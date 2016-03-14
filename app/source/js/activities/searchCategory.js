@@ -50,8 +50,7 @@ function ViewModel(appModel) {
     this.loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
         this.isCategoryLoading(true);
         //Call the get rest API method for api/v1/en-US/search/categories/by-categoryID
-        return appModel.rest.get('search/categories/by-categoryID', {
-            categoryID: categoryID, 
+        return appModel.rest.get('search/categories/' + categoryID, {
             origLat: origLat, 
             origLong: origLong,
             searchDistance: searchDistance

@@ -1,22 +1,20 @@
 <!-- Search Job Title activity -->
 
-<div class="Search-results" data-activity="searchJobTitle">
+<div class="SearchResults" data-activity="searchJobTitle">
     <div data-bind="with: jobTitleSearchResult">
         <h3 class="text-secondary">
-            <span data-bind="text: pluralName"></span>
+            <span data-bind="text: pluralName"></span> <span class="text-secondary" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</span>
         </h3>
         <p>
             <span data-bind="text: searchDescription"></span>
         </p>
-        <h3>
-            <span data-bind="text: serviceProfessionalsCount, visible: serviceProfessionalsCount"></span> near you
-        </h3>
     </div>
-        <ul class="Result-list" data-bind="foreach: serviceProfessionalSearchResult">
-          <li class="Result-item">
-            <div class="Avatar Avatar--primary Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}"></div>          
+        <ul data-bind="foreach: serviceProfessionalSearchResult">
+          <li>
             <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
-                <div class="Result-summary">
+              <div class="Avatar Avatar--primary Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
+              </div>          
+              <div class="ServiceProfessionalResult-summary">
                   <div>
                      <h3>
                         <span data-bind="text: firstName"></span>
@@ -28,17 +26,16 @@
                         <span data-bind="text: businessName"></span>
                     </h5>
                   </div>
-                <div class="ServiceProfessionalInfo-meta">
-                    <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings" class="text-secondary"></app-stars-rating>
-                    <span class="VerificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> 
-                        (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)
+                  <div class="ServiceProfessionalInfo-meta">
+                    <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings" class="text-secondary">
+                    </app-stars-rating>
+                    <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)
                     </span>
-
     <!--
                     <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
                     <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
     -->
-                </div>
+                  </div>
                   <div>
                     <h5>
                         <span data-bind="text: distance"></span> miles
@@ -51,11 +48,13 @@
                   </div>
                 </div>
               </a>
-            <div class="Result-actions">
-                <h5>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> from <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></h5>
+            <div class="ServiceProfessionalResult-description">
+                  <h5>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></h5>
+            </div>
+            <div class="ServiceProfessionalResult-actions">         
                 <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request to book</a> 
                 <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()" class="btn btn-primary">Book instantly</a> 
-                  <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">See profile and reviews</a>
+                <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">See profile and reviews</a>
             </div>
           </li>
         </ul>

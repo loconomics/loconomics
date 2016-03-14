@@ -1,7 +1,7 @@
 /**
     Search Results component
 **/
-
+        
 .SearchResultsPreview 
     background-color rgba(247, 247, 247, 1)
     display block
@@ -53,7 +53,7 @@
             overflow hidden
             text-overflow ellipsis
     
-.Search-results 
+.SearchResults
   background-color $gray-background
   
   h3
@@ -71,65 +71,96 @@
     text-align left
     margin-left 15px
     margin-right 15px
-  
-
-.Result-list
-  display flex
-  margin 0
-  padding 0
-  flex-wrap wrap
-  justify-content center
-
+    
+  ul
+    display flex
+    margin 0
+    padding 0
+    flex-wrap wrap
+    justify-content center
+    
   li
     list-style none
     background-color rgba(255,255,255,1)
-    border-bottom 3px solid $gray-lighter
+    box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
     width 290px
     margin 15px
     padding-top 20px
     padding-bottom 20px
-     
-    .Result-summary
-      width 69%
-      float left
-      text-align center
-      color $gray-dark
-      h3
-        margin-top 0
-        margin-bottom 0
-
-      h5
-        margin-top 0
-        margin-bottom 0
-
-    .VerificationsRating
-      font-size 18px
-        
-    div.clear
-      clear both
     
-    .Result-actions
-      text-align center
-      padding-top 5px
-      clear both 
-      
-      a
-        margin-top 8px
-        display block
-        color $brand-secondary
-        
-      .btn
-        width 80%
-        margin auto
-        color white
-        
-      h5
-        margin-top 8px
-        display block
-        
-      .FromPrice
-        color $gray-dark
-        font-size 16px
-        font-weight bold
+    a
+      text-decoration none
+     
+.ServiceProfessionalResult-summary
+  width 69%
+  float left
+  text-align center
+  color $gray-dark
 
+  h3
+    margin-top 0
+    margin-bottom 0
 
+  h5
+    margin-top 0
+    margin-bottom 0
+
+.ServiceProfessionalResult-verificationsRating
+  font-size 18px
+
+.ServiceProfessionalResult-description
+  text-align center
+  padding-top 5px
+  clear both 
+
+  h5
+    margin-top 8px
+    display block
+
+  .FromPrice
+    color $gray-dark
+    font-size 16px
+    font-weight bold
+
+.ServiceProfessionalResult-actions
+  text-align center
+  padding-top 5px
+  clear both 
+
+  a
+    margin-top 8px
+    display block
+    color $brand-secondary
+
+  .btn
+    width 80%
+    margin auto
+    color white
+        
+.CategoryResult-summary
+  text-align center
+  color $gray-dark
+
+  h3
+    margin-top 0
+    margin-bottom 0
+
+  h5
+    margin-top 0
+    margin-bottom 0
+
+.CategoryResult-description
+  padding-top 5px
+  padding-left 15px
+  padding-right 15px
+  clear both 
+
+  h5  
+    text-align justify
+    margin-top 8px
+    display block
+
+  .FromPrice
+    color $gray-dark
+    font-size 16px
+    font-weight bold
