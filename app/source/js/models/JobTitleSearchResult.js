@@ -19,6 +19,9 @@ function JobTitleSearchResult(values) {
         totalRatings: '',
         averageResponseTimeMinutes: 0,
         averageHourlyRate: 0,
+        minServicePrice: 0,
+        minHourlyRate: 0,
+        minServiceValue: '',
         serviceProfessionalsCount: 0
     }, values);
 }

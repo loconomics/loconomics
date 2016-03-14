@@ -20,6 +20,9 @@ namespace LcRest
         public long totalRatings;
         public decimal? averageResponseTimeMinutes;
         public decimal? averageHourlyRate;
+        public decimal? minServicePrice;
+        public decimal? minHourlyRate;
+        public string minServiceValue;
         public long serviceProfessionalsCount;
         #endregion
 
@@ -38,6 +41,9 @@ namespace LcRest
                 totalRatings = record.totalRatings,
                 averageResponseTimeMinutes = record.averageResponseTimeMinutes,
                 averageHourlyRate = record.averageHourlyRate,
+                minServicePrice = record.minServicePrice,
+                minHourlyRate = record.minHourlyRate,
+                minServiceValue = record.minServiceValue,
                 serviceProfessionalsCount = record.serviceProfessionalsCount
             };
         }
@@ -49,19 +55,26 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(@"
-                    DECLARE @jobTitleID AS int
-                    SET @jobTitleID = @0
-                    DECLARE @origLat DECIMAL(12, 9)
-                    SET @origLat=@1
-                    DECLARE @origLong DECIMAL(12, 9)
-                    SET @origLong=@2
-                    DECLARE @SearchDistance int
-                    SET @SearchDistance = @3
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = @4
-                    DECLARE @CountryID int
-                    SET @CountryID = @5
-                    DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
+                    SELECT 
+                    		jobTitleID
+                    		,pluralName
+                    		,singularName
+                    		,description
+                    		,searchDescription
+                    		,averageRating
+                    		,totalRatings
+                    		,averageResponseTimeMinutes
+                    		,averageHourlyRate
+                    		,minServicePrice
+                    		,minHourlyRate
+                            ,CASE WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minServicePrice < minHourlyRate THEN '$' + convert(varchar,  minServicePrice)
+                              WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minHourlyRate < minServicePrice THEN '$' + convert(varchar,  minHourlyRate) + '/hour'
+                              WHEN (minServicePrice > 0 AND minHourlyRate is null) THEN '$' + convert(varchar,  minServicePrice)
+                              WHEN (minHourlyRate > 0 AND minServicePrice is null) THEN '$' + convert(varchar,  minHourlyRate) + '/hour' ELSE NULL END as minServiceValue
+                            ,serviceProfessionalsCount  
+                            ,displayRank
+                            FROM
+                            (                
                     SELECT	
                             P.PositionID as jobTitleID
                             ,P.PositionPlural as pluralName
@@ -83,8 +96,11 @@ namespace LcRest
                             ), 0) As averageRating
                             ,coalesce(sum(ur.TotalRatings), 0) As totalRatings
                             ,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
-                            ,avg(PHR.HourlyRate) As averageHourlyRate
+                            ,avg(PHR.averageHourlyRate) As averageHourlyRate
+                            ,min(PHR.minServicePrice) As minServicePrice
+                            ,min(PHR.minHourlyRate) As minHourlyRate
                             ,count (distinct SPC.UserID) As serviceProfessionalsCount
+                            ,P.DisplayRank
 
                     FROM	Positions As P
                              LEFT JOIN
@@ -133,13 +149,15 @@ namespace LcRest
                              LEFT JOIN
                             (SELECT	ProviderPackage.ProviderUserID As UserID
                                     ,ProviderPackage.PositionID
-                                    ,min(PriceRate) As HourlyRate
+                                    ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
+                                    ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
+                                    ,AVG(PriceRate) as averageHourlyRate
                                     ,LanguageID
                                     ,CountryID
                              FROM	ProviderPackage
                              WHERE	ProviderPackage.Active = 1
-                                    AND ProviderPackage.PriceRateUnit like 'HOUR' 
-                                    AND ProviderPackage.PriceRate > 0
+                                    AND ProviderPackage.PriceRateUnit like '%HOUR%' 
+                                    AND ProviderPackage.PricingTypeID != 7
                              GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
                                         ,LanguageID, CountryID
                             ) As PHR
@@ -160,7 +178,8 @@ namespace LcRest
                         AND (p.Approved = 1 Or p.Approved is null) 
 							AND dbo.fx_IfNW(p.PositionSingular, null) is not null                    
                     GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-                    ORDER BY serviceProfessionalsCount DESC, P.DisplayRank, P.PositionPlural  
+                    ) as tab
+                    ORDER BY serviceProfessionalsCount DESC, DisplayRank, pluralName  
                                 ", jobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
             }
         }
@@ -182,6 +201,26 @@ namespace LcRest
                     DECLARE @CountryID int
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
+                    SELECT 
+                    		jobTitleID
+                    		,pluralName
+                    		,singularName
+                    		,description
+                    		,searchDescription
+                    		,averageRating
+                    		,totalRatings
+                    		,averageResponseTimeMinutes
+                    		,averageHourlyRate
+                    		,minServicePrice
+                    		,minHourlyRate
+                            ,CASE WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minServicePrice < minHourlyRate THEN '$' + convert(varchar,  minServicePrice)
+                              WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minHourlyRate < minServicePrice THEN '$' + convert(varchar,  minHourlyRate) + '/hour'
+                              WHEN (minServicePrice > 0 AND minHourlyRate is null) THEN '$' + convert(varchar,  minServicePrice)
+                              WHEN (minHourlyRate > 0 AND minServicePrice is null) THEN '$' + convert(varchar,  minHourlyRate) + '/hour' ELSE NULL END as minServiceValue
+                            ,serviceProfessionalsCount  
+                            ,displayRank
+                            FROM
+                            (                
                     SELECT	
                             P.PositionID as jobTitleID
                             ,P.PositionPlural as pluralName
@@ -203,8 +242,11 @@ namespace LcRest
                             ), 0) As averageRating
                             ,coalesce(sum(ur.TotalRatings), 0) As totalRatings
                             ,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
-                            ,avg(PHR.HourlyRate) As averageHourlyRate
+                            ,avg(PHR.averageHourlyRate) As averageHourlyRate
+                            ,min(PHR.minServicePrice) As minServicePrice
+                            ,min(PHR.minHourlyRate) As minHourlyRate
                             ,count (distinct SPC.UserID) As serviceProfessionalsCount
+                            ,P.DisplayRank
 
                     FROM	Positions As P
                              LEFT JOIN
@@ -253,13 +295,15 @@ namespace LcRest
                              LEFT JOIN
                             (SELECT	ProviderPackage.ProviderUserID As UserID
                                     ,ProviderPackage.PositionID
-                                    ,min(PriceRate) As HourlyRate
+                                    ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
+                                    ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
+                                    ,AVG(PriceRate) as averageHourlyRate
                                     ,LanguageID
                                     ,CountryID
                              FROM	ProviderPackage
                              WHERE	ProviderPackage.Active = 1
-                                    AND ProviderPackage.PriceRateUnit like 'HOUR' 
-                                    AND ProviderPackage.PriceRate > 0
+                                    AND ProviderPackage.PriceRateUnit like '%HOUR%' 
+                                    AND ProviderPackage.PricingTypeID != 7
                              GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
                                         ,LanguageID, CountryID
                             ) As PHR
@@ -278,9 +322,9 @@ namespace LcRest
                              AND
                             P.CountryID = @CountryID
                         AND (p.Approved = 1 Or p.Approved is null) 
-							AND dbo.fx_IfNW(p.PositionSingular, null) is not null                    
-                    GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-                    ORDER BY serviceProfessionalsCount DESC, P.DisplayRank, P.PositionPlural  
+							AND dbo.fx_IfNW(p.PositionSingular, null) is not null                             GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
+					) as tab
+					ORDER BY serviceProfessionalsCount DESC, DisplayRank, pluralName  
                                 ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(FromDB);
             }
