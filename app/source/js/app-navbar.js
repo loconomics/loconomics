@@ -20,6 +20,7 @@ exports.extend = function (app) {
     // Adjust the navbar setup depending on current user,
     // since different things are need for logged-in/out.
     function adjustUserBar() {
+        //jshint maxcomplexity:8
 
         var user = app.model.user();
 
@@ -30,9 +31,29 @@ exports.extend = function (app) {
                 app.navBar().prevLeftAction = prev;
             }
         }
-        else if (app.navBar().prevLeftAction) {
-            app.navBar().leftAction(app.navBar().prevLeftAction);
-            app.navBar().prevLeftAction = null;
+        else {
+            if (app.navBar().prevLeftAction) {
+                app.navBar().leftAction(app.navBar().prevLeftAction);
+                app.navBar().prevLeftAction = null;
+            }
+            // If we are in a 'section' activity, that is with the menuNewItem in the rightAction,
+            // we need to change it for just-client profiles:
+            if (!user.isServiceProfessional()) {
+                // Only if is menuNewItem, otherwise we do NOT restore preRightAction (thats why
+                // the nested 'if' rather than 'professional AND menuNewItem').
+                if (app.navBar().rightAction() === NavAction.menuNewItem) {
+                    // Replace default right-menu for professionals by
+                    // a client link to go marketplace
+                    app.navBar().preRightAction = app.navBar().rightAction();
+                    app.navBar().rightAction(NavAction.goMarketplace);
+                }
+            }
+            else if (app.navBar().preRightAction) {
+                // Recovering previous right action, like after change it to a just-client option
+                // and then entering with service-professional profile
+                app.navBar().rightAction(app.navBar().preRightAction);
+                app.navBar().preRightAction = null;
+            }
         }
     }
     // Commented lines, used previously but unused now, it must be enough with the update
