@@ -8,7 +8,6 @@ var ko = require('knockout');
 var Activity = require('../components/Activity'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     Appointment = require('../models/Appointment'),
-    Booking = require('../models/Booking'),
     UserJobTitle = require('../models/UserJobTitle');
 
 var A = Activity.extend(function DashboardActivity() {
@@ -105,15 +104,16 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
     appModel.bookings.getUpcomingBookings()
     .then(function(upcoming) {
 
-        if (upcoming.nextBooking) {
-            var booking = new Booking(upcoming.nextBooking);
-            v.nextBooking(new AppointmentView(Appointment.fromBooking(booking), app));
+        v.upcomingBookings.model.updateWith(upcoming, true);
+        var b = v.upcomingBookings.nextBooking();
+
+        if (b) {
+            v.nextBooking(new AppointmentView(Appointment.fromBooking(b), app));
         }
         else {
             v.nextBooking(null);
         }
         
-        v.upcomingBookings.model.updateWith(upcoming, true);
     }.bind(this))
     .catch(this.prepareShowErrorFor('Error loading upcoming bookings'))
     .then(function() {

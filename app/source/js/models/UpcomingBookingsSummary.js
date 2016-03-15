@@ -3,7 +3,8 @@
 
 var ko = require('knockout'),
     Model = require('./Model'),
-    BookingSummary = require('./BookingSummary');
+    BookingSummary = require('./BookingSummary'),
+    Booking = require('./Booking');
 
 function UpcomingBookingsSummary(values) {
 
@@ -25,7 +26,10 @@ function UpcomingBookingsSummary(values) {
         nextWeek: new BookingSummary({
             concept: 'next week',
             timeFormat: null
-        })
+        }),
+        nextBooking: {
+            Model: Booking
+        }
     }, values);
     
     this.items = ko.pureComputed(function() {
