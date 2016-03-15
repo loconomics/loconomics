@@ -9,11 +9,6 @@ function UpcomingBookingsSummary(values) {
 
     Model(this);
     
-    // TODO: define today, tomorrow and nextWeek as
-    // properties with default Model?
-    // Review how update happens on home/dashboard, it can helps
-    // to simplify that
-    
     this.model.defProperties({
         today: new BookingSummary({
             concept: 'left today',
@@ -32,24 +27,6 @@ function UpcomingBookingsSummary(values) {
             timeFormat: null
         })
     }, values);
-
-    /*
-    this.today = new BookingSummary({
-        concept: 'left today',
-        timeFormat: ' [ending @] h:mma'
-    });
-    this.tomorrow = new BookingSummary({
-        concept: 'tomorrow',
-        timeFormat: ' [starting @] h:mma'
-    });
-    this.thisWeek = new BookingSummary({
-        concept: 'this week',
-        timeFormat: null
-    });
-    this.nextWeek = new BookingSummary({
-        concept: 'next week',
-        timeFormat: null
-    });*/
     
     this.items = ko.pureComputed(function() {
         var items = [];
@@ -65,7 +42,6 @@ function UpcomingBookingsSummary(values) {
 
         return items;
     }, this);
-    
 }
 
 module.exports = UpcomingBookingsSummary;
