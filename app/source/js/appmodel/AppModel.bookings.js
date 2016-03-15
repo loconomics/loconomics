@@ -47,6 +47,13 @@ exports.create = function create(appModel) {
     api.getUpcomingBookings = function getUpcomingBookings() {
         return appModel.rest.get('me/upcoming-bookings');
     };
+    
+    /**
+        Get upcoming appointments meta-information for dashboard page
+    **/
+    api.getUpcomingAppointments = function getUpcomingAppointments() {
+        return appModel.rest.get('me/upcoming-appointments');
+    };
 
     /**
         Get a specific booking by ID

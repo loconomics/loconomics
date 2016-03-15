@@ -9,6 +9,7 @@ var Activity = require('../components/Activity'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     Appointment = require('../models/Appointment'),
     UserJobTitle = require('../models/UserJobTitle');
+var PublicUser = require('../models/PublicUser');
 
 var A = Activity.extend(function DashboardActivity() {
     
@@ -20,11 +21,29 @@ var A = Activity.extend(function DashboardActivity() {
     this.navBar = Activity.createSectionNavBar(null);
     
     // Getting elements
-    this.$nextBooking = this.$activity.find('#dashboardNextBooking');
-    this.$upcomingBookings = this.$activity.find('#dashboardUpcomingBookings');
-    this.$inbox = this.$activity.find('#dashboardInbox');
-    this.$performance = this.$activity.find('#dashboardPerformance');
-    this.$getMore = this.$activity.find('#dashboardGetMore');
+    //this.$nextBooking = this.$activity.find('#dashboardNextBooking');
+    //this.$upcomingBookings = this.$activity.find('#dashboardUpcomingBookings');
+    //this.$inbox = this.$activity.find('#dashboardInbox');
+    //this.$performance = this.$activity.find('#dashboardPerformance');
+    //this.$getMore = this.$activity.find('#dashboardGetMore');
+    
+    this.prepareShowErrorFor = function prepareShowErrorFor(title) {
+        return function(err) {
+            this.app.modals.showError({
+                title: title,
+                error: err
+            });
+        }.bind(this);
+    }.bind(this);
+    
+    var app = this.app;
+    this.getUserData = function(userID, jobTitleID) {
+        return app.model.users.getUser(userID)
+        .then(function(info) {
+            info.selectedJobTitleID = jobTitleID;
+            return new PublicUser(info);
+        }.bind(this));
+    };
     
     // TestingData
     setSomeTestingData(this.viewModel);
@@ -51,18 +70,12 @@ A.prototype.show = function show(options) {
         }
     }
     
-    this.prepareShowErrorFor = function prepareShowErrorFor(title) {
-        return function(err) {
-            this.app.modals.showError({
-                title: title,
-                error: err
-            });
-        }.bind(this);
-    }.bind(this);
-    
     // Update data
     if (this.app.model.user().isServiceProfessional()) {
         this.syncUpcomingBookings();
+    }
+    if (this.app.model.user().isClient()) {
+        this.syncUpcomingAppointments();
     }
     this.syncMessages();
     this.syncGetMore();
@@ -123,6 +136,36 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
     });
 };
 
+A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
+    var v = this.viewModel,
+        appModel = this.app.model;
+
+    if (v.upcomingAppointments.items().length) {
+        v.upcomingAppointments.isSyncing(true);
+    }
+    else {
+        v.upcomingAppointments.isLoading(true);
+    }
+    appModel.bookings.getUpcomingAppointments()
+    .then(function(upcoming) {
+        v.upcomingAppointments.model.updateWith(upcoming, true);
+
+        if (upcoming.nextBooking) {
+            return this.getUserData(upcoming.nextBooking.serviceProfessionalUserID, upcoming.nextBooking.jobTitleID);
+        }
+        return null;
+    }.bind(this))
+    .then(function(user) {
+        v.nextAppointmentServiceProfessionalInfo(user);
+    })
+    .catch(this.prepareShowErrorFor('Error loading upcoming appointments'))
+    .then(function() {
+        // Finally
+        v.upcomingAppointments.isLoading(false);
+        v.upcomingAppointments.isSyncing(false);
+    });
+};
+
 A.prototype.syncGetMore = function syncGetMore() {
     // Professional only alerts/to-dos
     if (this.app.model.user().isServiceProfessional()) {
@@ -142,15 +185,23 @@ A.prototype.syncGetMore = function syncGetMore() {
 var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
     MailFolder = require('../models/MailFolder'),
     PerformanceSummary = require('../models/PerformanceSummary'),
-    GetMore = require('../models/GetMore');
+    GetMore = require('../models/GetMore'),
+    UpcomingAppointmentsSummary = require('../models/UpcomingAppointmentsSummary');
 
 function ViewModel(app) {
 
     this.upcomingBookings = new UpcomingBookingsSummary();
     this.upcomingBookings.isLoading = ko.observable(false);
     this.upcomingBookings.isSyncing = ko.observable(false);
+    
+    this.upcomingAppointments = new UpcomingAppointmentsSummary();
+    this.upcomingAppointments.isLoading = ko.observable(false);
+    this.upcomingAppointments.isSyncing = ko.observable(false);
+    
+    this.nextAppointmentServiceProfessionalInfo = ko.observable(null);
 
     this.nextBooking = ko.observable(null);
+    this.currentAppointment = ko.observable(null);
     
     this.inbox = new MailFolder({
         topNumber: 4
@@ -163,6 +214,14 @@ function ViewModel(app) {
     this.getMore = new GetMore();
     
     this.user = app.model.userProfile.data;
+    
+    this.getMapUrlFor = function(address) {
+        var lat = ko.unwrap(address.latitude);
+        var lng = ko.unwrap(address.longitude);
+        //var name = ko.unwrap(address.addressName);
+        var place = address.singleLine ? address.singleLine() : '';
+        return 'https://www.google.com/maps/?q=' + encodeURIComponent(lat) + ',' + encodeURIComponent(lng) + '&near=' + encodeURIComponent(place) + '&z=16';
+    };
 }
 
 /** TESTING DATA **/

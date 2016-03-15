@@ -112,6 +112,7 @@ namespace LcRest
                 //    quantity = d.count,
                 //    time = d.startTime
                 //};
+                ret.pendingScheduling = new Summary();
 
                 var nextBookingID = (int?)db.QueryValue(sqlGetNextBookingID, userID, DateTime.Now, LcEnum.BookingStatus.confirmed);
                 if (nextBookingID.HasValue) {

@@ -1,6 +1,22 @@
 <!-- Activity dashboard -->
 <div data-activity="dashboard" class="limited-size-md limited-size-lg">
-
+    <div data-bind="visible: user.isClient() && upcomingAppointments.nextBooking()">
+        <h1 class="SectionTitle">Current appointment</h1>
+        <ul class="TilesList">
+            <li id="dashboardCurrentAppointment" data-bind="with: upcomingAppointments.nextBooking">
+                <h4>
+                    <span data-bind="text: serviceDate().startTime, format: { type: 'datetime', format: 'h:mma' }"></span>
+                    <span>until</span>
+                    <span data-bind="text: serviceDate().endTime, format: { type: 'datetime', format: 'h:mma' }"></span>
+                </h4>
+                <a href="#map" class="btn btn-secondary" target="_blank"
+                   data-bind="attr: { href: $root.getMapUrlFor(serviceAddress()) }">Map</a>
+            </li>
+        </ul>
+        <div class="Box-sm">
+            <div data-bind="template: { name: 'service-professional-info-template', data: nextAppointmentServiceProfessionalInfo() }"></div>
+        </div>
+    </div>
     <div data-bind="visible: user.isServiceProfessional">
         <h1 class="SectionTitle"
             data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
@@ -48,6 +64,26 @@
         </ul>
         <a class="CompactLinkTile" href="/calendar">
             <div class="Tile-content">Go to calendar</div>
+            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+        </a>
+    </div>
+    <div data-bind="visible: user.isClient() && upcomingAppointments.items().length">
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing() }">
+            Upcoming appointments
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
+        <ul class="TilesList" data-bind="foreach: upcomingAppointments.items">
+            <li class="LineTile">
+                <strong data-bind="text: quantity"></strong>
+                <span data-bind="text: phrase"></span>
+            </li>
+        </ul>
+        <a class="CompactLinkTile" href="/myAppointments">
+            <div class="Tile-content">Go to appointments</div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
         </a>
     </div>
