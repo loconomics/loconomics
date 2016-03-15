@@ -33,11 +33,7 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
-    var v = this.viewModel,
-        app = this.app,
-        appModel = this.app.model;
-    
+
     if (this.requestData.completedOnboarding) {
         switch (this.requestData.completedOnboarding) {
             case 'welcome': // Schedule complete
@@ -54,7 +50,7 @@ A.prototype.show = function show(options) {
         }
     }
     
-    var preapareShowErrorFor = function preapareShowErrorFor(title) {
+    this.prepareShowErrorFor = function prepareShowErrorFor(title) {
         return function(err) {
             this.app.modals.showError({
                 title: title,
@@ -64,6 +60,40 @@ A.prototype.show = function show(options) {
     }.bind(this);
     
     // Update data
+    if (this.app.model.user().isServiceProfessional()) {
+        this.syncUpcomingBookings();
+    }
+    this.syncMessages();
+    this.syncGetMore();
+};
+
+A.prototype.syncMessages = function syncMessages() {
+    var v = this.viewModel;
+    var app = this.app;
+
+    var MessageView = require('../models/MessageView');
+    if (v.inbox.messages().length)
+        v.inbox.isSyncing(true);
+    else
+        v.inbox.isLoading(true);
+    
+    this.app.model.messaging.getList()
+    .then(function(threads) {
+        v.inbox.messages(threads().map(MessageView.fromThread.bind(null, app)));
+    })
+    .catch(this.prepareShowErrorFor('Error loading latest messages'))
+    .then(function() {
+        // Finally
+        v.inbox.isLoading(false);
+        v.inbox.isSyncing(false);
+    });
+};
+
+A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
+    var v = this.viewModel,
+        app = this.app,
+        appModel = this.app.model;
+
     if (v.upcomingBookings.items().length) {
         v.upcomingBookings.isSyncing(true);
     }
@@ -86,7 +116,7 @@ A.prototype.show = function show(options) {
                 .then(function(apt) {
                     v.nextBooking(new AppointmentView(apt, app));
                 })
-                .catch(preapareShowErrorFor('Error loading next booking'))
+                .catch(this.prepareShowErrorFor('Error loading next booking'))
                 .then(function() {
                     // Finally
                     v.nextBooking.isLoading(false);
@@ -107,43 +137,27 @@ A.prototype.show = function show(options) {
         v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
         v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
     })
-    .catch(preapareShowErrorFor('Error loading upcoming bookings'))
+    .catch(this.prepareShowErrorFor('Error loading upcoming bookings'))
     .then(function() {
         // Finally
         v.upcomingBookings.isLoading(false);
         v.upcomingBookings.isSyncing(false);
     });
-    
-    // Messages
-    var MessageView = require('../models/MessageView');
-    if (v.inbox.messages().length)
-        v.inbox.isSyncing(true);
-    else
-        v.inbox.isLoading(true);
-    appModel.messaging.getList()
-    .then(function(threads) {
-        v.inbox.messages(threads().map(MessageView.fromThread.bind(null, app)));
-    })
-    .catch(preapareShowErrorFor('Error loading latest messages'))
-    .then(function() {
-        // Finally
-        v.inbox.isLoading(false);
-        v.inbox.isSyncing(false);
-    });
-    
-    this.syncGetMore();
 };
 
 A.prototype.syncGetMore = function syncGetMore() {
-    // Check the 'profile' alert
-    this.app.model.userJobProfile.syncList()
-    .then(function(list) {
-        var yep = list.some(function(job) {
-            if (job.statusID() !== UserJobTitle.status.on)
-                return true;
-        });
-        this.viewModel.getMore.profile(!!yep);
-    }.bind(this));
+    // Professional only alerts/to-dos
+    if (this.app.model.user().isServiceProfessional()) {
+        // Check the 'profile' alert
+        this.app.model.userJobProfile.syncList()
+        .then(function(list) {
+            var yep = list.some(function(job) {
+                if (job.statusID() !== UserJobTitle.status.on)
+                    return true;
+            });
+            this.viewModel.getMore.profile(!!yep);
+        }.bind(this));
+    }
 };
 
 
