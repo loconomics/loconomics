@@ -9,12 +9,17 @@ function BookingSummary(values) {
     
     Model(this);
 
+    // Only actual data as properties,
+    // configuration values goes in manual observables later
     this.model.defProperties({
         quantity: 0,
         concept: '',
-        time: null,
+        time: { isDate: true },
         timeFormat: ' [@] h:mma'
     }, values);
+    
+   // this.concept = ko.observable(values && values.concept);
+   // this.timeFormat = ko.observable(values && values.timeFormat);
 
     this.phrase = ko.pureComputed(function(){
         var t = this.timeFormat() && 

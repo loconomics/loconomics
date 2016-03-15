@@ -3,15 +3,15 @@
 
     <div data-bind="visible: user.isServiceProfessional">
         <h1 class="SectionTitle"
-            data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() || nextBooking.isSyncing() }">
+            data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
             Upcoming bookings
             <!-- ko component: {
                 name: 'app-loading-spinner',
                 params: { mod: 'onRight' }
             } --><!-- /ko -->
-        </h1>    
+        </h1>
         <div id="dashboardNextBooking"
-           data-bind="css: { 'is-loading': nextBooking.isLoading() }">
+           data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
             <div data-bind="with: nextBooking">
                 <a href="#" class="LeadTile"
                    data-bind="attr: { href: '#!appointment/' + startTime().toISOString() + '/' + id() }">
@@ -31,7 +31,7 @@
                 </a>
             </div>
             <div data-bind="visible: !nextBooking()" class="PaddedBox-xs">
-                <span data-bind="visible: !nextBooking.isLoading()">No upcoming bookings :-/</span>
+                <span data-bind="visible: !upcomingBookings.isLoading()">No upcoming bookings :-/</span>
                 <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
             </div>
         </div>

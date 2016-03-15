@@ -112,15 +112,8 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
         else {
             v.nextBooking(null);
         }
-
-        v.upcomingBookings.today.quantity(upcoming.today.quantity);
-        v.upcomingBookings.today.time(upcoming.today.time && new Date(upcoming.today.time));
-        v.upcomingBookings.tomorrow.quantity(upcoming.tomorrow.quantity);
-        v.upcomingBookings.tomorrow.time(upcoming.tomorrow.time && new Date(upcoming.tomorrow.time));
-        v.upcomingBookings.thisWeek.quantity(upcoming.thisWeek.quantity);
-        v.upcomingBookings.thisWeek.time(upcoming.thisWeek.time && new Date(upcoming.thisWeek.time));
-        v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
-        v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
+        
+        v.upcomingBookings.model.updateWith(upcoming, true);
     }.bind(this))
     .catch(this.prepareShowErrorFor('Error loading upcoming bookings'))
     .then(function() {
@@ -158,8 +151,6 @@ function ViewModel(app) {
     this.upcomingBookings.isSyncing = ko.observable(false);
 
     this.nextBooking = ko.observable(null);
-    this.nextBooking.isLoading = ko.observable(false);
-    this.nextBooking.isSyncing = ko.observable(false);
     
     this.inbox = new MailFolder({
         topNumber: 4
