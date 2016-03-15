@@ -37,6 +37,13 @@ function PublicUserProfile(values) {
         
         return nameParts.join(' ');
     }, this);
+    
+    // The businessName or the fullName; it's the best choice to expose a service-professional name
+    this.publicName = ko.pureComputed(function() {
+        var b = this.businessName();
+        if (b) return b;
+        return this.fullName();
+    }, this);
 }
 
 module.exports = PublicUserProfile;

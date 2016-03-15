@@ -12,6 +12,7 @@ var Model = require('./Model'),
     PricingSummary = require('./PricingSummary'),
     PublicUserJobTitle = require('./PublicUserJobTitle'),
     Address = require('./Address'),
+    moment = require('moment'),
     EventDates = require('./EventDates');
 
 function Booking(values) {
@@ -114,6 +115,27 @@ function Booking(values) {
     this.isServiceProfessionalBooking = ko.pureComputed(function() {
         return this.bookingTypeID() === Booking.type.serviceProfessionalBooking;
     }, this);
+    
+    // Smart visualization of date and time
+    this.displayedDate = ko.pureComputed(function() {
+        return moment(this.serviceDate().startTime()).locale('en-US-LC').calendar();
+    }, this);
+    
+    this.displayedStartTime = ko.pureComputed(function() {
+        return moment(this.serviceDate().startTime()).locale('en-US-LC').format('LT');
+    }, this);
+    
+    this.displayedEndTime = ko.pureComputed(function() {
+        return moment(this.serviceDate().endTime()).locale('en-US-LC').format('LT');
+    }, this);
+    
+    this.servicesSummary = ko.pureComputed(function() {
+        return this.pricingSummary().details()
+        .map(function(service) {
+            return service.serviceName();
+        }).join(', ');
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
 module.exports = Booking;

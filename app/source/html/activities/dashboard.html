@@ -76,6 +76,24 @@
                 params: { mod: 'onRight' }
             } --><!-- /ko -->
         </h1>
+        <div data-bind="with: upcomingAppointments.nextBooking()">
+            <a href="#" class="LeadTile"
+               data-bind="attr: { href: '#!myAppointments/' + bookingID() }">
+                <h3 class="Tile-title">
+                    <div data-bind="text: displayedDate"></div>
+                    <div>
+                        <span data-bind="text: displayedStartTime"></span>
+                        -
+                        <span data-bind="text: displayedEndTime"></span>
+                    </div>
+                </h3>
+                <h4 class="Tile-subtitle" data-bind="text: $root.nextAppointmentServiceProfessionalInfo() && $root.nextAppointmentServiceProfessionalInfo().profile().publicName()"></h4>
+                <p class="Tile-content">
+                    <span data-bind="text: servicesSummary()"></span>
+                    <em data-bind="text: pricingSummary().totalPrice(), format: { type: 'number', format: '$0,0' }"></em>
+                </p>
+            </a>
+        </div>
         <ul class="TilesList" data-bind="foreach: upcomingAppointments.items">
             <li class="LineTile">
                 <strong data-bind="text: quantity"></strong>
