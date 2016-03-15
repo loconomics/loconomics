@@ -113,9 +113,9 @@ namespace LcRest
                 //    time = d.startTime
                 //};
 
-                var nextBoookingID = (int?)db.QueryValue(sqlGetNextBookingID, userID, DateTime.Now, LcEnum.BookingStatus.confirmed);
-                if (nextBoookingID.HasValue) {
-                    ret.nextBooking = Booking.Get(nextBoookingID.Value, true, false, userID);
+                var nextBookingID = (int?)db.QueryValue(sqlGetNextBookingID, userID, DateTime.Now, LcEnum.BookingStatus.confirmed);
+                if (nextBookingID.HasValue) {
+                    ret.nextBooking = Booking.Get(nextBookingID.Value, true, false, userID);
                 }
             }
 

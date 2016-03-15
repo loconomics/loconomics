@@ -7,6 +7,8 @@ var ko = require('knockout');
 
 var Activity = require('../components/Activity'),
     AppointmentView = require('../viewmodels/AppointmentView'),
+    Appointment = require('../models/Appointment'),
+    Booking = require('../models/Booking'),
     UserJobTitle = require('../models/UserJobTitle');
 
 var A = Activity.extend(function DashboardActivity() {
@@ -103,26 +105,9 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
     appModel.bookings.getUpcomingBookings()
     .then(function(upcoming) {
 
-        if (upcoming.nextBookingID) {
-            var previousID = v.nextBooking() && v.nextBooking().sourceBooking().bookingID();
-            if (upcoming.nextBookingID !== previousID) {
-                if (v.nextBooking()) {
-                    v.nextBooking.isSyncing(true);
-                }
-                else {
-                    v.nextBooking.isLoading(true);
-                }
-                appModel.calendar.getAppointment({ bookingID: upcoming.nextBookingID })
-                .then(function(apt) {
-                    v.nextBooking(new AppointmentView(apt, app));
-                })
-                .catch(this.prepareShowErrorFor('Error loading next booking'))
-                .then(function() {
-                    // Finally
-                    v.nextBooking.isLoading(false);
-                    v.nextBooking.isSyncing(false);
-                });
-            }
+        if (upcoming.nextBooking) {
+            var booking = new Booking(upcoming.nextBooking);
+            v.nextBooking(new AppointmentView(Appointment.fromBooking(booking), app));
         }
         else {
             v.nextBooking(null);
@@ -136,7 +121,7 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
         v.upcomingBookings.thisWeek.time(upcoming.thisWeek.time && new Date(upcoming.thisWeek.time));
         v.upcomingBookings.nextWeek.quantity(upcoming.nextWeek.quantity);
         v.upcomingBookings.nextWeek.time(upcoming.nextWeek.time && new Date(upcoming.nextWeek.time));
-    })
+    }.bind(this))
     .catch(this.prepareShowErrorFor('Error loading upcoming bookings'))
     .then(function() {
         // Finally

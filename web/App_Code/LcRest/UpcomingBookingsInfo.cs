@@ -26,7 +26,7 @@ namespace LcRest
         public Summary tomorrow;
         public Summary thisWeek;
         public Summary nextWeek;
-        public int? nextBookingID;
+        public Booking nextBooking;
         #endregion
 
         #region Get
@@ -125,7 +125,11 @@ namespace LcRest
                     time = d.startTime
                 };
 
-                ret.nextBookingID = db.QueryValue(sqlGetNextBookingID, userID, leftToday);
+                var nextBookingID = (int?)db.QueryValue(sqlGetNextBookingID, userID, leftToday);
+                if (nextBookingID.HasValue)
+                {
+                    ret.nextBooking = Booking.Get(nextBookingID.Value, true, false, userID);
+                }
             }
 
             return ret;

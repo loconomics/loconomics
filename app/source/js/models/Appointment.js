@@ -152,6 +152,16 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     Creates an appointment instance from a Booking and a CalendarEvent model instances
 **/
 Appointment.fromBooking = function fromBooking(booking, event) {
+    // Optional Event: can be generated with the booking info,
+    // but only if includes serviceDate info and for the main fields (some less important ones will not have value)
+    if (!event) {
+        event = new CalendarEvent({
+            calendarEventID: booking.serviceDateID(),
+            startTime: booking.serviceDate().startTime(),
+            endTime: booking.serviceDate().endTime(),
+            readOnly: true
+        });
+    }
     // Include event in apt
     var apt = Appointment.fromCalendarEvent(event);
     
