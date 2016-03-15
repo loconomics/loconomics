@@ -201,7 +201,6 @@ function ViewModel(app) {
     this.nextAppointmentServiceProfessionalInfo = ko.observable(null);
 
     this.nextBooking = ko.observable(null);
-    this.currentAppointment = ko.observable(null);
     
     this.inbox = new MailFolder({
         topNumber: 4

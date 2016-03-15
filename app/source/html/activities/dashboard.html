@@ -1,9 +1,9 @@
 <!-- Activity dashboard -->
 <div data-activity="dashboard" class="limited-size-md limited-size-lg">
-    <div data-bind="visible: user.isClient() && upcomingAppointments.nextBooking()">
+    <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()">
         <h1 class="SectionTitle">Current appointment</h1>
         <ul class="TilesList">
-            <li id="dashboardCurrentAppointment" data-bind="with: upcomingAppointments.nextBooking">
+            <li id="dashboardCurrentAppointment" data-bind="with: upcomingAppointments.currentAppointment">
                 <h4>
                     <span data-bind="text: serviceDate().startTime, format: { type: 'datetime', format: 'h:mma' }"></span>
                     <span>until</span>

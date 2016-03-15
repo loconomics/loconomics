@@ -40,6 +40,19 @@ function UpcomingAppointmentsSummary(values) {
 
         return items;
     }, this);
+    
+    this.currentAppointment = ko.pureComputed(function() {
+        var b = this.nextBooking();
+        if (b) {
+            var today = (new Date()).toISOString().substr(0, 10);
+            var bookday = b.serviceDate() && b.serviceDate().startTime() || '';
+            bookday = (typeof(bookday) === 'string' ? bookday : bookday.toISOString()).substr(0, 10);
+            if (bookday === today) {
+                return b;
+            }
+        }
+        return null;
+    }, this);
 }
 
 module.exports = UpcomingAppointmentsSummary;
