@@ -1,7 +1,11 @@
 /**
     Search Results component
 **/
-        
+@import '../components/HomeNavBar.styl';
+@import '../terms.styl';
+@import '../home.styl';
+
+
 .SearchResultsPreview 
     background-color rgba(247, 247, 247, 1)
     display block
@@ -164,3 +168,7 @@
     color $gray-dark
     font-size 16px
     font-weight bold
+
+.CategoryBackground
+    padding-top: $HomeNavBar-Height + 32px;
+    background: rgb(79, 184, 185) url('../images/home-header.jpg') no-repeat top center / cover;
