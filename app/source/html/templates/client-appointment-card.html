@@ -1,0 +1,72 @@
+<script type="text/html" id="client-appointment-card-template">
+    <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
+
+        <div class="Card-title">
+            <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
+        </div>
+        
+        <ul class="TilesList TilesList--opendEnd">
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ios-clock-outline"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                        <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
+                        <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
+                    </div>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: editMode() && pickLocation">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ios-location-outline"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <p data-bind="visible: item().addressSummary, text: item().addressSummary"></p>
+                        <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().addressSummary()" class="text-muted">Select/Add location</p>
+                    </div>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && pickService">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ios-pricetags-outline"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <p data-bind="visible: item().servicesSummary(), text: item().servicesSummary()"></p>
+                        <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().servicesSummary()" class="text-muted">Select/Add service(s)</p>
+                    </div>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && changePrice">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-social-usd"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <p data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></p>
+                    </div>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'specialRequests')">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-edit"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <p data-bind="visible: item().specialRequests(), text: item().specialRequests"></p>
+                        <p data-bind="visible: !item().specialRequests()" class="text-muted">Add notes to <span>TODO</span></p>
+                    </div>
+                </button>
+            </li>
+        </ul>
+        
+        <div class="AppointmentCard-actions" data-bind="visible: editMode()">
+            <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="visible: canBeCancelledByClient(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
+        </div>
+    </div>
+</script>

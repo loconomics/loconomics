@@ -76,5 +76,6 @@ module.exports = {
     'serviceProfessionalProfileUrl': require('./activities/serviceProfessionalProfileUrl'),
     'boardMemberNominations': require('./activities/boardMemberNominations'),
     'paymentAccount': require('./activities/paymentAccount'),
-    'myAppointments': require('./activities/myAppointments')
+    'myAppointments': require('./activities/myAppointments'),
+    'clientAppointment': require('./activities/clientAppointment')
 };
