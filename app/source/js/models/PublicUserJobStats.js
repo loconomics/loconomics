@@ -14,10 +14,10 @@ function PublicUserJobStats(values) {
         jobTitleID: 0,
         servicesCount: 0,
         minServicePrice: 0,
-        minServicePriceUnit: 0,
-        minServiceValue: 0
+        minUnitRate: 0,
+        priceRateUnit: '',
+        minServiceValue: ''
     }, values);
-
 }
 
 module.exports = PublicUserJobStats;

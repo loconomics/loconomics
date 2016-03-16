@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,25 +15,9 @@ namespace LcRest
         private int jobTitleID;
         public long servicesCount;
         public decimal? minServicePrice;
-        public string minServicePriceUnit;
-        public string minServiceValue
-        {
-            get
-            {
-                if (!minServicePrice.HasValue)
-                {
-                    return "";
-                }
-                else if (!String.IsNullOrEmpty(minServicePriceUnit))
-                {
-                    return String.Format("{0:c}/{1}", minServicePrice.Value, minServicePriceUnit);
-                }
-                else
-                {
-                    return String.Format("{0:c}", minServicePrice.Value);
-                }
-            }
-        }
+        public decimal? minUnitRate;
+        public string priceRateUnit;
+        public string minServiceValue;
         #endregion
 
         #region Instances
@@ -43,74 +27,117 @@ namespace LcRest
             return new PublicUserJobStats
             {
                 userID = record.userID,
+                jobTitleID = record.jobTitleID,
+                servicesCount = record.servicesCount,
                 minServicePrice = record.minServicePrice,
-                minServicePriceUnit = record.minServicePriceUnit
+                minUnitRate = record.minUnitRate,
+                priceRateUnit = record.priceRateUnit,
+                minServiceValue = record.minServiceValue
             };
         }
         #endregion
 
         #region Fetch
-        #region SQL
-        const string sqlGetPriceData = @"
-            SELECT
-                min(ProviderPackagePrice) as minServicePrice,
-                min(PriceRate) as minServicePriceRate,
-                count(*) as servicesCount
-            FROM ProviderPackage As P
-            WHERE P.ProviderUserID = @0
-                    AND P.PositionID = @1
-                    AND P.Active = 1
-        ";
-        const string sqlGetPriceRateUnit = @"
-            SELECT priceRateUnit
-            FROM ProviderPackage
-            WHERE ProviderUserID = @0
-                AND PositionID = @1
-                AND PriceRate = @2
-        ";
-        #endregion
         public static PublicUserJobStats Get(int userID, int jobTitleID)
         {
             using (var db = new LcDatabase())
             {
-                //return FromDB(db.QuerySingle(sqlGet, userID));
-                var d = db.QuerySingle(sqlGetPriceData, userID, jobTitleID);
-                var r = new PublicUserJobStats {
-                    userID = userID,
-                    servicesCount = (long)d.servicesCount
-                };
-                if (d == null) return r;
-                var mp = (decimal?)d.minServicePrice;
-                var mr = (decimal?)d.minServicePriceRate;
-                var hasUnit = false;
-                if (!mp.HasValue && !mr.HasValue)
-                {
-                    return r;
-                }
-                else if (mp.HasValue && !mr.HasValue)
-                {
-                    r.minServicePrice = mp;
-                }
-                else if (!mp.HasValue && mr.HasValue)
-                {
-                    r.minServicePrice = mr;
-                    hasUnit = true;
-                }
-                else
-                {
-                    // Both has value, get minimum
-                    r.minServicePrice = Math.Min(mp.Value, mr.Value);
-                    if (r.minServicePrice == d.minServicePriceRate)
-                    {
-                        hasUnit = true;
-                    }
-                }
-                // Get Unit, if has one (because we choose price rate)
-                if (hasUnit)
-                {
-                    r.minServicePriceUnit = (string)db.QueryValue(sqlGetPriceRateUnit, userID, jobTitleID, r.minServicePrice.Value);
-                }
-                return r;
+                return FromDB(db.QuerySingle(@"
+                    DECLARE @userID AS int
+                    SET @userID = @0
+                    DECLARE @jobTitleID AS int
+                    SET @jobTitleID = @1
+                    DECLARE @LanguageID int                    
+                    SET @LanguageID = 1
+                    DECLARE @CountryID int
+                    SET @CountryID = 1
+                    
+                 ;WITH CTE AS
+                    (
+ 					SELECT 
+ 							MSP.ProviderUserID
+                            ,MSP.PositionID 
+                            ,MSP.LanguageID
+                            ,MSP.CountryID
+                            ,MSP.minServicePrice
+                            ,MSP.servicesCount
+                            ,MUP.PriceRateUnit
+                            ,MUP.minUnitRate
+                            ,MUP.UnitPackages
+                            ,CASE WHEN MUP.rn > 0 THEN MUP.rn ELSE 1 END as rn
+                            FROM 
+                        (SELECT 
+                            ProviderUserID
+                            ,PositionID
+                            ,LanguageID
+                            ,CountryID
+                            ,min(ProviderPackagePrice) as minServicePrice
+                            ,servicesCount=
+                            (SELECT count(*) 
+                            FROM ProviderPackage 
+                            WHERE ProviderPackage.Active = 1 
+                            AND ProviderUserID = @userID
+                            AND PositionID = @jobTitleID
+                            AND LanguageID = @LanguageID
+                            AND CountryID = @CountryID)
+                     FROM
+                            ProviderPackage
+                            WHERE 
+                            ProviderPackage.Active = 1 
+                            AND ProviderUserID = @userID
+                            AND PositionID = @jobTitleID
+                            AND LanguageID = @LanguageID
+                            AND CountryID = @CountryID
+                            AND ProviderPackage.PricingTypeID != 7
+
+                         GROUP BY
+                            ProviderUserID, PositionID, LanguageID, CountryID) MSP
+                            LEFT JOIN
+                            (
+  							SELECT 
+	                            ProviderUserID
+	                            ,PositionID
+	                            ,LanguageID
+	                            ,CountryID
+	                            ,PriceRateUnit
+	                            ,min(PriceRate) as minUnitRate
+	                            ,count(distinct ProviderPackageID) as UnitPackages
+	                            ,ROW_NUMBER() OVER (PARTITION BY ProviderUserID, PositionID, LanguageID, CountryID 
+	                    		ORDER BY 
+	                            count(distinct ProviderPackageID)
+	                    		 DESC) AS rn                     
+	                    	FROM
+                            ProviderPackage
+                            WHERE 
+                            ProviderPackage.Active = 1 
+                            AND ProviderUserID = @userID
+                            AND PositionID = @jobTitleID
+                            AND LanguageID = @LanguageID
+                            AND CountryID = @CountryID
+                            AND PriceRate is not null
+
+                         GROUP BY
+                            ProviderUserID, PositionID, LanguageID, CountryID, PriceRateUnit) as MUP
+                            ON
+                            MSP.ProviderUserID=MUP.ProviderUserID
+                            AND MSP.PositionID=MUP.PositionID
+                            AND MSP.LanguageID=MUP.LanguageID
+                            AND MSP.CountryID=MUP.CountryID
+                    )
+                    SELECT
+                    ProviderUserID as userID
+                    ,PositionID as jobTitleID
+                    ,servicesCount
+                    ,minServicePrice
+                    ,minUnitRate
+                    ,priceRateUnit
+                    ,CASE WHEN (minUnitRate > 0 AND minServicePrice > 0) AND minServicePrice <= minUnitRate THEN '$' + convert(varchar,  minServicePrice)
+                    WHEN (minUnitRate > 0 AND minServicePrice > 0) AND minUnitRate < minServicePrice THEN '$' + convert(varchar,  minUnitRate) + '/' + PriceRateUnit
+                    WHEN (minServicePrice > 0 AND minUnitRate is null) THEN '$' + convert(varchar,  minServicePrice)
+                    WHEN (minUnitRate > 0 AND minServicePrice <=0 ) THEN '$' + convert(varchar,  minUnitRate) + '/' + PriceRateUnit ELSE NULL END as minServiceValue
+                    FROM CTE
+                    WHERE rn = 1	
+                    ", userID, jobTitleID));
             }
         }
         #endregion
