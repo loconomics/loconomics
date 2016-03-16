@@ -46,6 +46,11 @@ function ViewModel(appModel) {
     //create an object named ServiceProfessionalSearchResult to hold the search results returned from the API
     this.jobTitleSearchResult = ko.observableArray();
     this.categorySearchResult = ko.observable();
+    //create a pure computed ko observable to change the background image when the categoryID changes
+    this.categoryBackgroundImage = ko.pureComputed(function(){
+        var id = this.categoryID();
+        return 'CategoryBackground-' + id;
+    },this); //add this so that the context is the current one (special ko syntax)
     
     this.loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
         this.isCategoryLoading(true);

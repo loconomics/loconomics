@@ -2,15 +2,16 @@
     Search Results component
 **/
 @import '../components/HomeNavBar.styl';
-@import '../terms.styl';
-@import '../home.styl';
-
 
 .SearchResultsPreview 
     background-color rgba(247, 247, 247, 1)
     display block
     margin-top 4px
     padding 0
+    position absolute
+    left 0
+    right 0
+    z-index 9999
 
     li 
       list-style none
@@ -94,7 +95,35 @@
     
     a
       text-decoration none
+
+  .CategoryBackground
+      padding-top $HomeNavBar-Height + 32px
+      background rgb(79, 184, 185) no-repeat top center / cover
      
+      &.CategoryBackground-1
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-2
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-3
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-4
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-5
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-6
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-7
+        background-image url('../images/home-header.jpg') 
+     
+      &.CategoryBackground-8
+        background-image url('../images/home-header.jpg') 
+             
 .ServiceProfessionalResult-summary
   width 69%
   float left
@@ -169,6 +198,3 @@
     font-size 16px
     font-weight bold
 
-.CategoryBackground
-    padding-top: $HomeNavBar-Height + 32px;
-    background: rgb(79, 184, 185) url('../images/home-header.jpg') no-repeat top center / cover;
