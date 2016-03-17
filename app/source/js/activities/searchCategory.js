@@ -28,9 +28,8 @@ A.prototype.show = function show(options) {
     var origLat = params[1] || '';
     var origLong = params[2] || '';
     var searchDistance = params[3] || '';
-    this.viewModel.loadCategoryData(categoryID, origLat, origLong, searchDistance);
-    this.viewModel.loadData(categoryID, origLat, origLong, searchDistance);
-};    
+    this.viewModel.load(categoryID, origLat, origLong, searchDistance);
+};
 
 function ViewModel(appModel) {
     this.isLoading = ko.observable(false);
@@ -49,10 +48,12 @@ function ViewModel(appModel) {
     //create a pure computed ko observable to change the background image when the categoryID changes
     this.categoryBackgroundImage = ko.pureComputed(function(){
         var id = this.categoryID();
-        return 'CategoryBackground-' + id;
-    },this); //add this so that the context is the current one (special ko syntax)
+        return id ? 'CategoryBackground-' + id : '';
+    }, this); //add this so that the context is the current one (special ko syntax)
     
-    this.loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
+    // PRIVATE load functions, that use parameters we will internally ensure are the same values
+    // as the observables we have for them
+    var loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
         this.isCategoryLoading(true);
         //Call the get rest API method for api/v1/en-US/search/categories/by-categoryID
         return appModel.rest.get('search/categories/' + categoryID, {
@@ -67,8 +68,8 @@ function ViewModel(appModel) {
         .catch(function(/*err*/) {
             this.isCategoryLoading(false);
         }.bind(this));
-    };
-    this.loadData = function(categoryID, origLat, origLong, searchDistance) {
+    }.bind(this);
+    var loadData = function(categoryID, origLat, origLong, searchDistance) {
         this.isLoading(true);
         //Call the get rest API method for api/v1/en-US/search/job-titles/by-category
         return appModel.rest.get('search/job-titles/by-category', {
@@ -84,6 +85,22 @@ function ViewModel(appModel) {
         .catch(function(/*err*/) {
             this.isLoading(false);
         }.bind(this));
+    }.bind(this);
+    // PUBLIC load function; the given parameters are stored in observables and used
+    // to perform all data loading tasks.
+    // @return Promise
+    this.load = function(categoryID, origLat, origLong, searchDistance) {
+        // Update observables with given data, so them reflects the same data we are loading
+        this.categoryID(categoryID);
+        this.origLat(origLat);
+        this.origLong(origLong);
+        this.searchDistance(searchDistance);
+        // Call specific load functions.
+        // The returned promise fulfilles when both are completed
+        return Promise.all([
+            loadCategoryData(categoryID, origLat, origLong, searchDistance),
+            loadData(categoryID, origLat, origLong, searchDistance)
+        ]);
     };
 }
 

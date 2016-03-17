@@ -17,7 +17,7 @@
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="categories-home">
             <div data-bind="with: categorySearchResult">
-                <div class="CategoryBackground">
+                <div class="CategoryBackground" data-bind="css: $root.categoryBackgroundImage">
                     <div class="CategoryBackground-text">
                         <h1>Services for your <span data-bind="text: categoryName"></span></h1>
                         <p><span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> near you)</span>
