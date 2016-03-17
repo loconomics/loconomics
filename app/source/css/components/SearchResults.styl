@@ -1,5 +1,8 @@
 /**
     Search Results component
+    
+        background linear-gradient(rgba(255, 103, 101, .8), transparent 90%), 
+               $brand-secondary  url('../images/self-header.jpg') no-repeat center / cover
 **/
 @import '../components/HomeNavBar.styl';
 
@@ -60,7 +63,7 @@
     
 .SearchResults
   background-color $gray-background
-  
+
   h3
     margin-top 10px
     margin-bottom 5px
@@ -96,34 +99,136 @@
     a
       text-decoration none
 
-  .CategoryBackground
-      padding-top $HomeNavBar-Height + 32px
-      background rgb(79, 184, 185) no-repeat top center / cover
-     
-      &.CategoryBackground-1
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-2
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-3
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-4
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-5
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-6
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-7
-        background-image url('../images/home-header.jpg') 
-     
-      &.CategoryBackground-8
-        background-image url('../images/home-header.jpg') 
-             
+  .CategoryBackground 
+    padding-top 15px
+    height 100px
+    position relative
+    background $brand-secondary no-repeat center / cover
+    background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+      
+    @media $mediaMinSm {
+        height: 300px;
+    }
+    
+    &.CategoryBackground-1 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/home-header.jpg');
+    }
+    
+    &.CategoryBackground-2 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+
+    &.CategoryBackground-3 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+      
+    &.CategoryBackground-4 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+
+    &.CategoryBackground-5 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+
+    &.CategoryBackground-6 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+
+    &.CategoryBackground-7 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+
+    &.CategoryBackground-8 {
+      background-image:  
+      linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+      ),
+      url('../images/self-header.jpg');
+    }
+    
+    .CategoryBackground-text {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    h1 {
+      color: White;
+      font-size: 38px;
+      font-weight: bold;
+      margin: 0.4em auto;
+      text-align: center;
+
+      @media $mediaMinSm {
+        font-size: 44px;
+        }
+    }
+  
+    h2 {
+      display: none;
+      font-size: 24px;
+      color: White;
+      font-size: 24px;
+      margin: 0.5em auto;
+      text-align: center;   
+      
+      @media $mediaMinSm {
+        display: inherit;
+        }
+    }
+    
+    p {
+      font-size: 18px;
+      color: White;
+      margin: 0.5em auto;
+      text-align: center;
+      display: none;
+    
+      @media $mediaMinSm {
+        display: inherit;
+        }        
+    }
 .ServiceProfessionalResult-summary
   width 69%
   float left
