@@ -2,38 +2,105 @@
     PageMenu component for secondary navigation
 **/
 
-.PageMenu
-    display block
-    position relative
-    width 100%
-    padding 0px
-    text-align center
-    line-height 19px !important
-    background-color $brand-primary 
-    a
-        color #FFF
-        text-decoration none
-    ul
-        display block
-        width 100% !important
-        margin 0 auto !important
-        list-style none
+.PageMenu {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0px;
+  text-align: center;
+  line-height: 19px !important;
+  background-color: $brand-primary;
+    
+  .PageMenu-list {
+    display: none;    
+    
+    a {
+      color: #FFF;
+      text-decoration: none;
+    }
+      
+    ul {
+      display: block;
+      width: 100% !important;
+      margin: 0 auto !important;
+      list-style: none;
 
-        li
-            display inline
-            margin 0px !important
+      li {
+        display: inline;
+        margin: 0px !important;
 
-            a
-              color #FFF
-              display inline-block
-              padding 17px 15px
-              margin 0px -3px 0px -3px
-              font-size 15px
+        a {
+          color: #FFF;
+          display: inline-block;
+          padding: 17px 15px;
+          margin: 0px -3px 0px -3px;
+          font-size: 15px;
+        }
 
-              &:hover
-                border-bottom 4px solid
-                padding-bottom 13px !important
-              &.active
-                  a
-                    border-bottom 4px solid
-                    padding-bottom 13px !important
+          &:hover {
+            border-bottom: 4px solid white;
+            padding-bottom: 13px !important;
+          }
+            
+          &.active {
+            a {
+              border-bottom: 4px solid;
+              padding-bottom: 13px !important;
+            }  
+          } 
+       } 
+    }
+    
+    @media $mediaMinXs {
+      display: inherit;
+    }  
+  }
+  
+  .btn-group {
+    @media $mediaMinXs {
+      display: none;
+    }        
+  }
+  
+  .btn-group {
+    padding: 5px; 
+    width: 66.67%;
+  
+    .btn {
+      float: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .dropdown-toggle {
+      font-size: 20px;
+      color: white;
+      font-weight: normal;
+      background-color: $brand-primary;
+      border: 2px solid white;
+      margin: auto;
+    }
+
+    .dropdown-menu {
+      float: left;
+      position: absolute;
+      margin-top: 0px;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      background-color: #fff;
+      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+      width: 100%;
+
+      > li {        
+        text-align: center;
+
+        > a {
+          white-space: normal;
+          font-size: inherit;
+        }
+      }
+    }
+  }
+}

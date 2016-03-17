@@ -29,6 +29,9 @@ A.prototype.show = function show(options) {
     var origLong = params[2] || '';
     var searchDistance = params[3] || '';
     this.viewModel.load(categoryID, origLat, origLong, searchDistance);
+//    var tabName = categoryID + '/' + origLat + '/' + origLong + '/' + searchDistance;
+//    var tab = this.$activity.find('[href="/searchCategory/' + tabName + '"]');
+//    if (tab.length) tab.tab('show');
 };
 
 function ViewModel(appModel) {

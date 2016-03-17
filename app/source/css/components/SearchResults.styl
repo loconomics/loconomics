@@ -99,11 +99,11 @@
     a
       text-decoration none
 
-  .CategoryBackground 
-    padding-top 15px
-    height 100px
-    position relative
-    background $brand-secondary no-repeat center / cover
+  .CategoryBackground {
+    padding-top: 10px;
+    height: 120px;
+    position: relative;
+    background: $brand-secondary no-repeat center / cover;
     background-image:  
       linear-gradient(
         rgba(0, 0, 0, 0.5),
@@ -114,7 +114,7 @@
     @media $mediaMinSm {
         height: 300px;
     }
-    
+  
     &.CategoryBackground-1 {
       background-image:  
       linear-gradient(
@@ -188,47 +188,52 @@
     }
     
     .CategoryBackground-text {
+      width: 80%;
+      height: auto;
+      overflow: auto;
+      margin: auto;
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    
-    h1 {
-      color: White;
-      font-size: 38px;
-      font-weight: bold;
-      margin: 0.4em auto;
-      text-align: center;
+      top: 0; 
+      left: 0; 
+      bottom: 0; 
+      right: 0;
 
-      @media $mediaMinSm {
-        font-size: 44px;
+      h1 {
+        color: White;
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+
+        @media $mediaMinSm {
+          font-size: 44px;
         }
-    }
-  
-    h2 {
-      display: none;
-      font-size: 24px;
-      color: White;
-      font-size: 24px;
-      margin: 0.5em auto;
-      text-align: center;   
-      
-      @media $mediaMinSm {
-        display: inherit;
+      }
+
+      h2 {
+        display: none;
+        font-size: 24px;
+        color: White;
+        font-size: 24px;
+        text-align: center;   
+
+        @media $mediaMinSm {
+          display: inherit;
         }
-    }
-    
-    p {
-      font-size: 18px;
-      color: White;
-      margin: 0.5em auto;
-      text-align: center;
-      display: none;
-    
-      @media $mediaMinSm {
-        display: inherit;
+      }
+
+      p {
+        font-size: 18px;
+        color: White;
+        text-align: center;
+        display: none;
+
+        @media $mediaMinSm {
+          display: inherit;
         }        
+      }
     }
+  }
+    
 .ServiceProfessionalResult-summary
   width 69%
   float left
