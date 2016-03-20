@@ -332,3 +332,4 @@ function ClientAppointmentCardVM(params) {
 }
 
 module.exports = ClientAppointmentCardVM;
+
