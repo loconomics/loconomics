@@ -96,11 +96,6 @@ exports.registerAll = function(app) {
         template: { element: 'appointment-card-template' },
         viewModel: require('./viewmodels/AppointmentCard')
     });
-    /// client-appointment-card
-    ko.components.register('app-client-appointment-card', {
-        template: { element: 'client-appointment-card-template' },
-        viewModel: require('./viewmodels/ClientAppointmentCard')
-    });
     
     /// job titles list
     ko.components.register('app-job-titles-list', {

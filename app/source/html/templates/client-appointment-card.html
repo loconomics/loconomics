@@ -1,5 +1,5 @@
 <script type="text/html" id="client-appointment-card-template">
-    <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
+    <div class="Card AppointmentCard" data-bind="css: { 'in-edit': isEditMode, 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
 
         <div class="Card-title">
             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
@@ -7,66 +7,91 @@
         
         <ul class="TilesList TilesList--opendEnd">
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
+                <button type="button" class="InfoTile" data-bind="click: isEditMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
-                    <div class="Tile-content">
-                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                        <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
-                        <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
+                    <div class="Tile-content" data-bind="visible: !booking.instantBooking()">
+                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime()">
+                            <strong>1st choice: </strong>
+                                <span data-bind="text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></span>
+                        </div>
+                        <div data-bind="visible: booking.alternativeDate1() && booking.alternativeDate1().startTime()">
+                            <strong>2nd choice: </strong>
+                                <span data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking.alternativeDate1() && booking.alternativeDate1().displayedTimeRange()"></span>
+                        </div>
+                        <div data-bind="visible: booking.alternativeDate2() && booking.alternativeDate2().startTime()">
+                            <strong>3rd choice: </strong>
+                                <span data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking.alternativeDate2() && booking.alternativeDate2().displayedTimeRange()"></span>
+                        </div>
+                        <p data-bind="visible: !hasSomeDateSelected()" class="text-muted">Select preferred times</p>
+                    </div>
+                    <div class="Tile-content" data-bind="visible: booking.instantBooking">
+                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                        <div data-bind="visible: booking.serviceDate() && booking.serviceDate().startTime(), text: booking.serviceDate() && booking.serviceDate().displayedTimeRange()"></div>
+                        <p data-bind="visible: !(booking.serviceDate() && booking.serviceDate().startTime())" class="text-muted">Select date/time</p>
                     </div>
                 </button>
             </li>
-            <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && pickLocation">
+            <li data-bind="if: !isPhoneServiceOnly()">
+                <button type="button" class="InfoTile" data-bind="click: isEditMode() && pickLocation">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-location-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <p data-bind="visible: item().addressSummary, text: item().addressSummary"></p>
-                        <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().addressSummary()" class="text-muted">Select/Add location</p>
+                        <p data-bind="visible: booking.serviceAddress(), text: booking.serviceAddress() && booking.serviceAddress().singleLine()"></p>
+                        <p data-bind="visible: canEditLocation() && isEditMode() && !(booking.serviceAddress() && booking.serviceAddress().singleLine())" class="text-muted">Select/Add location</p>
                     </div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && pickService">
+                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && isEditMode() && pickService">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-ios-pricetags-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <p data-bind="visible: item().servicesSummary(), text: item().servicesSummary()"></p>
-                        <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().servicesSummary()" class="text-muted">Select/Add service(s)</p>
+                        <p data-bind="visible: booking.pricingSummary() && booking.pricingSummary().servicesSummary(), text: booking.pricingSummary() && booking.pricingSummary().servicesSummary()"></p>
+                        <p data-bind="visible: canChangePricing() && isEditMode() && !(booking.pricingSummary() && booking.pricingSummary().servicesSummary())" class="text-muted">Select/Add service(s)</p>
                     </div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && changePrice">
+                <button type="button" class="InfoTile">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-social-usd"></span>
                     </div>
                     <div class="Tile-content">
-                        <p data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></p>
+                        <p data-bind="text: booking.pricingSummary() && booking.pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking.pricingSummary() && booking.pricingSummary().totalPrice())}"></p>
+                    </div>
+                </button>
+            </li>
+            <li data-bind="if: supportsGratuity() && booking.paymentEnabled()">
+                <button type="button" class="InfoTile" data-bind="click: isEditMode() && pickService">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-cash"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <p><span data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"></span> <span>gratuity</span></p>
                     </div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'specialRequests')">
+                <button type="button" class="InfoTile" data-bind="click: isEditMode() && pickSpecialRequests">
                     <div class="Tile-icon" aria-hidden="true">
                         <span class="fa ion ion-edit"></span>
                     </div>
                     <div class="Tile-content">
-                        <p data-bind="visible: item().specialRequests(), text: item().specialRequests"></p>
-                        <p data-bind="visible: !item().specialRequests()" class="text-muted">Add notes to <span>TODO</span></p>
+                        <p data-bind="visible: booking.specialRequests(), text: booking.specialRequests()"></p>
+                        <p data-bind="visible: isEditMode() && !booking.specialRequests(), text: specialRequestsPlaceholder" class="text-muted"></p>
                     </div>
                 </button>
             </li>
         </ul>
         
-        <div class="AppointmentCard-actions" data-bind="visible: editMode()">
+        <div class="AppointmentCard-actions" data-bind="visible: isEditMode()">
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
-            <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
-            <button type="button" class="btn btn-danger btn-block" data-bind="visible: canBeCancelledByClient(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="click: confirmCancel, disable: isLocked">Don't save changes</button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="visible: booking.canBeCancelledByClient(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
         </div>
     </div>
 </script>
