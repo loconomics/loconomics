@@ -16,18 +16,34 @@ function PricingSummaryVM(values) {
     Model(this);
 
     this.model.defProperties({
+        // Fields for use when loading data
+        pricingSummaryID: null,
+        pricingSummaryRevision: null,
+        createdDate: null,
+        updatedDate: null,
+        // User Data
         details: {
             isArray: true,
             Model: PricingSummaryDetail
         },
         gratuityPercentage: 0,
         gratuityAmount: 0,
+        // Data from server
         firstTimeServiceFeeFixed: 0,
         firstTimeServiceFeePercentage: 0,
         firstTimeServiceFeeMaximum: 0,
-        firstTimeServiceFeeMinimum: 0
+        firstTimeServiceFeeMinimum: 0,
+        paymentProcessingFeePercentage: 0,
+        paymentProcessingFeeFixed: 0,
+        
+        // Server calculated only
+        serviceFeeAmount: 0,
+        cancellationFeeCharged: null,
+        cancellationDate: null
     }, values);
 
+    /// Locally calculated fields (they have a persistent equivalent on server)
+    
     this.subtotalPrice = ko.pureComputed(function() {
         return this.details().reduce(function(total, item) {
             total += item.price();
@@ -35,7 +51,7 @@ function PricingSummaryVM(values) {
         }, 0);
     }, this);
     
-    this.fees = ko.pureComputed(function() {
+    this.clientServiceFeePrice = ko.pureComputed(function() {
         var t = +this.subtotalPrice(),
             f = +this.firstTimeServiceFeeFixed(),
             p = +this.firstTimeServiceFeePercentage(),
@@ -56,11 +72,27 @@ function PricingSummaryVM(values) {
     }, this);
 
     this.totalPrice = ko.pureComputed(function() {
-        return this.subtotalPrice() + this.fees() + this.gratuity();
+        return this.subtotalPrice() + this.clientServiceFeePrice() + this.gratuity();
+    }, this);
+
+    this.serviceDurationMinutes = ko.pureComputed(function() {
+        return this.details().reduce(function(total, item) {
+            total += item.serviceDurationMinutes();
+            return total;
+        }, 0);
     }, this);
     
+    this.firstSessionDurationMinutes = ko.pureComputed(function() {
+        return this.details().reduce(function(total, item) {
+            total += item.firstSessionDurationMinutes();
+            return total;
+        }, 0);
+    }, this);
+    
+    /// Useful computed observables
+    
     this.feesMessage = ko.pureComputed(function() {
-        var f = numeral(this.fees()).format('$#,##0.00');
+        var f = numeral(this.clientServiceFeePrice()).format('$#,##0.00');
         return '*The first-time __fees__ booking fee applies only to the very first time you connect with a professional and helps cover costs of running the marketplace. There are no fees for subsequent bookings with this professional.'.replace(/__fees__/g, f);
     }, this);
 
@@ -80,7 +112,7 @@ function PricingSummaryVM(values) {
             }));
         }
         
-        var fees = this.fees();
+        var fees = this.clientServiceFeePrice();
         if (fees > 0) {
             var feesLabel = 'First-time booking fee*';
             items.push(new PricingSummaryDetail({
@@ -90,20 +122,6 @@ function PricingSummaryVM(values) {
         }
 
         return items;
-    }, this);
-    
-    this.serviceDurationMinutes = ko.pureComputed(function() {
-        return this.details().reduce(function(total, item) {
-            total += item.serviceDurationMinutes();
-            return total;
-        }, 0);
-    }, this);
-    
-    this.firstSessionDurationMinutes = ko.pureComputed(function() {
-        return this.details().reduce(function(total, item) {
-            total += item.firstSessionDurationMinutes();
-            return total;
-        }, 0);
     }, this);
     
     var duration2Language = require('../utils/duration2Language');
@@ -116,10 +134,12 @@ function PricingSummaryVM(values) {
         return duration2Language({ minutes: this.firstSessionDurationMinutes() });
     }, this);
     
+    /// Export data
+    
     this.toPricingSummary = function() {
         var plain = this.model.toPlainObject(true);
         plain.subtotalPrice = this.subtotalPrice();
-        plain.clientServiceFeePrice = this.fees();
+        plain.clientServiceFeePrice = this.clientServiceFeePrice();
         plain.totalPrice = this.totalPrice();
         plain.serviceDurationMinutes = this.serviceDurationMinutes();
         plain.firstSessionDurationMinutes = this.firstSessionDurationMinutes();

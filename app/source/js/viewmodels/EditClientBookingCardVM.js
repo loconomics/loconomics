@@ -30,6 +30,17 @@ function EditClientBookingCardVM(app) {
     this.canEditLocation = ko.observable(false);
     this.canChangePricing = ko.observable(false);
     
+    ///
+    /// Reset
+    var baseReset = this.reset;
+    this.reset = function reset() {
+        baseReset();
+
+        this.editedVersion(null);
+
+        this.isLoadingBooking(false);
+    }.bind(this);
+    
     /// Text helpers
     this.submitText = ko.pureComputed(function() {
         var v = this.editedVersion();

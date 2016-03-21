@@ -248,7 +248,7 @@ exports.create = function create(appModel) {
     
     api.setClientBooking = function setClientBooking(booking) {
         // TODO
-        return booking;
+        return Promise.resolve(booking);
     };
 
     return api;

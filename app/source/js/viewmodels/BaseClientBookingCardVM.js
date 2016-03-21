@@ -106,7 +106,8 @@ function BaseClientBookingCardVM(app) {
 
     this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
     this.gratuityAmount.subscribe(this.summary.gratuityAmount);
-    ko.computed(function() {
+
+    ko.pureComputed(function() {
         var services = this.serviceProfessionalServices.selectedServices();
         this.summary.details(services.map(function(service) {
             return PricingSummaryDetail.fromServiceProfessionalService(service);
