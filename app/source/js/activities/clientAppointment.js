@@ -13,8 +13,14 @@ var A = Activity.extend(function ClientAppointmentActivity() {
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    // TODO Customize navbar per design
-    this.navBar = Activity.createSectionNavBar('Upcoming');
+    this.navBar = new Activity.NavBar({
+        title: 'Upcoming',
+        leftAction: Activity.NavAction.goBack.model.clone(),
+        rightAction: {
+            text: 'Edit',
+            handler: this.viewModel.currentItem.edit.bind(this.viewModel)
+        }
+    });
 });
 
 exports.init = A.init;
