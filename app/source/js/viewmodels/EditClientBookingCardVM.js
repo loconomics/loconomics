@@ -57,16 +57,22 @@ function EditClientBookingCardVM(app) {
     };
     
     this.confirmCancel = function() {
-        app.modals.confirm({
-            title: 'Cancel',
-            message: 'Are you sure?',
-            yes: 'Yes',
-            no: 'No'
-        })
-        .then(function() {
-            // Confirmed cancellation:
+        var v = this.editedVersion();
+        if (v && v.areDifferent()) {
+            app.modals.confirm({
+                title: 'Cancel',
+                message: 'Are you sure?',
+                yes: 'Yes',
+                no: 'No'
+            })
+            .then(function() {
+                // Confirmed cancellation:
+                this.cancel();
+            }.bind(this));
+        }
+        else {
             this.cancel();
-        }.bind(this));
+        }
     };
     this.confirmCancelBookingByClient = function() {
         app.modals.confirm({

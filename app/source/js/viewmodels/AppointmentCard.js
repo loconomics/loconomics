@@ -209,16 +209,22 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
     
     this.confirmCancel = function confirmCancel() {
-        this.app.modals.confirm({
-            title: 'Cancel',
-            message: 'Are you sure?',
-            yes: 'Yes',
-            no: 'No'
-        })
-        .then(function() {
-            // Confirmed cancellation:
+        var v = this.editedVersion();
+        if (v && v.areDifferent()) {
+            this.app.modals.confirm({
+                title: 'Cancel',
+                message: 'Are you sure?',
+                yes: 'Yes',
+                no: 'No'
+            })
+            .then(function() {
+                // Confirmed cancellation:
+                this.cancel();
+            }.bind(this));
+        }
+        else {
             this.cancel();
-        }.bind(this));
+        }
     }.bind(this);
 
     // Delete Event
