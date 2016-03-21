@@ -94,7 +94,7 @@ function EditClientBookingCardVM(app) {
         this.isLoadingBooking(true);
         
         app.model.bookings.getBooking(bookingID).then(function(bookingData) {
-            this.booking.model.updateWith(bookingData);
+            this.booking.model.updateWith(bookingData, true);
             this.summary.firstTimeServiceFeeFixed(bookingData.pricingSummary.firstTimeServiceFeeFixed);
             this.summary.firstTimeServiceFeePercentage(bookingData.pricingSummary.firstTimeServiceFeePercentage);
             this.summary.firstTimeServiceFeeMaximum(bookingData.pricingSummary.firstTimeServiceFeeMaximum);

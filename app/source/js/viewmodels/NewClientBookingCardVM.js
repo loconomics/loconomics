@@ -322,7 +322,7 @@ function NewClientBookingCardVM(app) {
             jobTitleID: jobTitleID,
             bookCode: bookCode
         }).then(function(bookingData) {
-            this.booking.model.updateWith(bookingData);
+            this.booking.model.updateWith(bookingData, true);
             if (this.booking.paymentEnabled()) {
                 var ipm = new InputPaymentMethod();
                 ipm.billingAddress(new Address());
@@ -373,7 +373,7 @@ function NewClientBookingCardVM(app) {
         // success promise:
         var success = function(serverBooking) {
             this.isSaving(false);
-            this.booking.model.updateWith(serverBooking);
+            this.booking.model.updateWith(serverBooking, true);
             
             // Forget availability cache for this professional, since is not needed
             // and any new booking with it needs a refresh to avoid problems. See #905
