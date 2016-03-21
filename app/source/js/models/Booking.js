@@ -129,13 +129,10 @@ function Booking(values) {
         return moment(this.serviceDate().endTime()).locale('en-US-LC').format('LT');
     }, this);
     
+    // TODO Can/must be removed this shortcut?
     this.servicesSummary = ko.pureComputed(function() {
-        return this.pricingSummary().details()
-        .map(function(service) {
-            return service.serviceName();
-        }).join(', ');
-    }, this)
-    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+        return this.pricingSummary().servicesSummary();
+    }, this);
 }
 
 module.exports = Booking;
