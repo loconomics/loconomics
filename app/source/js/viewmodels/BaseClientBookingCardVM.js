@@ -198,7 +198,7 @@ function BaseClientBookingCardVM(app) {
     var setAddress = function(add) {
         if (!add || !this.booking()) return;
         this.booking().serviceAddress(add);
-        if (this.isRestoring && !this.isRestoring())
+        if (!this.isRestoring || !this.isRestoring())
             this.nextStep();
     }.bind(this);
     // IMPORTANT: selection from one list must deselect from the other one
@@ -253,6 +253,12 @@ function BaseClientBookingCardVM(app) {
     
     ///
     /// Date time picker(s)
+    /* It returns true if user can only choose one time, that is
+        on instant bookings or non-incomplete/non-request bookings
+    */
+    this.singleTimeOption = ko.pureComputed(function() {
+        return this.originalBooking().instantBooking() || !(this.originalBooking().isRequest() || this.originalBooking().isIncomplete());
+    }, this);
     ko.computed(function triggerSelectedDatetime() {
         if (!this.booking()) return;
         var v = this.serviceStartDatePickerView(),
@@ -270,8 +276,7 @@ function BaseClientBookingCardVM(app) {
             });
 
             this.timeFieldToBeSelected('');
-            // Support for progress (is optional, usually only on 'new')
-            if (this.booking().instantBooking() && this.progress)
+            if (this.singleTimeOption())
                 this.progress.next();
         }
     }, this);
@@ -355,6 +360,20 @@ function BaseClientBookingCardVM(app) {
     this.isAtLocation = this.progress.observeStep('selectLocation');
     this.isAtPayment = this.progress.observeStep('payment');
     this.isAtConfirm = this.progress.observeStep('confirm');
+    // Edition links
+    this.pickDateTime = function() {
+        var single = this.singleTimeOption();
+        this.progress.go(single ? 'selectTime' : 'selectTimes');
+    }.bind(this);
+    this.pickLocation = function() {
+        this.progress.go('selectLocation');
+    }.bind(this);
+    this.pickServices = function() {
+        this.progress.go('services');
+    }.bind(this);
+    this.pickPayment = function() {
+        this.progress.go('payment');
+    }.bind(this);
     
     ///
     /// Keeps the progress stepsList updated depending on the data
@@ -367,7 +386,7 @@ function BaseClientBookingCardVM(app) {
             if (!this.isPhoneServiceOnly())
                 list.push('selectLocation');
 
-            list.push((this.booking().instantBooking() || !this.booking().isRequest()) ? 'selectTime' : 'selectTimes');
+            list.push(this.singleTimeOption() ? 'selectTime' : 'selectTimes');
 
             if (this.booking().paymentEnabled())
                 list.push('payment');

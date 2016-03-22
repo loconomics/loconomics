@@ -41,7 +41,7 @@ function BookingProgress(values) {
     }, this);
     this.reset = function() {
         maxStepReachedEver(-1);
-        this.step(-1);
+        this.currentStep('');
         return this;
     };
 }
@@ -62,17 +62,16 @@ BookingProgress.prototype.next = function() {
 
 BookingProgress.prototype.observeStep = function(stepName) {
     return ko.pureComputed(function() {
-        return this.isStep(stepName);
+        return this.currentStep() === stepName;
     }, this);
 };
 
 BookingProgress.prototype.isStep = function(stepName) {
-    return this.stepsList()[this.step()] === stepName;
+    return this.currentStep() === stepName;
 };
 
 BookingProgress.prototype.go = function(stepName) {
-    var step = this.stepsList().indexOf(stepName);
-    this.step(step > -1 ? step : 0);
+    this.currentStep(stepName);
     return this;
 };
 

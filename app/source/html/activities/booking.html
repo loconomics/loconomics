@@ -628,7 +628,7 @@
                             <li></li>
                             <li>
                                 <button type="button" class="InfoTile"
-                                 data-bind="css: { InfoTile: booking().instantBooking(), InfoTile3L: !booking().instantBooking() }, click: progress.go.bind($data, 'selectTimes')">
+                                 data-bind="css: { InfoTile: booking().instantBooking(), InfoTile3L: !booking().instantBooking() }, click: pickDateTime">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-ios-clock-outline"></span>
                                     </div>
@@ -655,7 +655,7 @@
                                 </button>
                             </li>
                             <li data-bind="if: !isPhoneServiceOnly()">
-                                <button type="button" class="InfoTile" data-bind="click: progress.go.bind($data, 'selectLocation')">
+                                <button type="button" class="InfoTile" data-bind="click: pickLocation">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-ios-location-outline"></span>
                                     </div>
@@ -665,7 +665,7 @@
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="InfoTile" data-bind="click: progress.go.bind($data, 'services')">
+                                <button type="button" class="InfoTile" data-bind="click: pickServices">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-ios-pricetags-outline"></span>
                                     </div>
@@ -683,7 +683,7 @@
                                 </div>
                             </li>
                             <li data-bind="if: supportsGratuity() && booking().paymentEnabled()">
-                                <button type="button" class="InfoTile" data-bind="click: progress.go.bind($data, 'services')">
+                                <button type="button" class="InfoTile" data-bind="click: pickServices">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-cash"></span>
                                     </div>
@@ -693,7 +693,7 @@
                                 </button>
                             </li>
                             <li data-bind="if: booking().paymentEnabled()">
-                                <button type="button" class="InfoTile" data-bind="click: progress.go.bind($data, 'payment')">
+                                <button type="button" class="InfoTile" data-bind="click: pickPayment">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-card"></span>
                                     </div>

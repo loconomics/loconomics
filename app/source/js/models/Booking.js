@@ -112,6 +112,10 @@ function Booking(values) {
         return this.bookingStatusID() === Booking.status.request;
     }, this);
     
+    this.isIncomplete = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.incomplete;
+    }, this);
+    
     this.isServiceProfessionalBooking = ko.pureComputed(function() {
         return this.bookingTypeID() === Booking.type.serviceProfessionalBooking;
     }, this);

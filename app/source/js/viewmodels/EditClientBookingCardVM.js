@@ -57,17 +57,6 @@ function EditClientBookingCardVM(app) {
         this.progress.go('confirm');
     }.bind(this);
     
-    this.pickDateTime = function() {
-        var single = this.originalBooking().instantBooking() || !this.originalBooking().isRequest();
-        this.progress.go(single ? 'selectTime' : 'selectTimes');
-    };
-    this.pickLocation = function() {
-        this.progress.go('selectLocation');
-    };
-    this.pickService = function() {
-        this.progress.go('services');
-    };
-    
     this.confirmCancel = function() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
