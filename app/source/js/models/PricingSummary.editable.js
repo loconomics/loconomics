@@ -155,12 +155,11 @@ PricingSummary.editable = function(obj) {
     **/
     pricingSummary.connectToSelectableServicesView = function(serviceProfessionalServices) {
         // Automatic update
-        ko.computed(function() {
-            var services = serviceProfessionalServices.selectedServices();
+        serviceProfessionalServices.selectedServices.subscribe(function(services) {
             this.details(services.map(function(service) {
                 return PricingSummaryDetail.fromServiceProfessionalService(service);
             }));
-        }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+        }, this);
     };
 };
 

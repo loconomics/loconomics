@@ -47,12 +47,6 @@ Booking.editable = function(obj) {
         list of services and selected ones changes.
     **/
     booking.connectToSelectableServicesView = function(serviceProfessionalServices) {
-//        // Sync: Automatic updates between dependent models:
-//        this.jobTitleID.subscribe(serviceProfessionalServices.jobTitleID);
-//        this.serviceProfessionalUserID.subscribe(serviceProfessionalServices.serviceProfessionalID);
-//        // First sync forced
-//        serviceProfessionalServices.jobTitleID(this.jobTitleID());
-//        serviceProfessionalServices.serviceProfessionalID(this.serviceProfessionalUserID());
         // Connect pricing:
         this.pricingSummary().connectToSelectableServicesView(serviceProfessionalServices);
     };

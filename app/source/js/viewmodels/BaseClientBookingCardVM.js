@@ -123,7 +123,6 @@ function BaseClientBookingCardVM(app) {
         // Start loading things that are needed right now
         // there are saved pricing details (booking selected services), we need to load professional services
         if (version.version.pricingSummary().details().length) {
-            // TODO PRESET SERVICES OR SET THEM WHEN LOADED???
             this.loadServices();
         }
         // there is a saved address, load service addresses
@@ -180,7 +179,7 @@ function BaseClientBookingCardVM(app) {
     var setAddress = function(add) {
         if (!add || !this.booking()) return;
         this.booking().serviceAddress(add);
-        if (!this.isRestoring())
+        if (this.nextStep && !this.isRestoring())
             this.nextStep();
     }.bind(this);
     // IMPORTANT: selection from one list must deselect from the other one
@@ -248,7 +247,7 @@ function BaseClientBookingCardVM(app) {
                 startTime: dt
             }));
             this.booking()[field]().duration({
-                minutes: this.booking().pricingSummary.firstSessionDurationMinutes()
+                minutes: this.booking().pricingSummary().firstSessionDurationMinutes()
             });
 
             this.timeFieldToBeSelected('');
@@ -323,10 +322,23 @@ module.exports = BaseClientBookingCardVM;
 
 BaseClientBookingCardVM.prototype.loadServices = function() {
     var b = this.booking();
-    return this.serviceProfessionalServices.loadData(b.serviceProfessionalID(), b.jobTitleID());
+    this.serviceProfessionalServices.preSelectedServices(this.booking().pricingSummary().details().map(function(s) {
+        return s.model.toPlainObject();
+    }));
+    var spid = b.serviceProfessionalUserID();
+    var jid = b.jobTitleID();
+    if (this.serviceProfessionalServices.serviceProfessionalID() !== spid ||
+        this.serviceProfessionalServices.jobTitleID() !== jid) {
+        return this.serviceProfessionalServices.loadData(spid, jid);
+    }
 };
 
 BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
+    // Preselect current, if any
+    var add = this.booking().serviceAddress();
+    if (add && add.addressID()) {
+        this.serviceAddresses.selectedAddress(add);
+    }
     // Load remote addresses for provider and jobtitle, reset first
     this.serviceAddresses.sourceAddresses([]);
     this.isLoadingServiceAddresses(true);
