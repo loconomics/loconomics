@@ -148,6 +148,66 @@
                 </div>
             </div>
         
+            <div class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                <div data-bind="visible: !addressEditorOpened()">
+                    <h1 data-bind="visible: serviceAddresses.hasAddresses" class="SectionTitle">Select one of <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations</h1>
+                    <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                    <h1 data-bind="visible: clientAddresses.hasAddresses" class="SectionTitle">Select one of your locations</h1>
+                    <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                    <div class="Box-sm" data-bind="visible: hasServiceArea">
+                        <h1 class="SectionTitle">Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</h1>
+                        <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
+                            <li><button type="button" class="ItemAddonTile" data-bind="click: $parent.addAddress">
+                                <i class="Tile-marker" aria-hidden="true"></i>
+                                <div class="Tile-content">
+                                    <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
+                                </div>
+                                <div class="Tile-addon" aria-hidden="true">
+                                    <span class="fa fa-xl ion ion-ios-plus-outline" aria-hidden="true"></span>
+                                </div>
+                            </button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div data-bind="visible: addressEditorOpened(), with: booking().serviceAddress">
+                    <h1 class="SectionTitle">Add your location details</h1>
+                    <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
+                        <div class="form-group" data-bind="css: { 'has-error': $parent.errorMessages.postalCode() }">
+                            <input type="number" class="form-control"
+                                 placeholder="Zip code" aria-label="Zip code"
+                                 data-bind="value: postalCode, disable: $parent.isLocked,
+                                            popover: { content: $parent.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                        </div>
+                        <div class="form-group">
+                            <p class="form-control-static">
+                                <span data-bind="visible: city() || stateProvinceCode()">
+                                    <span data-bind="text: city"></span>, 
+                                    <span data-bind="text: stateProvinceCode"></span>
+                                </span>
+                                <!-- White space to reserve space -->
+                                &nbsp;
+                            </p>
+                        </div>
+                        <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
+                        <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Save as:</span>
+                                <input type="text" class="form-control" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="Location name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
+                            <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
                 <ul class="TilesList TilesList--opendEnd">
                     <li>
