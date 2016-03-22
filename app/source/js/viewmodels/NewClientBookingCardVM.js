@@ -4,21 +4,10 @@ var ko = require('knockout');
 var Booking = require('../models/Booking');
 var BaseClientBookingCardVM = require('../viewmodels/BaseClientBookingCardVM');
 var InputPaymentMethod = require('../models/InputPaymentMethod');
-var BookingProgress = require('../viewmodels/BookingProgress');
 var SignupVM = require('../viewmodels/Signup');
 var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 
-// L18N
-// List of all possible steps by name providing the language for the UI
-var stepsLabels = {
-    services: 'Services',
-    selectLocation: 'Select a location',
-    selectTimes: 'Select preferred times',
-    selectTime: 'Select the time',
-    payment: 'Payment',
-    confirm: 'Confirm'
-};
 
 // Functions to manage the lastBooking info, for save/restore state feature
 // IMPORTANT: initially used localforage, but this is cleared on a logout/login,
@@ -60,10 +49,6 @@ function NewClientBookingCardVM(app) {
     this.makeRepeatBooking = ko.observable(false);
     this.promotionalCode = ko.observable('');
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
-    /// Progress management
-    // Se inicializa con un estado previo al primer paso
-    // (necesario para el manejo de reset y preparación del activity)
-    this.progress = new BookingProgress({ step: -1 });
     /// Signup
     this.signupVM = new SignupVM(app);
     // States
@@ -95,8 +80,7 @@ function NewClientBookingCardVM(app) {
         this.makeRepeatBooking(false);
         
         this.signupVM.reset();
-        
-        this.progress.step(-1);
+
         this.isSaving(false);
         this.isDone(false);
     }.bind(this);
@@ -264,46 +248,7 @@ function NewClientBookingCardVM(app) {
             this.booking().paymentLastFourCardNumberDigits(last);
         }
     }, this);
-    
-    ///
-    /// Progress management
-    this.nextStep = function() {
-        this.progress.next();
-    }.bind(this);
-    this.goStep = function(stepName) {
-        var i = this.progress.stepsList().indexOf(stepName);
-        this.progress.step(i > -1 ? i : 0);
-    };
-    this.getStepLabel = function(stepName) {
-        return stepsLabels[stepName] || stepName;
-    };
-    // Reused step observers
-    this.isAtSelectTimes = this.progress.observeStep('selectTimes');
-    this.isAtSelectTime = this.progress.observeStep('selectTime');
-    
-    ///
-    /// Keeps the progress stepsList updated depending on the data
-    ko.computed(function() {
-        // Starting list, with fixed first steps:
-        var list = ['services'];
-        
-        if (this.newDataReady()) {
 
-            if (!this.isPhoneServiceOnly())
-                list.push('selectLocation');
-
-            list.push(this.booking().instantBooking() ? 'selectTime' : 'selectTimes');
-
-            if (this.booking().paymentEnabled())
-                list.push('payment');
-
-            // The final fixed steps
-            list.push('confirm');
-        }
-        // we need almost the first, for its load process to work, even if newData is not ready still
-
-        this.progress.stepsList(list);
-    }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     ///
     /// New Booking data
@@ -334,7 +279,7 @@ function NewClientBookingCardVM(app) {
             this.edit();
             
             // Reset progress to none and trigger next so Load logic gets executed
-            this.progress.step(-1);
+            this.progress.reset();
             this.nextStep();
         }.bind(this))
         .catch(function(err) {

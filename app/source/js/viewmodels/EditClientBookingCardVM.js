@@ -100,6 +100,7 @@ function EditClientBookingCardVM(app) {
         
         app.model.bookings.getBooking(bookingID).then(function(booking) {
             this.originalBooking(booking);
+            this.progress.go('confirm');
             this.isLoadingBooking(false);
         }.bind(this))
         .catch(function(err) {

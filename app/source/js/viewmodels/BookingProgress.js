@@ -11,8 +11,7 @@ function BookingProgress(values) {
 
     this.model.defProperties({
         step: 0,
-        stepsList: [],
-        ended: false
+        stepsList: []
     }, values);
 
     this.totalSteps = ko.pureComputed(function() {
@@ -22,14 +21,34 @@ function BookingProgress(values) {
     this.currentStep = ko.pureComputed(function() {
         return this.stepsList()[this.step()];
     }, this);
+    
+    /// Check when the progress has reached the end almost once
+    var maxStepReachedEver = ko.observable(-1);
+    ko.computed(function() {
+        var s = this.step();
+        if (s > maxStepReachedEver()) maxStepReachedEver(s);
+    }, this);
+    this.ended = ko.pureComputed(function() {
+        var lastStep = this.totalSteps() - 1;
+        return lastStep <= maxStepReachedEver();
+    }, this);
+    this.reset = function() {
+        maxStepReachedEver(-1);
+        this.step(-1);
+    };
 }
 
 module.exports = BookingProgress;
 
 BookingProgress.prototype.next = function() {
-    var step = Math.max(0, Math.min(this.step() + 1, this.totalSteps() - 1));
-    
-    this.step(step);
+    if (this.ended()) {
+        // Go last directly
+        this.step(this.totalSteps() - 1);
+    }
+    else {
+        var step = Math.max(0, Math.min(this.step() + 1, this.totalSteps() - 1));
+        this.step(step);
+    }
 };
 
 BookingProgress.prototype.observeStep = function(stepName) {
@@ -40,6 +59,11 @@ BookingProgress.prototype.observeStep = function(stepName) {
 
 BookingProgress.prototype.isStep = function(stepName) {
     return this.stepsList()[this.step()] === stepName;
+};
+
+BookingProgress.prototype.go = function(stepName) {
+    var step = this.stepsList().indexOf(stepName);
+    this.step(step > -1 ? step : 0);
 };
 
 /*

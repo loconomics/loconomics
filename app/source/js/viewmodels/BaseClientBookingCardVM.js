@@ -4,10 +4,23 @@ var ko = require('knockout');
 var Booking = require('../models/Booking.editable');
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService');
 var ServiceAddresses = require('../viewmodels/ServiceAddresses');
+var BookingProgress = require('../viewmodels/BookingProgress');
 var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 var PublicUser = require('../models/PublicUser');
 var ModelVersion = require('../utils/ModelVersion');
+
+
+// L18N
+// List of all possible steps by name providing the language for the UI
+var stepsLabels = {
+    services: 'Services',
+    selectLocation: 'Select a location',
+    selectTimes: 'Select preferred times',
+    selectTime: 'Select the time',
+    payment: 'Payment',
+    confirm: 'Confirm'
+};
 
 function BaseClientBookingCardVM(app) {
     //jshint maxstatements:100
@@ -37,6 +50,10 @@ function BaseClientBookingCardVM(app) {
     this.serviceStartDatePickerView = ko.observable(null);
     /// Date time picker(s)
     this.timeFieldToBeSelected = ko.observable('');
+    /// Progress management
+    // Se inicializa con un estado previo al primer paso
+    // (necesario para el manejo de reset y preparación del activity)
+    this.progress = new BookingProgress({ step: -1 });
 
     /// States (other states are computed)
     this.isSaving = ko.observable(false);
@@ -79,6 +96,7 @@ function BaseClientBookingCardVM(app) {
         
         this.timeFieldToBeSelected('');
         this.isSaving(false);
+        this.progress.reset();
         
         this.errorMessages.postalCode('');
     }.bind(this);
@@ -179,7 +197,7 @@ function BaseClientBookingCardVM(app) {
     var setAddress = function(add) {
         if (!add || !this.booking()) return;
         this.booking().serviceAddress(add);
-        if (this.nextStep && !this.isRestoring())
+        if (this.isRestoring && !this.isRestoring())
             this.nextStep();
     }.bind(this);
     // IMPORTANT: selection from one list must deselect from the other one
@@ -284,7 +302,6 @@ function BaseClientBookingCardVM(app) {
             b.alternativeDate2() && b.alternativeDate2().startTime()
         );
     }, this);
-
     
     this.isPhoneServiceOnly = ko.pureComputed(function() {
         if (this.isEditMode() && !this.serviceProfessionalServices.isLoading()) {
@@ -321,6 +338,45 @@ function BaseClientBookingCardVM(app) {
             // No error, do nothing just was dismissed
         });
     }.bind(this);
+    
+    ///
+    /// Progress management
+    this.nextStep = function() {
+        this.progress.next();
+    }.bind(this);
+    this.getStepLabel = function(stepName) {
+        return stepsLabels[stepName] || stepName;
+    };
+    // Reused step observers
+    this.isAtSelectTimes = this.progress.observeStep('selectTimes');
+    this.isAtSelectTime = this.progress.observeStep('selectTime');
+    this.isAtServices = this.progress.observeStep('services');
+    this.isAtLocation = this.progress.observeStep('selectLocation');
+    this.isAtPayment = this.progress.observeStep('payment');
+    this.isAtConfirm = this.progress.observeStep('confirm');
+    
+    ///
+    /// Keeps the progress stepsList updated depending on the data
+    ko.computed(function() {
+        // Starting list, with fixed first steps:
+        var list = ['services'];
+        
+        if (this.originalBooking()) {
+
+            if (!this.isPhoneServiceOnly())
+                list.push('selectLocation');
+
+            list.push(this.booking().instantBooking() ? 'selectTime' : 'selectTimes');
+
+            if (this.booking().paymentEnabled())
+                list.push('payment');
+        }
+        // The final fixed steps
+        list.push('confirm');
+        // we need almost the first, for its load process to work, even if newData is not ready still
+
+        this.progress.stepsList(list);
+    }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
 module.exports = BaseClientBookingCardVM;
