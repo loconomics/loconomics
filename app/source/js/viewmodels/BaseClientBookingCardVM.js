@@ -375,6 +375,19 @@ function BaseClientBookingCardVM(app) {
         this.progress.go('payment');
     }.bind(this);
     
+    /// Special steps preparation processes
+    /// Run some logic every time an step is accessed
+    ko.computed(function() {
+        switch (this.progress.currentStep()) {
+            case 'selectTime':
+                this.prepareDatePicker('serviceDate');
+                break;
+            case 'selectTimes':
+                this.prepareDatePicker('');
+                break;
+        }
+    }, this);
+    
     ///
     /// Keeps the progress stepsList updated depending on the data
     ko.computed(function() {

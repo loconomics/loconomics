@@ -100,11 +100,9 @@ A.prototype.selectLocationLoad = function() {
 };
 
 A.prototype.selectTimesLoad = function() {
-    this.viewModel.prepareDatePicker('');
 };
 
 A.prototype.selectTimeLoad = function() {
-    this.viewModel.prepareDatePicker('serviceDate');
 };
 
 A.prototype.paymentLoad = function() {
