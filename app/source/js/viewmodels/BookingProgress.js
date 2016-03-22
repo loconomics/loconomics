@@ -10,18 +10,25 @@ function BookingProgress(values) {
     Model(this);
 
     this.model.defProperties({
-        step: 0,
+        currentStep: '',
         stepsList: []
     }, values);
+
+    this.step = ko.pureComputed({
+        read: function() {
+            return this.stepsList().indexOf(this.currentStep());
+        },
+        write: function(index) {
+            var name = this.stepsList()[index] || '';
+            this.currentStep(name);
+        },
+        owner: this
+    });
 
     this.totalSteps = ko.pureComputed(function() {
         return this.stepsList().length;
     }, this);
-    
-    this.currentStep = ko.pureComputed(function() {
-        return this.stepsList()[this.step()];
-    }, this);
-    
+
     /// Check when the progress has reached the end almost once
     var maxStepReachedEver = ko.observable(-1);
     ko.computed(function() {
@@ -35,6 +42,7 @@ function BookingProgress(values) {
     this.reset = function() {
         maxStepReachedEver(-1);
         this.step(-1);
+        return this;
     };
 }
 
@@ -49,6 +57,7 @@ BookingProgress.prototype.next = function() {
         var step = Math.max(0, Math.min(this.step() + 1, this.totalSteps() - 1));
         this.step(step);
     }
+    return this;
 };
 
 BookingProgress.prototype.observeStep = function(stepName) {
@@ -64,6 +73,7 @@ BookingProgress.prototype.isStep = function(stepName) {
 BookingProgress.prototype.go = function(stepName) {
     var step = this.stepsList().indexOf(stepName);
     this.step(step > -1 ? step : 0);
+    return this;
 };
 
 /*

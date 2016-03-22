@@ -160,6 +160,7 @@ function BaseClientBookingCardVM(app) {
         }
         // Out of edit mode
         this.editedVersion(null);
+        this.progress.reset();
     }.bind(this);
     
     this.booking = ko.pureComputed(function() {
@@ -366,7 +367,7 @@ function BaseClientBookingCardVM(app) {
             if (!this.isPhoneServiceOnly())
                 list.push('selectLocation');
 
-            list.push(this.booking().instantBooking() ? 'selectTime' : 'selectTimes');
+            list.push((this.booking().instantBooking() || !this.booking().isRequest()) ? 'selectTime' : 'selectTimes');
 
             if (this.booking().paymentEnabled())
                 list.push('payment');

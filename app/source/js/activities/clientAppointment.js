@@ -4,7 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-//var ko = require('knockout');
+var ko = require('knockout');
 var EditClientBookingCardVM = require('../viewmodels/EditClientBookingCardVM');
 
 var A = Activity.extend(function ClientAppointmentActivity() {
@@ -21,6 +21,17 @@ var A = Activity.extend(function ClientAppointmentActivity() {
             handler: this.viewModel.currentItem.edit.bind(this.viewModel)
         }
     });
+    ko.computed(function() {
+        var isEdit = this.viewModel.currentItem.isEditMode();
+        var settings = isEdit ? {
+            text: 'Cancel',
+            handler: this.viewModel.currentItem.cancel.bind(this.viewModel)
+        } : {
+            text: 'Edit',
+            handler: this.viewModel.currentItem.edit.bind(this.viewModel)
+        };
+        this.navBar.rightAction().model.updateWith(settings);
+    }, this);
 });
 
 exports.init = A.init;

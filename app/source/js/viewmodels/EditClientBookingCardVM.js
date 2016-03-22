@@ -23,8 +23,8 @@ function EditClientBookingCardVM(app) {
         );
     }, this);
     // TODO computed permisions
-    this.canEditLocation = ko.observable(false);
-    this.canChangePricing = ko.observable(false);
+    this.canEditLocation = ko.observable(true);
+    this.canChangePricing = ko.observable(true);
     
     ///
     /// Reset
@@ -51,14 +51,21 @@ function EditClientBookingCardVM(app) {
     
     ///
     /// Edition
+    var baseCancel = this.cancel.bind(this);
+    this.cancel = function cancel() {
+        baseCancel();
+        this.progress.go('confirm');
+    }.bind(this);
+    
     this.pickDateTime = function() {
-        //this.goStep('selectTimes');
+        var single = this.originalBooking().instantBooking() || !this.originalBooking().isRequest();
+        this.progress.go(single ? 'selectTime' : 'selectTimes');
     };
     this.pickLocation = function() {
-        //this.goStep('selectLocation');
+        this.progress.go('selectLocation');
     };
     this.pickService = function() {
-        //this.goStep('services');
+        this.progress.go('services');
     };
     
     this.confirmCancel = function() {
@@ -100,7 +107,7 @@ function EditClientBookingCardVM(app) {
         
         app.model.bookings.getBooking(bookingID).then(function(booking) {
             this.originalBooking(booking);
-            this.progress.go('confirm');
+            this.progress.reset().go('confirm');
             this.isLoadingBooking(false);
         }.bind(this))
         .catch(function(err) {
