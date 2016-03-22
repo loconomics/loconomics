@@ -10,12 +10,12 @@
                 <h4>Add a new booking</h4>
                 <div class="row" data-bind="foreach: { data: progress.stepsList, as: 'stepName' }">
                     <button type="button" class="btn btn-link btn-block" data-bind="css: { active: $parent.progress.observeStep(stepName)() },
-                        text: $parent.getStepLabel(stepName), click: $parent.goStep.bind($parent, stepName)"></buttons>
+                        text: $parent.getStepLabel(stepName), click: $parent.goStep.bind($parent, stepName)"></button>
                 </div>
             </div>
 
             <div class="col-md-9 col-sm-reset booking-steps">
-                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('services')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
@@ -33,12 +33,6 @@
 
                     <div data-bind="visible: supportsGratuity() && booking().paymentEnabled()">
                         <h2 class="SectionTitle">Add gratuity</h2>
-                        <script type="text/html" id="booking-gratuity-radioButton">
-                            <label class="btn btn-default" data-bind="css: { 'btn-secondary': value() === itemValue }">
-                                <input type="radio" name="gratuity" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                                <span data-bind="text: labelText"></span>
-                            </label>
-                        </script>
                         <div class="center-block Box-sm PaddedBox-xs" style="text-align: center">
                             <div class="btn-group ut-noRadioCheck">
                                 <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } } --><!-- /ko -->
@@ -102,7 +96,7 @@
                     </div>
                 </div>
                 
-                <div id="bookingSelectLocation" class="booking-step" data-bind="attr: { hidden: !progress.observeStep('selectLocation')() }, css: { 'is-loading': isLoadingServiceAddresses }">
+                <div id="bookingSelectLocation" class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
@@ -263,7 +257,7 @@
                     </div>
                 </div>
 
-                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('payment')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !isAtPayment() }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
@@ -328,7 +322,7 @@
                     </div>
                 </div>
                 
-                <div class="booking-step" data-bind="attr: { hidden: !progress.observeStep('confirm')() }">
+                <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
