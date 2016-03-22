@@ -321,6 +321,9 @@ var appInit = function appInit() {
 
         // Update app navigation
         app.updateAppNav(activity, state);
+        
+        // For debugging purposes, give access to current activity
+        app._currentActivity = activity;
     });
     // When an activity is hidden
     app.shell.on(app.shell.events.closed, function($act) {

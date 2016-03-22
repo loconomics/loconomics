@@ -245,6 +245,11 @@ exports.create = function create(appModel) {
     api.getNewClientBooking = function getNewClientBooking(options) {
         return appModel.rest.get('me/client-booking', options);
     };
+    
+    api.setClientBooking = function setClientBooking(booking) {
+        // TODO
+        return Promise.resolve(booking);
+    };
 
     return api;
 };
