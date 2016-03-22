@@ -287,9 +287,14 @@ function BaseClientBookingCardVM(app) {
 
     
     this.isPhoneServiceOnly = ko.pureComputed(function() {
-        return this.serviceProfessionalServices.selectedServices().every(function(service) {
-            return service.isPhone();
-        });
+        if (this.isEditMode() && !this.serviceProfessionalServices.isLoading()) {
+            return this.serviceProfessionalServices.selectedServices().every(function(service) {
+                return service.isPhone();
+            });
+        }
+        else {
+            return !this.booking().serviceAddress();
+        }
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     
