@@ -12,6 +12,8 @@ var ModelVersion = require('../utils/ModelVersion');
 function BaseClientBookingCardVM(app) {
     //jshint maxstatements:100
     
+    this.app = app;
+    
     ///
     /// Data properties
     this.originalBooking = ko.observable(); // :Booking
@@ -95,6 +97,11 @@ function BaseClientBookingCardVM(app) {
     this.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving();
     }, this);
+    
+    this.isAnonymous = ko.pureComputed(function() {
+        var u = app.model.user();
+        return u && u.isAnonymous();
+    });
 
     ///
     /// Computed observables and View Functions
@@ -113,6 +120,17 @@ function BaseClientBookingCardVM(app) {
         version.version.connectPostalCodeLookup(app, this.addressEditorOpened, this.errorMessages.postalCode);
         // Use the version as booking()
         this.editedVersion(version);
+        // Start loading things that are needed right now
+        // there are saved pricing details (booking selected services), we need to load professional services
+        if (version.version.pricingSummary().details().length) {
+            // TODO PRESET SERVICES OR SET THEM WHEN LOADED???
+            this.loadServices();
+        }
+        // there is a saved address, load service addresses
+        if (version.version.serviceAddress() && version.version.serviceAddress().addressID()) {
+            // TODO PRESET ADDRESS AS SELECTED IF BELONGS TO PROFESSIONAL OR SET IT WHEN LOADED??
+            this.loadServiceAddresses();
+        }
 
     }.bind(this);
     
@@ -195,8 +213,7 @@ function BaseClientBookingCardVM(app) {
     this.isLoadingServiceProfessionalInfo = ko.observable(false);
     ko.computed(function() {
         var userID = this.booking() && this.booking().serviceProfessionalUserID();
-        var isEditMode = this.isEditMode();
-        if (!userID || !isEditMode) {
+        if (!userID) {
             this.serviceProfessionalInfo().model.reset();
             this.isLoadingServiceProfessionalInfo(false);
             return;
@@ -303,3 +320,53 @@ function BaseClientBookingCardVM(app) {
 }
 
 module.exports = BaseClientBookingCardVM;
+
+BaseClientBookingCardVM.prototype.loadServices = function() {
+    var b = this.booking();
+    return this.serviceProfessionalServices.loadData(b.serviceProfessionalID(), b.jobTitleID());
+};
+
+BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
+    // Load remote addresses for provider and jobtitle, reset first
+    this.serviceAddresses.sourceAddresses([]);
+    this.isLoadingServiceAddresses(true);
+    return this.app.model.users.getServiceAddresses(this.booking().serviceProfessionalUserID(), this.booking().jobTitleID())
+    .then(function(list) {
+        // Save addresses: the serviceAddresses viewmodel will create separated lists for 
+        // selectable (service location) addresses and service areas
+        this.serviceAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(list));
+        // Load user personal addresses too if the service professional has serviceArea
+        if (this.serviceAddresses.serviceAreas().length &&
+            !this.isAnonymous()) {
+            // jobTitleID:0 for client service addresses.
+            return this.app.model.serviceAddresses.getList(0);
+        }
+        // No client addresses (result for the next 'then'):
+        return null;
+    }.bind(this))
+    .then(function(clientList) {
+        if (clientList) {
+            this.clientAddresses.sourceAddresses(clientList.map(function(a) {
+                // We wanted it to appear in the widget, must be a service location
+                // (comes as 'false' from REST service since they are currently user client addresses
+                // not actual 'service' addresses, even they comes from 'service' API).
+                a.isServiceLocation = true;
+                return this.app.model.serviceAddresses.asModel(a);
+            }.bind(this)));
+        }
+        // All finished
+        this.isLoadingServiceAddresses(false);
+    }.bind(this))
+    .catch(function(err) {
+        this.isLoadingServiceAddresses(false);
+        this.app.modals.showError({ error: err });
+    }.bind(this));
+};
+
+BaseClientBookingCardVM.prototype.prepareDatePicker = function(fieldToBeSelected) {
+    this.timeFieldToBeSelected(fieldToBeSelected);
+    var picker = this.serviceStartDatePickerView();
+    picker.selectedDatetime(null);
+    picker.userID(this.booking().serviceProfessionalUserID());
+    picker.selectedDate(new Date());
+};

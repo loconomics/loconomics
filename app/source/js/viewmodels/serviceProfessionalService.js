@@ -192,12 +192,14 @@ function ServiceProfessionalServiceViewModel(app) {
         event.stopImmediatePropagation();
     }.bind(this);
     
+    ///
+    /// Load Data
     var loadDataFor = function loadDataFor(serviceProfessionalID, jobTitleID) {
         if (jobTitleID) {
             this.isLoading(true);
             // Get data for the Job title ID and pricing types.
             // They are essential data
-            Promise.all([
+            return Promise.all([
                 app.model.jobTitles.getJobTitle(jobTitleID),
                 app.model.pricingTypes.getList()
             ])
@@ -250,11 +252,26 @@ function ServiceProfessionalServiceViewModel(app) {
         else {
             this.list([]);
             this.jobTitle(null);
+            return Promise.resolve();
         }
     }.bind(this);
+    
+    var manualLoad = false;
+    
+    // Public interface
+    this.loadData = function(serviceProfessionalID, jobTitleID) {
+        manualLoad = true;
+        this.serviceProfessionalID(serviceProfessionalID);
+        this.jobTitleID(jobTitleID);
+        return loadDataFor(serviceProfessionalID, jobTitleID).then(function() {
+            manualLoad = false;
+        });
+    };
 
+    this.isAutoLoadEnabled = ko.observable(false);
     // AUTO LOAD on job title change
     ko.computed(function() {
+        if (manualLoad || !this.isAutoLoadEnabled()) return;
         loadDataFor(this.serviceProfessionalID(), this.jobTitleID());
     }.bind(this)).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }

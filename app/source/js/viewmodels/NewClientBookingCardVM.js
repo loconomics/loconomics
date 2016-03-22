@@ -246,11 +246,6 @@ function NewClientBookingCardVM(app) {
         }.bind(this));
     }.bind(this);
     
-
-    this.isAnonymous = ko.pureComputed(function() {
-        var u = app.model.user();
-        return u && u.isAnonymous();
-    });
     
     this.confirmBtnText = ko.pureComputed(function() {
         return this.isAnonymous() ? 'Sign up and confirm' : 'Confirm';

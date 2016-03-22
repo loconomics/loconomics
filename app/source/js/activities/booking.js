@@ -91,60 +91,20 @@ A.prototype.hide = function hide() {
 
 A.prototype.servicesLoad = function() {
     // TODO Depends on jobTitle:
-    this.viewModel.supportsGratuity(false);    
+    this.viewModel.supportsGratuity(false);
+    this.viewModel.loadServices();
 };
 
 A.prototype.selectLocationLoad = function() {
-    // Load remote addresses for provider and jobtitle, reset first
-    this.viewModel.serviceAddresses.sourceAddresses([]);
-    this.viewModel.isLoadingServiceAddresses(true);
-    this.app.model.users.getServiceAddresses(this.viewModel.booking().serviceProfessionalUserID(), this.viewModel.booking().jobTitleID())
-    .then(function(list) {
-        // Save addresses: the serviceAddresses viewmodel will create separated lists for 
-        // selectable (service location) addresses and service areas
-        this.viewModel.serviceAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(list));
-        // Load user personal addresses too if the service professional has serviceArea
-        if (this.viewModel.serviceAddresses.serviceAreas().length &&
-            !this.viewModel.isAnonymous()) {
-            // jobTitleID:0 for client service addresses.
-            return this.app.model.serviceAddresses.getList(0);
-        }
-        // No client addresses (result for the next 'then'):
-        return null;
-    }.bind(this))
-    .then(function(clientList) {
-        if (clientList) {
-            this.viewModel.clientAddresses.sourceAddresses(clientList.map(function(a) {
-                // We wanted it to appear in the widget, must be a service location
-                // (comes as 'false' from REST service since they are currently user client addresses
-                // not actual 'service' addresses, even they comes from 'service' API).
-                a.isServiceLocation = true;
-                return this.app.model.serviceAddresses.asModel(a);
-            }.bind(this)));
-        }
-        // All finished
-        this.viewModel.isLoadingServiceAddresses(false);
-    }.bind(this))
-    .catch(function(err) {
-        this.viewModel.isLoadingServiceAddresses(false);
-        this.app.modals.showError({ error: err });
-    }.bind(this));
+    this.viewModel.loadServiceAddresses();
 };
 
 A.prototype.selectTimesLoad = function() {
-    var picker = this.viewModel.serviceStartDatePickerView();
-    this.viewModel.timeFieldToBeSelected('');
-    picker.selectedDatetime(null);
-    picker.userID(this.viewModel.booking().serviceProfessionalUserID());
-    picker.selectedDate(new Date());
+    this.viewModel.prepareDatePicker('');
 };
 
 A.prototype.selectTimeLoad = function() {
-    this.viewModel.timeFieldToBeSelected('serviceDate');
-    var picker = this.viewModel.serviceStartDatePickerView();
-    picker.selectedDatetime(null);
-    picker.userID(this.viewModel.booking().serviceProfessionalUserID());
-    picker.selectedDate(new Date());
+    this.viewModel.prepareDatePicker('serviceDate');
 };
 
 A.prototype.paymentLoad = function() {

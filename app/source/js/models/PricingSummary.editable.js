@@ -145,7 +145,7 @@ PricingSummary.editable = function(obj) {
     pricingSummary.firstSessionDurationDisplay = ko.pureComputed(function() {
         return duration2Language({ minutes: this.firstSessionDurationMinutes() });
     }, pricingSummary);
-    
+
     /**
         Allow to connect the booking to an externally created/maintained instance
         of ServiceProfessionalServicesVM, that is able to manage full services details
@@ -160,7 +160,7 @@ PricingSummary.editable = function(obj) {
             this.details(services.map(function(service) {
                 return PricingSummaryDetail.fromServiceProfessionalService(service);
             }));
-        }, this);
+        }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     };
 };
 
