@@ -10,7 +10,6 @@ function EditClientBookingCardVM(app) {
     
     ///
     /// Data properties
-    this.editedVersion = ko.observable(null);
     /// States
     this.isLoadingBooking = ko.observable(false);
     
@@ -23,9 +22,6 @@ function EditClientBookingCardVM(app) {
             baseIsLoading()
         );
     }, this);
-    this.isEditMode = ko.pureComputed(function() {
-        return !!this.editedVersion();
-    }, this);
     // TODO computed permisions
     this.canEditLocation = ko.observable(false);
     this.canChangePricing = ko.observable(false);
@@ -35,8 +31,6 @@ function EditClientBookingCardVM(app) {
     var baseReset = this.reset;
     this.reset = function reset() {
         baseReset();
-
-        this.editedVersion(null);
 
         this.isLoadingBooking(false);
     }.bind(this);
@@ -104,12 +98,8 @@ function EditClientBookingCardVM(app) {
 
         this.isLoadingBooking(true);
         
-        app.model.bookings.getBooking(bookingID).then(function(bookingData) {
-            this.booking.model.updateWith(bookingData, true);
-            this.summary.firstTimeServiceFeeFixed(bookingData.pricingSummary.firstTimeServiceFeeFixed);
-            this.summary.firstTimeServiceFeePercentage(bookingData.pricingSummary.firstTimeServiceFeePercentage);
-            this.summary.firstTimeServiceFeeMaximum(bookingData.pricingSummary.firstTimeServiceFeeMaximum);
-            this.summary.firstTimeServiceFeeMinimum(bookingData.pricingSummary.firstTimeServiceFeeMinimum);
+        app.model.bookings.getBooking(bookingID).then(function(booking) {
+            this.originalBooking(booking);
             this.isLoadingBooking(false);
         }.bind(this))
         .catch(function(err) {
@@ -117,43 +107,16 @@ function EditClientBookingCardVM(app) {
             app.modals.showError({ error: err });
         }.bind(this));
     }.bind(this);
-    
-    var ModelVersion = require('../utils/ModelVersion');
-    
-    ///
-    /// Edit
-    this.edit = function edit() {
-        if (this.isLocked()) return;
-
-        // Create and set a version to be edited
-        var version = new ModelVersion(this.booking);
-        this.editedVersion(version);
-
-    }.bind(this);
-    
-    this.cancel = function cancel() {
-        if (this.isLocked()) return;
-
-        if (this.editedVersion()) {
-            // Discard previous version
-            // NOTE: using push here since we use the original in the view editor
-            // rather than the version copy
-            this.editedVersion().push({ evenIfObsolete: true });
-        }
-        // Out of edit mode
-        this.editedVersion(null);
-    }.bind(this);
 
     /// Save helpers
     // For booking cancel/decline/confirm.
     var afterSaveBooking = function(serverBooking) {
-        this.booking.model.updateWith(serverBooking, true);
+        this.originalBooking().model.updateWith(serverBooking, true);
         var version = this.editedVersion();
         if (version) {
-            // NOTE: using pull here since we use the original in the view editor
-            // rather than the version copy
-            version.pull({ evenIfNewer: true });
-
+            // IMPORTANT: we do not need to push changes from version to original, since
+            // we already are updating the originalBooking with server-updated data
+            //version.push({ evenIfObsolete: true });
             // Go out edit mode
             this.editedVersion(null);
         }
@@ -162,7 +125,7 @@ function EditClientBookingCardVM(app) {
 
         // Forget availability cache for this professional, since is not needed
         // and any new booking with it needs a refresh to avoid problems. See #905
-        app.model.availability.clearUserCache(this.booking.serviceProfessionalUserID());
+        app.model.availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
     }.bind(this);
     
     ///
@@ -184,7 +147,7 @@ function EditClientBookingCardVM(app) {
     this.cancelBookingByClient = function() {
         if (!this.item().canBeCancelledByClient()) return;
         this.isSaving(true);
-        app.model.bookings.cancelBookingByClient(this.booking.bookingID())
+        app.model.bookings.cancelBookingByClient(this.booking().bookingID())
         .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry

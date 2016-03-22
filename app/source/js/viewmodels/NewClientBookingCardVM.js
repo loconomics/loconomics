@@ -1,6 +1,7 @@
 'use strict';
 
 var ko = require('knockout');
+var Booking = require('../models/Booking');
 var BaseClientBookingCardVM = require('../viewmodels/BaseClientBookingCardVM');
 var InputPaymentMethod = require('../models/InputPaymentMethod');
 var BookingProgress = require('../viewmodels/BookingProgress');
@@ -112,8 +113,8 @@ function NewClientBookingCardVM(app) {
         
         // Base and identification data:
         var s = {
-            serviceProfessionalUserID: this.booking.serviceProfessionalUserID(),
-            jobTitleID: this.booking.jobTitleID(),
+            serviceProfessionalUserID: this.booking().serviceProfessionalUserID(),
+            jobTitleID: this.booking().jobTitleID(),
             bookCode: this.bookCode()
         };
         
@@ -126,17 +127,17 @@ function NewClientBookingCardVM(app) {
         s.gratuityAmount = this.gratuityAmount();
         s.promotionalCode = this.promotionalCode();
         
-        var add = this.booking.serviceAddress();
+        var add = this.booking().serviceAddress();
         s.serviceAddress = add && add.model.toPlainObject(true) || null;
         
-        s.serviceDate = this.booking.serviceDate();
+        s.serviceDate = this.booking().serviceDate();
         s.serviceDate = s.serviceDate ? s.serviceDate.model.toPlainObject() : null;
-        s.alternativeDate1 = this.booking.alternativeDate1();
+        s.alternativeDate1 = this.booking().alternativeDate1();
         s.alternativeDate1 = s.alternativeDate1 ? s.alternativeDate1.model.toPlainObject() : null;
-        s.alternativeDate2 = this.booking.alternativeDate2();
+        s.alternativeDate2 = this.booking().alternativeDate2();
         s.alternativeDate2 = s.alternativeDate2 ? s.alternativeDate2.model.toPlainObject() : null;
         
-        s.specialRequests = this.booking.specialRequests();
+        s.specialRequests = this.booking().specialRequests();
         
         var pm = this.paymentMethod();
         s.paymentMethod = pm ? pm.model.toPlainObject(true) : null;
@@ -162,8 +163,8 @@ function NewClientBookingCardVM(app) {
             // Once is used, delete (is not last anymore)
             clearLastBooking();
                 
-            var spuid = this.booking.serviceProfessionalUserID();
-            var jid = this.booking.jobTitleID();
+            var spuid = this.booking().serviceProfessionalUserID();
+            var jid = this.booking().jobTitleID();
             if (s.serviceProfessionalUserID === spuid &&
                 s.jobTitleID === jid) {
                 this.bookCode(s.bookCode);
@@ -218,7 +219,7 @@ function NewClientBookingCardVM(app) {
                             }
                         } else {
                             // It's a client new address
-                            this.booking.serviceAddress(new Address(s.serviceAddress));
+                            this.booking().serviceAddress(new Address(s.serviceAddress));
                             this.addressEditorOpened(true);
                         }
                         
@@ -226,11 +227,11 @@ function NewClientBookingCardVM(app) {
                     }.bind(this));
                 }
                 
-                this.booking.serviceDate(s.serviceDate ? new EventDates(s.serviceDate) : null);
-                this.booking.alternativeDate1(s.alternativeDate1 ? new EventDates(s.alternativeDate1) : null);
-                this.booking.alternativeDate2(s.alternativeDate2 ? new EventDates(s.alternativeDate2) : null);
+                this.booking().serviceDate(s.serviceDate ? new EventDates(s.serviceDate) : null);
+                this.booking().alternativeDate1(s.alternativeDate1 ? new EventDates(s.alternativeDate1) : null);
+                this.booking().alternativeDate2(s.alternativeDate2 ? new EventDates(s.alternativeDate2) : null);
                 
-                this.booking.specialRequests(s.specialRequests);
+                this.booking().specialRequests(s.specialRequests);
                 
                 var pm = s.paymentMethod;
                 if (pm && this.paymentMethod()) {
@@ -257,7 +258,7 @@ function NewClientBookingCardVM(app) {
     
     // Displayed text when there is a payment card
     this.paymentMethodDisplay = ko.pureComputed(function() {
-        var n = this.booking.paymentLastFourCardNumberDigits();
+        var n = this.booking().paymentLastFourCardNumberDigits();
         return n ? 'Card ending in ' + n : '';
     }, this);
     ko.computed(function() {
@@ -265,7 +266,7 @@ function NewClientBookingCardVM(app) {
             number = pm && pm.cardNumber();
         if (number) {
             var last = number.slice(-4);
-            this.booking.paymentLastFourCardNumberDigits(last);
+            this.booking().paymentLastFourCardNumberDigits(last);
         }
     }, this);
     
@@ -296,9 +297,9 @@ function NewClientBookingCardVM(app) {
             if (!this.isPhoneServiceOnly())
                 list.push('selectLocation');
 
-            list.push(this.booking.instantBooking() ? 'selectTime' : 'selectTimes');
+            list.push(this.booking().instantBooking() ? 'selectTime' : 'selectTimes');
 
-            if (this.booking.paymentEnabled())
+            if (this.booking().paymentEnabled())
                 list.push('payment');
 
             // The final fixed steps
@@ -322,21 +323,20 @@ function NewClientBookingCardVM(app) {
             jobTitleID: jobTitleID,
             bookCode: bookCode
         }).then(function(bookingData) {
-            this.booking.model.updateWith(bookingData, true);
-            if (this.booking.paymentEnabled()) {
+            // In creation of booking, the server initial data is our 'originalBooking'
+            this.originalBooking(new Booking(bookingData));
+            if (this.originalBooking().paymentEnabled()) {
                 var ipm = new InputPaymentMethod();
                 ipm.billingAddress(new Address());
                 this.paymentMethod(ipm);
             }
-            this.summary.firstTimeServiceFeeFixed(bookingData.pricingSummary.firstTimeServiceFeeFixed);
-            this.summary.firstTimeServiceFeePercentage(bookingData.pricingSummary.firstTimeServiceFeePercentage);
-            this.summary.firstTimeServiceFeeMaximum(bookingData.pricingSummary.firstTimeServiceFeeMaximum);
-            this.summary.firstTimeServiceFeeMinimum(bookingData.pricingSummary.firstTimeServiceFeeMinimum);
-            
+
             return this.restoreState();
         }.bind(this)).then(function() {
             this.isLoadingNewBooking(false);
             this.newDataReady(true);
+            // Enter edit mode
+            this.edit();
             
             // Reset progress to none and trigger next so Load logic gets executed
             this.progress.step(-1);
@@ -351,7 +351,7 @@ function NewClientBookingCardVM(app) {
     ///
     /// UI
     this.bookingHeader = ko.pureComputed(function() {
-        var v = this.booking.instantBooking();
+        var v = this.booking() && this.booking().instantBooking();
         return v === true ? 'Your instant booking' : v === false ? 'Your booking request' : '';
     }, this);
     
@@ -368,18 +368,20 @@ function NewClientBookingCardVM(app) {
                 promotionalCode: this.promotionalCode(),
                 bookCode: this.bookCode()
             };
-            return app.model.bookings.requestClientBooking(this.booking, requestOptions, this.paymentMethod());    
+            return app.model.bookings.requestClientBooking(this.booking(), requestOptions, this.paymentMethod());    
         }.bind(this);
         // success promise:
         var success = function(serverBooking) {
             this.isSaving(false);
-            this.booking.model.updateWith(serverBooking, true);
-            
+            this.originalBooking().model.updateWith(serverBooking, true);
+            // Discard edition data (is saved and already at originalBooking with server-updated data)
+            this.editedVersion(null);
+
             // Forget availability cache for this professional, since is not needed
             // and any new booking with it needs a refresh to avoid problems. See #905
-            app.model.availability.clearUserCache(this.booking.serviceProfessionalUserID());
+            app.model.availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
             this.isDone(true);
-            
+
             app.modals.showNotification({
                 title: 'Done!',
                 message: 'Your booking was created!'

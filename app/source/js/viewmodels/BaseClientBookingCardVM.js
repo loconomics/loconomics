@@ -1,22 +1,21 @@
 'use strict';
 
 var ko = require('knockout');
-var PricingSummaryDetail = require('../models/PricingSummaryDetail');
-var PricingSummaryVM = require('../viewmodels/PricingSummaryVM');
+var Booking = require('../models/Booking.editable');
 var ServiceProfessionalServiceVM = require('../viewmodels/ServiceProfessionalService');
-var Booking = require('../models/Booking');
 var ServiceAddresses = require('../viewmodels/ServiceAddresses');
 var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 var PublicUser = require('../models/PublicUser');
+var ModelVersion = require('../utils/ModelVersion');
 
 function BaseClientBookingCardVM(app) {
     //jshint maxstatements:100
     
     ///
     /// Data properties
-    this.booking = new Booking();
-    this.summary = new PricingSummaryVM();
+    this.originalBooking = ko.observable(); // :Booking
+    this.editedVersion = ko.observable(null); // :ModelVersion
     this.serviceProfessionalServices = new ServiceProfessionalServiceVM(app);
     this.serviceProfessionalServices.isSelectionMode(true);
     this.serviceProfessionalServices.preSelectedServices([]);
@@ -52,11 +51,12 @@ function BaseClientBookingCardVM(app) {
         postalCode: ko.observable('')
     };
     
+    
     ///
     /// Reset
     this.reset = function reset() {
-        this.booking.model.reset();
-        this.summary.model.reset();
+        this.originalBooking(null);
+        this.editedVersion(null);
         
         this.serviceProfessionalServices.reset();
         this.serviceProfessionalServices.isSelectionMode(true);
@@ -81,8 +81,56 @@ function BaseClientBookingCardVM(app) {
         this.errorMessages.postalCode('');
     }.bind(this);
     
+    /// 
+    /// Computed states
+    this.isEditMode = ko.pureComputed(function() {
+        return !!this.editedVersion();
+    }, this);
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            this.isLoadingServiceProfessionalInfo() ||
+            this.serviceProfessionalServices.isLoading()
+        );
+    }, this);
+    this.isLocked = ko.pureComputed(function() {
+        return this.isLoading() || this.isSaving();
+    }, this);
+
     ///
     /// Computed observables and View Functions
+    
+    ///
+    /// Edit
+    this.edit = function edit() {
+        if (this.isLocked()) return;
+
+        // Create and set a version to be edited
+        var version = new ModelVersion(this.originalBooking());
+        // Expand edition capabilities of the booking version before being available for edition
+        Booking.editable(version.version);
+        version.version.connectToSelectableServicesView(this.serviceProfessionalServices);
+        // Only on addresses being edited by the user, with the editor opened
+        version.version.connectPostalCodeLookup(app, this.addressEditorOpened, this.errorMessages.postalCode);
+        // Use the version as booking()
+        this.editedVersion(version);
+
+    }.bind(this);
+    
+    this.cancel = function cancel() {
+        if (this.isLocked()) return;
+
+        if (this.editedVersion()) {
+            // Discard previous version
+            this.editedVersion().pull({ evenIfNewer: true });
+        }
+        // Out of edit mode
+        this.editedVersion(null);
+    }.bind(this);
+    
+    this.booking = ko.pureComputed(function() {
+        var v = this.editedVersion();
+        return v ? v.version : this.originalBooking();
+    }, this);
     
     /// Gratuity
     // TODO Complete support for gratuity, server-side
@@ -96,35 +144,24 @@ function BaseClientBookingCardVM(app) {
 
     
     // Sync: Automatic updates between dependent models:
-    this.booking.jobTitleID.subscribe(this.serviceProfessionalServices.jobTitleID);
-    this.booking.serviceProfessionalUserID.subscribe(this.serviceProfessionalServices.serviceProfessionalID);
+    this.gratuityPercentage.subscribe(function(v) {
+        if (this.booking()) this.booking().pricingSummary().gratuityPercentage(v);
+    }, this);
+    this.gratuityAmount.subscribe(function(v) {
+        if (this.booking()) this.booking().pricingSummary().gratuityAmount(v);
+    }, this);
     
     this.hasServicesSelected = ko.pureComputed(function() {
         var s = this.serviceProfessionalServices.selectedServices();
         return s && s.length > 0 || false;
     }, this);
 
-    this.gratuityPercentage.subscribe(this.summary.gratuityPercentage);
-    this.gratuityAmount.subscribe(this.summary.gratuityAmount);
-
-    ko.pureComputed(function() {
-        var services = this.serviceProfessionalServices.selectedServices();
-        this.summary.details(services.map(function(service) {
-            return PricingSummaryDetail.fromServiceProfessionalService(service);
-        }));
-    }, this);
-    
-    // Fill booking services from the selected services view
-    ko.computed(function() {
-        this.booking.pricingSummary(this.summary.toPricingSummary());
-    }, this)
-    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     ///
     /// Service Address
     var setAddress = function(add) {
-        if (!add) return;
-        this.booking.serviceAddress(add);
+        if (!add || !this.booking()) return;
+        this.booking().serviceAddress(add);
         if (!this.isRestoring())
             this.nextStep();
     }.bind(this);
@@ -146,18 +183,20 @@ function BaseClientBookingCardVM(app) {
         event.preventDefault();
         // We use directly the booking address, but reset to prevent a previous
         // address details and ID from appear
-        this.booking.serviceAddress(new Address());
+        this.booking().serviceAddress(new Address());
         // Display client service address form
         this.addressEditorOpened(true);
     }.bind(this);
     
     ///
     /// Service Professional Info
-    // IMPORTANT: RESET IS FORBIDDEN, since is updated with a change at booking.serviceProfessionalUserID
+    // IMPORTANT: RESET IS FORBIDDEN, since is updated with a change at booking().serviceProfessionalUserID
     this.serviceProfessionalInfo = ko.observable(new PublicUser());
     this.isLoadingServiceProfessionalInfo = ko.observable(false);
-    this.booking.serviceProfessionalUserID.subscribe(function(userID) {
-        if (!userID) {
+    ko.computed(function() {
+        var userID = this.booking() && this.booking().serviceProfessionalUserID();
+        var isEditMode = this.isEditMode();
+        if (!userID || !isEditMode) {
             this.serviceProfessionalInfo().model.reset();
             this.isLoadingServiceProfessionalInfo(false);
             return;
@@ -167,7 +206,7 @@ function BaseClientBookingCardVM(app) {
 
         app.model.users.getUser(userID)
         .then(function(info) {
-            info.selectedJobTitleID = this.booking.jobTitleID();
+            info.selectedJobTitleID = this.booking().jobTitleID();
             this.serviceProfessionalInfo().model.updateWith(info, true);
             this.isLoadingServiceProfessionalInfo(false);
         }.bind(this))
@@ -175,37 +214,41 @@ function BaseClientBookingCardVM(app) {
             this.isLoadingServiceProfessionalInfo(false);
             app.modals.showError({ error: err });
         }.bind(this));
-    }, this);
+    }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     ///
     /// Date time picker(s)
     ko.computed(function triggerSelectedDatetime() {
+        if (!this.booking()) return;
         var v = this.serviceStartDatePickerView(),
             dt = v && v.selectedDatetime(),
-            current = this.booking.serviceDate(),
+            current = this.booking().serviceDate(),
             field = this.timeFieldToBeSelected.peek();
 
         if (dt && field &&
             dt.toString() !== (current && current.startTime().toString())) {
-            this.booking[field](new EventDates({
+            this.booking()[field](new EventDates({
                 startTime: dt
             }));
-            this.booking[field]().duration({
-                minutes: this.summary.firstSessionDurationMinutes()
+            this.booking()[field]().duration({
+                minutes: this.booking().pricingSummary.firstSessionDurationMinutes()
             });
 
             this.timeFieldToBeSelected('');
             // Support for progress (is optional, usually only on 'new')
-            if (this.booking.instantBooking() && this.progress)
+            if (this.booking().instantBooking() && this.progress)
                 this.progress.next();
         }
     }, this);
-    this.summary.firstSessionDurationMinutes.subscribe(function(minutes) {
+    ko.computed(function() {
+        var b = this.booking();
+        if (!b) return;
+        var minutes = b.pricingSummary().firstSessionDurationMinutes();
         if (this.serviceStartDatePickerView()) {
             this.serviceStartDatePickerView().requiredDurationMinutes(minutes);
         }
     }, this);
-    
+
     this.pickServiceDate = function() {
         this.timeFieldToBeSelected('serviceDate');
     }.bind(this);
@@ -217,7 +260,8 @@ function BaseClientBookingCardVM(app) {
     }.bind(this);
     
     this.hasSomeDateSelected = ko.pureComputed(function() {
-        var b = this.booking;
+        var b = this.booking();
+        if (!b) return false;
         return (
             b.serviceDate() && b.serviceDate().startTime() ||
             b.alternativeDate1() && b.alternativeDate1().startTime() ||
@@ -232,18 +276,6 @@ function BaseClientBookingCardVM(app) {
         });
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-
-    ///
-    /// States
-    this.isLoading = ko.pureComputed(function() {
-        return (
-            this.isLoadingServiceProfessionalInfo() ||
-            this.serviceProfessionalServices.isLoading()
-        );
-    }, this);
-    this.isLocked = ko.pureComputed(function() {
-        return this.isLoading() || this.isSaving();
-    }, this);
     
     ///
     /// Field Special requests (client notes to service professional)
@@ -256,10 +288,10 @@ function BaseClientBookingCardVM(app) {
     this.pickSpecialRequests = function() {
         app.modals.showTextEditor({
             title: this.specialRequestsPlaceholder(),
-            text: this.booking.specialRequests()
+            text: this.booking().specialRequests()
         })
         .then(function(text) {
-            this.booking.specialRequests(text);
+            this.booking().specialRequests(text);
         }.bind(this))
         .catch(function(err) {
             if (err) {

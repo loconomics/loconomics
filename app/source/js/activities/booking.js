@@ -57,59 +57,6 @@ var A = Activity.extend(function BookingActivity() {
         }
         nav.title(label);
     }, this.viewModel.progress);
-    
-    // Remote postal code look-up
-    // NOTE: copied the code from addressEditor.js with slight changes
-    var app = this.app,
-        viewModel = this.viewModel;
-    this.registerHandler({
-        target: this.viewModel.booking.serviceAddress,
-        handler: function(address) {
-            if (address &&
-               !address.postalCode._hasLookup) {
-                address.postalCode._hasLookup = true;
-                
-                // On change to a valid code, do remote look-up
-                ko.computed(function() {
-                    // Only on addresses being edited by the user, with the editor opened
-                    if (!viewModel.addressEditorOpened()) return;
-                    
-                    var postalCode = this.postalCode();
-                    
-                    if (postalCode && !/^\s*$/.test(postalCode)) {
-                        app.model.postalCodes.getItem(postalCode)
-                        .then(function(info) {
-                            if (info) {
-                                address.city(info.city);
-                                address.stateProvinceCode(info.stateProvinceCode);
-                                address.stateProvinceName(info.stateProvinceName);
-                                viewModel.errorMessages.postalCode('');
-                            }
-                        })
-                        .catch(function(err) {
-                            address.city('');
-                            address.stateProvinceCode('');
-                            address.stateProvinceName('');
-                            // Expected errors, a single message, set
-                            // on the observable
-                            var msg = typeof(err) === 'string' ? err : null;
-                            if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                                viewModel.errorMessages.postalCode(msg || err.responseJSON.errorMessage);
-                            }
-                            else {
-                                // Log to console for debugging purposes, on regular use an error on the
-                                // postal code is not critical and can be transparent; if there are 
-                                // connectivity or authentification errors will throw on saving the address
-                                console.error('Server error validating Zip Code', err);
-                            }
-                        });
-                    }
-                }, address)
-                // Avoid excessive requests by setting a timeout since the latest change
-                .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
-            }
-        }
-    });
 });
 
 exports.init = A.init;
@@ -151,7 +98,7 @@ A.prototype.selectLocationLoad = function() {
     // Load remote addresses for provider and jobtitle, reset first
     this.viewModel.serviceAddresses.sourceAddresses([]);
     this.viewModel.isLoadingServiceAddresses(true);
-    this.app.model.users.getServiceAddresses(this.viewModel.booking.serviceProfessionalUserID(), this.viewModel.booking.jobTitleID())
+    this.app.model.users.getServiceAddresses(this.viewModel.booking().serviceProfessionalUserID(), this.viewModel.booking().jobTitleID())
     .then(function(list) {
         // Save addresses: the serviceAddresses viewmodel will create separated lists for 
         // selectable (service location) addresses and service areas
@@ -188,7 +135,7 @@ A.prototype.selectTimesLoad = function() {
     var picker = this.viewModel.serviceStartDatePickerView();
     this.viewModel.timeFieldToBeSelected('');
     picker.selectedDatetime(null);
-    picker.userID(this.viewModel.booking.serviceProfessionalUserID());
+    picker.userID(this.viewModel.booking().serviceProfessionalUserID());
     picker.selectedDate(new Date());
 };
 
@@ -196,7 +143,7 @@ A.prototype.selectTimeLoad = function() {
     this.viewModel.timeFieldToBeSelected('serviceDate');
     var picker = this.viewModel.serviceStartDatePickerView();
     picker.selectedDatetime(null);
-    picker.userID(this.viewModel.booking.serviceProfessionalUserID());
+    picker.userID(this.viewModel.booking().serviceProfessionalUserID());
     picker.selectedDate(new Date());
 };
 
