@@ -274,6 +274,7 @@ function BaseClientBookingCardVM(app) {
         on instant bookings or non-incomplete/non-request bookings
     */
     this.singleTimeOption = ko.pureComputed(function() {
+        if (!this.originalBooking()) return null;
         return this.originalBooking().instantBooking() || !(this.originalBooking().isRequest() || this.originalBooking().isIncomplete());
     }, this);
     ko.computed(function triggerSelectedDatetime() {
