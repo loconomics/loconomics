@@ -22,9 +22,6 @@ function EditClientBookingCardVM(app) {
             baseIsLoading()
         );
     }, this);
-    // TODO computed permisions
-    this.canEditLocation = ko.observable(true);
-    this.canChangePricing = ko.observable(true);
     
     ///
     /// Reset

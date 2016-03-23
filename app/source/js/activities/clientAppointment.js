@@ -16,22 +16,24 @@ var A = Activity.extend(function ClientAppointmentActivity() {
     this.navBar = new Activity.NavBar({
         title: 'Upcoming',
         leftAction: Activity.NavAction.goBack.model.clone(),
-        rightAction: {
-            text: 'Edit',
-            handler: this.viewModel.currentItem.edit.bind(this.viewModel)
-        }
+        rightAction: {}
     });
+    var nav = this.navBar;
     ko.computed(function() {
-        var isEdit = this.viewModel.currentItem.isEditMode();
+        var itCan = this.canCancel() || this.canEdit();
+        var isEdit = this.isEditMode() || this.isCancelMode();
         var settings = isEdit ? {
             text: 'Cancel',
-            handler: this.viewModel.currentItem.cancel.bind(this.viewModel)
-        } : {
+            handler: this.cancel.bind(this.viewModel)
+        } : itCan ? {
             text: 'Edit',
-            handler: this.viewModel.currentItem.edit.bind(this.viewModel)
+            handler: this.edit.bind(this.viewModel)
+        } : {
+            text: '',
+            handler: function() {}
         };
-        this.navBar.rightAction().model.updateWith(settings);
-    }, this);
+        nav.rightAction().model.updateWith(settings);
+    }, this.viewModel.currentItem);
 });
 
 exports.init = A.init;

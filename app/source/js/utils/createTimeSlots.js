@@ -24,6 +24,9 @@ exports.forRange = function forRange(from, to, size, duration, roundUp, includeE
     //jshint maxcomplexity:10
     from = new Date(from);
     to = new Date(to);
+    if (!duration) {
+        throw new Error('forRange: Duration is required');
+   }
     var i = moment(from),
         d,
         slots = [],

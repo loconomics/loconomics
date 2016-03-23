@@ -57,6 +57,7 @@ function BaseClientBookingCardVM(app) {
 
     /// States (other states are computed)
     this.isSaving = ko.observable(false);
+    this.isCancelMode = ko.observable(false);
 
     ///
     /// URLs (constants, don't need reset)
@@ -96,6 +97,7 @@ function BaseClientBookingCardVM(app) {
         
         this.timeFieldToBeSelected('');
         this.isSaving(false);
+        this.isCancelMode(false);
         this.progress.reset();
         
         this.errorMessages.postalCode('');
@@ -115,7 +117,16 @@ function BaseClientBookingCardVM(app) {
     this.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving();
     }, this);
-    
+    // Edit permissions, per client edition rules #880
+    this.canEdit = ko.pureComputed(function() {
+        // Not allowed in request state (only cancellation is allowed there)
+        // Allowed only for instant-booking
+        if (!this.originalBooking()) return false;
+        return !this.booking().bookingID() || !this.booking().isRequest() && this.booking().instantBooking();
+    }, this);
+    this.canCancel = ko.pureComputed(function() {
+        return this.originalBooking() && this.originalBooking().canBeCancelledByClient();
+    }, this);
     this.isAnonymous = ko.pureComputed(function() {
         var u = app.model.user();
         return u && u.isAnonymous();
@@ -128,6 +139,11 @@ function BaseClientBookingCardVM(app) {
     /// Edit
     this.edit = function edit() {
         if (this.isLocked()) return;
+        
+        if (this.canCancel()) {
+            this.isCancelMode(true);
+        }
+        if (!this.canEdit()) return;
 
         // Create and set a version to be edited
         var version = new ModelVersion(this.originalBooking());
@@ -145,7 +161,6 @@ function BaseClientBookingCardVM(app) {
         }
         // there is a saved address, load service addresses
         if (version.version.serviceAddress() && version.version.serviceAddress().addressID()) {
-            // TODO PRESET ADDRESS AS SELECTED IF BELONGS TO PROFESSIONAL OR SET IT WHEN LOADED??
             this.loadServiceAddresses();
         }
 
@@ -153,6 +168,7 @@ function BaseClientBookingCardVM(app) {
     
     this.cancel = function cancel() {
         if (this.isLocked()) return;
+        this.isCancelMode(false);
 
         if (this.editedVersion()) {
             // Discard previous version

@@ -2149,7 +2149,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 // 0: previous data and checks
-                var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
+                var booking = LcRest.Booking.Get(bookingID, true, true, serviceProfessionalUserID);
                 if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
                     return false;
 

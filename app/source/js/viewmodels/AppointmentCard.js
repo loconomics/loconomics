@@ -159,7 +159,7 @@ function AppointmentCardViewModel(params) {
         this.editMode(false);
 
         // Notify
-        if (this.isBooking()) {
+        if (this.isBooking() && this.item().client()) {
 
             var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
