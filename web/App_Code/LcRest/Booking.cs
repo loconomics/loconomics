@@ -2011,7 +2011,7 @@ namespace LcRest
 
         #region Service Professional Manipulations
         /// <summary>
-        /// 
+        /// TODO Change serviceAddressID to Address serviceAddress like in client-booking to allow professionals to specify a client address
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="clientUserID"></param>
@@ -2051,7 +2051,7 @@ namespace LcRest
                 if (customer == null)
                     throw new ConstraintException("Impossible to retrieve the client information. It exists?");
                 if (services == null)
-                    throw new ConstraintException("Create a booking require select almost one service");
+                    throw new ConstraintException("The booking require the selection of almost one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
                 var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null, true);
@@ -2060,6 +2060,8 @@ namespace LcRest
 
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Chosen services does not belongs to the Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("The booking require the selection of almost one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
@@ -2149,7 +2151,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 // 0: previous data and checks
-                var booking = LcRest.Booking.Get(bookingID, true, true, serviceProfessionalUserID);
+                var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
                 if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
                     return false;
 
@@ -2173,15 +2175,22 @@ namespace LcRest
                 if (customer == null)
                     throw new ConstraintException("Impossible to retrieve the client information. It exists?");
                 if (services == null)
-                    throw new ConstraintException("Create a booking require select almost one service");
+                    throw new ConstraintException("The booking require the selection of almost one service");
 
                 booking.FillUserJobTitle();
                 if (booking.userJobTitle == null)
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
-                if (canChangePricing && booking.CreatePricing(services))
+                if (!canChangePricing)
+                {
+                    // Load it, we need the information
+                    booking.FillPricingSummary();
+                }
+                else if (booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("The booking require the selection of almost one service");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
@@ -2487,7 +2496,7 @@ namespace LcRest
                 if (customer == null)
                     throw new ConstraintException("Impossible to retrieve the client information. It exists?");
                 if (services == null)
-                    throw new ConstraintException("Create a booking require select almost one service");
+                    throw new ConstraintException("The booking require the selection of almost one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
                 var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, bookCode);
@@ -2497,6 +2506,8 @@ namespace LcRest
                 // Booking type enforced by this API, required before calculate correctly the pricing:
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Choosen services does not belongs to the Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("The booking require the selection of almost one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
@@ -2671,6 +2682,133 @@ namespace LcRest
             this.RefundPayment();
 
             LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
+        }
+        /// <summary>
+        /// Allow a client to update a booking (any booking, not only client-booking)
+        /// </summary>
+        /// <returns>True if update was possible and done, while false if cannot be performed since doesn't exists. Errors will throw.</returns>
+        public static bool UpdClientBooking(
+            int bookingID,
+            int clientUserID,
+            Address serviceAddress,
+            DateTime serviceStartTime,
+            IEnumerable<int> services,
+            string specialRequests)
+        {
+            using (var db = new LcDatabase())
+            {
+                // 0: previous data and checks
+                var booking = LcRest.Booking.Get(bookingID, false, false, clientUserID);
+                if (booking == null || booking.clientUserID != clientUserID)
+                    return false;
+
+                // NOTE: Client Editing Rules
+                // Can update a booking only if is an instant booking, it's in the 'confirmed' status
+                // and payment is not authornized still.
+                // That means, we do not allow booking requests to be updated or bookings that passed
+                // the service professional confirmation (because where not-instant).
+                if (booking.bookingStatusID != (int)LcEnum.BookingStatus.confirmed ||
+                    !booking.instantBooking ||
+                    booking.paymentAuthorized)
+                {
+                    throw new Exception("Booking cannot be updated");
+                }
+
+                var provider = LcData.UserInfo.GetUserRowWithContactData(booking.serviceProfessionalUserID);
+                var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
+
+                if (provider == null)
+                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                if (customer == null)
+                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                if (services == null)
+                    throw new ConstraintException("The booking require the selection of almost one service");
+
+                booking.FillUserJobTitle();
+                if (booking.userJobTitle == null)
+                    throw new ConstraintException("Impossible to update the booking for that Job Title.");
+
+                // 1º: calculating pricing and timing by checking services included
+                if (booking.CreatePricing(services))
+                    throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("The booking require the selection of almost one service");
+
+                // 2º: Dates update? Checking availability and updating event dates if changed
+                var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
+                // Only if dates changed:
+                booking.FillServiceDates();
+                if (booking.serviceDate.startTime != serviceStartTime && booking.serviceDate.endTime != endTime)
+                {
+                    // Because this API is only for providers, we avoid the advance time from the checking
+                    var isAvailable = LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, serviceStartTime, endTime, false);
+                    if (!isAvailable)
+                        throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+
+                    // Transaction begins
+                    db.Execute("BEGIN TRANSACTION");
+
+                    // Update event
+                    db.Execute(LcCalendar.sqlUpdBookingEvent, booking.serviceDateID, serviceStartTime, endTime, null, null, null);
+                }
+                else
+                {
+                    // Transaction begins
+                    db.Execute("BEGIN TRANSACTION");
+                }
+
+
+                // 3º: Updating pricing estimate records
+                // save Summary on db, will set the ID and Revision on the returned summary
+                // and save details with updated IDs too
+                booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
+                // Get new Revision so is persisted on Booking.Set later
+                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
+
+
+                // 4º: Validate addressID or update the existent, service-specific, one
+                //serviceAddress.userID
+                //booking.FillServiceAddress();
+                //var isServiceOnlyAddress = booking.serviceAddress.userID == clientUserID;                
+                if (booking.serviceAddressID != serviceAddress.addressID)
+                {
+                    // A different addressID was given, is expected to be an existent address of the client
+                    // or professional.
+                    // On this cases, NO UPDATES are allowed on the address since is a selection of a previous one
+                    if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                    {
+                        throw new ConstraintException("Selected location is not valid.");
+                    }
+                    else
+                    {
+                        booking.serviceAddressID = serviceAddress.addressID;
+                    }
+                }
+                // TODO Update address
+
+
+                // 5º: persisting booking on database
+                booking.specialRequests = specialRequests;
+                Booking.Set(booking, clientUserID, db.Db);
+
+                // Persisting all or nothing:
+                db.Execute("COMMIT TRANSACTION");
+
+                // LAST:
+                // Update the CalendarEvent to include contact data,
+                // but this is not so important as the rest because of that it goes
+                // inside a try-catch, it doesn't matter if fails, is just a commodity
+                // (customer and provider can access contact data from the booking).
+                try
+                {
+                    booking.UpdateEventDetails(db.Db);
+                }
+                catch { }
+
+                LcMessaging.SendBooking.For(booking.bookingID).BookingUpdatedByClient();
+
+                return true;
+            }
         }
         #endregion
     }
