@@ -213,7 +213,7 @@
                     <li>
                         <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickDateTime">
                             <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                            <div class="Tile-content" data-bind="visible: !booking().instantBooking()">
+                            <div class="Tile-content" data-bind="visible: !booking().instantBooking() && booking().isRequest()">
                                 <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
                                     <strong>1st choice: </strong>
                                         <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
@@ -228,7 +228,7 @@
                                 </div>
                                 <p data-bind="visible: !hasSomeDateSelected()" class="text-muted">Select preferred times</p>
                             </div>
-                            <div class="Tile-content" data-bind="visible: booking().instantBooking">
+                            <div class="Tile-content" data-bind="visible: booking().instantBooking() || !booking().isRequest()">
                                 <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
                                 <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></div>
                                 <p data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())" class="text-muted">Select date/time</p>
