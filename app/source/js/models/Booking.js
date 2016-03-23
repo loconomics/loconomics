@@ -53,7 +53,7 @@ function Booking(values) {
         pricingAdjustmentApplied: false,
         paymentEnabled: false,
         paymentCollected: false,
-        paymentauthorized: false,
+        paymentAuthorized: false,
         awaitingResponseFromUserID: null,
         pricingAdjustmentRequested: false,
         
@@ -112,6 +112,10 @@ function Booking(values) {
         return this.bookingStatusID() === Booking.status.request;
     }, this);
     
+    this.isCompleted = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.completed;
+    }, this);
+    
     this.isIncomplete = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.incomplete;
     }, this);
@@ -136,6 +140,16 @@ function Booking(values) {
     // TODO Can/must be removed this shortcut?
     this.servicesSummary = ko.pureComputed(function() {
         return this.pricingSummary().servicesSummary();
+    }, this);
+    
+    this.displayPaymentAuthorizedLabel = ko.pureComputed(function() {
+        return this.paymentAuthorized() && !this.isCompleted();
+    }, this);
+    this.displayPaymentCollectedLabel = ko.pureComputed(function() {
+        return this.paymentCollected() && !this.paymentAuthorized();
+    }, this);
+    this.displayPaymentPaidLabel = ko.pureComputed(function() {
+        return this.paymentEnabled() && this.isCompleted();
     }, this);
 }
 

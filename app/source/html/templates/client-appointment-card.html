@@ -265,7 +265,12 @@
                                 <span class="fa ion ion-social-usd"></span>
                             </div>
                             <div class="Tile-content">
-                                <p data-bind="text: booking().pricingSummary() && booking().pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().totalPrice())}"></p>
+                                <p>
+                                    <span data-bind="text: booking().pricingSummary() && booking().pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().totalPrice())}"></span>
+                                    <strong class="label label-warning" data-bind="visible: booking().displayPaymentAuthorizedLabel">AUTHORIZED</strong>
+                                    <strong class="label label-warning" data-bind="visible: booking().displayPaymentCollectedLabel">COLLECTED</strong>
+                                    <strong class="label label-success" data-bind="visible: booking().displayPaymentPaidLabel">PAID</strong>
+                                </p>
                             </div>
                         </button>
                     </li>
