@@ -209,7 +209,7 @@
             </div>
             
             <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
-                <ul class="TilesList TilesList--opendEnd">
+                <ul class="TilesList TilesList--openEnd">
                     <li>
                         <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickDateTime">
                             <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
@@ -288,6 +288,14 @@
                             </div>
                             <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                         </button>
+                    </li>
+                    <li data-bind="visible: !canEdit() && !canCancel()">
+                        <div data-bind="css: { 'Tile--danger': !booking().isClosed(), 'Tile--success': booking().isCompleted(), 'Tile--warning': booking().isClosed() && !booking().isCompleted() }" class="ItemTile">
+                            <i class="Tile-marker fa fa-stop" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <p data-bind="text: booking().bookingStatusLabel()"></p>
+                            </div>
+                        </div>
                     </li>
                 </ul>
 

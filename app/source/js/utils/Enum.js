@@ -1,4 +1,4 @@
-﻿/** Base class 'enum' with utility methods for objects that are used as enumerations.
+/** Base class 'enum' with utility methods for objects that are used as enumerations.
 Its NOT a class to instantiate or to use as base for enumerations, else enumerations
 are plain objects with properties-values only.
 **/
@@ -11,8 +11,12 @@ var Enum = {
             if (e.toLowerCase && e.toLowerCase() == str)
                 return enumType[e];
         return null;
+    },
+    name: function (enumType, value) {
+        for (var e in enumType)
+            if (enumType[e] === value)
+                return e;
     }
 };
 
-if (typeof module !== 'undefined' && module.exports)
-    module.exports = Enum;
+module.exports = Enum;

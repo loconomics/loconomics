@@ -160,8 +160,6 @@ exports.create = function create(appModel) {
     api.cancelBookingByClient = function cancelBookingByClient(bookingID) {
         return appModel.rest.post('me/client-booking/' + bookingID + '/cancel')
         .then(function(serverBooking) {
-            // Reset calendar availability cache
-            appModel.calendar.clearCache();
             return new Booking(serverBooking);
         });
     };

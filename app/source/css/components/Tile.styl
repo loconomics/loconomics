@@ -160,3 +160,22 @@ Tile-addTagContentSupport($vgap, $left = -6px) {
         addTagFor('gray-' + $color, $gray-colors[$color]);
     }
 }
+
+/** Add colored background support */
+Tile-addStyleSupport() {
+    
+    addTagFor($colorName, $color) { 
+        &.Tile--{$colorName} {
+            background: $color;
+            color: White;
+        }
+    }
+    
+    for $color in $brand-colors {
+        addTagFor($color, $brand-colors[$color]);
+    }
+    
+    for $color in $gray-colors {
+        addTagFor('gray-' + $color, $gray-colors[$color]);
+    }
+}

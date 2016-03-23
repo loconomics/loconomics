@@ -119,10 +119,11 @@ function BaseClientBookingCardVM(app) {
     }, this);
     // Edit permissions, per client edition rules #880
     this.canEdit = ko.pureComputed(function() {
-        // Not allowed in request state (only cancellation is allowed there)
+        // Not allowed in request state (only cancellation is allowed there), so just only on 'confirmed' ones
+        // (other states are not valid too).
         // Allowed only for instant-booking
         if (!this.originalBooking()) return false;
-        return !this.booking().bookingID() || !this.booking().isRequest() && this.booking().instantBooking();
+        return !this.booking().bookingID() || this.booking().instantBooking() && this.booking().isConfirmed();
     }, this);
     this.canCancel = ko.pureComputed(function() {
         return this.originalBooking() && this.originalBooking().canBeCancelledByClient();

@@ -83,7 +83,7 @@ function EditClientBookingCardVM(app) {
             // Confirmed:
             this.cancelBookingByClient();
         }.bind(this));
-    };
+    }.bind(this);
 
     ///
     /// Load Booking data
@@ -139,7 +139,7 @@ function EditClientBookingCardVM(app) {
     ///
     /// Cancel Booking
     this.cancelBookingByClient = function() {
-        if (!this.item().canBeCancelledByClient()) return;
+        if (!this.canCancel()) return;
         this.isSaving(true);
         app.model.bookings.cancelBookingByClient(this.booking().bookingID())
         .then(afterSaveBooking)
