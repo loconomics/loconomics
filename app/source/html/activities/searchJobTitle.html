@@ -1,14 +1,15 @@
 <!-- Search Job Title activity -->
 
-<div class="SearchResults" data-activity="searchJobTitle">
+<div class="SearchResults" data-activity="searchJobTitle" id="job-titles-results">
     <div data-bind="with: jobTitleSearchResult">
-        <h3 class="text-secondary">
-            <span data-bind="text: pluralName"></span> <span class="text-secondary" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</span>
-        </h3>
-        <p>
-            <span data-bind="text: searchDescription"></span>
-        </p>
-    </div>
+        <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
+            <div class="SearchResultsBackground-text">
+                <h1><span data-bind="visible: serviceProfessionalsCount"><span data-bind="text: pluralName"></span></h1>
+                <p><span class="text-secondary" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</span></span></p>                    
+                <h2><span data-bind="text: searchDescription"></span></h2>
+            </div>
+        </div>
+      </div>
         <ul data-bind="foreach: serviceProfessionalSearchResult">
           <li>
             <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">

@@ -7,7 +7,7 @@
 @import '../components/HomeNavBar.styl';
 
 .SearchResultsPreview 
-    background-color rgba(247, 247, 247, 1)
+    background-color white
     display block
     margin-top 4px
     padding 0
@@ -21,11 +21,8 @@
         
       a 
         text-decoration none
-        display block
-        padding 15px
-      
-        
-      div 
+         
+      h3 
         padding-top 15px
         font-size 18px
         text-align center
@@ -34,32 +31,43 @@
         width 100%
         padding 0
         
-        li hover 
-          background-color rgba(255,255,255,1)
-        
-        
-        li 
-          border-bottom 1px solid rgba(204, 204, 204, 1)
+        .Result 
+          border-bottom 1px solid $gray-light
+          display block
+          padding 15px 
+          height auto
           
-          .Result-name 
-            color rgba(51,51,51,1)
-            font-size 16px
+          .Result-info
+            width 80%
+            float left
+            padding-left 15px          
           
+            .Result-name 
+              color $gray-dark
+              font-size 16px
+
+            .Result-count 
+              font-size 16px
+              color $gray
+
+            .Result-description 
+              display block
+              font-size 12px
+              color $gray
+              line-height 24px
+              height 24px
+              white-space nowrap
+              overflow hidden
+              text-overflow ellipsis
+            
+          .btn-inline
+            width 15%
+            float right
+            margin-right 15px
+            margin-top 5px
           
-          .Result-count 
-            font-size 16px
-            color rgba(51,51,51,0.5)
-          
-          
-          .Result-description 
-            display block
-            font-size 12px
-            color rgba(51,51,51,0.5)
-            line-height 24px
-            height 24px
-            white-space nowrap
-            overflow hidden
-            text-overflow ellipsis
+          .Result hover 
+            background-color $gray-background
     
 .SearchResults
   background-color $gray-background
@@ -79,13 +87,27 @@
     text-align left
     margin-left 15px
     margin-right 15px
+  
+  #categories-home
+    position relative
+
+  #job-titles-results
+    position relative
     
   ul
+    position relative
+    z-index 999
+    top -40px
+    margin-bottom -25px
     display flex
     margin 0
     padding 0
     flex-wrap wrap
     justify-content center
+
+    @media $mediaMinSm {
+      top -100px;
+    }
     
   li
     list-style none
@@ -99,18 +121,11 @@
     a
       text-decoration none
 
-  .CategoryBackground {
+  .SearchResultsBackground {
     padding-top: 10px;
     height: 120px;
     position: relative;
-    background: $brand-secondary no-repeat center / cover;
-    background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/self-header.jpg');
-      
+    background: $brand-secondary no-repeat center / cover;      
     @media $mediaMinSm {
         height: 300px;
     }
@@ -121,7 +136,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/home-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_383231.jpg');
     }
     
     &.CategoryBackground-2 {
@@ -130,7 +145,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_32232.jpg');
     }
 
     &.CategoryBackground-3 {
@@ -139,7 +154,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_210692.jpg');
     }
       
     &.CategoryBackground-4 {
@@ -148,7 +163,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_42639.jpg');
     }
 
     &.CategoryBackground-5 {
@@ -157,7 +172,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_85410.jpg');
     }
 
     &.CategoryBackground-6 {
@@ -166,7 +181,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_491656.jpg');
     }
 
     &.CategoryBackground-7 {
@@ -175,7 +190,7 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_392432.jpg');
     }
 
     &.CategoryBackground-8 {
@@ -184,10 +199,10 @@
         rgba(0, 0, 0, 0.5),
         rgba(0, 0, 0, 0.5)
       ),
-      url('../images/self-header.jpg');
+      url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
     }
     
-    .CategoryBackground-text {
+    .SearchResultsBackground-text {
       width: 80%;
       height: auto;
       overflow: auto;
@@ -211,9 +226,8 @@
 
       h2 {
         display: none;
-        font-size: 24px;
+        font-size: 20px;
         color: White;
-        font-size: 24px;
         text-align: center;   
 
         @media $mediaMinSm {
@@ -297,6 +311,16 @@
   padding-left 15px
   padding-right 15px
   clear both 
+  color $gray-dark
+  font-size 14px
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* number of lines to show */
+  line-height: 1.42857143;        /* fallback */
+  max-height: 4.28571429;       /* fallback */
+  
 
   h5  
     text-align justify

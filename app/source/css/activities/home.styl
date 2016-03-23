@@ -74,6 +74,7 @@
 
                 .form-control {
                     background: White;
+                    font-size: 17px;
                 }
 
                 // Reduce column gaps by a 20px in total
@@ -236,7 +237,7 @@
                 li {
                     // background photo setup (will have an image per category)
                     background: White no-repeat top center / contain;
-                    background-size: contain;
+                    background-size: 240px auto;
                     display: inline-block;
                     width: $boxSize;
                     margin: $boxMargin;
@@ -263,31 +264,36 @@
                         background-size: 100% 157px;
                     }
                     */
-
+                    
+                    h3,
+                    .app-stars-rating {
+                      color: white;
+                    }
+                    
                     // Category background images
                     &.SearchCategory-home {
-                        background-image: url('../images/search-category-home.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_73410.jpg');
                     }
                     &.SearchCategory-children {
-                        background-image: url('../images/search-category-children.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_415150.jpg');
                     }
                     &.SearchCategory-pet {
-                        background-image: url('../images/search-category-pet.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_416775.jpg');
                     }
-                    &.SearchCategory-personal {
-                        background-image: url('../images/search-category-personal.jpg');
+                    &.SearchCategory-self {
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_567644.jpg');
                     }
                     &.SearchCategory-transport {
-                        background-image: url('../images/search-category-transport.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_770466.jpg');
                     }
                     &.SearchCategory-office {
-                        background-image: url('../images/search-category-office.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_143562.jpg');
                     }
                     &.SearchCategory-senior {
-                        background-image: url('../images/search-category-senior.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_273182.jpg');
                     }
                     &.SearchCategory-celebration {
-                        background-image: url('../images/search-category-celebration.jpg');
+                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_883208.jpg');
                     }
 
                     h3 {
@@ -318,15 +324,61 @@
                     }
                     
                     // icons
-                    > i {
-                        color: White;
-                        font-size: 4em;
+                    .SearchCategoryBackground {
+                        margin: 24px 8px;
                         display: inline-block;
-                        border-radius: 12px;
-                        background: $brand-primary;
-                        text-align: center;
-                        padding: 13px 20px;
-                        margin: 24px auto 8px;
+                        width: 96px;
+                        height: 96px;
+                        background-size: 96px 96px;
+                    
+                      &.Icon-home {
+                        background-image: url('../images/home.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/home.svg');
+                      }
+                      &.Icon-self {
+                        background-image: url('../images/self.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/self.svg');
+                      }
+                      &.Icon-pet {
+                        background-image: url('../images/pet.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/pet.svg');
+                      }
+                      &.Icon-celebration {
+                        background-image: url('../images/celebration.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/celebration.svg');
+                      }
+                      &.Icon-senior {
+                        background-image: url('../images/senior.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/senior.svg');
+                      }
+                      &.Icon-transport {
+                        background-image: url('../images/transport.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/transport.svg');
+                      }
+                      &.Icon-child {
+                        background-image: url('../images/child.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/child.svg');
+                      }
+                      &.Icon-office {
+                        background-image: url('../images/office.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/office.svg');
+                      }
                     }
                 }
                 
