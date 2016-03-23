@@ -302,7 +302,7 @@ function BaseClientBookingCardVM(app) {
         var b = this.booking();
         if (!b) return;
         var minutes = b.pricingSummary().firstSessionDurationMinutes();
-        if (this.serviceStartDatePickerView()) {
+        if (this.serviceStartDatePickerView() && minutes) {
             this.serviceStartDatePickerView().requiredDurationMinutes(minutes);
         }
     }, this);
