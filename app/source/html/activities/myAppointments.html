@@ -14,7 +14,8 @@
                 <span class="fa ion ion-calendar"></span>
             </div>
             <div class="Tile-content">
-                <div><strong data-bind="text: quantity"></strong> <span data-bind="text: concept"></span></div>
+                <p><strong data-bind="text: quantity, visible: !timePhrase()"></strong> <span data-bind="text: concept"></span></p>
+                <div><strong data-bind="text: quantity, visible: timePhrase"></strong> <span data-bind="text: concept"></span></div>
                 <div data-bind="text: timePhrase"></div>
             </div>
         </li>
