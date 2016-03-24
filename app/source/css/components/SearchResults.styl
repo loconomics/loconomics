@@ -6,69 +6,7 @@
 **/
 @import '../components/HomeNavBar.styl';
 
-.SearchResultsPreview 
-    background-color white
-    display block
-    margin-top 4px
-    padding 0
-    position absolute
-    left 0
-    right 0
-    z-index 9999
 
-    li 
-      list-style none
-        
-      a 
-        text-decoration none
-         
-      h3 
-        padding-top 15px
-        font-size 18px
-        text-align center
-      
-      ul 
-        width 100%
-        padding 0
-        
-        .Result 
-          border-bottom 1px solid $gray-light
-          display block
-          padding 15px 
-          height auto
-          
-          .Result-info
-            width 80%
-            float left
-            padding-left 15px          
-          
-            .Result-name 
-              color $gray-dark
-              font-size 16px
-
-            .Result-count 
-              font-size 16px
-              color $gray
-
-            .Result-description 
-              display block
-              font-size 12px
-              color $gray
-              line-height 24px
-              height 24px
-              white-space nowrap
-              overflow hidden
-              text-overflow ellipsis
-            
-          .btn-inline
-            width 15%
-            float right
-            margin-right 15px
-            margin-top 5px
-          
-          .Result hover 
-            background-color $gray-background
-    
 .SearchResults
   background-color $gray-background
 
@@ -123,13 +61,13 @@
 
   .SearchResultsBackground {
     padding-top: 10px;
-    height: 120px;
-    position: relative;
-    background: $brand-primary no-repeat center / cover;      
+    height: auto;
+    padding-bottom: 60px;
+    background: $brand-primary no-repeat center / cover; 
     @media $mediaMinSm {
-        height: 300px;
+      padding-bottom: 120px;
     }
-  
+    
     &.CategoryBackground-1 {
       background-image:  
       linear-gradient(
@@ -207,11 +145,6 @@
       height: auto;
       overflow: auto;
       margin: auto;
-      position: absolute;
-      top: 0; 
-      left: 0; 
-      bottom: 0; 
-      right: 0;
 
       h1 {
         color: White;

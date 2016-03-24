@@ -23,7 +23,7 @@
                             <li data-bind="visible: searchResults.jobTitles().length>0">
                               <h3>Services</h3>
                                  <ul data-bind="foreach: searchResults.jobTitles">
-                                    <li class="Result">
+                                    <li class="Result clearfix">
                                       <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                                           <div class="Result-info">
                                             <span class="Result-name" data-bind="text: pluralName"></span>
@@ -38,7 +38,7 @@
                             <li data-bind="visible: searchResults.serviceProfessionals().length>0">
                               <h3>Professionals</h3>                             
                                 <ul data-bind="foreach: searchResults.serviceProfessionals">
-                                    <li class="Result">
+                                    <li class="Result clearfix">
                                         <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
                                             <div class="Result-info">
                                                 <span class="Result-name" data-bind="text: firstName"></span> 
@@ -54,7 +54,7 @@
                             <li data-bind="visible: searchResults.categories().length>0">
                               <h3>Categories</h3>               
                                  <ul data-bind="foreach: searchResults.categories">
-                                    <li class="Result">
+                                    <li class="Result clearfix">
                                         <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                                           <div class="Result-info">
                                             <span class="Result-name" data-bind="text: categoryName"></span>     

@@ -41,7 +41,13 @@
         
         .home-search {
             padding-top: $HomeNavBar-Height + 32px;
-            background: rgb(79, 184, 185) url('../images/home-header.jpg') no-repeat top center / cover;
+            background: no-repeat center / cover;
+            background-image:  
+              linear-gradient(
+                rgba(0, 152, 154, 0.5),
+                rgba(0, 152, 154, 0.5)
+              ),
+              url('../images/Stocksy_txp67b81859qys000_Small_32232.jpg');
         
             .home-title {
                 color: White;
@@ -87,6 +93,88 @@
                     }
                 }
             }
+            .SearchResultsPreview {
+              background-color: white;
+              display: block;
+              margin-top: 4px;
+              padding: 0;
+              position: absolute;
+              left: 0;
+              right: 0;
+              z-index: 9999;
+              margin: 0 15px;
+
+              @media $mediaMinSm {
+                margin: 0 10px;
+              }  
+
+              li {
+                list-style: none;
+
+                a {
+                  text-decoration: none;
+                }
+
+                h3 {
+                  padding-top: 5px;
+                  font-size: 18px;
+                  text-align: center;
+                  margin: 10px 0;
+                  color: $gray-dark;
+                }
+
+                ul {
+                  width: 100%;
+                  padding: 0;
+
+                  .Result {
+                    border-bottom: 1px solid $gray-background;
+                    display: block;
+                    padding: 15px ;
+                    height: auto;
+                    clear: both;
+
+                    .Result-info {
+                      width: 80%;
+                      float: left;
+                      padding-left: 15px;         
+                    }
+                    .Result-name { 
+                      color: $gray-dark;
+                      font-size: 15px;         
+                    }
+
+                    .Result-count { 
+                      font-size: 15px;
+                      color: $gray;         
+                    }
+
+                    .Result-description { 
+                      display: block;
+                      font-size: 12px;
+                      color: $gray;
+                      line-height: 24px;
+                      height: 24px;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;         
+                    }
+
+                    .btn-inline {
+                      width: 15%;
+                      float: right;
+                      margin-right: auto;
+                      margin-top: 5px;         
+                    }
+                }
+
+                .Result:hover {
+                   background-color: $gray-background;
+                 }
+               }
+              }
+            }
+
         }
 
         
@@ -303,15 +391,18 @@
                     
                     app-stars-rating {
                         display: block;
+                        color: white;
                     }
                     
                     .StarsRating {
-                        color: $brand-secondary;
+                        color: white;
                         display: block;
                     }
                     
                     p {
                         margin: 0px 0px 30px;
+                        color: $gray-dark;
+                        font-size: 16px;
                     }
                     
                     .btn {
