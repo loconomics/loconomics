@@ -2482,7 +2482,8 @@ namespace LcRest
             IEnumerable<int> services,
             int languageID,
             int countryID,
-            string bookCode
+            string bookCode,
+            string specialRequests
         )
         {
             using (var db = new LcDatabase())
@@ -2598,6 +2599,7 @@ namespace LcRest
                 }
 
                 // 5º: persisting booking on database
+                booking.specialRequests = specialRequests;
                 // Explicitly set incomplete status when payment is enabled (since payment info was not added still, it requires
                 // a call to another method after this).
                 // On no payment, depends on instantBooking
