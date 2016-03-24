@@ -5,7 +5,7 @@
         <!-- Single button -->
         <div class="btn-group">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Change category <span class="caret">
+              Change category <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Home</a></li>
@@ -45,7 +45,6 @@
                  </div>
                  <ul data-bind="foreach: jobTitleSearchResult">
                    <li>
-                     <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID()">
                        <div class="CategoryResult-summary">
                          <div>
                            <h3><span data-bind="text: pluralName"></span></h3>
@@ -54,7 +53,7 @@
                            <app-stars-rating params="rating: averageRating, total: totalRatings" class="text-secondary"></app-stars-rating>
                          </div>
                        </div>
-                       <div class="CategoryResult-description" id="category-description">
+                       <div class="CategoryResult-description">
                            <span data-bind="text: searchDescription"></span>
                        </div>    
                        <div class="ServiceProfessionalResult-actions">
@@ -63,10 +62,8 @@
                          </h5>
                          <h5><span data-bind="visible: serviceProfessionalsCount < 1 || averageHourlyRate < 1">&nbsp;</span>
                          </h5>
-<!--                           href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + lat() + '/' + lng() + '/' + searchDistance()}" -->
-                           <a class="btn btn-primary">View and book</a>
+                           <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID + '/' + $root.origLat() + '/' + $root.origLong() + '/' + $root.searchDistance()}" class="btn btn-primary">View and book</a>
                       </div>
-                    </a>
                   </li>
                 </ul>
             </div>
