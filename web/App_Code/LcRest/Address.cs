@@ -157,6 +157,49 @@ namespace LcRest
         {
             return addressID == NewAddressID;
         }
+
+        /// <summary>
+        /// Checks if current address data is empty in all user fields. It doesn't checks fields like addressID, or timestamps.
+        /// This is useful to read data given by a user into an Address instance
+        /// and check if the user passed in some data or not, on the case of not we
+        /// may check if a given addressID was given, that means the user wants to use
+        /// that ID without update the address data.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return (
+                String.IsNullOrWhiteSpace(this.addressLine1) &&
+                String.IsNullOrWhiteSpace(this.addressLine2) &&
+                String.IsNullOrWhiteSpace(this.addressName) &&
+                String.IsNullOrWhiteSpace(this.postalCode) &&
+                String.IsNullOrWhiteSpace(this.specialInstructions) &&
+                !this.latitude.HasValue &&
+                !this.longitude.HasValue
+            );
+        }
+
+        /// <summary>
+        /// Checks if current address and the given address are similar, by checking if the
+        /// values at user editable fields are the same.
+        /// It's not an 'IsEqual' comparision because not all fields (addressID, timestamps) are checked.
+        /// </summary>
+        public bool IsSimilar(Address other) {
+            return (
+                this.addressLine1 == other.addressLine1 &&
+                this.addressLine2 == other.addressLine2 &&
+                this.addressName == other.addressName &&
+                this.postalCode == other.postalCode &&
+                this.specialInstructions == other.specialInstructions &&
+                this.latitude == other.latitude &&
+                this.longitude == other.longitude
+            );
+        }
+
+        public bool IsAnonymous()
+        {
+            return String.IsNullOrWhiteSpace(this.addressName);
+        }
         #endregion
 
         #region SQL
