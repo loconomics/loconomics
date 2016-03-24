@@ -334,7 +334,7 @@ function BaseClientBookingCardVM(app) {
             });
         }
         else {
-            return !this.booking().serviceAddress();
+            return !this.booking() || !this.booking().serviceAddress();
         }
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
