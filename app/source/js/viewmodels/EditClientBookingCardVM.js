@@ -128,7 +128,7 @@ function EditClientBookingCardVM(app) {
         // Final step, confirm and save booking
         this.isSaving(true);
 
-        app.model.bookings.setClientBooking(this.booking)
+        app.model.bookings.setClientBooking(this.booking())
         .then(afterSaveBooking)
         .catch(function(err) {
             this.isSaving(false);
