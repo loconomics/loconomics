@@ -2182,12 +2182,9 @@ namespace LcRest
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
-                if (!canChangePricing)
-                {
-                    // Load it, we need the information
-                    booking.FillPricingSummary();
-                }
-                else if (booking.CreatePricing(services))
+                // Load it, we need the information
+                booking.FillPricingSummary();
+                if (canChangePricing && booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
                     throw new ConstraintException("The booking require the selection of almost one service");
@@ -2731,6 +2728,7 @@ namespace LcRest
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
+                booking.FillPricingSummary();
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
@@ -2769,6 +2767,7 @@ namespace LcRest
 
 
                 // 4º: Validate addressID or update the existent, service-specific, one
+                booking.FillServiceAddress();
                 // Validate owership of the address
                 if (!serviceAddress.IsNewAddress() && !Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
                 {

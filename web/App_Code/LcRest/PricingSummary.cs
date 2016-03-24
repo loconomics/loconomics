@@ -70,17 +70,6 @@ namespace LcRest
         #region Instances
         public PricingSummary() { }
 
-        /// <summary>
-        /// Creates a pricing summary instance prefilling the reference fees
-        /// fields with values from the bookingType and depending if is for HIPAA or not.
-        /// </summary>
-        /// <param name="bookingTypeID"></param>
-        /// <param name="isHipaa"></param>
-        public PricingSummary(int bookingTypeID, bool isHipaa)
-        {
-
-        }
-
         public static PricingSummary FromDB(dynamic record)
         {
             return new PricingSummary
