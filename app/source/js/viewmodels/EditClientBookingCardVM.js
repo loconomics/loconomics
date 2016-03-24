@@ -114,6 +114,14 @@ function EditClientBookingCardVM(app) {
             // Go out edit mode
             this.editedVersion(null);
         }
+        this.isCancelMode(false);
+        
+        var msg = 'You\'re all set! We\'ll notify {0} of your changes.'.replace('{0}', this.serviceProfessionalInfo().profile().firstName());
+        
+        app.modals.showNotification({
+            title: 'Done!',
+            message: msg
+        });
 
         this.isSaving(false);
 
