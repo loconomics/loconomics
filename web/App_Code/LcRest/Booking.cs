@@ -1910,6 +1910,20 @@ namespace LcRest
             }
         }
         /// <summary>
+        /// Utility that checks if the booking is in 'declined/denied' state
+        /// and declination was performed by the client in a booking
+        /// created by the service-professional.
+        /// </summary>
+        bool isDeclinedByClient
+        {
+            get
+            {
+                return
+                    this.bookingStatusID == (int)LcEnum.BookingStatus.denied &&
+                    this.bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
+            }
+        }
+        /// <summary>
         /// Applies the cancellation policy rules on the current booking,
         /// depending on status, type and cancellation policy
         /// and updating the pricingSummary values about cancellation,
@@ -1922,7 +1936,7 @@ namespace LcRest
 
             pricingSummary.cancellationDate = DateTime.Now;
 
-            if (isCancelledByClient)
+            if (isCancelledByClient || isDeclinedByClient)
             {
                 var policy = CancellationPolicy.Get(cancellationPolicyID, languageID, countryID);
                 if (serviceDate == null)
@@ -2680,6 +2694,33 @@ namespace LcRest
 
             this.RefundPayment();
 
+            LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
+        }
+        /// <summary>
+        /// Performs a booking declination by a client, save at database and send messages
+        /// </summary>
+        public void DeclineBookingByClient()
+        {
+            // Constraint
+            if ((bookingStatusID != (int)LcEnum.BookingStatus.confirmed &&
+                bookingStatusID != (int)LcEnum.BookingStatus.request) ||
+                bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking)
+            {
+                throw new Exception("Booking cannot be cancelled. Status: " + bookingStatusID.ToString() +
+                    " Type: " + bookingTypeID.ToString()
+                );
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.denied;
+
+            this.RefundPayment();
+
+            // NOTE: We manage this case the same as a 'client cancellation' for messages and language,
+            // even if internally is a different status for us, because we need the 'denied' status to
+            // correctly analyze the booking.
             LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
         }
         /// <summary>

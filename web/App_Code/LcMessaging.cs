@@ -438,23 +438,23 @@ public class LcMessaging
         /// </summary>
         public virtual void InstantBookingConfirmed() { }
         /// <summary>
-        /// Connected: NO (there is no update-client API still)
+        /// Connected: Yes LcRest.Booking.UpdClientBooking
         /// </summary>
         public virtual void BookingUpdatedByClient() { }
         /// <summary>
-        /// Connected: NO
+        /// Connected: Yes LcRest.Booking.CancelBookingByServiceProfessional
         /// </summary>
         public virtual void BookingCancelledByServiceProfessional() { }
         /// <summary>
-        /// Connected: NO
+        /// Connected: Yes LcRest.Booking.UpdServiceProfessionalBooking
         /// </summary>
         public virtual void BookingUpdatedByServiceProfessional() { }
         /// <summary>
-        /// Connected: NO
+        /// Connected: Yes LcRest.Booking.CancelBookingByClient
         /// </summary>
         public virtual void BookingCancelledByClient() { }
         /// <summary>
-        /// Connected: NO
+        /// Connected: Yes
         /// </summary>
         public virtual void BookingRequestDeclined() { }
         /// <summary>

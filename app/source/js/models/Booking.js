@@ -115,6 +115,14 @@ function Booking(values) {
         );
     }, this);
     
+    this.canBeDeclinedByClient = ko.pureComputed(function() {
+        return (
+            (this.bookingStatusID() === Booking.status.confirmed ||
+            this.bookingStatusID() === Booking.status.request) &&
+            this.bookingTypeID() === Booking.type.serviceProfessionalBooking
+        );
+    }, this);
+    
     this.canBeDeclinedByServiceProfessional = ko.pureComputed(function() {
         return (
             this.bookingStatusID() === Booking.status.request &&

@@ -125,8 +125,15 @@ function BaseClientBookingCardVM(app) {
         if (!this.originalBooking()) return false;
         return !this.booking().bookingID() || this.booking().instantBooking() && this.booking().isConfirmed();
     }, this);
+    /**
+        This observable abstracts the idea of 'cancellation' for clients: internally
+        is either 'cancel' or 'decline', it depends on the booking type.
+    **/
     this.canCancel = ko.pureComputed(function() {
-        return this.originalBooking() && this.originalBooking().canBeCancelledByClient();
+        return this.originalBooking() && (
+            this.originalBooking().canBeCancelledByClient() ||
+            this.originalBooking().canBeDeclinedByClient()
+        );
     }, this);
     this.isAnonymous = ko.pureComputed(function() {
         var u = app.model.user();

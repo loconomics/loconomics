@@ -149,7 +149,11 @@ function EditClientBookingCardVM(app) {
     this.cancelBookingByClient = function() {
         if (!this.canCancel()) return;
         this.isSaving(true);
-        app.model.bookings.cancelBookingByClient(this.booking().bookingID())
+        var apiCall = this.booking().canBeCancelledByClient() ?
+            app.model.bookings.cancelBookingByClient :
+            app.model.bookings.declineBookingByClient
+        ;
+        apiCall(this.booking().bookingID())
         .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry

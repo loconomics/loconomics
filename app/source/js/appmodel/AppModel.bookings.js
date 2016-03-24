@@ -164,6 +164,13 @@ exports.create = function create(appModel) {
         });
     };
     
+    api.declineBookingByClient = function declineBookingByClient(bookingID) {
+        return appModel.rest.post('me/client-booking/' + bookingID + '/deny')
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
     // dateType values allowed by REST API: 'preferred', 'alternative1', 'alternative2'
     api.confirmBookingRequest = function confirmBookingRequest(bookingID, dateType) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/confirm', { dateType: dateType })
