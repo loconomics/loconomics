@@ -2047,11 +2047,11 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
                 var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null, true);
@@ -2059,9 +2059,9 @@ namespace LcRest
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
                 if (booking.CreatePricing(services))
-                    throw new ConstraintException("Chosen services does not belongs to the Job Title");
+                    throw new ConstraintException("Chosen services does not belong to the Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
@@ -2171,11 +2171,11 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 booking.FillUserJobTitle();
                 if (booking.userJobTitle == null)
@@ -2190,7 +2190,7 @@ namespace LcRest
                 else if (booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
@@ -2201,7 +2201,7 @@ namespace LcRest
                     // Because this API is only for providers, we avoid the advance time from the checking
                     var isAvailable = allowBookUnavailableTime || LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, startTime, endTime, true);
                     if (!isAvailable)
-                        throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+                        throw new ConstraintException("The chosen time is unavailable, it conflicts with a recent appointment!");
 
                     // Transaction begins
                     db.Execute("BEGIN TRANSACTION");
@@ -2492,11 +2492,11 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
                 var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, bookCode);
@@ -2505,9 +2505,9 @@ namespace LcRest
 
                 // Booking type enforced by this API, required before calculate correctly the pricing:
                 if (booking.CreatePricing(services))
-                    throw new ConstraintException("Choosen services does not belongs to the Job Title");
+                    throw new ConstraintException("Chosen services does not belong to the Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
@@ -2718,11 +2718,11 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 booking.FillUserJobTitle();
                 if (booking.userJobTitle == null)
@@ -2732,7 +2732,7 @@ namespace LcRest
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
-                    throw new ConstraintException("The booking require the selection of almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
@@ -2743,7 +2743,7 @@ namespace LcRest
                     // Because this API is only for providers, we avoid the advance time from the checking
                     var isAvailable = LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, serviceStartTime, endTime, false);
                     if (!isAvailable)
-                        throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+                        throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                     // Transaction begins
                     db.Execute("BEGIN TRANSACTION");
