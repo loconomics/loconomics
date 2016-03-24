@@ -96,13 +96,13 @@
             .SearchResultsPreview {
               background-color: white;
               display: block;
-              margin-top: 4px;
               padding: 0;
               position: absolute;
               left: 0;
               right: 0;
               z-index: 9999;
               margin: 0 15px;
+              box-shadow: 0 1.5px 0 0 $gray-background;
 
               @media $mediaMinSm {
                 margin: 0 10px;
@@ -388,7 +388,13 @@
                         font-size: 20px;
                         font-weight: bold;
                     }
-                    
+
+                    h4 {
+                        color: white;
+                        font-size: 16px;
+                        font-weight: bold;
+                    }
+                                        
                     app-stars-rating {
                         display: block;
                         color: white;

@@ -85,26 +85,31 @@
       float: left;
       position: absolute;
       margin-top: 0px;
-      border: 1px solid rgba(0,0,0,0.15);
-      border-top-left-radius: 0px;
-      border-top-right-radius: 0px;
+      border: 1px solid $gray-light;
+      border-radius: 0px;
       background-color: #fff;
-      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,0.175);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+      -webkit-box-shadow: 0 1.5px 0 0 $gray-background;
+      box-shadow: 0 1.5px 0 0 $gray-background;
       width: 100%;
       z-index: 9999;
+      margin: 0;
 
       > li {        
         text-align: center;
-        border-bottom: 1px solid rgba(204, 204, 204, 1);
+        border-bottom: 1px solid $gray-background;
         padding: 10px 10px;
-        margin: 0px 30px;
-
+        
         > a {
           white-space: normal;
           font-size: inherit;
         }
       }
+      
+      > li:hover,
+        a:hover{
+          background-color: $gray-background; 
+          color: $gray-dark;
+        }        
       
       > li:last-child {
           border-bottom: none;

@@ -3,17 +3,18 @@
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <!-- TODO: FROM JUVO, TO REFACTOR -->
     <!-- profile internal menu -->
-    <div class="PageMenu hidden-xs">
-        <ul>
-            <li><a href="#profile-overview">Overview</a></li>
-            <li><a href="#profile-pricing">Pricing</a></li>
-            <li><a href="#profile-reviews">Reviews</a></li>
-            <li><a href="#profile-workphotos">Photos</a></li>
-            <li><a href="#profile-locations">Location</a></li>
-            <li><a href="#profile-credentials">Credentials</a></li>
-        </ul>
+    <div class="PageMenu">
+        <div class="PageMenu-list  hidden-xs">
+            <ul>
+                <li><a href="#profile-overview">Overview</a></li>
+                <li><a href="#profile-pricing">Pricing</a></li>
+                <li><a href="#profile-reviews">Reviews</a></li>
+                <li><a href="#profile-workphotos">Photos</a></li>
+                <li><a href="#profile-locations">Location</a></li>
+                <li><a href="#profile-credentials">Credentials</a></li>
+            </ul>
+        </div>
     </div>
-
     <div data-bind="with: user">
         <div class="container profile">
             <div class="col-xs-12 col-sm-3 user-in-card">
