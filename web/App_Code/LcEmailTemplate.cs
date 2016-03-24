@@ -200,7 +200,7 @@ public static class LcEmailTemplate
         #region URLs
         public static string GetBookingUrl(int bookingID)
         {
-            return LcUrl.AppUrl + "appointment/" + bookingID.ToString();
+            return LcUrl.AppUrl + "viewBooking/" + bookingID.ToString();
         }
         /// <summary>
         /// URL: Opens a view in the website where the user can see the email content
