@@ -104,7 +104,13 @@ module.exports = function(/*grunt*/) {
                     path: './vendor/touch-punch/jquery.ui.touch-punch.min',
                     exports: null,
                     'depends': { 'jquery': null }
+                },
+                'jquery.dotdotdot': {
+                    path: './vendor/jQuery.dotdotdot-master/src/jquery.dotdotdot.js',
+                    exports: null,
+                    'depends': { 'jquery': null }
                 }
+      
             }
         }
     };
