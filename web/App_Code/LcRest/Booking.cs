@@ -585,7 +585,7 @@ namespace LcRest
         /// the payment is authorized with the exception of services for more than 7 days in advance,
         /// that ones are postponed because of authorization expirations.
         /// This query returns that bookings on a secure time frame to avoid expirations and prevent
-        /// take action if any problem: 48 hours before the service start.
+        /// take action if any problem: 24 hours before the service start.
         /// </summary>
         /// <param name="dbShared"></param>
         /// <returns></returns>
@@ -618,9 +618,9 @@ namespace LcRest
                         BookingStatusID IN (" + validStatuses + @")
                          AND
                         -- at 48 hours before service starts (after that is fine)
-                        getdate() >= dateadd(hh, -48, E.StartTime)
+                        getdate() >= dateadd(hh, -23, E.StartTime)
                         /* AND
-                         getdate() < dateadd(hh, -49, E.StartTime)
+                         getdate() < dateadd(hh, -24, E.StartTime)
                         */
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
             }
