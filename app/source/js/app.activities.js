@@ -68,6 +68,7 @@ module.exports = {
     'workPhotos': require('./activities/workPhotos'),
     'profile': require('./activities/profile'),
     'home': require('./activities/home'),
+    'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
     'terms': require('./activities/terms'),
     'about': require('./activities/about'),
