@@ -4,7 +4,7 @@
 var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment');
-    
+
 function BookingSummary(values) {
     
     Model(this);
@@ -12,16 +12,21 @@ function BookingSummary(values) {
     this.model.defProperties({
         quantity: 0,
         concept: '',
-        time: null,
+        time: { isDate: true },
         timeFormat: ' [@] h:mma'
     }, values);
-
-    this.phrase = ko.pureComputed(function(){
-        var t = this.timeFormat() && 
+    
+    this.timePhrase = ko.pureComputed(function() {
+        return (
+            this.timeFormat() && 
             this.time() && 
             moment(this.time()).format(this.timeFormat()) ||
-            '';        
-        return this.concept() + t;
+            ''
+        );
+    }, this);
+
+    this.phrase = ko.pureComputed(function(){
+        return this.concept() + this.timePhrase();
     }, this);
 
     this.url = ko.pureComputed(function() {

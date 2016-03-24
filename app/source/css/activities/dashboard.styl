@@ -1,9 +1,23 @@
-[data-activity=dashbard] {
+[data-activity=dashboard] {
     #dashboardNextBooking {
         // Minimum height just to reduce the flickering effect
         // between the loading phase and filling in data:
         min-height: 196px;
         // Overflow needed so internal margins don't collapse because of min-height
         overflow: hidden;
+    }
+    
+    #dashboardCurrentAppointment {
+        h4 {
+            display: inline-block;
+            padding: 1em;
+            margin: 0;
+            font-weight: bold;
+            color: $gray;
+        }
+        .btn {
+            float: right;
+            margin: .65em;
+        }
     }
 }

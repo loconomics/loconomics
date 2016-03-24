@@ -6,7 +6,10 @@ using System.Web;
 namespace LcRest
 {
     /// <summary>
-    /// Descripción breve de UpcomingBookingsInfo
+    /// Get statistical information about the upcoming bookings 
+    /// for the service professional, like how many, when starts, for different criteria.
+    /// It includes the next booking (closest in time to the moment of the request).
+    /// IMPORTANT: Bookings where the requested user is client are NOT included; check UpcomingAppointmentsInfo for that
     /// </summary>
     public class UpcomingBookingsInfo
     {
@@ -23,7 +26,7 @@ namespace LcRest
         public Summary tomorrow;
         public Summary thisWeek;
         public Summary nextWeek;
-        public int? nextBookingID;
+        public Booking nextBooking;
         #endregion
 
         #region Get
@@ -39,9 +42,7 @@ namespace LcRest
             WHERE   
                     -- Any bookings, as provider or customer
                     (
-                     B.ClientUserID=@0
-                      OR
-                     B.ServiceProfessionalUserID=@0
+                        B.ServiceProfessionalUserID=@0
                     )
                      AND
                     (   
@@ -61,9 +62,7 @@ namespace LcRest
             WHERE   
                     -- Any bookings, as provider or customer
                     (
-                     B.ClientUserID=@0
-                      OR
-                     B.ServiceProfessionalUserID=@0
+                        B.ServiceProfessionalUserID=@0
                     )
                      AND
                     (   
@@ -126,107 +125,15 @@ namespace LcRest
                     time = d.startTime
                 };
 
-                ret.nextBookingID = db.QueryValue(sqlGetNextBookingID, userID, leftToday);
-            }
-
-            return ret;
-        }
-        #endregion
-
-        #region OLD UpcomingBookings Code
-        /*
-        #region SQLs
-        private const string sqlGetBookingsByDateRange = @"
-        SELECT  B.BookingID,
-                B.ServiceProfessionalUserID,
-                B.ClientUserID,
-                B.PricingSummaryID,
-                B.BookingStatusID,
-
-                UC.FirstName As CustomerFirstName,
-                UC.LastName As CustomerLastName,
-
-                UP.FirstName As ProviderFirstName,
-                UP.LastName As ProviderLastName,
-
-                E.StartTime,
-                E.EndTime,
-                E.TimeZone,
-                Pos.PositionSingular,
-                Pr.TotalPrice As CustomerPrice,
-                (Pr.SubtotalPrice - Pr.PFeePrice) As ProviderPrice
-        FROM    Booking As B
-                 INNER JOIN
-                PricingSummary As Pr
-                  ON Pr.PricingSummaryID = B.PricingSummaryID AND Pr.PricingSummaryRevision = B.PricingSummaryRevision
-                 INNER JOIN
-                Users As UC
-                  ON UC.UserID = B.ClientUserID
-                 INNER JOIN
-                Users As UP
-                  ON UP.UserID = B.ServiceProfessionalUserID
-                 LEFT JOIN
-                CalendarEvents As E
-                  ON E.Id = B.ServiceDateID
-                 INNER JOIN
-                Positions As Pos
-                  ON Pos.PositionID = R.PositionID
-					AND Pos.LanguageID = @3 AND Pos.CountryID = @4
-        WHERE   (
-                 B.ClientUserID=@0
-                  OR
-                 B.ServiceProfessionalUserID=@0
-                )
-                 AND
-                (   @1 is null AND E.StartTime is null
-                    OR
-                    Convert(date, E.StartTime) >= @1
-                     AND
-                    Convert(date, E.StartTime) <= @2
-                )
-        ORDER BY E.StartTime DESC, B.UpdatedDate DESC
-        ";
-        #endregion
-
-        public static Dictionary<string, dynamic> GetUpcomingBookings(int userID, int upcomingLimit = 10)
-        {
-            var ret = new Dictionary<string, dynamic>();
-
-            // Preparing dates for further filtering
-            var today = DateTime.Today;
-            var tomorrow = today.AddDays(1);
-            // This week must not include today and tomorrow, to avoid duplicated entries
-            var upcomingFirstDay = tomorrow.AddDays(1);
-            var upcomingLastDay = System.Data.SqlTypes.SqlDateTime.MaxValue; // DateTime.MaxValue;
-
-            using (var db = Database.Open("sqlloco"))
-            {
-                var l = LcData.GetCurrentLanguageID();
-                var c = LcData.GetCurrentCountryID();
-                dynamic d = null;
-
-                d = db.Query(sqlGetBookingsByDateRange, userID, today, today, l, c);
-                if (d != null && d.Count > 0)
+                var nextBookingID = (int?)db.QueryValue(sqlGetNextBookingID, userID, leftToday);
+                if (nextBookingID.HasValue)
                 {
-                    ret["today"] = d;
-                }
-                d = db.Query(sqlGetBookingsByDateRange, userID, tomorrow, tomorrow, l, c);
-                if (d != null && d.Count > 0)
-                {
-                    ret["tomorrow"] = d;
-                }
-
-                var sqlLimited = sqlGetBookingsByDateRange.Replace("SELECT", "SELECT TOP " + upcomingLimit.ToString());
-                d = db.Query(sqlLimited, userID, upcomingFirstDay, upcomingLastDay, l, c);
-                if (d != null && d.Count > 0)
-                {
-                    ret["upcoming"] = d;
+                    ret.nextBooking = Booking.Get(nextBookingID.Value, true, false, userID);
                 }
             }
 
             return ret;
         }
-        */
         #endregion
     }
 }

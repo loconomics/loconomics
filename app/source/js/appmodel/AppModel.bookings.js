@@ -47,6 +47,13 @@ exports.create = function create(appModel) {
     api.getUpcomingBookings = function getUpcomingBookings() {
         return appModel.rest.get('me/upcoming-bookings');
     };
+    
+    /**
+        Get upcoming appointments meta-information for dashboard page
+    **/
+    api.getUpcomingAppointments = function getUpcomingAppointments() {
+        return appModel.rest.get('me/upcoming-appointments');
+    };
 
     /**
         Get a specific booking by ID
@@ -153,8 +160,6 @@ exports.create = function create(appModel) {
     api.cancelBookingByClient = function cancelBookingByClient(bookingID) {
         return appModel.rest.post('me/client-booking/' + bookingID + '/cancel')
         .then(function(serverBooking) {
-            // Reset calendar availability cache
-            appModel.calendar.clearCache();
             return new Booking(serverBooking);
         });
     };
@@ -237,6 +242,11 @@ exports.create = function create(appModel) {
     **/
     api.getNewClientBooking = function getNewClientBooking(options) {
         return appModel.rest.get('me/client-booking', options);
+    };
+    
+    api.setClientBooking = function setClientBooking(booking) {
+        // TODO
+        return Promise.resolve(booking);
     };
 
     return api;

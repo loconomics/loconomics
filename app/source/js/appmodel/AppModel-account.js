@@ -11,29 +11,6 @@ var localforage = require('localforage');
 
 exports.plugIn = function (AppModel) {
     /**
-        Try to perform an automatic login if there is a local
-        copy of credentials to use on that,
-        calling the login method that save the updated
-        data and profile.
-    **/
-    AppModel.prototype.tryLogin = function tryLogin() {
-        // Get saved credentials
-        return localforage.getItem('credentials')
-        .then(function(credentials) {
-            // If we have ones, try to log-in
-            if (credentials) {
-                // Attempt login with that
-                return this.login(
-                    credentials.username,
-                    credentials.password
-                );
-            } else {
-                throw new Error('No saved credentials');
-            }
-        }.bind(this));
-    };
-
-    /**
         Performs a login attempt with the API by using
         the provided credentials.
     **/

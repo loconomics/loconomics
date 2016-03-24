@@ -1,13 +1,13 @@
 @*
-    Getting logged user Upcoming Bookings Information:
+    Getting logged user Upcoming Bookings Information (bookings as service professional):
     - Next booking
     - Stats about upcoming ones
 
     EXAMPLES {
-        "Upcoming Bookings": {
+        "Upcoming Bookings (bookings where user is the service professional)": {
             "url": "/api/v1/en-US/me/upcoming-bookings",
             "get": {
-                "api comment": "The result is an object with: thisWeek, nextWeek, tomorrow, today, nextBookingID; first four will contain the amount of bookings in the period and the time it starts-first-booking/ends-last-booking depending on the case."
+                "api comment": "The result is an object with: thisWeek, nextWeek, tomorrow, today, nextBooking; first four will contain the amount of bookings in the period and the time it starts-first-booking/ends-last-booking depending on the case."
             }
         }
     }
@@ -22,6 +22,6 @@
     }
 }
 @{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
     new RestUpcommingBookings().JsonResponse(this);
 }

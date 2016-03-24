@@ -111,6 +111,11 @@ NavAction.menuNewItem = new NavAction({
     isMenu: true
 });
 
+NavAction.goMarketplace = new NavAction({
+    link: '/home',
+    icon: 'fa ion ion-ios-cart-outline'
+});
+
 NavAction.goHelpIndex = new NavAction({
     link: '/contactForm/general?mustReturn=true',
     text: 'help',

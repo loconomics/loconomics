@@ -159,7 +159,7 @@ function AppointmentCardViewModel(params) {
         this.editMode(false);
 
         // Notify
-        if (this.isBooking()) {
+        if (this.isBooking() && this.item().client()) {
 
             var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
@@ -209,16 +209,22 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
     
     this.confirmCancel = function confirmCancel() {
-        this.app.modals.confirm({
-            title: 'Cancel',
-            message: 'Are you sure?',
-            yes: 'Yes',
-            no: 'No'
-        })
-        .then(function() {
-            // Confirmed cancellation:
+        var v = this.editedVersion();
+        if (v && v.areDifferent()) {
+            this.app.modals.confirm({
+                title: 'Cancel',
+                message: 'Are you sure?',
+                yes: 'Yes',
+                no: 'No'
+            })
+            .then(function() {
+                // Confirmed cancellation:
+                this.cancel();
+            }.bind(this));
+        }
+        else {
             this.cancel();
-        }.bind(this));
+        }
     }.bind(this);
 
     // Delete Event

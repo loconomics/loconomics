@@ -1,0 +1,58 @@
+<!-- myAppointments activity -->
+<div data-activity="myAppointments" class="limited-size-md limited-size-lg">
+    <h1 class="SectionTitle"
+        data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing(), 'is-loading': upcomingAppointments.isLoading() }">
+        Upcoming 
+        <!-- ko component: {
+            name: 'app-loading-spinner',
+            params: { mod: 'onRight' }
+        } --><!-- /ko -->
+    </h1>
+    <ul class="TilesList">
+        <li class="InfoTile" data-bind="with: upcomingAppointments.nextOnes">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-calendar"></span>
+            </div>
+            <div class="Tile-content">
+                <div><strong data-bind="text: quantity"></strong> <span data-bind="text: concept"></span></div>
+                <div data-bind="text: timePhrase"></div>
+            </div>
+        </li>
+        <li class="InfoTile" data-bind="with: upcomingAppointments.pendingRequests">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-calendar"></span>
+            </div>
+            <div class="Tile-content">
+                <p><strong data-bind="text: quantity"></strong> <span data-bind="text: concept"></span></p>
+            </div>
+        </li>
+        <li class="InfoTile" data-bind="with: upcomingAppointments.pendingScheduling">
+            <div class="Tile-icon" aria-hidden="true">
+                <span class="fa ion ion-ios-compose-outline"></span>
+            </div>
+            <div class="Tile-content">
+                <p><strong data-bind="text: quantity"></strong> <span data-bind="text: concept"></span></p>
+            </div>
+        </li>
+    </ul>
+    <div data-bind="if: pastAppointments.count">
+        <h1 class="SectionTitle"
+            data-bind="css: { 'is-syncing': pastAppointments.isSyncing() }">
+            Past
+            <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+            } --><!-- /ko -->
+        </h1>
+        <ul class="TilesList">
+            <li><a class="InfoTile" href="/pastAppointments">
+                <div class="Tile-icon" aria-hidden="true">
+                    <span class="fa ion ion-rewind" aria-hidden="true"></span>
+                </div>                
+                <div class="Tile-content"><p>
+                    <span data-bind="text: pastAppointments.count"></span> past appointments
+                </p></div>
+            </a></li>
+        </ul>
+    </div>
+</div>

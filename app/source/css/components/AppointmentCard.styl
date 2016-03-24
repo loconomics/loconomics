@@ -49,8 +49,25 @@
         }
     }
     
+    &.in-edit {
+        .Tile-icon .ion-edit {
+            //color: $brand-secondary;
+            // Per design at #880, icon inside a circle
+            color: white;
+            background: $brand-secondary;
+            border-radius: 50%;
+            // ItemTile Tile-icon size:
+            width: 20px;
+            height: 20px;
+            font-size: 13px;
+            text-align: center;
+            vertical-align: top;
+        }
+    }
+    
     .TilesList {
-        > li > .InfoTile {
+        > li > .InfoTile,
+        > li > .ItemTile {
             // Reduce hgap so keeps the same gap with the window edges,
             // compensate the card padding
             padding-right: 6px;

@@ -41,7 +41,7 @@ module.exports = {
     
     html: {
         files: ['./source/html/app.js.html', './source/html/**/*.html', './source/html/modals/*.html'],
-        tasks: ['build-html', 'build-webapp-html']
+        tasks: ['build-html']
     },
     
     configXml: {

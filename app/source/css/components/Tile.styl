@@ -123,6 +123,12 @@ Tile-addContent($linesNumber) {
                 margin: $btnMargin auto;
             }
         }
+        
+        // Support for Bootstrap labels
+        .label {
+            font-size: 1em;
+            margin: 0 .7em;
+        }
     }
 }
 
@@ -143,6 +149,25 @@ Tile-addTagContentSupport($vgap, $left = -6px) {
                 border-left: 2px solid $color;
                 display: block;
             }
+        }
+    }
+    
+    for $color in $brand-colors {
+        addTagFor($color, $brand-colors[$color]);
+    }
+    
+    for $color in $gray-colors {
+        addTagFor('gray-' + $color, $gray-colors[$color]);
+    }
+}
+
+/** Add colored background support */
+Tile-addStyleSupport() {
+    
+    addTagFor($colorName, $color) { 
+        &.Tile--{$colorName} {
+            background: $color;
+            color: White;
         }
     }
     
