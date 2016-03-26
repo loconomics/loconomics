@@ -21,10 +21,8 @@ var A = Activity.extend(function TermsActivity() {
         e.preventDefault();
         e.stopImmediatePropagation();
         $(this).tab('show');
-        if (window.history && window.history.replaceState) {
-            var link = $(this).attr('href').replace(/^#terms-/, '');
-            window.history.replaceState(null, null, '#!terms/' + link);
-        }
+        var link = $(this).attr('href').replace(/^#terms-/, '');
+        this.app.shell.replaceState(null, null, '#!terms/' + link);
     });
 });
 

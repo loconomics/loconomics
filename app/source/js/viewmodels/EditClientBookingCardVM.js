@@ -87,19 +87,27 @@ function EditClientBookingCardVM(app) {
 
     ///
     /// Load Booking data
-    this.load = function(bookingID) {
-
-        this.isLoadingBooking(true);
-        
-        app.model.bookings.getBooking(bookingID).then(function(booking) {
-            this.originalBooking(booking);
+    this.load = function(bookingIdOrModel) {
+        if (bookingIdOrModel && bookingIdOrModel.model) {
+            // Use model as original data
+            this.originalBooking(bookingIdOrModel);
             this.progress.reset().go('confirm');
-            this.isLoadingBooking(false);
-        }.bind(this))
-        .catch(function(err) {
-            this.isLoadingBooking(false);
-            app.modals.showError({ error: err });
-        }.bind(this));
+            return Promise.resolve();
+        }
+        else {
+            // Load by ID
+            var bookingID = bookingIdOrModel |0;
+            this.isLoadingBooking(true);
+            return app.model.bookings.getBooking(bookingID).then(function(booking) {
+                this.originalBooking(booking);
+                this.progress.reset().go('confirm');
+                this.isLoadingBooking(false);
+            }.bind(this))
+            .catch(function(err) {
+                this.isLoadingBooking(false);
+                app.modals.showError({ error: err });
+            }.bind(this));
+        }
     }.bind(this);
 
     /// Save helpers

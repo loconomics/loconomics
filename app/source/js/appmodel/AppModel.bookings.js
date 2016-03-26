@@ -34,7 +34,6 @@ exports.create = function create(appModel) {
             start: date,
             end: end
         }).then(function(bookings) {
-            // Put in cache (they are already model instances)
             var arr = ko.observableArray(bookings);
             // Return the observable array
             return arr;
