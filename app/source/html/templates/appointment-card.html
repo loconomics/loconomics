@@ -189,7 +189,7 @@
             <li>
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToClient')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-edit"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().preNotesToClient(), text: item().preNotesToClient"></p>
@@ -200,7 +200,7 @@
             <li>
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToSelf')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-edit"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().preNotesToSelf, text: item().preNotesToSelf"></p>
@@ -211,18 +211,18 @@
             <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToClient')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-compose-outline"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().postNotesToClient(), text: item().postNotesToClient"></p>
-                        <p data-bind="visible: !item().postNotesToClient()" class="text-muted">Notes to client (afterwards)</p>
+                        <p data-bind="visible: !item().postNotesToClient()" class="text-muted">Post app't notes to client</p>
                     </div>
                 </button>
             </li>
             <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToSelf')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-compose-outline"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().postNotesToSelf, text: item().postNotesToSelf"></p>

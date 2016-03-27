@@ -281,10 +281,11 @@
                     </li>
                     <li data-bind="visible: canEdit() || booking().specialRequests()">
                         <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickSpecialRequests">
-                            <i class="Tile-marker fa ion ion-edit" aria-hidden="true"></i>
+                            <i class="Tile-marker fa ion ion-compose" aria-hidden="true"></i>
                             <div class="Tile-content">
+                                <p data-bind="visible: !booking().specialRequests(), text: specialRequestsPlaceholder" class="text-muted"></p>
                                 <p data-bind="visible: booking().specialRequests(), text: booking().specialRequests()"></p>
-                                <p data-bind="visible: canEdit() && isEditMode() && !booking().specialRequests(), text: specialRequestsPlaceholder" class="text-muted"></p>
+                                <p data-bind="visible: canEdit() && isEditMode() && !booking().specialRequests()" class="text-muted"></p>
                             </div>
                             <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                         </button>
