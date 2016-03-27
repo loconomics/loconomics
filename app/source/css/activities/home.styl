@@ -83,6 +83,12 @@
                     font-size: 17px;
                 }
 
+                .form-control:focus {
+                  border-bottom: 1px solid #ccc;
+                  border-top: none;
+                  border-right: none;
+                }
+
                 // Reduce column gaps by a 20px in total
                 // for sizes bigger than XS (so keep standar in phone where
                 // forms goes vertical)
@@ -93,88 +99,6 @@
                     }
                 }
             }
-            .SearchResultsPreview {
-              background-color: white;
-              display: block;
-              padding: 0;
-              position: absolute;
-              left: 0;
-              right: 0;
-              z-index: 9999;
-              margin: 0 15px;
-              box-shadow: 0 1.5px 0 0 $gray-background;
-
-              @media $mediaMinSm {
-                margin: 0 10px;
-              }  
-
-              li {
-                list-style: none;
-
-                a {
-                  text-decoration: none;
-                }
-
-                h3 {
-                  padding-top: 5px;
-                  font-size: 18px;
-                  text-align: center;
-                  margin: 10px 0;
-                  color: $gray-dark;
-                }
-
-                ul {
-                  width: 100%;
-                  padding: 0;
-
-                  .Result {
-                    border-bottom: 1px solid $gray-background;
-                    display: block;
-                    padding: 15px ;
-                    height: auto;
-                    clear: both;
-
-                    .Result-info {
-                      width: 80%;
-                      float: left;
-                      padding-left: 15px;         
-                    }
-                    .Result-name { 
-                      color: $gray-dark;
-                      font-size: 15px;         
-                    }
-
-                    .Result-count { 
-                      font-size: 15px;
-                      color: $gray;         
-                    }
-
-                    .Result-description { 
-                      display: block;
-                      font-size: 12px;
-                      color: $gray;
-                      line-height: 24px;
-                      height: 24px;
-                      white-space: nowrap;
-                      overflow: hidden;
-                      text-overflow: ellipsis;         
-                    }
-
-                    .btn-inline {
-                      width: 15%;
-                      float: right;
-                      margin-right: auto;
-                      margin-top: 5px;         
-                    }
-                }
-
-                .Result:hover {
-                   background-color: $gray-background;
-                 }
-               }
-              }
-            }
-
         }
 
         

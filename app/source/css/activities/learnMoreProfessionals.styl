@@ -9,7 +9,7 @@
 @import '../components/SearchBar.styl';
 @import '../components/HomeNavBar.styl';
 
-[data-activity=home] {
+[data-activity=learnMoreProfessionals] {
 
     
     // NO NAVBAR, disabled on the JS activity, so this can replace the default:
@@ -24,7 +24,7 @@
         $sectionTitleFontSizeSmall = 28px;
         $sectionTitleLineHeightSmall = ceil($sectionTitleFontSizeSmall * 1.1);
 
-        .home-section-title {
+        .coop-section-title {
             color: White;
             font-size: $sectionTitleFontSize;
             line-height: $sectionTitleLineHeight;
@@ -39,7 +39,7 @@
             }
         }
         
-        .home-search {
+        .coop-search {
             padding-top: $HomeNavBar-Height + 32px;
             background: no-repeat center / cover;
             background-image:  
@@ -47,9 +47,9 @@
                 rgba(0, 152, 154, 0.1),
                 rgba(0, 152, 154, 0.1)
               ),
-              url('../images/Stocksy_txp67b81859qys000_Small_32232.jpg');
+              url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
         
-            .home-title {
+            .coop-title {
                 color: White;
                 font-size: 44px;
                 font-weight: bold;
@@ -61,7 +61,7 @@
                 }
             }
 
-            .home-tagline {
+            .coop-tagline {
                 color: White;
                 font-size: 24px;
                 margin: 0.5em auto;
@@ -69,18 +69,24 @@
             }
 
             // Edge limit for phone
-            .home-title,
-            .home-tagline {
+            .coop-title,
+            .coop-tagline {
                 padding: 0 $grid-gap;
             }
 
             form {
                 margin: 40px auto;
-                max-width: 700px;
+                max-width: 450px;
 
                 .form-control {
                     background: White;
                     font-size: 17px;
+                }
+
+                .form-control:focus {
+                  border-bottom: 1px solid #ccc;
+                  border-top: none;
+                  border-right: none;
                 }
 
                 // Reduce column gaps by a 20px in total
@@ -93,93 +99,11 @@
                     }
                 }
             }
-            .SearchResultsPreview {
-              background-color: white;
-              display: block;
-              padding: 0;
-              position: absolute;
-              left: 0;
-              right: 0;
-              z-index: 9999;
-              margin: 0 15px;
-              box-shadow: 0 1.5px 0 0 $gray-background;
-
-              @media $mediaMinSm {
-                margin: 0 10px;
-              }  
-
-              li {
-                list-style: none;
-
-                a {
-                  text-decoration: none;
-                }
-
-                h3 {
-                  padding-top: 5px;
-                  font-size: 18px;
-                  text-align: center;
-                  margin: 10px 0;
-                  color: $gray-dark;
-                }
-
-                ul {
-                  width: 100%;
-                  padding: 0;
-
-                  .Result {
-                    border-bottom: 1px solid $gray-background;
-                    display: block;
-                    padding: 15px ;
-                    height: auto;
-                    clear: both;
-
-                    .Result-info {
-                      width: 80%;
-                      float: left;
-                      padding-left: 15px;         
-                    }
-                    .Result-name { 
-                      color: $gray-dark;
-                      font-size: 15px;         
-                    }
-
-                    .Result-count { 
-                      font-size: 15px;
-                      color: $gray;         
-                    }
-
-                    .Result-description { 
-                      display: block;
-                      font-size: 12px;
-                      color: $gray;
-                      line-height: 24px;
-                      height: 24px;
-                      white-space: nowrap;
-                      overflow: hidden;
-                      text-overflow: ellipsis;         
-                    }
-
-                    .btn-inline {
-                      width: 15%;
-                      float: right;
-                      margin-right: auto;
-                      margin-top: 5px;         
-                    }
-                }
-
-                .Result:hover {
-                   background-color: $gray-background;
-                 }
-               }
-              }
-            }
-
         }
 
         
         // How It Works section
-        .home-hiw {
+        .coop-hiw {
             text-align: center;
             color: $gray;
             background: White;
@@ -204,7 +128,7 @@
             
             // icons
             i {
-                background: $brand-secondary-background;
+                background: $brand-primary;
                 font-size: floor($iconsSize / 1.60);
                 border-radius: 100%;
                 width: $iconsSize;
@@ -214,12 +138,12 @@
 
         }
         
-        // Why book on Loconomics section
-        .home-booking {
+        // Benefits of ownership in Loconomics
+        .coop-benefits {
             $boxSize = 340px;
             $boxMargin = 1.5%;
 
-            background: $brand-secondary-background;
+            background: $brand-secondary;
             text-align: center;
             padding-top: 40px;
 
@@ -261,6 +185,27 @@
                         font-weight: bold;
                     }
                     
+                    h2 {
+                        font-size: 38px;
+                        font-weight: bold;
+                        color: $brand-secondary;
+                        margin: 0;
+                        text-align: center;
+                    }
+                    
+                    .Icon-bookNow {
+                        display: inline-block;
+                        width: 100px;
+                        height: 37px;
+                        color: $brand-secondary;
+                        background-size: 100px 37px;
+                        background-image: url('../images/book-now.png');
+                        background-image: 
+                          linear-gradient(transparent, transparent),
+                          url('../images/book-now.svg');
+                        
+                    }
+                    
                     h3 {
                         font-size: 15px;
                         font-weight: bold;
@@ -280,7 +225,7 @@
                 }
             }
             
-            .home-booking-more {
+            .coop-about-us {
                 width: $boxSize;
                 margin: auto;
                 padding-bottom: 2em;
@@ -301,9 +246,66 @@
                 }
             }
         }
+
         
-        .home-categories {
-            $boxSize = 240px;
+        // How the Cooperative Works section
+        .coop-ownership {
+            text-align: center;
+            color: $gray;
+            background: White;
+            down-arrow($arrowSize, 0, none, White, center);
+            padding-top: 40px;
+            
+            $iconsSize = 90px;
+            
+            .coop-section-title {
+              color: $gray-dark;
+            }
+            
+            ul {
+                margin-top: ($iconsSize / 2) + 18px;
+                margin-bottom: 0;
+                padding-bottom: ($iconsSize / 2);
+                
+                @media (max-width: 520px) {
+                    margin-top: 0px;
+                }
+                
+                > li {
+                  margin-top: (0 - $iconsSize / 2);
+                
+                  @media (max-width: 520px) {
+                    margin-top: 30px;
+                  }
+                }
+            }
+            @media (max-width: 520px) {
+                    margin: 0 $grid-gap;
+            }
+            
+            
+            
+            h3 {
+                font-weight: bold;
+                font-size: 22px;
+            }
+            
+            // icons
+            i {
+                background: white;
+                border: 2px solid $brand-secondary;
+                font-size: floor($iconsSize / 1.60);
+                border-radius: 50%;
+                width: $iconsSize;
+                height: $iconsSize;
+                line-height: $iconsSize;
+                color: $brand-secondary;
+            }
+
+        }
+        
+        .coop-pricing {
+            $boxSize = 300px;
             $boxMargin = 1.5%;
             
             background: $gray-background;
@@ -328,9 +330,10 @@
                     background-size: 240px auto;
                     display: inline-block;
                     width: $boxSize;
+                    height: 240px;
                     margin: $boxMargin;
-                    padding: 12px;
                     vertical-align: middle;
+                    box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
                     
                     /* DISABLED, background does not looks good, and not so needed
                     // For a small size where only one card fits the space (~pixels)
@@ -353,56 +356,20 @@
                     }
                     */
                     
-                    h3,
-                    .app-stars-rating {
-                      color: white;
-                    }
-                    
-                    // Category background images
-                    &.SearchCategory-home {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_73410.jpg');
-                    }
-                    &.SearchCategory-children {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_415150.jpg');
-                    }
-                    &.SearchCategory-pet {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_416775.jpg');
-                    }
-                    &.SearchCategory-self {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_567644.jpg');
-                    }
-                    &.SearchCategory-transport {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_770466.jpg');
-                    }
-                    &.SearchCategory-office {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_143562.jpg');
-                    }
-                    &.SearchCategory-senior {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_273182.jpg');
-                    }
-                    &.SearchCategory-celebration {
-                        background-image: url('../images/Stocksy_txp67b81859qys000_Small_883208.jpg');
-                    }
-
                     h3 {
-                        font-size: 20px;
-                        font-weight: bold;
+                      font-size: 36px;
+                      color: white;
+                      background-color: $brand-primary;
+                      padding: 25px 0px;
+                      -webkit-margin-before: 0;
+                      -webkit-margin-after: 0;
+                      margin: 0px;
                     }
 
-                    h4 {
-                        color: white;
-                        font-size: 16px;
+                    h1 {
+                        font-size: 56px;
                         font-weight: bold;
-                    }
-                                        
-                    app-stars-rating {
-                        display: block;
-                        color: white;
-                    }
-                    
-                    .StarsRating {
-                        color: white;
-                        display: block;
+                        color: $gray-dark;
                     }
                     
                     p {
@@ -410,73 +377,16 @@
                         color: $gray-dark;
                         font-size: 16px;
                     }
-                    
-                    .btn {
-                        font-weight: bold;
-                        
-                        em {
-                            font-weight: normal;
-                            font-style: normal;
-                        }
-                    }
-                    
-                    // icons
-                    .SearchCategoryBackground {
-                        margin: 24px 8px;
-                        display: inline-block;
-                        width: 96px;
-                        height: 96px;
-                        background-size: 96px 96px;
-                    
-                      &.Icon-home {
-                        background-image: url('../images/home.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/home.svg');
-                      }
-                      &.Icon-self {
-                        background-image: url('../images/self.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/self.svg');
-                      }
-                      &.Icon-pet {
-                        background-image: url('../images/pet.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/pet.svg');
-                      }
-                      &.Icon-celebration {
-                        background-image: url('../images/celebration.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/celebration.svg');
-                      }
-                      &.Icon-senior {
-                        background-image: url('../images/senior.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/senior.svg');
-                      }
-                      &.Icon-transport {
-                        background-image: url('../images/transport.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/transport.svg');
-                      }
-                      &.Icon-child {
-                        background-image: url('../images/child.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/child.svg');
-                      }
-                      &.Icon-office {
-                        background-image: url('../images/office.png');
-                        background-image: 
-                          linear-gradient(transparent, transparent),
-                          url('../images/office.svg');
-                      }
-                    }
+                }
+                
+                .coop-or {
+                  display: inline-block;
+                  margin: 20px 30px;
+                  text-align: center;
+                  
+                  @media (max-width: 520px) {
+                    display: block;
+                  }
                 }
                 
                 // Setting margin for small screens since the items margin is auto there
@@ -493,16 +403,16 @@
         /// box and out of the background, while keeping separation with previous section;
         // Manually calculated:
         $offset = 126px;
-        .home-search {
+        .coop-search {
             // Add the space to home-search on bottom to hold the moved-up home-hiw
             // while keeping background filling the whole area
             padding-bottom: $offset;
         }
-        .home-hiw {
+        .coop-hiw {
             margin-bottom: (0 - $offset);
             
-            .home-section-title,
-            .home-section-listing {
+            .coop-section-title,
+            .coop-section-listing {
                 position: relative;
                 top: (0 - $offset);
             }
@@ -513,7 +423,7 @@
             
             // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
             @media $mediaMaxXs {
-                .home-section-title {
+                .coop-section-title {
                     // 2 lines height, even when only one required to keep offsets the same
                     height: ($sectionTitleLineHeightSmall * 2);
                     box-sizing: content-box;
@@ -529,8 +439,8 @@
                 }
             }
         }
-        .home-booking {
-            .home-section-title {
+        .coop-benefits {
+            .coop-section-title {
                 // Required to avoid an ugly side-effect from the negative margin offset on the
                 // previous box (home-hiw):
                 // IMPORTANT: The clear must go in the first element in this container (the title)
@@ -538,5 +448,105 @@
                 clear: both;
             }
         }
+        
+        .coop-signup {
+            padding-top: 32px;
+            background: no-repeat center / cover;
+            background-image:  
+              linear-gradient(
+                rgba(0, 152, 154, 0.1),
+                rgba(0, 152, 154, 0.1)
+              ),
+              url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
+        
+            .coop-title {
+                color: White;
+                font-size: 44px;
+                font-weight: bold;
+                margin: 0.4em auto;
+                text-align: center
+                
+                @media $mediaMaxSm {
+                    font-size: 38px;
+                }
+            }
+
+            .coop-tagline {
+                color: White;
+                font-size: 24px;
+                margin: 0.5em auto;
+                text-align: center;
+            }
+
+            // Edge limit for phone
+            .coop-title,
+            .coop-tagline {
+                padding: 0 $grid-gap;
+            }
+
+            form {
+                margin: 40px auto;
+                max-width: 450px;
+
+                .form-control {
+                    background: White;
+                    font-size: 17px;
+                }
+
+                .form-control:focus {
+                  border-bottom: 1px solid #ccc;
+                  border-top: none;
+                  border-right: none;
+                }
+
+                // Reduce column gaps by a 20px in total
+                // for sizes bigger than XS (so keep standar in phone where
+                // forms goes vertical)
+                @media $mediaMinSm {
+                    > * {
+                        padding-left: 10px;
+                        padding-right: 10px;
+                    }
+                }
+            }
+            
+            ul {
+              text-align: center;
+              margin: 0 auto;
+              padding-bottom: 10px;
+              -webkit-padding-start: 0px;
+              
+              li {
+                margin: auto;
+                padding: 12px;
+                vertical-align: middle;
+              }
+            }
+            
+            .Icon-appleStore {
+                margin: 20px 8px;
+                display: inline-block;
+                width: 187px;
+                height: 61px;
+                background-size: 187px 61px;
+                background-image: 
+                  linear-gradient(transparent, transparent),
+                  url('../images/Download_on_the_App_Store_Badge_US-UK_135x40.svg');
+            }
+            
+            .Icon-googlePlay {
+                margin: 20px 8px;
+                display: inline-block;
+                width: 187px;
+                height: 61px;
+                background-size: 187px 61px;
+                background-image: url('../images/en-play-badge-border.png');
+            }
+            
+            
+            
+        }
+
+        
     }
 }
