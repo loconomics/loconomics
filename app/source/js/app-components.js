@@ -117,7 +117,7 @@ exports.registerAll = function(app) {
     ko.components.register('app-stars-rating', {
         template: { element: 'stars-rating-template' },
         viewModel: function(params) {
-            this.rating = getObservable(params.rating || 2.5);
+            this.rating = getObservable(params.rating || 0);
             this.total = getObservable(params.total || 0);
             this.size = getObservable(params.size || '');
             

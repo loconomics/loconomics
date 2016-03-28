@@ -8,6 +8,7 @@ var
     SearchResults = require('../models/SearchResults'),
     ko = require('knockout'),
     Activity = require('../components/Activity'),
+    SignupVM = require('../viewmodels/Signup'),
     snapPoints = require('../utils/snapPoints');
 
 var googleMapReady = require('../utils/googleMapReady');
@@ -19,7 +20,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
     Activity.apply(this, arguments);
     this.navBar = null;
     this.accessLevel = null;
-    this.viewModel = new ViewModel(this.app.model);
+    this.viewModel = new ViewModel(this.app);
     this.viewModel.nav = this.app.navBarBinding;
     var $header = this.$header = this.$activity.find('header');
 
@@ -34,6 +35,15 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
                 $header.removeClass('is-fixed');
             }
         }
+    });
+    
+    // Redircect on success
+    this.registerHandler({
+        target: this.viewModel.signup,
+        event: 'signedup',
+        handler: function() {
+            this.app.goDashboard();
+        }.bind(this)
     });
 
     this.registerHandler({
@@ -136,10 +146,21 @@ A.prototype.show = function show(state) {
 };
 
 
-function ViewModel(appModel) {
+function ViewModel(app) {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();
+    this.isServiceProfessional = ko.pureComputed(function() {
+        var u = app.model.user();
+        return u && u.isServiceProfessional();
+    });
+    this.isClient = ko.pureComputed(function() {
+        var u = app.model.user();
+        return u && u.isClient();
+    });
+    //Signup
+    this.signup = new SignupVM(app); 
+    this.signup.profile('service-professional');
     // Coordinates
     this.lat = ko.observable(DEFAULT_LOCATION.lat);
     this.lng = ko.observable(DEFAULT_LOCATION.lng);
@@ -150,7 +171,7 @@ function ViewModel(appModel) {
     this.loadData = function(searchTerm, lat, lng) {
         this.isLoading(true);
         //Call the get rest API method for api/v1/en-US/search
-        return appModel.rest.get('search', {
+        return app.model.rest.get('search', {
             searchTerm: searchTerm, 
             origLat: lat || DEFAULT_LOCATION.lat,
             origLong: lng || DEFAULT_LOCATION.lng,
@@ -187,11 +208,8 @@ function ViewModel(appModel) {
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
     },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 1000 } });
     
-    this.isSearchAutocompleteOpened = ko.pureComputed(function() {
-        return (
-            this.searchResults.jobTitles().length || 
-            this.searchResults.serviceProfessionals().length || 
-            this.searchResults.categories().length
-        );
+    this.isInput = ko.pureComputed(function() {
+        var s = this.searchTerm();
+        return s && s.length > 2;
     }, this);
 }

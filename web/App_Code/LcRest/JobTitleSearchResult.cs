@@ -16,7 +16,7 @@ namespace LcRest
         public string pluralName;
         public string description;
         public string searchDescription;
-        public decimal averageRating;
+        public decimal? averageRating;
         public long totalRatings;
         public decimal? averageResponseTimeMinutes;
         public decimal? averageHourlyRate;
@@ -69,131 +69,123 @@ namespace LcRest
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
 
-                        SELECT 
-                    		jobTitleID
-                    		,pluralName
-                    		,singularName
-                    		,description
-                    		,searchDescription
-                    		,averageRating
-                    		,totalRatings
-                    		,averageResponseTimeMinutes
-                    		,averageHourlyRate
-                    		,minServicePrice
-                    		,minHourlyRate
-                            ,CASE WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minServicePrice < minHourlyRate THEN '$' + convert(varchar,  minServicePrice)
-                              WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minHourlyRate < minServicePrice THEN '$' + convert(varchar,  minHourlyRate) + '/hour'
-                              WHEN (minServicePrice > 0 AND minHourlyRate is null) THEN '$' + convert(varchar,  minServicePrice)
-                              WHEN (minHourlyRate > 0 AND minServicePrice is null) THEN '$' + convert(varchar,  minHourlyRate) + '/hour' ELSE NULL END as minServiceValue
-                            ,serviceProfessionalsCount  
-                            ,displayRank
-                            FROM
-                            (                
-                    SELECT	
-                            P.PositionID as jobTitleID
-                            ,P.PositionPlural as pluralName
-                            ,P.PositionSingular as singularName
-                            ,P.PositionDescription as description
-                            ,P.PositionSearchDescription as searchDescription
-                            ,coalesce((SELECT
-                                avg( (coalesce(UR2.Rating1, 0) + coalesce(UR2.Rating2, 0) + coalesce(UR2.Rating3, 0)) / 3) As AVR
-                              FROM UserReviews As UR2
-                                INNER JOIN
-                                  UserProfilePositions As UP2
-                                  ON UP2.PositionID = UR2.PositionID
-                                    AND UR2.ProviderUserID = UP2.UserID
-                                    AND UP2.LanguageID = @LanguageID
-                                    AND UP2.CountryID = @CountryID
-                                    AND UP2.Active = 1
-                                    AND UP2.StatusID = 1
-                              WHERE UR2.PositionID = P.PositionID
-                            ), 0) As averageRating
-                            ,coalesce(sum(ur.TotalRatings), 0) As totalRatings
-                            ,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
-                            ,avg(PHR.averageHourlyRate) As averageHourlyRate
-                            ,min(PHR.minServicePrice) As minServicePrice
-                            ,min(PHR.minHourlyRate) As minHourlyRate
-                            ,count (distinct SPC.UserID) As serviceProfessionalsCount
-                            ,P.DisplayRank
-
-                    FROM	Positions As P
-                             LEFT JOIN
-                            ServiceCategoryPosition As SCP
-                              ON P.PositionID = SCP.PositionID
-                                AND P.LanguageID = SCP.LanguageID
-                                AND P.CountryID = SCP.CountryID
-
-                             LEFT JOIN
+                   SELECT
+                        P.PositionID as jobTitleID
+                        ,P.PositionSingular as singularName
+                        ,P.PositionPlural as pluralName
+                        ,P.PositionDescription as description
+                        ,P.PositionSearchDescription as searchDescription
+                        ,CASE WHEN SUM(coalesce(URS.TotalRatings,0)) > 0 THEN SUM(coalesce(URS.ratingAvg,0)*coalesce(URS.TotalRatings,0))/SUM(coalesce(URS.TotalRatings,0)) ELSE NULL END as averageRating
+                        ,SUM(coalesce(URS.TotalRatings,0)) as totalRatings
+                        ,AVG(US.ResponseTimeMinutes) as averageResponseTimeMinutes
+                        ,AVG(PHR.averageHourlyRate) As averageHourlyRate
+                        ,CASE WHEN MIN(MSP.minServicePrice) > 0 THEN MIN(MSP.minServicePrice) ELSE NULL END as minServicePrice
+                        ,MIN(PHR.minHourlyRate) As minHourlyRate
+                        ,CASE WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) > 0) AND MIN(MSP.minServicePrice) < MIN(PHR.minHourlyRate) THEN '$' + convert(varchar,  MIN(MSP.minServicePrice))
+                          WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) > 0) AND MIN(PHR.minHourlyRate) < MIN(MSP.minServicePrice) THEN '$' + convert(varchar,  MIN(PHR.minHourlyRate)) + '/hour'
+                          WHEN (MIN(MSP.minServicePrice) > 0 AND MIN(PHR.minHourlyRate) is null) THEN '$' + convert(varchar,  MIN(MSP.minServicePrice))
+                          WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) <= 0) THEN '$' + convert(varchar,  MIN(PHR.minHourlyRate)) + '/hour' ELSE NULL END as minServiceValue
+                        ,COUNT(distinct SPC.userID) as serviceProfessionalsCount
+                        ,P.displayRank
+                    FROM    
+                        Positions As P
+                        LEFT JOIN
                             UserProfilePositions As UP
-                              ON UP.PositionID = P.PositionID
-                                AND UP.LanguageID = P.LanguageID
-                                AND UP.CountryID = P.CountryID
-                                AND UP.Active = 1
-                                AND UP.StatusID = 1
-                             LEFT JOIN
-                            (SELECT up.PositionID, up.UserID
-                                    FROM address a
-                                    INNER JOIN
-                                    serviceaddress sa
-                                    ON a.addressID=sa.addressID
-                                    INNER JOIN UserProfilePositions up
-                                    ON sa.userID = up.UserID
-                                    AND sa.PositionID = up.PositionID
-                                    WHERE 
-                                    a.Latitude IS NOT NULL
-                                    AND a.Longitude IS NOT NULL
-                                    AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
-                                    (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
-                                    CONVERT(FLOAT, ServiceRadiusFromLocation)
-                                    ELSE 
-                                    @SearchDistance
-                                    END)
-                                    AND up.StatusID=1
-                                    AND up.Active=1
-                                ) As SPC
-                                    ON
-                                    UP.PositionID = SPC.PositionID
-                             LEFT JOIN
-                            UserReviewScores AS UR
-                              ON UR.UserID = UP.UserID
-                                AND UR.PositionID = UP.PositionID
-                             LEFT JOIN
-                            UserStats As US
-                              ON US.UserID = UP.UserID
-                             LEFT JOIN
-                            (SELECT	ProviderPackage.ProviderUserID As UserID
-                                    ,ProviderPackage.PositionID
-                                    ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
-                                    ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
-                                    ,AVG(PriceRate) as averageHourlyRate
-                                    ,LanguageID
-                                    ,CountryID
-                             FROM	ProviderPackage
-                             WHERE	ProviderPackage.Active = 1
-                                    AND ProviderPackage.PriceRateUnit like '%HOUR%' 
-                                    AND ProviderPackage.PricingTypeID != 7
-                             GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
-                                        ,LanguageID, CountryID
-                            ) As PHR
-                              ON PHR.UserID = UP.UserID
-                                AND PHR.PositionID = UP.PositionID
-                                AND PHR.LanguageID = P.LanguageID
-                                AND PHR.CountryID = P.CountryID
+                        ON 
+                            UP.PositionID = P.PositionID
+                            AND UP.LanguageID = P.LanguageID
+                            AND UP.CountryID = P.CountryID
+                            AND UP.Active = 1
+                            AND UP.StatusID = 1
+                        LEFT JOIN
+                            (SELECT 
+                            up.UserID
+                            ,up.PositionID
+                            ,MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
+                            FROM address a
+                            INNER JOIN
+                            serviceaddress sa
+                            ON a.addressID=sa.addressID
+                            INNER JOIN UserProfilePositions up
+                            ON sa.userID = up.UserID
+                            AND sa.PositionID = up.PositionID
+                            WHERE 
+                            a.Latitude IS NOT NULL
+                            AND a.Longitude IS NOT NULL
+                            AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
+                            (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
+                            CONVERT(FLOAT, ServiceRadiusFromLocation)
+                            ELSE 
+                            @searchDistance
+                            END)
+                            AND up.StatusID=1
+                            AND up.Active=1
+                            GROUP BY up.PositionID, up.UserID) As SPC
+                        ON
+                            UP.PositionID = SPC.PositionID
+                            AND UP.UserID = SPC.UserID              
+                        LEFT JOIN
+                            (SELECT 
+                            UserID
+                            ,PositionID
+                            ,TotalRatings
+                            ,sum(coalesce(Rating1, 0) + coalesce(Rating2, 0) + coalesce(Rating3, 0))/3 as ratingAvg
+                            FROM UserReviewScores
+                            GROUP BY UserID, PositionID, TotalRatings) As URS
+                        ON 
+                            SPC.UserID = URS.UserID
+                            AND SPC.PositionID = URS.PositionID             
+                        LEFT JOIN
+                            (SELECT 
+                            UserID
+                            ,ResponseTimeMinutes
+                            FROM UserStats
+                            ) As US
+                        ON 
+                            SPC.UserID = US.UserID     
+                        LEFT JOIN
+                            (SELECT 
+                            ProviderUserID
+                            ,PositionID
+                            ,min(ProviderPackagePrice) as minServicePrice
+                            ,count(*) as servicesCount
+                            FROM
+                            ProviderPackage
+                            WHERE 
+                            ProviderPackage.Active = 1 
+                            AND ProviderPackage.PricingTypeID != 7
+                            GROUP BY ProviderUserID, PositionID) MSP
+                            ON 
+                            SPC.UserID = MSP.ProviderUserID
+                            AND SPC.PositionID = MSP.PositionID     
+                        LEFT JOIN
+                           (SELECT	
+                                ProviderPackage.ProviderUserID
+                                ,ProviderPackage.PositionID
+                                ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
+                                ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
+                                ,AVG(PriceRate) as averageHourlyRate
+                            FROM	
+                                ProviderPackage
+                            WHERE	
+                                ProviderPackage.Active = 1
+                                AND ProviderPackage.PriceRateUnit like '%HOUR%' 
+                                AND ProviderPackage.PricingTypeID != 7
+                            GROUP BY	
+                                ProviderPackage.ProviderUserID, ProviderPackage.PositionID) As PHR
+                         ON 
+                            MSP.ProviderUserID = PHR.ProviderUserID
+                            AND MSP.PositionID = PHR.PositionID
                     WHERE
-                            P.PositionID = @jobTitleID
-                             AND
-                            SCP.Active = 1
-                             AND
-                            P.Active = 1
-                             AND
-                            P.LanguageID = @LanguageID
-                             AND
-                            P.CountryID = @CountryID
-                        AND (p.Approved = 1 Or p.Approved is null) 
-							AND dbo.fx_IfNW(p.PositionSingular, null) is not null                    
-                    GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-                    ) as tab
-                    ORDER BY serviceProfessionalsCount DESC, DisplayRank, pluralName  
+                        P.PositionID = @jobTitleID
+                        AND P.Active = 1
+                        AND P.LanguageID = @languageID
+                        AND P.CountryID = @countryID
+                        AND p.Approved = 1 
+                        AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
+                    GROUP BY P.PositionID, P.PositionSingular, P.PositionPlural, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
+
+                    ORDER BY count(distinct spc.userID) DESC, P.DisplayRank
                                 ", jobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID));
             }
         }
@@ -215,130 +207,130 @@ namespace LcRest
                     DECLARE @CountryID int
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
-                    SELECT 
-                    		jobTitleID
-                    		,pluralName
-                    		,singularName
-                    		,description
-                    		,searchDescription
-                    		,averageRating
-                    		,totalRatings
-                    		,averageResponseTimeMinutes
-                    		,averageHourlyRate
-                    		,minServicePrice
-                    		,minHourlyRate
-                            ,CASE WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minServicePrice < minHourlyRate THEN '$' + convert(varchar,  minServicePrice)
-                              WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minHourlyRate < minServicePrice THEN '$' + convert(varchar,  minHourlyRate) + '/hour'
-                              WHEN (minServicePrice > 0 AND minHourlyRate is null) THEN '$' + convert(varchar,  minServicePrice)
-                              WHEN (minHourlyRate > 0 AND minServicePrice is null) THEN '$' + convert(varchar,  minHourlyRate) + '/hour' ELSE NULL END as minServiceValue
-                            ,serviceProfessionalsCount  
-                            ,displayRank
-                            FROM
-                            (                
-                    SELECT	
-                            P.PositionID as jobTitleID
-                            ,P.PositionPlural as pluralName
-                            ,P.PositionSingular as singularName
-                            ,P.PositionDescription as description
-                            ,P.PositionSearchDescription as searchDescription
-                            ,coalesce((SELECT
-                                avg( (coalesce(UR2.Rating1, 0) + coalesce(UR2.Rating2, 0) + coalesce(UR2.Rating3, 0)) / 3) As AVR
-                              FROM UserReviews As UR2
-                                INNER JOIN
-                                  UserProfilePositions As UP2
-                                  ON UP2.PositionID = UR2.PositionID
-                                    AND UR2.ProviderUserID = UP2.UserID
-                                    AND UP2.LanguageID = @LanguageID
-                                    AND UP2.CountryID = @CountryID
-                                    AND UP2.Active = 1
-                                    AND UP2.StatusID = 1
-                              WHERE UR2.PositionID = P.PositionID
-                            ), 0) As averageRating
-                            ,coalesce(sum(ur.TotalRatings), 0) As totalRatings
-                            ,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
-                            ,avg(PHR.averageHourlyRate) As averageHourlyRate
-                            ,min(PHR.minServicePrice) As minServicePrice
-                            ,min(PHR.minHourlyRate) As minHourlyRate
-                            ,count (distinct SPC.UserID) As serviceProfessionalsCount
-                            ,P.DisplayRank
-
-                    FROM	Positions As P
-                             LEFT JOIN
+                    
+                    SELECT
+                        P.PositionID as jobTitleID
+                        ,P.PositionSingular as singularName
+                        ,P.PositionPlural as pluralName
+                        ,P.PositionDescription as description
+                        ,P.PositionSearchDescription as searchDescription
+                        ,CASE WHEN SUM(coalesce(URS.TotalRatings,0)) > 0 THEN SUM(coalesce(URS.ratingAvg,0)*coalesce(URS.TotalRatings,0))/SUM(coalesce(URS.TotalRatings,0)) ELSE NULL END as averageRating
+                        ,SUM(coalesce(URS.TotalRatings,0)) as totalRatings
+                        ,AVG(US.ResponseTimeMinutes) as averageResponseTimeMinutes
+                        ,AVG(PHR.averageHourlyRate) As averageHourlyRate
+                        ,CASE WHEN MIN(MSP.minServicePrice) > 0 THEN MIN(MSP.minServicePrice) ELSE NULL END as minServicePrice
+                        ,MIN(PHR.minHourlyRate) As minHourlyRate
+                        ,CASE WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) > 0) AND MIN(MSP.minServicePrice) < MIN(PHR.minHourlyRate) THEN '$' + convert(varchar,  MIN(MSP.minServicePrice))
+                          WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) > 0) AND MIN(PHR.minHourlyRate) < MIN(MSP.minServicePrice) THEN '$' + convert(varchar,  MIN(PHR.minHourlyRate)) + '/hour'
+                          WHEN (MIN(MSP.minServicePrice) > 0 AND MIN(PHR.minHourlyRate) is null) THEN '$' + convert(varchar,  MIN(MSP.minServicePrice))
+                          WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) <= 0) THEN '$' + convert(varchar,  MIN(PHR.minHourlyRate)) + '/hour' ELSE NULL END as minServiceValue
+                        ,COUNT(distinct SPC.userID) as serviceProfessionalsCount
+                        ,P.displayRank
+                    FROM    
+                        Positions As P
+                        LEFT JOIN
                             ServiceCategoryPosition As SCP
-                              ON P.PositionID = SCP.PositionID
-                                AND P.LanguageID = SCP.LanguageID
-                                AND P.CountryID = SCP.CountryID
-
-                             LEFT JOIN
+                        ON 
+                            P.PositionID = SCP.PositionID
+                            AND P.LanguageID = SCP.LanguageID
+                            AND P.CountryID = SCP.CountryID
+                        LEFT JOIN
                             UserProfilePositions As UP
-                              ON UP.PositionID = P.PositionID
-                                AND UP.LanguageID = P.LanguageID
-                                AND UP.CountryID = P.CountryID
-                                AND UP.Active = 1
-                                AND UP.StatusID = 1
-                             LEFT JOIN
-                            (SELECT up.PositionID, up.UserID
-                                    FROM address a
-                                    INNER JOIN
-                                    serviceaddress sa
-                                    ON a.addressID=sa.addressID
-                                    INNER JOIN UserProfilePositions up
-                                    ON sa.userID = up.UserID
-                                    AND sa.PositionID = up.PositionID
-                                    WHERE 
-                                    a.Latitude IS NOT NULL
-                                    AND a.Longitude IS NOT NULL
-                                    AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
-                                    (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
-                                    CONVERT(FLOAT, ServiceRadiusFromLocation)
-                                    ELSE 
-                                    @SearchDistance
-                                    END)
-                                    AND up.StatusID=1
-                                    AND up.Active=1
-                                ) As SPC
-                                    ON
-                                    UP.PositionID = SPC.PositionID
-                             LEFT JOIN
-                            UserReviewScores AS UR
-                              ON UR.UserID = UP.UserID
-                                AND UR.PositionID = UP.PositionID
-                             LEFT JOIN
-                            UserStats As US
-                              ON US.UserID = UP.UserID
-                             LEFT JOIN
-                            (SELECT	ProviderPackage.ProviderUserID As UserID
-                                    ,ProviderPackage.PositionID
-                                    ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
-                                    ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
-                                    ,AVG(PriceRate) as averageHourlyRate
-                                    ,LanguageID
-                                    ,CountryID
-                             FROM	ProviderPackage
-                             WHERE	ProviderPackage.Active = 1
-                                    AND ProviderPackage.PriceRateUnit like '%HOUR%' 
-                                    AND ProviderPackage.PricingTypeID != 7
-                             GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
-                                        ,LanguageID, CountryID
-                            ) As PHR
-                              ON PHR.UserID = UP.UserID
-                                AND PHR.PositionID = UP.PositionID
-                                AND PHR.LanguageID = P.LanguageID
-                                AND PHR.CountryID = P.CountryID
+                        ON 
+                            UP.PositionID = P.PositionID
+                            AND UP.LanguageID = P.LanguageID
+                            AND UP.CountryID = P.CountryID
+                            AND UP.Active = 1
+                            AND UP.StatusID = 1
+                        LEFT JOIN
+                            (SELECT 
+                            up.UserID
+                            ,up.PositionID
+                            ,MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
+                            FROM address a
+                            INNER JOIN
+                            serviceaddress sa
+                            ON a.addressID=sa.addressID
+                            INNER JOIN UserProfilePositions up
+                            ON sa.userID = up.UserID
+                            AND sa.PositionID = up.PositionID
+                            WHERE 
+                            a.Latitude IS NOT NULL
+                            AND a.Longitude IS NOT NULL
+                            AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
+                            (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
+                            CONVERT(FLOAT, ServiceRadiusFromLocation)
+                            ELSE 
+                            @searchDistance
+                            END)
+                            AND up.StatusID=1
+                            AND up.Active=1
+                            GROUP BY up.PositionID, up.UserID) As SPC
+                        ON
+                            UP.PositionID = SPC.PositionID
+                            AND UP.UserID = SPC.UserID              
+                        LEFT JOIN
+                            (SELECT 
+                            UserID
+                            ,PositionID
+                            ,TotalRatings
+                            ,sum(coalesce(Rating1, 0) + coalesce(Rating2, 0) + coalesce(Rating3, 0))/3 as ratingAvg
+                            FROM UserReviewScores
+                            GROUP BY UserID, PositionID, TotalRatings) As URS
+                        ON 
+                            SPC.UserID = URS.UserID
+                            AND SPC.PositionID = URS.PositionID             
+                        LEFT JOIN
+                            (SELECT 
+                            UserID
+                            ,ResponseTimeMinutes
+                            FROM UserStats
+                            ) As US
+                        ON 
+                            SPC.UserID = US.UserID     
+                        LEFT JOIN
+                            (SELECT 
+                            ProviderUserID
+                            ,PositionID
+                            ,min(ProviderPackagePrice) as minServicePrice
+                            ,count(*) as servicesCount
+                            FROM
+                            ProviderPackage
+                            WHERE 
+                            ProviderPackage.Active = 1 
+                            AND ProviderPackage.PricingTypeID != 7
+                            GROUP BY ProviderUserID, PositionID) MSP
+                            ON 
+                            SPC.UserID = MSP.ProviderUserID
+                            AND SPC.PositionID = MSP.PositionID     
+                        LEFT JOIN
+                           (SELECT	
+                                ProviderPackage.ProviderUserID
+                                ,ProviderPackage.PositionID
+                                ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
+                                ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
+                                ,AVG(PriceRate) as averageHourlyRate
+                            FROM	
+                                ProviderPackage
+                            WHERE	
+                                ProviderPackage.Active = 1
+                                AND ProviderPackage.PriceRateUnit like '%HOUR%' 
+                                AND ProviderPackage.PricingTypeID != 7
+                            GROUP BY	
+                                ProviderPackage.ProviderUserID, ProviderPackage.PositionID) As PHR
+                         ON 
+                            MSP.ProviderUserID = PHR.ProviderUserID
+                            AND MSP.PositionID = PHR.PositionID
                     WHERE
-                            SCP.ServiceCategoryID = @categoryID
-                             AND
-                            SCP.Active = 1
-                             AND
-                            P.Active = 1
-                             AND
-                            P.LanguageID = @LanguageID
-                             AND
-                            P.CountryID = @CountryID
-                        AND (p.Approved = 1 Or p.Approved is null) 
-							AND dbo.fx_IfNW(p.PositionSingular, null) is not null                             GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-					) as tab
-					ORDER BY serviceProfessionalsCount DESC, DisplayRank, pluralName  
+                        SCP.ServiceCategoryID = @categoryID
+                        AND SCP.Active = 1
+                        AND P.Active = 1
+                        AND P.LanguageID = @languageID
+                        AND P.CountryID = @countryID
+                        AND p.Approved = 1 
+                        AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
+                    GROUP BY P.PositionID, P.PositionSingular, P.PositionPlural, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
+                    ORDER BY count(distinct spc.userID) DESC, P.displayRank, P.PositionPlural
                                 ", categoryID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(FromDB);
             }
@@ -488,164 +480,163 @@ namespace LcRest
                     DECLARE @CountryID int
                     SET @CountryID = @5
                     DECLARE @orig geography = geography::Point(@origLat, @origLong, 4326)
-                SELECT 
-                    		jobTitleID
-                    		,pluralName
-                    		,singularName
-                    		,description
-                    		,searchDescription
-                    		,averageRating
-                    		,totalRatings
-                    		,averageResponseTimeMinutes
-                    		,averageHourlyRate
-                    		,minServicePrice
-                    		,minHourlyRate
-                            ,CASE WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minServicePrice < minHourlyRate THEN '$' + convert(varchar,  minServicePrice)
-                              WHEN (minHourlyRate > 0 AND minServicePrice > 0) AND minHourlyRate < minServicePrice THEN '$' + convert(varchar,  minHourlyRate) + '/hour'
-                              WHEN (minServicePrice > 0 AND minHourlyRate is null) THEN '$' + convert(varchar,  minServicePrice)
-                              WHEN (minHourlyRate > 0 AND minServicePrice is null) THEN '$' + convert(varchar,  minHourlyRate) + '/hour' ELSE NULL END as minServiceValue
-                            ,serviceProfessionalsCount  
-                            ,displayRank
-                            FROM
-                            (                
-                    SELECT	
-                            P.PositionID as jobTitleID
-                            ,P.PositionPlural as pluralName
-                            ,P.PositionSingular as singularName
-                            ,P.PositionDescription as description
-                            ,P.PositionSearchDescription as searchDescription
-                            ,coalesce((SELECT
-                                avg( (coalesce(UR2.Rating1, 0) + coalesce(UR2.Rating2, 0) + coalesce(UR2.Rating3, 0)) / 3) As AVR
-                              FROM UserReviews As UR2
-                                INNER JOIN
-                                  UserProfilePositions As UP2
-                                  ON UP2.PositionID = UR2.PositionID
-                                    AND UR2.ProviderUserID = UP2.UserID
-                                    AND UP2.LanguageID = @LanguageID
-                                    AND UP2.CountryID = @CountryID
-                                    AND UP2.Active = 1
-                                    AND UP2.StatusID = 1
-                              WHERE UR2.PositionID = P.PositionID
-                            ), 0) As averageRating
-                            ,coalesce(sum(ur.TotalRatings), 0) As totalRatings
-                            ,avg(US.ResponseTimeMinutes) As averageResponseTimeMinutes
-                            ,avg(PHR.averageHourlyRate) As averageHourlyRate
-                            ,min(PHR.minServicePrice) As minServicePrice
-                            ,min(PHR.minHourlyRate) As minHourlyRate
-                            ,count (distinct SPC.UserID) As serviceProfessionalsCount
-                            ,P.DisplayRank
-
-                    FROM	Positions As P
-                             LEFT JOIN
+                  
+                    SELECT
+                        P.PositionID as jobTitleID
+                        ,P.PositionSingular as singularName
+                        ,P.PositionPlural as pluralName
+                        ,P.PositionDescription as description
+                        ,P.PositionSearchDescription as searchDescription
+                        ,CASE WHEN SUM(coalesce(URS.TotalRatings,0)) > 0 THEN SUM(coalesce(URS.ratingAvg,0)*coalesce(URS.TotalRatings,0))/SUM(coalesce(URS.TotalRatings,0)) ELSE NULL END as averageRating
+                        ,SUM(coalesce(URS.TotalRatings,0)) as totalRatings
+                        ,AVG(US.ResponseTimeMinutes) as averageResponseTimeMinutes
+                        ,AVG(PHR.averageHourlyRate) As averageHourlyRate
+                        ,CASE WHEN MIN(MSP.minServicePrice) > 0 THEN MIN(MSP.minServicePrice) ELSE NULL END as minServicePrice
+                        ,MIN(PHR.minHourlyRate) As minHourlyRate
+                        ,CASE WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) > 0) AND MIN(MSP.minServicePrice) < MIN(PHR.minHourlyRate) THEN '$' + convert(varchar,  MIN(MSP.minServicePrice))
+                          WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) > 0) AND MIN(PHR.minHourlyRate) < MIN(MSP.minServicePrice) THEN '$' + convert(varchar,  MIN(PHR.minHourlyRate)) + '/hour'
+                          WHEN (MIN(MSP.minServicePrice) > 0 AND MIN(PHR.minHourlyRate) is null) THEN '$' + convert(varchar,  MIN(MSP.minServicePrice))
+                          WHEN (MIN(PHR.minHourlyRate) > 0 AND MIN(MSP.minServicePrice) <= 0) THEN '$' + convert(varchar,  MIN(PHR.minHourlyRate)) + '/hour' ELSE NULL END as minServiceValue
+                        ,COUNT(distinct SPC.userID) as serviceProfessionalsCount
+                        ,P.displayRank
+                    FROM    
+                        Positions As P
+                        LEFT JOIN
                             ServiceCategoryPosition As SCP
-                              ON P.PositionID = SCP.PositionID
-                                AND P.LanguageID = SCP.LanguageID
-                                AND P.CountryID = SCP.CountryID
-
-                             LEFT JOIN
+                        ON 
+                            P.PositionID = SCP.PositionID
+                            AND P.LanguageID = SCP.LanguageID
+                            AND P.CountryID = SCP.CountryID
+                        LEFT JOIN
                             UserProfilePositions As UP
-                              ON UP.PositionID = P.PositionID
-                                AND UP.LanguageID = P.LanguageID
-                                AND UP.CountryID = P.CountryID
-                                AND UP.Active = 1
-                                AND UP.StatusID = 1
-                             LEFT JOIN
-                            (SELECT up.PositionID, up.UserID
-                                    FROM address a
-                                    INNER JOIN
-                                    serviceaddress sa
-                                    ON a.addressID=sa.addressID
-                                    INNER JOIN UserProfilePositions up
-                                    ON sa.userID = up.UserID
-                                    AND sa.PositionID = up.PositionID
-                                    WHERE 
-                                    a.Latitude IS NOT NULL
-                                    AND a.Longitude IS NOT NULL
-                                    AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
-                                    (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
-                                    CONVERT(FLOAT, ServiceRadiusFromLocation)
-                                    ELSE 
-                                    @SearchDistance
-                                    END)
-                                    AND up.StatusID=1
-                                    AND up.Active=1
-                                ) As SPC
-                                    ON
-                                    UP.PositionID = SPC.PositionID
-                             LEFT JOIN
-                            UserReviewScores AS UR
-                              ON UR.UserID = UP.UserID
-                                AND UR.PositionID = UP.PositionID
-                             LEFT JOIN
-                            UserStats As US
-                              ON US.UserID = UP.UserID
-                             LEFT JOIN
-                            (SELECT	ProviderPackage.ProviderUserID As UserID
-                                    ,ProviderPackage.PositionID
-                                    ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
-                                    ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
-                                    ,AVG(PriceRate) as averageHourlyRate
-                                    ,LanguageID
-                                    ,CountryID
-                             FROM	ProviderPackage
-                             WHERE	ProviderPackage.Active = 1
-                                    AND ProviderPackage.PriceRateUnit like '%HOUR%' 
-                                    AND ProviderPackage.PricingTypeID != 7
-                             GROUP BY	ProviderPackage.ProviderUserID, ProviderPackage.PositionID
-                                        ,LanguageID, CountryID
-                            ) As PHR
-                              ON PHR.UserID = UP.UserID
-                                AND PHR.PositionID = UP.PositionID
-                                AND PHR.LanguageID = P.LanguageID
-                                AND PHR.CountryID = P.CountryID
+                        ON 
+                            UP.PositionID = P.PositionID
+                            AND UP.LanguageID = P.LanguageID
+                            AND UP.CountryID = P.CountryID
+                            AND UP.Active = 1
+                            AND UP.StatusID = 1
+                        LEFT JOIN
+                            (SELECT 
+                            up.UserID
+                            ,up.PositionID
+                            ,MIN(ROUND(@orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371,1)) as distance
+                            FROM address a
+                            INNER JOIN
+                            serviceaddress sa
+                            ON a.addressID=sa.addressID
+                            INNER JOIN UserProfilePositions up
+                            ON sa.userID = up.UserID
+                            AND sa.PositionID = up.PositionID
+                            WHERE 
+                            a.Latitude IS NOT NULL
+                            AND a.Longitude IS NOT NULL
+                            AND @orig.STDistance(geography::Point(a.Latitude, a.Longitude, 4326))/1000*0.621371 <=
+                            (CASE WHEN (ServicesPerformedAtLocation = 0 AND sa.ServiceRadiusFromLocation IS NOT NULL) THEN
+                            CONVERT(FLOAT, ServiceRadiusFromLocation)
+                            ELSE 
+                            @searchDistance
+                            END)
+                            AND up.StatusID=1
+                            AND up.Active=1
+                            GROUP BY up.PositionID, up.UserID) As SPC
+                        ON
+                            UP.PositionID = SPC.PositionID
+                            AND UP.UserID = SPC.UserID              
+                        LEFT JOIN
+                            (SELECT 
+                            UserID
+                            ,PositionID
+                            ,TotalRatings
+                            ,sum(coalesce(Rating1, 0) + coalesce(Rating2, 0) + coalesce(Rating3, 0))/3 as ratingAvg
+                            FROM UserReviewScores
+                            GROUP BY UserID, PositionID, TotalRatings) As URS
+                        ON 
+                            SPC.UserID = URS.UserID
+                            AND SPC.PositionID = URS.PositionID             
+                        LEFT JOIN
+                            (SELECT 
+                            UserID
+                            ,ResponseTimeMinutes
+                            FROM UserStats
+                            ) As US
+                        ON 
+                            SPC.UserID = US.UserID     
+                        LEFT JOIN
+                            (SELECT 
+                            ProviderUserID
+                            ,PositionID
+                            ,min(ProviderPackagePrice) as minServicePrice
+                            ,count(*) as servicesCount
+                            FROM
+                            ProviderPackage
+                            WHERE 
+                            ProviderPackage.Active = 1 
+                            AND ProviderPackage.PricingTypeID != 7
+                            GROUP BY ProviderUserID, PositionID) MSP
+                            ON 
+                            SPC.UserID = MSP.ProviderUserID
+                            AND SPC.PositionID = MSP.PositionID     
+                        LEFT JOIN
+                           (SELECT	
+                                ProviderPackage.ProviderUserID
+                                ,ProviderPackage.PositionID
+                                ,CASE WHEN min(ProviderPackagePrice) > 0 THEN min(ProviderPackagePrice) else NULL end as minServicePrice
+                                ,CASE WHEN min(PriceRate) > 0 THEN min(PriceRate) else NULL end as minHourlyRate
+                                ,AVG(PriceRate) as averageHourlyRate
+                            FROM	
+                                ProviderPackage
+                            WHERE	
+                                ProviderPackage.Active = 1
+                                AND ProviderPackage.PriceRateUnit like '%HOUR%' 
+                                AND ProviderPackage.PricingTypeID != 7
+                            GROUP BY	
+                                ProviderPackage.ProviderUserID, ProviderPackage.PositionID) As PHR
+                         ON 
+                            MSP.ProviderUserID = PHR.ProviderUserID
+                            AND MSP.PositionID = PHR.PositionID
                     WHERE
+                        SCP.Active = 1
+                        AND P.Active = 1
+                        AND P.LanguageID = @languageID
+                        AND P.CountryID = @countryID
+                        AND p.Approved = 1 
+                        AND dbo.fx_IfNW(p.PositionSingular, null) is not null    
+                        AND (p.PositionSingular like @SearchTerm
+                            OR
+                            p.PositionPlural like @SearchTerm
+                            OR
+                            p.PositionDescription like @SearchTerm
+                            OR
+                            p.Aliases like @SearchTerm
+                            OR
+                            p.GovPosition like @SearchTerm
+                            OR
+                            p.GovPositionDescription like @SearchTerm
+                            OR
+                            EXISTS (SELECT *
+                                    FROM	UserProfileServiceAttributes As SP
+                                     INNER JOIN
+                                    ServiceAttribute As SA
+                                      ON SP.ServiceAttributeID = SA.ServiceAttributeID
+                                        AND SP.Active = 1
+                                        AND SA.Active = 1
+                                        AND SA.LanguageID = SP.LanguageID
+                                        AND SA.CountryID = SP.CountryID
+                                    WHERE
+                                    SP.PositionID = p.PositionID
+                                    AND SA.LanguageID = @LanguageID
+                                    AND SA.CountryID = @CountryID
+                                    AND (
+                                     SA.Name like @SearchTerm
+                                      OR
+                                     SA.ServiceAttributeDescription like @SearchTerm
+                                    )
+                                )
+                        )
+                    GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
 
-                            SCP.Active = 1
-                             AND
-                            P.Active = 1
-                             AND
-                            P.LanguageID = @LanguageID
-                             AND
-                            P.CountryID = @CountryID
-                        AND (p.Approved = 1 Or p.Approved is null) 
-							AND dbo.fx_IfNW(p.PositionSingular, null) is not null     
-													AND (
-								p.PositionSingular like @SearchTerm
-								 OR
-								p.PositionPlural like @SearchTerm
-								 OR
-								p.PositionDescription like @SearchTerm
-								 OR
-								p.Aliases like @SearchTerm
-								 OR
-								p.GovPosition like @SearchTerm
-								 OR
-								p.GovPositionDescription like @SearchTerm
-								 OR
-								EXISTS (
-									SELECT *
-									FROM	UserProfileServiceAttributes As SP
-											 INNER JOIN
-											ServiceAttribute As SA
-											  ON SP.ServiceAttributeID = SA.ServiceAttributeID
-												AND SP.Active = 1
-												AND SA.Active = 1
-												AND SA.LanguageID = SP.LanguageID
-												AND SA.CountryID = SP.CountryID
-									WHERE
-											SP.PositionID = p.PositionID
-											AND SA.LanguageID = @LanguageID
-											AND SA.CountryID = @CountryID
-											AND (
-											 SA.Name like @SearchTerm
-											  OR
-											 SA.ServiceAttributeDescription like @SearchTerm
-											)
-								)
-							)
-							                        GROUP BY P.PositionID, P.PositionPlural, P.PositionSingular, P.PositionDescription, P.PositionSearchDescription, P.DisplayRank
-					) as tab
-					ORDER BY serviceProfessionalsCount DESC, DisplayRank, pluralName 
+                    ORDER BY count(distinct spc.userID) DESC, P.displayRank
+
                                 ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(FromDB);
             }

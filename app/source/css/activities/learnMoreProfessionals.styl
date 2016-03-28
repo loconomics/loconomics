@@ -487,16 +487,28 @@
             form {
                 margin: 40px auto;
                 max-width: 450px;
+                
+                .form-group {
+                  margin-bottom: 5px;
+                }
+                
+                button {
+                  margin-top: 15px;
+                }
 
                 .form-control {
                     background: White;
-                    font-size: 17px;
+                    font-size: 15px;
                 }
 
                 .form-control:focus {
-                  border-bottom: 1px solid #ccc;
+                  border-bottom: 3px solid $brand-success;
                   border-top: none;
-                  border-right: none;
+                  border-right: none;              
+                }
+                  
+                input: focus {
+                  border: none;
                 }
 
                 // Reduce column gaps by a 20px in total
@@ -508,6 +520,20 @@
                         padding-right: 10px;
                     }
                 }
+                
+               .has-feedback:focus,
+               .btn:focus {
+                    border: none;
+                    border-bottom: none;
+                    color: $gray-dark;
+                  }
+                
+               .has-feedback:hover,
+               .btn:hover {
+                    border: none;
+                    border-bottom: none;
+                    color: $gray-dark;
+                  }
             }
             
             ul {
@@ -543,10 +569,49 @@
                 background-image: url('../images/en-play-badge-border.png');
             }
             
-            
-            
-        }
+            .Signup-formcontainer {
+                padding-top: 0;
+                padding-bottom: 10px;
 
-        
+                @media $mediaMinSm {
+                    padding: 15px 20px;
+                }
+                @media $mediaMinMd {
+                    padding: 15px 30px;
+                }
+                h3 {
+                  color: white;
+                  font-size: 32px;
+                }
+                label {
+                  color: white;
+                  font-size: 11px;
+                }
+            }
+            .Signup-login {
+                text-align: center;
+                color: white;
+                font-weight: 700;
+                padding: 0px 20px;
+                margin: 0;
+                > * {
+                    vertical-align: middle;
+                }
+                .btn-link {
+                  color: white;
+                  text-decoration: underline;
+                }
+            } 
+            
+            .Signup-agreement {
+              color: white;
+              font-weight: 700;
+              text-align: center;
+              a {
+               color: white;
+               text-decoration: underline;
+              }
+            }
+        }
     }
 }

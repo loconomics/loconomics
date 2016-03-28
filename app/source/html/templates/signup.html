@@ -1,29 +1,12 @@
-<!-- Activity Signup -->
-<div data-activity="signup" class="Signup">
-    
-    <div class="text-center Signup-logo"><a class="logo-white">Loconomics Cooperative, Inc.</a></div>
-    
-    <div class="LeadContent Signup-profiles" data-bind="visible: !profile()">
-        <h1>Join our community</h1>
-        <h2>You'll soon get access to our beta and help shape our future.</h2>
-        <div class="Signup-selector">
-            <div class="Signup-selector-option">
-                <h3>I am a local service professional</h3>
-                <a class="btn btn-secondary btn-lg btn-block" href="#!signup/service-professional">Sign up</a>
-            </div>
-            <div class="Signup-selector-separator">
-                or
-            </div>
-            <div class="Signup-selector-option">
-                <h3>I want to hire local service professionals</h3>
-                <a class="btn btn-secondary btn-lg btn-block" href="#!signup/client">Sign up</a>
-            </div>
-        </div>
-    </div>
-    
-  <div class="LeadContent container Signup-formcontainer" data-bind="visible: profile">
+<!-- Sign up -->
+<script type="text/html" id="signup-template">
+<div class="LeadContent container Signup-formcontainer" data-bind="visible: profile">
       <p class="Signup-login"><span>Already have an account? </span><a class="btn btn-link" href="/login">Login</a></p>
-  <!-- HIDDEN UNTIL GETS IMPLEMENTED   ON APP -only web version works of Facebook Connect
+    
+        <h3 data-bind="visible: !forServiceProfessional">Sign up for free</h3>
+        <h3 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h3>    
+
+  <!-- HIDDEN UNTIL GETS IMPLEMENTED ON  APP -only web version works of Facebook Connect
     <div data-bind="visible: !facebookUserID()">
       <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
       <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-- >
@@ -35,17 +18,11 @@
     -->
       
     <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-        
-        <script type="text/html" id="signup-field">
-          <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
-            <input type="text" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-            <span class="form-control-feedback" aria-hidden="true" data-bind="css: icon"></span>
-          </div>
-        </script>
-        <h3 data-bind="visible: !forServiceProfessional">Sign up for free</h3>
-        <h3 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h3>        
+        <label for="firstName">First Name</label>
         <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
+        <label for="lastName">Last Name</label>
         <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
+        <label for="countryID">Country</label>
         <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
             <select data-bind="value: countryID" class="form-control btn">
                  <option value="1">United States</option>
@@ -291,10 +268,15 @@
             <span class="ion-ios-world-outline form-control-feedback" aria-hidden="true"></span>
         </div>
         <div class="row">
+            <label class="col-xs-5" for="postalCode">Postal Code</label>
+            <label class="col-xs-7" for="referralCode">Referral Code</label>
+        </div>
+        <div class="row">
             <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label:                        'Postal code', icon: 'ion-ios-home-outline' } }"></div>
             <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label:                      'Referral code', icon: 'ion-android-contacts' } }"></div>
         </div>
         <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
+            <label for="device">Device</label>
             <select data-bind="value: device" class="form-control btn">
                 <option value="">Select your device</option>
                 <option value="ios">iPhone/iPad</option>
@@ -302,16 +284,17 @@
             </select>
             <span class="ion-iphone form-control-feedback" aria-hidden="true"></span>
         </div>
+        <label for="phone">Mobile Phone</label>
         <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
         
       <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-        <label for="signupAccountEmail" class="sr-only">E-mail address</label>
+        <label for="signupAccountEmail">E-mail address</label>
         <input type="email" class="form-control" id="signupAccountEmail" placeholder="E-mail address" data-bind="value: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }, disable: emailIsLocked">
           <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
       </div>
         
       <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
-        <label for="signupAccountPassword" class="sr-only">Password</label>
+        <label for="signupAccountPassword">Password</label>
         <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }">
           <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
       </div>
@@ -327,5 +310,4 @@
         <a href="#!terms/privacy-policy?mustReturn=true">Privacy Policy</a>
     </p>
   </div>
-
-</div>
+</script>

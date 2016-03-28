@@ -75,7 +75,7 @@ function EditClientBookingCardVM(app) {
     this.confirmCancelBookingByClient = function() {
         app.modals.confirm({
             title: 'Cancel booking',
-            message: 'Are you sure?',
+            message: 'Are you sure? Cancellation fees may apply.',
             yes: 'Yes',
             no: 'No'
         })
