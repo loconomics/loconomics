@@ -74,15 +74,57 @@
 							{
                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-								    @if (info.cancellationLimitDate <= DateTime.Now)  
+								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore == 0)  
 								    {
 									    <span>
-										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@((1 - policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
+										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
+									    </span>
+								    }
+								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										    Your cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should @(info.client.firstName) not have cancelled their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong>. Since that time has passed, @(info.client.firstName) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is your cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>. You&rsquo;ll receive payment shortly.
+									    </span>
+								    }
+								    @if (info.cancellationLimitDate > DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										    Your cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since @(info.client.firstName) has cancelled, they will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>. You&rsquo;ll receive payment shortly.
 									    </span>
 								    }
 								    else
 								    {
 									    <span>
+										    Since @(info.client.firstName) cancelled within your cancellation policy, they will not be charged.
+									    </span>
+								    }
+								</td>
+							</tr>
+							@if (policy != null && !info.booking.paymentCollected)
+							{
+                           <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore == 0)  
+								    {
+									    <span>
+										    Since your cancellation policy states @(info.client.firstName) would have had to cancel their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, @(info.client.firstName) has been told to pay <strong>@(info.booking.pricingSummary.CancellationFeeCharged.Value.ToString("c"))</strong> at their next appointment, which is your cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>. Please make a note of this.
+									    </span>
+								    }
+								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										    Your cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should @(info.client.firstName) not have cancelled their appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong>. Since that time has passed, @(info.client.firstName) has been told to pay <strong>@(info.booking.pricingSummary.CancellationFeeCharged.Value.ToString("c"))</strong> at their next appointment, which is your cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>. Please make a note of this.
+									    </span>
+								    }
+								    @if (info.cancellationLimitDate > DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										    Your cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since @(info.client.firstName) has cancelled, they have been told to pay <strong>@(info.booking.pricingSummary.CancellationFeeCharged.Value.ToString("c"))</strong> at their next appointment. Please make a note of this.
+									    </span>
+								    }
+								    else
+								    {
+									   <span>
 										    Since @(info.client.firstName) cancelled within your cancellation policy, they will not be charged.
 									    </span>
 								    }
