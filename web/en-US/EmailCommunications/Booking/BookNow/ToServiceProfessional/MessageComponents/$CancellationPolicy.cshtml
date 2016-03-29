@@ -25,15 +25,15 @@
                                  <td align="left" style="padding: 10px 25px 15px 0; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">@policy.description
 									 @if (info.cancellationLimitDate <= DateTime.Now)
 										{
-											var tpl = "Since the requested time is within {0} hours, the client will not be able to cancel this appointment.";
+											var tpl = "Since the requested time is within {0} hours, the client will not be able to cancel this appointment without fees.";
 											<span>
 												@String.Format(tpl, policy.hoursRequired)
- 			                                </span>
+											</span>
 										}
 										else
 										{
 											<span>
-												 @info.client.firstName would need to cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to receive a @((1 - policy.cancellationFeeBefore).ToString("0.##%")) refund.
+												 @info.client.firstName would need to cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to avoid a @(( policy.cancellationFeeAfter).ToString("0.##%")) fee.
 											</span>
 										}
                                  </td>
@@ -47,8 +47,3 @@
     </tr>
 </table>
 }
-
-
-
-
-
