@@ -74,10 +74,53 @@
 							{
                            <tr>
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
-								    @if (info.cancellationLimitDate <= DateTime.Now)  
+								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore == 0)  
+								    {
+                                    <span>
+                                        @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
+                                    </span>
+								    }
+								    else if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore > 0)  
 								    {
 									    <span>
-										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((1 - policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services plus Loconomics booking fees (if any).</strong>.
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should you not have cancelled your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong>. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>.
+									    </span>
+								    }
+								    else if (info.cancellationLimitDate > DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										   @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since you've cancelled, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>.
+									    </span>
+								    }
+								    else
+								    {
+									    <span>
+										    Since you&rsquo;ve cancelled within @(info.serviceProfessional.firstName)&rsquo;s cancellation policy, your card will not be charged and any authorization should expire shortly.
+									    </span>
+								    }
+								</td>
+							</tr>
+                            }
+							else if (policy != null && !info.booking.paymentCollected)
+							{
+                           <tr>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore == 0)  
+								    {
+									    <span>
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong> to avoid any cancellation fees. Since that time has passed, <strong>@(info.booking.pricingSummary.cancellationFeeCharged.Value.ToString("c"))</strong> is due at your next appointment, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
+									    </span>
+								    }
+								    else if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should you not have cancelled your appointment by <strong>@(info.cancellationLimitDate.ToShortTimeString())</strong> on <strong>@info.cancellationLimitDate.ToLongDateString()</strong>. Since that time has passed, <strong>@(info.booking.pricingSummary.cancellationFeeCharged.Value.ToString("c"))</strong> is due at your next appointment, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
+									    </span>
+								    }
+								    else if (info.cancellationLimitDate > DateTime.Now && policy.cancellationFeeBefore > 0)  
+								    {
+									    <span>
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since you've cancelled, <strong>@(info.booking.pricingSummary.cancellationFeeCharged.Value.ToString("c"))</strong> is due at your next appointment.
 									    </span>
 								    }
 								    else
