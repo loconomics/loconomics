@@ -58,8 +58,8 @@
                         <i class="fa ion ion-ios-clock-outline"></i>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                        <div data-bind="visible: item().startTime(), text: item().displayedStartTime()"></div>
+                        <div><strong>Start date/time: </strong></div>
+                        <div><span data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'ddd, MMM Do h:mm a' }"></span></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-mute">Select start date/time</p>
                     </div>
                 </button>
@@ -70,8 +70,9 @@
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                        <div data-bind="visible: item().endTime(), text: item().displayedEndTime()"></div>
+                        <div><strong>End date/time: </strong></div>
+                        <div><span data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'ddd, MMM Do h:mm a' }"></span> 
+                        </div>
                         <p data-bind="visible: editMode() && !item().endTime()" class="text-mute">Select end date/time</p>
                     </div>
                 </button>
@@ -127,7 +128,7 @@
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'ddd, MMM Do' }"></div>
                         <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
                     </div>

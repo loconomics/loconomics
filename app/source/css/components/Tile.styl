@@ -129,6 +129,11 @@ Tile-addContent($linesNumber) {
             font-size: 1em;
             margin: 0 .7em;
         }
+        // Setting margin for small screens since the items margin is auto there
+                //@media $mediaMaxXs {
+        @media (max-width: 520px) {
+            margin: 0 $grid-gap;
+        }
     }
 }
 
@@ -163,11 +168,15 @@ Tile-addTagContentSupport($vgap, $left = -6px) {
 
 /** Add colored background support */
 Tile-addStyleSupport() {
-    
+
     addTagFor($colorName, $color) { 
         &.Tile--{$colorName} {
-            background: $color;
-            color: White;
+          font-style: italic;
+          border-left: 10px solid $color;
+          z-index: 3;
+          > i {
+            color: $gray-dark;      
+          }
         }
     }
     
