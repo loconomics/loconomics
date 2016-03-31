@@ -99,12 +99,6 @@ NavAction.menuIn = new NavAction({
     isMenu: true
 });
 
-NavAction.menuOut = new NavAction({
-    link: 'menuOut',
-    icon: 'menu',
-    isMenu: true
-});
-
 NavAction.menuNewItem = new NavAction({
     link: 'menuNewItem',
     icon: 'fa ion ion-ios-plus-empty',

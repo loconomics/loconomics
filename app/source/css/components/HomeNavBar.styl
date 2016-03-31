@@ -113,6 +113,14 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
                 > .dropdown-menu {
                     right: 0;
                     left: auto;
+                    width: 300px;
+                  > li {
+                    white-space: normal;  
+                    border-bottom: 1px solid $gray-background;  
+                  }
+                  > li:last-child {
+                     border-bottom: none;
+                   }
                 }
 
                 // Used along .btn.btn-link
@@ -122,6 +130,7 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
                     font-weight: bold;
                     // With links using btn btn-link, just adjust line to get the desired block size
                     line-height: 26px;
+                    text-decoration: none;
                 }
             }
             

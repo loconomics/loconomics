@@ -26,8 +26,8 @@ exports.extend = function (app) {
 
         if (user.isAnonymous()) {
             var prev = app.navBar().leftAction();
-            if (prev !== NavAction.menuOut) {
-                app.navBar().leftAction(NavAction.menuOut);
+            if (prev !== NavAction.menuIn) {
+                app.navBar().leftAction(NavAction.menuIn);
                 app.navBar().prevLeftAction = prev;
             }
         }
