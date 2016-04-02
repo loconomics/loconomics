@@ -59,7 +59,7 @@
                     </div>
                     <div class="Tile-content">
                         <div><strong>Start date/time: </strong></div>
-                        <div><span data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'ddd, MMM Do h:mm a' }"></span></div>
+                        <div><span data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-mute">Select start date/time</p>
                     </div>
                 </button>
@@ -71,7 +71,7 @@
                     </div>
                     <div class="Tile-content">
                         <div><strong>End date/time: </strong></div>
-                        <div><span data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'ddd, MMM Do h:mm a' }"></span> 
+                        <div><span data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span> 
                         </div>
                         <p data-bind="visible: editMode() && !item().endTime()" class="text-mute">Select end date/time</p>
                     </div>
@@ -128,7 +128,7 @@
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'ddd, MMM Do' }"></div>
+                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></div>
                         <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
                     </div>
