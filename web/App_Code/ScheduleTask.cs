@@ -130,10 +130,10 @@ public class ScheduleTask
             totalmessages += messages;
 
             /*
-             * Check:: Authorize postponed transactions 48hours previous to service start-time
+             * Check:: Authorize postponed transactions 24hours previous to service start-time
              * If:: Confirmed or performed bookings only, not cancelled or in dispute or completed (completed may be
              * and old booking already paid
-             * If:: Current time is 48 hours before Confirmed Service StartTime
+             * If:: Current time is 24 hours before Confirmed Service StartTime
              * If:: BookingRequest PaymentTransactionID is a Card token rather than an actual TransactionID
              * If:: Customer was still not charged / transaction was not submitted for settlement ([ClientPayment] is null)
              * Action:: authorize booking transaction
@@ -157,7 +157,7 @@ public class ScheduleTask
                         catch (Exception ex)
                         {
 
-                            var errTitle = "Booking Authorize Postponed Transactions, 48h before Service Starts";
+                            var errTitle = "Booking Authorize Postponed Transactions, 24h before Service Starts";
                             var errDesc = String.Format(
                                 "BookingID: {0}, TransactionID: {1} Payment not allowed, error on Braintree 'sale transaction, authorizing only': {2}",
                                 b.bookingID,
@@ -174,11 +174,11 @@ public class ScheduleTask
                     }
                     catch (Exception ex)
                     {
-                        logger.LogEx("Booking Authorize Postponed Transactions, 48h before Service Starts", ex);
+                        logger.LogEx("Booking Authorize Postponed Transactions, 24h before Service Starts", ex);
                     }
                 }
             }
-            logger.Log("Total of Booking Authorize Postponed Transactions, 48h before Service Starts: {0}", items);
+            logger.Log("Total of Booking Authorize Postponed Transactions, 24h before Service Starts: {0}", items);
             totalitems += items;
 
             /*

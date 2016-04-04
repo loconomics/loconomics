@@ -9,15 +9,16 @@
         } --><!-- /ko -->
     </h1>
     <ul class="TilesList">
-        <li class="InfoTile" data-bind="with: upcomingAppointments.nextOnes">
+        <li data-bind="with: upcomingAppointments.nextOnes"><a class="InfoTile" href="/clientAppointment">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-calendar"></span>
             </div>
             <div class="Tile-content">
-                <div><strong data-bind="text: quantity"></strong> <span data-bind="text: concept"></span></div>
+                <p data-bind="visible: !timePhrase()"><strong data-bind="text: quantity"></strong> <span data-bind="text: concept"></span></p>
+                <div><strong data-bind="text: quantity, visible: timePhrase"></strong> <span data-bind="text: concept"></span></div>
                 <div data-bind="text: timePhrase"></div>
             </div>
-        </li>
+        </a></li>
         <li class="InfoTile" data-bind="with: upcomingAppointments.pendingRequests">
             <div class="Tile-icon" aria-hidden="true">
                 <span class="fa ion ion-calendar"></span>

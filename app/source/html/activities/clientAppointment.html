@@ -1,12 +1,18 @@
 <!-- Activity clientAppointment -->
 <div class="limited-size-md limited-size-lg" data-activity="clientAppointment" data-bind="css: { 'in-edit': currentItem.isEditMode }">
     <div class="CardsDeck CardsDeck--dotsSlider"
-       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() }">
+       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
+
+        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         
+        <div data-bind="visible: isEmpty" class="isolated">
+            You have not appointments still.
+        </div>
+
         <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
 
-        <!--<div class="CardsDeck-dots" data-bind="foreach: appointments">
+        <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
             <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
-        </div>-->
+        </div>
     </div>
 </div>

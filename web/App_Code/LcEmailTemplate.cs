@@ -200,7 +200,7 @@ public static class LcEmailTemplate
         #region URLs
         public static string GetBookingUrl(int bookingID)
         {
-            return LcUrl.AppUrl + "appointment/" + bookingID.ToString();
+            return LcUrl.AppUrl + "viewBooking/" + bookingID.ToString();
         }
         /// <summary>
         /// URL: Opens a view in the website where the user can see the email content
@@ -310,8 +310,11 @@ public static class LcEmailTemplate
     public static BookingEmailInfo GetBookingInfo(int bookingID)
     {
         var bID = bookingID;
-
-        var b = LcRest.Booking.Get(bID, true);
+        // We need the booking including some internal sensitive data (like 'payment last four digits')
+        // since here we have not enough context to know what userID is the target, and must not be a problem
+        // since this data is never provided as is, but only used by the templates that must be carefull with what
+        // data to show to every case.
+        var b = LcRest.Booking.Get(bID, true, true);
         if (b == null) throw new Exception("BookingID not found #" + bID + ", at Email template");
 
         /* Generics not used in new email template organization, but keep this commented

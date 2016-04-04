@@ -62,11 +62,33 @@
                     "expirationYear": "2017",
                     "securityCode": "1565",
                     "savePayment": false
-                }
+                },
+                "specialRequests": "Some notes to the professional"
+            }
+        },
+        "Client Booking: Update booking": {
+            "url": "/api/v1/en-US/me/client-booking/34",
+            "put": {
+                "serviceStartTime": "2015-10-19T08:30:00.000Z",
+                "serviceAddress": {
+                    "addressID": 240,
+                    "addressName": "Service Area",
+                    "addressLine1": "",
+                    "postalCode": 98001,
+                    "countryCode": "US",
+                    "latitude": 47.3394747,
+                    "longitude": -122.2667661,
+                },
+                "services": [8, 108],
+                "specialRequests": "Some notes to the professional"
             }
         },
         "Client Booking: Cancel booking": {
             "url": "/api/v1/en-US/me/client-booking/34/cancel",
+            "post": {}
+        },
+        "Client Booking: Decline/deny booking": {
+            "url": "/api/v1/en-US/me/client-booking/34/deny",
             "post": {}
         }
     }
@@ -121,9 +143,141 @@
                     // fresh copy from db
                     return LcRest.Booking.Get(bookingID, true, false, userID);
                 }
+                else if (UrlData[1] == "deny")
+                {
+                    booking.DeclineBookingByClient();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true, false, userID);
+                }
             }
             
             throw new HttpException(405, "Method not allowed.");
+        }
+
+        public override dynamic Put()
+        {
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = UpdateItem(UrlData[0].AsInt(0));
+
+            if (updated == null)
+            {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Booking not found.");
+            }
+
+            return updated;
+        }
+        
+        public LcRest.Address GetFormServiceAddress(int userID, LcRest.Locale locale)
+        {
+            var serviceAddress = new LcRest.Address
+            {
+                addressID = (Request["serviceAddress[addressID]"] ?? Request["serviceAddressID"]).AsInt(0),
+                addressLine1 = Request["serviceAddress[addressLine1]"],
+                addressLine2 = Request["serviceAddress[addressLine2]"],
+                addressName = Request["serviceAddress[addressName]"],
+                postalCode = Request["serviceAddress[postalCode]"],
+                specialInstructions = Request["serviceAddress[specialInstructions]"],
+                countryCode = Request["serviceAddress[countryCode]"] ?? locale.countryCode,
+                latitude = Request["serviceAddress[latitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[latitude]"].AsDecimal(),
+                longitude = Request["serviceAddress[longitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[longitude]"].AsDecimal()
+            };
+            if (serviceAddress.IsNewAddress())
+            {
+                serviceAddress.userID = userID;
+            }
+            return serviceAddress;
+        }
+        
+        public void ApplyServiceAddressValidation()
+        {
+            Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
+            Validation.RequireField("serviceAddress[addressLine1]", LcRessources.RequiredField("Address Line 1"));
+            Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
+            Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
+            Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
+            Validation.Add("serviceAddress[specialInstructions]", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+            Validation.Add("serviceAddress[latitude]", Validator.Decimal("Latitude must be a number"));
+            Validation.Add("serviceAddress[longitude]", Validator.Decimal("Longitude must be a number"));
+        }
+        
+        public List<int> GetFormServices()
+        {
+            /* TODO: Update to receive an array of object like
+                * { serviceProfessionalUserID: 0, totalPrice: 0, clientInputData: null,... }
+                * like the pricing estimate detail object.
+            */
+            if (!Request.Form.AllKeys.Contains<string>("services[]"))
+            {
+                ModelState.AddError("services", "Choose at least one service");
+            }
+            var services = Request.Form.GetValues("services[]");
+            var servicesIds = new List<int>();
+            if (services == null || services.Length < 1)
+            {
+                ModelState.AddError("services", "Choose at least one service");
+            }
+            else
+            {
+                foreach (var serviceItem in services)
+                {
+                    var sid = serviceItem.AsInt(0);
+                    if (sid == 0)
+                    {
+                        ModelState.AddError("services", "Some specified services are incorrect");
+                        break;
+                    }
+                    servicesIds.Add(sid);
+                }
+            }
+            return servicesIds;
+        }
+        
+        public dynamic UpdateItem(int bookingID)
+        {
+            int clientUserID = WebSecurity.CurrentUserId;
+            var locale = LcRest.Locale.Current;
+
+            var serviceStartTime = DateTimeFromISO(Request.Form["serviceStartTime"]);
+            if (!serviceStartTime.HasValue)
+            {
+                ModelState.AddError("startTime", "Start date and time is not valid");
+            }
+            
+            var serviceAddress = GetFormServiceAddress(clientUserID, locale);
+            if (serviceAddress.IsNewAddress() || !serviceAddress.IsEmpty())
+            {
+                ApplyServiceAddressValidation();
+            }
+
+            var servicesIds = GetFormServices();
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
+            var specialRequests = Request["specialRequests"];
+
+            try {
+                var itemExists = LcRest.Booking.UpdClientBooking(bookingID, clientUserID, serviceAddress, serviceStartTime.Value, servicesIds, specialRequests);
+                // If doesn't exists, return null early
+                if (!itemExists)
+                {
+                    return null;
+                }
+            }
+            catch (ConstraintException delEx)
+            {
+                // The item cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);
+            }
+
+            // Return database copy
+            return LcRest.Booking.Get(bookingID, true, false, clientUserID);
         }
         
         public dynamic CreateItem()
@@ -153,29 +307,7 @@
             // Get booking presets for current data, to know some fixed settings like instantBooking
             var booking = LcRest.Booking.NewFor(userID, serviceProfessionalUserID, jobTitleID, locale.languageID, locale.countryID, bookCode);
 
-            /* TODO: Update to receive an array of object like
-                * { serviceProfessionalUserID: 0, totalPrice: 0, clientInputData: null,... }
-                * like the pricing estimate detail object.
-            */
-            if (!Request.Form.AllKeys.Contains<string>("services[]"))
-            {
-                ModelState.AddError("services", "Choose at least one service");
-            }
-            var pricing = Request.Form.GetValues("services[]");
-            var pricingIds = new List<int>();
-            if (pricing == null || pricing.Length < 1) {
-                ModelState.AddError("services", "Choose at least one service");
-            }
-            else {
-                foreach(var pricingItem in pricing) {
-                    var sid = pricingItem.AsInt(0);
-                    if (sid == 0) {
-                        ModelState.AddError("services", "Some specified services are incorrect");
-                        break;
-                    }
-                    pricingIds.Add(sid);
-                }
-            }
+            var servicesIds = GetFormServices();
             
             // Date/times: main and alternative1/2
             var requiredStartTimeName = "Start date and time";
@@ -205,34 +337,17 @@
                 ModelState.AddError("startTime", requiredStartTimeName + " is not valid");
             }
 
-            var serviceAddress = new LcRest.Address
+            var serviceAddress = GetFormServiceAddress(userID, locale);
+            if (serviceAddress.IsNewAddress())
             {
-                addressID = (Request["serviceAddress[addressID]"] ?? Request["serviceAddressID"]).AsInt(0),
-                addressLine1 = Request["serviceAddress[addressLine1]"],
-                addressLine2 = Request["serviceAddress[addressLine2]"],
-                addressName = Request["serviceAddress[addressName]"],
-                postalCode = Request["serviceAddress[postalCode]"],
-                specialInstructions = Request["serviceAddress[specialInstructions]"],
-                countryCode = Request["serviceAddress[countryCode]"] ?? locale.countryCode,
-                latitude = Request["serviceAddress[latitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[latitude]"].AsDecimal(),
-                longitude = Request["serviceAddress[longitude]"].IsEmpty() ? (double?)null : (double)Request["serviceAddress[longitude]"].AsDecimal()
-            };
-            if (serviceAddress.IsNewAddress()) {
-                serviceAddress.userID = userID;
-                
-                Validation.RequireField("serviceAddress[postalCode]", LcRessources.RequiredField("Zip Code"));
-                Validation.RequireField("serviceAddress[addressLine1]", LcRessources.RequiredField("Address Line 1"));
-                Validation.Add("serviceAddress[addressLine1]", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
-                Validation.Add("serviceAddress[addressLine2]", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
-                Validation.Add("serviceAddress[addressName]", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
-                Validation.Add("serviceAddress[specialInstructions]", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
-                Validation.Add("serviceAddress[latitude]", Validator.Decimal("Latitude must be a number"));
-                Validation.Add("serviceAddress[longitude]", Validator.Decimal("Longitude must be a number"));
+                ApplyServiceAddressValidation();
             }
 
             if (!Validation.IsValid() || !ModelState.IsValid) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
+
+            var specialRequests = Request["specialRequests"];
 
             try
             {               
@@ -245,10 +360,11 @@
                     serviceStartTime.Value,
                     alternative1StartTime,
                     alternative2StartTime,
-                    pricingIds,
+                    servicesIds,
                     locale.languageID,
                     locale.countryID,
-                    bookCode
+                    bookCode,
+                    specialRequests
                 );
                 itemID = booking.bookingID;
                 

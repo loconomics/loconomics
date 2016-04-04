@@ -17,7 +17,7 @@ function UpcomingAppointmentsSummary(values) {
         }),
         nextOnes: new BookingSummary({
             concept: 'more appointments coming up',
-            timeFormat: ' [Next is] MMMM Qo [@] h:mma'
+            timeFormat: ' [Next is] MMMM Do [@] h:mma'
         }),
         pendingScheduling: new BookingSummary({
             concept: 'to be scheduled',

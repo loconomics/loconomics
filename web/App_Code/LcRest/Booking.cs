@@ -585,7 +585,7 @@ namespace LcRest
         /// the payment is authorized with the exception of services for more than 7 days in advance,
         /// that ones are postponed because of authorization expirations.
         /// This query returns that bookings on a secure time frame to avoid expirations and prevent
-        /// take action if any problem: 48 hours before the service start.
+        /// take action if any problem: 24 hours before the service start.
         /// </summary>
         /// <param name="dbShared"></param>
         /// <returns></returns>
@@ -618,9 +618,9 @@ namespace LcRest
                         BookingStatusID IN (" + validStatuses + @")
                          AND
                         -- at 48 hours before service starts (after that is fine)
-                        getdate() >= dateadd(hh, -48, E.StartTime)
+                        getdate() >= dateadd(hh, -23, E.StartTime)
                         /* AND
-                         getdate() < dateadd(hh, -49, E.StartTime)
+                         getdate() < dateadd(hh, -24, E.StartTime)
                         */
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
             }
@@ -1910,6 +1910,20 @@ namespace LcRest
             }
         }
         /// <summary>
+        /// Utility that checks if the booking is in 'declined/denied' state
+        /// and declination was performed by the client in a booking
+        /// created by the service-professional.
+        /// </summary>
+        bool isDeclinedByClient
+        {
+            get
+            {
+                return
+                    this.bookingStatusID == (int)LcEnum.BookingStatus.denied &&
+                    this.bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
+            }
+        }
+        /// <summary>
         /// Applies the cancellation policy rules on the current booking,
         /// depending on status, type and cancellation policy
         /// and updating the pricingSummary values about cancellation,
@@ -1922,7 +1936,7 @@ namespace LcRest
 
             pricingSummary.cancellationDate = DateTime.Now;
 
-            if (isCancelledByClient)
+            if (isCancelledByClient || isDeclinedByClient)
             {
                 var policy = CancellationPolicy.Get(cancellationPolicyID, languageID, countryID);
                 if (serviceDate == null)
@@ -2182,12 +2196,9 @@ namespace LcRest
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
-                if (!canChangePricing)
-                {
-                    // Load it, we need the information
-                    booking.FillPricingSummary();
-                }
-                else if (booking.CreatePricing(services))
+                // Load it, we need the information
+                booking.FillPricingSummary();
+                if (canChangePricing && booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
                     throw new ConstraintException("Bookings require the selection of at least one service");
@@ -2482,7 +2493,8 @@ namespace LcRest
             IEnumerable<int> services,
             int languageID,
             int countryID,
-            string bookCode
+            string bookCode,
+            string specialRequests
         )
         {
             using (var db = new LcDatabase())
@@ -2598,6 +2610,7 @@ namespace LcRest
                 }
 
                 // 5º: persisting booking on database
+                booking.specialRequests = specialRequests;
                 // Explicitly set incomplete status when payment is enabled (since payment info was not added still, it requires
                 // a call to another method after this).
                 // On no payment, depends on instantBooking
@@ -2684,6 +2697,33 @@ namespace LcRest
             LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
         }
         /// <summary>
+        /// Performs a booking declination by a client, save at database and send messages
+        /// </summary>
+        public void DeclineBookingByClient()
+        {
+            // Constraint
+            if ((bookingStatusID != (int)LcEnum.BookingStatus.confirmed &&
+                bookingStatusID != (int)LcEnum.BookingStatus.request) ||
+                bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking)
+            {
+                throw new Exception("Booking cannot be cancelled. Status: " + bookingStatusID.ToString() +
+                    " Type: " + bookingTypeID.ToString()
+                );
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.denied;
+
+            this.RefundPayment();
+
+            // NOTE: We manage this case the same as a 'client cancellation' for messages and language,
+            // even if internally is a different status for us, because we need the 'denied' status to
+            // correctly analyze the booking.
+            LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
+        }
+        /// <summary>
         /// Allow a client to update a booking (any booking, not only client-booking)
         /// </summary>
         /// <returns>True if update was possible and done, while false if cannot be performed since doesn't exists. Errors will throw.</returns>
@@ -2729,6 +2769,7 @@ namespace LcRest
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
+                booking.FillPricingSummary();
                 if (booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
@@ -2767,24 +2808,72 @@ namespace LcRest
 
 
                 // 4º: Validate addressID or update the existent, service-specific, one
-                //serviceAddress.userID
-                //booking.FillServiceAddress();
-                //var isServiceOnlyAddress = booking.serviceAddress.userID == clientUserID;                
-                if (booking.serviceAddressID != serviceAddress.addressID)
+                booking.FillServiceAddress();
+                // Validate owership of the address
+                if (!serviceAddress.IsNewAddress() && !Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
                 {
-                    // A different addressID was given, is expected to be an existent address of the client
-                    // or professional.
-                    // On this cases, NO UPDATES are allowed on the address since is a selection of a previous one
-                    if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                    throw new ConstraintException("Selected location is not valid.");
+                }
+                if (!serviceAddress.IsNewAddress() && booking.serviceAddressID != serviceAddress.addressID)
+                {
+                    // A different addressID was given, update it in the booking
+                    // NOTE: When a different addressID is given, we do NOT allow updates, since is an address choosen from a list.
+                    booking.serviceAddressID = serviceAddress.addressID;
+                }
+                else
+                {
+                    // if addressID is zero, so user wants to create a new address, we follow to create one
+                    if (serviceAddress.IsNewAddress())
                     {
-                        throw new ConstraintException("Selected location is not valid.");
+                        // CREATE address
+                        // Save new client address for the service
+                        serviceAddress.userID = clientUserID;
+                        // Is a client service address, where perform a service but not related to
+                        // a job title but as customer
+                        serviceAddress.kind = Address.AddressKind.Service;
+                        serviceAddress.isServiceLocation = true;
+                        serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                        // Save and get ID (passed in the connection to be in the same transaction)
+                        booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
                     }
                     else
                     {
-                        booking.serviceAddressID = serviceAddress.addressID;
+                        // When addressID is the same: we need to check if user wants and can update the address details:
+                        // If the given address is empty, do nothing; just user wants to keep using the same address with no updates
+                        // If the given address has details but are the same as the stored one, do nothing.
+                        if (!serviceAddress.IsEmpty() && !serviceAddress.IsSimilar(booking.serviceAddress))
+                        {
+                            // On the other cases: has data and is different, we need to know if we allow the user to update the given addressID with that details:
+                            // - If saved address has no name, was created specifically for this service, update that even if new address has a name.
+                            // - If the address name is the same, user intention is to update the same address details,
+                            //    otherwise, we create a new address on behalf the user and update the booking addressID.
+                            // - To allow update the address with same name, addressID must belongs to the client (previously, we checked if belongs client
+                            //    or professional, but we need to ensure is a client address here to avoid updates of professional addresses in an attack
+                            //    or client software error; if that happens, we silently skip address update.)
+                            var allowUpdate = (booking.serviceAddress.IsAnonymous() || booking.serviceAddress.addressName == serviceAddress.addressName) &&
+                                Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID);
+                            if (allowUpdate)
+                            {
+                                // Update address record
+                                Address.SetAddress(serviceAddress, db.Db);
+                            }
+                            else
+                            {
+                                // Create a new address and update booking reference to the new one
+                                serviceAddress.addressID = Address.NewAddressID;
+                                // Save new client address for the service
+                                serviceAddress.userID = clientUserID;
+                                // Is a client service address, where perform a service but not related to
+                                // a job title but as customer
+                                serviceAddress.kind = Address.AddressKind.Service;
+                                serviceAddress.isServiceLocation = true;
+                                serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                                // Save and get ID (passed in the connection to be in the same transaction)
+                                booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                            }
+                        }
                     }
                 }
-                // TODO Update address
 
 
                 // 5º: persisting booking on database

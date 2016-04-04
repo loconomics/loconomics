@@ -81,5 +81,6 @@ module.exports = {
     'boardMemberNominations': require('./activities/boardMemberNominations'),
     'paymentAccount': require('./activities/paymentAccount'),
     'myAppointments': require('./activities/myAppointments'),
-    'clientAppointment': require('./activities/clientAppointment')
+    'clientAppointment': require('./activities/clientAppointment'),
+    'viewBooking': require('./activities/viewBooking')
 };

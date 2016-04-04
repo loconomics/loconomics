@@ -87,19 +87,27 @@ function EditClientBookingCardVM(app) {
 
     ///
     /// Load Booking data
-    this.load = function(bookingID) {
-
-        this.isLoadingBooking(true);
-        
-        app.model.bookings.getBooking(bookingID).then(function(booking) {
-            this.originalBooking(booking);
+    this.load = function(bookingIdOrModel) {
+        if (bookingIdOrModel && bookingIdOrModel.model) {
+            // Use model as original data
+            this.originalBooking(bookingIdOrModel);
             this.progress.reset().go('confirm');
-            this.isLoadingBooking(false);
-        }.bind(this))
-        .catch(function(err) {
-            this.isLoadingBooking(false);
-            app.modals.showError({ error: err });
-        }.bind(this));
+            return Promise.resolve();
+        }
+        else {
+            // Load by ID
+            var bookingID = bookingIdOrModel |0;
+            this.isLoadingBooking(true);
+            return app.model.bookings.getBooking(bookingID).then(function(booking) {
+                this.originalBooking(booking);
+                this.progress.reset().go('confirm');
+                this.isLoadingBooking(false);
+            }.bind(this))
+            .catch(function(err) {
+                this.isLoadingBooking(false);
+                app.modals.showError({ error: err });
+            }.bind(this));
+        }
     }.bind(this);
 
     /// Save helpers
@@ -114,6 +122,14 @@ function EditClientBookingCardVM(app) {
             // Go out edit mode
             this.editedVersion(null);
         }
+        this.isCancelMode(false);
+        
+        var msg = 'You\'re all set! We\'ll notify {0} of your changes.'.replace('{0}', this.serviceProfessionalInfo().profile().firstName());
+        
+        app.modals.showNotification({
+            title: 'Done!',
+            message: msg
+        });
 
         this.isSaving(false);
 
@@ -128,7 +144,7 @@ function EditClientBookingCardVM(app) {
         // Final step, confirm and save booking
         this.isSaving(true);
 
-        app.model.bookings.setClientBooking(this.booking)
+        app.model.bookings.setClientBooking(this.booking())
         .then(afterSaveBooking)
         .catch(function(err) {
             this.isSaving(false);
@@ -141,7 +157,11 @@ function EditClientBookingCardVM(app) {
     this.cancelBookingByClient = function() {
         if (!this.canCancel()) return;
         this.isSaving(true);
-        app.model.bookings.cancelBookingByClient(this.booking().bookingID())
+        var apiCall = this.booking().canBeCancelledByClient() ?
+            app.model.bookings.cancelBookingByClient :
+            app.model.bookings.declineBookingByClient
+        ;
+        apiCall(this.booking().bookingID())
         .then(afterSaveBooking)
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry

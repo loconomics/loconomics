@@ -15,7 +15,10 @@ var A = Activity.extend(function ClientAppointmentActivity() {
     this.viewModel = new ViewModel(this.app);
     this.navBar = new Activity.NavBar({
         title: 'Upcoming',
-        leftAction: Activity.NavAction.goBack.model.clone(),
+        leftAction: Activity.NavAction.goBack.model.clone({
+            link: '/myAppointments',
+            isShell: false
+        }),
         rightAction: {}
     });
     var nav = this.navBar;
@@ -44,25 +47,96 @@ A.prototype.show = function show(options) {
     
     var params = options && options.route && options.route.segments;
     var id = params[0] |0;
-    if (id) {
-        this.viewModel.currentItem.load(id);
-    }
-    else {
-        this.viewModel.currentItem.reset();
-    }
+    this.viewModel.load(id);
 };
 
 function ViewModel(app) {
-    /*this.list = ko.observableArray([]);
-    this.currentIndex = ko.observable(0);
-    
-    this.currentItem = ko.pureComputed(function() {
-        return this.list()[this.currentIndex()];
-    }, this);*/
-
+    this.list = app.model.clientAppointments.list;
+    this.currentIndex = ko.observable(-1);
     this.currentItem = new EditClientBookingCardVM(app);
+    this.isLoading = ko.observable(false);
     
-    // TODO
-    this.goNext = function() {};
-    this.goPrevious = function() {};
+    this.isEmpty = ko.pureComputed(function() {
+        return this.currentIndex() === -2;
+    }, this);
+
+    var updateListIndex = function() {
+        if (this.list().length) {
+            if (this.currentIndex() === -1) {
+                // Single booking was selected, find in the list
+                var bID = this.currentItem.booking().bookingID();
+                this.list().some(function(b, i) {
+                    if (b.bookingID() === bID) {
+                        this.currentIndex(i);
+                        return true;
+                    }
+                }.bind(this));
+            }
+        }
+    }.bind(this);
+
+    this.load = function(id) {
+        if (id) {
+            this.currentIndex(-1);
+            this.currentItem.load(id)
+            .then(function() {
+                // Load the list in background
+                app.model.clientAppointments.sync()
+                .then(updateListIndex);
+            })
+            .catch(function(err) {
+                app.modals.showError({
+                    title: 'Error loading the appointment',
+                    error: err
+                });
+            }.bind(this));
+        }
+        else {
+            this.isLoading(true);
+            this.currentItem.reset();
+            app.model.clientAppointments.sync()
+            .then(function() {
+                var first = this.list().length ? this.list()[0] : null;
+                if (first) {
+                    this.currentIndex(0);
+                    this.currentItem.load(first);
+                    updateListIndex();
+                    // Update URL
+                    app.shell.replaceState(null, null, '/clientAppointment/' + first.bookingID());
+                }
+                else {
+                    this.currentIndex(-2);
+                    // Update URL
+                    app.shell.replaceState(null, null, '/clientAppointment');
+                }
+                this.isLoading(false);
+            }.bind(this))
+            .catch(function(err) {
+                this.isLoading(false);
+                app.modals.showError({
+                    title: 'Error loading appointments',
+                    error: err
+                });
+            }.bind(this));
+        }
+    }.bind(this);
+
+    // Control list movements
+    var goToIndex = function(i) {
+        var min = 0, max = this.list().length - 1;
+        if (this.currentIndex() >= min) {
+            var ni = Math.max(min, Math.min(max, i));
+            this.currentIndex(ni);
+            var b = this.list()[ni];
+            this.currentItem.load(b);
+            // Update URL
+            app.shell.replaceState(null, null, '/clientAppointment/' + b.bookingID());
+        }
+    }.bind(this);
+    this.goNext = function() {
+        goToIndex(this.currentIndex() + 1);
+    }.bind(this);
+    this.goPrevious = function() {
+        goToIndex(this.currentIndex() - 1);
+    }.bind(this);
 }

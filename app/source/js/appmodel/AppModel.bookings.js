@@ -34,7 +34,6 @@ exports.create = function create(appModel) {
             start: date,
             end: end
         }).then(function(bookings) {
-            // Put in cache (they are already model instances)
             var arr = ko.observableArray(bookings);
             // Return the observable array
             return arr;
@@ -164,6 +163,13 @@ exports.create = function create(appModel) {
         });
     };
     
+    api.declineBookingByClient = function declineBookingByClient(bookingID) {
+        return appModel.rest.post('me/client-booking/' + bookingID + '/deny')
+        .then(function(serverBooking) {
+            return new Booking(serverBooking);
+        });
+    };
+    
     // dateType values allowed by REST API: 'preferred', 'alternative1', 'alternative2'
     api.confirmBookingRequest = function confirmBookingRequest(bookingID, dateType) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/confirm', { dateType: dateType })
@@ -217,7 +223,9 @@ exports.create = function create(appModel) {
                 postalCode: billingAddress.postalCode
             },
             
-            paymentMethod: paymentMethod
+            paymentMethod: paymentMethod,
+            
+            specialRequests: booking.specialRequests()
         };
     };
     
@@ -226,7 +234,7 @@ exports.create = function create(appModel) {
         @param booking model/Booking
         @param requestOptions { promotionalCode, bookCode }
     **/
-    api.requestClientBooking = function requetsClientBooking(booking, requestOptions, billingAddress, paymentMethod) {
+    api.requestClientBooking = function requestClientBooking(booking, requestOptions, billingAddress, paymentMethod) {
         var data = createClientBookingRequest(booking, requestOptions, billingAddress, paymentMethod);
         return appModel.rest.post('me/client-booking', data);
     };
@@ -244,9 +252,26 @@ exports.create = function create(appModel) {
         return appModel.rest.get('me/client-booking', options);
     };
     
+    /**
+        A client booking update allows a subset of the booking plain-data and some
+        fields needs conversion (services, asn in createClientBookingRequest).
+        It receives a booking instance filled in with form data and returns a plain object.
+    **/
+    var createClientBookingUpdateObject = function(booking) {
+        return {
+            serviceStartTime: booking.serviceDate() && booking.serviceDate().startTime(),        
+            serviceAddress: booking.serviceAddress() && booking.serviceAddress().model.toPlainObject(),
+            
+            services: booking.pricingSummary() && booking.pricingSummary().details()
+            .map(function(pricing) {
+                return pricing.serviceProfessionalServiceID();
+            }),
+
+            specialRequests: booking.specialRequests()
+        };
+    };
     api.setClientBooking = function setClientBooking(booking) {
-        // TODO
-        return Promise.resolve(booking);
+        return appModel.rest.put('me/client-booking/' + booking.bookingID(), createClientBookingUpdateObject(booking));
     };
 
     return api;

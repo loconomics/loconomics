@@ -30,7 +30,7 @@ var statusLabels = {
 var Enum = require('../utils/Enum');
 
 function Booking(values) {
-    
+//jshint maxstatements:34    
     Model(this);
 
     this.model.defProperties({
@@ -112,6 +112,14 @@ function Booking(values) {
             (this.bookingStatusID() === Booking.status.confirmed ||
             this.bookingStatusID() === Booking.status.request) &&
             this.bookingTypeID() !== Booking.type.serviceProfessionalBooking
+        );
+    }, this);
+    
+    this.canBeDeclinedByClient = ko.pureComputed(function() {
+        return (
+            (this.bookingStatusID() === Booking.status.confirmed ||
+            this.bookingStatusID() === Booking.status.request) &&
+            this.bookingTypeID() === Booking.type.serviceProfessionalBooking
         );
     }, this);
     
