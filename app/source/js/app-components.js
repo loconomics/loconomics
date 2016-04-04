@@ -57,6 +57,12 @@ exports.registerAll = function(app) {
         }
     });
     
+    /// inline-user-menu
+    ko.components.register('app-inline-user-menu', {
+        template: { element: 'inline-user-menu-template' },
+        viewModel: { instance: app.navBarBinding }
+    });
+    
     /// feedback-entry
     ko.components.register('app-feedback-entry', {
         template: { element: 'feedback-entry-template' },

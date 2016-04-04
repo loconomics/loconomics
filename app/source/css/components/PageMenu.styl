@@ -10,7 +10,7 @@
   text-align: center;
   line-height: 19px !important;
   background-color: $brand-primary;
-    
+  
   .PageMenu-list {
     display: none;    
     
@@ -35,27 +35,52 @@
           padding: 17px 15px;
           margin: 0px -3px 0px -3px;
           font-size: 15px;
+        }
 
           &:hover {
-            border-bottom: 5px solid white;
-            padding-bottom: 13px !important;
-          }
-            
-          &.active {
-            border-bottom: 5px solid white;
-            padding-bottom: 13px !important;
-          }  
-        }
-        &.active {
-          border-bottom: 5px solid white;
-          padding-bottom: 13px !important;
-        }  
+             border-bottom: 4px solid white;
+             padding-bottom: 14px !important;
+           }
+             
+           &.active {
+             a {
+               border-bottom: 4px solid;
+               padding-bottom: 14px !important;
+               outline: none;
+             }  
+           } 
       } 
     }
     
     @media $mediaMinXs {
       display: inherit;
     }  
+  }
+  &.DashboardNavMenu {
+    background-color: $gray;
+    position: 
+    clear both;
+    .PageMenu-list {
+      >ul {
+        .App-menus-group-header{
+          display: none;
+        }
+        >li {
+          >a {
+              >i {
+                display: none;
+              }
+          }
+          &.go-marketplace,
+          &.go-help,
+          &.go-logout,
+          &.go-download
+          &.divider{
+            display none;
+          }
+        }  
+      }
+    }
   }
   
   .btn-group {
@@ -87,37 +112,28 @@
     .dropdown-toggle:hover {
       border: 2px solid $brand-primary-dark; 
       background-color: white;   
-      color: $brand-primary-dark;
+      color: $brand-secondary-dark !important;
     }
 
     .dropdown-menu {
-      float: left;
-      position: absolute;
-      margin-top: 0px;
-      border: 1px solid $gray-light;
-      border-radius: 0px;
-      background-color: #fff;
-      -webkit-box-shadow: 0 1.5px 0 0 $gray-background;
-      box-shadow: 0 1.5px 0 0 $gray-background;
       width: 100%;
-      z-index: 9999;
-      margin: 0;
 
       > li {        
         text-align: center;
         border-bottom: 1px solid $gray-background;
-        padding: 10px 10px;
         
         > a {
           white-space: normal;
           font-size: inherit;
+          padding: 10px 0px;
         }
       }
       
       > li:hover,
         a:hover{
-          background-color: $gray-background; 
-          color: $gray-dark;
+          color: $brand-secondary-dark;
+          font-weight: 400;
+          background-color: white;          
         }        
       
       > li:last-child {

@@ -114,6 +114,7 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
                     right: 0;
                     left: auto;
                     width: 300px;
+                    margin-top: 8px;
                   > li {
                     white-space: normal;  
                     border-bottom: 1px solid $gray-background;  
@@ -206,8 +207,12 @@ $HomeNavBar-Height = $HomeNavBar-ContentHeight + ($HomeNavBar-VGap * 2);
         position: fixed;
 
         .btn-link {
-            color: $brand-primary !important;
+          color: $gray-dark;
+          &:hover {
+            color: $brand-secondary-dark !important;
+          }
         }
+        
 
         .HomeNavBar-brand > a {
             background-image: url("../images/logo-loconomics-teal-mini.png");

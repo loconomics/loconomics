@@ -22,7 +22,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
 .LargeNavBar
     
     height $LargeNavBar-height
-    
+    background-color: white;
     position: relative;
     z-index: 250;
     padding $LargeNavBar-vGap $container-padding-right $LargeNavBar-vGap $container-padding-left
@@ -88,36 +88,53 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             & > a
                   height $LargeNavBar-contentHeight
                   line-height $LargeNavBar-contentHeight
-                  color #4c4c4c
+                  color $gray-dark;
                   padding-top 0
                   padding-bottom 0
                   
                   &:hover
                   &:focus
                       background-color transparent
-                      color $brand-primary
+                      color $brand-secondary-dark !important
+                      border-color transparent
+                      
+    
+          & > .open {
 
-        & > .open
-            & > a
-                color #999
-                background-color #fff
+            & > a {
+                color: $gray;
+                background-color: #fff;
+            }
 
-            & > .dropdown-menu
-                float left
-                position absolute
-                margin-top 0px
-                border 1px solid rgba(0,0,0,0.15)
-                border-top-left-radius 0px
-                border-top-right-radius 0px
-                background-color #fff
-                -webkit-box-shadow 0 6px 12px rgba(0,0,0,0.175)
-                box-shadow 0 6px 12px rgba(0,0,0,0.175)
+            & > .dropdown-menu {
+                
+                .go-dashboard > a
+                .go-logout > a {
+                  padding-left: 10px;
+                  padding-bottom: 10px;
 
-                > li
-                    width 200px
-                    > a
-                      white-space normal
-                      font-size inherit
+                  &:hover,
+                  &:focus {
+                    padding-left: 17px;
+                  }
+                }
+                &.Category-menu {
+                  > li {        
+                    text-align: center;
+                    border-bottom: 1px solid $gray-background;
+
+                    > a {
+                      white-space: normal;
+                      font-size: inherit;
+                      padding: 10px 0px;
+                    }
+                  }
+                 > li:last-child {
+                     border-bottom: none;
+                   }
+                }
+             }
+         }
 
         ///// SPECIFIC THINGS THAT MAY GET BETTER ORGANIZED OR CONVERTED TO GENERIC COMPONENTS:
         .mail-nav

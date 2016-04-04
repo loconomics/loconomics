@@ -162,21 +162,24 @@ exports.extend = function (app) {
         .filter(':visible')
         .collapse('hide');
     };
+
+    // Set model for the AppNav
+    app.navBarBinding = {
+        navBar: app.navBar,
+        // Both: are later filled with a call to the model once loaded and ready
+        photoUrl: ko.observable('about:blank'),
+        userName: ko.observable('Me'),
+        isServiceProfessional: ko.observable(false),
+        isClient: ko.observable(false),
+        isApp: ko.observable(!!window.cordova)
+    };
     
+    app.navBarBinding.isAnonymous = ko.pureComputed(function() {
+        return !this.isServiceProfessional() && !this.isClient();
+    }, app.navBarBinding);
+
     app.setupNavBarBinding = function setupNavBarBinding() {
-        // Set model for the AppNav
-        app.navBarBinding = {
-            navBar: app.navBar,
-            // Both: are later filled with a call to the model once loaded and ready
-            photoUrl: ko.observable('about:blank'),
-            userName: ko.observable('Me'),
-            isServiceProfessional: ko.observable(false),
-            isClient: ko.observable(false),
-            isApp: ko.observable(!!window.cordova)
-        };
-        app.navBarBinding.isAnonymous = ko.pureComputed(function() {
-            return !this.isServiceProfessional() && !this.isClient();
-        }, app.navBarBinding);
+        app.navBarBinding.isApp(!!window.cordova);
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
     

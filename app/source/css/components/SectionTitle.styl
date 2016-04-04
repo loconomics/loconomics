@@ -25,6 +25,12 @@ $gray = lighten(#000, 33.5%);
     border: none;
     color: $gray;
     text-transform: uppercase;
+    @media $mediaMinMd {
+      margin-top: 15px;
+      background: $gray-lighter;
+      font-size: 28px; 
+      text-transform: none;
+    }
     
     &.SectionTitle--withBtn {
         padding: 0;

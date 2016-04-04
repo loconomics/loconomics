@@ -190,3 +190,60 @@ ResetSectionTitleMargin() {
         }
     }
 }
+
+
+// custom styles for dropdown-menus across app
+.dropdown-menu {
+  float: left;
+  margin-top: 0px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1.5px 0 0 $gray-background;
+  box-shadow: 0 1.5px 0 0 $gray-background;
+  border-radius: 0px;
+  
+  .App-menus-group-header {    
+        padding: 0px 10px 10px;
+        border-bottom: 1px solid $gray-light;
+        color: $gray-light;            
+        font-size: 1.1em;
+  }  
+  > li {
+        width: 250px;
+        &.go-marketplace,
+        &.go-help,
+        &.go-download{
+          display none;
+        }
+        > a {
+        color: $gray;        
+        font-size: 1.1em;               
+        padding: 10px 10px 10px 40px;
+        margin: 0;
+
+        // icons
+        > i {
+            color: $gray;
+            font-size: 1.5em;      
+            margin-right: 5px;
+        }
+
+        &:hover,
+        &:focus {
+          color: $brand-secondary-dark !important;
+          background-color: transparent;
+          padding-left: 42px;
+          > i {
+            color: $brand-secondary-dark !important;
+          }
+        }
+        }
+    }
+    li.active > a {
+      color: $gray-dark !important;
+      background: transparent;  
+      > i {
+        color: $gray-dark !important;
+      }
+    }
+}
+
