@@ -173,6 +173,12 @@ namespace LcRest
                 serviceFeeAmount,
                 cancellationDate,
                 cancellationFeeCharged,
+                firstTimeServiceFeeFixed,
+                firstTimeServiceFeePercentage,
+                paymentProcessingFeePercentage,
+                paymentProcessingFeeFixed,
+                firstTimeServiceFeeMaximum,
+                firstTimeServiceFeeMinimum,
                 CreatedDate,
                 UpdatedDate,
                 ModifiedBy,
@@ -188,6 +194,9 @@ namespace LcRest
                 @6, -- pfee price
                 @7, -- canc date
                 @8, -- canc fee
+                @9, @10, -- first time fee
+                @11, @12, -- payment fee
+                @13, @14, -- maxmin
                 getdate(), getdate(), 'sys', 1
             )
 
@@ -209,7 +218,13 @@ namespace LcRest
                     data.serviceDurationMinutes, data.firstSessionDurationMinutes,
                     data.subtotalPrice, data.clientServiceFeePrice,
                     data.totalPrice, data.serviceFeeAmount,
-                    data.cancellationDate, data.cancellationFeeCharged
+                    data.cancellationDate, data.cancellationFeeCharged,
+                    data.firstTimeServiceFeeFixed,
+                    data.firstTimeServiceFeePercentage,
+                    data.paymentProcessingFeePercentage,
+                    data.paymentProcessingFeeFixed,
+                    data.firstTimeServiceFeeMaximum,
+                    data.firstTimeServiceFeeMinimum
                 ));
 
                 if (data.details != null)

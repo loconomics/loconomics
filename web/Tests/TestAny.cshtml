@@ -5,13 +5,23 @@
     Layout = "_TestLayout.cshtml";
 
     DateTime start = DateTime.Now;
+    dynamic data;
 
-    dynamic data = new
-    {
-        one = LcCalendar.DoubleCheckEventAvailability(6800990, null, null, true),
-        two = LcCalendar.DoubleCheckEventAvailability(6800991, null, null, true),
-        three = LcCalendar.DoubleCheckEventAvailability(6800992, null, null, true)
-    };
+    try {
+        data = LcRest.Booking.NewFor(547, 540, 106, 1, 1, null, false);
+        /*data = LcRest.Booking.InsClientBooking(547, 540, 106, new LcRest.Address{
+            addressLine1 = "asdf",
+            postalCode = "90001",
+            countryCode = "US",
+            addressName = ""
+        }, new DateTime(2016, 5, 5), null, null, new List<int>
+        {
+            143
+        }, 1, 1, null, null);*/
+    }
+    catch (Exception ex) {
+        data = ex;
+    }
 }
 @ObjectInfo.Print(data)
 
