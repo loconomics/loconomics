@@ -3,6 +3,9 @@
 **/
 @import "nib";
 
+/**
+    Sidebar
+**/
 .AppNav {
     
     left: 0px;
@@ -51,12 +54,13 @@
     .App-menus {
         // General menus container
         background: white;
-    
+        
         // Individual menus set-up
         > .navbar-collapse {
+            background: $AppNav-backColor;
             position: fixed;
             left: 0;
-            right: 0;
+            right: 25%;
             overflow: auto;
             bottom: 0;
             top: 0;
@@ -70,7 +74,25 @@
             // No border
             border-top: none;
         }
-    
+        
+        #menuNewItem {
+          left: 45%;
+          right: 0;   
+          
+          .App-menus-header {
+            text-align: right;   
+          }
+          
+          a {               
+            padding: 10px 10px 10px 20px;
+            text-align: right;  
+          }
+          
+          i {
+            margin-left: 5px;   
+          }
+        }
+        
         > .navbar-collapse.collapsing {
             // Avoid scrollbar during animation
             overflow: hidden;
@@ -78,27 +100,27 @@
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {
-            background: $AppNav-backColor;
             margin-top: 0;
             margin-bottom: 0;
             position: relative;
             z-index: 200;
+            overflow: auto;
         }
         
         .App-menus-header {
             margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
             padding: 15px;
             border-bottom: 1px solid White;
-            background: $AppNav-backColor;
             color: White;
-            
             font-size: 1.1em;
             
             .App-menus-header-user {
                 text-align: center;
-                font-size: 1em;
+                font-size: 1.1em;
                 display: block;
                 margin: 10px 0 0 0;
+                color: white;
+                text-decoration: none;                
             }
             
             .App-menus-header-photo {
@@ -108,8 +130,8 @@
                 background: none;
 
                 img {
-                    width: 60px;
-                    height: 60px;
+                    width: 80px;
+                    height: 80px;
                     display: inline-block;
                     border: 3px solid White;
                     border-radius: 100%;
@@ -117,33 +139,70 @@
                     overflow: hidden;
                 }
             }
+            a {
+                &:hover,
+                &:focus {
+                  text-decoration: none;    
+              }
+            }
         }
-
+        
+        .App-menus-group-header {    
+            padding: 0px 10px 10px;
+            border-bottom: 1px solid $gray-light;
+            color: $gray-light;            
+            font-size: 1.1em;
+        }
         // Main nav and its content
         .navbar-nav {
 
             padding-top: 10px;
             
             a {
-                color: white;
-                
-                padding: 10px 15px 10px 40px;
-
-                &:hover,
-                &:active {
-                    color: $gray;
-                    background: $gray-lighter;
-                    outline: none;
-                }
-                
-                // icons
+                color: $gray-lighter;        
+                font-size: 1.1em;               
+                padding: 10px 10px 10px 40px;
+                margin: 0;
+                   
+              // icons
                 > i {
-                    color: $AppNav-iconColor;
+                    color: $gray-lighter;
+                    font-size: 1.5em;      
                     margin-right: 5px;
                 }
+                
+                &:hover,
+                &:focus {
+                  color: white;
+                  font-weight: 700;
+                  padding-left: 42px;
+                  background-color: $AppNav-backColor;  
+                  > i {
+                    color: white;
+                    font-weight: 700;
+                  }
+                }            
             }
+            
+            .go-dashboard > a
+            .go-logout > a {
+              padding-left: 10px;
+              padding-bottom: 15px;
+              
+              &:hover,
+              &:focus {
+                padding-left: 17px;
+              }    
+            }
+            
             li.active > a {
-                color: $brand-primary;
+              color: white;
+              font-weight: 900;
+              background: transparent;  
+              > i {
+                color: white;
+                font-weight: 900;
+              }
             }
         }
     }
@@ -249,20 +308,13 @@
     }
 }
 
-@import 'utils/backdrop.styl'
+
 @media $mediaMaxSm {
     // On AppNav opened, match SmartNavBar style with nav
     body.has-appNav-open {
-        backdrop();
-
         .SmartNavBar {
-            //background: $AppNav-backColor;
             background: transparent;
             border-bottom-color: transparent;
-
-            .SmartNavBar-btn {
-                color: White;
-            }
 
             pointer-events: none;
             .SmartNavBar-edge,
@@ -290,4 +342,41 @@
             opacity: 1;
         }
     }
+}
+
+.SideNavNewItem {
+  background: $gray-background;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: right;            
+  .App-menus-header {
+    margin-top: 20px;
+    color: $gray-light;
+    text-align: right;
+    border-bottom: 1px solid $gray-light;     
+  }
+  .nav {
+      a {               
+        padding: 10px 10px 10px 20px;
+        text-align: right; 
+        color: $gray-dark;
+
+        &:hover,
+        &:focus {
+          color: $brand-secondary-dark !important;
+          font-weight: 500;
+          padding-left: 42px;
+          background-color: transparent;   
+          > i {
+            color: $brand-secondary-dark !important;
+            font-weight: 500;
+            background-color: transparent;   
+          }
+        }   
+      }
+
+      i {
+        margin-left: 5px;   
+      }
+  }
 }
