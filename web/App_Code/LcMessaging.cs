@@ -392,17 +392,25 @@ public class LcMessaging
             this.info = info;
             flags = JobTitleMessagingFlags.Get(info.booking.jobTitleID, info.booking.languageID, info.booking.countryID);
         }
+        protected virtual string getSenderForClient()
+        {
+            return info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+        }
+        protected virtual string getSenderForServiceProfessional()
+        {
+            return "Loconomics Scheduler <automated@loconomics.com>";
+        }
         void sendToClient(string tplName)
         {
             toEmail = info.client.email;
-            fromEmail = info.serviceProfessional.firstName + " " + info.serviceProfessional.lastName + " <automated@loconomics.com>";
+            fromEmail = getSenderForClient();
             tpl = "ToClient/" + tplName + (flags.hipaa ? "HIPAA" : "");
             send();
         }
         void sendToServiceProfessional(string tplName)
         {
             toEmail = info.serviceProfessional.email;
-            fromEmail = "Loconomics Scheduler <automated@loconomics.com>";
+            fromEmail = getSenderForServiceProfessional();
             tpl = "ToServiceProfessional/" + tplName + (flags.hipaa ? "HIPAA" : "");
             send();
         }
@@ -564,6 +572,14 @@ public class LcMessaging
             {
                 prepareData(info);
                 return this;
+            }
+            protected override string getSenderForClient()
+            {
+                return "Loconomics <automated@loconomics.com>";
+            }
+            protected override string getSenderForServiceProfessional()
+            {
+                return "Loconomics Marketplace <automated@loconomics.com>";
             }
             public override void BookingCancelledByClient()
             {
