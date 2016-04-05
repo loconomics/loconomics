@@ -19,7 +19,8 @@ function NavBar(values) {
         rightAction: {
             Model: NavAction
         },
-        hidden: false
+        hidden: false,
+        additionalNavClasses: ''
     }, values);
 }
 

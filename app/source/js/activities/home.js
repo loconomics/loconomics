@@ -18,6 +18,7 @@ var A = Activity.extend(function HomeActivity() {
 
     Activity.apply(this, arguments);
     this.navBar = Activity.createSectionNavBar(null);
+    this.navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app.model);
     this.viewModel.nav = this.app.navBarBinding;

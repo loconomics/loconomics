@@ -1,4 +1,4 @@
-<nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }">
+<nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
 
     <div class="SmartNavBar visible-xs visible-sm">
         <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
