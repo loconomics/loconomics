@@ -3,6 +3,7 @@
     //used to get apisearch results by term, lat, long, 
 **/
 'use strict';
+var $ = require('jquery');
 
 var 
     SearchResults = require('../models/SearchResults'),
@@ -18,21 +19,26 @@ var A = Activity.extend(function HomeActivity() {
 
     Activity.apply(this, arguments);
     this.navBar = Activity.createSectionNavBar(null);
-    this.navBar.additionalNavClasses('AppNav--home');
+    var navBar = this.navBar;
+    navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app.model);
     this.viewModel.nav = this.app.navBarBinding;
-    var $header = this.$header = this.$activity.find('header');
+    // We need a reference to later calculate snap-point based on Nav height
+    this.$header = $('.AppNav');
 
     this.registerHandler({
         target: this.$activity,
         event: 'scroll-fixed-header',
         handler: function(e, what) {
+            var cs = navBar.additionalNavClasses();
             if (what === 'after') {
-                $header.addClass('is-fixed');
+                navBar.additionalNavClasses(cs + ' is-fixed');
+                //$header.addClass('is-fixed');
             }
             else {
-                $header.removeClass('is-fixed');
+                navBar.additionalNavClasses(cs.replace('is-fixed', ''));
+                //$header.removeClass('is-fixed');
             }
         }
     });
@@ -41,11 +47,14 @@ var A = Activity.extend(function HomeActivity() {
         target: this.$activity,
         event: 'scroll-search',
         handler: function(e, what) {
+            var cs = navBar.additionalNavClasses();
             if (what === 'after') {
-                $header.addClass('is-search');
+                navBar.additionalNavClasses(cs + ' is-search');
+                //$header.addClass('is-search');
             }
             else {
-                $header.removeClass('is-search');
+                navBar.additionalNavClasses(cs.replace('is-search', ''));
+                //$header.removeClass('is-search');
             }
         }
     });

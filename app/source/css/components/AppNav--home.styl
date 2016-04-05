@@ -3,5 +3,41 @@
     for specific styles in the public Home page (and similars, like learnMore)
 **/
 .AppNav.AppNav--home {
-    
+    // TRANSPARENT BACKGROUND: change colors and image so content keeps readable.
+    // This is only for when the page scroll is at the top, that is, when there is not an 'is-fixed' class applied
+    // (set from javascript when scrolling is detected, allows to enable extra design features)
+    &:not(.is-fixed) {
+        .SmartNavBar {
+            background-color: transparent;
+            border-bottom-color: transparent;
+
+            .SmartNavBar-btn {
+                color: White;
+            }
+        }
+        
+        .LargeNavBar {
+            background-color: transparent;
+            
+            .nav > li > a {
+                color: White;
+            }
+        }
+
+        .navbar-brand {
+            background-image: url("../images/logo-loconomics-white-mini.png");
+            hr-image("../images/logo-loconomics-white-mini@2x.png", $AppNav-brandWidth, $AppNav-brandHeight);
+        }
+    }
+
+    // Search visibility
+    .LargeNavBar-searchBar {
+        transition: opacity 300ms $cubic-easing;
+        opacity: 1;
+        pointer-events: auto;
+    }
+    &:not(.is-search) .LargeNavBar-searchBar {
+        opacity: 0;
+        pointer-events: none;
+    }
 }
