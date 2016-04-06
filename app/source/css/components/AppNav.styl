@@ -79,18 +79,21 @@ $AppNav-brandHeight = 38px;
         }
         
         #menuNewItem {
-          left: 45%;
+          left: 44%;
           right: 0;   
           
-          .App-menus-header {
+          .App-menus-group-header {
             text-align: right;   
           }
           
           a {               
             padding: 10px 10px 10px 20px;
-            text-align: right;  
+            text-align: right;            
+            &:hover,
+            &:focus {
+              padding-left: 12px;
+            } 
           }
-          
           i {
             margin-left: 5px;   
           }
@@ -177,12 +180,12 @@ $AppNav-brandHeight = 38px;
                 &:hover,
                 &:focus {
                   color: white;
-                  font-weight: 700;
+                  font-weight: 500;
                   padding-left: 42px;
-                  background-color: $AppNav-backColor;  
+                  background-color: transparent;  
                   > i {
                     color: white;
-                    font-weight: 700;
+                    font-weight: 500;
                   }
                 }            
             }
@@ -200,11 +203,11 @@ $AppNav-brandHeight = 38px;
             
             li.active > a {
               color: white;
-              font-weight: 900;
+              font-weight: 500;
               background: transparent;  
               > i {
                 color: white;
-                font-weight: 900;
+                font-weight: 500;
               }
             }
         }
@@ -351,8 +354,9 @@ $AppNav-brandHeight = 38px;
   background: $gray-background;
   padding-top: 20px;
   padding-bottom: 20px;
-  text-align: right;            
-  .App-menus-header {
+  text-align: right;  
+  margin-right: 15px;
+  .App-menus-group-header {
     margin-top: 20px;
     color: $gray-light;
     text-align: right;
@@ -360,15 +364,16 @@ $AppNav-brandHeight = 38px;
   }
   .nav {
       a {               
-        padding: 10px 10px 10px 20px;
+        padding: 10px 25px 10px 20px;
         text-align: right; 
         color: $gray-dark;
+        font-size: 18px;
 
         &:hover,
         &:focus {
           color: $brand-secondary-dark !important;
           font-weight: 500;
-          padding-left: 42px;
+          padding-right: 27px;
           background-color: transparent;   
           > i {
             color: $brand-secondary-dark !important;
@@ -379,7 +384,51 @@ $AppNav-brandHeight = 38px;
       }
 
       i {
-        margin-left: 5px;   
+        margin-left: 5px;  
+        font-size: 18px;
       }
   }
 }
+
+.SubSectionNavBar {
+    position: relative;
+    ul {
+      background: $gray-background;
+      display: block;
+      width: 100% !important;
+      list-style: none;
+      padding-top: 20px;
+      -webkit-padding-start: 25px;
+      li {
+        font-size: 18px;
+        color: $gray;
+        text-decoration: none; 
+        display: inline;
+        a {
+          text-decoration: none;
+          color: $gray;
+          &:hover,
+          &:focus {
+            text-decoration: none;
+            color: $brand-secondary-dark;
+          }
+        }
+      }
+     }
+    > button {
+        position: absolute; 
+        display: inline-block;
+        top: 10px;
+        right: 25px;
+        a {
+          text-decoration: none;
+          color: white;
+          &:hover,
+          &:focus {
+            text-decoration: none;
+          }
+        }
+    }
+}
+
+
