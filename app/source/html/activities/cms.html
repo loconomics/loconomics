@@ -1,5 +1,12 @@
 <!-- CMS activity -->
 <div data-activity="cms" class="limited-size-md limited-size-lg">
+  <div class="container">
+      <div class="row">
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+        <div class="col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Clients</h2>
     <div>
         <ul class="TilesList">
@@ -18,4 +25,7 @@
     </div>
 
     <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
+</div>
+</div>
+</div>
 </div>

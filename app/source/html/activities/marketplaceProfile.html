@@ -2,14 +2,9 @@
 <div data-activity="marketplaceProfile" DISABLEDdata-bind="css: { 'is-loading': isLoading }" class="limited-size-md limited-size-lg">
   <div class="container">
       <div class="row">
-        <div class="SideNavNewItem hidden-xs hidden-sm col-md-3 col-md-offset-1" data-bind="visible: user.isServiceProfessional">
-          @render('parts/AddNewMenuContents.html')
-          <h4 class="App-menus-header">WE'RE HERE TO HELP</h4>
-          <ul class="nav">
-            <li><a href="/faqs">FAQs <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
-            <li><a href="/feedbackForm/dashboard">Feedback and ideas <i class="fa fa-fw ion-ios-lightbulb-outline" aria-hidden="true"></i></a></li>
-            <li><a href="/contactForm/general">Contact us <i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i></a></li>
-          </ul>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div data-bind="visible: user.isServiceProfessional">@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
         </div>
         <div class="col-md-7 col-sm-reset">
     

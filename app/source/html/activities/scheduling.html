@@ -1,5 +1,12 @@
 <!-- Scheduling activity -->
 <div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }" class="limited-size-md limited-size-lg">
+  <div class="container">
+      <div class="row">
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+        <div class="col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Services, Pricing, &amp; Locations
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
@@ -46,4 +53,7 @@
     </ul>
 
     <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
+</div>
+</div>
+</div>
 </div>

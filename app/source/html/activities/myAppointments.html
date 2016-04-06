@@ -1,5 +1,12 @@
 <!-- myAppointments activity -->
 <div data-activity="myAppointments" class="limited-size-md limited-size-lg">
+  <div class="container">
+      <div class="row">
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+        <div class="col-md-7 col-sm-reset">
     <h1 class="SectionTitle"
         data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing(), 'is-loading': upcomingAppointments.isLoading() }">
         Upcoming 
@@ -57,3 +64,7 @@
         </ul>
     </div>
 </div>
+</div>
+</div>
+</div>
+
