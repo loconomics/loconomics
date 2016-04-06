@@ -352,20 +352,22 @@ $AppNav-brandHeight = 38px;
 
 .SideMenu {
   background: $gray-background;
-  padding-top: 20px;
   padding-bottom: 20px;
-  text-align: right;  
+  text-align: left;  
   margin-right: 15px;
   .App-menus-group-header {
     margin-top: 20px;
     color: $gray-light;
-    text-align: right;
+    text-align: left;
     border-bottom: 1px solid $gray-light;     
+  }
+  .navbar-nav {
+    margin: 0;
   }
   .nav {
       a {               
-        padding: 10px 25px 10px 20px;
-        text-align: right; 
+        padding: 10px 20px 10px 25px;
+        text-align: left; 
         color: $gray-dark;
         font-size: 18px;
 
@@ -373,7 +375,7 @@ $AppNav-brandHeight = 38px;
         &:focus {
           color: $brand-secondary-dark !important;
           font-weight: 500;
-          padding-right: 27px;
+          padding-left: 22px;
           background-color: transparent;   
           > i {
             color: $brand-secondary-dark !important;

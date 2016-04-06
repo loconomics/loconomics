@@ -1,12 +1,10 @@
 <!-- Inbox activity -->
-<div data-activity="inbox" class="limited-size-md limited-size-lg">
+<div data-activity="inbox" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
   <div class="container">
       <div class="row">
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div>@render('parts/HereToHelpContents.html')</div>   
-        </div>
+          <h1 class="hidden-xs hidden-sm">You've got mail</h1>
         <div class="col-md-7 col-sm-reset">
-
           <div class="isolated inset">
             <div class="input-group">
                 <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
@@ -26,7 +24,10 @@
           </div>
 
           <div class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>
-</div>
+      </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
 </div>
 </div>
 </div>

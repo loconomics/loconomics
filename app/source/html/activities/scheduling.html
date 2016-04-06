@@ -1,11 +1,9 @@
 <!-- Scheduling activity -->
-<div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }" class="limited-size-md limited-size-lg">
+<div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
   <div class="container">
       <div class="row">
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div>@render('parts/AddNewMenuContents.html')</div>
-          <div>@render('parts/HereToHelpContents.html')</div>   
-        </div>
+          <h1 class="hidden-xs hidden-sm">No pencils here</h1>
         <div class="col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Services, Pricing, &amp; Locations
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -52,8 +50,13 @@
         </a></li>
     </ul>
 
-    <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
+    <app-feedback-entry class="visible-xs visible-sm" params="section: 'scheduling'"></app-feedback-entry>
 </div>
+          
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
 </div>
 </div>
 </div>

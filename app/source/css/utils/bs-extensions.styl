@@ -71,6 +71,18 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
 .btn {
     border-radius: 0; // Or 1px so looks square but gets a smooth rendering??
     font-weight: 700;
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        outline: none;
+    }
+}
+.btn-link {
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        outline: none;
+    }
 }
 // Only bottom border to look flatty
 .form-control,

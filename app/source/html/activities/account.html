@@ -1,13 +1,12 @@
 <!-- Activity account -->
-<div data-activity="account" class="limited-size-md limited-size-lg">
+<div data-activity="account" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
   <div class="container">
+          <h1 data-bind="visible: isServiceProfessional" class="hidden-xs hidden-sm">You own this place</h1>
+          <h1 data-bind="visible: !isServiceProfessional()" class="hidden-xs hidden-sm">Your account</h1>
       <div class="row">
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div data-bind="visible: isServiceProfessional">@render('parts/AddNewMenuContents.html')</div>
-          <div>@render('parts/HereToHelpContents.html')</div>   
-        </div>
         <div class="col-md-7 col-sm-reset">
-            <h1 class="SectionTitle has-HelpPoint">You own this place</h1>  
+            <h1 class="SectionTitle has-HelpPoint">Important info</h1>  
             <ul class="TilesList">
                 <li data-bind="visible: !isServiceProfessional()"><a class="InfoTile" href="/contactInfo">
                     <div class="Tile-icon" aria-hidden="true">
@@ -50,6 +49,11 @@
                     </div>
                 </a></li>
             </ul>
+        </div>
+          
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div data-bind="visible: isServiceProfessional">@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
         </div>
     </div>
   </div>

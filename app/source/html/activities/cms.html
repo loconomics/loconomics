@@ -1,11 +1,9 @@
 <!-- CMS activity -->
-<div data-activity="cms" class="limited-size-md limited-size-lg">
+<div data-activity="cms" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
   <div class="container">
       <div class="row">
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div>@render('parts/AddNewMenuContents.html')</div>
-          <div>@render('parts/HereToHelpContents.html')</div>   
-        </div>
+          <h1 class="hidden-xs hidden-sm">You're the boss</h1>
         <div class="col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Clients</h2>
     <div>
@@ -24,8 +22,13 @@
         </a>
     </div>
 
-    <app-feedback-entry params="section: 'cms'"></app-feedback-entry>
+    <app-feedback-entry class="visible-xs visible-sm" params="section: 'cms'"></app-feedback-entry>
 </div>
+          
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
 </div>
 </div>
 </div>

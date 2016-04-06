@@ -17,7 +17,6 @@ var A = Activity.extend(function AddJobTitlesActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-
     var referrer = this.app.shell.referrerRoute;
     referrer = referrer && referrer.url || '/scheduling';
     var link = this.requestData.cancelLink || referrer;
@@ -38,9 +37,9 @@ A.prototype.show = function show(options) {
     this.updateNavBarState();
 };
 
-var ko = require('knockout');
 function ViewModel(app) {
     
+    var ko = require('knockout');
     this.isSearching = ko.observable(false);
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;

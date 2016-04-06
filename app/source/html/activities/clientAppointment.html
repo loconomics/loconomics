@@ -1,18 +1,24 @@
 <!-- Activity clientAppointment -->
-<div class="limited-size-md limited-size-lg" data-activity="clientAppointment" data-bind="css: { 'in-edit': currentItem.isEditMode }">
-    <div class="CardsDeck CardsDeck--dotsSlider"
-       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
-
-        <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
-        
-        <div data-bind="visible: isEmpty" class="isolated">
-            You have not appointments still.
+<div data-activity="clientAppointment" data-bind="css: { 'in-edit': currentItem.isEditMode }">    
+  <div class="container">
+    <div class="row">
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/HereToHelpContents.html')</div>   
         </div>
+        <div class="col-md-7 col-sm-reset CardsDeck CardsDeck--dotsSlider"
+           data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
+            <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
 
-        <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
+            <div data-bind="visible: isEmpty" class="isolated">
+                No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a> 
+            </div>
 
-        <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
-            <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+            <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
+
+            <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
+                <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+            </div>
         </div>
+      </div>
     </div>
 </div>
