@@ -1,12 +1,21 @@
 <!-- serviceProfessionalWebsite activity -->
-<div class="container-fluid LightForm limited-size-md limited-size-lg" data-activity="serviceProfessionalWebsite">
+<div data-activity="serviceProfessionalWebsite" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile</a></li>
+        </ul>
+    </div>
+        <div class="container-fluid LightForm col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Your website</h2>
-    <form data-bind="submit: save">
+    <form class="container-fluid LightForm" data-bind="submit: save">
         <div class="form-group">
             <label for="serviceProfessionalWebsite-url" class="sr-only">Enter your website URL</label>
             <div>
                 <input type="url" id="serviceProfessionalWebsite-url" class="form-control"
-                       data-bind="value: profile.serviceProfessionalWebsiteUrl, disable: isLocked"/>
+                       data-bind="value: profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
             </div>
         </div>
         <div class="LightForm-submitBar">
@@ -14,3 +23,10 @@
         </div>
     </form>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

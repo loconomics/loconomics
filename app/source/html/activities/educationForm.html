@@ -1,7 +1,17 @@
 <!-- educationForm activity -->
-<div class="container-fluid LightForm limited-size-md limited-size-lg" data-activity="educationForm">
+<div data-activity="educationForm" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+            <li><a href="/education">Education</a></li>
+        </ul>
+    </div>
+        <div class="container-fluid LightForm col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Education</h2>
-    <form data-bind="submit: save, with: item">
+    <form lass="container-fluid LightForm" data-bind="submit: save, with: item">
         <div class="form-group">
             <label for="educationForm-school">School</label>
             <div>
@@ -45,3 +55,10 @@
         </div>
     </form>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

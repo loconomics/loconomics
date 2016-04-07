@@ -1,9 +1,18 @@
-<div class="LightForm container-fluid limited-size-md limited-size-lg" data-activity="paymentAccount">
+<div data-activity="paymentAccount" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile</a></li>
+        </ul>
+    </div>
+        <div class="container-fluid LightForm col-md-7 col-sm-reset">
     <h2 class="SectionTitle">Payout Preference</h2>
     <p>
         Getting paid is the easy part. We accept payments on your behalf, and Braintree (a leading credit card merchant provider) processes them with a deposit directly to your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is subtracted from your payment. Easy, right? Complete the information below and, as always, let us know if you have questions. 
     </p>
-    <div data-bind="visible: paymentAccount.status()">
+    <div class="LightForm container-fluid" data-bind="visible: paymentAccount.status()">
         <h2 class="SectionTitle">Merchant account status</h2>
         <p data-bind="visible: paymentAccount.status() === 'active'" class="bg-success PaddedBox-xs">
             You're all set up with Braintree. We'll deposit any payments due to you
@@ -79,3 +88,10 @@
         </div>
     </div>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

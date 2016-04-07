@@ -16,6 +16,30 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
     button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+  &:hover,
+  &:focus {
+      color: inherit;
+      text-decoration: none;
+      outline: none;
+  }
+}
+
+.btn-default {
+    background: transparent;
+    border-color: $gray;
+    color: $gray;
+    &:hover,
+    &:focus {
+        color: $brand-secondary;
+        border-color: $brand-secondary;
+        background: transparent;
+    }
+}
+
+
 // Create the text-secondary
 .text-secondary {
     color: $brand-secondary;

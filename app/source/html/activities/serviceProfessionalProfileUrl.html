@@ -1,9 +1,18 @@
 <!-- serviceProfessionalProfileUrl activity -->
-<div class="container-fluid LightForm limited-size-md limited-size-lg" data-activity="serviceProfessionalProfileUrl">
-    <h2 class="SectionTitle">Create a custom URL so that you can use your profile as your website</h2>
+<div data-activity="serviceProfessionalProfileUrl" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile</a></li>
+        </ul>
+    </div>
+        <div class="container-fluid LightForm col-md-7 col-sm-reset">
+    <h2 class="SectionTitle">Use your profile as your website</h2>
     <form data-bind="submit: save">
         <div class="form-group">
-            <label for="serviceProfessionalProfileUrl-url" class="sr-only">Enter your custom URL</label>
+            <label for="serviceProfessionalProfileUrl-url">Create your custom URL:</label>
             <div class="input-group">
                 <span class="input-group-addon">www.loconomics.com/</span>
                 <input type="text" id="serviceProfessionalProfileUrl-url" class="form-control"
@@ -15,3 +24,11 @@
         </div>
     </form>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>        
+

@@ -1,6 +1,16 @@
 <!-- Activity contactInfo -->
-<div class="container-fluid LightForm limited-size-md limited-size-lg" data-activity="contactInfo">
-    <form role="form" data-bind="submit: save">
+<div data-activity="contactInfo" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/account">Account </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+            <li><a href="/ownerInfo">Owner information</a></li>
+        </ul>
+    </div>
+        <div class="col-md-7 col-sm-reset">
+    <form class="container-fluid LightForm" role="form" data-bind="submit: save">
         <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
         <div>
             <app-unlabeled-input params="placeholder: 'First name', value: profile.firstName, disable: isLocked"></app-unlabeled-input>
@@ -53,4 +63,10 @@
             </div>
         </div>
     </form>
+</div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+</div>
+</div>
 </div>

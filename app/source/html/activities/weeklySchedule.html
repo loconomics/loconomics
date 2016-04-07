@@ -1,5 +1,14 @@
 <!-- WeeklySchedule activity -->
-<div class="LightForm limited-size-md limited-size-lg" data-activity="weeklySchedule">
+<div data-activity="weeklySchedule" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/scheduling">Scheduling</a></li>
+        </ul>
+    </div>
+      <div class="row">
+    <div class="col-md-7 col-sm-reset">
 
     <h2 class="SectionTitle">Weekly schedule</h2>
     
@@ -97,7 +106,7 @@
         </div>
     </script>
     
-    <form data-bind="submit: save" class="container">
+    <form data-bind="submit: save" class="container-fluid LightForm">
 
         <div class="weeklySchedule-allTime">
             <label>
@@ -127,3 +136,10 @@
         </div>
     </form>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

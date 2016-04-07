@@ -1,9 +1,15 @@
 <!-- Activity clientAppointment -->
-<div data-activity="clientAppointment" data-bind="css: { 'in-edit': currentItem.isEditMode }">    
+<div data-activity="clientAppointment" data-bind="css: { 'in-edit': currentItem.isEditMode }" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>    
   <div class="container">
     <div class="row">
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div>@render('parts/HereToHelpContents.html')</div>   
+        
+        <div class="SubSectionNavBar hidden-xs hidden-sm col-md-7 col-sm-reset">
+            <ul>
+                <li><a href="/myAppointments">My appointments </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+                <li>Upcoming</li>
+            </ul>
+            <button class="btn btn-default" >Edit this booking</button>
         </div>
         <div class="col-md-7 col-sm-reset CardsDeck CardsDeck--dotsSlider"
            data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
@@ -18,6 +24,9 @@
             <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
                 <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
             </div>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/HereToHelpContents.html')</div>   
         </div>
       </div>
     </div>

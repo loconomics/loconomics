@@ -1,7 +1,18 @@
 <!-- Activity appointment -->
-<div class="limited-size-md limited-size-lg container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
+<div data-activity="appointment" data-bind="css: { 'in-edit': editMode }" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">
+          
+       <div class="SubSectionNavBar hidden-xs hidden-sm col-md-7 col-sm-reset">
+        <ul>
+            <li><a href="/scheduling">Scheduling</a></li>
+        </ul>
+        <button class="btn btn-default"><a href="/scheduling">Cancel</a></button>
+    </div>
+    <div class="col-md-7 col-sm-reset">
     <!-- Appointment View (cards) -->
-    <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
+    <div id="calendarAppointmentView" class="row container-fluid CardsDeck CardsDeck--dotsSlider"
        data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
         
         <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
@@ -11,3 +22,10 @@
         </div>
     </div>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

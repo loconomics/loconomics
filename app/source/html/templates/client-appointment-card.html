@@ -1,6 +1,7 @@
 <script type="text/html" id="client-appointment-card-template">
-    <div class="Card AppointmentCard" data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
-
+    
+    <div data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
+    <div class="Card AppointmentCard">
         <div class="Card-title">
             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
         </div>
@@ -306,6 +307,7 @@
                     <button type="button" class="btn btn-danger btn-block" data-bind="visible: isCancelMode(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </script>
