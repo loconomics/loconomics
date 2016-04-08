@@ -1,6 +1,12 @@
 <!-- ServiceProfessionalService activity -->
-<div data-activity="serviceProfessionalService" class="limited-size-md limited-size-lg"
-     data-bind="css: { 'is-loading': isLoading }">
+<div data-activity="serviceProfessionalService" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">
+          <h1 class="hidden-xs hidden-sm">Add new pricing</h1>
+        <div class="col-md-7 col-sm-reset">
+
+    <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">Select a job title</h2>
     <div>
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         
@@ -35,3 +41,11 @@
         <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
     </div>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div> 
+  </div> 
+

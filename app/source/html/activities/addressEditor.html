@@ -1,6 +1,16 @@
 <!-- Activity addressEditor -->
-<div class="limited-size-md limited-size-lg LightForm" data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }">
-    <form role="form" data-bind="submit: save" class="container-fluid">
+<div data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+            <li><a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">Job Title</a></li>
+        </ul>
+    </div>
+        <div class="col-md-7 col-sm-reset">
+    <form role="form" data-bind="submit: save" class="container-fluid LightForm">
         <h2 class="SectionTitle">
             <span data-bind="text: header"></span>
             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -55,3 +65,10 @@
   </form>
 
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

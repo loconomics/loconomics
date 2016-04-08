@@ -1,5 +1,14 @@
 <!-- AddJobTitles activity -->
-<div data-activity="addJobTitles" class="limited-size-md limited-size-lg">
+<div data-activity="addJobTitles"  class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile</a></li>
+        </ul>
+    </div>
+        <div class="col-md-7 col-sm-reset">
     <h2 class="SectionTitle">
         <span>Add one or more job title(s)</span>
     </h2>
@@ -32,10 +41,18 @@
     </div>
   </div>
     
-  <div class="navbar navbar-default ActivityNavbar">
-    <div class="container">
+    
+        <div class="LightForm-submitBar">
         <button type="button" class="btn btn-primary btn-block"
                 data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
+
+  </div>
+</div>
+          
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
     </div>
   </div>
 </div>
+

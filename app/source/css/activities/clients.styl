@@ -8,7 +8,10 @@
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
     $indexTop = 62px;
-
+    
+    .container-fluid {
+        padding-left: 0;
+    }
     .SectionTitle {
         position: absolute;
         left: 0px;
@@ -20,6 +23,8 @@
     #clientsIndex {
         overflow: hidden;
         width: $fullIndexWidth;
+        //@iagosrl this needs a calculated "height" for responsive...it gets hidden now
+        min-height: 600px;
         
         // Fixed has the problems of iOS with scrolling, and too the lack of scroll for itself
         // Scroll context must be carefully placed in a sibling elements that acts as container for
@@ -43,6 +48,9 @@
                 border-radius: 0;
             }
         }
+        @media $mediaMinMd {
+          position: relative;
+        }  
     }
     
     #clientsContent {

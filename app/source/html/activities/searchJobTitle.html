@@ -4,8 +4,8 @@
     <div data-bind="with: jobTitleSearchResult">
         <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
             <div class="SearchResultsBackground-text">
-                <h1><span data-bind="visible: serviceProfessionalsCount"><span data-bind="text: pluralName"></span></h1>
-                <p><span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</span></span></p>                    
+                <span data-bind="visible: serviceProfessionalsCount"><h1><span data-bind="text: pluralName"></span></h1>
+                <p><span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</span></p></span>                  
                 <h2><span data-bind="text: searchDescription"></span></h2>
             </div>
         </div>

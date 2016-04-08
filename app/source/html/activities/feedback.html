@@ -1,6 +1,11 @@
 <!-- Feedback activity -->
-<div data-activity="feedback" class="limited-size-md limited-size-lg">
-    <h2 class="SectionTitle">We're here to help</h2>
+<div data-activity="feedback" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">
+          <h1 class="hidden-xs hidden-sm">Let's talk</h1>
+        <div class="container-fluid LightForm col-md-7 col-sm-reset">
+            <h2 class="SectionTitle">We're here to help</h2>
     <ul class="TilesList">
         <li><a class="LinkTile" href="/faqs">
             <div class="Tile-content"><p>FAQs</p></div>
@@ -16,3 +21,12 @@
         </a></li>
     </ul>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div> 
+  </div> 
+
+

@@ -1,5 +1,15 @@
 <!-- BookMeButton activity -->
-<div class="LightForm limited-size-md limited-size-lg" data-activity="bookMeButton">
+<div data-activity="bookMeButton" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+            <li><a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">Job Title</a></li>
+        </ul>
+    </div>
+        <div class="col-md-7 col-sm-reset">
 
     <h2 class="SectionTitle">Book Me Now Button</h2>
     
@@ -10,7 +20,7 @@
         </label>
     </script>
     
-    <form class="container">
+    <form class="container-fluid LightForm">
         
         <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
         
@@ -35,3 +45,10 @@
         </div>
     </form>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    

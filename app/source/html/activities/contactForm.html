@@ -1,7 +1,12 @@
 <!-- ContactForm activity -->
-<div class="container-fluid LightForm limited-size-md limited-size-lg" data-activity="contactForm">
+<div data-activity="contactForm" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">
+          <h1 class="hidden-xs hidden-sm">Let's talk</h1>
+        <div class="container-fluid LightForm col-md-7 col-sm-reset">
 
-    <h2 class="SectionTitle">Contact us for help</h2>
+    <h2 class="SectionTitle">Contact us</h2>
     
     <p class="isolated">
         If you've searched the <a href="/faqs">FAQs</a> and can't find the help you need,
@@ -14,3 +19,11 @@
         <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending() || !isValid()">Send</button>
     </div>
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div> 
+  </div> 
+

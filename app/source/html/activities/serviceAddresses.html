@@ -1,5 +1,15 @@
 <!-- Activity locations -->
-<div data-activity="serviceAddresses" class="limited-size-md limited-size-lg">
+<div data-activity="serviceAddresses" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">  
+       <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <ul>
+            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+            <li><a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}"><span data-bind="text: jobTitles.singularName"></span>Job Title</a></li>
+        </ul>
+    </div>
+        <div class="col-md-7 col-sm-reset">
 
   <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
       <span data-bind="visible: headerText, text: headerText">
@@ -37,3 +47,10 @@
     </div>
 
 </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+          <div>@render('parts/AddNewMenuContents.html')</div>
+          <div>@render('parts/HereToHelpContents.html')</div>   
+        </div>
+    </div>
+  </div>
+</div>    
