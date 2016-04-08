@@ -29,7 +29,6 @@ module.exports = {
     'index': require('./activities/index'),
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
-    'learnMore': require('./activities/learnMore'),
     'signup': require('./activities/signup'),
     'contactInfo': require('./activities/contactInfo'),
     'welcome': require('./activities/welcome'),
