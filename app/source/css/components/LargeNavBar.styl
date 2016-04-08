@@ -26,7 +26,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     background-color: white;
     position: relative;
     z-index: 250;
-    padding $LargeNavBar-vGap $container-padding-right $LargeNavBar-vGap $container-padding-left
+    padding $LargeNavBar-vGap 60px $LargeNavBar-vGap 60px
     
     // common border color
     $border-color =	$gray-lighter
@@ -71,7 +71,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
         & > li
             display inline-block
             height $LargeNavBar-contentHeight
-            font-size 16px
+            line-height: 26px;
             width auto
             //border-left 1px solid $border-color
             padding 0
@@ -89,10 +89,15 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             & > a
                   height $LargeNavBar-contentHeight
                   line-height $LargeNavBar-contentHeight
-                  color $gray-dark;
+                  color $gray;
                   padding-top 0
                   padding-bottom 0
+                  font-size 16px;
                   
+                  .btn {
+                    font-size: 16px;
+                  }
+
                   &:hover
                   &:focus
                       background-color transparent

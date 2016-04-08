@@ -3,6 +3,7 @@
     //used to get apisearch results by term, lat, long, 
 **/
 'use strict';
+var $ = require('jquery');
 
 var 
     SearchResults = require('../models/SearchResults'),
@@ -18,11 +19,13 @@ require('geocomplete');
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
     Activity.apply(this, arguments);
-    this.navBar = null;
+    this.navBar = Activity.createSectionNavBar(null);
+    var navBar = this.navBar;
+    navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app);
     this.viewModel.nav = this.app.navBarBinding;
-    var $header = this.$header = this.$activity.find('header');
+    var $header = this.$header = $('.AppNav');
 
     this.registerHandler({
         target: this.$activity,
