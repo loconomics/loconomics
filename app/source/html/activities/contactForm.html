@@ -19,10 +19,10 @@
         <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending() || !isValid()">Send</button>
     </div>
 </div>
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div>@render('parts/AddNewMenuContents.html')</div>
-          <div>@render('parts/HereToHelpContents.html')</div>   
-        </div>
+          <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu></app-inline-side-menu>
+          </div>
+
     </div>
   </div> 
   </div> 

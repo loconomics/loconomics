@@ -63,6 +63,13 @@ exports.registerAll = function(app) {
         viewModel: { instance: app.navBarBinding }
     });
     
+    
+    /// inline-side-menu
+    ko.components.register('app-inline-side-menu', {
+        template: { element: 'inline-side-menu-template' },
+        viewModel: { instance: app.navBarBinding }
+    });
+    
     /// feedback-entry
     ko.components.register('app-feedback-entry', {
         template: { element: 'feedback-entry-template' },

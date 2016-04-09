@@ -1,17 +1,25 @@
 <!-- Faqs activity -->
-<div data-activity="faqs" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+<div data-activity="help" class="Boxes-sm animated">
+    <div class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+      <div class="PageMenu-list">
+        <ul>
+          <li><a href="#">Local service professionals</a></li>
+            <li><a href="#">Clients</a></li>
+        </ul>
+      </div>
+    </div>
   <div class="container">
       <div class="row"> 
-          <h1 class="hidden-xs hidden-sm">Talk to us</h1>
+          <h1 class="hidden-xs hidden-sm">Frequently asked questions</h1>
         <div class="container-fluid LightForm col-md-7 col-sm-reset">
+          <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, please contact us.</p>
 
     <div class="isolated inset">
         <div class="input-group">
             <span class="input-group-addon">
                 <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
             </span>
-            <input type="text" class="form-control" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+            <input type="text" class="form-control text-muted" placeholder="search faqs" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
         </div><!-- /input-group -->
     </div>
     
@@ -26,14 +34,13 @@
         </a></li>
     </ul>
     <div class="isolated inset text-center" data-bind="if: !filteredFaqs().length && !isLoading()">
-        <div>Nothing on that topic yet...</div>
-        <a href="/contactForm" class="btn btn-link">Contact us</a>
+        <div>Nothing on that topic yet...please contact us.</div>
     </div>
 </div>
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-          <div>@render('parts/AddNewMenuContents.html')</div>
-          <div>@render('parts/HereToHelpContents.html')</div>   
-        </div>
+          <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu></app-inline-side-menu>
+          </div>
+
     </div>
   </div>
 </div>  

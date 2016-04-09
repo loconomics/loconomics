@@ -1,17 +1,16 @@
 /**
-    Faqs activity
+    Help activity
 **/
 'use strict';
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extend(function FaqsActivity() {
+var A = Activity.extend(function HelpActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel();
-    this.accessLevel = this.app.UserType.loggedUser;
-    
+    this.accessLevel = null;    
     this.navBar = Activity.createSubsectionNavBar('Talk to us');
     
     // TestingData

@@ -109,7 +109,9 @@
             </ul>
         </li>-->
         <li>
-            <a href="/feedback"><span class="LargeNavBar-label">Talk to Us</span></a>
+            <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
+            <a data-bind="visible: !isAnonymous() && isServiceProfessional" href="/help/serviceProfessionals"><span class="LargeNavBar-label">Help</span></a>
+            <a data-bind="visible: !isAnonymous() && !isServiceProfessional()" href="/help/clients"><span class="LargeNavBar-label">Help</span></a>
         </li>
     </ul>
 </div>
