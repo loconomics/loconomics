@@ -26,38 +26,6 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
             if (jobTitleID) {
                 ////////////
-                // Addresses
-                this.app.model.serviceAddresses.getList(jobTitleID)
-                .then(function(list) {
-
-                    list = this.app.model.serviceAddresses.asModel(list);
-                    this.viewModel.addresses(list);
-
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading addresses.',
-                        error: err
-                    });
-                }.bind(this));
-                
-                ////////////
-                // Pricing/Services
-                this.app.model.serviceProfessionalServices.getList(jobTitleID)
-                .then(function(list) {
-
-                    list = this.app.model.serviceProfessionalServices.asModel(list);
-                    this.viewModel.pricing(list);
-
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading services.',
-                        error: err
-                    });
-                }.bind(this));
-                
-                ////////////
                 // Job Title
                 // Get data for the Job Title and User Profile
                 this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
@@ -66,10 +34,27 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     // Fill the job title record
                     this.viewModel.jobTitle(job.jobTitle);
                     this.viewModel.userJobTitle(job.userJobTitle);
+                    this.viewModel.userID(job.userID);
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
                         title: 'There was an error while loading your job title.',
+                        error: err
+                    });
+                }.bind(this));
+                
+                ////////////
+                // Job Title
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading the job title.',
                         error: err
                     });
                 }.bind(this));
@@ -90,8 +75,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                 }.bind(this));
             }
             else {
-                this.viewModel.addresses([]);
-                this.viewModel.pricing([]);
+                this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -119,10 +103,8 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
-    this.jobTitleName = ko.pureComputed(function() {
-        var j = this.jobTitle();
-        return j && j.singularName() || 'Job Title';
-    }, this);
+    this.userID = ko.observable(null);
+    this.jobTitleName = ko.observable('Job Title'); 
     
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
@@ -166,43 +148,8 @@ function ViewModel(app) {
     this.statusLabel = ko.pureComputed(function() {
         return this.isActiveStatus() ? 'ON' : 'OFF';
     }, this);
-    
-    this.cancellationPolicyLabel = ko.pureComputed(function() {
-        var pid = this.userJobTitle() && this.userJobTitle().cancellationPolicyID();
-        // TODO fetch policy ID label
-        return pid === 3 ? 'Flexible' : pid === 2 ? 'Moderate' : 'Strict';
-    }, this);
-    
-    this.instantBooking = ko.pureComputed(function() {
-        return this.userJobTitle() && this.userJobTitle().instantBooking();
-    }, this);
-    
-    this.instantBookingLabel = ko.pureComputed(function() {
-        return this.instantBooking() ? 'ON' : 'OFF';
-    }, this);
-    
-    this.toggleInstantBooking = function() {
-        var current = this.instantBooking();
-        if (this.userJobTitle()) {
-            // Change immediately, while saving in background
-            this.userJobTitle().instantBooking(!current);
-            // Push change to server
-            var plain = this.userJobTitle().model.toPlainObject();
-            plain.instantBooking = !current;
-
-            app.model.userJobProfile.setUserJobTitle(plain)
-            .catch(function(err) {
-                app.modals.showError({ title: 'Error saving Instant Booking preference', error: err });
-                // On error, original value must be restored (so can attempt to change it again)
-                this.userJobTitle().instantBooking(current);
-            }.bind(this));
-        }
-    };
 
     /// Related models information
-    
-    this.addresses = ko.observable([]);
-    this.pricing = ko.observable([]);
     this.licenseCertifications = ko.observable([]);
     this.workPhotos = ko.observable([]);
 
@@ -214,39 +161,7 @@ function ViewModel(app) {
         );
         
     }, this);
-    
-    this.addressesCount = ko.pureComputed(function() {
-        
-        // TODO l10n.
-        // Use i18next plural localization support rather than this manual.
-        var count = this.addresses().length,
-            one = '1 location',
-            more = ' locations';
-        
-        if (count === 1)
-            return one;
-        else
-            // Small numbers, no need for formatting
-            return count + more;
-
-    }, this);
-    
-    this.pricingCount = ko.pureComputed(function() {
-        
-        // TODO l10n.
-        // Use i18next plural localization support rather than this manual.
-        var count = this.pricing().length,
-            one = '1 service',
-            more = ' services';
-        
-        if (count === 1)
-            return one;
-        else
-            // Small numbers, no need for formatting
-            return count + more;
-
-    }, this);
-    
+ 
     this.licensesCertificationsSummary = ko.pureComputed(function() {
         var lc = this.licenseCertifications();
         if (lc && lc.length) {

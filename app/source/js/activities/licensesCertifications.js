@@ -15,8 +15,37 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title');
-});
+    
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
 
+            if (jobTitleID) {
+                
+                ////////////
+                // Job Title
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading the job title.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
+    });
+});
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
@@ -48,6 +77,7 @@ function ViewModel(app) {
 
     this.jobTitleID = ko.observable(0);
     this.list = ko.observableArray([]);
+    this.jobTitleName = ko.observable('Job Title'); 
     
     this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
     this.isLoading = app.model.userLicensesCertifications.state.isLoading();

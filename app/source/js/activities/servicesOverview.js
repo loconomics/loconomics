@@ -14,6 +14,36 @@ var A = Activity.extend(function ServicesOverviewActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Job Title');
+    
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+
+            if (jobTitleID) {
+                
+                ////////////
+                // Job Title
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading the job title.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
@@ -66,6 +96,8 @@ function ViewModel(app) {
     
     this.isLoadingUserJobTitle = ko.observable(false);
     this.userJobTitle = ko.observable(null);
+    this.jobTitleName = ko.observable('Job Title'); 
+    
     // Local copy of the intro, rather than use
     // it directly from the userJobTitle to avoid that gets saved
     // in memory without press 'save'

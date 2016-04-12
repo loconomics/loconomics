@@ -75,6 +75,31 @@ var A = Activity.extend(function AddressEditorActivity() {
             }
         }
     });
+
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
+    });
     
     // Special treatment of the save operation
     this.viewModel.onSave = function(addressID) {
@@ -180,6 +205,7 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
+    this.jobTitleName = ko.observable('Job Title'); 
     
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {

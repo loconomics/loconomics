@@ -1,74 +1,67 @@
 <!-- Activity addressEditor -->
 <div data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">  
-       <div class="SubSectionNavBar hidden-xs hidden-sm">
-        <ul>
-            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
-            <li><a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">Job Title</a></li>
-        </ul>
-    </div>
-        <div class="col-md-7 col-sm-reset">
-    <form role="form" data-bind="submit: save" class="container-fluid LightForm">
-        <h2 class="SectionTitle">
-            <span data-bind="text: header"></span>
-            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-        </h2>
-
-        <div data-bind="with: address()">
-            
-            <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-              <input type="number" class="form-control"
-                     placeholder="Zip code" aria-label="Zip code"
-                     data-bind="value: postalCode, disable: $root.isLocked,
-                                popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/jobtitles">Scheduler </a>
+                        <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
+                    </li>
+                    <li>
+                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                            <span data-bind="text: jobTitleName"></span>
+                        </a>
+                    </li>
+                </ul>
             </div>
-
-            <div data-bind="visible: isServiceArea">
-                <div class="form-group">
-                    <label for="addressEditorRadius">Service radius</label>
-                    <select class="form-control" id="addressEditorRadius" data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true">
-                    </select>
-                </div>
+            <div class="col-md-7 col-sm-reset">
+                <form role="form" data-bind="submit: save" class="container-fluid LightForm">
+                    <h2 class="SectionTitle">
+                        <span data-bind="text: header"></span>
+                        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                    </h2>
+                    <div data-bind="with: address()">
+                        <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="value: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                        </div>
+                        <div data-bind="visible: isServiceArea">
+                            <div class="form-group">
+                                <label for="addressEditorRadius">Service radius</label>
+                                <select class="form-control" id="addressEditorRadius" data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true">
+                                </select>
+                            </div>
+                        </div>
+                        <div data-bind="visible: isServiceLocation">
+                            <div class="form-group">
+                                <p class="form-control-static">
+                                    <span data-bind="visible: city() || stateProvinceCode()">
+                                        <span data-bind="text: city"></span>, 
+                                        <span data-bind="text: stateProvinceCode"></span>
+                                    </span>
+                                    <!-- White space to reserve space -->
+                                    &nbsp;
+                                </p>
+                            </div>
+                            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
+                            <div class="form-group">
+                                <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
+                                <textarea rows="2" class="form-control" placeholder="Special instructions" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="LightForm-submitBar">
+                        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+                        <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
+                    </div>
+                </form>
             </div>
-            
-            <div data-bind="visible: isServiceLocation">
-                 <div class="form-group">
-                    <p class="form-control-static">
-                        <span data-bind="visible: city() || stateProvinceCode()">
-                            <span data-bind="text: city"></span>, 
-                            <span data-bind="text: stateProvinceCode"></span>
-                        </span>
-                        <!-- White space to reserve space -->
-                        &nbsp;
-                    </p>
-                </div>
-
-                <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
-                <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
-                <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
-
-                <div class="form-group">
-                    <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
-                    <textarea rows="2" class="form-control" placeholder="Special instructions" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
-                </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
             </div>
         </div>
-
-      <div class="LightForm-submitBar">
-        <button type="submit" class="btn btn-primary btn-block"
-                data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-        <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
-      </div>
-        
-  </form>
-
-</div>
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-
-           <app-inline-side-menu></app-inline-side-menu>
-        </div>
     </div>
-  </div>
 </div>    

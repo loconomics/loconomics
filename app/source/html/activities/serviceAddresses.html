@@ -1,56 +1,60 @@
 <!-- Activity locations -->
 <div data-activity="serviceAddresses" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">  
-       <div class="SubSectionNavBar hidden-xs hidden-sm">
-        <ul>
-            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
-            <li><a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}"><span data-bind="text: jobTitles.singularName"></span>Job Title</a></li>
-        </ul>
-    </div>
-        <div class="col-md-7 col-sm-reset">
-
-  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-      <span data-bind="visible: headerText, text: headerText">
-        Locations
-      </span>
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
-    <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-    </div>
-
-    <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
-    
-    <div id="addressesListView">
-        <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
-    </div>
-
-    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
-        <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
-            <div class="Tile-content text-muted">Add a service location</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
-        <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !serviceAddresses.isSelectionMode()">
-            <div class="Tile-content text-muted">Add a service area</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
-        <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientID()">
-            <div class="Tile-content text-muted">Add a client location</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
-    </div>
-    
-    <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
-        <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
-    </div>
-
-</div>
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-
-           <app-inline-side-menu></app-inline-side-menu>
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row"> 
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a href="/jobtitles">Scheduler </a>
+                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
+                </li>
+                <li>
+                    <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                        <span data-bind="text: jobTitleName"></span>
+                    </a>
+                </li>
+            </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+                    <span data-bind="visible: headerText, text: headerText">Locations</span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
+                <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+                <div id="addressesListView">
+                    <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                </div>
+                <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
+                    <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
+                        <div class="Tile-content text-muted">Add a service location</div>
+                        <div class="Tile-icon text-muted">
+                            <span class="fa ion ion-plus"></span>
+                        </div>
+                    </button>
+                    <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !serviceAddresses.isSelectionMode()">
+                        <div class="Tile-content text-muted">Add a service area</div>
+                        <div class="Tile-icon text-muted">
+                            <span class="fa ion ion-plus"></span>
+                        </div>
+                    </button>
+                    <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientID()">
+                        <div class="Tile-content text-muted">Add a client location</div>
+                        <div class="Tile-icon text-muted">
+                            <span class="fa ion ion-plus"></span>
+                        </div>
+                    </button>
+                </div>
+                <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
+                    <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
     </div>
-  </div>
 </div>    

@@ -1,50 +1,49 @@
 <!-- Activity licensesCertifications -->
 <div data-activity="licensesCertifications" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">  
-       <div class="SubSectionNavBar hidden-xs hidden-sm">
-        <ul>
-            <li><a href="/marketplaceProfile">Marketplace profile </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
-            <li><a href="/marketplaceProfile">Job Title</a></li>
-        </ul>
-    </div>
-        <div class="col-md-7 col-sm-reset">
-    <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-        Certifications/Licenses
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-    </div>
-    
-    <div>
-        <ul class="TilesList" data-bind="foreach: list">
-            <li><button class="InfoTile" type="button" data-bind="click: $root.selectItem">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span class="fa fa-certificate" aria-hidden="true"></span>
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceProfile">Marketplace profile </a>
+                        <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> 
+                    </li>
+                    <li>
+                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}"><span data-bind="text: jobTitleName"></span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+                    Certifications/Licenses
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div class="Tile-content">
-                    <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
-                    <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'do not expires' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+                <ul class="TilesList" data-bind="foreach: list">
+                    <li><button class="InfoTile" type="button" data-bind="click: $root.selectItem">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa fa-certificate" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                            <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'do not expires' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+                        </div>
+                    </button></li>
+                </ul>
+                <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
+                    <button type="button" class="CompactLinkTile" data-bind="click: addNew">
+                        <div class="Tile-content text-muted">Add a certification/license</div>
+                        <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                    </button>
                 </div>
-            </button></li>
-        </ul>
-    </div>
-
-    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
-        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
-            <div class="Tile-content text-muted">Add a certification/license</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
-    </div>
-
-</div>
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-
-           <app-inline-side-menu></app-inline-side-menu>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+               <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
     </div>
-  </div>
 </div>    
 

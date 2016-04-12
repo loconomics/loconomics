@@ -33,6 +33,9 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                     this.viewModel.jobTitle(jobTitle);
                     // Update navbar (may indicate the jobTitle name)
                     this.updateNavBarState();
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
                     
                     // Get addresses
                     return this.app.model.serviceAddresses.getList(jobTitleID);
@@ -54,6 +57,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                 this.viewModel.serviceAddresses.sourceAddresses([]);
                 this.viewModel.jobTitle(null);
                 this.updateNavBarState();
+                this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -182,7 +186,7 @@ function ViewModel(app) {
     // Optionally, some times a clientID can be passed in order to create
     // a location for that client where perform a work.
     this.clientID = ko.observable(null);
-    
+    this.jobTitleName = ko.observable('Job Title'); 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
     this.jobTitles.selectJobTitle = function(jobTitle) {
