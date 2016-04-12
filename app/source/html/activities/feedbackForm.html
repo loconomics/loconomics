@@ -1,28 +1,28 @@
 <!-- FeedbackForm activity -->
 <div data-activity="feedbackForm" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">
-          <h1 class="hidden-xs hidden-sm">Talk to us</h1>
-        <div class="container-fluid LightForm col-md-7 col-sm-reset">
-
-    <h2 class="SectionTitle">Send us ideas or feedback</h2>
-    <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
-    <div class="checkbox" data-bind="visible: !isCollaborator()">
-        <label>
-            <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending" />
-            I'd like to become an Owner Collaborator and help develop new tools 
-            and features for Owners! We'll folow up with detail.
-        </label>
-    </div>
-    <div class="LightForm-submitBar">
-        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending() || !isValid()">Send</button>
-    </div>
-</div>
-          <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-           <app-inline-side-menu></app-inline-side-menu>
-          </div>
-
-    </div>
-  </div> 
-  </div> 
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <h1 class="hidden-xs hidden-sm">Talk to us</h1>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">Send us ideas or feedback</h2>
+                <form class="container-fluid LightForm">
+                    <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
+                    <div class="checkbox" data-bind="visible: !isCollaborator()">
+                        <label>
+                        <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending" />
+                        I'd like to become an Owner Collaborator and help develop new tools 
+                        and features for Owners! We'll folow up with detail.
+                        </label>
+                    </div>
+                    <div class="LightForm-submitBar">
+                        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending() || !isValid()">Send</button>
+                    </div>
+                </form>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
+    </div> 
+</div> 

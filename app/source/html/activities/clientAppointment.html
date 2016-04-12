@@ -1,33 +1,28 @@
 <!-- Activity clientAppointment -->
 <div data-activity="clientAppointment" data-bind="css: { 'in-edit': currentItem.isEditMode }" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>    
-  <div class="container">
-    <div class="row">
-        
-        <div class="SubSectionNavBar hidden-xs hidden-sm col-md-7 col-sm-reset">
-            <ul>
-                <li><a href="/myAppointments">My appointments </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
-                <li>Upcoming</li>
-            </ul>
-            <button class="btn btn-default" >Edit this booking</button>
-        </div>
-        <div class="col-md-7 col-sm-reset CardsDeck CardsDeck--dotsSlider"
-           data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
-            <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
-
-            <div data-bind="visible: isEmpty" class="isolated">
-                No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a> 
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>    
+    <div class="container">
+        <div class="row">   
+            <div class="SubSectionNavBar hidden-xs hidden-sm col-md-7 col-sm-reset">
+                <ul>
+                    <li><a href="/myAppointments">My appointments </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
+                    <li>Upcoming</li>
+                </ul>
+                <button class="btn btn-default" >Edit this booking</button>
             </div>
-
-            <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
-
-            <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
-                <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+            <div class="col-md-7 col-sm-reset CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
+                <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+                <div data-bind="visible: isEmpty" class="isolated">
+                    No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a> 
+                </div>
+                <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
+                <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
+                    <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+               <app-inline-side-menu></app-inline-side-menu>
             </div>
         </div>
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-           <app-inline-side-menu></app-inline-side-menu>
-        </div>
-      </div>
     </div>
 </div>

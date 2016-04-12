@@ -13,9 +13,7 @@
       <span>or</span>
     </p>
     -->
-      
     <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-        
         <script type="text/html" id="signup-field">
           <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
             <input type="text" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
@@ -23,7 +21,7 @@
           </div>
         </script>
         <h3 data-bind="visible: !forServiceProfessional">Sign up for free</h3>
-        <h3 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h3>        
+        <h3 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h3>    
         <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
         <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
         <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
@@ -282,8 +280,7 @@
             </select>
             <span class="ion-iphone form-control-feedback" aria-hidden="true"></span>
         </div>
-        <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
-        
+        <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div> 
       <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
         <label for="signupAccountEmail" class="sr-only">E-mail address</label>
         <input type="email" class="form-control" id="signupAccountEmail" placeholder="E-mail address" data-bind="value: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }, disable: emailIsLocked">
@@ -295,17 +292,14 @@
         <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }">
           <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
       </div>
-        
       <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
         <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
         <span data-bind="text: submitText">Create account</span>
       </button>
     </form>
-
     <p class="isolated Signup-agreement">
       By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service?mustReturn=true">Terms of Use</a> &amp;
         <a href="#!terms/privacy-policy?mustReturn=true">Privacy Policy</a>
     </p>
   </div>
-
 </div>

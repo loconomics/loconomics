@@ -1,25 +1,27 @@
 <div data-activity="boardMemberNominations" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">  
-       <div class="SubSectionNavBar hidden-xs hidden-sm">
-        <ul>
-            <li><a href="/account">Account </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
-            <li><a href="/ownerInfo">Owner information</a></li>
-        </ul>
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/account">Account</a> 
+                        <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> 
+                    </li>
+                    <li>
+                        <a href="/ownerInfo">Owner information</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h1 class="SectionTitle">Board Member Nominations</h1>
+                <div class="LeadContent">
+                    <h1>Coming soon!</h1>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
     </div>
-        <div class="col-md-7 col-sm-reset">
-    <h1 class="SectionTitle">Board Member Nominations</h1>
-    <div class="LeadContent">
-        <h1>Coming soon!</h1>
-    </div>
-          </div>
-
-          
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-
-           <app-inline-side-menu></app-inline-side-menu>
-        </div>
-        </div>
-        </div>
-        </div>
+</div>

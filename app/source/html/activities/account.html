@@ -1,59 +1,69 @@
 <!-- Activity account -->
 <div data-activity="account" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-          <h1 data-bind="visible: isServiceProfessional" class="hidden-xs hidden-sm">You own this place</h1>
-          <h1 data-bind="visible: !isServiceProfessional()" class="hidden-xs hidden-sm">Your account</h1>
-      <div class="row">
-        <div class="col-md-7 col-sm-reset">
-            <h1 class="SectionTitle has-HelpPoint">Important info</h1>  
-            <ul class="TilesList">
-                <li data-bind="visible: !isServiceProfessional()"><a class="InfoTile" href="/contactInfo">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <p>Contact information</p>
-                    </div>
-                </a></li>
-                <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/ownerInfo">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <p>Owner information</p>
-                    </div>
-                </a></li>
-                <li><a class="InfoTile" href="/privacySettings">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <p>Privacy settings</p>
-                    </div>
-                </a></li>
-                <li><a class="InfoTile" href="#!terms/terms-of-service?mustReturn=true" target="_blank">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa fa-file-text-o" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <p>Terms of Use</p>
-                    </div>
-                </a></li>
-                <li><a class="InfoTile" href="#!terms/privacy-policy?mustReturn=true" target="_blank">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa fa-file-text-o" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <p>Privacy policy</p>
-                    </div>
-                </a></li>
-            </ul>
-        </div>
-          
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-           <app-inline-side-menu></app-inline-side-menu>
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <h1 data-bind="visible: isServiceProfessional" class="hidden-xs hidden-sm">You own this place</h1>
+        <h1 data-bind="visible: !isServiceProfessional()" class="hidden-xs hidden-sm">Your account</h1>
+        <div class="row">
+            <div class="col-md-7 col-sm-reset">
+                <h1 class="SectionTitle has-HelpPoint">Important info</h1>  
+                <ul class="TilesList">
+                    <li>
+                        <a class="InfoTile" href="/contactInfo">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Contact information</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-bind="visible: isServiceProfessional">
+                        <a class="InfoTile" href="/ownerInfo">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <div>Owner information</div>
+                                <em>About your cooperative</em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="/privacySettings">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Privacy settings</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="#!terms/terms-of-service?mustReturn=true" target="_blank">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Terms of Use</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="#!terms/privacy-policy?mustReturn=true" target="_blank">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Privacy policy</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
     </div>
-  </div>
 </div>

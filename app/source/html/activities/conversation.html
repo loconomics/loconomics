@@ -1,44 +1,40 @@
 <!-- Conversation activity -->
 <div data-activity="conversation"class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">  
-       <div class="SubSectionNavBar hidden-xs hidden-sm">
-        <ul>
-            <li><a href="/inbox">Inbox</a></li>
-        </ul>
-    </div>
-
-  <h2 class="SectionTitle"
-      data-bind="css: { 'is-syncing': isSyncing() }">
-      <span data-bind="text: subject"></span>
-      <!-- ko component: {
-        name: 'app-loading-spinner',
-        params: { mod: 'onRight' }
-      } --><!-- /ko -->
-  </h2>
-  <div data-bind="css: { 'is-loading': isLoading() }">
-      <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-  </div>
-  <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
-    <div class="panel-heading">
-        <span data-bind="text: displayedDate"></span>
-        <span class="text-muted" data-bind="text: displayedTime"></span>
-    </div>
-    <div class="panel-body">
-        <div data-bind="text: bodyText"></div>
-    </div>
-  </div>
-  <div data-bind="if: bookingID" class="isolated">
-      <button type="button" class="btn btn-default btn-block"
-              data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() + '/booking' }">
-          Open Booking
-      </button>
-  </div>
-</div>
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/inbox">Inbox</a>
+                    </li>
+                </ul>
+            </div>
+            <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing() }">
+                <span data-bind="text: subject"></span>
+                <!-- ko component: {
+                name: 'app-loading-spinner',
+                params: { mod: 'onRight' }
+                } --><!-- /ko -->
+            </h2>
+            <div data-bind="css: { 'is-loading': isLoading() }">
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+            </div>
+            <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
+                <div class="panel-heading">
+                    <span data-bind="text: displayedDate"></span>
+                    <span class="text-muted" data-bind="text: displayedTime"></span>
+                </div>
+                <div class="panel-body">
+                    <div data-bind="text: bodyText"></div>
+                </div>
+            </div>
+            <div data-bind="if: bookingID" class="isolated">
+                <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() + '/booking' }">Open Booking</button>
+            </div>
+        </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-
-           <app-inline-side-menu></app-inline-side-menu>
+            <app-inline-side-menu></app-inline-side-menu>
         </div>
     </div>
-  </div>
+</div>

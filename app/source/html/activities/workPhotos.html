@@ -9,7 +9,6 @@
             <div data-bind="css: { 'is-loading': state.isLoading }">
                 <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
             </div>
-
             <div>
                 <ul class="list-unstyled WorkPhotos"
                     data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
@@ -29,7 +28,6 @@
                     </li>
                 </ul>
             </div>
-
             <div id="workPhotos-addNewButton" class="TilesList" data-bind="visible: jobTitleID()">
                 <button type="button" class="CompactLinkTile" data-bind="disable: state.isLocked" data-toggle="ActionSheet" data-target="workPhotos-photoSheet">
                     <div class="Tile-content text-muted">Upload/take photo</div>

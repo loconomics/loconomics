@@ -1,34 +1,32 @@
 <!-- CMS activity -->
 <div data-activity="cms" class="Boxes-sm animated">
-  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-  <div class="container">
-      <div class="row">
-          <h1 class="hidden-xs hidden-sm">You're the boss</h1>
-        <div class="col-md-7 col-sm-reset">
-    <h2 class="SectionTitle">Clients</h2>
-    <div>
-        <ul class="TilesList">
-            <li>
-                <a class="LinkTile" href="/clients">
-                    <div class="Tile-content"><p>My clients</p></div>
-                    <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <h1 class="hidden-xs hidden-sm">You're the boss</h1>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">Clients</h2>
+                <ul class="TilesList">
+                    <li>
+                        <a class="LinkTile" href="/clients">
+                            <div class="Tile-content"><p>My clients</p></div>
+                            <div class="Tile-icon">
+                                <span class="fa ion ion-ios-arrow-right"></span>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <a class="CompactLinkTile" href="/clientEditor">
+                    <div class="Tile-content text-muted">Add a new client</div>
+                    <div class="Tile-icon text-muted">
+                        <span class="fa ion ion-plus"></span>
+                    </div>
                 </a>
-            </li>
-        </ul>
-
-        <a class="CompactLinkTile" href="/clientEditor">
-            <div class="Tile-content text-muted">Add a new client</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </a>
-    </div>
-
-    <app-feedback-entry class="visible-xs visible-sm" params="section: 'cms'"></app-feedback-entry>
-</div>
-          
-        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-
-           <app-inline-side-menu></app-inline-side-menu>
+                <app-feedback-entry class="visible-xs visible-sm" params="section: 'cms'"></app-feedback-entry>
+            </div>   
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+               <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
-</div>
-</div>
+    </div>
 </div>
