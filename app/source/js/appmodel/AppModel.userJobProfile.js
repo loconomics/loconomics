@@ -370,8 +370,8 @@ exports.create = function create(appModel) {
                     name: 'Not Found',
                     message:
                         // LJDI:
-                        'You have not this job title in your profile. ' + 
-                        'Maybe was deleted from your profile recently.'
+                        "We don't have a record of this job title" + 
+                        'It may have been recently deleted.'
                 };
             }
 
