@@ -3,56 +3,52 @@
 **/
 [data-activity=about]
     
-    background White
+    
     
     // Ensure contents don't create horizontal scroll
     .container
+        background $gray-background
         overflow: hidden;
         // Multiline for large words, like links. Seems only needed for Webkit;
         // with and without it, Firefox do it similar and slightly better by default
         word-wrap: break-word;
         // Legal text better justified
         text-align: justify;
-      
-      
-      .span2
-        float left
-        width 25%
-        padding-left 5%
+        padding: 40px;
         
-        ul
-          padding-top 20px
+        .nav 
+        &.navbar-nav
+            margin-top: 30px;
+            text-align: right;
+        #team,
+        #board
+            position relative
         
-          li
-            list-style none
-            margin-bottom: 8px
-            
-            a
-              font-size 16px
-        
-      .span10
-        float right
-        width 70%
-
         .team-cards
           width 100%
           text-align center
           padding-left 0
+          position relative
+          display flex
+          flex-wrap wrap
+          justify-content center
                     
           .team-member
             list-style none
-            display inline-block
-            border 1px solid rgba(240,240,240,1)
-            background-color rgba(246,246,246,1)
-            width 320px
+            box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
+            background-color white;
+            width 90%
             height auto
             margin 10px
-            height 850px
-            padding 0 25px
-            float left
+            height auto
+
+            @media $mediaMinSm {
+              width 280px;
+            }
             
             p
               opacity 0.5
+              padding 0 25px
               
             .title
               font-style italic
@@ -62,54 +58,27 @@
               margin-bottom: 25px
                  
             .member-image
-              width 100%
-              height 300px
-              background-size cover
+              width 200px
+              border-radius: 50%;
+              height 200px
+              margin-top 30px
+              background no-repeat center / cover;
               display inline-block
-          
-            .joshua-danielson
-              background-image url(/assets/images/team-members/joshua.danielson.jpg)
+              padding 0px
+              
+            .joshua
+              background-image url(/assets/images/team-members/josh.jpg)
+            .iago
+              background-image url(/assets/images/team-members/iago.jpg)
+            .janelle
+              background-image url(/assets/images/team-members/janelle.jpg)
+            .amy
+              background-image url(/assets/images/team-members/amy.jpg)
+            .christopher
+              background-image url(/assets/images/team-members/christopher.jpg)
+            .yavette
+              background-image url(/assets/images/team-members/yavette.jpg)
             
             .default
               background-image url(/assets/images/team-members/default.png)
             
-    /// TODO Needs refactor, into it's own, shared, file, from here and the original profile.styl
-    // navmenu.styl (.rmm) -> .profile-menu
-    .profile-menu
-        display block
-        position relative
-        width 100%
-        padding 0px
-        margin 0px auto 25px !important
-        text-align center
-        line-height 19px !important
-        background-color $brand-primary
-        a
-            color #FFF
-            text-decoration none
-        ul
-            display block
-            width 100% !important
-            margin 0 auto !important
-            padding: 0
-            list-style none
-            
-            li
-                display inline
-                margin 0px !important
-
-                a
-                  color #FFF
-                  display inline-block
-                  padding 17px 15px
-                  margin 0px -3px 0px -3px
-                  font-size 15px
-
-                  &:hover
-                    border-bottom 4px solid
-                    padding-bottom 13px !important
-              
-                &.active
-                    a
-                        border-bottom 4px solid
-                        padding-bottom 13px !important
