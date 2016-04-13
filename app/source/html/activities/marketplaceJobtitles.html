@@ -24,9 +24,10 @@
                             <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
                         </label>
                     </div>
-
-                    <div data-bind="visible: isActiveStatus" class="btn btn-default btn-block"><a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a></div>
                 </div>
+                <button data-bind="visible: isActiveStatus" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%">
+                    <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a>
+                </button>
                 <h2 class="SectionTitle">
                     <span>About your <span data-bind="text: jobTitleName"></span> services</span>
                 </h2>
@@ -65,6 +66,10 @@
                             <p>Delete your <span data-bind="text: jobTitleName"></span> profile</p>
                         </div>
                     </button></li>
+                    <li><a class="CompactLinkTile" href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                        <div class="Tile-content text-muted">Edit scheduler settings (services, pricing &amp; locations)</div>
+                        <div class="Tile-icon text-muted"><span class="fa ion ion-ios-arrow-right"></span></div>
+                    </a></li>
                 </ul>
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
             </div>
