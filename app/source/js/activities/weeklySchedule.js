@@ -14,8 +14,9 @@ var A = Activity.extend(function WeeklyScheduleActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduler'
+        backLink: 'scheduling' , helpLink: '/help/faqs/weeklySchedule'
     });
+    
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     this.registerHandler({

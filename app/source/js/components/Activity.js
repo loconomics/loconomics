@@ -220,7 +220,8 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
 
     var rightOptions = helpLink ?
         NavAction.goHelpIndex.model.clone({
-            link: helpLink
+            link: helpLink,
+            text: "Help"
         }) :
         NavAction.goHelpIndex;
 

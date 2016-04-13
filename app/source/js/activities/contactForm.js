@@ -14,7 +14,7 @@ var A = Activity.extend(function ContactFormActivity() {
     
     this.accessLevel = this.app.UserType.loggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Talk to us');
+    this.navBar = Activity.createSubsectionNavBar('Back');
     this.navBar.rightAction(null);
 });
 
