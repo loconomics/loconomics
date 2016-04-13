@@ -1,10 +1,3 @@
-<!-- Wordpress API implementation! -->
-
-<?php
-// Include Wordpress 
-define('WP_USE_THEMES', false);
-require('https://loconomics.wordpress.com/wp-blog-header.php');
-?>
 <!-- About -->
 <div data-activity="about" class="Boxes-sm animated">
     <div class="PageMenu" id="about-index"> 
@@ -23,9 +16,6 @@ require('https://loconomics.wordpress.com/wp-blog-header.php');
                 <li>
                     <a class="dropdown-item" href="#about-careers">Careers</a>
                 </li>
-                <li>
-                    <a class="dropdown-item" href="#about-blog">Blog</a>
-                </li>
             </ul>
         </div>
         <div class="PageMenu-list">
@@ -38,9 +28,6 @@ require('https://loconomics.wordpress.com/wp-blog-header.php');
                 </li>
                 <li>
                     <a href="#about-careers">Careers</a>
-                </li>
-                <li>
-                    <a href="#about-blog">Blog</a>
                 </li>
             </ul>
         </div>
@@ -146,28 +133,6 @@ require('https://loconomics.wordpress.com/wp-blog-header.php');
                         <h2>Cooperative Model</h2>
                         <p>Loconomics chose to form as a cooperative in order to steward its tools, platform, services, resources, community, and opportunities as a commons. As writer David Bollier describes, “A commons may arise whenever a group of people decides that it wishes to manage a resource in a collective manner, with a special regard for equitable access [...] and long-term stewardship.” Loconomics is substantially shielded from the lust for wealth accumulation and short-term gain, thereby allowing it to focus on activities that grow and spread benefit among the Owners and communities.</p>
                         <p>A cooperative structure generally demands that every owner have an equal vote in the election of the board and in other major decisions. A cooperative structure also generally demands that the profits of the enterprise be returned to the owners in proportion to each owners’ participation in generating value for the company. Loconomics believes that its mission will be most effectively advanced by this combination of factors, which distinguish a cooperative from a conventional for-profit corporation.</p>
-                    </div>
-                </div>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="about-blog">
-                <div class="SideMenu col-md-3 col-md-offset-1 hidden-xs hidden-sm">
-                    <ul class="nav navbar-nav">
-                      <h4><a href="#">About</a></h4>
-                      <h4><a href="#">Team</a></h4>
-                    </ul>
-                </div>
-                <div class="col-md-7 col-sm-reset">
-                    <div>
-                        <h1>Blog</h1>    
-                        <?php
-                        // Get the last 3 posts.
-                        global $post;
-                        $args = array( 'posts_per_page' => 3 );
-                        $myposts = get_posts( $args );
-
-                        foreach( $myposts as $post ) :	setup_postdata($post); ?>
-                        <a href="<?php the_permalink() ?>" rel="bookmark" title="Permanent Link to <?php the_title_attribute(); ?>"><?php the_title(); ?></a><br />
-                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
