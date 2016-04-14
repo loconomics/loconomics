@@ -4,7 +4,7 @@
         <div class="PageMenu-list">
             <ul>
                 <li>
-                    <a href="/help/categories/200431835-resources-for-service-professionals">Local service professionals</a>
+                    <a href="/help/categories/200431835-resources-for-service-professionals">Service Professionals</a>
                 </li>
                 <li>
                     <a href="/help/categories/200474305-resources-for-clients">Clients</a>
@@ -33,7 +33,7 @@
             <!-- /ko -->
             <!-- ko if: viewType() =='viewAllCategories' && categories().length -->
                 <div data-bind="visible: viewType() == 'viewAllCategories' && categories().length > 0">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, please contact us.</p> 
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p> 
                     <h2 class="SectionTitle">Select a category</h2>
                     <ul class="TilesList" data-bind="foreach: categories">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -53,8 +53,8 @@
                     <div class="SubSectionNavBar hidden-xs hidden-sm">
                         <ul>
                             <li>
-                                <a data-bind="visible: selectedSection()[0].category_id() == '200431835'" href="//help/categories/200431835-resources-for-service-professionals">Resources for Service Professionals <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
-                                <a data-bind="visible: selectedSection()[0].category_id() == '200474305'" href="/help/categories/200474305-resources-for-clients">Resources for clients <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
+                                <a style="margin-left: -20px" data-bind="visible: selectedSection()[0].category_id() == '200431835'" href="//help/categories/200431835-resources-for-service-professionals">Resources for Service Professionals  <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
+                                <a style="margin-left: -20px"  data-bind="visible: selectedSection()[0].category_id() == '200474305'" href="/help/categories/200474305-resources-for-clients">Resources for clients <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
                             </li>
                         </ul>
                     </div>
@@ -82,7 +82,7 @@
 
                 <!-- ko if: viewType() =='viewAllArticles' && filteredFaqs().length -->
                 <div data-bind="visible: viewType() == 'viewAllArticles' && filteredFaqs().length > 0">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, please contact us.</p> 
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p> 
                     <div class="isolated inset">
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -129,7 +129,7 @@
                 <div data-bind="visible: nothingFound() && !isLoading()" class="isolated inset text-center">
                     <div>Nothing on that topic yet...send us a note!</div>
                     <hr>
-                    <a href="mailto:support@@loconomics.com" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
+                    <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
                 </div>
             <!-- /ko -->
             </div>

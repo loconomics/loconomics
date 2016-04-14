@@ -182,7 +182,7 @@ function ViewModel() {
     this.faqs = ko.observableArray([]);
     this.searchText = ko.observable('');
     this.isLoading = ko.observable(false);
-    this.params = ko.observableArray(''); // sections/2342342342-stuff-i-do
+    this.params = ko.observable(''); // sections/2342342342-stuff-i-do
     this.viewType = ko.observable('');
 
     this.tailId = ko.observable('');
