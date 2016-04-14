@@ -109,9 +109,9 @@
             </ul>
         </li>-->
         <li>
+            <a data-bind="visible: isServiceProfessional() && !isAnonymous()" href="/help/categories/200431835-resources-for-service-professionals"><span class="LargeNavBar-label">Help</span></a>
+            <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
             <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
-            <a data-bind="visible: !isAnonymous() && isServiceProfessional" href="/help/serviceProfessionals"><span class="LargeNavBar-label">Help</span></a>
-            <a data-bind="visible: !isAnonymous() && !isServiceProfessional()" href="/help/clients"><span class="LargeNavBar-label">Help</span></a>
         </li>
     </ul>
 </div>

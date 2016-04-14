@@ -25,14 +25,37 @@ var A = Activity.extend(function HelpActivity() {
 
         // var articleIdsRelatedTo = {'weeklySchedule':[205679005, 205282499]};
         var url = 'https://loconomics.zendesk.com/api/v2/help_center/articles.json?label_names=' + encodeURIComponent(this.currentLabels);
-        var category_id = 200431835; // we only care about Service Professionals right now
-        var sectionsUrl = 'https://loconomics.zendesk.com/api/v2/help_center/categories/'+ category_id +'/sections.json';
+        var categoriesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/categories.json';
+        var sectionsUrl = 'https://loconomics.zendesk.com/api/v2/help_center/sections.json';
         this.viewModel.isLoading(true);
 
         var $ = require('jquery');
-        Promise.all([$.get(url), $.get(sectionsUrl)]).then(function(res) {
+        Promise.all([$.get(url), $.get(categoriesUrl), $.get(sectionsUrl)]).then(function(res) {
             var resArticles = res[0];
-            var resSections = res[1];
+            var resCategories = res[1];
+            var resSections = res[2];
+
+            if(resCategories){
+                this.viewModel.categories(
+                    resCategories.categories.map(function(category){
+                        var tail = category.id + '-' + slug(category.name);
+                        return new Category({
+                            id: category.id,
+                            category_id: category.category_id,
+                            name: category.name,
+                            description: category.description,
+                            tail: tail,
+                            urlPath: '/help/categories/' + tail
+                        });
+                    })
+                );
+                // need to "call" every property in order to get value
+                // exmaple:
+                // console.log(this.viewModel.sections()[0].name()); >> "Announcements"
+            }
+            else {
+                this.viewModel.categories([]);
+            }
 
             if(resSections){
                 this.viewModel.sections(
@@ -42,6 +65,7 @@ var A = Activity.extend(function HelpActivity() {
                             id: section.id,
                             category_id: section.category_id,
                             name: section.name,
+                            description: section.description,
                             tail: tail,
                             urlPath: '/help/sections/' + tail
                         });
@@ -80,6 +104,10 @@ var A = Activity.extend(function HelpActivity() {
 
 
     this.subSectionFunction = {
+        "categories": function(tailId){
+            this.viewModel.selectedCategoryId(Number(tailId));
+            this.viewModel.viewType('categoryView');
+        }.bind(this),
         "sections": function(tailId){
             this.viewModel.selectedSectionId(Number(tailId));
             this.viewModel.viewType('sectionView');
@@ -97,6 +125,10 @@ var A = Activity.extend(function HelpActivity() {
     this.renderSubSection = function(subSectionPath, tail){
         var tailId = tail.split('-')[0];
         if(tailId === ''){
+            // for categoryView
+            if(subSectionPath ==="categories"){
+                this.viewModel.viewType('viewAllCategories');
+            }
             // for sectionView
             if(subSectionPath ==="sections"){
                 this.viewModel.viewType('viewAllSections');
@@ -124,7 +156,7 @@ A.prototype.show = function show(state) {
 
     var params = state && state.route && state.route.segments;
 
-    var subSections = ['articles', 'sections', 'faqs'];
+    var subSections = ['articles', 'sections', 'categories', 'faqs'];
     this.viewModel.viewType('');
     if(params){
         var subSectionPath = params[0] || '';
@@ -134,7 +166,7 @@ A.prototype.show = function show(state) {
             this.renderSubSection(subSectionPath, tail);
         }
         else if( subSectionPath === ''){
-            this.viewModel.viewType('viewAllSections');
+            this.viewModel.viewType('viewAllCategories');
         }
         else{
             this.viewModel.viewType('404');
@@ -155,9 +187,13 @@ function ViewModel() {
 
     this.tailId = ko.observable('');
 
+    this.categories = ko.observableArray([]);
+
     this.sections = ko.observableArray([]);
 
     this.selectedArticleId = ko.observable(0);
+
+    this.selectedCategoryId = ko.observable(0);
 
     this.selectedSectionId = ko.observable(0);
 
@@ -177,11 +213,27 @@ function ViewModel() {
         });
     }, this);
 
+    this.selectedCategory = ko.pureComputed(function(){
+        var selectedCategoryId = this.selectedCategoryId();
+        return this.categories().filter(function(category) {
+            var categoryIsSelected = category.id() === selectedCategoryId;
+            return categoryIsSelected;
+        });
+    }, this);
+
     this.filteredSectionArticles = ko.pureComputed(function() {
         var selectedSectionId = this.selectedSectionId();
         return this.faqs().filter(function(article) {
             var articleIsSelected = article.section_id() === selectedSectionId;
             return articleIsSelected;
+        });
+    }, this);
+
+    this.filteredCategorySections = ko.pureComputed(function() {
+        var selectedCategoryId = this.selectedCategoryId();
+        return this.sections().filter(function(section) {
+            var sectionIsSelected = section.category_id() === selectedCategoryId;
+            return sectionIsSelected;
         });
     }, this);
 
@@ -215,6 +267,7 @@ function ViewModel() {
             !this.filteredFaqs().length +
             (this.viewType() == '404') +
             (this.viewType() == 'viewAllSections' && !this.sections().length) +
+            (this.viewType() == 'categoryView' && !this.filteredCategorySections().length) +
             (this.viewType() == 'sectionView' && !this.filteredSectionArticles().length) +
             (this.viewType() == 'viewAllArticles' && !this.filteredFaqs().length) +
             (this.viewType() == 'articleView' && !this.fullArticleData().length) +
@@ -248,6 +301,20 @@ function Section(values) {
         id: 0,
         category_id: 0,
         name: '',
+        description: '',
+        tail: '',
+        urlPath: ''
+    }, values);
+}
+
+function Category(values) {
+
+    Model(this);
+
+    this.model.defProperties({
+        id: 0,
+        name: '',
+        description: '',
         tail: '',
         urlPath: ''
     }, values);
