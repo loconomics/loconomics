@@ -2,9 +2,7 @@
     About activity styles.
 **/
 [data-activity=about]
-    
-    
-    
+ 
     // Ensure contents don't create horizontal scroll
     .container
         background $gray-background
@@ -18,11 +16,10 @@
         
         .nav 
         &.navbar-nav
-            margin-top: 30px;
+            margin-top: 50px;
             text-align: right;
-        #team,
-        #board
-            position relative
+            h4
+              margin-bottom: 25px;
         
         .team-cards
           width 100%
@@ -49,6 +46,7 @@
             p
               opacity 0.5
               padding 0 25px
+              text-align: justify;
               
             .title
               font-style italic
@@ -81,4 +79,35 @@
             
             .default
               background-image url(/assets/images/team-members/default.png)
+          
+      .special-thanks-partners          
+        position: relative;
+        
+      .special-thanks-logos
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        height: 160px;
+
+        @media $mediaMinSm {
+          display: inline-block;
+          margin-right: 0px;
+          margin-left: 5px;
+          top: 0px;
+          right: 0px;
+        }
+        
+        &.special-thanks-logos-right
+          border: solid 20px white;
+          height: 350px;
+
+          @media $mediaMinSm {
+            position: absolute;
+            margin-right: 5px;
+            margin-left: 15px;
+            top: 0px;
+            right: 0px;
+          }
             
