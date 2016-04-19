@@ -13,8 +13,34 @@ var A = Activity.extend(function CancellationPolicyActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Job Title');
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: 'scheduling' , helpLink: '/help/sections/201966026-setting-your-cancellation-policy'
+    });
     
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
+    });
     // On changing jobTitleID:
     // - load addresses
     this.registerHandler({
@@ -65,6 +91,7 @@ function ViewModel(app) {
 
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
+    this.jobTitleName = ko.observable('Job Title'); 
     // Local copy of the cancellationPolicyID, rather than use
     // it directly from the userJobTitle to avoid that gets saved
     // in memory without press 'save'
