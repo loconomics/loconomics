@@ -80,5 +80,7 @@ module.exports = {
     'paymentAccount': require('./activities/paymentAccount'),
     'myAppointments': require('./activities/myAppointments'),
     'clientAppointment': require('./activities/clientAppointment'),
-    'viewBooking': require('./activities/viewBooking')
+    'viewBooking': require('./activities/viewBooking'),
+    'blog': require('./activities/blog'),
+    'instantBooking': require('./activities/instantBooking')
 };
