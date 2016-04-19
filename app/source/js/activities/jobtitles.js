@@ -13,7 +13,7 @@ var A = Activity.extend(function JobtitlesActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: '/scheduling'
+        backLink: '/scheduling' , helpLink: '/help/sections/201967086-managing-your-scheduler'
     });
     
     // On changing jobTitleID:
@@ -197,10 +197,11 @@ function ViewModel(app) {
     /// COPIED FROM marketplaceJobtitles
     this.deleteJobTitle = function() {
         var jid = this.jobTitleID();
+        var jname = this.jobTitleName();
         if (jid) {
             app.modals.confirm({
-                title: 'Delete job title',
-                message: 'Are you really sure you want to delete this job title?',
+                title: 'Delete ' + jname + ' profile',
+                message: 'Are you really sure you want to delete your ' + jname +' profile?',
                 yes: 'Delete',
                 no: 'Keep'
             }).then(function() {
