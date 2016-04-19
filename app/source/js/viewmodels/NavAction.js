@@ -112,7 +112,7 @@ NavAction.goMarketplace = new NavAction({
 
 NavAction.goHelpIndex = new NavAction({
     link: '/contactForm/general?mustReturn=true',
-    text: 'Help',
+    text: 'Contact us',
     isModal: false
 });
 
