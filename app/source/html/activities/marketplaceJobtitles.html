@@ -26,9 +26,11 @@
                         </label>
                     </div>
                 </div>
-                <button data-bind="visible: isActiveStatus" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%">
-                    <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a>
-                </button>
+                <div class="PaddedBox-xs">
+                    <button data-bind="visible: isActiveStatus" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%">
+                        <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a>
+                    </button>
+                </div>
                 <h2 class="SectionTitle">
                     <span class="pull-left">About your&nbsp;<span data-bind="text: jobTitleName"></span>&nbsp;services</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
