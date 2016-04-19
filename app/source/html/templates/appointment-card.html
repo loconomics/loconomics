@@ -1,12 +1,16 @@
 <!-- Component Template appointment-card -->
 <script type="text/html" id="appointment-card-template">
+    <h2 class="SectionTitle">
+        <span class="pull-left" data-bind="visible: currentID() == -4">Add a new booking</span>
+        <span class="pull-left" data-bind="visible: currentID() == -3">Add a calendar block</span>
+        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+        </span>
+    </h2>
     <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
-        <div class="Card-title ItemTile" data-bind="visible: currentID() <= 0">
+        <div class="Card-title ItemTile" data-bind="visible: currentID() == -2">
             <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
             <div class="Tile-content">
-                <h3 data-bind="visible: currentID() == -4">Add a new booking</h3>
-                <h3 data-bind="visible: currentID() == -3">Add a calendar block</h3>
-                <h3 data-bind="visible: currentID() == -2">You're free</h3>
+                <h4>You're free</h4>
                 <p class="text-muted" data-bind="visible: !item().summary(), text: item().stateHeader()"></p>
                 <em data-bind="visible: item().summary() && item().stateHeader()">
                     <span data-bind="text: item().stateHeader()"></span>
