@@ -1,17 +1,23 @@
 <!-- WeeklySchedule activity -->
 <div data-activity="weeklySchedule" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-    <div class="container">
-       <div class="SubSectionNavBar hidden-xs hidden-sm">
-            <ul>
-                <li>
-                    <a href="/scheduling">Scheduling</a>
-                </li>
-            </ul>
-        </div>
+    <div class="container"> 
         <div class="row">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/scheduling">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Scheduler
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">Weekly schedule</h2>
+                <h2 class="SectionTitle">
+                    <span class="pull-left">Your weekly schedule</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201964173-setting-your-weekly-schedule" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
                 <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
                     <select data-bind="value: value, disable: isLocked, valueAllowUnset: true" class="form-control">
                         <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->

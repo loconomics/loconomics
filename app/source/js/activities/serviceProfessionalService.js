@@ -18,7 +18,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling'
+        backLink: '/scheduling', helpLink: '/help/sections/201967166-listing-and-pricing-your-services'
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);

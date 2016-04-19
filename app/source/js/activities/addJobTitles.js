@@ -11,7 +11,9 @@ var A = Activity.extend(function AddJobTitlesActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: '/scheduling' , helpLink: '/help/sections/201211055-adding-job-profiles'
+    });
 });
 
 exports.init = A.init;
@@ -51,7 +53,7 @@ function ViewModel(app) {
             app.model.onboarding.inProgress() ?
                 'Save and continue' :
                 this.isSaving() ? 
-                    'saving...' : 
+                    'Saving...' : 
                     'Save'
         );
     }, this);

@@ -13,9 +13,8 @@ var A = Activity.extend(function ClientEditionActivity() {
     this.viewModel = new ViewModel(this.app);
     
     this.accessLevel = this.app.UserType.loggedUser;
-    
-    this.navBar = Activity.createSubsectionNavBar('clients', {
-        backLink: 'clients'
+    this.navBar = Activity.createSubsectionNavBar('Clients', {
+        backLink: 'clients' , helpLink: '/help/sections/201966046-adding-new-clients'
     });
     
     // If there is a change on the clientID, the updates must match
@@ -95,7 +94,7 @@ A.prototype.show = function show(state) {
         .then(function (clientVersion) {
             if (clientVersion) {
                 this.viewModel.clientVersion(clientVersion);
-                this.viewModel.header('Edit Client');
+                this.viewModel.header('Edit client');
             } else {
                 this.viewModel.clientVersion(null);
                 this.viewModel.header('Unknow client or was deleted');
@@ -125,7 +124,7 @@ A.prototype.show = function show(state) {
         /*this.viewModel.client.newItem(presetData);*/
         // New client
         this.viewModel.clientVersion(this.app.model.clients.newItem(presetData));
-        this.viewModel.header('Add a Client');
+        this.viewModel.header('Add a client');
         
         // Extra preset data
         if (this.requestData.newForSearchText) {

@@ -13,7 +13,10 @@ var A = Activity.extend(function ServicesOverviewActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Job Title');
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/marketplaceProfile', helpLink: '/help/sections/201967766-describing-your-services-to-clients'
+    });
+    
     
     // On changing jobTitleID:
     // - load job title name

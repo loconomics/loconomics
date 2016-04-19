@@ -16,8 +16,10 @@ var A = Activity.extend(function WorkPhotosActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Job Title');
+    
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/marketplaceProfile', helpLink: '/help/sections/201964193-showcase-your-work-with-photos'
+    });
 
     // Event handlers for photo list management
     this.registerHandler({

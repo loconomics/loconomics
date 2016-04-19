@@ -14,8 +14,9 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
-    
+    this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
+        backLink: 'scheduling' , helpLink: '/help/sections/201959943-add-scheduling-to-your-website'
+    });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.

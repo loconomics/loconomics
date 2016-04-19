@@ -1,16 +1,21 @@
 <!-- Activity clients -->
-<div data-activity="clients" data-bind="css: { 'is-searching': searchText(), 'has-SectionTitle': headerText }" class="Boxes-sm animated">
+<div data-activity="clients" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/marketplaceProfile">Marketplace profile</a>
+                        <a href="/cms"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Client manager</a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                    <span class="pull-left" data-bind="text: headerText"></span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152639-managing-clients" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
                 <div id="clientsContent" class="container-fluid">
                     <div class="isolated">
                         <div class="input-group">

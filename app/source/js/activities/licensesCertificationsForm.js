@@ -13,8 +13,10 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-
-    this.navBar = Activity.createSubsectionNavBar('Certifications/Licenses');
+    
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/marketplaceProfile', helpLink: '/help/sections/201967966-adding-professional-licenses-and-certifications'
+    });
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
 });
 

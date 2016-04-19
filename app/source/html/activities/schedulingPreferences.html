@@ -1,17 +1,23 @@
 <!-- SchedulingPreferences activity -->
 <div data-activity="schedulingPreferences" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-    <div class="container">
-        <div class="SubSectionNavBar hidden-xs hidden-sm">
-            <ul>
-                <li>
-                    <a href="/scheduling">Scheduling</a>
-                </li>
-            </ul>
-        </div>
-        <div class="row">
+    <div class="container"> 
+        <div class="row"> 
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/scheduling/">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Scheduler
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">Schedule preferences</h2>
+                <h2 class="SectionTitle">
+                    <span class="pull-left">Scheduling preferences</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201961423-setting-your-scheduling-preferences" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
                 <script type="text/html" id="schedulingPrefs-radioButton">
                     <label class="btn btn-default" data-bind="css: { 'active btn-primary': value() === itemValue }">
                         <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />

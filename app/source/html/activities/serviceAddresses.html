@@ -2,24 +2,22 @@
 <div data-activity="serviceAddresses" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
-        <div class="row"> 
+        <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
-            <ul>
-                <li>
-                    <a href="/jobtitles">Scheduler </a>
-                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                </li>
-                <li>
-                    <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                        <span data-bind="text: jobTitleName"></span>
-                    </a>
-                </li>
-            </ul>
+                <ul>
+                    <li>
+                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <span data-bind="text: jobTitleName"></span> Scheduler
+                        </a>
+                    </li>
+                </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-                    <span data-bind="visible: headerText, text: headerText">Locations</span>
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                <h2 class="SectionTitle">
+                    <span class="pull-left" data-bind="visible: headerText, text: headerText"></span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>

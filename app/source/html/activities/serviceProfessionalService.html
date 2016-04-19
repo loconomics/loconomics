@@ -3,15 +3,30 @@
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <h1 class="hidden-xs hidden-sm">Add new pricing</h1>
+            <h1 class="hidden-xs hidden-sm">Add new pricing</h1>  
+            <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: jobTitleID() !== 0">
+                <ul>
+                    <li>
+                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <span data-bind="">Job Title</span> Scheduler
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">Select a job title</h2>
-                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">
+                    <span class="pull-left">Select a job title</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div data-bind="foreach: groupedServices">
-                    <div class="SectionTitle" data-bind="visible: !$root.isAdditionMode()">
-                        <span data-bind="text: group"></span>
-                    </div>
+                    <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode()">
+                        <span class="pull-left" data-bind="text: group"></span>
+                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                        </span>
+                    </h2>
                     <ul class="TilesList" data-bind="foreach: pricing">
                         <li>
                             <a href="#" class="ItemTile" data-bind="click: $root.tapService" role="button">

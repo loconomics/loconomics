@@ -15,7 +15,7 @@ var A = Activity.extend(function CalendarSyncingActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling'
+        backLink: 'scheduling' , helpLink: '/help/sections/201959953-syncing-your-existing-calendar'
     });
     
     // Adding auto-select behavior to the export URL

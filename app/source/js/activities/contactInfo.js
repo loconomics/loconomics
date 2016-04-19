@@ -13,12 +13,12 @@ var A = Activity.extend(function ContactInfoActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: 'ownerInfo'
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201960743-adding-your-contact-information'
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: 'account'
+        backLink: '/account' , helpLink: '/help/sections/201960753-adding-your-contact-information'
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
