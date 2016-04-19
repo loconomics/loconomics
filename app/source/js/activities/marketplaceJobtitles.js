@@ -13,7 +13,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile'
+        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201152759-managing-your-marketplace-profile'
     });
 
     // On changing jobTitleID:
@@ -196,10 +196,11 @@ function ViewModel(app) {
     
     this.deleteJobTitle = function() {
         var jid = this.jobTitleID();
+        var jname = this.jobTitleName();
         if (jid) {
             app.modals.confirm({
-                title: 'Delete job title',
-                message: 'Are you really sure you want to delete this job title?',
+                title: 'Delete ' + jname + ' profile',
+                message: 'Are you really sure you want to delete your ' + jname +' profile?',
                 yes: 'Delete',
                 no: 'Keep'
             }).then(function() {

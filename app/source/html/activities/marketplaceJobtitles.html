@@ -2,18 +2,19 @@
 <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row"> 
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/marketplaceProfile">Marketplace profile</a>
+                        <a href="/marketplaceProfile"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Marketplace profile</a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
-                    <span data-bind="text: jobTitleName"></span><span> profile status</span>
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                    <span class="pull-left" data-bind="text: jobTitleName"></span>&nbsp;profile status
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
                 </h2>
                 <div class="switchLine">
                     <span class="switchLine-label">
@@ -29,7 +30,9 @@
                     <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a>
                 </button>
                 <h2 class="SectionTitle">
-                    <span>About your <span data-bind="text: jobTitleName"></span> services</span>
+                    <span class="pull-left">About your&nbsp;<span data-bind="text: jobTitleName"></span>&nbsp;services</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
                 </h2>
                 <ul class="TilesList">
                     <li><a class="InfoTile" href="/servicesOverview" data-bind="attr: { href: getJobUrlTo('servicesOverview') }">
