@@ -13,8 +13,9 @@ var A = Activity.extend(function FeedbackFormActivity() {
     this.viewModel = new ViewModel(this.app);
     
     this.accessLevel = this.app.UserType.loggedUser;
-    
-    this.navBar = Activity.createSubsectionNavBar('Talk to us');
+    this.navBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: '/help/sections/201960863-providing-feedback-to-us'
+    });
 });
 
 exports.init = A.init;
