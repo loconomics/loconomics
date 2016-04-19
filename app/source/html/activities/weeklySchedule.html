@@ -116,18 +116,18 @@
 
                     <div class="weeklySchedule-allTime">
                         <label>
-                            <span>All days/times</span>
-                            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime }" />
+                            <span>All days/times</span> 
+                            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
                         </label>
                     </div>
                     <div class="weeklySchedule-days" data-bind="visible: !schedule.isAllTime()">
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Monday', isLocked: isLocked } } --><!-- /ko -->
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.tuesday, label: 'Tuesday', isLocked: isLocked } } --><!-- /ko -->
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.wednesday, label: 'Wednesday', isLocked: isLocked } } --><!-- /ko -->
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.thursday, label: 'Thursday', isLocked: isLocked } } --><!-- /ko -->
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.friday, label: 'Friday', isLocked: isLocked } } --><!-- /ko -->
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.saturday, label: 'Saturday', isLocked: isLocked } } --><!-- /ko -->
-                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday, label: 'Sunday', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Mondays', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.tuesday, label: 'Tuesdays', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.wednesday, label: 'Wednesdays', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.thursday, label: 'Thursdays', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.friday, label: 'Fridays', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.saturday, label: 'Saturdays', isLocked: isLocked } } --><!-- /ko -->
+                        <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday, label: 'Sundays', isLocked: isLocked } } --><!-- /ko -->
 
                         <div class="form-group">
                             <label class="control-label">Time Zone:</label>
