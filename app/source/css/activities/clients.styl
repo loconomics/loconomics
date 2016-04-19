@@ -7,7 +7,7 @@
     
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
-    $indexTop = 62px;
+    $indexTop = 96px;
     
     .container-fluid {
         padding-left: 0;
@@ -48,8 +48,13 @@
                 border-radius: 0;
             }
         }
-        @media $mediaMinMd {
+        @media $mediaMinSm {
           position: relative;
+          top: 110px;
+          right: -350px;
+        }  
+        @media $mediaMinMd {
+          right: -270px;
         }  
     }
     
@@ -58,12 +63,15 @@
         // because the need to left space (sometimes) for the SectionTitle on top
         overflow: auto;
         position: absolute;
-        top: 0;
+        top: 38px;
         // Using padding for left positioning to allow negative margin on the list
         left: 0;
         padding-left: $container-padding-left;
         right: $fullIndexWidth;
         bottom: 0;
+        @media $mediaMinSm {
+          top: 44px;
+        }  
 
         #clientsListView {
             // List must start on the edge, per design
@@ -72,16 +80,6 @@
             .SimpleList-divider {
                 text-transform: uppercase;
             }
-        }
-    }
-    
-    &.has-SectionTitle {
-        #clientsContent {
-            top: $SectionTitle-height;
-        }
-        
-        #clientsIndex {
-            top: $indexTop + $SectionTitle-height;
         }
     }
     
