@@ -36,6 +36,7 @@
         overflow: auto;
         bottom: 0;
         box-sizing: border-box;
+        color: $gray-light;
         
         > .nav {
             border-bottom: none;
@@ -45,7 +46,12 @@
                 font-weight: bold;
                 padding: 3px 6px 3px 15px;
                 border: none;
-                border-radius: 0;
+                border-radius: 0; 
+                &:hover,
+                &:focus {
+                    background-color: transparent;
+                    color: $brand-secondary;
+                }
             }
         }
         @media $mediaMinSm {
@@ -56,6 +62,9 @@
         @media $mediaMinMd {
           right: -270px;
         }  
+        @media $mediaMinLg {
+          right: -325px;
+        }
     }
     
     #clientsContent {
