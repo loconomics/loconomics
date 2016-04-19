@@ -29,7 +29,8 @@ $gray = lighten(#000, 33.5%);
       margin-top: 15px;
       background: $gray-lighter;
       border: solid 1px #DDD;
-      font-size: 28px; 
+      font-size: 20px;
+      height: 42px;
       text-transform: none;
     }
     
@@ -42,6 +43,14 @@ $gray = lighten(#000, 33.5%);
             color: $gray;
             border: none;
             line-height: $SectionTitle-fontSize;
+            @media $mediaMinMd {
+              margin-top: 15px;
+              background: $gray-lighter;
+              border: solid 1px #DDD;
+              font-size: 20px;
+              height: 42px;
+              text-transform: none;
+            }
         }
     }
 }
