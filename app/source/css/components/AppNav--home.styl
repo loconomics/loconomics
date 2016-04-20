@@ -8,20 +8,21 @@
     // (set from javascript when scrolling is detected, allows to enable extra design features)
     .SmartNavBar {
         background-color: transparent;
-        border-bottom-color: transparent;
+        border-bottom: 1px solid $gray-light;
     }
     .LargeNavBar {
         background-color: transparent;
     }
     &:not(.is-fixed) {
         .SmartNavBar {
+            border-bottom: transparent;
             .SmartNavBar-btn {
                 color: White;
             }
         }
 
         .LargeNavBar {
-            
+            border-bottom: none;
             .nav > li > a {
                 color: White;
             }
@@ -31,8 +32,10 @@
         }
 
         .navbar-brand {
-            background-image: url("../images/logo-loconomics-white-mini.png");
-            hr-image("../images/logo-loconomics-white-mini@2x.png", $AppNav-brandWidth, $AppNav-brandHeight);
+            background-image: url('../images/logo-white-large.png');
+            background-image: 
+              linear-gradient(transparent, transparent),
+              url('../images/logo-white.svg');
         }
     }
 

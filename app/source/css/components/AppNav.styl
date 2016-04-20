@@ -20,6 +20,7 @@ $AppNav-brandHeight = 38px;
     .navbar-brand {
         float: none;
         display: inline-block;
+        padding: 12px;
     
         // magic number! For some reason, the only line-height
         // that limits the full height to the navbar-height (44px now)
@@ -27,14 +28,17 @@ $AppNav-brandHeight = 38px;
 
         text-indent: -99999px;
         // manually vertical 'visually' centering (depends on icon)
-        background: url("../images/logo-loconomics-header-mini.png") no-repeat center 2px;
-        hr-image("../images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+        background-repeat: no-repeat;
+        background-size: $AppNav-brandWidth $AppNav-brandHeight;
+        background-image: url('../images/logo-large.png');
+        background-image: 
+          linear-gradient(transparent, transparent),
+          url('../images/logo.svg');
         min-width: 100px;
         min-height: 39px;
         height: $app-navbar-height;
         @media $media-big-navbar {
             height: $big-navbar-height;
-            
             background-position: center;
         }
     }
