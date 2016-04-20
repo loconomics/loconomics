@@ -26,8 +26,8 @@
                         </label>
                     </div>
                 </div>
-                <div class="PaddedBox-xs">
-                    <button data-bind="visible: isActiveStatus" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%">
+                <div class="PaddedBox-xs" data-bind="visible: isActiveStatus">
+                    <button class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;">
                         <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a>
                     </button>
                 </div>
