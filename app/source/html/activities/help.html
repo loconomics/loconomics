@@ -1,4 +1,4 @@
-<!-- Help activity -->
+<!-- Faqs activity -->
 <div data-activity="help" class="Boxes-sm animated">
     <div class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
         <div class="PageMenu-list">
@@ -15,86 +15,56 @@
     <div class="container">
         <div class="row"> 
             <h1 class="hidden-xs hidden-sm">We're here to help</h1> 
-            <div class="container-fluid col-md-7 col-sm-reset">
+            <div class="container-fluid LightForm col-md-7 col-sm-reset">
+            <!-- ko if: viewType() =='viewAllSections' && sections().length -->
                 <div data-bind="visible: viewType() == 'viewAllSections' && sections().length > 0">
-                    <h2 class="SectionTitle">Select a topic</h2>
+                    <h2 class="SectionTitle">Select a section</h2>
                     <ul class="TilesList" data-bind="foreach: sections">
-                        <li>
-                            <a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
-                                <div class="Tile-content">
-                                    <p data-bind="text: name"></p>
-                                </div>
-                                <div class="Tile-icon">
-                                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
+                            <div class="Tile-content"><p data-bind="text: name"></p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
                     </ul>
                     <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content">
-                            <p>View All FAQ's</p>
-                        </div>
-                        <div class="Tile-icon">
-                            <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                        </div>
+                        <div class="Tile-content"><p>View All FAQ's</p></div>
+                        <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
+            <!-- /ko -->
+            <!-- ko if: viewType() =='viewAllCategories' && categories().length -->
                 <div data-bind="visible: viewType() == 'viewAllCategories' && categories().length > 0">
                     <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p> 
                     <h2 class="SectionTitle">Select a category</h2>
                     <ul class="TilesList" data-bind="foreach: categories">
-                        <li>
-                            <a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
-                                <div class="Tile-content">
-                                    <p data-bind="text: name"></p>
-                                </div>
-                                <div class="Tile-icon">
-                                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
+                            <div class="Tile-content"><p data-bind="text: name"></p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
                     </ul>
                     <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content">
-                            <p>View All FAQ's</p>
-                        </div>
-                        <div class="Tile-icon">
-                            <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                        </div>
+                        <div class="Tile-content"><p>View All FAQ's</p></div>
+                        <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
+            <!-- /ko -->
+
             <!-- ko if: viewType() =='sectionView' && filteredSectionArticles().length -->
                 <div data-bind="visible: viewType() == 'sectionView' && filteredSectionArticles().length > 0">  
                     <div class="SubSectionNavBar hidden-xs hidden-sm">
                         <ul>
                             <li>
-                                <a style="margin-left: -20px" data-bind="visible: selectedSection()[0].category_id() == '200431835'" href="/help/categories/200431835-resources-for-service-professionals">
-                                <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Resources for Service Professionals</a>
-                                <a style="margin-left: -20px"  data-bind="visible: selectedSection()[0].category_id() == '200474305'" href="/help/categories/200474305-resources-for-clients"><i class="fa fa-fw ion-ios-arrow-thin-left"></i>  Resources for clients</a>
+                                <a style="margin-left: -20px" data-bind="visible: selectedSection()[0].category_id() == '200431835'" href="//help/categories/200431835-resources-for-service-professionals">Resources for Service Professionals  <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
+                                <a style="margin-left: -20px"  data-bind="visible: selectedSection()[0].category_id() == '200474305'" href="/help/categories/200474305-resources-for-clients">Resources for clients <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
                             </li>
                         </ul>
                     </div>
                     <h2 class="SectionTitle" data-bind="text: selectedSection()[0].name"></h2>
                     <ul class="TilesList" data-bind="foreach: filteredSectionArticles">
-                        <li>
-                            <a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
-                                <div class="Tile-content">
-                                    <p data-bind="text: title"></p>
-                                </div>
-                                <div class="Tile-icon">
-                                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
+                            <div class="Tile-content"><p data-bind="text: title"></p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
                     </ul>
-                    <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content">
-                            <p>View all help articles</p>
-                        </div>
-                        <div class="Tile-icon">
-                            <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                        </div>
-                    </a>
                 </div>
             <!-- /ko -->
 
@@ -102,16 +72,10 @@
                 <div data-bind="visible: viewType() == 'categoryView' && filteredCategorySections().length > 0">
                     <h2 class="SectionTitle" data-bind="text: selectedCategory()[0].name"></h2>
                     <ul class="TilesList" data-bind="foreach: filteredCategorySections">
-                        <li>
-                            <a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
-                                <div class="Tile-content">
-                                    <p data-bind="text: name"></p>
-                                </div>
-                                <div class="Tile-icon">
-                                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
+                            <div class="Tile-content"><p data-bind="text: name"></p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
                     </ul>
                 </div>
             <!-- /ko -->
@@ -122,69 +86,52 @@
                     <div class="isolated inset">
                         <div class="input-group">
                             <span class="input-group-addon">
-                                <span class="fa ion ion-ios-search"></span>
-                                <span class="sr-only">Search</span>
-                            </span>
-                            <input type="text" class="form-control" placeholder="search all help articles" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+                                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
+                                </span>
+                                <input type="text" class="form-control" placeholder="search all help articles" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
                         </div><!-- /input-group -->
                     </div>
                     <h2 class="SectionTitle">All help articles</h2>
                     <ul class="TilesList" data-bind="foreach: filteredFaqs">
-                        <li>
-                            <a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
-                                <div class="Tile-content">
-                                    <p data-bind="text: title"></p>
-                                </div>
-                                <div class="Tile-icon">
-                                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
+                            <div class="Tile-content"><p data-bind="text: title"></p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
                     </ul>
                 </div>
                 <!-- /ko -->
+
+
             <!-- ko if: viewType() =='articleView' && fullArticleData().length -->
-                <div class="Content" data-bind="visible: viewType() == 'articleView' && fullArticleData().length > 0">  
-                    <div class="SubSectionNavBar hidden-xs hidden-sm">
-                        <ul>
-                            <li>
-                                <a style="margin-left: -20px" href="/help">
-                                <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Help center</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <h2 data-bind="text: fullArticleData()[0].title()"></h2>
+                <div data-bind="style: { width: '90%', margin: 'auto' }, visible: viewType() == 'articleView' && fullArticleData().length > 0">
+                    <h2 class="SectionTitle" data-bind="text: fullArticleData()[0].title()"></h2>
                     <span data-bind="html: fullArticleData()[0].description()"></span>
                 </div>
             <!-- /ko -->
+
+            <!-- ko if: viewType() =='helpView' && filteredHelpArticles().length -->
                 <div data-bind="visible: viewType() == 'helpView' && filteredHelpArticles().length > 0">
                     <h2 class="SectionTitle">Related help articles</h2>
                     <ul class="TilesList" data-bind="foreach: filteredHelpArticles">
-                        <li>
-                            <a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
-                                <div class="Tile-content">
-                                    <p data-bind="text: title"></p>
-                                </div>
-                            <div class="Tile-icon">
-                                <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                                </div>
-                            </a>
-                        </li>
+                        <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
+                            <div class="Tile-content"><p data-bind="text: title"></p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
                     </ul>
                     <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content">
-                            <p>View all help articles</p>
-                        </div>
-                        <div class="Tile-icon">
-                            <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                        </div>
+                        <div class="Tile-content"><p>View All FAQ's</p></div>
+                        <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
+            <!-- /ko -->
+
+            <!-- ko if: nothingFound() && !isLoading() -->
                 <div data-bind="visible: nothingFound() && !isLoading()" class="isolated inset text-center">
                     <div>Nothing on that topic yet...send us a note!</div>
                     <hr>
                     <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
                 </div>
+            <!-- /ko -->
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu></app-inline-side-menu>
