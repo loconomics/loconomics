@@ -18,7 +18,7 @@
             <div class="container-fluid LightForm col-md-7 col-sm-reset">
             <!-- ko if: viewType() =='viewAllSections' && sections().length -->
                 <div data-bind="visible: viewType() == 'viewAllSections' && sections().length > 0">
-                    <h2 class="SectionTitle">Select a section</h2>
+                    <h2 class="SectionTitle">Select a topic</h2>
                     <ul class="TilesList" data-bind="foreach: sections">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
                             <div class="Tile-content"><p data-bind="text: name"></p></div>
@@ -26,7 +26,7 @@
                         </a></li>
                     </ul>
                     <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content"><p>View All FAQ's</p></div>
+                        <div class="Tile-content"><p>View all help articles</p></div>
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
@@ -42,7 +42,7 @@
                         </a></li>
                     </ul>
                     <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content"><p>View All FAQ's</p></div>
+                        <div class="Tile-content"><p>View all help articles</p></div>
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
@@ -53,8 +53,8 @@
                     <div class="SubSectionNavBar hidden-xs hidden-sm">
                         <ul>
                             <li>
-                                <a style="margin-left: -20px" data-bind="visible: selectedSection()[0].category_id() == '200431835'" href="//help/categories/200431835-resources-for-service-professionals">Resources for Service Professionals  <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
-                                <a style="margin-left: -20px"  data-bind="visible: selectedSection()[0].category_id() == '200474305'" href="/help/categories/200474305-resources-for-clients">Resources for clients <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></a>
+                                <a style="margin-left: -20px" data-bind="visible: selectedSection()[0].category_id() == '200431835'" href="//help/categories/200431835-resources-for-service-professionals"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Resources for Service Professionals</a>
+                                <a style="margin-left: -20px"  data-bind="visible: selectedSection()[0].category_id() == '200474305'" href="/help/categories/200474305-resources-for-clients"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Resources for clients</a>
                             </li>
                         </ul>
                     </div>
@@ -65,6 +65,14 @@
                             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                         </a></li>
                     </ul>
+                    <a class="LinkTile" href="/help/articles">
+                        <div class="Tile-content">
+                            <p>View all help articles</p>
+                        </div>
+                        <div class="Tile-icon">
+                            <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
+                        </div>
+                    </a>
                 </div>
             <!-- /ko -->
 
@@ -103,8 +111,16 @@
 
 
             <!-- ko if: viewType() =='articleView' && fullArticleData().length -->
-                <div data-bind="style: { width: '90%', margin: 'auto' }, visible: viewType() == 'articleView' && fullArticleData().length > 0">
-                    <h2 class="SectionTitle" data-bind="text: fullArticleData()[0].title()"></h2>
+                <div class="Content" data-bind="visible: viewType() == 'articleView' && fullArticleData().length > 0">  
+                    <div class="SubSectionNavBar hidden-xs hidden-sm">
+                        <ul>
+                            <li>
+                                <a style="margin-left: -20px" href="/help">
+                                <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Help center</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <h2 data-bind="text: fullArticleData()[0].title()"></h2>
                     <span data-bind="html: fullArticleData()[0].description()"></span>
                 </div>
             <!-- /ko -->
@@ -119,7 +135,7 @@
                         </a></li>
                     </ul>
                     <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content"><p>View All FAQ's</p></div>
+                        <div class="Tile-content"><p>View all help articles</p></div>
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
