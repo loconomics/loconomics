@@ -142,6 +142,17 @@
     @media $mediaMinSm {
       padding-bottom: 120px;
     }
+
+    h1 {
+      color: White;
+      font-size: 30px;
+      font-weight: bold;
+      text-align: center;
+
+      @media $mediaMinSm {
+        font-size: 44px;
+      }
+    }
     
     &.CategoryBackground-1 {
       background-image:  
@@ -220,17 +231,6 @@
       height: auto;
       overflow: auto;
       margin: auto;
-
-      h1 {
-        color: White;
-        font-size: 30px;
-        font-weight: bold;
-        text-align: center;
-
-        @media $mediaMinSm {
-          font-size: 44px;
-        }
-      }
 
       h2 {
         display: none;
@@ -340,3 +340,12 @@
     font-size 16px
     font-weight bold
 
+.Avatar-default {
+  margin: 0 auto;
+  background-repeat: round;
+  display: inline-block;
+  background-image: url('../images/avatar.png');
+  background-image: 
+    linear-gradient(transparent, transparent),
+    url('../images/avatar.svg');
+}

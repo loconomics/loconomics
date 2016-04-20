@@ -3,9 +3,9 @@
 <div class="SearchResults" data-activity="searchJobTitle" id="job-titles-results">
     <div data-bind="with: jobTitleSearchResult">
         <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
+            <h1 data-bind="text: pluralName"></h1>
             <div class="SearchResultsBackground-text">
-                <span data-bind="visible: serviceProfessionalsCount"><h1><span data-bind="text: pluralName"></span></h1>
-                <p><span data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</span></p></span>                  
+                <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
                 <h2><span data-bind="text: searchDescription"></span></h2>
             </div>
         </div>
@@ -13,7 +13,7 @@
         <ul data-bind="foreach: serviceProfessionalSearchResult">
           <li>
             <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
-              <div class="Avatar Avatar--primary Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
+              <div class="Avatar Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
               </div>          
               <div class="ServiceProfessionalResult-summary">
                   <div>
@@ -58,5 +58,63 @@
                 <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">See profile and reviews</a>
             </div>
           </li>
+        </ul>
+        <ul data-bind="with: jobTitleSearchResult">
+            <li>               
+                <a href="/learnMoreProfessionals">
+                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
+                  <div class="ServiceProfessionalResult-summary">
+                      <div>
+                         <h3>Your name?</h3>
+                      </div>
+                      <div>
+                          <h5>Your <span data-bind="text: singularName"></span> business</h5>
+                      </div>
+                      <div class="ServiceProfessionalInfo-meta">
+                        <app-stars-rating params="rating: '5.0', total: '74'">
+                        </app-stars-rating>
+                        <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (6)</span>
+                      </div>
+                      <div>
+                        <h5>1 mile</h5>
+                      </div>
+                </div>
+                </a>
+                <div class="ServiceProfessionalResult-description">
+                      <h5>Offers 8 services from $59</h5>
+                </div>
+                <div class="ServiceProfessionalResult-actions">         
+                    <a href="/learnMoreProfessionals" class="btn btn-primary" style="font-size: 12px">List your services</a> 
+                    <a href="/learnMoreProfessionals">Learn more</a>
+                </div>
+            </li>
+            <li>
+                <a href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0D%0A%0D%0AI+just+wanted+to+share+with+you+a+new+app%2Fsite+for+local+services+that+could+really+help+you+with+your+business.+It%27s+cooperatively+owned+by+the+service+professionals%2C+which+sounds+pretty+cool.+%0D%0A%0D%0ACheck+them+out+here%3A%0D%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0D%0A%0D%0ACheers%21" target="_blank">
+                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
+                  <div class="ServiceProfessionalResult-summary">
+                      <div>
+                         <h3>Know any?</h3>
+                      </div>
+                      <div>
+                          <h5>Help us recruit <span data-bind="text: pluralName"></span>!</h5>
+                      </div>
+                      <div class="ServiceProfessionalInfo-meta">
+                        <app-stars-rating params="rating: '5.0', total: '74'">
+                        </app-stars-rating>
+                        <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (6)</span>
+                      </div>
+                      <div>
+                        <h5>Your area</h5>
+                      </div>
+                </div>
+                </a>
+                <div class="ServiceProfessionalResult-description">
+                      <h5>We'll help them with their business.</h5>
+                </div>
+                <div class="ServiceProfessionalResult-actions">         
+                    <a href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0D%0A%0D%0AI+just+wanted+to+share+with+you+a+new+app%2Fsite+for+local+services+that+could+really+help+you+with+your+business.+It%27s+cooperatively+owned+by+the+service+professionals%2C+which+sounds+pretty+cool.+%0D%0A%0D%0ACheck+them+out+here%3A%0D%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0D%0A%0D%0ACheers%21" target="_blank" class="btn btn-primary" style="font-size: 12px">Refer <span data-bind="text: pluralName"></span></a> 
+                    <a href="/learnMoreProfessionals">Learn more</a>
+                </div>
+            </li>
         </ul>
 </div>
