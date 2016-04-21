@@ -1,4 +1,4 @@
-# Loconomics
+# Verifying licneses and certifications of service professionals
 
 Root folders include documentation (/docs and /styleguide*1) and sub-projects (/app, /web and the /iCalendarLib library).
 
