@@ -6,22 +6,19 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/marketplaceProfile">Marketplace profile </a>
-                        <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> 
-                    </li>
-                    <li>
-                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}"><span data-bind="text: jobTitleName"></span></a>
+                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <span data-bind="text: jobTitleName"></span> marketplace profile
+                        </a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-                    Certifications/Licenses
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                <h2 class="SectionTitle">
+                    <span class="pull-left">Required licenses/certifications</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
                 </h2>
-                <div data-bind="css: { 'is-loading': isLoading }">
-                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                </div>
                 <ul class="TilesList" data-bind="foreach: list">
                     <li><button class="InfoTile" type="button" data-bind="click: $root.selectItem">
                         <div class="Tile-icon" aria-hidden="true">
@@ -29,7 +26,10 @@
                         </div>
                         <div class="Tile-content">
                             <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
-                            <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'do not expires' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+                            <div data-bind="visible: statusID() === 2">
+                             <em data-bind="css: {color : 'text-success'}"><span data-bind="text: status"> </span> (expires on: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</em></div>
+                            <div data-bind="visible: statusID() !== 2">
+                            <em><span data-bind="text: status, css: {color : 'text-warning'}"> </span></em></div>
                         </div>
                     </button></li>
                 </ul>

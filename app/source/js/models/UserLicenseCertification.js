@@ -11,12 +11,13 @@ function UserLicenseCertification(values) {
     Model(this);
     
     this.model.defProperties({
+        userLicenseVerificationID: 0,
         userID: 0,
         jobTitleID: 0,
-        statusID: 0,
         licenseCertificationID: 0,
-        licenseCertificationUrl: '',
+        statusID: 0,
         licenseCertificationNumber: '',
+        licenseCertificationUrl: '',
         licenseCertificationStatus: '',
         expirationDate: null,
         issueDate: null,
@@ -36,6 +37,10 @@ function UserLicenseCertification(values) {
         lastVerifiedDate: null,
         createdDate: null, // Autofilled by server
         updatedDate: null, // Autofilled by server
+        required: null,
+        publicLicenseURL: null,
+        status: null,
+        statusDescription: null,
         
         licenseCertification: new LicenseCertification(),
         
