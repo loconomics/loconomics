@@ -122,6 +122,9 @@ ModifiedBy,
 LicenseStatus,
 Actions;
 
+
+ALTER TABLE UserLicenseCertifications ADD PRIMARY KEY (userLicenseCertificationID)
+
 ALTER TABLE 
     licensecertification 
 ADD LanguageID int DEFAULT 1 NOT NULL;
@@ -176,6 +179,18 @@ ALTER TABLE UserLicenseCertifications DROP CONSTRAINT FK__userlicen__Licen__1DC6
 ALTER TABLE licensecertification DROP CONSTRAINT PK__licensec__CE7A16FC19FFD4FC;
 
 ALTER TABLE licensecertification ADD PRIMARY KEY (LicenseCertificationID, LanguageID);
+
+ALTER TABLE jobTitleLicense DROP CONSTRAINT PK__jobTitle__5E077F7A396E5EB4
+
+ALTER TABLE jobTitleLicense ALTER COLUMN LicenseCertificationID int NOT NULL
+
+ALTER TABLE jobTitleLicense ALTER COLUMN CountryID int NOT NULL;
+
+ALTER TABLE jobTitleLicense ALTER COLUMN StateProvinceID int NOT NULL;
+
+ALTER TABLE jobTitleLicense ADD PRIMARY KEY (PositionID, LicenseCertificationID, StateProvinceID, CountryID, MunicipalityID, CountyID)
+
+
 
 
 

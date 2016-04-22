@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
-                    <span class="pull-left">Required licenses/certifications</span>
+                    <span class="pull-left">Current licenses/certifications</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
@@ -33,6 +33,90 @@
                         </div>
                     </button></li>
                 </ul>
+                <div data-bind="with: jobTitleApplicableLicences()">
+                    <div data-bind="visible: municipality().length">
+                        <h2 class="SectionTitle">
+                            <span class="pull-left">Required municipality licenses</span>
+                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                            </span>
+                        </h2>
+                        <ul class="TilesList" data-bind="foreach: municipality">
+                            <li>
+                                <button class="InfoTile" type="button" data-bind="click: $root.addNew">
+                                    <div class="Tile-icon" aria-hidden="true">
+                                        <span class="fa fa-certificate" aria-hidden="true"></span>
+                                    </div>
+                                    <div class="Tile-content">
+                                        <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                                    </div>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div data-bind="with: jobTitleApplicableLicences()">
+                    <div data-bind="visible: county().length">
+                        <h2 class="SectionTitle">
+                            <span class="pull-left">Required county licenses</span>
+                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                            </span>
+                        </h2>
+                        <ul class="TilesList" data-bind="foreach: county">
+                            <li>
+                                <button class="InfoTile" type="button" data-bind="click: $root.addNew">
+                                    <div class="Tile-icon" aria-hidden="true">
+                                        <span class="fa fa-certificate" aria-hidden="true"></span>
+                                    </div>
+                                    <div class="Tile-content">
+                                        <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                                    </div>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div data-bind="with: jobTitleApplicableLicences()">
+                    <div data-bind="visible: stateProvince().length">
+                        <h2 class="SectionTitle">
+                            <span class="pull-left">Required state licenses</span>
+                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                            </span>
+                        </h2>
+                        <ul class="TilesList" data-bind="foreach: stateProvince">
+                            <li>
+                                <button class="InfoTile" type="button" data-bind="click: $root.addNew">
+                                    <div class="Tile-icon" aria-hidden="true">
+                                        <span class="fa fa-certificate" aria-hidden="true"></span>
+                                    </div>
+                                    <div class="Tile-content">
+                                        <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                                    </div>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div data-bind="with: jobTitleApplicableLicences()">
+                    <div data-bind="visible: country().length">
+                        <h2 class="SectionTitle">
+                            <span class="pull-left">Required country licenses</span>
+                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                            </span>
+                        </h2>
+                        <ul class="TilesList" data-bind="foreach: country">
+                            <li>
+                                <button class="InfoTile" type="button" data-bind="click: $root.addNew">
+                                    <div class="Tile-icon" aria-hidden="true">
+                                        <span class="fa fa-certificate" aria-hidden="true"></span>
+                                    </div>
+                                    <div class="Tile-content">
+                                        <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                                    </div>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
                     <button type="button" class="CompactLinkTile" data-bind="click: addNew">
                         <div class="Tile-content text-muted">Add a certification/license</div>

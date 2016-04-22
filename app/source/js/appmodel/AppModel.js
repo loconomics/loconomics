@@ -146,6 +146,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.statesProvinces = require('./AppModel.statesProvinces').create(this);
     this.paymentAccount = require('./AppModel.paymentAccount').create(this);
     this.clientAppointments = require('./AppModel.clientAppointments').create(this);
+    this.jobTitleLicenses = require('./AppModel.jobTitleLicenses').create(this);
 };
 
 /**

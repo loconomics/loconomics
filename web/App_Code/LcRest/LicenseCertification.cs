@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,14 +14,12 @@ namespace LcRest
         public int licenseCertificationID;
         public string name;
         public string description;
-        public string stateProvinceCode;
-        public string countryCode;
         public string authority;
         public string verificationWebsiteUrl;
         public string howToGetLicensedUrl;
-        public string optionGroup;
         public DateTime createdDate;
         public DateTime updatedDate;
+        public int languageID;
         #endregion
 
         #region Instances
@@ -35,16 +33,54 @@ namespace LcRest
                 licenseCertificationID = record.licenseCertificationID,
                 name = record.name,
                 description = record.description,
-                stateProvinceCode = record.stateProvinceCode,
-                countryCode = record.countryCode,
                 authority = record.authority,
                 verificationWebsiteUrl = record.verificationWebsiteUrl,
                 howToGetLicensedUrl = record.howToGetLicensedUrl,
-                optionGroup = record.optionGroup,
                 createdDate = record.createdDate,
-                updatedDate = record.updatedDate
+                updatedDate = record.updatedDate,
+                languageID = record.languageID
             };
         }
         #endregion
+
+        #region Fetch
+        #region SQL
+        const string sqlGetItem = @"         
+            DECLARE @licensecertificationID AS int
+            SET @licensecertificationID = @0       
+            DECLARE @languageID AS int
+            SET @languageID = @1 
+                       
+        	SELECT  
+        		licenseCertificationID
+                ,LicenseCertificationType as name
+                ,LicenseCertificationTypeDescription as description
+                ,LicenseCertificationAuthority as authority
+                ,verificationWebsiteUrl
+                ,howToGetLicensedUrl
+                ,optionGroup
+                ,createdDate
+                ,updatedDate
+                ,languageID
+            FROM
+                licensecertification                                 
+            WHERE
+                licensecertificationID = @licensecertificationID
+                 AND 
+                languageID = @languageID 
+                 AND
+                active=1
+        ";
+        #endregion
+
+        public static LicenseCertification GetItem(int licenseCertificationID, int languageID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetItem, licenseCertificationID, languageID));
+            }
+        }
+        #endregion
+
     }
 }
