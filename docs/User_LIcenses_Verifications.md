@@ -1,6 +1,6 @@
 # Verifying licenses and certifications of service professionals
 
-This document outlines the process for verifying required and optional licenses and certifications uploaded by service professionals.
+This document outlines the process for verifying required and optional licenses and certifications uploaded by service professionals and how we display them to potential clients.
 
 ## Objective
 - We want clients to konw that professionals listed on Loconomics have the licenses or certifications required in the area they are offering services. 
