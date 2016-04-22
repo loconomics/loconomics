@@ -1,0 +1,31 @@
+@using WebMatrix.WebData;
+@*
+    Check to see for the job title if there are licenses or certifications required for where the service professional is offering services. Additionaly, any supplemental certifications. Initially, we will list one generic supplemental license for all and one generic required license for certain job titles. Eventually we will list the detailed licenses applicable to the service professional's service locations/area for a given job title.
+
+    EXAMPLES {
+        "List applicable job title licenses": {
+            "url": "/api/v1/en-US/me/job-title-licenses/106",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestJobTitleLicenses : RestWebPage
+    {
+        public override dynamic Get()
+        {           
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                int userID = WebSecurity.CurrentUserId;
+                var jobTitleID = UrlData[0].AsInt();
+
+                return LcRest.JobTitleLicense.Get(userID, jobTitleID, LcRest.Locale.Current.languageID);
+            }
+
+            return base.Get();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestJobTitleLicenses().JsonResponse(this);
+}

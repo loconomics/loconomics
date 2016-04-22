@@ -43,20 +43,14 @@ A.prototype.show = function show(state) {
     
     this.viewModel.jobTitleID(params[0] |0);
     this.viewModel.licenseCertificationID(params[1] |0);
+    this.viewModel.isNew(params[2] === 'new');
     
     this.updateNavBarState();
     
     var ModelVersion = require('../utils/ModelVersion'),
         UserLicenseCertification = require('../models/UserLicenseCertification');
     
-    if (this.viewModel.isNew()) {
-        this.app.model.statesProvinces.getList()
-        .then(function(list) {
-            this.viewModel.statesProvinces(list());
-            this.viewModel.version(new ModelVersion(new UserLicenseCertification()));
-        }.bind(this));
-    }
-    else {
+    if (!this.viewModel.isNew()) {
         this.app.model.userLicensesCertifications
         .getItem(this.viewModel.jobTitleID(), this.viewModel.licenseCertificationID())
         .then(function(data) {
@@ -77,13 +71,12 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
-    this.statesProvinces = ko.observable();
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
+    this.jobTitleNamePlural = ko.observable(); 
     this.isLoading = ko.pureComputed(function() {
         return (
-            app.model.userLicensesCertifications.state.isLoading() ||
-            app.model.statesProvinces.state.isLoading()
+            app.model.userLicensesCertifications.state.isLoading()
         );
     }, this);
     this.isSaving = app.model.userLicensesCertifications.state.isSaving;
@@ -91,22 +84,19 @@ function ViewModel(app) {
     this.isDeleting = app.model.userLicensesCertifications.state.isDeleting;
     this.isLocked = ko.pureComputed(function() {
         return (
-            app.model.userLicensesCertifications.state.isLocked() ||
-            app.model.statesProvinces.state.isLocked()
+            app.model.userLicensesCertifications.state.isLocked()
         );
     }, this);
     this.isReady = ko.pureComputed(function() {
         var it = this.item();
-        return !!(it && it.stateProvinceCode() && it.localTempFilePath());
+        return !!(it && it.localTempFilePath());
     }, this);
     
     this.submitText = ko.pureComputed(function() {
         return (this.isLoading() || this.isSyncing()) ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
     }, this);
 
-    this.isNew = ko.pureComputed(function() {
-        return this.licenseCertificationID() === 0;
-    }, this);
+    this.isNew = ko.observable(false);
     
     this.version = ko.observable(null);
     this.item = ko.pureComputed(function() {
@@ -131,7 +121,9 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        app.model.userLicensesCertifications.setItem(this.item().model.toPlainObject())
+        var data = this.item().model.toPlainObject();
+        data.licenseCertificationID = this.licenseCertificationID();
+        app.model.userLicensesCertifications.setItem(data)
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
@@ -153,7 +145,7 @@ function ViewModel(app) {
         // L18N
         app.modals.confirm({
             title: 'Delete',
-            message: 'Are you sure? The operation cannot be undone.',
+            message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
             no: 'Keep'
         })
@@ -191,12 +183,12 @@ function ViewModel(app) {
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1
                 if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                    app.modals.showError({ error: err, title: 'Error getting photo.' });
+                    app.modals.showError({ error: err, title: 'Error selecting photo.' });
                 }
             });
         }
         else {
-            app.modals.showError({ error: 'Take photo is not supported on the web right now' });
+            app.modals.showError({ error: 'This feature is currently only available on mobile devices' });
         }
     }.bind(this);
     

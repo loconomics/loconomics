@@ -8,15 +8,6 @@
             </div>
             <form data-bind="submit: save">
                 <fieldset data-bind="visible: isNew">
-                    <div class="form-group">
-                        <label for="licensesCertificationsForm-state">State</label>
-                        <div>
-                            <select id="licensesCertificationsForm-state" class="form-control"
-                                   data-bind="options: statesProvinces, value: item() && item().stateProvinceCode, optionsValue: 'code',
-                                              optionsText: 'name', disable: isLocked, optionsCaption: ' '">
-                            </select>
-                        </div>
-                    </div>
                     <div clas="form-group">
                         <label for="licensesCertificationForm-file">Upload a photo or document of your certification/license</label>
                         <button type="button" class="CompactLinkTile" data-bind="disable: isLocked" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet">

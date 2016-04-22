@@ -1,4 +1,4 @@
-﻿@using WebMatrix.WebData;
+@using WebMatrix.WebData;
 @*
     Fetchs a summary of the public user profile.
     Returned object includes data from different APIs available also individually
@@ -79,7 +79,7 @@
                     serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.languageID, locale.countryID) : null,
                     workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null,
                     verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null,
-                    licensesCertifications = full ? LcRest.PublicUserLicenseCertification.GetList(userID, x.jobTitleID) : null
+                    licensesCertifications = full ? LcRest.PublicUserLicenseCertification.GetList(userID, x.jobTitleID, locale.languageID) : null
                 };
             });
 

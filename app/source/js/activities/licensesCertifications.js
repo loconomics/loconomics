@@ -33,8 +33,8 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 this.app.model.jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
 
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
+                // Fill in job title name
+                this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
@@ -70,23 +70,39 @@ A.prototype.show = function show(options) {
                 error: err
             });
         }.bind(this));
+        
+        // Get required licenses for the Job title ID - an object, not a list
+        this.app.model.jobTitleLicenses.getItem(jobTitleID)
+        .then(function(item) {
+            // Save for use in the view
+            this.viewModel.jobTitleApplicableLicences(item);
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
     }
     else {
         this.viewModel.list([]);
+        this.viewModel.jobTitleApplicableLicences(null);
     }
 };
 
 function ViewModel(app) {
-
+    
     this.jobTitleID = ko.observable(0);
     this.list = ko.observableArray([]);
+    //is an object that happens to have arrays
+    this.jobTitleApplicableLicences = ko.observable(null);
     this.jobTitleName = ko.observable('Job Title'); 
     
     this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
     this.isLoading = app.model.userLicensesCertifications.state.isLoading();
 
-    this.addNew = function() {
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID(),
+    this.addNew = function(item) {
+        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/' + item.licenseCertificationID() + '/new',
             cancelUrl = app.shell.currentRoute.url;
         var request = $.extend({}, this.requestData, {
             cancelLink: cancelUrl
