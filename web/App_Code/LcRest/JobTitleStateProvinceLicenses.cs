@@ -18,6 +18,8 @@ namespace LcRest
         public int stateProvinceID;
         public string stateProvinceName;
         public int languageID;
+        public int submitted;
+        public string optionGroup;
         #endregion
 
         #region Link
@@ -42,7 +44,9 @@ namespace LcRest
                 required = record.required,
                 stateProvinceID = record.stateProvinceID,
                 stateProvinceName = record.stateProvinceName,
-                languageID = record.languageID
+                languageID = record.languageID,
+                submitted = record.submitted,
+                optionGroup = record.optionGroup
             };
             item.FillLicenseCertification();
             return item;
@@ -66,13 +70,19 @@ namespace LcRest
                 ,JL.stateProvinceID
                 ,SP.stateProvinceName
                 ,@languageID as languageID
+                ,CASE WHEN UL.LicenseCertificationID = JL.LicenseCertificationID then 1 else 0 END as submitted
+                ,JL.optionGroup 
             FROM
                 jobTitleLicense JL
                 INNER JOIN
                 StateProvince SP
                 ON JL.stateProvinceID = SP.stateProvinceID
+                LEFT JOIN
+                userLicenseCertifications UL
+                ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                AND UL.ProviderUserID = @userID
             WHERE
-                positionID = @jobTitleID
+                JL.positionID = @jobTitleID
                 AND SP.stateProvinceID in ((SELECT
                 P.stateProvinceID
             FROM

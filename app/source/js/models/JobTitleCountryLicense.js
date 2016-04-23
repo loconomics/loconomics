@@ -15,6 +15,8 @@ function JobTitleCountryLicense(values) {
         countryID: 0,
         countryName: '',
         languageID: 0,
+        submitted: 0,
+        optionGroup: '',
         
         licenseCertification: new LicenseCertification()
     }, values);

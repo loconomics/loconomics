@@ -15,6 +15,8 @@ function JobTitleMunicipalLicense(values) {
         municipalityID: 0,
         municipalityName: '',
         languageID: 0,
+        submitted: 0,
+        optionGroup: '',
         
         licenseCertification: new LicenseCertification()
     }, values);

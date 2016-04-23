@@ -15,6 +15,8 @@ function JobTitleStateProvinceLicense(values) {
         stateProvinceID: 0,
         stateProvinceName: '',
         languageID: 0,
+        submitted: 0,
+        optionGroup: '',
         
         licenseCertification: new LicenseCertification()
     }, values);

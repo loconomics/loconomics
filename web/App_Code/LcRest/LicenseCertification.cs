@@ -58,7 +58,6 @@ namespace LcRest
                 ,LicenseCertificationAuthority as authority
                 ,verificationWebsiteUrl
                 ,howToGetLicensedUrl
-                ,optionGroup
                 ,createdDate
                 ,updatedDate
                 ,languageID

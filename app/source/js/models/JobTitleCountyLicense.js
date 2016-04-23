@@ -15,6 +15,8 @@ function JobTitleCountyLicense(values) {
         countyID: 0,
         countyName: '',
         languageID: 0,
+        submitted: 0,
+        optionGroup: '',
         
         licenseCertification: new LicenseCertification()
     }, values);
