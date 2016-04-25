@@ -21,11 +21,11 @@
                 return LcRest.LicenseCertification.GetItem(licenseCertificationID, languageID);
             }
 
-            return base.GetItem();
+            return base.Get();
         }
     }
 }
 @{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.User)
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestLicenseCertification().JsonResponse(this);
 }

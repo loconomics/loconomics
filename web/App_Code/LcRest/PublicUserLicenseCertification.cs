@@ -26,6 +26,7 @@ namespace LcRest
         public string statusDescription;
         public DateTime? lastVerifiedDate;
         public string submittedImageLocalURL;
+        public int languageID;
         #endregion
 
         #region Link
@@ -59,8 +60,7 @@ namespace LcRest
                 statusDescription = record.statusDescription,
                 lastVerifiedDate = record.lastVerifiedDate,
                 submittedImageLocalURL = record.submittedImageLocalURL,
-
-                licenseCertification = LicenseCertification.FromDB(record)
+                languageID = record.languageID
             };
         }
         #endregion
@@ -91,6 +91,7 @@ namespace LcRest
                 ,VS.verificationStatusDisplayDescription as statusDescription
                 ,V.lastVerifiedDate
                 ,V.submittedImageLocalURL
+                ,@languageID as languageID
             FROM
                 userlicensecertifications As V
                  INNER JOIN
