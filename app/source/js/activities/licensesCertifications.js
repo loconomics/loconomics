@@ -62,7 +62,7 @@ A.prototype.show = function show(options) {
         this.app.model.userLicensesCertifications.getList(jobTitleID)
         .then(function(list) {
             // Save for use in the view
-            this.viewModel.list(this.app.model.userLicensesCertifications.asModel(list));
+            this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
@@ -93,7 +93,7 @@ A.prototype.show = function show(options) {
 function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
-    this.list = ko.observableArray([]);
+    this.submittedUserLicensesCertifications = ko.observableArray([]);
     //is an object that happens to have arrays
     this.jobTitleApplicableLicences = ko.observable(null);
     this.jobTitleName = ko.observable('Job Title'); 
@@ -114,7 +114,7 @@ function ViewModel(app) {
         var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
             item.licenseCertificationID() + '?mustReturn=' + 
             encodeURIComponent(app.shell.currentRoute.url) +
-            '&returnText=' + encodeURIComponent('Certifications/Licenses');
+            '&returnText=' + encodeURIComponent('Licenses/certifications');
         app.shell.go(url, this.requestData);
     }.bind(this);
 }

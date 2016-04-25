@@ -48,13 +48,31 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
     
     var ModelVersion = require('../utils/ModelVersion'),
-        UserLicenseCertification = require('../models/UserLicenseCertification');
+        UserLicenseCertification = require('../models/UserLicenseCertification'),
+        LicenseCertification = require('../models/LicenseCertification');
     
     if (!this.viewModel.isNew()) {
         this.app.model.userLicensesCertifications
         .getItem(this.viewModel.jobTitleID(), this.viewModel.licenseCertificationID())
         .then(function(data) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            })
+            .then(function() {
+                // On close modal, go back
+                this.app.shell.goBack();
+            }.bind(this));
+        }.bind(this));
+    }
+    else {
+        this.app.model.licenseCertification
+        .getItem(this.viewModel.licenseCertificationID())
+        .then(function(data) {
+            this.viewModel.version(new ModelVersion(new LicenseCertification(data)));
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
