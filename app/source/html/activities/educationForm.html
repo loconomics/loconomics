@@ -11,8 +11,8 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span class="pull-left">Add a degree or certification</span>
+                <h2 class="SectionTitle SectionTitle-hasHelpPoint">
+                    <span class="pull-left">Your degrees &amp; certifications</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201960833-adding-education-to-your-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
@@ -32,19 +32,21 @@
                         <input type="text" id="educationForm-field" class="form-control"
                            data-bind="value: fieldOfStudy, disable: $parent.isLocked"/>
                     </div>
-                    <label for="educationForm-startYear">Years attended: </label>
-                    <div class="form-group form-group-inline">
-                        <label for="educationForm-startYear" class="sr-only">Start year</label>
-                        <select id="educationForm-startYear" class="form-control"
-                               data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked">
-                        </select>
-                    </div>
-                    &nbsp;-&nbsp;
-                    <div class="form-group form-group-inline">
-                        <label for="educationForm-startYear" class="sr-only">End year</label>
-                        <select id="educationForm-endYear" class="form-control"
-                               data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked">
-                        </select>
+                    <div class="form-group">
+                        <label for="educationForm-startYear">Years attended: </label>
+                        <div class="form-group form-group-inline">
+                            <label for="educationForm-startYear" class="sr-only">Started:</label>
+                            <select id="educationForm-startYear" class="form-control"
+                                   data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked">
+                            </select>
+                        </div>
+                        <span>&nbsp;-&nbsp;</span>
+                        <div class="form-group form-group-inline">
+                            <label for="educationForm-startYear" class="sr-only">Ended:</label>
+                            <select id="educationForm-endYear" class="form-control"
+                                   data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked">
+                            </select>
+                        </div>
                     </div>
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: $parent.submitText, disable: $parent.isLocked">Save</button>

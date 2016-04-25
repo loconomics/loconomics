@@ -86,6 +86,17 @@
             // List must start on the edge, per design
             margin-left: (0 - $container-padding-left);
             
+            .SimpleList-item {
+                background-color: white;
+                
+                a {
+                  &:hover,
+                  &:focus {
+                    color: $brand-secondary;
+                  }
+                }
+            }
+            
             .SimpleList-divider {
                 text-transform: uppercase;
             }

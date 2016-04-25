@@ -7,7 +7,7 @@
             <div class="col-md-7 col-sm-reset">
                 <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()">
                     <h1 class="SectionTitle">Current appointment</h1>
-                    <ul class="TilesList">
+                    <ul class="TilesList TilesList--openEnd">
                         <li id="dashboardCurrentAppointment" data-bind="with: upcomingAppointments.currentAppointment">
                             <h4>
                                 <span data-bind="text: serviceDate().startTime, format: { type: 'datetime', format: 'h:mma' }"></span>
@@ -125,14 +125,14 @@
                 <div data-bind="css: { 'is-loading': inbox.isLoading() }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div id="dashboardInbox" class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
+                <div id="dashboardInbox" class="TilesList TilesList--openEnd" data-bind="template: { name: 'inbox-tile-template', foreach: inbox.top() }"></div>
                 <a class="CompactLinkTile visible-xs visible-sm" href="/inbox">
                     <div class="Tile-content">Go to inbox</div>
                     <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                 </a>
                 <div data-bind="visible: user.isServiceProfessional" hidden="hidden">
                     <h1 class="SectionTitle">Performance</h1>
-                    <ul id="dashboardPerformance" class="TilesList" data-bind="foreach: performance.items">
+                    <ul id="dashboardPerformance" class="TilesList TilesList--openEnd" data-bind="foreach: performance.items">
                         <li>
                             <a href="#" class="LineTile" data-bind="attr: { href: link }">
                                 <strong data-bind="text: markerLine1"></strong>
@@ -149,7 +149,7 @@
             <!-- HIDDEN UNTIL MARKETPLACE-PROFILE IS FULLY IMPLEMENTED
             <div data-bind="visible: getMore.items().length">
                 <h1 class="SectionTitle">Get more from Loconomics</h1>
-                <ul class="TilesList" id="dashboardGetMore" data-bind="foreach: getMore.items()">
+                <ul class="TilesList TilesList--openEnd" id="dashboardGetMore" data-bind="foreach: getMore.items()">
                     <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
                         <div class="Tile-icon" aria-hidden="true">
                             <span data-bind="css: markerIcon"></span>

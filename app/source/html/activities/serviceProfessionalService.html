@@ -15,14 +15,14 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">
+                <h2 class="SectionTitle SectionTitle-hasHelpPoint" data-bind="visible: jobTitleID() === 0">
                     <span class="pull-left">Select a job title</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div data-bind="foreach: groupedServices">
-                    <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode()">
+                    <h2 class="SectionTitle SectionTitle-hasHelpPoint" data-bind="visible: !$root.isAdditionMode()">
                         <span class="pull-left" data-bind="text: group"></span>
                         <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                         </span>

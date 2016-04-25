@@ -52,3 +52,21 @@ $CompactLinkTile-indentSize = 30px;
 
     CompactLinkTile-addIcon($vgap);
 }
+
+.CompactLinkTile-twoLines {
+
+    Tile()
+    
+    $vgap = 20px;
+    
+    Tile-addTagContentSupport($vgap)
+
+    padding-left: ($CompactLinkTile-indentSize + $Tile-hgap);
+
+    .Tile-content {
+      height: 60px;
+      padding-top: 10px;
+    }
+
+    CompactLinkTile-addIcon($vgap);
+}

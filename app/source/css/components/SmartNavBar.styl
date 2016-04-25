@@ -239,6 +239,12 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     left: 0;
     z-index: 210;
     overflow: hidden;
+
+    @media $mediaMinSm {
+      position: relative;
+      height: 1100px;
+    }  
+    
     // On implementation of transitions/animations, a background must exists to avoid ugly overlays
     // now kept the inherit
     //background: white;

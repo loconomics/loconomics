@@ -5,7 +5,7 @@
         <div class="row">
             <h1 class="hidden-xs hidden-sm">What's going on</h1>
             <div class="col-md-7 col-sm-reset">
-                <h1 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
+                <h1 class="SectionTitle SectionTitle--withBtn SectionTitle-hasHelpPoint CalendarDateHeader">
                     <button type="button" class="btn btn-link">
                         <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
                         <span class="caret"></span>
@@ -14,7 +14,7 @@
                 </h1>
                 <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
                 <!-- Daily View (appointments list) -->
-                <div id="calendarDailyView" class="TilesList" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
+                <div id="calendarDailyView" class="TilesList TilesList--openEnd" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu></app-inline-side-menu>

@@ -22,9 +22,9 @@
                                     <span class="pull-right hidden-xs hidden-sm" data-bind="visible: !user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201213895-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                                     </span>
                                 </h2>
-                                <div class="Avatar Avatar--lg Avatar--primary"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
+                                <div class="Avatar Avatar--lg"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
                                 <div class="LightForm-tool">
-                                    <button type="button" class="btn btn-block btn-primary" data-bind="visible: takePhotoSupported, disable: isLocked" data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet"><span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span></button>
+                                    <button type="button" class="btn btn-default btn-block" data-bind="visible: takePhotoSupported, disable: isLocked" data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet"><span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span></button>
                                 </div>
                                 <h2 class="SectionTitle">
                                     <span class="pull-left">Public bio</span>
