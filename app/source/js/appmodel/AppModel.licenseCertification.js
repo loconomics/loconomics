@@ -1,22 +1,22 @@
-/** States Provinces
+/** License Certifications
 **/
 'use strict';
 
 var LicenseCertification = require('../models/LicenseCertification');
 
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var GroupRemoteModel = require('../utils/GroupRemoteModel');
 
 exports.create = function create(appModel) {
     
-    var api = new ListRemoteModel({
+    var api = new GroupRemoteModel({
         // Types does not changes usually, so very big ttl
-        listTtl: { years: 1 },
+        ttl: { years: 1 },
         itemIdField: 'licenseCertificationID',
         Model: LicenseCertification
     });
 
-    api.addLocalforageSupport('license-certification');
-    api.addRestSupport(appModel.rest, 'license-certification');
+    api.addLocalforageSupport('license-certification/');
+    api.addRestSupport(appModel.rest, 'license-certification/');
     
     appModel.on('clearLocalData', function() {
         api.clearCache();

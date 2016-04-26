@@ -48,8 +48,7 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
     
     var ModelVersion = require('../utils/ModelVersion'),
-        UserLicenseCertification = require('../models/UserLicenseCertification'),
-        LicenseCertification = require('../models/LicenseCertification');
+        UserLicenseCertification = require('../models/UserLicenseCertification');
     
     if (!this.viewModel.isNew()) {
         this.app.model.userLicensesCertifications
@@ -72,7 +71,9 @@ A.prototype.show = function show(state) {
         this.app.model.licenseCertification
         .getItem(this.viewModel.licenseCertificationID())
         .then(function(data) {
-            this.viewModel.version(new ModelVersion(new LicenseCertification(data)));
+            var item = new UserLicenseCertification();
+            item.licenseCertification().model.updateWith(data);
+            this.viewModel.version(new ModelVersion(item));
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
