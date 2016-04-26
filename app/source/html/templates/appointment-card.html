@@ -1,10 +1,16 @@
 <!-- Component Template appointment-card -->
 <script type="text/html" id="appointment-card-template">
+    <h2 class="SectionTitle">
+        <span class="pull-left" data-bind="visible: currentID() == -4">Add a new booking</span>
+        <span class="pull-left" data-bind="visible: currentID() == -3">Add a calendar block</span>
+        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+        </span>
+    </h2>
     <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
-        
-        <div class="Card-title ItemTile" data-bind="visible: currentID() <= 0">
+        <div class="Card-title ItemTile" data-bind="visible: currentID() == -2">
             <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
             <div class="Tile-content">
+                <h4>You're free</h4>
                 <p class="text-muted" data-bind="visible: !item().summary(), text: item().stateHeader()"></p>
                 <em data-bind="visible: item().summary() && item().stateHeader()">
                     <span data-bind="text: item().stateHeader()"></span>
@@ -20,14 +26,14 @@
             <li>
                 <a class="LinkTile" href="#appointment/-4"
                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-4' }">
-                    <div class="Tile-content"><p>Add new booking</p></div>
+                    <div class="Tile-content"><p>Add a new booking</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
                 </a>
             </li>
             <li>
                 <a class="LinkTile" href="#appointment/-3"
                     data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-3' }">
-                    <div class="Tile-content"><p>Add new calendar block</p></div>
+                    <div class="Tile-content"><p>Add a new calendar block</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
                 </a>
             </li>
@@ -58,8 +64,7 @@
                         <i class="fa ion ion-ios-clock-outline"></i>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                        <div data-bind="visible: item().startTime(), text: item().displayedStartTime()"></div>
+                        <div data-bind="visible: item().startTime()"><strong>Start date/time: </strong><br><span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-mute">Select start date/time</p>
                     </div>
                 </button>
@@ -70,8 +75,8 @@
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                        <div data-bind="visible: item().endTime(), text: item().displayedEndTime()"></div>
+                        <div data-bind="visible: item().endTime()"><strong>End date/time: </strong><br><span data-bind="text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span> 
+                        </div>
                         <p data-bind="visible: editMode() && !item().endTime()" class="text-mute">Select end date/time</p>
                     </div>
                 </button>
@@ -127,7 +132,7 @@
                         <span class="fa ion ion-ios-clock-outline"></span>
                     </div>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></div>
                         <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
                     </div>
@@ -189,7 +194,7 @@
             <li>
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToClient')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-edit"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().preNotesToClient(), text: item().preNotesToClient"></p>
@@ -200,7 +205,7 @@
             <li>
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToSelf')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-edit"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().preNotesToSelf, text: item().preNotesToSelf"></p>
@@ -211,18 +216,18 @@
             <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToClient')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-compose-outline"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().postNotesToClient(), text: item().postNotesToClient"></p>
-                        <p data-bind="visible: !item().postNotesToClient()" class="text-muted">Notes to client (afterwards)</p>
+                        <p data-bind="visible: !item().postNotesToClient()" class="text-muted">Post app't notes to client</p>
                     </div>
                 </button>
             </li>
             <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
                 <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToSelf')">
                     <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-compose-outline"></span>
+                        <span class="fa ion ion-compose"></span>
                     </div>
                     <div class="Tile-content">
                         <p data-bind="visible: item().postNotesToSelf, text: item().postNotesToSelf"></p>
@@ -236,7 +241,7 @@
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
             <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
-            <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent(), click: deleteEvent, disable: isLocked">Delete</button>
+            <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent() && currentID() > 0, click: deleteEvent, disable: isLocked">Delete</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
         </div>
 

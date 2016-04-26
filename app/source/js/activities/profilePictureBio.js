@@ -15,9 +15,16 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: 'marketplaceProfile'
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Marketplace profile', {
+        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201960933-writing-your-profile-bio'
     });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Marketplace profile', {
+        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201213895-managing-your-marketplace-profile'
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+        
     
     this.registerHandler({
         target: this.app.model.marketplaceProfile,
@@ -35,6 +42,15 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
@@ -43,9 +59,13 @@ A.prototype.show = function show(state) {
     
     // Keep data updated:
     this.app.model.marketplaceProfile.sync();
+    
+    this.updateNavBarState();
 };
 
 function ViewModel(app) {
+    
+    this.user = app.model.userProfile.data;
 
     // Marketplace Profile
     var marketplaceProfile = app.model.marketplaceProfile;

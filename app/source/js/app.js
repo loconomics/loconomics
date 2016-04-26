@@ -395,7 +395,7 @@ var appInit = function appInit() {
         if (!togglingBackdrop) {
             togglingBackdrop = true;
             var enabled = e.type === 'show';
-            $('body').toggleClass('use-backdrop', enabled);
+//            $('body').toggleClass('use-backdrop', enabled);
             $('body').toggleClass('has-appNav-open', enabled);
             // Hide any other opened collapse
             $('.collapsing, .collapse.in').collapse('hide');

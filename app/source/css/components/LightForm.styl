@@ -10,13 +10,17 @@
 **/
 .LightForm {
     background: $gray-background;
+    padding-bottom: 15px;
     
     .SectionTitle {
-        text-transform: none;
-        text-align: center;
-        font-weight: bold;
-        margin-top: 25px;
-        margin-bottom: 12px;
+//        text-transform: none;
+//        text-align: center;
+//        font-weight: bold;
+//        margin-top: 15px;
+//        margin-bottom: 12px;
+          @media $mediaMinMd {
+            margin-bottom: 12px;
+          }
     }
     
     // The toolbar, usually at the bottom and only one primary button,
@@ -24,6 +28,9 @@
     .LightForm-submitBar {
         margin-top: 25px;
         margin-bottom: 25px;
+        margin-right: auto;
+        margin-left: auto;
+        width: 95%;
     }
     
     // Container for a one line button/link that triggers a tool.
@@ -36,6 +43,10 @@
     
     textarea.form-control {
         resize: vertical;
+    }
+    
+    .form-group {
+        margin: 15px;
     }
     
     // All form controls are white background

@@ -1,7 +1,30 @@
 <!-- Activity userFees -->
-<div class="container" data-activity="userFees">
-    <h1 class="SectionTitle">User fees</h1>
-    <div class="LeadContent">
-        <h1>Coming soon!</h1>
+<div data-activity="userFees" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">   
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/ownerInfo">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Owner information
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                        <span class="pull-left">Owner user fees</span>
+                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201964153-how-owner-user-fees-work" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                        </span>
+                </h2>
+                <div class="LeadContent">
+                    <h1>Coming soon!</h1>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
     </div>
 </div>

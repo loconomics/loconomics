@@ -18,7 +18,11 @@
                                 <td align="left" style="padding: 0 25px 5px 0; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Location</td>
                             </tr>
                             <tr>
-                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>@info.booking.serviceAddress.addressName</strong><br><a target="_blank" href="@LcEmailTemplate.GetLocationGoogleMapsUrl(info.booking.serviceAddress)">@info.booking.serviceAddress.addressLine1<br>@info.booking.serviceAddress.city, @info.booking.serviceAddress.stateProvinceCode @info.booking.serviceAddress.postalCode</a>
+                                 <td align="left" style="padding: 10px 25px 15px 0; text-align: justify; text-justify: auto; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>@info.booking.serviceAddress.addressName</strong><br><a target="_blank" href="@LcEmailTemplate.GetLocationGoogleMapsUrl(info.booking.serviceAddress)">@info.booking.serviceAddress.addressLine1<br>
+                                     @if (!String.IsNullOrEmpty(info.booking.serviceAddress.addressLine2))
+                                     {
+                                     @info.booking.serviceAddress.addressLine2
+                                     }<br>@info.booking.serviceAddress.city, @info.booking.serviceAddress.stateProvinceCode @info.booking.serviceAddress.postalCode</a>
                                  @if (!String.IsNullOrEmpty(info.booking.serviceAddress.specialInstructions))
                                  {
                                     <br /><strong>Special instructions:</strong>

@@ -15,14 +15,28 @@ namespace LcRest
         public int jobTitleID;
         public int licenseCertificationID;
         public string licenseCertificationNumber;
+        public string licenseCertificationUrl;
         public DateTime? expirationDate;
+        public string firstName;
+        public string lastName;
+        public string middleInitial;
+        public string businessName;
+        public int statusID;
+        public string status;
+        public string statusDescription;
         public DateTime? lastVerifiedDate;
+        public string submittedImageLocalURL;
+        public int languageID;
         #endregion
 
         #region Link
         public LicenseCertification licenseCertification;
-        #endregion
 
+        public void FillLicenseCertification()
+        {
+            licenseCertification = LicenseCertification.GetItem(licenseCertificationID, languageID);
+        }
+        #endregion
         #region Instances
         public PublicUserLicenseCertification() { }
 
@@ -30,83 +44,77 @@ namespace LcRest
         {
             if (record == null) return null;
             return new PublicUserLicenseCertification
-            {
+            {           
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
                 licenseCertificationID = record.licenseCertificationID,
+                licenseCertificationNumber = record.licenseCertificationNumber,
+                licenseCertificationUrl = record.licenseCertificationUrl,
                 expirationDate = record.expirationDate,
+                firstName = record.firstName,
+                lastName = record.lastName,
+                middleInitial = record.middleInitial,
+                businessName = record.businessName,
+                statusID = record.statusID,
+                status = record.status,
+                statusDescription = record.statusDescription,
                 lastVerifiedDate = record.lastVerifiedDate,
-
-                licenseCertification = LicenseCertification.FromDB(record)
+                submittedImageLocalURL = record.submittedImageLocalURL,
+                languageID = record.languageID
             };
         }
         #endregion
 
         #region Fetch
         #region SQL
-        const string sqlGetList = @"
-            SELECT
-                V.ProviderUserID As userID,
-                V.PositionID As jobTitleID,
-                V.licenseCertificationID,
-                V.VerificationStatusID as StatusID,
-                V.licenseCertificationNumber,
-                V.licenseCertificationUrl,
-                V.LicenseStatus As licenseCertificationStatus,
-                V.expirationDate,
-                V.issueDate,
-                CY.countryCode,
-                SP.stateProvinceCode,
-                SP.stateProvinceName,
-                C.countyName,
-                V.city,
-                V.firstName,
-                V.lastName,
-                V.secondLastName,
-                V.middleInitial,
-                V.actions,
-                V.comments,
-                V.verifiedBy,
-                V.lastVerifiedDate,
-                V.createdDate,
-                V.modifiedDate as updatedDate,
-
-                -- Added License fields in addition for 1 call load of all info
-                L.LicenseCertificationType As name,
-                L.LicenseCertificationTypeDescription As description,
-                L.LicenseCertificationAuthority As authority,
-                L.verificationWebsiteUrl,
-                L.howToGetLicensedUrl,
-                L.optionGroup
+        const string sqlGetList = @"            
+            DECLARE @ProviderUserID AS int
+            SET @ProviderUserID = @0         
+            DECLARE @PositionID AS int
+            SET @PositionID = @1   
+            DECLARE @languageID AS int
+            SET @languageID = @2  
+                       
+            SELECT               
+                V.ProviderUserID As userID
+                ,V.PositionID As jobTitleID
+                ,V.licenseCertificationID
+                ,V.licenseCertificationNumber
+                ,V.licenseCertificationUrl
+                ,V.expirationDate
+                ,V.firstName
+                ,V.lastName
+                ,V.middleInitial
+                ,V.businessName
+                ,V.VerificationStatusID as statusID
+                ,VS.verificationStatusName as status
+                ,VS.verificationStatusDisplayDescription as statusDescription
+                ,V.lastVerifiedDate
+                ,V.submittedImageLocalURL
+                ,@languageID as languageID
             FROM
-                LicenseCertification As L
+                userlicensecertifications As V
                  INNER JOIN
-                userlicenseverification As V
-                  ON L.LicenseCertificationID = V.LicenseCertificationID
-                 INNER JOIN
-                StateProvince As SP
-                  ON L.StateProvinceID = SP.StateProvinceID
-                 INNER JOIN
-                County As C
-                  ON C.CountyID = V.CountyID
-                 INNER JOIN
-                Country As CY
-                  ON CY.CountryID = V.CountryID AND CY.LanguageID = 1
+                verificationstatus As VS
+                  ON V.VerificationStatusID = VS.VerificationStatusID                       
             WHERE
-                V.ProviderUserID = @0
+                V.ProviderUserID = @ProviderUserID
                  AND
-                V.PositionID = @1
-                 AND
-                L.Active = 1
-                 AND V.VerificationStatusID = 1 -- ONLY confirmed ones
+                V.PositionID = @PositionID
+                 AND 
+                VS.LanguageID = @languageID 
+                AND 
+                V.VerificationStatusID = 1 
+                AND
+                V.expirationDate >= getdate()
         ";
         #endregion
 
-        public static IEnumerable<PublicUserLicenseCertification> GetList(int userID, int jobTitleID)
+        public static IEnumerable<PublicUserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID, jobTitleID).Select(FromDB);
+                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
             }
         }
         #endregion

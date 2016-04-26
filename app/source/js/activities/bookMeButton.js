@@ -14,8 +14,9 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
-    
+    this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
+        backLink: 'scheduling' , helpLink: '/help/sections/201959943-add-scheduling-to-your-website'
+    });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.
@@ -42,6 +43,32 @@ var A = Activity.extend(function BookMeButtonActivity() {
             });
         }.bind(this)
     });
+
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
+    });
+    
     
     var $code = this.$activity.find('textarea');
     this.viewModel.copyCode = function() {
@@ -91,6 +118,7 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
 
     var marketplaceProfile = app.model.marketplaceProfile;
+    this.jobTitleName = ko.observable('Job Title'); 
     
     // Actual data for the form:
     

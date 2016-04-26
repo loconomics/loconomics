@@ -16,6 +16,33 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
     button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+  &:hover,
+  &:focus {
+      color: inherit;
+      text-decoration: none;
+      outline: none;
+  }
+}
+
+.btn-default {
+    background: transparent;
+    border-color: $gray;
+    color: $gray;
+    &:hover,
+    &:focus,
+    &:active,
+    &:target,
+    &:link {
+        color: $brand-secondary;
+        border-color: $brand-secondary;
+        background: transparent;
+    }
+}
+
+
 // Create the text-secondary
 .text-secondary {
     color: $brand-secondary;
@@ -70,6 +97,19 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
 // All buttons
 .btn {
     border-radius: 0; // Or 1px so looks square but gets a smooth rendering??
+    font-weight: 700;
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        outline: none;
+    }
+}
+.btn-link {
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        outline: none;
+    }
 }
 // Only bottom border to look flatty
 .form-control,
@@ -106,8 +146,9 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
 // Because of the border change, form controls on default, white background
 // does not looks like a control, add a background
 // Other form styles can revert this to white again
+// 15April2016: changed this back to white since Activity default is now gray-background.
 .form-control {
-    background: #fbfbfb;
+    background: white;
 }
 
 // COLUMNS RESET
@@ -189,3 +230,95 @@ ResetSectionTitleMargin() {
         }
     }
 }
+
+
+// custom styles for dropdown-menus across app
+.dropdown-menu {
+  float: left;
+  margin-top: 0px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1.5px 0 0 $gray-background;
+  box-shadow: 0 1.5px 0 0 $gray-background;
+  border-radius: 0px;
+  
+  .App-menus-group-header {    
+        padding: 0px 10px 10px;
+        border-bottom: 1px solid $gray-light;
+        color: $gray-light;            
+        font-size: 1.1em;
+  }  
+  > li {
+        width: 250px;
+        &.go-marketplace,
+        &.go-help,
+        &.go-download{
+          display none;
+        }
+        > a {
+        color: $gray;        
+        font-size: 1.1em;               
+        padding: 10px 10px 10px 40px;
+        margin: 0;
+
+        // icons
+        > i {
+            color: $gray;
+            font-size: 1.5em;      
+            margin-right: 5px;
+        }
+
+        &:hover,
+        &:focus {
+          color: $brand-secondary-dark !important;
+          background-color: transparent;
+          padding-left: 42px;
+          > i {
+            color: $brand-secondary-dark !important;
+          }
+        }
+        }
+    }
+    li.active > a {
+      color: $gray-dark !important;
+      background: transparent;  
+      > i {
+        color: $gray-dark !important;
+      }
+    }
+}
+
+.bootstrap-switch {
+    border-color: $gray;
+    border-radius: 0px;
+}
+
+.bootstrap-switch-handle-on 
+&.bootstrap-switch-primary {
+    background-color: $brand-success;
+    color: white;
+    border-radius: 0px;
+}
+.bootstrap-switch-handle-off 
+&.bootstrap-switch-default {
+    background-color: $gray-background;
+    border-radius: 0px;
+}
+.bootstrap-switch-label {
+    border-radius: 0px;
+}
+.checkbox,
+.radio {
+  margin-left: 15px;
+}
+.well {
+    margin: 15px 35px;
+    padding: 20px 20px -5px 20px;
+    background-color: #FFFFA5;
+    border: none;
+    
+    .list-group {      
+      margin-bottom: 0px;
+      padding-left: 20px;
+    }
+}
+

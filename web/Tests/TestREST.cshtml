@@ -1,4 +1,4 @@
-﻿@{
+@{
     if (!LcHelpers.InDev) {
         LcHelpers.TestArea();
     }
@@ -847,15 +847,35 @@
             },
             "delete": {}
         },
-        "List or Upload a License/Certification Photo": {
+        
+        "Submit a License/Certification": {
             "url": "/api/v1/en-US/me/licenses-certifications/106",
             "get": {},
             "post": {
-                "photo": "binary image/* content",
-                "stateProvinceCode": "CA"
+                "photo": "binary image/* content"
             }
         },
-
+        
+        "My licenses/certifications": {
+            "url": "/api/v1/en-US/me/licenses-certifications/106",
+            "get": { }
+        },
+        
+        "User's licenses/certifications for a job title": {
+            "url": "/api/v1/en-US/user/licenses-certifications/106",
+            "get": { }
+        },
+        
+        "List applicable job title licenses": {
+            "url": "/api/v1/en-US/me/job-title-licenses/106",
+            "get": { }
+        },
+        
+        "List license/certification info": {
+            "url": "/api/v1/en-US/license-certification/64",
+            "get": { }
+        },
+        
         "States/Provinces": {
             "url": "/api/v1/en-US/states-provinces",
             "get": {}
@@ -896,19 +916,84 @@
                 "agree": true
             }
         },
-
-        "Search Service Professionals by Job Title": {
+        
+        "Search Job Titles, Service Professionals, and Categories by Search Term": {
             "url": "/api/v1/en-US/search",
             "get": {
-                "jobTitleSingularName": "Massage Therapist",
-                "city": "San Francisco"
+                "searchTerm": "cleaner",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },       
+
+        "Search Service Professionals by Search Term": {
+            "url": "/api/v1/en-US/search/service-professionals",
+            "get": {
+                "searchTerm": "Joshua",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
             }
         },
-        "Search Job Titles by Category": {
+
+        "Search Service Professionals by Job TitleID": {
+            "url": "/api/v1/en-US/search/service-professionals/by-job-title",
+            "get": {
+                "jobTitleID": "106",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },
+
+
+        "Search Job Titles by Search Term": {
             "url": "/api/v1/en-US/search/job-titles",
             "get": {
-                "category": "Home",
-                "city": "San Francisco"
+                "searchTerm": "cleaner",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },
+        
+        "Search Job Title info by jobTitleID": {
+            "url": "/api/v1/en-US/search/job-titles/106",
+            "get": {
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },
+
+        "Search Job Titles by CategoryID": {
+            "url": "/api/v1/en-US/search/job-titles/by-category",
+            "get": {
+                "categoryID": "1",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },
+
+        
+        "Search Categories by Search Term": {
+            "url": "/api/v1/en-US/search/categories",
+            "get": {
+                "searchTerm": "home",
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
+            }
+        },   
+        
+        "Search Category info by CategoryID": {
+            "url": "/api/v1/en-US/search/categories/1",
+            "get": {
+                "origLat": "37.788479",
+                "origLong": "-122.40297199999998",
+                "searchDistance": "30"
             }
         }
     };

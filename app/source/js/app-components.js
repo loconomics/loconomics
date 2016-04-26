@@ -57,6 +57,19 @@ exports.registerAll = function(app) {
         }
     });
     
+    /// inline-user-menu
+    ko.components.register('app-inline-user-menu', {
+        template: { element: 'inline-user-menu-template' },
+        viewModel: { instance: app.navBarBinding }
+    });
+    
+    
+    /// inline-side-menu
+    ko.components.register('app-inline-side-menu', {
+        template: { element: 'inline-side-menu-template' },
+        viewModel: { instance: app.navBarBinding }
+    });
+    
     /// feedback-entry
     ko.components.register('app-feedback-entry', {
         template: { element: 'feedback-entry-template' },
@@ -117,7 +130,7 @@ exports.registerAll = function(app) {
     ko.components.register('app-stars-rating', {
         template: { element: 'stars-rating-template' },
         viewModel: function(params) {
-            this.rating = getObservable(params.rating || 2.5);
+            this.rating = getObservable(params.rating || 0);
             this.total = getObservable(params.total || 0);
             this.size = getObservable(params.size || '');
             

@@ -1,13 +1,30 @@
 <!-- Activity appointment -->
-<div class="limited-size-md limited-size-lg container-fluid" data-activity="appointment" data-bind="css: { 'in-edit': editMode }">
-    <!-- Appointment View (cards) -->
-    <div id="calendarAppointmentView" class="row CardsDeck CardsDeck--dotsSlider"
-       data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
-        
-        <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
-
-        <div class="CardsDeck-dots" data-bind="foreach: appointments">
-            <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+<div data-activity="appointment" data-bind="css: { 'in-edit': editMode }" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row"> 
+            <div class="SubSectionNavBar col-md-7 col-sm-reset hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/scheduling"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Scheduler</a>
+                    </li>
+                </ul>
+                <button class="btn btn-default">
+                    <a href="/scheduling">Cancel</a>
+                </button>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <!-- Appointment View (cards) -->
+                <div id="calendarAppointmentView" class="row container-fluid CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
+                    <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
+                    <div class="CardsDeck-dots" data-bind="foreach: appointments">
+                        <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
     </div>
-</div>
+</div>    

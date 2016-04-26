@@ -13,9 +13,9 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-
-    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
-        backLink: 'scheduling'
+    
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: '/scheduling' , helpLink: '/help/sections/201961423-setting-your-scheduling-preferences'
     });
     
     this.registerHandler({

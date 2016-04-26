@@ -1,38 +1,64 @@
 <!-- Activity profilePictureBio -->
-<div class="LightForm limited-size-md limited-size-lg" data-activity="profilePictureBio">
-    <div class="SmartNavView">
-        <div class="SmartNavContent container-fluid">
-            <form role="form" data-bind="submit: save">
-                <div>
-                    <h2 class="SectionTitle">Profile picture</h2>
-                    <div class="Avatar Avatar--lg Avatar--primary"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
-                    <div class="LightForm-tool">
-                        <button type="button" class="btn btn-block btn-primary" data-bind="visible: takePhotoSupported, disable: isLocked"
-                                data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">
-                            <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
-                        </button>
+<div data-activity="profilePictureBio" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceProfile"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Marketplace profile</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <div class="SmartNavView">
+                    <div class="SmartNavContent container-fluid">
+                        <form class="LightForm" role="form" data-bind="submit: save">
+                            <div>
+                                <h2 class="SectionTitle">
+                                    <span class="pull-left">Profile picture</span>
+                                    <span class="pull-right hidden-xs hidden-sm" data-bind="visible: user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201960933-writing-your-profile-bio" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                                    </span>
+                                    <span class="pull-right hidden-xs hidden-sm" data-bind="visible: !user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201213895-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                                    </span>
+                                </h2>
+                                <div class="Avatar Avatar--lg"><img data-bind="attr: { src: previewPhotoUrl() || profile.photoUrl() }" /></div>
+                                <div class="LightForm-tool">
+                                    <button type="button" class="btn btn-default btn-block" data-bind="visible: takePhotoSupported, disable: isLocked" data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet"><span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span></button>
+                                </div>
+                                <h2 class="SectionTitle">
+                                    <span class="pull-left">Public bio</span>
+                                    <span class="pull-right hidden-xs hidden-sm" data-bind="visible: user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201960933-writing-your-profile-bio" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                                    </span>
+                                    <span class="pull-right hidden-xs hidden-sm" data-bind="visible: !user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201213895-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                                    </span>
+                                </h2>
+                                <div class="form-group">
+                                    <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
+class="form-control" data-bind="value: profile.publicBio, disable: isLocked"></textarea>
+                                </div>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                            </div>
+                        </form>
                     </div>
-
-                    <h2 class="SectionTitle">Public bio</h2>
-                    <div class="form-group">
-                        <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
-                                  class="form-control" data-bind="value: profile.publicBio, disable: isLocked"></textarea>
+                    <div class="ActionSheetBackdrop"></div>
+                    <div class="ActionSheet" id="profilePictureBio-photoSheet" hidden="hidden">
+                        <ul>
+                            <li><a href="#takePhoto" data-bind="click: takePhoto">Take a photo</a></li>
+                            <li><a href="#pickPhoto" data-bind="click: pickPhoto">Select a photo</a></li>
+                        </ul>
+                        <ul class="ActionSheet-close">
+                            <li><a href="#close">Cancel</a></li>
+                        </ul>
                     </div>
                 </div>
-                <div class="LightForm-submitBar">
-                    <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
-                </div>
-            </form>
-        </div>
-        <div class="ActionSheetBackdrop"></div>
-        <div class="ActionSheet" id="profilePictureBio-photoSheet" hidden="hidden">
-            <ul>
-                <li><a href="#takePhoto" data-bind="click: takePhoto">Take a photo</a></li>
-                <li><a href="#pickPhoto" data-bind="click: pickPhoto">Select a photo</a></li>
-            </ul>
-            <ul class="ActionSheet-close">
-                <li><a href="#close">Cancel</a></li>
-            </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
     </div>
-</div>
+</div>        
+

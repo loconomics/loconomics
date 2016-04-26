@@ -1,23 +1,31 @@
 <!-- Inbox activity -->
-<div data-activity="inbox" class="limited-size-md limited-size-lg">
-
-  <div class="isolated inset">
-    <div class="input-group">
-        <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
-            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-            <span class="fa ion ion-ios-search"></span>
-            <span class="sr-only">Search</span>
-        </span>
-      <input type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText">
-        <!-- NOT IMPLEMENTED <span class="input-group-btn">
-            <button type="button" class="btn btn-secondary">New</button>
-        </span>-->
-    </div><!-- /input-group -->
-  </div>
-    
-  <div data-bind="css: { 'is-loading': isLoading() }">
-      <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-  </div>
-    
-  <div class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>
+<div data-activity="inbox" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">
+            <h1 class="hidden-xs hidden-sm">You've got mail</h1>
+            <div class="col-md-7 col-sm-reset">
+                <div class="isolated inset">
+                    <div class="input-group">
+                        <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
+                            <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+                            <span class="fa ion ion-ios-search"></span>
+                            <span class="sr-only">Search</span>
+                        </span>
+                        <input type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText">
+                        <!-- NOT IMPLEMENTED <span class="input-group-btn">
+                            <button type="button" class="btn btn-secondary">New</button>
+                        </span>-->
+                    </div><!-- /input-group -->
+                </div>
+                <div data-bind="css: { 'is-loading': isLoading() }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
+                <div class="TilesList" data-bind="template: { name: 'inbox-tile-template', foreach: threads() }"></div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
 </div>

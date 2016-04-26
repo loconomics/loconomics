@@ -11,17 +11,15 @@ function LicenseCertification(values) {
         licenseCertificationID: 0,
         name: '',
         description: '',
-        stateProvinceCode: '',
-        countryCode: '',
         authority: null,
         verificationWebsiteUrl: null,
         howToGetLicensedUrl: null,
-        optionGroup: null,
         createdDate: null, // Autofilled by server
-        updatedDate: null // Autofilled by server
+        updatedDate: null, // Autofilled by server
+        languageID: 0
     }, values);
     
-    this.model.defID(['licenseCertificationID']);
+    this.model.defID(['licenseCertificationID', 'languageID']);
 }
 
 module.exports = LicenseCertification;

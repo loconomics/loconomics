@@ -27,7 +27,7 @@ $SmartNavBar-buttonFontSize = 15px;
 $SmartNavBar-buttonHeaderFontSize = 15px;
 $SmartNavBar-buttonMaxWidth = none; // 140px;
 $SmartNavBar-bgColor = White; //rgba(248, 248, 248, 0.9);
-$SmartNavBar-borderColor = $gray-background; //rgb(200, 199, 204);
+$SmartNavBar-borderColor = $gray-light; //rgb(200, 199, 204);
 $SmartNavBar-buttonColor = $gray; // rgb(21, 125, 251);
 $SmartNavBar-headerColor = $brand-primary; //Black;
 $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
@@ -239,6 +239,12 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     left: 0;
     z-index: 210;
     overflow: hidden;
+
+    @media $mediaMinSm {
+      position: relative;
+      height: 1100px;
+    }  
+    
     // On implementation of transitions/animations, a background must exists to avoid ugly overlays
     // now kept the inherit
     //background: white;

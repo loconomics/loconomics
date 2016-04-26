@@ -16,7 +16,7 @@ var A = Activity.extend(function ClientsActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'cms'
+        backLink: 'cms' , helpLink: '/help/sections/201152639-managing-clients'
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
@@ -60,7 +60,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     
     var itIs = this.viewModel.isSelectionMode();
     
-    this.viewModel.headerText(itIs ? 'Select a client' : '');
+    this.viewModel.headerText(itIs ? 'Select a client' : 'My clients');
 
     if (this.requestData.title) {
         // Replace title by title if required

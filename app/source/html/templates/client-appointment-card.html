@@ -1,6 +1,7 @@
 <script type="text/html" id="client-appointment-card-template">
-    <div class="Card AppointmentCard" data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
-
+    
+    <div data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
+    <div class="Card AppointmentCard">
         <div class="Card-title">
             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
         </div>
@@ -211,25 +212,33 @@
             <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
                 <ul class="TilesList TilesList--openEnd">
                     <li>
+                        <div data-bind="css: { 'Tile--success': booking().isCompleted() || booking().isConfirmed() || booking().isPerformed(), 'Tile--warning': booking().isRequest() || booking().isDispute(), 'Tile--danger': booking().isCancelled() || booking().isDenied() || booking().isIncomplete() || booking().isExpired()}" class="ItemTile">
+                            <i class="Tile-marker fa ion ion-ios-information-outline" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <p data-bind="text: booking().bookingStatusLabel()"></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
                         <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickDateTime">
                             <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                             <div class="Tile-content" data-bind="visible: !booking().instantBooking() && booking().isRequest()">
                                 <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
                                     <strong>1st choice: </strong>
-                                        <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
+                                        <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
                                 </div>
                                 <div data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
                                     <strong>2nd choice: </strong>
-                                        <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
+                                        <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
                                 </div>
                                 <div data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
                                     <strong>3rd choice: </strong>
-                                        <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
+                                        <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
                                 </div>
                                 <p data-bind="visible: !hasSomeDateSelected()" class="text-muted">Select preferred times</p>
                             </div>
                             <div class="Tile-content" data-bind="visible: booking().instantBooking() || !booking().isRequest()">
-                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
+                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></div>
                                 <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></div>
                                 <p data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())" class="text-muted">Select date/time</p>
                             </div>
@@ -281,21 +290,14 @@
                     </li>
                     <li data-bind="visible: canEdit() || booking().specialRequests()">
                         <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickSpecialRequests">
-                            <i class="Tile-marker fa ion ion-edit" aria-hidden="true"></i>
+                            <i class="Tile-marker fa ion ion-clipboard" aria-hidden="true"></i>
                             <div class="Tile-content">
+                                <p data-bind="visible: !booking().specialRequests(), text: specialRequestsPlaceholder" class="text-muted"></p>
                                 <p data-bind="visible: booking().specialRequests(), text: booking().specialRequests()"></p>
-                                <p data-bind="visible: canEdit() && isEditMode() && !booking().specialRequests(), text: specialRequestsPlaceholder" class="text-muted"></p>
+                                <p data-bind="visible: canEdit() && isEditMode() && !booking().specialRequests()" class="text-muted"></p>
                             </div>
                             <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                         </button>
-                    </li>
-                    <li data-bind="visible: !canEdit() && !canCancel()">
-                        <div data-bind="css: { 'Tile--danger': !booking().isClosed(), 'Tile--success': booking().isCompleted(), 'Tile--warning': booking().isClosed() && !booking().isCompleted() }" class="ItemTile">
-                            <i class="Tile-marker fa fa-stop" aria-hidden="true"></i>
-                            <div class="Tile-content">
-                                <p data-bind="text: booking().bookingStatusLabel()"></p>
-                            </div>
-                        </div>
                     </li>
                 </ul>
 
@@ -305,6 +307,7 @@
                     <button type="button" class="btn btn-danger btn-block" data-bind="visible: isCancelMode(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </script>

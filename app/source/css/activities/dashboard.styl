@@ -2,7 +2,7 @@
     #dashboardNextBooking {
         // Minimum height just to reduce the flickering effect
         // between the loading phase and filling in data:
-        min-height: 196px;
+        min-height: 20px;
         // Overflow needed so internal margins don't collapse because of min-height
         overflow: hidden;
     }
@@ -19,5 +19,13 @@
             float: right;
             margin: .65em;
         }
+    }
+    .bookNow-link {
+      color: $brand-secondary;
+      text-decoration: none;
+      &:hover,
+      &:focus{
+        color: $brand-secondary-dark !important;
+      }
     }
 }

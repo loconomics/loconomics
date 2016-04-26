@@ -17,20 +17,20 @@ var EventDates = require('./EventDates');
 
 // I18N See not below where used
 var statusLabels = {
-    incomplete: 'Incomplete',
-    request: 'Booking Request',
-    cancelled: 'Cancelled',
-    denied: 'Declined',
-    requestExpired: 'Request Expired',
-    confirmed: 'Confirmed',
-    servicePerformed: 'Service Performed',
-    completed: 'Completed',
-    dispute: 'In Dispute'
+    incomplete: 'This booking was never completed',
+    request: 'Booking request not yet confirmed',
+    cancelled: 'This booking has been cancelled',
+    denied: 'This booking has been cancelled',
+    requestExpired: 'This booking request expired',
+    confirmed: 'This booking is confirmed',
+    servicePerformed: 'Services have been performed',
+    completed: 'This booking has been completed',
+    dispute: "We'll be in touch shortly"
 };
 var Enum = require('../utils/Enum');
 
 function Booking(values) {
-    
+//jshint maxstatements:34    
     Model(this);
 
     this.model.defProperties({
@@ -144,6 +144,26 @@ function Booking(values) {
     
     this.isIncomplete = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.incomplete;
+    }, this);
+    
+    this.isPerformed = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.servicePerformed;
+    }, this);    
+    
+    this.isDispute = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.dispute;
+    }, this);
+    
+    this.isCancelled = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.cancelled;
+    }, this);
+    
+    this.isDenied = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.denied;
+    }, this);
+    
+    this.isExpired = ko.pureComputed(function() {
+        return this.bookingStatusID() === Booking.status.requestExpired;
     }, this);
     
     /**

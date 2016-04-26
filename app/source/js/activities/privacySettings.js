@@ -12,11 +12,17 @@ var A = Activity.extend(function PrivacySettingsActivity() {
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-
-    this.navBar = Activity.createSubsectionNavBar('Account', {
-        backLink: 'account'
-    });
     
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201967106-protecting-your-privacy'
+    });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201960903-protecting-your-privacy'
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+        
     this.registerHandler({
         target: this.app.model.privacySettings,
         event: 'error',
@@ -32,6 +38,15 @@ var A = Activity.extend(function PrivacySettingsActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
@@ -39,6 +54,8 @@ A.prototype.show = function show(state) {
     this.app.model.privacySettings.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
+    
+    this.updateNavBarState();
 };
 
 function ViewModel(app) {

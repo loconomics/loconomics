@@ -24,7 +24,9 @@ var A = Activity.extend(function AddressEditorActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Locations');
+    this.navBar = Activity.createSubsectionNavBar('Locations', {
+        backLink: '/scheduling' , helpLink: '/help/sections/201965996-setting-your-service-locations-areas'
+    });
     
     // Remote postal code look-up
     // NOTE: copied the code inside the postalCode computed handler in contactInfo.js with slight changes
@@ -74,6 +76,31 @@ var A = Activity.extend(function AddressEditorActivity() {
                 .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
             }
         }
+    });
+
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
     });
     
     // Special treatment of the save operation
@@ -129,10 +156,10 @@ A.prototype.show = function show(options) {
         .then(function (addressVersion) {
             if (addressVersion) {
                 this.viewModel.addressVersion(addressVersion);
-                this.viewModel.header('Edit Location');
+                this.viewModel.header('Edit location');
             } else {
                 this.viewModel.addressVersion(null);
-                this.viewModel.header('Unknow location or was deleted');
+                this.viewModel.header('Unknown or deleted location');
             }
         }.bind(this))
         .catch(function (err) {
@@ -170,7 +197,7 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
 
-    this.header = ko.observable('Edit Location');
+    this.header = ko.observable('Edit location');
     
     // List of possible error messages registered
     // by name
@@ -180,6 +207,7 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
+    this.jobTitleName = ko.observable('Job Title'); 
     
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {
@@ -254,7 +282,7 @@ function ViewModel(app) {
     this.confirmRemoval = function() {
         app.modals.confirm({
             title: 'Delete location',
-            message: 'Are you sure? The operation cannot be undone.',
+            message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
             no: 'Keep'
         })
@@ -297,5 +325,6 @@ function ViewModel(app) {
         { value: 10, label: '10 miles' },
         { value: 25, label: '25 miles' },
         { value: 50, label: '50 miles' },
+        { value: 5000, label: 'I work remotely' },
     ]);
 }

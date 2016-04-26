@@ -1,16 +1,34 @@
 <!-- serviceProfessionalWebsite activity -->
-<div class="container-fluid LightForm limited-size-md limited-size-lg" data-activity="serviceProfessionalWebsite">
-    <h2 class="SectionTitle">Your website</h2>
-    <form data-bind="submit: save">
-        <div class="form-group">
-            <label for="serviceProfessionalWebsite-url" class="sr-only">Enter your website URL</label>
-            <div>
-                <input type="url" id="serviceProfessionalWebsite-url" class="form-control"
-                       data-bind="value: profile.serviceProfessionalWebsiteUrl, disable: isLocked"/>
+<div data-activity="serviceProfessionalWebsite" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceProfile"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Marketplace profile</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle SectionTitle-hasHelpPoint">
+                    <span class="pull-left">Your website</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967756-listing-your-personal-or-business-website" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
+                <form class="container-fluid LightForm" data-bind="submit: save">
+                    <div class="form-group">
+                        <label for="serviceProfessionalWebsite-url">Enter your website's URL:</label>
+                        <input type="url" id="serviceProfessionalWebsite-url" class="form-control" data-bind="value: profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
+                    </div>
+                    <div class="LightForm-submitBar">
+                        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
             </div>
         </div>
-        <div class="LightForm-submitBar">
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
-        </div>
-    </form>
-</div>
+    </div>
+</div>    

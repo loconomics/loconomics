@@ -1,6 +1,6 @@
 .Signup {
     
-    background: White;
+    background: $gray-background;
     
     .Signup-or {
         position: relative;
@@ -29,6 +29,8 @@
     }
     
     form .form-group {
+      margin-bottom: 5px;
+          
         .form-control {
             background: White;
             border-color: $gray-light;
@@ -44,12 +46,13 @@
         
         &.has-error {
             .form-control {
-                border-color: $brand-danger;
+                border-bottom: 3px solid $brand-danger;
             }
         }
+        
         &.has-warning {
             .form-control {
-                border-color: $brand-warning;
+                border-bottom: 3px solid $brand-warning;
             }
         }
     }
@@ -63,9 +66,8 @@
     
     .Signup-formcontainer {
         max-width: 360px;
-        background: White;
         margin: 0 auto;
-        padding-top: 20px;
+        padding-top: 10px;
         padding-bottom: 5px;
         padding-left: 15px;
         padding-right: 15px;
@@ -78,10 +80,24 @@
         }
     }
     
+    .Signup-login {
+        > a {
+          color: $brand-secondary;
+        }
+    }
+    
+    hr {
+      margin: 0px;
+    }
+    
+    h3 {
+      margin 15px 0;
+    }
     .btn[type=submit] {
         padding: 10px 12px;
         font-weight: bold;
         font-size: 17px;
+        margin-top: 10px;
     }
     
     .Signup-agreement {
@@ -91,44 +107,4 @@
         }
     }
 
-    .Signup-selector {
-        margin: 40px auto;
-        text-align: center;
-
-        .Signup-selector-option {
-            background: $brand-primary;
-            display: inline-block;
-            padding: 24px 40px;
-            width: 320px;
-            vertical-align: middle;
-            
-            h3 {
-                color: White;
-                margin: 0px 0px 20px;
-            }
-        }
-
-        .Signup-selector-separator {
-            display: inline-block;
-            line-height: 80px;
-            font-size: 20px;
-            font-weight: bold;
-            vertical-align: middle;
-            margin: 0 16px;
-        }
-        
-        @media $mediaMaxSm {
-            .Signup-selector-option {
-                display: block;
-                margin: 0px auto;
-                max-width: 320px;
-                width: auto;
-            }
-        }
-    }
-    
-    .Signup-logo {
-        display: none;
-        margin-bottom: 20px;
-    }
 }

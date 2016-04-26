@@ -1,38 +1,50 @@
 <!-- Activity backgroundCheck -->
-<div data-activity="backgroundCheck" class="limited-size-md limited-size-lg">
-
-    <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-      <span>
-        Background Check
-      </span>
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-    </div>
-    
-    <div>
-        <ul class="TilesList" data-bind="foreach: list">
-            <li class="InfoTile">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+<div data-activity="backgroundCheck" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceProfile">Marketplace profile</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
+                    <span>Background Check</span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div class="Tile-content">
-                    <div data-bind="text: backgroundCheck().name() || 'Background check'"></div>
-                    <em>
-                        <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
-                        <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
-                    </em>
+                <ul class="TilesList" data-bind="foreach: list">
+                    <li class="InfoTile">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div data-bind="text: backgroundCheck().name() || 'Background check'"></div>
+                            <em>
+                                <span data-bind="text: statusText, css: { 'text-warning': isStatus('pending'), 'text-success': isStatus('confirmed'), 'text-danger': isStatus('revoked') || isStatus('obsolete') }"></span>
+                                <span data-bind="text: lastVerifiedDate, format: { type: 'datetime', format: 'L LTS' }"></span>
+                            </em>
+                        </div>
+                    </li>
+                </ul>
+                <div class="TilesList">  
+                    <a href="/addBackgroundCheck" class="CompactLinkTile">
+                        <div class="Tile-content text-muted">Add a background check</div>
+                        <div class="Tile-icon text-muted">
+                            <span class="fa ion ion-plus"></span>
+                        </div>
+                    </a>
                 </div>
-            </li>
-        </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
     </div>
+</div>    
 
-    <div class="TilesList">  
-        <a href="/addBackgroundCheck" class="CompactLinkTile">
-            <div class="Tile-content text-muted">Add a background check</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </a>
-    </div>
-
-</div>

@@ -99,12 +99,6 @@ NavAction.menuIn = new NavAction({
     isMenu: true
 });
 
-NavAction.menuOut = new NavAction({
-    link: 'menuOut',
-    icon: 'menu',
-    isMenu: true
-});
-
 NavAction.menuNewItem = new NavAction({
     link: 'menuNewItem',
     icon: 'fa ion ion-ios-plus-empty',
@@ -118,21 +112,21 @@ NavAction.goMarketplace = new NavAction({
 
 NavAction.goHelpIndex = new NavAction({
     link: '/contactForm/general?mustReturn=true',
-    text: 'help',
+    text: 'Contact us',
     isModal: false
 });
 
 NavAction.goLogin = new NavAction({
     link: '/login',
-    text: 'log-in'
+    text: 'Log in'
 });
 
 NavAction.goLogout = new NavAction({
     link: '/logout',
-    text: 'log-out'
+    text: 'Log out'
 });
 
 NavAction.goSignup = new NavAction({
     link: '/signup',
-    text: 'sign-up'
+    text: 'Sign up'
 });

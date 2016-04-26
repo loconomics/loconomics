@@ -1,6 +1,6 @@
-﻿@using WebMatrix.WebData;
+@using WebMatrix.WebData;
 @*
-    Get, Update, Upload and Delete the logged user work photos.
+    Get, Update, Submit and Delete the logged user licenses/certifications.
 
     Options:
     - GET /{jobTitleID}
@@ -20,13 +20,16 @@
     - @Result LcRest.UserLicenseCertification class instance. On GET, it returns a list of them.
 
     EXAMPLES {
-        "List or Upload a License/Certification Photo": {
+        "Submit a License/Certification": {
             "url": "/api/v1/en-US/me/licenses-certifications/106",
             "get": {},
             "post": {
-                "photo": "binary image/* content",
-                "stateProvinceCode": "CA"
+                "photo": "binary image/* content"
             }
+        },
+        "My licenses/certifications": {
+            "url": "/api/v1/en-US/me/licenses-certifications/106",
+            "get": { }
         }
     }
 *@
@@ -38,8 +41,9 @@
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 var userID = WebSecurity.CurrentUserId;
                 var jobTitleID = UrlData[0].AsInt();
+                var languageID = LcRest.Locale.Current.languageID;
 
-                return LcRest.UserLicenseCertification.GetList(userID, jobTitleID);
+                return LcRest.UserLicenseCertification.GetList(userID, jobTitleID, languageID);
             }
 
             return base.Get();
@@ -58,7 +62,7 @@
             // Input Data
             var userID = WebSecurity.CurrentUserId;
             var jobTitleID = UrlData[0].AsInt();
-            //var licenseCertificationID = 0;
+            var licenseCertificationID = Request["licenseCertificationID"].AsInt();
             
             try {
                 Stream photoStream = null;
@@ -74,8 +78,7 @@
                     ModelState.AddFormError("Maximum request length exceeded");
                 }
                 else {
-                    var stateProvinceCode = Request["stateProvinceCode"];
-                    LcRest.UserLicenseCertification.UploadPhoto(userID, jobTitleID, stateProvinceCode, fileuploaded.FileName, photoStream);
+                    LcRest.UserLicenseCertification.SubmitPhoto(userID, jobTitleID, licenseCertificationID, fileuploaded.FileName, photoStream);
                 }
             }
             catch (Exception ex)

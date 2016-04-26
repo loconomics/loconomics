@@ -9,6 +9,7 @@ InfoTile($linesNumber) {
     $internalHeight = line-height-computed * $linesNumber;
     $gap = 18px;
     $heightLimit = $internalHeight + ($gap * 2);
+    background: white;
     
     padding: $gap $Tile-hgap;
 
@@ -33,6 +34,11 @@ InfoTile($linesNumber) {
 .InfoTile {
     Tile()
     InfoTile(2)
+}
+
+.InfoTile-icon-right {
+    Tile()
+    InfoTile(2) 
 }
 
 // Larger tile with 3 lines

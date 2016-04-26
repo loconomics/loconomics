@@ -3,6 +3,12 @@
 **/
 @import "nib";
 
+$AppNav-brandWidth = 100px;
+$AppNav-brandHeight = 38px;
+
+/**
+    Sidebar
+**/
 .AppNav {
     
     left: 0px;
@@ -14,6 +20,7 @@
     .navbar-brand {
         float: none;
         display: inline-block;
+        padding: 12px;
     
         // magic number! For some reason, the only line-height
         // that limits the full height to the navbar-height (44px now)
@@ -21,14 +28,17 @@
 
         text-indent: -99999px;
         // manually vertical 'visually' centering (depends on icon)
-        background: url("../images/logo-loconomics-header-mini.png") no-repeat center 2px;
-        hr-image("../images/logo-loconomics-header-mini@2x.png", 100px, 39px);
+        background-repeat: no-repeat;
+        background-size: $AppNav-brandWidth $AppNav-brandHeight;
+        background-image: url('../images/logo-large.png');
+        background-image: 
+          linear-gradient(transparent, transparent),
+          url('../images/logo.svg');
         min-width: 100px;
         min-height: 39px;
         height: $app-navbar-height;
         @media $media-big-navbar {
             height: $big-navbar-height;
-            
             background-position: center;
         }
     }
@@ -51,12 +61,13 @@
     .App-menus {
         // General menus container
         background: white;
-    
+        
         // Individual menus set-up
         > .navbar-collapse {
+            background: $AppNav-backColor;
             position: fixed;
             left: 0;
-            right: 0;
+            right: 25%;
             overflow: auto;
             bottom: 0;
             top: 0;
@@ -70,7 +81,28 @@
             // No border
             border-top: none;
         }
-    
+        
+        #menuNewItem {
+          left: 44%;
+          right: 0;   
+          
+          .App-menus-group-header {
+            text-align: right;   
+          }
+          
+          a {               
+            padding: 10px 10px 10px 20px;
+            text-align: right;            
+            &:hover,
+            &:focus {
+              padding-left: 12px;
+            } 
+          }
+          i {
+            margin-left: 5px;   
+          }
+        }
+        
         > .navbar-collapse.collapsing {
             // Avoid scrollbar during animation
             overflow: hidden;
@@ -78,27 +110,27 @@
         
         // Customization of Bootstrap navigation bar for use as menus
         .nav {
-            background: $AppNav-backColor;
             margin-top: 0;
             margin-bottom: 0;
             position: relative;
             z-index: 200;
+            overflow: auto;
         }
         
         .App-menus-header {
             margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
             padding: 15px;
             border-bottom: 1px solid White;
-            background: $AppNav-backColor;
             color: White;
-            
             font-size: 1.1em;
             
             .App-menus-header-user {
                 text-align: center;
-                font-size: 1em;
+                font-size: 1.1em;
                 display: block;
                 margin: 10px 0 0 0;
+                color: white;
+                text-decoration: none;                
             }
             
             .App-menus-header-photo {
@@ -108,8 +140,8 @@
                 background: none;
 
                 img {
-                    width: 60px;
-                    height: 60px;
+                    width: 80px;
+                    height: 80px;
                     display: inline-block;
                     border: 3px solid White;
                     border-radius: 100%;
@@ -117,33 +149,70 @@
                     overflow: hidden;
                 }
             }
+            a {
+                &:hover,
+                &:focus {
+                  text-decoration: none;    
+              }
+            }
         }
-
+        
+        .App-menus-group-header {    
+            padding: 0px 10px 10px;
+            border-bottom: 1px solid $gray-light;
+            color: $gray-light;            
+            font-size: 1.1em;
+        }
         // Main nav and its content
         .navbar-nav {
 
             padding-top: 10px;
             
             a {
-                color: white;
-                
-                padding: 10px 15px 10px 40px;
-
-                &:hover,
-                &:active {
-                    color: $gray;
-                    background: $gray-lighter;
-                    outline: none;
-                }
-                
-                // icons
+                color: $gray-lighter;        
+                font-size: 1.1em;               
+                padding: 10px 10px 10px 40px;
+                margin: 0;
+                   
+              // icons
                 > i {
-                    color: $AppNav-iconColor;
+                    color: $gray-lighter;
+                    font-size: 1.5em;      
                     margin-right: 5px;
                 }
+                
+                &:hover,
+                &:focus {
+                  color: white;
+                  font-weight: 500;
+                  padding-left: 42px;
+                  background-color: transparent;  
+                  > i {
+                    color: white;
+                    font-weight: 500;
+                  }
+                }            
             }
+            
+            .go-dashboard > a
+            .go-logout > a {
+              padding-left: 10px;
+              padding-bottom: 15px;
+              
+              &:hover,
+              &:focus {
+                padding-left: 17px;
+              }    
+            }
+            
             li.active > a {
-                color: $brand-primary;
+              color: white;
+              font-weight: 500;
+              background: transparent;  
+              > i {
+                color: white;
+                font-weight: 500;
+              }
             }
         }
     }
@@ -249,20 +318,13 @@
     }
 }
 
-@import 'utils/backdrop.styl'
+
 @media $mediaMaxSm {
     // On AppNav opened, match SmartNavBar style with nav
     body.has-appNav-open {
-        backdrop();
-
         .SmartNavBar {
-            //background: $AppNav-backColor;
             background: transparent;
             border-bottom-color: transparent;
-
-            .SmartNavBar-btn {
-                color: White;
-            }
 
             pointer-events: none;
             .SmartNavBar-edge,
@@ -291,3 +353,84 @@
         }
     }
 }
+
+.SideMenu {
+  background: $gray-background;
+  padding-bottom: 20px;
+  text-align: left;  
+  margin-right: 15px;
+  padding-left: 0px;
+  .App-menus-group-header {
+    margin-top: 20px;
+    color: $gray-light;
+    text-align: left;
+    border-bottom: 1px solid $gray-light;     
+  }
+  .navbar-nav {
+    margin: 0;
+  }
+  .nav {
+      a {               
+        padding: 10px 20px 10px 25px;
+        text-align: left; 
+        color: $gray-dark;
+        font-size: 18px;
+
+        &:hover,
+        &:focus {
+          color: $brand-secondary-dark !important;
+          font-weight: 500;
+          padding-left: 22px;
+          background-color: transparent;   
+          > i {
+            color: $brand-secondary-dark !important;
+            font-weight: 500;
+            background-color: transparent;   
+          }
+        }   
+      }
+
+      i {
+        margin-left: 5px;  
+        font-size: 18px;
+      }
+  }
+}
+
+.SubSectionNavBar {
+    position: relative;
+    ul {
+      background: $gray-background;
+      display: block;
+      width: 100% !important;
+      list-style: none;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      line-height: 1.1;
+      -webkit-padding-start: 5px;
+      li {
+        font-size: 18px;
+        color: $gray;
+        text-decoration: none; 
+        display: inline;
+        a {
+          text-decoration: none;
+          color: $gray;
+          &:hover,
+          &:focus {
+            text-decoration: none;
+            color: $brand-secondary-dark;
+          }
+        }
+      }
+     }
+    > button {
+        position: absolute; 
+        display: inline-block;
+        top: 15px;
+        right: 25px;
+    }
+}
+
+
+

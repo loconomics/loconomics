@@ -1,30 +1,46 @@
 <!-- Conversation activity -->
-<div class="container-fluid limited-size-md limited-size-lg" data-activity="conversation">
-
-  <h2 class="SectionTitle"
-      data-bind="css: { 'is-syncing': isSyncing() }">
-      <span data-bind="text: subject"></span>
-      <!-- ko component: {
-        name: 'app-loading-spinner',
-        params: { mod: 'onRight' }
-      } --><!-- /ko -->
-  </h2>
-  <div data-bind="css: { 'is-loading': isLoading() }">
-      <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-  </div>
-  <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
-    <div class="panel-heading">
-        <span data-bind="text: displayedDate"></span>
-        <span class="text-muted" data-bind="text: displayedTime"></span>
+<div data-activity="conversation" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row"> 
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/inbox">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Inbox
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle SectionTitle-hasHelpPoint" data-bind="css: { 'is-syncing': isSyncing() }">
+                    <span class="pull-left" data-bind="text: subject"></span>
+                    <span class="pull-right hidden-xs hidden-sm" data-bind="visible: user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201966986-sending-and-receiving-messages" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                    <span class="pull-right hidden-xs hidden-sm" data-bind="visible: !user.isServiceProfessional"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201966996-sending-and-receiving-messages" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
+                <div class="container-fluid LightForm">
+                    <div data-bind="css: { 'is-loading': isLoading() }">
+                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                    </div>
+                    <div class="panel panel-default isolated" data-bind="foreach: thread() && thread().messages">
+                        <div class="panel-heading">
+                            <span data-bind="text: displayedDate"></span>
+                            <span class="text-muted" data-bind="text: displayedTime"></span>
+                        </div>
+                        <div class="panel-body">
+                            <div data-bind="text: bodyText"></div>
+                        </div>
+                    </div>
+                    <div data-bind="if: bookingID" class="isolated">
+                        <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() + '/booking' }">Open Booking</button>
+                    </div>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
-        <div data-bind="text: bodyText"></div>
-    </div>
-  </div>
-  <div data-bind="if: bookingID" class="isolated">
-      <button type="button" class="btn btn-default btn-block"
-              data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() + '/booking' }">
-          Open Booking
-      </button>
-  </div>
 </div>

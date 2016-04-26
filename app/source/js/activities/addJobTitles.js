@@ -11,13 +11,14 @@ var A = Activity.extend(function AddJobTitlesActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: '/scheduling' , helpLink: '/help/sections/201211055-adding-job-profiles'
+    });
 });
 
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-
     var referrer = this.app.shell.referrerRoute;
     referrer = referrer && referrer.url || '/scheduling';
     var link = this.requestData.cancelLink || referrer;
@@ -38,9 +39,9 @@ A.prototype.show = function show(options) {
     this.updateNavBarState();
 };
 
-var ko = require('knockout');
 function ViewModel(app) {
     
+    var ko = require('knockout');
     this.isSearching = ko.observable(false);
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
@@ -52,7 +53,7 @@ function ViewModel(app) {
             app.model.onboarding.inProgress() ?
                 'Save and continue' :
                 this.isSaving() ? 
-                    'saving...' : 
+                    'Saving...' : 
                     'Save'
         );
     }, this);

@@ -220,7 +220,8 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
 
     var rightOptions = helpLink ?
         NavAction.goHelpIndex.model.clone({
-            link: helpLink
+            link: helpLink,
+            text: "Help"
         }) :
         NavAction.goHelpIndex;
 
@@ -237,7 +238,7 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
     
     var action = new NavAction({
         link: cancelLink,
-        text: 'cancel',
+        text: 'Cancel',
         handler: function(event) {
             var link = this.link(),
                 eoptions = event && event.options || {};

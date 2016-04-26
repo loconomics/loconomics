@@ -1,41 +1,56 @@
 <!-- AddJobTitles activity -->
-<div data-activity="addJobTitles" class="limited-size-md limited-size-lg">
-    <h2 class="SectionTitle">
-        <span>Add one or more job title(s)</span>
-    </h2>
-    
-    <div class="isolated inset">
-        <div class="input-group">
-            <span class="input-group-addon">
-                <span class="fa ion ion-ios-search"></span><span class="sr-only">Search</span>
-            </span>
-            <input id="addJobTitles-search" type="text" class="form-control" placeholder="search" data-bind="textInput: searchText">
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
-            </span>
-        </div><!-- /input-group -->
-        <div class="TagsListAutocomplete" data-bind="visible: searchText() && autocompleteSuggestions().length">
-            <ul data-bind="foreach: autocompleteSuggestions" class="list-unstyled">
-                <li><button type="button" class="btn btn-link btn-block" data-bind="text: label, click: $parent.addItem"></button></li>
-            </ul>
+<div data-activity="addJobTitles"  class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceProfile"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Marketplace profile</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="LightForm col-md-7 col-sm-reset">
+                <h2 class="SectionTitle SectionTitle-hasHelpPoint">
+                    <span class="pull-left">Add one or more job profiles</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201211055-adding-job-profiles" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
+                <div class="isolated inset">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="fa ion ion-ios-search"></span><span class="sr-only">Search for your profession</span>
+                        </span>
+                        <input id="addJobTitles-search" type="text" class="form-control" placeholder="search for your profession" data-bind="textInput: searchText">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
+                            </span>
+                    </div><!-- /input-group -->
+                    <div class="TagsListAutocomplete" data-bind="visible: searchText() && autocompleteSuggestions().length">
+                        <ul data-bind="foreach: autocompleteSuggestions" class="list-unstyled">
+                            <li>
+                                <button type="button" class="btn btn-link btn-block" data-bind="text: label, click: $parent.addItem"></button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
+                    <div class="ListView-item">
+                        <a href="#" class="btn btn-link btn-block ListView-item-content">
+                            <p data-bind="text: label"></p>
+                        </a>
+                        <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="LightForm-submitBar">
+                    <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
         </div>
     </div>
-    
-  <div class="ListView ListView--twolines ListView--textualmarker"
-       data-bind="foreach: jobTitles">
-    <div class="ListView-item">
-      <a href="#" class="btn btn-link btn-block ListView-item-content">
-        <p data-bind="text: label"></p>
-      </a>
-      <a href="#" class="btn btn-link ListView-item-action"
-         data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span></a>
-    </div>
-  </div>
-    
-  <div class="navbar navbar-default ActivityNavbar">
-    <div class="container">
-        <button type="button" class="btn btn-primary btn-block"
-                data-bind="text: submitText, disable: isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }, event: { click: save }"></button>
-    </div>
-  </div>
 </div>
+
