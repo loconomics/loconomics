@@ -96,6 +96,10 @@ A.prototype.show = function show(state) {
     // Set the job title
     var jobID = params[0] |0;
     this.viewModel.jobTitleID(jobID);
+    
+    //Get the return nav text
+    var returnText = state && state.route && state.route.query.returnText || 'Back';
+    this.viewModel.returnText(decodeURIComponent(returnText));
 };
 
 function ViewModel(app) {
@@ -105,6 +109,7 @@ function ViewModel(app) {
     this.userJobTitle = ko.observable(null);
     this.userID = ko.observable(null);
     this.jobTitleName = ko.observable('Job Title'); 
+    this.returnText = ko.observable('Back'); 
     
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
