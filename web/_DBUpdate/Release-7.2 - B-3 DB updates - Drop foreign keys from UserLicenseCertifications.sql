@@ -1,0 +1,2 @@
+ALTER TABLE UserLicenseCertifications DROP CONSTRAINT FK__userlicen__Licen__265B8A40
+ALTER TABLE UserLicenseCertifications DROP CONSTRAINT FK__userlicen__Provi__274FAE79

@@ -1,0 +1,1 @@
+DELETE FROM county WHERE CountyID = -1 AND StateProvinceID = 1

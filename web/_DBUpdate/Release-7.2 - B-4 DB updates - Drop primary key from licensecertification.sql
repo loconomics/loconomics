@@ -1,0 +1,1 @@
+ALTER TABLE licensecertification DROP CONSTRAINT PK__licensec__CE7A16FC19FFD4FC
