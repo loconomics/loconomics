@@ -113,7 +113,7 @@ function ViewModel(app) {
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.jobTitleID() + '?mustReturn=jobtitles/' + this.jobTitleID() +
-                '&returnText=' + this.jobTitleName()
+                '&returnText=' + this.jobTitleName() + ' Scheduler'
             );
         }, this);
     };
