@@ -8,7 +8,8 @@
                     <li><a href="/myAppointments">My appointments </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
                     <li>Upcoming</li>
                 </ul>
-                <button class="btn btn-default" >Edit this booking</button>
+                <button class="btn btn-default" data-bind="visible: !currentItem.isEditMode() && isEditButtonVisible(), click: isEditButtonVisible() && currentItem.edit">Edit this booking</button>
+                <button class="btn btn-default" data-bind="visible: currentItem.isEditMode(), click: currentItem.isEditMode() && currentItem.cancel">Cancel</button>
             </div>
             <div class="col-md-7 col-sm-reset CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
                 <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
