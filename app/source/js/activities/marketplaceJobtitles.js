@@ -195,27 +195,26 @@ function ViewModel(app) {
  
     this.licensesCertificationsSummary = ko.pureComputed(function() {
         var lc = this.submittedUserLicensesCertifications();
+        //jshint maxcomplexity:8
         if (lc && lc.length) {
-            // TODO Detect 
             var verified = 0, 
-//                other = 0,
-//                expired = 0,
+                other = 0,
                 pending = 0;
             lc.forEach(function(l) {
                 if (l && l.statusID() === 1)
                     verified++;
                 else if (l && l.statusID() === 2)
                     pending++;
-//                else if (l && l.statusID() === 4 || l.statusID() === 6)
-//                    expired++;
-//                else if (l && l.statusID() === 5)
-//                    other++;
+                else if (l && l.statusID() === 4)
+                    return 'Expired, please update';
+                else if (l && l.statusID() === 5)
+                    other++;
+                else if (l && l.statusID() === 6)
+                    return 'Expiring soon, please update';
                 else if (l && l.statusID() === 3)
                     return 'Please contact us';
             });
-            
-            return verified + ' verified, ' + pending + ' pending';
-//            return expired + ' expired/expiring' + verified + ' verified, ' + pending + ' pending' + other + ' other';
+            return verified + ' verified, ' + pending + ' pending, ' + other + ' supplemental';
         }
         else {
             return 'None verified';
