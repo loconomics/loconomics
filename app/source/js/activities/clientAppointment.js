@@ -22,9 +22,8 @@ var A = Activity.extend(function ClientAppointmentActivity() {
         rightAction: {}
     });
     var nav = this.navBar;
-    var vm = this.viewModel;
     ko.computed(function() {
-        var itCan = vm.isEditButtonVisible();
+        var itCan = this.canCancel() || this.canEdit();
         var isEdit = this.isEditMode() || this.isCancelMode();
         var settings = isEdit ? {
             text: 'Cancel',
@@ -58,7 +57,10 @@ function ViewModel(app) {
     this.isLoading = ko.observable(false);
     
     this.isEditButtonVisible = ko.pureComputed(function() {
-        return this.canCancel() || this.canEdit();
+        return (this.canCancel() || this.canEdit()) && !this.isEditMode() && !this.isCancelMode();
+    }, this.currentItem);
+    this.isCancelEditButtonVisible = ko.pureComputed(function() {
+        return (this.canCancel() || this.canEdit()) && (this.isEditMode() || this.isCancelMode());
     }, this.currentItem);
     
     this.isEmpty = ko.pureComputed(function() {
