@@ -40,8 +40,7 @@
                                 <div class="form-group">
                                     <label>Upload yours for us to verify:</label>
                                     <p>Upload a photo or document of your license/certification, and we'll do our best to verify it.</p>
-<!--                                    data-bind="disable: isLocked" -->
-                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet">Upload/take photo
+                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet" data-bind="disable: $root.isLocked">Upload/take photo
                                     </button>
                                 </div>
                             </fieldset>
@@ -125,8 +124,7 @@
                                 <div class="form-group">
                                     <label>Submit an update:</label>
                                     <p>Upload a photo or document of your updated license/certification.</p>
-<!--                                    data-bind="disable: isLocked" -->
-                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet">Upload/take photo
+                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet" data-bind="disable: $root.isLocked">Upload/take photo
                                     </button>
                                 </div>
                             </fieldset>
