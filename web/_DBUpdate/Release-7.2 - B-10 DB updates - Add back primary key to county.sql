@@ -1,1 +1,0 @@
-ALTER TABLE county ADD PRIMARY KEY (CountyID)

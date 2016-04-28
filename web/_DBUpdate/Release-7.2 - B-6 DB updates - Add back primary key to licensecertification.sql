@@ -1,1 +1,0 @@
-ALTER TABLE licensecertification ADD PRIMARY KEY (LicenseCertificationID, LanguageID)

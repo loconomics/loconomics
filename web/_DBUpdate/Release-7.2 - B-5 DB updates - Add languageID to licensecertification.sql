@@ -1,1 +1,0 @@
-ALTER TABLE licensecertification ADD LanguageID int DEFAULT 1 NOT NULL
