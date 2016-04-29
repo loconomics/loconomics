@@ -5,7 +5,7 @@
         <h1 class="hidden-xs hidden-sm">Everything you need to know</h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()">
+                <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()" style="background-color: white">
                     <h1 class="SectionTitle">Current appointment</h1>
                     <ul class="TilesList TilesList--openEnd">
                         <li id="dashboardCurrentAppointment" data-bind="with: upcomingAppointments.currentAppointment">
@@ -19,10 +19,10 @@
                         </li>
                     </ul>
                     <div class="Box-sm">
-                        <div data-bind="template: { name: 'service-professional-info-template', data: nextAppointmentServiceProfessionalInfo() }"></div>
+                        <a href="#" data-bind="template: { name: 'service-professional-info-template', data: nextAppointmentServiceProfessionalInfo()}, attr: { href: $root.getUrlTo('clientAppointment') }"></a>
                     </div>
                 </div>
-                <div data-bind="visible: user.isServiceProfessional">
+                <div data-bind="visible: user.isServiceProfessional" style="background-color: white">
                     <h1 class="SectionTitle"
                         data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
                         Upcoming bookings
@@ -72,7 +72,7 @@
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
-                <div data-bind="visible: user.isClient()">
+                <div data-bind="visible: user.isClient()" style="background-color: white">
                     <h1 class="SectionTitle"
                         data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing() }">
                         Upcoming appointments
@@ -83,7 +83,7 @@
                     </h1>
                     <div data-bind="visible: upcomingAppointments.items().length, with: upcomingAppointments.nextBooking()">
                         <a href="#" class="LeadTile"
-                           data-bind="attr: { href: '#!clientAppointment/' + bookingID() }">
+                           data-bind="attr: { href: $root.getUrlTo('clientAppointment') }">
                             <h3 class="Tile-title">
                                 <div data-bind="text: displayedDate"></div>
                                 <div>

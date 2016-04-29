@@ -221,6 +221,17 @@ function ViewModel(app) {
         var place = address.singleLine ? address.singleLine() : '';
         return 'https://www.google.com/maps/?q=' + encodeURIComponent(lat) + ',' + encodeURIComponent(lng) + '&near=' + encodeURIComponent(place) + '&z=16';
     };
+    
+    // Retrieves a computed that will link to the given named activity adding the current
+    // jobTitleID and a mustReturn URL to point this page so its remember the back route
+    this.getUrlTo = function(name) {
+        // Sample '/clientAppointment/' + jobTitleID()
+        return ko.pureComputed(function() {
+            return (
+                '/' + name + '/' + this.upcomingAppointments.nextBooking.bookingID +'?mustReturn=/dashboard/' + '&returnText=' + ' Dashboard'
+            );
+        }, this);
+    };
 }
 
 /** TESTING DATA **/
