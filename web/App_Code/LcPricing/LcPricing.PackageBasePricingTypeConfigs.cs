@@ -57,7 +57,7 @@ public static partial class LcPricingModel
                 SelectionGroups = new string[]{"package"},
         
                 NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
-                NumberOfSessionsLabel = "Number of appointments included:",
+                //NumberOfSessionsLabel = "Number of appointments included:",
                 PriceLabel = "Price for package:",
                 PriceNote = "(this should be all-inclusive)",
                 DurationLabel = "Duration (per appointment):",
