@@ -13,30 +13,9 @@ var A = Activity.extend(function ClientAppointmentActivity() {
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = new Activity.NavBar({
-        title: 'Upcoming',
-        leftAction: Activity.NavAction.goBack.model.clone({
-            link: '/myAppointments',
-            isShell: false
-        }),
-        rightAction: {}
+    this.navBar = Activity.createSubsectionNavBar('', {
+        backLink: '/myAppointments' , helpLink: '/help/sections/201983163-making-changes-canceling-appointments'
     });
-    var nav = this.navBar;
-    ko.computed(function() {
-        var itCan = this.canCancel() || this.canEdit();
-        var isEdit = this.isEditMode() || this.isCancelMode();
-        var settings = isEdit ? {
-            text: 'Cancel',
-            handler: this.cancel.bind(this.viewModel)
-        } : itCan ? {
-            text: 'Edit',
-            handler: this.edit.bind(this.viewModel)
-        } : {
-            text: '',
-            handler: function() {}
-        };
-        nav.rightAction().model.updateWith(settings);
-    }, this.viewModel.currentItem);
 });
 
 exports.init = A.init;
@@ -48,6 +27,10 @@ A.prototype.show = function show(options) {
     var params = options && options.route && options.route.segments;
     var id = params[0] |0;
     this.viewModel.load(id);
+    
+    //Get the return nav text
+    var returnText = options && options.route && options.route.query.returnText || 'Back';
+    this.viewModel.returnText(decodeURIComponent(returnText));
 };
 
 function ViewModel(app) {
@@ -55,7 +38,8 @@ function ViewModel(app) {
     this.currentIndex = ko.observable(-1);
     this.currentItem = new EditClientBookingCardVM(app);
     this.isLoading = ko.observable(false);
-    
+    this.returnText = ko.observable('Back'); 
+        
     this.isEditButtonVisible = ko.pureComputed(function() {
         return (this.canCancel() || this.canEdit()) && !this.isEditMode() && !this.isCancelMode();
     }, this.currentItem);

@@ -65,4 +65,15 @@ function ViewModel() {
         pastAppointments: ko.observable(false),
         count: ko.observable(0)
     };
+    
+    // Retrieves a computed that will link to the given named activity adding the current
+    // jobTitleID and a mustReturn URL to point this page so its remember the back route
+    this.getUrlTo = function(name) {
+        // Sample '/clientAppointment/' + jobTitleID()
+        return ko.pureComputed(function() {
+            return (
+                '/' + name + '/' + this.upcomingAppointments.nextBooking.bookingID +'?mustReturn=myAppointments/' + '&returnText=' + ' My appointments'
+            );
+        }, this);
+    };
 }

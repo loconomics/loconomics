@@ -5,21 +5,30 @@
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm col-md-7 col-sm-reset">
                 <ul>
-                    <li><a href="/myAppointments">My appointments </a><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span> </li>
-                    <li>Upcoming</li>
+                    <li>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> <span data-bind="text: returnText"></span></a>
+                    </li>
                 </ul>
                 <button class="btn btn-default" data-bind="visible: isEditButtonVisible, click: isEditButtonVisible() && currentItem.edit">Edit this booking</button>
-                <button class="btn btn-default" data-bind="visible: isCancelEditButtonVisible, click: currentItem.cancel">Cancel</button>
             </div>
-            <div class="col-md-7 col-sm-reset CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
-                <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
-                <div data-bind="visible: isEmpty" class="isolated">
-                    No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a> 
-                </div>
-                <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
-                <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
-                    <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
-                </div>
+            <div class="col-md-7 col-sm-reset">            
+                <h2 class="SectionTitle">
+                    <span>Upcoming appointments</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a href="https://loconomics.com/en-US/help/sections/201983163-making-changes-canceling-appointments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                    <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: isEditButtonVisible() && currentItem.edit">Edit</button>
+                    </span>
+                </h2>
+                <div class="CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
+                    <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
+                    <div data-bind="visible: isEmpty" class="isolated">
+                        No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a> 
+                    </div>
+                    <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
+                    <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
+                        <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
+                    </div>
+                </div>            
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                <app-inline-side-menu></app-inline-side-menu>

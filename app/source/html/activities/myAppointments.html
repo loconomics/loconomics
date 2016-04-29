@@ -15,7 +15,7 @@
                 </h1>
                 <ul class="TilesList">
                     <li data-bind="with: upcomingAppointments.nextOnes">
-                        <a class="InfoTile" href="/clientAppointment">
+                        <a class="InfoTile" href="/clientAppointment" data-bind="attr: { href: $root.getUrlTo('clientAppointment') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-calendar"></span>
                             </div>
@@ -44,14 +44,14 @@
                     </li>
                 </ul>
                 <div data-bind="if: pastAppointments.count">
-                    <h1 class="SectionTitle"
+                    <h2 class="SectionTitle"
                         data-bind="css: { 'is-syncing': pastAppointments.isSyncing() }">
                         Past
                         <!-- ko component: {
                             name: 'app-loading-spinner',
                             params: { mod: 'onRight' }
                         } --><!-- /ko -->
-                    </h1>
+                    </h2>
                     <ul class="TilesList">
                         <li>
                             <a class="InfoTile" href="/pastAppointments">
