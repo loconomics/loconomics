@@ -1,6 +1,6 @@
 <script type="text/html" id="service-professional-info-template">
     <div class="ServiceProfessionalInfo ServiceProfessionalInfo--md" data-bind="if: $data">
-        <div class="Avatar Avatar--primary Avatar--sm"><img data-bind="attr: { src: profile() && profile().photoUrl }"></div>
+        <div class="Avatar Avatar--sm"><img data-bind="attr: { src: profile() && profile().photoUrl }"></div>
         <h3 class="ServiceProfessionalInfo-name" data-bind="text: profile() && profile().fullName"></h3>
         <div class="ServiceProfessionalInfo-jobTitle" data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></div>
         <div class="ServiceProfessionalInfo-businessName" data-bind="text: profile() && profile().businessName"></div>

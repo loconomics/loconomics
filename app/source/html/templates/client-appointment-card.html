@@ -1,16 +1,11 @@
-<script type="text/html" id="client-appointment-card-template">
-    
-    <div data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
-    <div class="Card AppointmentCard">
+<script type="text/html" id="client-appointment-card-template">    
+    <div class="Card AppointmentCard" data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
         <div class="Card-title">
             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
-        </div>
-        
+        </div>        
         <div class="booking-steps">
             <div class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
-
                 <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
-
                 <div data-bind="visible: supportsGratuity() && booking().paymentEnabled()">
                     <h2 class="SectionTitle">Add gratuity</h2>
                     <div class="center-block Box-sm PaddedBox-xs" style="text-align: center">
@@ -27,7 +22,6 @@
                         <p class="isolated"><small>You’ll have until 1 hour after your app’t ends to adjust</small></p>
                     </div>
                 </div>
-
                 <h2 class="SectionTitle">Summary</h2>
                 <div class="PricingSummary Box-sm PaddedBox-xs">
                     <table>
@@ -51,14 +45,12 @@
                         <span data-bind="text: booking().pricingSummary().firstSessionDurationDisplay"></span>
                     </div>
                 </div>
-
                 <div class="PaddedBox-xs-only isolated-sm">
                     <div>
                         <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !hasServicesSelected(), click: nextStep">Save and continue</button>
                     </div>
                 </div>
-            </div>
-            
+            </div>            
             <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
                 <h1 class="SectionTitle">
                     <span data-bind="visible: isAtSelectTimes">Select up to 3 appointment times</span>
@@ -87,7 +79,6 @@
                                 <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
                             </button>
                         </li>
-
                         <li data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
                             <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate1">
                             <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
@@ -129,11 +120,9 @@
                         </li>
                     </ul>
                 </div>
-
                 <div data-bind="visible: timeFieldToBeSelected">
                     <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
                 </div>
-
                 <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
                     <div class="isolated bottom-only" data-bind="visible: isAtSelectTimes">
                         <div>
@@ -147,8 +136,7 @@
                         Your service professional has 18 hours to confirm your appointment.</p>
                     </div>
                 </div>
-            </div>
-        
+            </div>        
             <div class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
                 <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 <div data-bind="visible: !addressEditorOpened()">
@@ -207,16 +195,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
+            </div>            
             <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
                 <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <div data-bind="css: { 'Tile--success': booking().isCompleted() || booking().isConfirmed() || booking().isPerformed(), 'Tile--warning': booking().isRequest() || booking().isDispute(), 'Tile--danger': booking().isCancelled() || booking().isDenied() || booking().isIncomplete() || booking().isExpired()}" class="ItemTile">
-                            <i class="Tile-marker fa ion ion-ios-information-outline" aria-hidden="true"></i>
-                            <div class="Tile-content">
-                                <p data-bind="text: booking().bookingStatusLabel()"></p>
-                            </div>
+                    <li data-bind="css: { 'Tile--success': booking().isCompleted() || booking().isConfirmed() || booking().isPerformed(), 'Tile--warning': booking().isRequest() || booking().isDispute(), 'Tile--danger': booking().isCancelled() || booking().isDenied() || booking().isIncomplete() || booking().isExpired()}" class="ItemTile">
+                        <i class="Tile-marker fa ion ion-ios-information-outline" aria-hidden="true"></i>
+                        <div class="Tile-content">
+                            <p data-bind="text: booking().bookingStatusLabel()"></p>
                         </div>
                     </li>
                     <li>
@@ -300,14 +285,12 @@
                         </button>
                     </li>
                 </ul>
-
                 <div class="AppointmentCard-actions" data-bind="visible: isEditMode() || isCancelMode()">
                     <button type="button" class="btn btn-primary btn-block" data-bind="visible: canEdit, click: save, text: submitText, disable: isLocked">Save changes</button>
-                    <!--<button type="button" class="btn btn-default btn-block" data-bind="click: confirmCancel, disable: isLocked">Don't save changes</button>-->
                     <button type="button" class="btn btn-danger btn-block" data-bind="visible: isCancelMode(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
+                    <button type="button" class="btn btn-default btn-block" data-bind="click: confirmCancel, disable: isLocked">Don't save changes</button>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 </script>
