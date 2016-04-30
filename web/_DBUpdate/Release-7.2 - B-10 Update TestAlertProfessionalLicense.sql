@@ -186,7 +186,8 @@ BEGIN
              -- If there are no (required) licenses for the job title, turn off alert
 			OR
 			(            
-                 SELECT *
+                 SELECT 
+                 CASE WHEN COUNT(DISTINCT OptionGroup) <= SUM(CASE WHEN numberVerified > 0 AND OptionGroup is NOT NULL THEN 1 ELSE 0 END) THEN 1 ELSE 0 END
                  FROM
                 (SELECT
                     JL.OptionGroup
