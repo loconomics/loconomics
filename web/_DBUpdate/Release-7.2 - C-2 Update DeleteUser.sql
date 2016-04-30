@@ -20,7 +20,7 @@ DROP PROCEDURE dbo.DeleteUser;
 -- TODO: need be update with all
 -- the tables (calendar, pricing, etc.)
 -- =============================================
-CREATE PROCEDURE [dbo].[DeleteUser]
+ALTER PROCEDURE [dbo].[DeleteUser]
 	(
 	@UserId int
 	)
