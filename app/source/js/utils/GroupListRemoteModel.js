@@ -52,7 +52,7 @@ function GroupListRemoteModel(settings) {
     this.fetchGroupFromLocal = notImplemented;
     this.fetchGroupFromRemote = notImplemented;
     this.pushGroupToLocal = notImplemented;
-    this.pushGroupToRemote = notImplemented;
+    this.pushItemToRemote = notImplemented;
     this.removeItemFromRemote = notImplemented;
 
     /** API definition **/
@@ -61,12 +61,16 @@ function GroupListRemoteModel(settings) {
     api.getList = function getList(groupID) {
         var cacheEntry = cache.getGroupCache(groupID);
 
-        if (cacheEntry.control.mustRevalidate()) {
+        // Concurrent requests: First, check if there is a running/pending request already for this
+        if (cacheEntry.request) {
+            return cacheEntry.request;
+        }
+        else if (cacheEntry.control.mustRevalidate()) {
             // No cache data, is first load, try from local
             if (!cacheEntry.list) {
                 api.state.isLoading(true);
                 // From local
-                return this.fetchGroupFromLocal(groupID)
+                cacheEntry.request = this.fetchGroupFromLocal(groupID)
                 .then(function(data) {
                     // launch remote for sync
                     api.state.isSyncing(true);
@@ -86,19 +90,21 @@ function GroupListRemoteModel(settings) {
                     cache.setGroupCache(groupID, data);
                     this.pushGroupToLocal(groupID, data);
                     api.state.isLoading(false);
-
+                    cacheEntry.request = null;
                     return data;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cacheEntry.request = null;
                     // rethrow error
-                    return err;
+                    throw err;
                 });
+                return cacheEntry.request;
             } else {
                 api.state.isSyncing(true);
                 // From remote
-                return this.fetchGroupFromRemote(groupID)
+                cacheEntry.request = this.fetchGroupFromRemote(groupID)
                 .then(function(data) {
                     // Ever a list, even if empty
                     data = data || [];
@@ -106,15 +112,17 @@ function GroupListRemoteModel(settings) {
                     this.pushGroupToLocal(groupID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
-
+                    cacheEntry.request = null;
                     return data;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cacheEntry.request = null;
                     // rethrow error
-                    return err;
+                    throw err;
                 });
+                return cacheEntry.request;
             }
         }
         else {
@@ -157,7 +165,7 @@ function GroupListRemoteModel(settings) {
     api.setItem = function setItem(data) {
         api.state.isSaving(true);
         // Send to remote first
-        return this.pushGroupToRemote(data)
+        return this.pushItemToRemote(data)
         .then(function(serverData) {
             // Success! update local copy with returned data
             // IMPORTANT: to use server data here so we get values set
@@ -180,7 +188,7 @@ function GroupListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isSaving(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -206,7 +214,7 @@ function GroupListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isDeleting(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -298,11 +306,10 @@ GroupListRemoteModel.prototype.addRestSupport = function addRestSupport(restClie
     this.fetchGroupFromRemote = function fetchFromRemote(groupID) {
         return restClient.get(baseUrl + groupID);
     };
-    this.pushGroupToRemote = function pushToRemote(data) {
-
+    this.pushItemToRemote = function pushToRemote(data) {
         var groupID = data[this.settings.groupIdField],
             itemID = data[this.settings.itemIdField],
-            method = data[this.settings.itemIdField] ? 'put' : 'post';
+            method = itemID ? 'put' : 'post';
 
         var url = baseUrl + groupID + (
             itemID ? '/' + itemID : ''

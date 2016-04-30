@@ -52,10 +52,11 @@ public static partial class LcPayment
         {
             var errors = new Dictionary<string, string>();
             // Validate fields for credit card creation
-            if (nameOnCard.IsEmpty())
-            {
-                errors.Add("nameOnCard", "'Name as on card' is required");
-            }
+            // Removed 'name as on card' as asked by Josh at 2016-02-15 #735
+            //if (nameOnCard.IsEmpty())
+            //{
+            //    errors.Add("nameOnCard", "'Name as on card' is required");
+            //}
             if (cardNumber.IsEmpty())
             {
                 errors.Add("cardNumber", "Card number is required");

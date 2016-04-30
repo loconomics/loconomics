@@ -1,0 +1,8 @@
+        
+<script type="text/html" id="signup-field">
+  <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
+    <input type="text" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
+    <span class="form-control-feedback" aria-hidden="true" data-bind="css: icon"></span>
+  </div>
+</script>
+        

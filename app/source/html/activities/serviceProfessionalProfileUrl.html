@@ -1,0 +1,39 @@
+<!-- serviceProfessionalProfileUrl activity -->
+<div data-activity="serviceProfessionalProfileUrl" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceProfile"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Marketplace profile</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                    <span>Use your profile as your website</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201961853-setting-a-custom-marketplace-profile-url" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
+                <form class="container-fluid LightForm" data-bind="submit: save">
+                    <div class="form-group">
+                        <label style="margin-top: 10px;"for="serviceProfessionalProfileUrl-url">Create your custom URL:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">www.loconomics.com/</span>
+                            <input type="text" id="serviceProfessionalProfileUrl-url" class="form-control"
+data-bind="value: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+                        </div>
+                    </div>
+                    <div class="LightForm-submitBar">
+                        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+                    </div>
+                </form>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>        
+

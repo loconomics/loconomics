@@ -7,15 +7,15 @@ var Activity = require('../components/Activity'),
     $ = require('jquery'),
     ko = require('knockout');
 
-var A = Activity.extends(function CalendarSyncingActivity() {
+var A = Activity.extend(function CalendarSyncingActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
-        backLink: 'scheduling'
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: 'scheduling' , helpLink: '/help/sections/201959953-syncing-your-existing-calendar'
     });
     
     // Adding auto-select behavior to the export URL

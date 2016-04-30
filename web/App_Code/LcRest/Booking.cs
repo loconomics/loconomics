@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +13,15 @@ namespace LcRest
     /// </summary>
     public class Booking
     {
+        #region Static Information
+        /// <summary>
+        /// After that time from the last update on a
+        /// booking request without provider confirmation,
+        /// the request will expire.
+        /// </summary>
+        public const int ConfirmationLimitInHours = 18;
+        #endregion
+
         #region Fields
         public int bookingID;
         public int clientUserID;
@@ -34,10 +43,13 @@ namespace LcRest
         public int pricingSummaryRevision;
         internal string paymentTransactionID;
         public string paymentLastFourCardNumberDigits;
-        public decimal? totalPricePaidByClient;
-        public decimal? totalServiceFeesPaidByClient;
-        public decimal? totalPaidToServiceProfessional;
-        public decimal? totalServiceFeesPaidByServiceProfessional;
+        internal string paymentMethodID;
+        internal string cancellationPaymentTransactionID;
+        public decimal? clientPayment;
+        public decimal? serviceProfessionalPaid;
+        public decimal? serviceProfessionalPPFeePaid;
+        internal decimal? loconomicsPaid;
+        internal decimal? loconomicsPPFeePaid;
 
         public bool instantBooking;
         public bool firstTimeBooking;
@@ -93,7 +105,7 @@ namespace LcRest
                 if (bookingStatusID == (int)LcEnum.BookingStatus.request &&
                     updatedDate.HasValue)
                 {
-                    return updatedDate.Value.AddHours(LcData.Booking.ConfirmationLimitInHours);
+                    return updatedDate.Value.AddHours(ConfirmationLimitInHours);
                 }
                 return null;
             }
@@ -119,6 +131,15 @@ namespace LcRest
             var forServiceProfessional = forUserID.HasValue && forUserID.Value == booking.serviceProfessionalUserID;
             var forClient = forUserID.HasValue && forUserID.Value == booking.clientUserID;
 
+            var reviewedByServiceProfessional = false;
+            var reviewedByClient = false;
+            try
+            {
+                reviewedByServiceProfessional = booking.reviewedByServiceProfessional;
+                reviewedByClient = booking.reviewedByClient;
+            }
+            catch { }
+
             return new Booking
             {
                 bookingID = booking.bookingID,
@@ -141,10 +162,13 @@ namespace LcRest
                 pricingSummaryRevision = booking.pricingSummaryRevision,
                 paymentTransactionID = internalUse ? booking.paymentTransactionID : null,
                 paymentLastFourCardNumberDigits = forClient || internalUse ? LcEncryptor.Decrypt(booking.paymentLastFourCardNumberDigits) : null,
-                totalPricePaidByClient = booking.totalPricePaidByClient,
-                totalServiceFeesPaidByClient = booking.totalServiceFeesPaidByClient,
-                totalPaidToServiceProfessional = booking.totalPaidToServiceProfessional,
-                totalServiceFeesPaidByServiceProfessional = booking.totalServiceFeesPaidByServiceProfessional,
+                paymentMethodID = internalUse ? booking.paymentMethodID : null,
+                cancellationPaymentTransactionID = internalUse ? booking.cancellationPaymentTransactionID : null,
+                clientPayment = booking.clientPayment,
+                serviceProfessionalPaid = booking.serviceProfessionalPaid,
+                serviceProfessionalPPFeePaid = booking.serviceProfessionalPPFeePaid,
+                loconomicsPaid = booking.loconomicsPaid,
+                loconomicsPPFeePaid = booking.loconomicsPPFeePaid,
                 
                 instantBooking = booking.instantBooking,
                 firstTimeBooking = booking.firstTimeBooking,
@@ -172,8 +196,8 @@ namespace LcRest
                 preNotesToSelf = (forServiceProfessional || internalUse ? booking.preNotesToSelf : ""),
                 postNotesToSelf = (forServiceProfessional || internalUse ? booking.postNotesToSelf : ""),
 
-                reviewedByServiceProfessional = booking.reviewedByServiceProfessional,
-                reviewedByClient = booking.reviewedByClient
+                reviewedByServiceProfessional = reviewedByServiceProfessional,
+                reviewedByClient = reviewedByClient
             };
         }
 
@@ -197,7 +221,7 @@ namespace LcRest
         /// <param name="jobTitleID"></param>
         /// <param name="bookCode"></param>
         /// <returns></returns>
-        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, int langID, int countryID, string bookCode)
+        public static Booking NewFor(int clientID, int serviceProfessionalID, int jobTitleID, int langID, int countryID, string bookCode, bool isServiceProfessionalBooking = false)
         {
             var booking = new Booking();
             booking.clientUserID = clientID;
@@ -205,6 +229,17 @@ namespace LcRest
             booking.jobTitleID = jobTitleID;
             booking.languageID = langID;
             booking.countryID = countryID;
+
+            // Set bookingType (IMPORTANT: before fill the user job title)
+            if (isServiceProfessionalBooking)
+            {
+                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
+            }
+            else
+            {
+                // Only supports auto-detect client BookNow and Marketplace bookings.
+                booking.bookingTypeID = (int)(IsValidBookCode(serviceProfessionalID, bookCode) ? LcEnum.BookingType.bookNowBooking : LcEnum.BookingType.marketplaceBooking);
+            }
 
             // Check service-job exists and enabled, and get its public preferences
             booking.FillUserJobTitle();
@@ -214,16 +249,11 @@ namespace LcRest
                 return null;
             }
 
-            // Only supports auto-detect client BookNow and Marketplace bookings. ServiceProfessional booking must be overwritted on its own API and
-            // other types are not yet implemented
-            booking.bookingTypeID = (int)(IsValidBookCode(serviceProfessionalID, bookCode) ? LcEnum.BookingType.bookNowBooking : LcEnum.BookingType.marketplaceBooking);
-
-            // Check payment enabled on the
-            // Payment is required for client bookings, but avoided on bookNow bookings.
+            // Payment is required for client bookings, but avoided on bookNow bookings. That's excludes service professional bookings too
             // TODO Per #590, a new check by job-title and bookNow preference may be required, allowing
             // optionally enabling payment through bookNow.
             booking.paymentEnabled = false;
-            if (booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
+            if (!isServiceProfessionalBooking && booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
             {
                 booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
                 if (!booking.paymentEnabled)
@@ -237,7 +267,43 @@ namespace LcRest
             booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
             booking.cancellationPolicyID = booking.userJobTitle.cancellationPolicyID;
             booking.instantBooking = booking.userJobTitle.instantBooking;
-            booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);            
+            booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);
+        
+            // Fees:
+            var summary = new PricingSummary();
+            booking.pricingSummary = summary;
+            var flags = LcMessaging.SendBooking.JobTitleMessagingFlags.Get(jobTitleID, langID, countryID);
+
+            var type = BookingType.Get(booking.bookingTypeID);
+
+            // Payment fees only if payment enabled
+            if (booking.paymentEnabled)
+            {
+                summary.paymentProcessingFeeFixed = type.paymentProcessingFeeFixed;
+                summary.paymentProcessingFeePercentage = type.paymentProcessingFeePercentage;
+            }
+            else
+            {
+                summary.paymentProcessingFeeFixed = 0;
+                summary.paymentProcessingFeePercentage = 0;
+            }
+
+            // Client Service Fees
+            // Only are applied on NOT-HIPAA NOT-book-now firstTimeBookings, otherwise is zero
+            if (flags.hipaa || !booking.firstTimeBooking || booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking)
+            {
+                summary.firstTimeServiceFeeFixed = 0;
+                summary.firstTimeServiceFeePercentage = 0;
+                summary.firstTimeServiceFeeMinimum = 0;
+                summary.firstTimeServiceFeeMaximum = 0;
+            }
+            else
+            {
+                summary.firstTimeServiceFeeFixed = type.firstTimeServiceFeeFixed;
+                summary.firstTimeServiceFeePercentage = type.firstTimeServiceFeePercentage;
+                summary.firstTimeServiceFeeMinimum = type.firstTimeServiceFeeMinimum;
+                summary.firstTimeServiceFeeMaximum = type.firstTimeServiceFeeMaximum;
+            }
 
             return booking;
         }
@@ -332,10 +398,13 @@ namespace LcRest
                 pricingSummaryRevision,
                 paymentTransactionID,
                 paymentLastFourCardNumberDigits,
-                totalPricePaidByClient,
-                totalServiceFeesPaidByClient,
-                totalPaidToServiceProfessional,
-                totalServiceFeesPaidByServiceProfessional,
+                paymentMethodID,
+                cancellationPaymentTransactionID,
+                clientPayment,
+                serviceProfessionalPaid,
+                serviceProfessionalPPFeePaid,
+                loconomicsPaid,
+                loconomicsPPFeePaid,
 
                 instantBooking,
                 firstTimeBooking,
@@ -385,15 +454,34 @@ namespace LcRest
              INNER JOIN
             CalendarEvents As E
                 ON E.Id = B.ServiceDateID
+             LEFT JOIN
+            CalendarEvents As EA1
+                ON EA1.Id = B.AlternativeDate1ID
+             LEFT JOIN
+            CalendarEvents As EA2
+                ON EA2.Id = B.AlternativeDate2ID
         ";
         const string sqlGetItem = sqlSelect + "WHERE B.bookingID = @0";
         const string sqlGetList = sqlSelect + sqlJoinDate + @"
             WHERE 
                 (B.clientUserID = @0 OR B.serviceProfessionalUserID = @0)
+                  AND (
+                    E.EndTime > @1
+                        AND
+                    E.StartTime < @2
+                     OR
+                    EA1.EndTime > @1  
+                        AND
+                    EA1.StartTime < @2
+                     OR
+                    EA2.EndTime > @1  
+                        AND
+                    EA2.StartTime < @2
+                  )
                     AND
-                E.EndTime > @1
-                    AND
-                E.StartTime < @2
+                -- An status valid to be included in the listing
+                -- request, confirmed, performed, completed, dispute
+                B.BookingStatusID IN (2, 6, 7, 8, 9)
         ";
         const string sqlGetItemForUser = sqlGetItem + @"
             AND (B.clientUserID = @1 OR B.serviceProfessionalUserID = @1)
@@ -406,7 +494,7 @@ namespace LcRest
             {
                 var sql = UserID.HasValue ? sqlGetItemForUser : sqlGetItem;
                 var b = FromDB(db.QuerySingle(sql, BookingID, UserID), internalUse, UserID);
-                if (fillLinks)
+                if (b != null && fillLinks)
                     b.FillLinks();
                 return b;
             }
@@ -418,7 +506,7 @@ namespace LcRest
                 return db.Query(sqlGetList, UserID, StartTime, EndTime).Select<dynamic, Booking>(booking =>
                  {
                      var b = FromDB(booking, false, UserID);
-                     if (fillLinks)
+                     if (b != null && fillLinks)
                          b.FillLinks();
                      return b;
                  });
@@ -426,7 +514,6 @@ namespace LcRest
         }
 
         #region Queries
-
         /// <summary>
         /// Returns a list of bookings that are in status 'incomplete' and ready to become timedout
         /// </summary>
@@ -472,10 +559,11 @@ namespace LcRest
                              INNER JOIN
                             CalendarEvents As E
                               ON B.ServiceDateID = E.Id
-                             INNER JOIN
                     WHERE   
                             -- With payment enabled
                             B.PaymentEnabled = 1
+                             AND
+                            B.PaymentCollected = 1
                              AND
                             B.BookingStatusID IN (" + validStatuses + @")
                              AND
@@ -487,7 +575,7 @@ namespace LcRest
 
                              AND
                             -- Still not charged
-                            B.TotalPricePaidByClient is null
+                            B.ClientPayment is null
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
@@ -497,7 +585,7 @@ namespace LcRest
         /// the payment is authorized with the exception of services for more than 7 days in advance,
         /// that ones are postponed because of authorization expirations.
         /// This query returns that bookings on a secure time frame to avoid expirations and prevent
-        /// take action if any problem: 48 hours before the service start.
+        /// take action if any problem: 24 hours before the service start.
         /// </summary>
         /// <param name="dbShared"></param>
         /// <returns></returns>
@@ -507,8 +595,7 @@ namespace LcRest
             {
                 var validStatuses = String.Join(",", new List<int> {
                     (int)LcEnum.BookingStatus.confirmed,
-                    (int)LcEnum.BookingStatus.servicePerformed,
-                    (int)LcEnum.BookingStatus.completed
+                    (int)LcEnum.BookingStatus.servicePerformed
                 });
 
                 return db.Query(@"
@@ -517,19 +604,24 @@ namespace LcRest
                          INNER JOIN
                         CalendarEvents As E
                           ON B.ServiceDateID = E.Id
-                WHERE   BookingStatusID IN (" + validStatuses + @")
+                WHERE   
+                        -- With payment enabled
+                        B.PaymentEnabled = 1
                          AND
-                        -- at 48 hours before service starts (after that is fine)
-                        getdate() >= dateadd(hh, -48, E.StartTime)
-                        /* AND
-                         getdate() < dateadd(hh, -49, E.StartTime)
-                        */
-
+                        B.PaymentCollected = 1
                          AND
                         -- Still not charged or authorized
-                        B.TotalPricePaidByClient is null
+                        B.ClientPayment is null
                          AND
                         B.PaymentAuthorized = 0
+                         AND
+                        BookingStatusID IN (" + validStatuses + @")
+                         AND
+                        -- at 48 hours before service starts (after that is fine)
+                        getdate() >= dateadd(hh, -23, E.StartTime)
+                        /* AND
+                         getdate() < dateadd(hh, -24, E.StartTime)
+                        */
                 ").Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
@@ -542,6 +634,8 @@ namespace LcRest
                     CalendarEvents As E
                         ON B.ServiceDateID = E.Id
             WHERE   PaymentEnabled = 1
+                     AND
+                    B.PaymentCollected = 1
                      AND
                     BookingStatusID = @0
                         AND
@@ -567,6 +661,8 @@ namespace LcRest
                         ON B.ServiceDateID = E.Id
             WHERE   PaymentEnabled = 1
                      AND
+                    B.PaymentCollected = 1
+                     AND
                     BookingStatusID = @0
                         AND
                     -- at 120 hours, 5 days, after service ended (more than that is fine)
@@ -583,14 +679,35 @@ namespace LcRest
                         B2.BookingStatusID = @1
                     ) = 0 -- There is no complete bookings
         ";
+        private const string sqlPendingOfPaymentReleaseForServiceProfessionals = @"
+            SELECT  B.*
+            FROM    Booking As B
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON B.ServiceDateID = E.Id
+            WHERE   PaymentEnabled = 1
+                     AND
+                    B.PaymentCollected = 1
+                     AND
+                    BookingStatusID = @0
+                        AND
+                    -- at 1 hour 15 min, after service ended (more than that is fine)
+                    getdate() >= dateadd(hh, 1.25, E.EndTime)
+                    /* AND
+                        getdate() < dateadd(hh, 2.25, E.EndTime)
+                    */
+        ";
         #endregion
-        public static IEnumerable<Booking> QueryPendingOfPaymentReleaseBookings(bool forNewServiceProfessionals, Database dbShared = null)
+        public static IEnumerable<Booking> QueryPendingOfPaymentReleaseBookings(bool? forNewServiceProfessionals, Database dbShared = null)
         {
             using (var db = new LcDatabase(dbShared))
             {
-                var sql = forNewServiceProfessionals ?
+                var sql = 
+                    forNewServiceProfessionals.HasValue ?
+                    forNewServiceProfessionals.Value ?
                     sqlPendingOfPaymentReleaseForNewServiceProfessionals :
-                    sqlPendingOfPaymentReleaseForVeteranServiceProfessionals;
+                    sqlPendingOfPaymentReleaseForVeteranServiceProfessionals :
+                    sqlPendingOfPaymentReleaseForServiceProfessionals;
 
                 return db.Query(sql, (int)LcEnum.BookingStatus.servicePerformed, (int)LcEnum.BookingStatus.completed)
                 .Select<dynamic, Booking>(x => FromDB(x, true));
@@ -599,7 +716,8 @@ namespace LcRest
 
         /// <summary>
         /// Return a list of bookings in Confirmed status that are ready to update to status ServicePerformed.
-        /// Conditions: being confirmed (not other statuses allowed) and 48 hours after service endTime.
+        /// Conditions: being confirmed (not other statuses allowed) and between the service endTime.
+        /// (before #844, was at 48H after service endTime)
         /// </summary>
         /// <param name="dbShared"></param>
         /// <returns></returns>
@@ -622,9 +740,9 @@ namespace LcRest
                     WHERE   BookingStatusID = @0
                              AND
                             -- at 48 hours after service ended (more than 48 hours is fine)
-                            getdate() >= dateadd(hh, 48, E.EndTime)
+                            getdate() >= E.EndTime -- dateadd(hh, 0, E.EndTime)
                             /* AND
-                             getdate() < dateadd(hh, 49, E.EndTime)
+                             getdate() < dateadd(hh, 1, E.EndTime)
                             */
                 ", (int)LcEnum.BookingStatus.confirmed).Select<dynamic, Booking>(x => FromDB(x, true));
             }
@@ -654,8 +772,35 @@ namespace LcRest
                              AND
                             -- passed x hours from request or some change (some provider communication or customer change)
                             UpdatedDate < dateadd(hh, 0 - @0, getdate())
-                ", LcData.Booking.ConfirmationLimitInHours, (int)LcEnum.BookingStatus.request)
+                ", ConfirmationLimitInHours, (int)LcEnum.BookingStatus.request)
                  .Select<dynamic, Booking>(x => FromDB(x, true));
+            }
+        }
+
+        #region SQL PendingOfCompleteWithoutPaymentBookings
+        private const string sqlPendingOfCompleteWithoutPaymentBookings = @"
+            SELECT  B.*
+            FROM    Booking As B
+                        INNER JOIN
+                    CalendarEvents As E
+                        ON B.ServiceDateID = E.Id
+            WHERE   PaymentEnabled = 0
+                     AND
+                    BookingStatusID = @0
+                        AND
+                    -- at 1 hour 15 min, after service ended (more than that is fine)
+                    getdate() >= dateadd(hh, 1.25, E.EndTime)
+                    /* AND
+                        getdate() < dateadd(hh, 2.25, E.EndTime)
+                    */
+        ";
+        #endregion
+        public static IEnumerable<Booking> QueryPendingOfCompleteWithoutPaymentBookings(Database dbShared = null)
+        {
+            using (var db = new LcDatabase(dbShared))
+            {
+                return db.Query(sqlPendingOfCompleteWithoutPaymentBookings, (int)LcEnum.BookingStatus.servicePerformed)
+                .Select<dynamic, Booking>(x => FromDB(x, true));
             }
         }
         #endregion
@@ -692,11 +837,17 @@ namespace LcRest
         }
 
         /// <summary>
-        /// 
+        /// Fills the data about the service professional and its profile for the job title in the booking.
+        /// IMPORTANT: Be aware that different rules apply the information load when the booking is created by the service professional,
+        /// so it's important to set the bookingType before call this; to avoid mistakes, the bookingTypeID must be set or an exception is throw.
         /// </summary>
         internal void FillUserJobTitle()
         {
-            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID);
+            if (!Enum.IsDefined(typeof(LcEnum.BookingType), bookingTypeID))
+                throw new Exception("BookingTypeID must be set before calling FillUserJobTitle");
+
+            var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
+            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking);
         }
 
         /// <summary>
@@ -748,6 +899,8 @@ namespace LcRest
                 ,[PricingSummaryRevision]
                 ,[PaymentTransactionID]
                 ,[PaymentLastFourCardNumberDigits]
+                ,[paymentMethodID]
+                ,[CancellationPaymentTransactionID]
                 
                 ,[InstantBooking]
                 ,[FirstTimeBooking]
@@ -778,11 +931,11 @@ namespace LcRest
                 @6, -- type
                 @7, -- policy
                 @8, -- parent
-                @9, @10, @11, @12, @13, @14, @15, @16,
+                @9, @10, @11, @12, @13, @14, @15, @16, @17, @18,
                 -- instant.. 
-                @17, @18, @19, @20, @21, @22,
-                @23, @24, @25, @26,
-                @27, @28, @29,
+                @19, @20, @21, @22, @23, @24,
+                @25, @26, @27, @28,
+                @29, @30, @31,
                 getdate(), getdate(), 'sys'
             )
             SET @BookingID = @@Identity
@@ -838,6 +991,8 @@ namespace LcRest
                 ,PaymentCollected = @2
                 ,PaymentAuthorized = @3
                 ,PaymentLastFourCardNumberDigits = @4
+                ,paymentMethodID = @5
+                ,cancellationPaymentTransactionID = @6
                 ,[UpdatedDate] = getdate()
                 ,[ModifiedBy] = 'sys'
             WHERE BookingID = @0
@@ -854,10 +1009,161 @@ namespace LcRest
         ";
         private const string sqlUpdClientPayment = @"
             UPDATE  Booking
-            SET     TotalPricePaidByClient = @1,
-                    TotalServiceFeesPaidByClient = @2
+            SET     ClientPayment = @1
             WHERE   BookingId = @0
         ";
+        private const string sqlUpdPaidFields = @"
+            UPDATE  Booking
+            SET     ServiceProfessionalPPFeePaid = @1,
+                    ServiceProfessionalPaid = @2,
+                    LoconomicsPaid = @3,
+                    LoconomicsPPFeePaid = @4
+            WHERE   BookingId = @0
+        ";
+        /// <summary>
+        /// Update SQL for internal processes, setting a booking as timedout.
+        /// Right now that means to remove references to eventIDs, that must
+        /// be removed
+        /// </summary>
+        private const string sqlUpdBookingAsTimedout = @"
+            DECLARE @ServiceAddressID int
+            DECLARE @d1 int
+            DECLARE @d2 int
+            DECLARE @d3 int
+
+            -- Get Service Address ID to be (maybe) removed later
+            SELECT  @ServiceAddressID = ServiceAddressID,
+                    @d1 = ServiceDateID ,
+                    @d2 = AlternativeDate1ID,
+                    @d3 = AlternativeDate2ID
+            FROM    Booking
+            WHERE   BookingID = @0
+
+            UPDATE Booking SET
+                ServiceDateID = null
+                ,AlternativeDate1ID = null
+                ,AlternativeDate2ID = null
+                ,ServiceAddressID = null
+                ,[UpdatedDate] = getdate()
+                ,[ModifiedBy] = 'sys'
+            WHERE BookingID = @0
+
+            -- Removing Service Address, if is not an user saved location (it has not AddressName)
+            DELETE FROM ServiceAddress
+            WHERE AddressID = @ServiceAddressID
+                    AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @ServiceAddressID AND AddressName is null) = 1
+            DELETE FROM Address
+            WHERE AddressID = @ServiceAddressID
+                    AND
+                    AddressName is null
+        ";
+        private const string sqlDeleteBooking = @"
+            DECLARE @ServiceAddressID int
+            DECLARE @d1 int
+            DECLARE @d2 int
+            DECLARE @d3 int
+            DECLARE @ps int
+
+            -- Get Service Address ID to be (maybe) removed later
+            SELECT  @ServiceAddressID = ServiceAddressID,
+                    @d1 = ServiceDateID ,
+                    @d2 = AlternativeDate1ID,
+                    @d3 = AlternativeDate2ID,
+                    @ps = PricingSummaryID
+            FROM    Booking
+            WHERE   BookingID = @0
+
+            DELETE FROM Booking
+            WHERE BookingID = @0
+
+            DELETE FROM PricingSummaryDetail
+            WHERE PricingSummaryID = @ps
+            DELETE FROM PricingSummary
+            WHERE PricingSummaryID = @ps
+
+            -- Removing CalendarEvents:
+            DELETE FROM CalendarEvents
+            WHERE ID IN (@d1, @d2, @d3)
+
+            -- Removing Service Address, if is not an user saved location (it has not AddressName)
+            DELETE FROM ServiceAddress
+            WHERE AddressID = @ServiceAddressID
+                    AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @ServiceAddressID AND AddressName is null) = 1
+            DELETE FROM Address
+            WHERE AddressID = @ServiceAddressID
+                    AND
+                    AddressName is null
+        ";
+
+        #region SQL Invalidate booking
+        const string sqlInvalidateBooking = @"
+            -- Parameters
+            DECLARE @BookingID int, @BookingStatusID int
+            SET @BookingID = @0
+            SET @BookingStatusID = @1
+
+            DECLARE @ServiceAddressID int
+            DECLARE @d1 int
+            DECLARE @d2 int
+            DECLARE @d3 int
+            
+            BEGIN TRAN
+
+            BEGIN TRY   
+
+                -- Get Service Address ID to be (maybe) removed later
+                SELECT  @ServiceAddressID = ServiceAddressID,
+                        @d1 = ServiceDateID ,
+                        @d2 = AlternativeDate1ID,
+                        @d3 = AlternativeDate2ID
+                FROM    Booking
+                WHERE   BookingID = @BookingID
+
+                /*
+                    * Updating Booking status, and removing references to the 
+                    * user selected dates and address
+                    */
+                UPDATE  Booking
+                SET     BookingStatusID = @BookingStatusID,
+                        -- ServiceDateID = null,
+                        -- AlternativeDate1ID = null,
+                        -- AlternativeDate2ID = null,
+                        ServiceAddressID = null,
+                        clientPayment = @2,
+                        serviceProfessionalPaid = @3,
+                        serviceProfessionalPPFeePaid = @4,
+                        loconomicsPaid = @5,
+                        loconomicsPPFeePaid = @6,
+                        pricingSummaryRevision = @7,
+                        cancellationPaymentTransactionID = @8
+                WHERE   BookingID = @BookingID
+
+                -- Removing CalendarEvents:
+                -- DELETE FROM CalendarEvents
+                -- WHERE ID IN (@d1, @d2, @d3)
+                UPDATE CalendarEvents
+                SET Deleted = getdate()
+                WHERE ID IN (@d1, @d2, @d3)
+
+                -- Removing Service Address, if is not an user saved location (it has not AddressName)
+                DELETE FROM ServiceAddress
+                WHERE AddressID = @ServiceAddressID
+                        AND (SELECT count(*) FROM Address As A WHERE A.AddressID = @ServiceAddressID AND AddressName is null) = 1
+                DELETE FROM Address
+                WHERE AddressID = @ServiceAddressID
+                        AND
+                        AddressName is null
+
+                COMMIT TRAN
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0
+                    ROLLBACK TRAN
+                -- We return error number and message
+                SELECT (Cast(ERROR_NUMBER() as varchar) + ':' + ERROR_MESSAGE()) As ErrorMessage
+            END CATCH
+        ";
+        #endregion
         #endregion
 
         /// <summary>
@@ -898,6 +1204,8 @@ namespace LcRest
                         booking.pricingSummaryRevision,
                         booking.paymentTransactionID,
                         lastFour,
+                        booking.paymentMethodID,
+                        booking.cancellationPaymentTransactionID,
 
                         booking.instantBooking,
                         booking.firstTimeBooking,
@@ -965,27 +1273,46 @@ namespace LcRest
                     booking.paymentTransactionID,
                     booking.paymentCollected,
                     booking.paymentAuthorized,
-                    lastFour
+                    lastFour,
+                    booking.paymentMethodID,
+                    booking.cancellationPaymentTransactionID
                 );
             }
         }
 
         /// <summary>
-        /// Autoset the booking fields for prices finally paid by client
-        /// after complete the client payment process (charge customer, settling transaction)
+        /// Persist on database the booking fields for prices finally paid by client
+        /// after complete the client payment process (charge customer, settling transaction).
+        /// It's based on information
         /// </summary>
         /// <param name="booking"></param>
         public static void SetClientPayment(Booking booking)
         {
-            if (booking.pricingSummary == null)
-                booking.FillPricingSummary();
-
             using (var db = new LcDatabase())
             {
                 db.Execute(sqlUpdClientPayment,
                     booking.bookingID,
-                    booking.pricingSummary.totalPrice ?? 0,
-                    booking.pricingSummary.feePrice ?? 0
+                    booking.clientPayment
+                );
+            }
+        }
+
+        /// <summary>
+        /// Persist on database the booking fields for prices finally paid by service professional
+        /// and Loconomics (fields with suffix *Paid).
+        /// See SetClientPayment for client related fields.
+        /// </summary>
+        /// <param name="booking"></param>
+        public static void SetPaidFields(Booking booking)
+        {
+            using (var db = new LcDatabase())
+            {
+                db.Execute(sqlUpdPaidFields,
+                    booking.bookingID,
+                    booking.serviceProfessionalPPFeePaid,
+                    booking.serviceProfessionalPaid,
+                    booking.loconomicsPaid,
+                    booking.loconomicsPPFeePaid
                 );
             }
         }
@@ -1014,6 +1341,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
+                db.Execute(sqlUpdBookingAsTimedout, booking.bookingID);
                 if (booking.serviceDateID.HasValue)
                     LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.serviceDateID.Value);
                 if (booking.alternativeDate1ID.HasValue)
@@ -1022,6 +1350,84 @@ namespace LcRest
                     LcCalendar.DelUserAppointment(booking.serviceProfessionalUserID, booking.alternativeDate2ID.Value);
             }
         }
+
+        public static void SetAsInvalidated(Booking booking, Database sharedDb = null)
+        {
+            using (var db = new LcDatabase(sharedDb))
+            {
+                var result = (string)db.QueryValue(
+                    sqlInvalidateBooking,
+                    booking.bookingID,
+                    booking.bookingStatusID,
+                    booking.clientPayment,
+                    booking.serviceProfessionalPaid,
+                    booking.serviceProfessionalPPFeePaid,
+                    booking.loconomicsPaid,
+                    booking.loconomicsPPFeePaid,
+                    booking.pricingSummaryRevision,
+                    booking.cancellationPaymentTransactionID
+                );
+                if (!String.IsNullOrEmpty(result))
+                    throw new Exception(result);
+            }
+        }
+
+        /// <summary>
+        /// Deletes the Booking, it's pricingSummary (all revisions),
+        /// related specifically created records for serviceAddress
+        /// and calendarEvents.
+        /// IMPORTANT: Does NOT manages inbox Messages/Threads created
+        /// for the booking, since this method is intended for internal
+        /// use when booking is in an intermiadate, incomplete, state
+        /// and no messages where created/sent still.
+        /// </summary>
+        /// <param name="booking"></param>
+        private static void DeleteBooking(Booking booking)
+        {
+            using (var db = new LcDatabase())
+            {
+                db.Execute(
+                    sqlDeleteBooking,
+                    booking.bookingID
+                );
+            }
+        }
+        #endregion
+
+        #region Calculations
+        private void CalculateClientPayment()
+        {
+            if (pricingSummary == null)
+                FillPricingSummary();
+
+            clientPayment = pricingSummary.totalPrice ?? 0;
+        }
+        private void CalculatePaidFields()
+        {
+            if (pricingSummary == null)
+                FillPricingSummary();
+
+            if (!pricingSummary.totalPrice.HasValue || !pricingSummary.clientServiceFeePrice.HasValue)
+                throw new Exception("Impossible to calculate payment without pricing summary values");
+
+            serviceProfessionalPaid = (
+                pricingSummary.totalPrice.Value - (
+                    pricingSummary.paymentProcessingFeeFixed +
+                    pricingSummary.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value) +
+                    pricingSummary.clientServiceFeePrice.Value
+                )
+            );
+            serviceProfessionalPPFeePaid = (
+                pricingSummary.paymentProcessingFeeFixed +
+                pricingSummary.paymentProcessingFeePercentage * (pricingSummary.totalPrice.Value - pricingSummary.clientServiceFeePrice.Value)
+            );
+            loconomicsPaid = (
+                pricingSummary.clientServiceFeePrice.Value - pricingSummary.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice
+            );
+            loconomicsPPFeePaid = (
+                pricingSummary.paymentProcessingFeePercentage * pricingSummary.clientServiceFeePrice.Value
+            );
+        }
         #endregion
 
         #region Instance methods
@@ -1029,8 +1435,8 @@ namespace LcRest
         /// Helper for in memory creation and calculation of the Pricing Summary 
         /// attached to the current booking isntance, given the services to include.
         /// It's must be saved later on database.
+        /// The pricingSummary must exists as an instance with the correct fees values in it.
         /// 
-        /// TODO Complete PricingSummary TODOs
         /// </summary>
         /// <param name="services"></param>
         /// <returns>It returns if the jobTitleID changed because of the given services.
@@ -1038,17 +1444,13 @@ namespace LcRest
         /// will be throw</returns>
         private bool CreatePricing(IEnumerable<int> services)
         {
-            var summary = new PricingSummary
-            {
-                pricingSummaryID = pricingSummaryID,
-                pricingSummaryRevision = pricingSummaryRevision
-            };
+            pricingSummary.pricingSummaryID = pricingSummaryID;
+            pricingSummary.pricingSummaryRevision = pricingSummaryRevision;
 
-            var jobTitleID = summary.SetDetailServices(serviceProfessionalUserID, services);
-            summary.CalculateDetails();
-            summary.CalculateFees(BookingType.Get(this.bookingTypeID), this.firstTimeBooking);
+            var jobTitleID = pricingSummary.SetDetailServices(serviceProfessionalUserID, services);
 
-            pricingSummary = summary;
+            pricingSummary.CalculateDetails();
+            pricingSummary.CalculateFees();
 
             var result = jobTitleID != this.jobTitleID;
             this.jobTitleID = jobTitleID;
@@ -1062,15 +1464,65 @@ namespace LcRest
         private void UpdateEventDetails(Database sharedDb = null)
         {
             using(var db = new LcDatabase(sharedDb)) {
-                var description = LcData.Booking.GetBookingEventDescription(this.bookingID);
-                var location = LcData.Booking.GetBookingLocationAsOneLineText(this.bookingID);
+                var description = GetBookingEventDescription();
+                var location = GetBookingLocationAsOneLineText();
                 db.Execute(@"
                     UPDATE  CalendarEvents
                     SET     Description = @1,
                             Location = @2
-                    WHERE   Id = @0
-                ", this.serviceDateID, description, location);
+                    WHERE   Id IN (@0, @3, @4)
+                ", this.serviceDateID, description, location, this.alternativeDate1ID, this.alternativeDate2ID);
             }
+        }
+
+        /// <summary>
+        /// Get the location/address full information in one line of plain-text, to be used
+        /// for example as a CalendarEvent.Location
+        /// </summary>
+        /// <param name="BookingID"></param>
+        /// <returns></returns>
+        private string GetBookingLocationAsOneLineText()
+        {
+            if (serviceAddress == null)
+                FillServiceAddress();
+            if (String.IsNullOrEmpty(serviceAddress.stateProvinceCode))
+                // There is no address:
+                return "";
+            // Else, build the address one-line:
+            return String.Format("{0} {1} - {2} ({4}) {5}{6}",
+                serviceAddress.addressLine1,
+                serviceAddress.addressLine2,
+                serviceAddress.city,
+                serviceAddress.stateProvinceName,
+                serviceAddress.stateProvinceCode,
+                serviceAddress.postalCode,
+                !String.IsNullOrEmpty(serviceAddress.specialInstructions) ? string.Format(" ({0})", serviceAddress.specialInstructions) : ""
+            );
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private string GetBookingEventDescription()
+        {
+            // We need customer full name and phones:
+            var customer = LcData.UserInfo.GetUserRowWithContactData(clientUserID);
+            var phones = customer.MobilePhone ?? customer.AlternatePhone;
+            if (!string.IsNullOrEmpty(customer.MobilePhone) &&
+                !string.IsNullOrEmpty(customer.AlternatePhone))
+            {
+                phones = customer.MobilePhone + ", " + customer.AlternatePhone;
+            }
+            var sb = new System.Text.StringBuilder();
+            sb.AppendFormat("{0} {1}'s phone number: {2}\n", customer.FirstName, customer.LastName, phones);
+            sb.AppendLine("Pricing summary:");
+            sb.AppendLine(LcRest.PricingSummary.GetOneLineDescription(pricingSummary));
+            sb.AppendLine("Special instructions:");
+            sb.AppendLine(specialRequests);
+            // Previous ends in new-line but we add another new-line to get an empty line, and the phone:
+            sb.AppendLine("\nCall Loconomics for help: (415) 735-6025");
+            sb.AppendLine("Full details at " + LcUrl.LangUrl + LcEmailTemplate.BookingEmailInfo.GetBookingUrl(bookingID));
+            return sb.ToString();
         }
         #endregion
 
@@ -1112,80 +1564,146 @@ namespace LcRest
         {
             if (!paymentEnabled)
                 throw new ConstraintException("Payment not enabled for this booking");
-            if (paymentCollected || !String.IsNullOrEmpty(paymentTransactionID))
+            if (paymentCollected || !String.IsNullOrEmpty(paymentMethodID))
                 throw new ConstraintException("Payment already collected for this booking");
             
-            // The input paymentID must be one generated by Braintree, reset any (malicious) attempt
+            // The input paymentID must be one generated by Braintree, reset any (malicious?) attempt
             // to provide a special temp ID generated by this method
             if (paymentData.IsTemporaryID())
                 paymentData.paymentMethodID = null;
 
-            // The steps on emulation allows a quick view of what the overall process does and data set.
-            if (TESTING_EMULATEBRAINTREE)
-            {
-                paymentTransactionID = LcPayment.CreateFakeTransactionId();
-                paymentLastFourCardNumberDigits = null;
-                paymentCollected = true;
-                paymentAuthorized = false;
-            }
-            else
-            {
-                BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
-                // Find or create Customer on Braintree
-                var client = LcPayment.GetOrCreateBraintreeCustomer(clientUserID);
+            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT, AFTER CONTSTRAINTS");
 
-                // Quick way for saved pyament method that does not needs to be updated
-                var hasID = !String.IsNullOrWhiteSpace(paymentData.paymentMethodID);
-                if (hasID && !savePayment)
+            try
+            {
+                // The steps on emulation allows a quick view of what the overall process does and data being set.
+                if (TESTING_EMULATEBRAINTREE)
                 {
-                    // Just double check payment exists to avoid mistake/malicious attempts:
-                    if (!paymentData.ExistsOnVault())
-                    {
-                        // Since we have not input data to save, we can only throw an error
-                        // invalidSavedPaymentMethod
-                        throw new ConstraintException("Choosen payment method have expired");
-                    }
+                    paymentTransactionID = null;
+                    cancellationPaymentTransactionID = null;
+                    paymentMethodID = LcPayment.CreateFakePaymentMethodId();
+                    paymentLastFourCardNumberDigits = null;
+                    paymentCollected = true;
+                    paymentAuthorized = false;
                 }
                 else
                 {
-                    // Creates or updates a payment method with the given data
+                    BraintreeGateway gateway = LcPayment.NewBraintreeGateway();
+                    // Find or create Customer on Braintree
+                    var client = LcPayment.GetOrCreateBraintreeCustomer(clientUserID);
 
-                    // We create a temp ID if needed
-                    // (when an ID is provided, thats used -and validated and autogenerated if is not found while saving-,
-                    // and an empty ID for a payment to save is just left empty to be autogenerated as a persistent payment method)
-                    if (!hasID && !savePayment)
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT, Braintree preparation, client " + clientUserID);
+
+                    // Quick way for saved payment method that does not needs to be updated
+                    var hasID = !String.IsNullOrWhiteSpace(paymentData.paymentMethodID);
+                    if (hasID && !savePayment)
                     {
-                        paymentData.paymentMethodID = LcPayment.TempSavedCardPrefix + ASP.LcHelpers.Channel + "_" + bookingID.ToString();
+                        // Just double check payment exists to avoid mistake/malicious attempts:
+                        if (!paymentData.ExistsOnVault())
+                        {
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: Chosen payment method has expired");
+                            // Since we have not input data to save, we can only throw an error
+                            // invalidSavedPaymentMethod
+                            throw new ConstraintException("Chosen payment method has expired");
+                        }
+                    }
+                    else
+                    {
+                        // Creates or updates a payment method with the given data
+
+                        // We create a temp ID if needed
+                        // (when an ID is provided, thats used -and validated and autogenerated if is not found while saving-,
+                        // and an empty ID for a payment to save is just left empty to be autogenerated as a persistent payment method)
+                        if (!hasID && !savePayment)
+                        {
+                            paymentData.paymentMethodID = LcPayment.TempSavedCardPrefix + ASP.LcHelpers.Channel + "_" + bookingID.ToString();
+                        }
+
+                        // Validate
+                        var validationResults = paymentData.Validate();
+                        if (validationResults.Count > 0)
+                        {
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: validation errors, before delete booking");
+
+                            // Remove
+                            DeleteBooking(this);
+
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: validation errors, before return them");
+
+                            return validationResults;
+                        }
+
+                        // Save on Braintree secure Vault
+                        // It updates the paymentMethodID if a new one was generated
+                        var saveCardError = paymentData.SaveInVault(client.Id);
+                        if (!String.IsNullOrEmpty(saveCardError))
+                        {
+                            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: saveCardError: " + saveCardError);
+                            // paymentDataError
+                            throw new ConstraintException(saveCardError);
+                        }
                     }
 
-                    // Validate
-                    var validationResults = paymentData.Validate();
-                    if (validationResults.Count > 0)
-                        return validationResults;
+                    // We have a valid payment ID at this moment, save it on the booking
+                    paymentMethodID = paymentData.paymentMethodID;
+                    // Set card number (is processed later while saving to ensure only 4 and encrypted are persisted)
+                    paymentLastFourCardNumberDigits = paymentData.cardNumber;
+                    // Flags
+                    paymentCollected = true;
+                    paymentAuthorized = false;
+                    paymentTransactionID = null;
+                    cancellationPaymentTransactionID = null;
 
-                    // Save on Braintree secure Vault
-                    // It updates the ID if a new one was generated
-                    var saveCardError = paymentData.SaveInVault(client.Id);
-                    if (!String.IsNullOrEmpty(saveCardError))
-                    {
-                        // paymentDataError
-                        throw new ConstraintException(saveCardError);
-                    }
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT THROWS: finished Braintree tasks");
                 }
+            }
+            catch (Exception ex)
+            {
+                //ASP.LcHelpers.DebugLogger.LogEx("COLLECT PAYMENT CATCHES Braintree", ex);
 
-                // We have a valid payment ID at this moment, create the transactionID with that
-                paymentTransactionID = LcPayment.TransactionIdIsCardPrefix + paymentData.paymentMethodID;
-                // Set card number (is processed later while saving to ensure only 4 and encrypted are persisted)
-                paymentLastFourCardNumberDigits = paymentData.cardNumber;
-                // Flags
-                paymentCollected = true;
-                paymentAuthorized = false;
+                // Impossible to collect payment, or some Braintree validation error
+                DeleteBooking(this);
+
+                //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT CATCHES Braintree error, after delete booking befor rethrow");
+
+                // Re-throw exception
+                throw ex;
             }
 
-            // Update status:
-            bookingStatusID = (int)(instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
-            // Persist on database:
-            SetPaymentState(this);
+            try
+            {
+                //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT: Will save booking status after success collecting");
+
+                // Update status (since from it's creation it keeps as 'incomplete'):
+                bookingStatusID = (int)(instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
+                // Persist on database:
+                SetPaymentState(this);
+                SetStatus(this);
+                // Send communications (it was avoided on it's creation, waiting for this to be successfully)
+                var send = LcMessaging.SendBooking.For(bookingID);
+                if (instantBooking)
+                    send.InstantBookingConfirmed();
+                else
+                    send.BookingRequest();
+
+                //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT: success booking save status");
+            }
+            catch (Exception ex)
+            {
+                //ASP.LcHelpers.DebugLogger.LogEx("COLLECT PAYMENT CATCHES", ex);
+                try
+                {
+                    // Communicate Loconomics Stuff
+                    var jsbooking = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT CATCH, TO NOTIFY STUFF, jsbooking: " + jsbooking);
+                    LcMessaging.NotifyError("Payment collected for a booking, but booking at database could not update status", "Booking.CollectPayment", "Booking: " + jsbooking);
+                }
+                catch { }
+
+                // re-throw exception
+                throw ex;
+            }
+            //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT SUCCESS, NO ERRORS!");
             // No errors:
             return null;
         }
@@ -1215,8 +1733,8 @@ namespace LcRest
         }
 
         /// <summary>
-        /// If the given transactionID is a Card Token, it performs a transaction to authorize, without charge/settle,
-        /// the amount on the card.
+        /// It performs a transaction to authorize, without charge/settle,
+        /// the amount on the saved payment method.
         /// This process ensures the money is available for the later moment the charge happens (withing the authorization
         /// period, the worse case 7 days) using 'SettleBookingTransaction', or manage preventively any error that arises.
         /// The transactionID generated (if any) is updated on database properly.
@@ -1228,34 +1746,32 @@ namespace LcRest
         /// If the authorization through Braintree fails, throw the error</returns>
         public bool AuthorizeTransaction()
         {
-            if (paymentCollected && !paymentAuthorized && !LcPayment.IsFakeTransaction(paymentTransactionID))
+            if (!paymentEnabled)
+                return false; // throw new ConstraintException("Payment not enabled for this booking");
+            if (!paymentCollected || String.IsNullOrEmpty(paymentMethodID))
+                throw new ConstraintException("Payment not collected for this booking, cannot be authorized");
+            if (paymentAuthorized)
+                throw new ConstraintException("Payment authorized for this booking already");
+
+            if (LcPayment.IsFakePaymentMethod(paymentMethodID))
             {
-                if (paymentTransactionID.StartsWith(LcPayment.TransactionIdIsCardPrefix))
-                {
-                    var cardToken = paymentTransactionID.Substring(LcPayment.TransactionIdIsCardPrefix.Length);
-
-                    if (!String.IsNullOrWhiteSpace(cardToken))
-                    {
-                        // We need pricing info, if not preloaded
-                        if (pricingSummary == null)
-                            FillPricingSummary();
-
-                        // Transaction authorization, so NOT charge/settle now
-                        paymentTransactionID = LcPayment.AuthorizeBookingTransaction(this, cardToken);
-                        paymentAuthorized = true;
-
-                        SetPaymentState(this);
-
-                        return true;
-                    }
-                    else
-                    {
-                        throw new ConstraintException("Transaction or card identifier gets lost, payment cannot be performed.");
-                    }
-                }
+                paymentTransactionID = LcPayment.CreateFakeTransactionId();
+                return true;
             }
+            else
+            {
+                // We need pricing info, if not preloaded
+                if (pricingSummary == null)
+                    FillPricingSummary();
 
-            return false;
+                // Transaction authorization, so NOT charge/settle now
+                paymentTransactionID = LcPayment.AuthorizeBookingTransaction(this);
+                paymentAuthorized = true;
+
+                SetPaymentState(this);
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -1265,25 +1781,27 @@ namespace LcRest
         /// <returns></returns>
         public bool SettleTransaction()
         {
-            if (paymentCollected)
+            if (!paymentEnabled)
+                return false; // throw new ConstraintException("Payment not enabled for this booking");
+            if (!paymentCollected || String.IsNullOrEmpty(paymentMethodID))
+                throw new ConstraintException("Payment not collected for this booking, cannot be settle");
+
+            if (!paymentAuthorized)
             {
-                if (!paymentAuthorized)
-                {
-                    // First, request payment authorization from collected payment method (AKA saved credit card)
-                    AuthorizeTransaction();
-                }
-
-                // Require payment from authorized transaction
-                var settleError = LcPayment.SettleTransaction(paymentTransactionID);
-                if (!String.IsNullOrEmpty(settleError))
-                    throw new Exception(settleError);
-
-                // Update booking database information, setting price payed by customer
-                SetClientPayment(this);
-
-                return true;
+                // First, request payment authorization from collected payment method (AKA saved credit card)
+                AuthorizeTransaction();
             }
-            return false;
+
+            // Require payment from authorized transaction
+            var settleError = LcPayment.SettleTransaction(paymentTransactionID);
+            if (!String.IsNullOrEmpty(settleError))
+                throw new Exception(settleError);
+
+            // Update booking database information, setting price payed by customer
+            CalculateClientPayment();
+            SetClientPayment(this);
+
+            return true;
         }
 
         /// <summary>
@@ -1296,25 +1814,218 @@ namespace LcRest
         /// <returns></returns>
         public bool ReleasePayment()
         {
-            if (paymentEnabled && paymentCollected)
+            if (!paymentEnabled)
+                return false; // throw new ConstraintException("Payment not enabled for this booking");
+            if (!paymentCollected || String.IsNullOrEmpty(paymentMethodID))
+                throw new ConstraintException("Payment not collected for this booking, cannot be released");
+
+            if (!paymentAuthorized)
             {
-                var errmsg = LcPayment.ReleaseTransactionFromEscrow(paymentTransactionID);
-                if (!String.IsNullOrEmpty(errmsg))
-                    throw new Exception(errmsg);
-
-                // Booking is complete
-                bookingStatusID = (int)LcEnum.BookingStatus.completed;
-                SetStatus(this);
-
-                return true;
+                // First authorize an settle
+                SettleTransaction();
             }
-            return false;
+
+            var errmsg = LcPayment.ReleaseTransactionFromEscrow(paymentTransactionID);
+            if (!String.IsNullOrEmpty(errmsg))
+                throw new Exception(errmsg);
+
+            SetBookingAsCompleted();
+
+            return true;
+        }
+
+        /// <summary>
+        /// "Perform Payment Cancellation" / "Perform Cancellation Payment"
+        /// Runs all the operations needed to cancel/decline/avoid the pending payment of the booking,
+        /// usually *voiding* the pending, authorized, transaction or asking for *full refund* if already settle, to Braintree;
+        /// and sometimes running a new transaction to charge to the client some cancellation fees, on other cases may be nothing
+        /// so no new transaction is performed.
+        /// For temporarly saved payment methods, there is no actual transaction to void/refund, so only is charged with 
+        /// cancellation fee on the cases it needs to, and is removed when it finishes.
+        /// 
+        /// The task runs the cancellation calculation needed, that depends on the booking state (the new cancel/decline/expire state)
+        /// and other set-ups to choose what fees to apply.
+        /// </summary>
+        /// <returns></returns>
+        public void RefundPayment()
+        {
+            CalculateCancellation();
+
+            if (paymentEnabled && paymentCollected)
+            { 
+                // If we have a payment transaction, refund/void it first:
+                if (paymentAuthorized)
+                {
+                    // We have a transaction that can be in state: authorized, settled, or intermiedate states.
+                    // We need to cancel the authorization or perform a full refund on settled.
+                    // FULL REFUND
+                    var result = LcPayment.FullRefundTransaction(paymentTransactionID);
+                    if (!String.IsNullOrEmpty(result))
+                    {
+                        throw new Exception(result);
+                    }
+                }
+                // ON ELSE: we have just a payment method collected, we just go to the last step anyway
+
+                cancellationPaymentTransactionID = LcPayment.BookingCancellationPaymentFromCard(this);
+            }
+
+            // Save cancellation info to database
+            using (var db = new LcDatabase())
+            {
+                db.Execute("BEGIN TRANSACTION");
+                try
+                {
+                    // Persists changes in the pricing (cancellation fees and new totals) generating
+                    // a new revision
+                    var ps = PricingSummary.Set(pricingSummary, db.Db);
+                    // Update booking revision to new one
+                    this.pricingSummaryRevision = ps.pricingSummaryRevision;
+                    // Save all changes in database and further "invalidation/clean-up" tasks:
+                    SetAsInvalidated(this, db.Db);
+                    db.Execute("COMMIT TRANSACTION");
+                }
+                catch (Exception ex)
+                {
+                    LcMessaging.NotifyError("Booking payment was refunded and/or cancellation fee applied, but database couldn't get updated", "", "");
+                    throw ex;
+                }
+            }
+        }
+        #endregion
+
+        #region Cancellation Policy
+        /// <summary>
+        /// Utility that checks if the booking is in 'cancelled' state
+        /// and cancellation was performed by the client in a booking
+        /// he/she generated.
+        /// </summary>
+        bool isCancelledByClient
+        {
+            get
+            {
+                return
+                    this.bookingStatusID == (int)LcEnum.BookingStatus.cancelled &&
+                    this.bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking;
+            }
+        }
+        /// <summary>
+        /// Utility that checks if the booking is in 'declined/denied' state
+        /// and declination was performed by the client in a booking
+        /// created by the service-professional.
+        /// </summary>
+        bool isDeclinedByClient
+        {
+            get
+            {
+                return
+                    this.bookingStatusID == (int)LcEnum.BookingStatus.denied &&
+                    this.bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
+            }
+        }
+        /// <summary>
+        /// Applies the cancellation policy rules on the current booking,
+        /// depending on status, type and cancellation policy
+        /// and updating the pricingSummary values about cancellation,
+        /// but not saving them in database.
+        /// </summary>
+        public void CalculateCancellation()
+        {
+            if (pricingSummary == null)
+                FillPricingSummary();
+
+            pricingSummary.cancellationDate = DateTime.Now;
+
+            if (isCancelledByClient || isDeclinedByClient)
+            {
+                var policy = CancellationPolicy.Get(cancellationPolicyID, languageID, countryID);
+                if (serviceDate == null)
+                    FillServiceDates();
+
+                var cancellationLimitDate = serviceDate.startTime.AddHours(0 - policy.hoursRequired);
+                if (DateTime.Now < cancellationLimitDate)
+                {
+                    // BEFORE cancellation limit
+                    pricingSummary.cancellationFeeCharged = (pricingSummary.subtotalPrice ?? 0) * policy.cancellationFeeBefore;
+                }
+                else
+                {
+                    // AFTER cancellation limit
+                    pricingSummary.cancellationFeeCharged = (pricingSummary.subtotalPrice ?? 0) * policy.cancellationFeeAfter;
+                }
+
+                // keeps same subtotal and clientServiceFee
+                // Recalculate total
+                pricingSummary.totalPrice = pricingSummary.cancellationFeeCharged + pricingSummary.clientServiceFeePrice;
+                // Recalculate other values using standard calculations:
+                pricingSummary.CalculateServiceFee();
+                CalculateClientPayment();
+                CalculatePaidFields();
+            }
+            else {
+                // Not cancelled by client, can be:
+                // - cancelled by the professional (its a service professional booking)
+                // - declined by the professional
+                // - expired booking
+                // Then: no policy apply, just no cancellation fee (aka 'full refund')
+                pricingSummary.cancellationFeeCharged = 0;
+                // keeps sutbottal
+                // And Update totals to pay, all 0
+                pricingSummary.clientServiceFeePrice = 0;
+                pricingSummary.totalPrice = 0;
+                pricingSummary.serviceFeeAmount = 0;
+                clientPayment = 0;
+                serviceProfessionalPaid = 0;
+                serviceProfessionalPPFeePaid = 0;
+                loconomicsPaid = 0;
+                loconomicsPPFeePaid = 0;
+            }
+        }
+        #endregion
+
+        #region System Manipulations
+        public void SetBookingAsCompleted()
+        {
+            if (bookingStatusID != (int)LcEnum.BookingStatus.servicePerformed)
+                return;
+
+            // Update booking information with final paid amounts
+            // (it use pricing fees, will be 0 fees and pricing totals for no-payment bookings)
+            CalculatePaidFields();
+            SetPaidFields(this);
+
+            // Booking is complete
+            bookingStatusID = (int)LcEnum.BookingStatus.completed;
+            SetStatus(this);
+        }
+        /// <summary>
+        /// Perform tasks to expire this booking, making any refund task if needed
+        /// and persisting changes to database.
+        /// </summary>
+        public void ExpireBooking()
+        {
+            // Constraint
+            if (bookingStatusID != (int)LcEnum.BookingStatus.incomplete &&
+                bookingStatusID != (int)LcEnum.BookingStatus.request)
+            {
+                throw new Exception("Booking cannot set as expired. Status: " + bookingStatusID.ToString());
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.requestExpired;
+
+            this.RefundPayment();
+
+            // Remove relationship (will internally verify if must or not delete it)
+            ServiceProfessionalClient.CancelFromBooking(serviceProfessionalUserID, clientUserID);
         }
         #endregion
 
         #region Service Professional Manipulations
         /// <summary>
-        /// 
+        /// TODO Change serviceAddressID to Address serviceAddress like in client-booking to allow professionals to specify a client address
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="clientUserID"></param>
@@ -1350,28 +2061,28 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("Create a booking require select almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
-                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null);
+                var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, null, true);
                 if (booking == null)
                     throw new ConstraintException("Impossible to create a booking for that Job Title.");
 
-                // Booking type enforced by this API, required before calculate correctly the pricing:
-                booking.bookingTypeID = (int)LcEnum.BookingType.serviceProfessionalBooking;
                 if (booking.CreatePricing(services))
-                    throw new ConstraintException("Choosen services does not belongs to the Job Title");
+                    throw new ConstraintException("Chosen services does not belong to the Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
-                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
+                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Because this API is only for providers, we avoid the advance time from the checking
                 var isAvailable = allowBookUnavailableTime || LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
                 if (!isAvailable)
-                    throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+                    throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
@@ -1420,9 +2131,25 @@ namespace LcRest
                 }
                 catch {}
 
+                LcMessaging.SendBooking.ServiceProfessionalBooking.For(booking.bookingID).InstantBookingConfirmed();
+
                 return booking;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bookingID"></param>
+        /// <param name="serviceProfessionalUserID"></param>
+        /// <param name="serviceAddressID"></param>
+        /// <param name="startTime"></param>
+        /// <param name="services"></param>
+        /// <param name="preNotesToClient"></param>
+        /// <param name="preNotesToSelf"></param>
+        /// <param name="postNotesToClient"></param>
+        /// <param name="postNotesToSelf"></param>
+        /// <param name="allowBookUnavailableTime"></param>
+        /// <returns></returns>
         public static bool UpdServiceProfessionalBooking(
             int bookingID,
             int serviceProfessionalUserID,
@@ -1439,37 +2166,53 @@ namespace LcRest
             {
                 // 0: previous data and checks
                 var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
-                if (booking == null)
+                if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
                     return false;
+
+                // NOTE: Service Professional Editing Rules
+                // Can change Pricing only if is a BookNow Booking withOUT payment collected OR is a service
+                // professional booking
+                var canChangePricing = 
+                    booking.bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking || (
+                        booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking &&
+                        !booking.paymentCollected
+                    )
+                ;
+                // ON ANY CASE: professional can update time(s), location, notes (this limitations are forced
+                // in the Booking.Set method for any update done by the service professional).
 
                 var provider = LcData.UserInfo.GetUserRowWithContactData(serviceProfessionalUserID);
                 var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("Create a booking require select almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 booking.FillUserJobTitle();
                 if (booking.userJobTitle == null)
                     throw new ConstraintException("Impossible to update the booking for that Job Title.");
 
                 // 1º: calculating pricing and timing by checking services included
-                if (booking.CreatePricing(services))
+                // Load it, we need the information
+                booking.FillPricingSummary();
+                if (canChangePricing && booking.CreatePricing(services))
                     throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
-                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.serviceDurationMinutes ?? 0));
+                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Only if dates changed:
-                var eventInfo = LcCalendar.GetBasicEventInfo(booking.serviceDateID.Value, db.Db);
-                if (eventInfo.StartTime != startTime && eventInfo.EndTime != endTime)
+                booking.FillServiceDates();
+                if (booking.serviceDate.startTime != startTime && booking.serviceDate.endTime != endTime)
                 {
                     // Because this API is only for providers, we avoid the advance time from the checking
                     var isAvailable = allowBookUnavailableTime || LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, startTime, endTime, true);
                     if (!isAvailable)
-                        throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+                        throw new ConstraintException("The chosen time is unavailable, it conflicts with a recent appointment!");
 
                     // Transaction begins
                     db.Execute("BEGIN TRANSACTION");
@@ -1483,12 +2226,15 @@ namespace LcRest
                     db.Execute("BEGIN TRANSACTION");
                 }
 
-                // 3º: Updating pricing estimate records
-                // save Summary on db, will set the ID and Revision on the returned summary
-                // and save details with updated IDs too
-                booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
-                booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
-                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
+                if (canChangePricing)
+                {
+                    // 3º: Updating pricing estimate records
+                    // save Summary on db, will set the ID and Revision on the returned summary
+                    // and save details with updated IDs too
+                    booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
+                    // Get new Revision so is persisted on Booking.Set later
+                    booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
+                }
 
                 // 4º: persisting booking on database
                 booking.serviceAddressID = serviceAddressID;
@@ -1512,8 +2258,193 @@ namespace LcRest
                 }
                 catch { }
 
+                LcMessaging.SendBooking.For(booking.bookingID).BookingUpdatedByServiceProfessional();
+
                 return true;
             }
+        }
+
+        #region SQL Confirm Booking
+        const string sqlConfirmBooking = @"
+            -- Parameters
+            DECLARE @BookingID int
+            SET @BookingID = @0            
+            DECLARE @ConfirmedDateID int
+            SET @ConfirmedDateID = @1
+
+            BEGIN TRY
+                BEGIN TRAN
+
+                /* 
+                 * Soft Delete not needed CalendarEvents:
+                 */
+                UPDATE CalendarEvents
+                SET Deleted = getdate()
+                WHERE ID IN (
+                    SELECT TOP 1 ServiceDateID FROM Booking
+                    WHERE BookingID = @BookingID AND ServiceDateID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate1ID FROM Booking
+                    WHERE BookingID = @BookingID AND AlternativeDate1ID <> @ConfirmedDateID
+                    UNION
+                    SELECT TOP 1 AlternativeDate2ID FROM Booking
+                    WHERE BookingID = @BookingID AND AlternativeDate2ID <> @ConfirmedDateID
+                )
+
+                /*
+                 * Update Availability of the CalendarEvent record for the ConfirmedDateID,
+                 * from 'tentative' to 'busy'
+                 */
+                UPDATE  CalendarEvents
+                SET     CalendarAvailabilityTypeID = 2
+                WHERE   Id = @ConfirmedDateID
+
+                /*
+                 * Updating Booking status, set selected serviceDate and remove
+                 * alternative ones
+                 */
+                UPDATE  Booking
+                SET     BookingStatusID = 6, -- confirmed
+                        ServiceDateID = @ConfirmedDateID,
+                        AlternativeDate1ID = null,
+                        AlternativeDate2ID = null
+                WHERE   BookingID = @BookingID
+
+                COMMIT TRAN
+            END TRY
+            BEGIN CATCH
+                IF @@TRANCOUNT > 0
+                    ROLLBACK TRAN
+                -- We return error number and message
+                SELECT (Cast(ERROR_NUMBER() as varchar) + ':' + ERROR_MESSAGE()) As ErrorMessage
+            END CATCH
+        ";
+        #endregion
+
+        /// <summary>
+        /// Method that allows a Service Professional to confirm a Booking in
+        /// state 'Booking Request' using the specified date type
+        /// </summary>
+        /// <param name="dateType">A string value from: PREFERRED, ALTERNATIVE1, ALTERNATIVE2;
+        /// that date/event from the booking request will be confirmed.</param>
+        /// <returns></returns>
+        public bool ConfirmBookingRequest(string dateType)
+        {
+            // Constraint
+            if (bookingStatusID != (int)LcEnum.BookingStatus.request)
+            {
+                throw new ConstraintException("Booking cannot be confirmed. Status: " + bookingStatusID.ToString());
+            }
+
+            int? dateID = null;
+            switch (dateType.ToUpper())
+            {
+                case "PREFERRED":
+                    dateID = serviceDateID;
+                    break;
+                case "ALTERNATIVE1":
+                    dateID = alternativeDate1ID;
+                    break;
+                case "ALTERNATIVE2":
+                    dateID = alternativeDate2ID;
+                    break;
+            }
+            if (!dateID.HasValue)
+            {
+                throw new ConstraintException("A valid date must be choosen to confirm the booking request");
+            }
+
+            // Disabled *excessive* double check: client only can choose an available time and professional knows what is confirming
+            // AND it's buggy for this concrete case, a booking request, since the double check takes care only of one event at a time,
+            // while it must discard all three events choosen in the request to avoid that one of the times collides with the other one
+            // (commented at #735, as the case of a first time of 12:00-13:00 and second of 12:30-13:30, checking any of them will fail
+            // because of the other one overlapping it).
+            /*if (!LcCalendar.DoubleCheckEventAvailability(dateID.Value, null, null, true))
+            {
+                // Text: message to be showed to provider and must care that the time was available when selected
+                // but is not now because a (very) recent change (race condition).
+                throw new ConstraintException("The choosen time is not available, it conflicts with a recent appointment!");
+            }*/
+
+            using (var db = new LcDatabase())
+            {
+                // Save confirmation data
+                var err = (string)db.QueryValue(sqlConfirmBooking, bookingID, dateID.Value);
+                if (!String.IsNullOrEmpty(err))
+                {
+                    throw new ConstraintException(err);
+                }
+                // Set in-memory object as confirmed too in order to...
+                bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
+                serviceDateID = dateID.Value;
+                // ..process the payment options of the booking, if any
+                ProcessConfirmedBookingPayment();
+
+                // LAST:
+                // Update the CalendarEvent to include contact data,
+                // but this is not so important as the rest because of that it goes
+                // inside a try-catch, it doesn't matter if fails, is just a commodity
+                // (customer and provider can access contact data from the booking).
+                try
+                {
+                    UpdateEventDetails(db.Db);
+                }
+                catch { }
+            }
+
+            LcMessaging.SendBooking.For(bookingID).BookingRequestConfirmed();
+
+            // Success
+            return true;
+        }
+        /// <summary>
+        /// Performs a booking cancellation by a service professional, save at database and send messages
+        /// </summary>
+        public void CancelBookingByServiceProfessional()
+        {
+            // Constraint
+            if (bookingStatusID != (int)LcEnum.BookingStatus.confirmed ||
+                bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking)
+            {
+                throw new Exception("Booking cannot be cancelled. Status: " + bookingStatusID.ToString() +
+                    " Type: " + bookingTypeID.ToString()
+                );
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.cancelled;
+
+            this.RefundPayment();
+
+            LcMessaging.SendBooking.For(bookingID).BookingCancelledByServiceProfessional();
+        }
+        /// <summary>
+        /// Performs a booking denied/decline by a service professional,
+        /// save it at database and send messages
+        /// </summary>
+        public void DeclineBooking()
+        {
+            // Constraint
+            if (bookingStatusID != (int)LcEnum.BookingStatus.request ||
+                bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking)
+            {
+                throw new Exception("Booking cannot be declined. Status: " + bookingStatusID.ToString() +
+                    " Type: " + bookingTypeID.ToString()
+                );
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.denied;
+
+            this.RefundPayment();
+            // Remove relationship (will internally verify if must or not delete it)
+            ServiceProfessionalClient.CancelFromBooking(serviceProfessionalUserID, clientUserID);
+
+            LcMessaging.SendBooking.For(bookingID).BookingRequestDeclined();
         }
         #endregion
 
@@ -1521,6 +2452,7 @@ namespace LcRest
         /// <summary>
         /// Utility for client bookings, to check service professional availability for the given input
         /// data, thow a ConstraintException if not available and returns the calculated endTime if available.
+        /// It takes care of the advanceTime
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="serviceDurationMinutes"></param>
@@ -1530,7 +2462,7 @@ namespace LcRest
         {
             var endTime = startTime.AddMinutes((double)(serviceDurationMinutes ?? 0));
             // Because this API is only for providers, we avoid the advance time from the checking
-            var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
+            var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, false);
             if (!isAvailable)
                 throw new ConstraintException(String.Format("The time {0} is not available, it conflicts with a recent appointment!", startTime));
 
@@ -1538,7 +2470,6 @@ namespace LcRest
         }
         /// <summary>
         /// Create an save a client booking.
-        /// TODO Payment info.
         /// </summary>
         /// <param name="clientUserID"></param>
         /// <param name="serviceProfessionalUserID"></param>
@@ -1562,7 +2493,8 @@ namespace LcRest
             IEnumerable<int> services,
             int languageID,
             int countryID,
-            string bookCode
+            string bookCode,
+            string specialRequests
         )
         {
             using (var db = new LcDatabase())
@@ -1572,11 +2504,11 @@ namespace LcRest
                 var customer = LcData.UserInfo.GetUserRow(clientUserID);
 
                 if (provider == null)
-                    throw new ConstraintException("Impossible to retrieve the service professional information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
                 if (customer == null)
-                    throw new ConstraintException("Impossible to retrieve the client information. It exists?");
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
                 if (services == null)
-                    throw new ConstraintException("Create a booking require select almost one service");
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 1º: start booking, calculate pricing and timing by checking services included
                 var booking = NewFor(clientUserID, serviceProfessionalUserID, jobTitleID, languageID, countryID, bookCode);
@@ -1585,16 +2517,18 @@ namespace LcRest
 
                 // Booking type enforced by this API, required before calculate correctly the pricing:
                 if (booking.CreatePricing(services))
-                    throw new ConstraintException("Choosen services does not belongs to the Job Title");
+                    throw new ConstraintException("Chosen services does not belong to the Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
-                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID);
+                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
                 DateTime? alternative1EndTime = null;
                 DateTime? alternative2EndTime = null;
                 if (!booking.instantBooking)
                 {
-                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTime?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID) : null;
-                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTime?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.serviceDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTime?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTime?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
                 }
 
                 // Event data
@@ -1676,18 +2610,39 @@ namespace LcRest
                 }
 
                 // 5º: persisting booking on database
+                booking.specialRequests = specialRequests;
                 // Explicitly set incomplete status when payment is enabled (since payment info was not added still, it requires
                 // a call to another method after this).
                 // On no payment, depends on instantBooking
+                var mustSendEmail = false;
                 if (booking.paymentEnabled)
                 {
                     booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
                 }
                 else
                 {
+                    mustSendEmail = true;
                     booking.bookingStatusID = (int)(booking.instantBooking ? LcEnum.BookingStatus.confirmed : LcEnum.BookingStatus.request);
                 }
                 Booking.Set(booking, clientUserID, db.Db);
+                if (booking.firstTimeBooking)
+                {
+                    // Auto-detect what is the referralSourceID
+                    // IMPORTANT: Put here future additions, to use other referral codes, using more context information for the booking
+                    // like a utm query-string.
+                    var referralSourceID = (int)(booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking ?
+                        LcEnum.ReferralSource.serviceProfessionalWebsite :
+                        LcEnum.ReferralSource.marketplace
+                    );
+                    // Create client-professional relationship. Without this, professional cannot fetch information about the client
+                    ServiceProfessionalClient.Set(new ServiceProfessionalClient
+                    {
+                        serviceProfessionalUserID = booking.serviceProfessionalUserID,
+                        clientUserID = booking.clientUserID,
+                        referralSourceID = referralSourceID,
+                        createdByBookingID = booking.bookingID
+                    }, db.Db);
+                }
 
                 // Persisting all or nothing:
                 db.Execute("COMMIT TRANSACTION");
@@ -1703,7 +2658,245 @@ namespace LcRest
                 }
                 catch {}
 
+                // We only send email if booking is ready for that; when there is payment
+                // we wait to collectPayment, there the email is sent if success, and the bookingStatus changes too.
+                if (mustSendEmail)
+                {
+                    var send = LcMessaging.SendBooking.For(booking.bookingID);
+                    if (booking.instantBooking)
+                        send.InstantBookingConfirmed();
+                    else
+                        send.BookingRequest();
+                }
+
                 return booking;
+            }
+        }
+        /// <summary>
+        /// Performs a booking cancellation by a client, save at database and send messages
+        /// </summary>
+        public void CancelBookingByClient()
+        {
+            // Constraint
+            if ((bookingStatusID != (int)LcEnum.BookingStatus.confirmed &&
+                bookingStatusID != (int)LcEnum.BookingStatus.request) ||
+                bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking)
+            {
+                throw new Exception("Booking cannot be cancelled. Status: " + bookingStatusID.ToString() +
+                    " Type: " + bookingTypeID.ToString()
+                );
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.cancelled;
+
+            this.RefundPayment();
+
+            LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
+        }
+        /// <summary>
+        /// Performs a booking declination by a client, save at database and send messages
+        /// </summary>
+        public void DeclineBookingByClient()
+        {
+            // Constraint
+            if ((bookingStatusID != (int)LcEnum.BookingStatus.confirmed &&
+                bookingStatusID != (int)LcEnum.BookingStatus.request) ||
+                bookingTypeID != (int)LcEnum.BookingType.serviceProfessionalBooking)
+            {
+                throw new Exception("Booking cannot be cancelled. Status: " + bookingStatusID.ToString() +
+                    " Type: " + bookingTypeID.ToString()
+                );
+            }
+
+            if (this.pricingSummary == null)
+                this.FillPricingSummary();
+
+            bookingStatusID = (int)LcEnum.BookingStatus.denied;
+
+            this.RefundPayment();
+
+            // NOTE: We manage this case the same as a 'client cancellation' for messages and language,
+            // even if internally is a different status for us, because we need the 'denied' status to
+            // correctly analyze the booking.
+            LcMessaging.SendBooking.For(bookingID).BookingCancelledByClient();
+        }
+        /// <summary>
+        /// Allow a client to update a booking (any booking, not only client-booking)
+        /// </summary>
+        /// <returns>True if update was possible and done, while false if cannot be performed since doesn't exists. Errors will throw.</returns>
+        public static bool UpdClientBooking(
+            int bookingID,
+            int clientUserID,
+            Address serviceAddress,
+            DateTime serviceStartTime,
+            IEnumerable<int> services,
+            string specialRequests)
+        {
+            using (var db = new LcDatabase())
+            {
+                // 0: previous data and checks
+                var booking = LcRest.Booking.Get(bookingID, false, false, clientUserID);
+                if (booking == null || booking.clientUserID != clientUserID)
+                    return false;
+
+                // NOTE: Client Editing Rules
+                // Can update a booking only if is an instant booking, it's in the 'confirmed' status
+                // and payment is not authornized still.
+                // That means, we do not allow booking requests to be updated or bookings that passed
+                // the service professional confirmation (because where not-instant).
+                if (booking.bookingStatusID != (int)LcEnum.BookingStatus.confirmed ||
+                    !booking.instantBooking ||
+                    booking.paymentAuthorized)
+                {
+                    throw new Exception("Booking cannot be updated");
+                }
+
+                var provider = LcData.UserInfo.GetUserRowWithContactData(booking.serviceProfessionalUserID);
+                var customer = LcData.UserInfo.GetUserRow(booking.clientUserID);
+
+                if (provider == null)
+                    throw new ConstraintException("Unable to retrieve the service professional's info. Their profile may no longer exist.");
+                if (customer == null)
+                    throw new ConstraintException("Unable to retrieve the client's info. Their profile may no longer exist.");
+                if (services == null)
+                    throw new ConstraintException("Bookings require the selection of at least one service");
+
+                booking.FillUserJobTitle();
+                if (booking.userJobTitle == null)
+                    throw new ConstraintException("Impossible to update the booking for that Job Title.");
+
+                // 1º: calculating pricing and timing by checking services included
+                booking.FillPricingSummary();
+                if (booking.CreatePricing(services))
+                    throw new ConstraintException("Impossible to change the services of a booking to another Job Title");
+                if (booking.pricingSummary.details.Count() == 0)
+                    throw new ConstraintException("Bookings require the selection of at least one service");
+
+                // 2º: Dates update? Checking availability and updating event dates if changed
+                var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
+                // Only if dates changed:
+                booking.FillServiceDates();
+                if (booking.serviceDate.startTime != serviceStartTime && booking.serviceDate.endTime != endTime)
+                {
+                    // Because this API is only for providers, we avoid the advance time from the checking
+                    var isAvailable = LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, serviceStartTime, endTime, false);
+                    if (!isAvailable)
+                        throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
+
+                    // Transaction begins
+                    db.Execute("BEGIN TRANSACTION");
+
+                    // Update event
+                    db.Execute(LcCalendar.sqlUpdBookingEvent, booking.serviceDateID, serviceStartTime, endTime, null, null, null);
+                }
+                else
+                {
+                    // Transaction begins
+                    db.Execute("BEGIN TRANSACTION");
+                }
+
+
+                // 3º: Updating pricing estimate records
+                // save Summary on db, will set the ID and Revision on the returned summary
+                // and save details with updated IDs too
+                booking.pricingSummary = PricingSummary.Set(booking.pricingSummary, db.Db);
+                // Get new Revision so is persisted on Booking.Set later
+                booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
+
+
+                // 4º: Validate addressID or update the existent, service-specific, one
+                booking.FillServiceAddress();
+                // Validate owership of the address
+                if (!serviceAddress.IsNewAddress() && !Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                {
+                    throw new ConstraintException("Selected location is not valid.");
+                }
+                if (!serviceAddress.IsNewAddress() && booking.serviceAddressID != serviceAddress.addressID)
+                {
+                    // A different addressID was given, update it in the booking
+                    // NOTE: When a different addressID is given, we do NOT allow updates, since is an address choosen from a list.
+                    booking.serviceAddressID = serviceAddress.addressID;
+                }
+                else
+                {
+                    // if addressID is zero, so user wants to create a new address, we follow to create one
+                    if (serviceAddress.IsNewAddress())
+                    {
+                        // CREATE address
+                        // Save new client address for the service
+                        serviceAddress.userID = clientUserID;
+                        // Is a client service address, where perform a service but not related to
+                        // a job title but as customer
+                        serviceAddress.kind = Address.AddressKind.Service;
+                        serviceAddress.isServiceLocation = true;
+                        serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                        // Save and get ID (passed in the connection to be in the same transaction)
+                        booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                    }
+                    else
+                    {
+                        // When addressID is the same: we need to check if user wants and can update the address details:
+                        // If the given address is empty, do nothing; just user wants to keep using the same address with no updates
+                        // If the given address has details but are the same as the stored one, do nothing.
+                        if (!serviceAddress.IsEmpty() && !serviceAddress.IsSimilar(booking.serviceAddress))
+                        {
+                            // On the other cases: has data and is different, we need to know if we allow the user to update the given addressID with that details:
+                            // - If saved address has no name, was created specifically for this service, update that even if new address has a name.
+                            // - If the address name is the same, user intention is to update the same address details,
+                            //    otherwise, we create a new address on behalf the user and update the booking addressID.
+                            // - To allow update the address with same name, addressID must belongs to the client (previously, we checked if belongs client
+                            //    or professional, but we need to ensure is a client address here to avoid updates of professional addresses in an attack
+                            //    or client software error; if that happens, we silently skip address update.)
+                            var allowUpdate = (booking.serviceAddress.IsAnonymous() || booking.serviceAddress.addressName == serviceAddress.addressName) &&
+                                Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID);
+                            if (allowUpdate)
+                            {
+                                // Update address record
+                                Address.SetAddress(serviceAddress, db.Db);
+                            }
+                            else
+                            {
+                                // Create a new address and update booking reference to the new one
+                                serviceAddress.addressID = Address.NewAddressID;
+                                // Save new client address for the service
+                                serviceAddress.userID = clientUserID;
+                                // Is a client service address, where perform a service but not related to
+                                // a job title but as customer
+                                serviceAddress.kind = Address.AddressKind.Service;
+                                serviceAddress.isServiceLocation = true;
+                                serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                                // Save and get ID (passed in the connection to be in the same transaction)
+                                booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                            }
+                        }
+                    }
+                }
+
+
+                // 5º: persisting booking on database
+                booking.specialRequests = specialRequests;
+                Booking.Set(booking, clientUserID, db.Db);
+
+                // Persisting all or nothing:
+                db.Execute("COMMIT TRANSACTION");
+
+                // LAST:
+                // Update the CalendarEvent to include contact data,
+                // but this is not so important as the rest because of that it goes
+                // inside a try-catch, it doesn't matter if fails, is just a commodity
+                // (customer and provider can access contact data from the booking).
+                try
+                {
+                    booking.UpdateEventDetails(db.Db);
+                }
+                catch { }
+
+                LcMessaging.SendBooking.For(booking.bookingID).BookingUpdatedByClient();
+
+                return true;
             }
         }
         #endregion

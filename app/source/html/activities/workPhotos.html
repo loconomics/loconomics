@@ -1,43 +1,68 @@
 <!-- Activity workPhotos -->
-<div class="container-fluid LightForm" data-activity="workPhotos">
-
-  <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-      Photos of your work
-      <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-  </h2>
-    <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-    </div>
-    
-    <div>
-        <ul class="list-unstyled WorkPhotos"
-            data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
-            <li>
-                <div class="WorkPhotos-imgBtn">
-                    <img src="nophoto.jpg" alt="Work photo" data-bind="attr: { src: url, alt: title }" />
-                    <div class="WorkPhotos-editionLayer">
-                        <div class="WorkPhotos-toolbar">
-                            <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
-                            <button type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span></button>
-                        </div>
+<div data-activity="workPhotos" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <span data-bind=""></span> Marketplace profile
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <div class="SmartNavView">
+                    <div class="SmartNavContent">
+                        <h2 class="SectionTitle SectionTitle-withHelpPoint">
+                            <span> Your work photos</span>
+                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201964193-showcase-your-work-with-photos" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                            </span>
+                        </h2>
+                        <ul class="list-unstyled WorkPhotos"
+                            data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
+                            <li>
+                                <div class="WorkPhotos-imgBtn">
+                                    <img alt="Work photo" data-bind="attr: { src: url, alt: caption }" />
+                                    <div class="WorkPhotos-editionLayer">
+                                        <div class="WorkPhotos-toolbar">
+                                            <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
+                                            <button type="button" class="btn btn-link btn-lg WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="text" data-bind="textInput: caption, disable: $parent.state.isLocked" placeholder="Photo caption" />
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="workPhotos-addNewButton" class="TilesList" data-bind="visible: jobTitleID()">
+                        <button type="button" class="CompactLinkTile" data-bind="disable: state.isLocked" data-toggle="ActionSheet" data-target="workPhotos-photoSheet">
+                            <div class="Tile-content text-muted">Upload/take photo</div>
+                            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                        </button>
+                    </div>
+                    <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
+                        <button type="button" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" data-bind="textInput: title" />
+                <div class="ActionSheetBackdrop"></div>
+                <div class="ActionSheet" id="workPhotos-photoSheet" hidden="hidden">
+                    <ul>
+                        <li><a href="#takePhoto" data-bind="click: takePhotoForNew">Take a photo</a></li>
+                        <li><a href="#pickPhoto" data-bind="click: pickPhotoForNew">Select a photo</a></li>
+                    </ul>
+                    <ul class="ActionSheet-close">
+                        <li><a href="#close">Cancel</a></li>
+                    </ul>
                 </div>
-            </li>
-        </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu></app-inline-side-menu>
+            </div>
+        </div>
     </div>
-
-    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
-        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
-            <div class="Tile-content text-muted">Upload/take photo</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
-    </div>
-    
-    <div class="LightForm-submitBar">
-        <button type="submit" class="btn btn-primary btn-block">Save</button>
-    </div>
-
 </div>

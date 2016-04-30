@@ -27,11 +27,12 @@ function GetMore(values) {
         }),
         profile: new ListViewItem({
             contentLine1: 'Activate your profile in the marketplace',
-            markerIcon: 'fa ion ion-cash'
+            markerIcon: 'fa ion ion-cash',
+            link: '/marketplaceProfile'
         }),
         coop: new ListViewItem({
             contentLine1: 'Learn more about our cooperative',
-            actionIcon: 'fa fa-gavel'
+            markerIcon: 'fa fa-gavel'
         })
     };
 

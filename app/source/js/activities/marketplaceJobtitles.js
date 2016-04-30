@@ -6,14 +6,14 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function MarketplaceJobtitlesActivity() {
+var A = Activity.extend(function MarketplaceJobtitlesActivity() {
     
     Activity.apply(this, arguments);
     
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile'
+        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201152759-managing-your-marketplace-profile'
     });
 
     // On changing jobTitleID:
@@ -26,38 +26,6 @@ var A = Activity.extends(function MarketplaceJobtitlesActivity() {
 
             if (jobTitleID) {
                 ////////////
-                // Addresses
-                this.app.model.serviceAddresses.getList(jobTitleID)
-                .then(function(list) {
-
-                    list = this.app.model.serviceAddresses.asModel(list);
-                    this.viewModel.addresses(list);
-
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading addresses.',
-                        error: err
-                    });
-                }.bind(this));
-                
-                ////////////
-                // Pricing/Services
-                this.app.model.serviceProfessionalServices.getList(jobTitleID)
-                .then(function(list) {
-
-                    list = this.app.model.serviceProfessionalServices.asModel(list);
-                    this.viewModel.pricing(list);
-
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading services.',
-                        error: err
-                    });
-                }.bind(this));
-                
-                ////////////
                 // Job Title
                 // Get data for the Job Title and User Profile
                 this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
@@ -66,6 +34,7 @@ var A = Activity.extends(function MarketplaceJobtitlesActivity() {
                     // Fill the job title record
                     this.viewModel.jobTitle(job.jobTitle);
                     this.viewModel.userJobTitle(job.userJobTitle);
+                    this.viewModel.userID(job.userID);
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
@@ -73,10 +42,65 @@ var A = Activity.extends(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                ////////////
+                // Job Title
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading the job title.',
+                        error: err
+                    });
+                }.bind(this));
+                
+                ////////////
+                // Work Photos
+                this.app.model.workPhotos.getList(jobTitleID)
+                .then(function(list) {
+                    list = this.app.model.workPhotos.asModel(list);
+                    this.viewModel.workPhotos(list);
+
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while your work photos.',
+                        error: err
+                    });
+                }.bind(this));
+                ////////////
+                // Submitted Licenses
+                this.app.model.userLicensesCertifications.getList(jobTitleID)
+                .then(function(list) {
+                    // Save for use in the view
+                    this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+                // Get required licenses for the Job title ID - an object, not a list
+                this.app.model.jobTitleLicenses.getItem(jobTitleID)
+                .then(function(item) {
+                    // Save for use in the view
+                    this.viewModel.jobTitleApplicableLicences(item);
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
             }
             else {
-                this.viewModel.addresses([]);
-                this.viewModel.pricing([]);
+                this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -97,6 +121,10 @@ A.prototype.show = function show(state) {
     // Set the job title
     var jobID = params[0] |0;
     this.viewModel.jobTitleID(jobID);
+    
+    //Get the return nav text
+    var returnText = state && state.route && state.route.query.returnText || 'Back';
+    this.viewModel.returnText(decodeURIComponent(returnText));
 };
 
 function ViewModel(app) {
@@ -104,10 +132,9 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
-    this.jobTitleName = ko.pureComputed(function() {
-        var j = this.jobTitle();
-        return j && j.singularName() || 'Job Title';
-    }, this);
+    this.userID = ko.observable(null);
+    this.jobTitleName = ko.observable('Job Title'); 
+    this.returnText = ko.observable('Back'); 
     
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
@@ -116,7 +143,7 @@ function ViewModel(app) {
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.jobTitleID() + '?mustReturn=marketplaceJobtitles/' + this.jobTitleID() +
-                '&returnText=' + this.jobTitleName()
+                '&returnText=' + encodeURIComponent(this.jobTitleName())
             );
         }, this);
     };
@@ -130,11 +157,20 @@ function ViewModel(app) {
             var status = this.userJobTitle() && this.userJobTitle().statusID();
             if (v === true && status === 3) {
                 this.userJobTitle().statusID(1);
+                // Push change to back-end
+                app.model.userJobProfile.reactivateUserJobTitle(this.jobTitleID())
+                .catch(function(err) {
+                    app.modals.showError({ title: 'Error enabling a Job Title', error: err });
+                });
             }
             else if (v === false && status === 1) {
                 this.userJobTitle().statusID(3);
+                // Push change to back-end
+                app.model.userJobProfile.deactivateUserJobTitle(this.jobTitleID())
+                .catch(function(err) {
+                    app.modals.showError({ title: 'Error disabling a Job Title', error: err });
+                });
             }
-            // TODO Push change to back-end
         },
         owner: this
     });
@@ -142,34 +178,10 @@ function ViewModel(app) {
     this.statusLabel = ko.pureComputed(function() {
         return this.isActiveStatus() ? 'ON' : 'OFF';
     }, this);
-    
-    this.cancellationPolicyLabel = ko.pureComputed(function() {
-        var pid = this.userJobTitle() && this.userJobTitle().cancellationPolicyID();
-        // TODO fetch policy ID label
-        return pid === 3 ? 'Flexible' : pid === 2 ? 'Moderate' : 'Strict';
-    }, this);
-    
-    this.instantBooking = ko.pureComputed(function() {
-        return this.userJobTitle() && this.userJobTitle().instantBooking();
-    }, this);
-    
-    this.instantBookingLabel = ko.pureComputed(function() {
-        return this.instantBooking() ? 'ON' : 'OFF';
-    }, this);
-    
-    this.toggleInstantBooking = function() {
-        var current = this.instantBooking();
-        if (this.userJobTitle()) {
-            this.userJobTitle().instantBooking(!current);
-            // TODO Push change to server
-        }
-    };
 
     /// Related models information
-    
-    this.addresses = ko.observable([]);
-    this.pricing = ko.observable([]);
-    this.licenseCertifications = ko.observable([]);
+    this.submittedUserLicensesCertifications = ko.observableArray([]);
+    this.jobTitleApplicableLicences = ko.observable(null);
     this.workPhotos = ko.observable([]);
 
     // Computed since it can check several externa loadings
@@ -180,57 +192,32 @@ function ViewModel(app) {
         );
         
     }, this);
-    
-    this.addressesCount = ko.pureComputed(function() {
-        
-        // TODO l10n.
-        // Use i18next plural localization support rather than this manual.
-        var count = this.addresses().length,
-            one = '1 location',
-            more = ' locations';
-        
-        if (count === 1)
-            return one;
-        else
-            // Small numbers, no need for formatting
-            return count + more;
-
-    }, this);
-    
-    this.pricingCount = ko.pureComputed(function() {
-        
-        // TODO l10n.
-        // Use i18next plural localization support rather than this manual.
-        var count = this.pricing().length,
-            one = '1 service',
-            more = ' services';
-        
-        if (count === 1)
-            return one;
-        else
-            // Small numbers, no need for formatting
-            return count + more;
-
-    }, this);
-    
+ 
     this.licensesCertificationsSummary = ko.pureComputed(function() {
-        var lc = this.licenseCertifications();
+        var lc = this.submittedUserLicensesCertifications();
+        //jshint maxcomplexity:8
         if (lc && lc.length) {
-            // TODO Detect 
-            var verified = 0,
+            var verified = 0, 
+                other = 0,
                 pending = 0;
             lc.forEach(function(l) {
                 if (l && l.statusID() === 1)
                     verified++;
                 else if (l && l.statusID() === 2)
                     pending++;
+                else if (l && l.statusID() === 4)
+                    return 'Expired, please update';
+                else if (l && l.statusID() === 5)
+                    other++;
+                else if (l && l.statusID() === 6)
+                    return 'Expiring soon, please update';
+                else if (l && l.statusID() === 3)
+                    return 'Please contact us';
             });
-            // L18N
-            return verified + ' verified, ' + pending + ' pending';
+            return verified + ' verified, ' + pending + ' pending, ' + other + ' supplemental';
         }
         else {
-            // L18N
-            return 'There are not verifications';
+            return 'None verified';
         }
     }, this);
     
@@ -245,4 +232,24 @@ function ViewModel(app) {
             return 'No images';
     }, this);
     
+    this.deleteJobTitle = function() {
+        var jid = this.jobTitleID();
+        var jname = this.jobTitleName();
+        if (jid) {
+            app.modals.confirm({
+                title: 'Delete ' + jname + ' profile',
+                message: 'Are you really sure you want to delete your ' + jname +' profile?',
+                yes: 'Delete',
+                no: 'Keep'
+            }).then(function() {
+                app.shell.goBack();
+                return app.model.userJobProfile.deleteUserJobTitle(jid);
+            })
+            .catch(function(err) {
+                if (err) {
+                    app.modals.showError({ error: err, title: 'Error while deleting a job title' });
+                }
+            });
+        }
+    }.bind(this);
 }

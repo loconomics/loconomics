@@ -21,5 +21,6 @@ module.exports = {
     coopFee: 13,
     senseOfCommunity: 14,
     clientServiceAgents: 15,
-    helpPages: 16
+    helpPages: 16,
+    boardNomination: 17
 };

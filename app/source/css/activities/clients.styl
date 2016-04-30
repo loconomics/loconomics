@@ -7,8 +7,11 @@
     
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
-    $indexTop = 62px;
-
+    $indexTop = 96px;
+    
+    .container-fluid {
+        padding-left: 0;
+    }
     .SectionTitle {
         position: absolute;
         left: 0px;
@@ -20,6 +23,8 @@
     #clientsIndex {
         overflow: hidden;
         width: $fullIndexWidth;
+        //@iagosrl this needs a calculated "height" for responsive...it gets hidden now
+        min-height: 600px;
         
         // Fixed has the problems of iOS with scrolling, and too the lack of scroll for itself
         // Scroll context must be carefully placed in a sibling elements that acts as container for
@@ -31,6 +36,7 @@
         overflow: auto;
         bottom: 0;
         box-sizing: border-box;
+        color: $gray-light;
         
         > .nav {
             border-bottom: none;
@@ -40,40 +46,60 @@
                 font-weight: bold;
                 padding: 3px 6px 3px 15px;
                 border: none;
-                border-radius: 0;
+                border-radius: 0; 
+                &:hover,
+                &:focus {
+                    background-color: transparent;
+                    color: $brand-secondary;
+                }
             }
+        }
+        @media $mediaMinSm {
+          position: relative;
+          top: 110px;
+          right: -350px;
+        }  
+        @media $mediaMinMd {
+          right: -270px;
+        }  
+        @media $mediaMinLg {
+          right: -325px;
         }
     }
     
     #clientsContent {
-        // Using absolute positioning rather than SmartViewContent (height:100%)
+        // Using absolute positioning rather than (height:100%)
         // because the need to left space (sometimes) for the SectionTitle on top
-        overflow: auto;        
+        overflow: auto;
         position: absolute;
-        top: 0;
+        top: 38px;
         // Using padding for left positioning to allow negative margin on the list
         left: 0;
         padding-left: $container-padding-left;
         right: $fullIndexWidth;
         bottom: 0;
+        @media $mediaMinSm {
+          top: 44px;
+        }  
 
         #clientsListView {
             // List must start on the edge, per design
             margin-left: (0 - $container-padding-left);
             
+            .SimpleList-item {
+                background-color: white;
+                
+                a {
+                  &:hover,
+                  &:focus {
+                    color: $brand-secondary;
+                  }
+                }
+            }
+            
             .SimpleList-divider {
                 text-transform: uppercase;
             }
-        }
-    }
-    
-    &.has-SectionTitle {
-        #clientsContent {
-            top: $SectionTitle-height;
-        }
-        
-        #clientsIndex {
-            top: $indexTop + $SectionTitle-height;
         }
     }
     

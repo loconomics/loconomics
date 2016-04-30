@@ -1,0 +1,28 @@
+﻿@* Placeholder testing area
+ *@
+@{
+    //LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+    dynamic data;
+
+    try {
+        data = LcRest.Booking.NewFor(547, 540, 106, 1, 1, null, false);
+        /*data = LcRest.Booking.InsClientBooking(547, 540, 106, new LcRest.Address{
+            addressLine1 = "asdf",
+            postalCode = "90001",
+            countryCode = "US",
+            addressName = ""
+        }, new DateTime(2016, 5, 5), null, null, new List<int>
+        {
+            143
+        }, 1, 1, null, null);*/
+    }
+    catch (Exception ex) {
+        data = ex;
+    }
+}
+@ObjectInfo.Print(data)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())

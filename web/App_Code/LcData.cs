@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,6 +10,7 @@ using WebMatrix.Data;
 public static partial class LcData
 {
     #region Service Attributes and Categories
+    [Obsolete("Use LcRest.ServiceAttribute and LcRest.UserJobTitleServiceAttributes methods")]
     public static Dictionary<int, Dictionary<string, object>> GetServiceCatsAndItsAttributes(int positionId, string filters = null, int userId = 0)
     {
         var rcats = new Dictionary<int, Dictionary<string, object>>();
@@ -161,6 +162,7 @@ public static partial class LcData
     //public const int ServiceAttCatIDClientTypes = 7;
 
     #region Extra tables for Service attributes (Languages&Experience Levels)
+    [Obsolete("Use LcRest.ExperienceLevel API")]
     public static dynamic GetExperienceLevels(int UserID = 0, int PositionID = 0)
     {
         using (var db = Database.Open("sqlloco"))
@@ -185,6 +187,7 @@ public static partial class LcData
              UserID, PositionID);
         }
     }
+    [Obsolete("Unused language levels")]
     public static dynamic GetLanguageLevels()
     {
         using (var db = Database.Open("sqlloco"))
@@ -204,6 +207,7 @@ public static partial class LcData
     /// <param name="UserID"></param>
     /// <param name="PositionID"></param>
     /// <returns></returns>
+    [Obsolete("Unused language levels")]
     public static Dictionary<int, int> GetUserLanguageLevels(int UserID, int PositionID)
     {
         var userLangLevels = new Dictionary<int, int>();
@@ -670,124 +674,6 @@ public static partial class LcData
     #endregion
 
     #region Pricing Wizard
-    #region Provider Price
-    public class ProviderPrice
-    {
-        public bool IsHourly;
-        public decimal Price;
-    }
-    /// <summary>
-    /// Gets the minimum price offered by the provider on a specific position,
-    /// being a 'since' fixed price or an hourly rate depending on its offered pricing.
-    /// </summary>
-    /// <param name="providerUserID"></param>
-    /// <param name="positionID"></param>
-    /// <param name="clienttypeid"></param>
-    /// <param name="customerUserID"></param>
-    /// <returns></returns>
-    public static ProviderPrice GetProviderPrice(int providerUserID, int positionID, int clienttypeid, int customerUserID = 0)
-    {
-        dynamic minPackage = null;
-
-        // Look for the package with the minimum price (fixed or rate)
-        using (var db = Database.Open("sqlloco"))
-        {
-            var packages = db.Query(@"
-            SELECT  coalesce(P.ProviderPackagePrice, 0) As Price
-                    ,coalesce(P.PriceRate, 0) As PriceRate
-                    ,coalesce(P.PriceRateUnit, '') As PriceRateUnit
-                    ,P.PricingTypeID
-            FROM    ProviderPackage As P
-                     INNER JOIN
-                    pricingtype PR
-                      ON P.PricingTypeID = PR.PricingTypeID
-                         AND PR.CountryID = P.CountryID AND PR.LanguageID = P.LanguageID
-                     INNER JOIN
-                    positionpricingtype PO
-                     ON PR.PricingTypeID = PO.PricingTypeID AND PR.CountryID = PO.CountryID AND PR.LanguageID = PO.LanguageID
-                        AND PR.Active = 1
-                        AND PO.Active = 1
-                        AND P.PositionID = PO.PositionID
-            WHERE   P.Active = 1
-                    AND P.ProviderUserID = @0
-                    AND P.PositionID = @1
-                    AND P.LanguageID = @2 AND P.CountryID = @3
-                    -- Discard addons:
-                    AND P.IsAddOn = 0
-            ORDER BY
-                    -- Precedence to hourly-rates
-                    P.PriceRate DESC
-            ", providerUserID, positionID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            foreach (var pak in packages)
-            {
-                // No minimum, gets this
-                if (minPackage == null)
-                {
-                    minPackage = pak;
-                    continue;
-                }
-
-                // Hourly rates take precedence.
-                // If pak has an hourly rate, compare that
-                if (pak.PriceRate != null &&
-                    pak.PriceRate > 0 &&
-                    (pak.PriceRateUnit ?? "").ToUpper() == "HOUR" &&
-                    pak.PriceRate < minPackage.PriceRate)
-                {
-                    minPackage = pak;
-                    continue;
-                }
-
-                // If package has a fixed price, compare that
-                if (pak.Price != null &&
-                    pak.Price > 0 &&
-                    pak.Price < minPackage.Price)
-                {
-                    minPackage = pak;
-                    continue;
-                }
-            }
-        }
-
-        // Get fees
-        var feesSet = LcPricingModel.GetFeesSetFor(customerUserID, providerUserID, (minPackage != null ? minPackage.PricingTypeID : 0), positionID);
-        var fee = feesSet["standard:customer"];
-        // Create ProviderPrice from the minimum package
-        if (minPackage != null)
-        {
-            // If has an hourly rate
-            if (minPackage.PriceRate != null &&
-                minPackage.PriceRate > 0 &&
-                (minPackage.PriceRateUnit ?? "").ToUpper() == "HOUR")
-            {
-                // Get price with fees, 1 decimal for hourly rate
-                return new ProviderPrice
-                {
-                    IsHourly = true,
-                    Price = (new LcPricingModel.Price(minPackage.PriceRate, fee, 1)).TotalPrice
-                };
-            }
-            // If has fixed price
-            if (minPackage.Price != null &&
-                minPackage.Price > 0)
-            {
-                // Get price with fees, 0 decimal for fixed price
-                return new ProviderPrice
-                {
-                    IsHourly = false,
-                    Price = (new LcPricingModel.Price(minPackage.Price, fee, 0)).TotalPrice
-                };
-            }
-        }
-        // There is no price, creates 0 and apply flat fees
-        fee = feesSet["flat:customer"];
-        return new ProviderPrice
-        {
-            IsHourly = false,
-            Price = (new LcPricingModel.Price(0, fee, 0)).TotalPrice
-        };
-    }
-    #endregion
     #region Common Pricing
     /// <summary>
     /// Get the ID list of pricing types for a position
@@ -1204,7 +1090,7 @@ public static partial class LcData
                     ,L.LicenseCertificationAuthority
                     ,L.LicenseCertificationTypeDescription
                     ,UL.Comments
-            FROM    UserLicenseVerification As UL
+            FROM    UserLicenseCertifications As UL
                      INNER JOIN
                     LicenseCertification As L
                       ON UL.LicenseCertificationID = L.LicenseCertificationID
@@ -1413,34 +1299,6 @@ public static partial class LcData
     ";
     #endregion
 
-    #region Positions
-    public static int GetPositionIDByName(string nameOrTerm)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            var r = db.Query("EXEC SearchPositions @0,@1,@2", "%" + nameOrTerm + "%", LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-            // Check results number:
-            switch (r.Count())
-            {
-                // Only one result, return that
-                case 1:
-                    return r.First().PositionID;
-                // No retults, return 0
-                case 0:
-                    return 0;
-            }
-            // More than one result, check for one record that matchs exactly the 
-            // PositionSingular name
-            foreach (var ri in r)
-                if (nameOrTerm.ToLower() == ri.PositionSingular.ToLower())
-                    return ri.PositionID;
-
-            // Too much partial matches, ambiguous search:
-            return -1;
-        }
-    }
-    #endregion
-
     #region Payment gateway local data
     public static dynamic GetProviderPaymentAccount(int userID)
     {
@@ -1484,7 +1342,7 @@ public static partial class LcData
                     ) VALUES (
                         @0
                         , @1
-                        , @2
+                        , coalesce(@2, 'pending')
                         , @3
                         , @4
                         , @5

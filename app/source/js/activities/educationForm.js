@@ -6,14 +6,15 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function EducationFormActivity() {
+var A = Activity.extend(function EducationFormActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-
-    this.navBar = Activity.createSubsectionNavBar('Education');
+    this.navBar = Activity.createSubsectionNavBar('Education', {
+        backLink: '/education' , helpLink: '/help/sections/201960833-adding-education-to-your-profile'
+    });
 });
 
 exports.init = A.init;

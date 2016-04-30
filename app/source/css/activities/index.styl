@@ -1,0 +1,102 @@
+/**
+    Index
+**/
+[data-activity=index] {
+    a:not(.btn) {
+        color: White;
+        text-decoration: underline;
+    }
+    
+    .splashIndex-top {
+        background: $brand-primary;
+    }
+    
+    .LeadContent {
+        
+        h1,
+        p,
+        .btn {
+            color: White;
+        }
+    }
+    
+    .btn {
+        font-size: 16px;
+        border-radius: 2px;
+        border-bottom-color: $brand-danger;
+    }
+        
+    $brandWidth = 100px;
+    $brandHeight = 38px;
+    .logo-white,
+    .logo-teal {
+        // It's always in the top, adds the top margin
+        margin-top: 44px !important;
+        
+        display: inline-block;
+        text-indent: -99999px;
+        background: url("../images/logo-loconomics-teal-mini.png") no-repeat center;
+        hr-image("../images/logo-loconomics-teal-mini@2x.png", $brandWidth, $brandHeight);
+        width: $brandWidth;
+        height: $brandHeight;
+    }
+    .logo-white {
+        background: url("../images/logo-loconomics-white-mini.png") no-repeat center;
+        hr-image("../images/logo-loconomics-white-mini@2x.png", $brandWidth, $brandHeight);
+    }
+    .welcome {
+    	display: block;
+    	margin: auto;
+  		text-indent: -9999px;
+  		width: 600px;
+  		height: 600px;
+  		background-image: url("../images/welcome.png");
+  		background-image: 
+    		url("../images/welcome.svg");
+    	background-position: center;
+    	background-repeat: no-repeat;
+  		background-size: 600px 600px;
+  		@media $mediaMaxMd {
+            width: 800px;
+            height: 800px;
+            background-size: 800px 800px;
+        }                                    
+  		@media $mediaMaxSm {
+            width: 640px;
+            height: 640px;
+            background-size: 640px 640px;
+        }
+  		@media $mediaMaxXs {
+            width: 120px;
+            height: 120px;
+            background-size: 120px 120px;
+        }
+    }
+    
+    // Common styles on Splash specific pages
+    .Splash-message {
+        background: White;
+        margin: 0 auto;
+        padding: 20px 60px 30px;
+        text-align: center;
+        font-size: 1.2em;
+        
+        h2 {
+            font-size: 1.6em;
+        }
+
+        p {
+            text-align: justify;
+            max-width: 360px;
+            margin: 0 auto 16px;
+        }
+
+        .btn {
+            margin: 10px auto;
+        }
+        
+        @media $mediaMaxXs {
+            padding: 20px;
+        }
+    }
+}

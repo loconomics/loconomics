@@ -4,10 +4,14 @@
 'use strict';
 
 var ko = require('knockout'),
-    _ = require('lodash'),
+    groupBy = require('lodash/groupBy'),
     $ = require('jquery');
 
+var EventEmitter = require('events').EventEmitter;
+
 function ServiceProfessionalServiceViewModel(app) {
+    
+    EventEmitter.call(this);
 
     this.isLoading = ko.observable(false);
     this.list = ko.observableArray([]);
@@ -26,6 +30,20 @@ function ServiceProfessionalServiceViewModel(app) {
     this.requestData = ko.observable();
     this.cancelLink = ko.observable(null);
     
+    this.reset = function() {
+        this.isLoading(false);
+        this.list([]);
+        this.jobTitleID(0);
+        this.serviceProfessionalID(null);
+        this.jobTitle(null);
+        this.isAdditionMode(false);
+        this.isSelectionMode(false);
+        this.selectedServices([]);
+        this.preSelectedServices([]);
+        this.requestData();
+        this.cancelLink(null);
+    };
+    
     this.allowAddServices = ko.pureComputed(function() {
         return this.serviceProfessionalID() === null;
     }, this);
@@ -41,7 +59,7 @@ function ServiceProfessionalServiceViewModel(app) {
         var groups = [],
             groupsList = [];
         if (!this.isAdditionMode()) {
-            groups = _.groupBy(list, function(service) {
+            groups = groupBy(list, function(service) {
                 return service.pricingTypeID();
             });
 
@@ -174,12 +192,14 @@ function ServiceProfessionalServiceViewModel(app) {
         event.stopImmediatePropagation();
     }.bind(this);
     
+    ///
+    /// Load Data
     var loadDataFor = function loadDataFor(serviceProfessionalID, jobTitleID) {
         if (jobTitleID) {
             this.isLoading(true);
             // Get data for the Job title ID and pricing types.
             // They are essential data
-            Promise.all([
+            return Promise.all([
                 app.model.jobTitles.getJobTitle(jobTitleID),
                 app.model.pricingTypes.getList()
             ])
@@ -217,6 +237,8 @@ function ServiceProfessionalServiceViewModel(app) {
                 this.list(list);
                 
                 this.isLoading(false);
+                
+                this.emit('loaded');
 
             }.bind(this))
             .catch(function (err) {
@@ -230,13 +252,30 @@ function ServiceProfessionalServiceViewModel(app) {
         else {
             this.list([]);
             this.jobTitle(null);
+            return Promise.resolve();
         }
     }.bind(this);
+    
+    var manualLoad = false;
+    
+    // Public interface
+    this.loadData = function(serviceProfessionalID, jobTitleID) {
+        manualLoad = true;
+        this.serviceProfessionalID(serviceProfessionalID);
+        this.jobTitleID(jobTitleID);
+        return loadDataFor(serviceProfessionalID, jobTitleID).then(function() {
+            manualLoad = false;
+        });
+    };
 
+    this.isAutoLoadEnabled = ko.observable(false);
     // AUTO LOAD on job title change
     ko.computed(function() {
+        if (manualLoad || !this.isAutoLoadEnabled()) return;
         loadDataFor(this.serviceProfessionalID(), this.jobTitleID());
     }.bind(this)).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
+
+ServiceProfessionalServiceViewModel._inherits(EventEmitter);
 
 module.exports = ServiceProfessionalServiceViewModel;

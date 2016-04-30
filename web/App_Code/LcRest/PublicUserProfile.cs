@@ -28,6 +28,33 @@ namespace LcRest
         public string serviceProfessionalProfileUrlSlug;
         public string serviceProfessionalWebsiteUrl;
 
+        /// <summary>
+        /// This full URL is not editable directly, just
+        /// a computed using the Loconomics URL and
+        /// the service professional choosen 'slug', or fallback
+        /// to the standard URL.
+        /// </summary>
+        public string serviceProfessionalProfileUrl
+        {
+            get
+            {
+                var url = MarketplaceProfile.BuildServiceProfessionalCustomURL(serviceProfessionalProfileUrlSlug);
+                if (String.IsNullOrWhiteSpace(url))
+                {
+                    // Gets the standard, base URL provided by Loconomics.
+                    // It's a SEO friendly URL that additionally to the userID
+                    // contains information like the city and the primary
+                    // job title name (if some information is missed it fallbacks
+                    // to the non-SEO, ID based, URL, ever a valid address).
+                    return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicSeoUrlPath(this.userID);
+                }
+                else
+                {
+                    return url;
+                }
+            }
+        }
+
         /// Fields protected, empty/null except for users that has a relationship together
         public string email;
         public string phone;
@@ -40,14 +67,12 @@ namespace LcRest
         {
             get
             {
-                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID;
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/profile/photo/" + userID;
             }
         }
 
         public bool isServiceProfessional;
         public bool isClient;
-        // TODO To decide if expose this publicly
-        //public bool isMember;
 
         public DateTime updatedDate;
         #endregion
@@ -74,7 +99,6 @@ namespace LcRest
 
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
-                //isMember = record.isMember,
 
                 updatedDate = record.updatedDate
             };
@@ -96,7 +120,6 @@ namespace LcRest
             -- User Type
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
-            ,isMember
 
             ,CASE WHEN PC.Active = 1 THEN UP.email ELSE null END as Email
             ,CASE WHEN PC.Active = 1 THEN Users.MobilePhone ELSE null END As phone
@@ -116,6 +139,38 @@ namespace LcRest
                 (   PC.ServiceProfessionalUserID = @0 AND PC.ClientUserID = @1
                  OR PC.ServiceProfessionalUserID = @1 AND PC.ClientUserID = @0 )
         WHERE Users.UserID = @0
+            -- Users must be active (no deleted and publicly active) OR to exist in relationship with the other user (active or not, but with record)
+          AND (Users.Active = 1 AND Users.AccountStatusID = 1 OR PC.Active is not null)
+        ";
+        private const string sqlSelectProfileForInternalUse = @"
+        SELECT TOP 1
+            -- ID
+            Users.userID
+
+            -- Name
+            ,firstName
+            ,lastName
+            ,secondLastName
+            ,businessName
+            ,publicBio
+
+            -- User Type
+            ,isProvider as isServiceProfessional
+            ,isCustomer as isClient
+
+            ,UP.email as Email
+            ,Users.MobilePhone As phone
+            ,providerWebsiteUrl as serviceProfessionalWebsiteUrl
+            
+            ,providerProfileUrl as serviceProfessionalProfileUrlSlug
+
+            ,Users.updatedDate
+
+        FROM Users
+                INNER JOIN
+            UserProfile As UP
+                ON UP.UserID = Users.UserID
+        WHERE Users.UserID = @0
           AND Users.Active = 1
         ";
         #endregion
@@ -126,6 +181,13 @@ namespace LcRest
             using (var db = Database.Open("sqlloco"))
             {
                 return FromDB(db.QuerySingle(sqlSelectProfile, userID, requesterUserID));
+            }
+        }
+        internal static PublicUserProfile GetForInternalUse(int userID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return FromDB(db.QuerySingle(sqlSelectProfileForInternalUse, userID));
             }
         }
         #endregion

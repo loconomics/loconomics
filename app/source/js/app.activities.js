@@ -6,7 +6,7 @@
 'use strict';
 
 var Activity = require('./components/Activity');
-var EmptyActivity = Activity.extends(function EmptyActivity() {
+var EmptyActivity = Activity.extend(function EmptyActivity() {
 
     Activity.apply(this, arguments);
 
@@ -17,6 +17,7 @@ var EmptyActivity = Activity.extends(function EmptyActivity() {
 
 module.exports = {
     '_test': EmptyActivity,
+    'downloadApp': require('./activities/downloadApp'),
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
     'clients': require('./activities/clients'),
@@ -28,7 +29,6 @@ module.exports = {
     'index': require('./activities/index'),
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
-    'learnMore': require('./activities/learnMore'),
     'signup': require('./activities/signup'),
     'contactInfo': require('./activities/contactInfo'),
     'welcome': require('./activities/welcome'),
@@ -38,8 +38,7 @@ module.exports = {
     'conversation': require('./activities/conversation'),
     'scheduling': require('./activities/scheduling'),
     'jobtitles': require('./activities/jobtitles'),
-    'feedback': require('./activities/feedback'),
-    'faqs': require('./activities/faqs'),
+    'help': require('./activities/help'),
     'feedbackForm': require('./activities/feedbackForm'),
     'contactForm': require('./activities/contactForm'),
     'cms': require('./activities/cms'),
@@ -67,6 +66,22 @@ module.exports = {
     'workPhotos': require('./activities/workPhotos'),
     'profile': require('./activities/profile'),
     'home': require('./activities/home'),
+    'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
-    'terms': require('./activities/terms')
+    'terms': require('./activities/terms'),
+    'about': require('./activities/about'),
+    'payments': require('./activities/payments'),
+    'userFees': require('./activities/userFees'),
+    'performance': require('./activities/performance'),
+    'searchJobTitle': require('./activities/searchJobTitle'),
+    'searchCategory': require('./activities/searchCategory'),
+    'serviceProfessionalProfileUrl': require('./activities/serviceProfessionalProfileUrl'),
+    'boardMemberNominations': require('./activities/boardMemberNominations'),
+    'paymentAccount': require('./activities/paymentAccount'),
+    'myAppointments': require('./activities/myAppointments'),
+    'clientAppointment': require('./activities/clientAppointment'),
+    'viewBooking': require('./activities/viewBooking'),
+    'blog': require('./activities/blog'),
+    'instantBooking': require('./activities/instantBooking'),
+    'ownerPerks': require('./activities/ownerPerks')
 };

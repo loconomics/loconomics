@@ -1,4 +1,4 @@
-﻿/**
+/**
     Website authentication pages must use the utilities
     given here on most cases rather than directly the LcAuth API
     since it helps with validate data from form for Log-in and
@@ -82,11 +82,17 @@ public static class LcAuthHelper
         }
     }
 
-    public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false, bool allowUnconfirmed = false) {
-            
-        checkAccountIsLocked(username);
-        if (!allowUnconfirmed)
-            checkAccountIsConfirmed(username);
+    public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false, bool allowUnconfirmed = false)
+    {
+        // AVOID FRUSTRATION IN BETA PERIOD REMOVING THE LOCK CHECK
+        // TODO: RE-ENABLE AFTER BETA
+        //checkAccountIsLocked(username);
+
+        // DISABLED CONFIRMATION CHECK FOR BETA PERIOD, BECAUSE WE HAVE NOT THE EMAIL CONFIRMATION READY
+        // AFTER THE WHOLE SITE AND MESSAGING CHANGE.
+        // TODO: RE-ENABLE AFTER BETA
+        //if (!allowUnconfirmed)
+        //    checkAccountIsConfirmed(username);
             
         if (LcAuth.Login(username, password, rememberMe)) {
             
@@ -94,7 +100,7 @@ public static class LcAuthHelper
             return GetLoginResultForID(userId, returnProfile);
         }
         else {
-            throw new HttpException(400, "Incorrect Username or password.");
+            throw new HttpException(400, "Incorrect username or password.");
         }
     }
 
@@ -180,29 +186,30 @@ public static class LcAuthHelper
         // Since we set IsConfirmed as true on database to let 'auto-logging on register', 
         // we must check for the existance of a confirmation token:
         var userId = WebSecurity.GetUserId(username);
-        string token = userId == -1 ? null :
-            Database
-            .Open("sqlloco")
-            // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
-            // is already confirmed
-            .QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userId);
 
-        if (userId > -1 && !string.IsNullOrWhiteSpace(token)) {
-            // Resend confirmation mail
-            var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(token ?? "");
+        using (var db = new LcDatabase())
+        {
+            string token = LcAuth.GetConfirmationToken(userId);
             
-            var isProvider = Database
-                .Open("sqlloco")
-                .QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId);
+            if (userId > -1 && !string.IsNullOrWhiteSpace(token))
+            {
+                // Resend confirmation mail
+                var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + Uri.EscapeDataString(token ?? "");
 
-            if (isProvider) {
-                LcMessaging.SendWelcomeProvider(userId, username, confirmationUrl);
-            } else {
-                LcMessaging.SendWelcomeCustomer(userId, username, confirmationUrl, token);
+                var isProvider = (bool)(db.QueryValue("SELECT IsProvider FROM users WHERE UserID=@0", userId) ?? false);
+
+                if (isProvider)
+                {
+                    LcMessaging.SendWelcomeProvider(userId, username);
+                }
+                else
+                {
+                    LcMessaging.SendWelcomeCustomer(userId, username);
+                }
+
+                /// http 409:Conflict
+                throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
             }
-            
-            /// http 409:Conflict
-            throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
         }
     }
     #endregion
@@ -210,6 +217,9 @@ public static class LcAuthHelper
     #region Signup
     /// <summary>
     /// Quick signup, just username/email and a password.
+    /// 
+    /// IMPORTANT: It was used in a previous iteration of the project, now the detailed is in use and this lacks some of the latest
+    /// additions, like client-confirmationCode code.
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
@@ -286,7 +296,8 @@ public static class LcAuthHelper
             Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
         page.Validation.RequireField("firstName", "You must specify your first name.");
         page.Validation.RequireField("lastName", "You must specify your last name.");
-        page.Validation.RequireField("postalCode", "You must specify your Zip code.");
+        page.Validation.RequireField("postalCode", "You must specify your postal/zip code.");
+        page.Validation.RequireField("countryID", "You must specify your country.");
 
         // First data
         var profileTypeStr = Request.Form["profileType"] ?? "";
@@ -299,7 +310,7 @@ public static class LcAuthHelper
         if (isServiceProfessional)
         {
             page.Validation.RequireField("phone", "You must specify your mobile phone number.");
-            page.Validation.RequireField("device", "You must select a device. In short, we will send you a link to download the app for your device.");
+            page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
         }
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
@@ -317,18 +328,35 @@ public static class LcAuthHelper
 
         if (page.Validation.IsValid())
         {
+            var postalCode = Request.Form["postalCode"];
+            // TODO To use countryCode for a more 'open' public REST API, where 'code' is a well know ISO 2-letters CODE
+            //var countryCode = Request.Form["countryCode"];
+            var countryID = Request.Form["countryID"].AsInt();
+
+            // Validate postal code before continue
+            if (!LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
+            {
+                postalCode = postalCode,
+                //countryCode = countryCode
+                countryID = countryID
+            }))
+            {
+                // bad postal code
+                page.ModelState.AddError("postalCode", "Invalid postal code");
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
             // Autogenerated password (we need to save one) on facebook connect:
             var password = useFacebookConnect ? Membership.GeneratePassword(14, 5) : Request.Form["password"];
             var firstName = Request.Form["firstName"];
             var lastName = Request.Form["lastName"];
-            var postalCode = Request.Form["postalCode"];
             var referralCode = Request.Form["referralCode"];
             var device = Request.Form["device"];
             var phone = Request.Form["phone"];
             var returnProfile = Request.Form["returnProfile"].AsBool();
-            var locale = LcRest.Locale.Current;
-
+            
             var utm = Request.Url.Query;
+            LoginResult logged = null;
 
             // If the user exists, try to log-in with the given password,
             // becoming a provider if that was the requested profileType and follow as 
@@ -337,21 +365,97 @@ public static class LcAuthHelper
             // Otherwise, just register the user.
             if (LcAuth.ExistsEmail(email))
             {
-                LoginResult logged = null;
-                // Try Login
-                try
+                // If the email exists, we try to log-in using the provided password, to don't bother with "e-mail in use" error 
+                // if the user provides the correct credentials (maybe just don't remember he/she has already an account; make it easy for them
+                // to return).
+                // BUT we have a special situation that needs extra checks:
+                // CLIENT--CONFIRMATION LOGIC
+                // The email can exists because the user has an account created as client by a service professional:
+                // - A: On that cases, we need to communicate that specific situation (error message), generate a confirmation code
+                // for the existent user, send email to let him to confirm it owns the given e-mail.
+                // - B: On returning here after point A, a confirmation code is provided and we must proceed
+                // by checking the confirmation code and, on success, unlock and update the membership password and
+                // continue updating any given data.
+                var userID = WebSecurity.GetUserId(email);
+                var user = LcRest.UserProfile.Get(userID);
+                if (user.accountStatusID != (int)LcEnum.AccountStatus.serviceProfessionalClient)
                 {
-                    logged = Login(email, password, false, returnProfile);
-                    // throw exception on error
-                    if (isServiceProfessional)
+                    // NOT a client, just standard sign-up that requires verify the email/password or fail
+                    // Try Login
+                    try
                     {
-                        LcAuth.BecomeProvider(logged.userID);
+                        logged = Login(email, password, false, returnProfile, true);
+                        userID = logged.userID;
+                        // throw exception on error
+                        if (isServiceProfessional)
+                        {
+                            LcAuth.BecomeProvider(userID);
+                        }
+                    }
+                    catch (HttpException)
+                    {
+                        // Not valid log-in, throw a 'email exists' error with Conflict http code
+                        throw new HttpException(409, "E-mail address is already in use.");
                     }
                 }
-                catch (HttpException)
+                else
                 {
-                    // Not valid log-in, throw a 'email exists' error with Conflict http code
-                    throw new HttpException(409, "E-mail address is already in use.");
+                    // CLIENT--CONFIRMATION LOGIC
+                    // The email can exists because the user has an account created as client by a service professional:
+                    // - A: On that cases, we need to communicate that specific situation (error message), generate a confirmation code
+                    // for the existent user, send email to let him to confirm it owns the given e-mail.
+                    // - B: On returning here after point A, a confirmation code is provided and we must proceed
+                    // by checking the confirmation code and, on success, unlock and update the membership password and
+                    // continue updating any given data.
+                    var confirmationCode = Request["confirmationCode"];
+                    var errMsg = String.Format(@"We see one of our service professionals has already scheduled services for you in the past.
+                        We've just sent an invitation to create your account to {0}.
+                        Please follow its instructions. We can't wait to get you on board!", email
+                    );
+                    if (String.IsNullOrEmpty(confirmationCode))
+                    {
+                        // Point A: create confirmation code  
+                        // generate a confirmation code (creates the Membership record, that does not exists still since is as just a client)
+                        // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
+                        // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
+                        // record will exists already, just double check and try creation only if record don't exists:
+                        if (!LcAuth.HasMembershipRecord(userID))
+                        {
+                            WebSecurity.CreateAccount(email, Membership.GeneratePassword(14, 5), true);
+                        }
+                        // send email to let him to confirm it owns the given e-mail
+                        LcMessaging.SendWelcomeCustomer(userID, email);
+                        // Not valid after all, just communicate was was done and needs to do to active its account:
+                        throw new HttpException(409, errMsg);
+                    }
+                    else
+                    {
+                        // Point B: confirm confirmation code
+                        if (LcAuth.GetConfirmationToken(userID) == confirmationCode)
+                        {
+                            // We know is valid, we can update the accountStatus to not be any more a "service professional's client"
+                            // and that will allow to set the account as confirmed
+                            using (var db = new LcDatabase())
+                            {
+                                db.Execute("UPDATE users SET accountStatusID = @1 WHERE UserID = @0", userID, LcEnum.AccountStatus.active);
+                            }
+                            // now we can confirm (we already know the code is valid, it will just double check and update database)
+                            LcAuth.ConfirmAccount(confirmationCode);
+                            // set the password provided by the user. Trick: we need to generate a reset token in order to set the password.
+                            var token = WebSecurity.GeneratePasswordResetToken(email);
+                            WebSecurity.ResetPassword(token, password);
+                            // Left continue with profile data update..
+                        }
+                        else
+                        {
+                            // RE-send email to let him to confirm it owns the given e-mail
+                            LcMessaging.SendWelcomeCustomer(userID, email);
+                            throw new HttpException(409, errMsg);
+                        }
+                    }
+
+                    // We need a logged object, and additionally a double check is performed (so we ensure setting the password process worked).
+                    logged = Login(email, password, false, returnProfile, false);
                 }
 
                 // Update account data with the extra information.
@@ -361,19 +465,40 @@ public static class LcAuthHelper
                         UPDATE users SET
                             firstName = @1,
                             lastName = @2,
-                            mobilePhone = @3
+                            mobilePhone = @3,
+                            signupDevice = @4
                         WHERE userID = @0
-                    ", logged.userID, firstName, lastName, phone);
+                    ", userID, firstName, lastName, phone, device);
 
-                    var address = LcRest.Address.GetHomeAddress(logged.userID);
+                    var address = LcRest.Address.GetHomeAddress(userID);
                     if (address.postalCode != postalCode)
                     {
                         address.postalCode = postalCode;
-                        address.countryCode = locale.countryCode;
-                        LcRest.Address.AutosetByCountryPostalCode(address);
+                        //address.countryCode = countryCode;
+                        address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
+                        address.countryID = countryID;
                         LcRest.Address.SetAddress(address);
                     }
                 }
+
+                // SPLASH BETA SIGNUP
+                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
+                    <html><body><h3>Sign-up for the beta from the Splash page.</h3>
+                    <strong>This user was already in the database, is re-registering itself again!</strong><br/>
+                    <dl>
+                    <dt>Profile:</dt><dd>{0}</dd>
+                    <dt>First Name:</dt><dd>{1}</dd>
+                    <dt>Last Name:</dt><dd>{2}</dd>
+                    <dt>Postal code:</dt><dd>{3}</dd>
+                    <dt>Country:</dt><dd>{9}</dd>
+                    <dt>Referral code:</dt><dd>{4}</dd>
+                    <dt>Device:</dt><dd>{5}</dd>
+                    <dt>Phone:</dt><dd>{6}</dd>
+                    <dt>Email:</dt><dd>{7}</dd>
+                    <dt>UserID:</dt><dd>{8}</dd>
+                    </dl>
+                    </body></html>
+                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, logged.userID, countryID));
 
                 return logged;
             }
@@ -388,12 +513,13 @@ public static class LcAuthHelper
                     }
                 }
 
-                var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone);
+                var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone, device);
                 // Set address
                 var address = LcRest.Address.GetHomeAddress(registered.UserID);
                 address.postalCode = postalCode;
-                address.countryCode = locale.countryCode;
-                LcRest.Address.AutosetByCountryPostalCode(address);
+                //address.countryCode = countryCode;
+                address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
+                address.countryID = countryID;
                 LcRest.Address.SetAddress(address);
 
                 if (useFacebookConnect)
@@ -402,8 +528,26 @@ public static class LcAuthHelper
                     LcAuth.ConnectWithFacebookAccount(registered.UserID, facebookUserID);
                 }
 
-                // IMPORTANT: DO NOT send registering email for now, until full website or app are ready #773
-                //LcAuth.SendRegisterUserEmail(registered);
+                // Welcome and confirmation e-mail
+                LcAuth.SendRegisterUserEmail(registered);
+
+                // SPLASH BETA SIGNUP
+                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
+                    <html><body><h3>Sign-up for the beta from the Splash page.</h3>
+                    <dl>
+                    <dt>Profile:</dt><dd>{0}</dd>
+                    <dt>First Name:</dt><dd>{1}</dd>
+                    <dt>Last Name:</dt><dd>{2}</dd>
+                    <dt>Postal code:</dt><dd>{3}</dd>
+                    <dt>Country:</dt><dd>{9}</dd>
+                    <dt>Referral code:</dt><dd>{4}</dd>
+                    <dt>Device:</dt><dd>{5}</dd>
+                    <dt>Phone:</dt><dd>{6}</dd>
+                    <dt>Email:</dt><dd>{7}</dd>
+                    <dt>UserID:</dt><dd>{8}</dd>
+                    </dl>
+                    </body></html>
+                ", profileTypeStr, firstName, lastName, postalCode, referralCode, device, phone, email, registered.UserID, countryID));
 
                 // Auto login:
                 return Login(email, password, false, returnProfile, true);
@@ -435,6 +579,8 @@ public static class LcAuthHelper
                 if (createAccount && isProvider)
                 {
                     LcAuth.BecomeProvider(user.UserID);
+                    user.IsProvider = true;
+                    LcAuth.SendRegisterUserEmail(user);
                 }
             }
             else
@@ -473,6 +619,7 @@ public static class LcAuthHelper
             //,facebookUser.gender
         );
         LcAuth.ConnectWithFacebookAccount(result.userID, facebookUser.id);
+        LcAuth.SendRegisterUserEmail(result);
         return result;
     }
 

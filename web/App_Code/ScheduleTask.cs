@@ -67,22 +67,18 @@ public class ScheduleTask
                 try
                 {
                     // RequestStatusID:6:expired
-                    var result = LcData.Booking.InvalidateBookingRequest(b.bookingID, (int)LcEnum.BookingStatus.requestExpired);
-                    if (result.Error == 0)
-                    {
-                        // Send message
-                        LcMessaging.SendBookingRequestInvalidation(b.bookingID, 1, 19);
-
-                        // Update MessagingLog for the booking request
-                        db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Booking Request Expiration]");
-                    }
+                    b.ExpireBooking();
+                    // Send message
+                    LcMessaging.SendBooking.For(b.bookingID).BookingRequestExpired();
+                    // Update MessagingLog for the booking
+                    db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Booking Request Expiration]");
 
                     items++;
                     messages += 2;
                 }
                 catch (Exception ex)
                 {
-                    logger.LogEx("Requests Expired", ex);
+                    logger.LogEx("Booking Request Expired", ex);
                 }
             }
             logger.Log("Total invalidated as Expired Booking Requests: {0}, messages sent: {1}", items, messages);
@@ -90,9 +86,9 @@ public class ScheduleTask
             totalmessages += messages;
 
             /*
-             * Check:: [24H Service Reminder] Booking will be on 24Hours
+             * Check:: [48H Service Reminder] Booking will be on 48Hours
              * If:: Confirmated bookings not cancelled
-             * If:: Current time is 24 hours before Confirmed Service StarTime
+             * If:: Current time is 48 hours before Confirmed Service StarTime
              * Action:: send a booking reminder email
              */
             messages = 0;
@@ -105,33 +101,353 @@ public class ScheduleTask
                           ON B.ServiceDateID = E.Id
                 WHERE   BookingStatusID = @0
                          AND
-                        -- at 24 hours before service starts (between 25 and 24 hours)
-                        getdate() > dateadd(hh, -25, E.StartTime)
+                        -- at 48 hours before service starts (between 49 and 48 hours)
+                        getdate() > dateadd(hh, -49, E.StartTime)
                          AND
-                        getdate() <= dateadd(hh, -24, E.StartTime)
+                        getdate() <= dateadd(hh, -48, E.StartTime)
                          AND
-                        B.MessagingLog not like '%[24H Service Reminder]%'
+                        B.MessagingLog not like '%[48H Service Reminder]%'
             ", (int)LcEnum.BookingStatus.confirmed))
             {
                 try
                 {
                     // Send message
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's', 'b', "service");
+                    LcMessaging.SendBooking.For(b.BookingID).BookingReminder();
 
                     // Update MessagingLog for the booking
-                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[24H Service Reminder]");
+                    db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[48H Service Reminder]");
 
                     items++;
                     messages += 2;
                 }
                 catch (Exception ex)
                 {
-                    logger.LogEx("Booking 24H Reminders", ex);
+                    logger.LogEx("Booking 48H Reminders", ex);
                 }
             }
-            logger.Log("Total of Booking 24H Reminders: {0}, messages sent: {1}", items, messages);
+            logger.Log("Total of Booking 48H Reminders: {0}, messages sent: {1}", items, messages);
             totalitems += items;
             totalmessages += messages;
+
+            /*
+             * Check:: Authorize postponed transactions 24hours previous to service start-time
+             * If:: Confirmed or performed bookings only, not cancelled or in dispute or completed (completed may be
+             * and old booking already paid
+             * If:: Current time is 24 hours before Confirmed Service StartTime
+             * If:: BookingRequest PaymentTransactionID is a Card token rather than an actual TransactionID
+             * If:: Customer was still not charged / transaction was not submitted for settlement ([ClientPayment] is null)
+             * Action:: authorize booking transaction
+             */
+            items = 0;
+            {
+                foreach (var b in LcRest.Booking.QueryPostponedPaymentAuthorizations(db))
+                {
+                    try
+                    {
+
+                        // Create transaction authorizing charge (but actually not charging still)
+                        // for saved customer credit card and update DB.
+                        try
+                        {
+                            if (b.AuthorizeTransaction())
+                            {
+                                items++;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            var errTitle = "Booking Authorize Postponed Transactions, 24h before Service Starts";
+                            var errDesc = String.Format(
+                                "BookingID: {0}, TransactionID: {1} Payment not allowed, error on Braintree 'sale transaction, authorizing only': {2}",
+                                b.bookingID,
+                                b.paymentTransactionID,
+                                ex.Message
+                            );
+
+                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+
+                            logger.Log("Error on: " + errTitle + "; " + errDesc);
+
+                            // DOUBT: Notify providers on failed authorization/receive-payment?
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Booking Authorize Postponed Transactions, 24h before Service Starts", ex);
+                    }
+                }
+            }
+            logger.Log("Total of Booking Authorize Postponed Transactions, 24h before Service Starts: {0}", items);
+            totalitems += items;
+
+            /*
+             * Check:: Charge Customer the day of the service
+             * If:: Confirmated or performed bookings only, not cancelled or in dispute or completed (completed may be
+             * and old booking already paid
+             * If:: Current time is the 1 hour after the End Service, or later
+             * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
+             * Action:: settle booking transaction
+             *          set [TotalPricePaidByCustomer] and [TotalServiceFeesPaidByCustomer] values
+             */
+            items = 0;
+            {
+                // Get bookings affected by conditions
+
+                foreach (var b in LcRest.Booking.QueryPendingOfClientChargeBookings(db))
+                {
+                    try
+                    {
+
+                        // Charge customer and update DB
+                        try
+                        {
+                            if (b.SettleTransaction())
+                            {
+                                items++;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var errTitle = "Booking Charge Customer, Receive Payment";
+                            var errDesc = String.Format(
+                                "BookingID: {0}, TransactionID: {1} Payment not received, error on Braintree 'settle transaction': {2}",
+                                b.bookingID,
+                                b.paymentTransactionID,
+                                ex.Message
+                            );
+
+                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+
+                            logger.Log("Error on: " + errTitle + "; " + errDesc);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Booking Charge Customer, Receive Payment", ex);
+                    }
+                }
+            }
+            logger.Log("Total of Booking Charge Customer, Receive Payment: {0}", items);
+            totalitems += items;
+
+            /*
+             * Check:: Service Performed: The end of the service (before #844, was at 48H passed from Service)
+             * If:: Confirmated bookings only, not cancelled, not set as performed, complete or dispute
+             * If:: Current time is Confirmed Service EndTime
+             * Action:: set booking status as 'service-performed'
+             */
+            messages = 0;
+            items = 0;
+            {
+                foreach (var b in LcRest.Booking.QueryConfirmed2ServicePerformedBookings(db))
+                {
+                    try
+                    {
+
+                        // Set as servicePerformed
+                        b.bookingStatusID = (int)LcEnum.BookingStatus.servicePerformed;
+                        LcRest.Booking.SetStatus(b, db);
+
+                        // Send messages
+
+                        // Notify customer and provider with an updated booking details:
+                        LcMessaging.SendBooking.For(b.bookingID).ServicePerformed();
+
+                        // Update MessagingLog for the booking
+                        db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Service Performed]");
+
+                        items++;
+                        // Before Marketplace: messages += 3;
+                        messages += 2;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Booking Service Performed", ex);
+                    }
+                }
+            }
+            logger.Log("Total of Booking Service Performed: {0}, messages sent: {1}", items, messages);
+            totalitems += items;
+            totalmessages += messages;
+
+            /*
+             * Check:: Release Payment for New Providers: 5 full days after the service is performed
+             * If:: If provider is a new provider (it has not previous completed bookings)
+             * If:: Performed bookings only, without pricing adjustment
+             * If:: Current time is 5 days after Confirmed Service EndTime
+             * Action:: set booking status as 'completed',
+             *          send a message to the provider notifying that payment is released.
+             */
+            /* REMOVED AS OF #844, 2016-01-26
+            messages = 0;
+            items = 0;
+            {
+                foreach (var b in LcRest.Booking.QueryPendingOfPaymentReleaseBookings(true, db))
+                {
+                    try
+                    {
+                        // Release the payment
+                        try
+                        {
+                            if (b.ReleasePayment())
+                            {
+                                items++;
+
+                                // Send messages
+
+                                // Notify customer and provider with an updated booking details:
+                                LcMessaging.SendBooking.For(b.bookingID).BookingCompleted();
+
+                                // Update MessagingLog for the booking
+                                db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 120H New Provider]");
+
+                                messages += 2;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            var errTitle = "Booking Release Payment after 120H for new providers";
+                            var errDesc = String.Format(
+                                "BookingID: {0}, TransactionID: {1}. Not payed on [Release Payment 120H New Provider], error on Braintree 'release transaction from escrow': {2}",
+                                b.bookingID,
+                                b.paymentTransactionID,
+                                ex.Message
+                            );
+
+                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+
+                            logger.Log("Error on: " + errTitle + "; " + errDesc);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Booking Release Payment after 120H for new providers", ex);
+                    }
+                }
+            }
+            logger.Log("Total of Booking Release Payment after 120H for new providers: {0}, messages sent: {1}", items, messages);
+            totalitems += items;
+            totalmessages += messages;
+            */
+
+            /*
+             * Check:: Release Payment for Service Complete: 1 hour 15 min after service is performed
+             * (before #844 was 1 day after the service is performed)
+             * //If:: Provider has already completed bookings (is not a new provider)
+             * If:: Performed bookings only, without pricing adjustment
+             * If:: Current time is 1 hour 15 min after Confirmed Service EndTime (before #844 was 1 day)
+             * Action:: set booking status as 'completed',
+             *          send a messages.
+             */
+            messages = 0;
+            items = 0;
+            {
+                // NOTE: Changed to ALL providers at 2016-01-26 as of #844
+                foreach (var b in LcRest.Booking.QueryPendingOfPaymentReleaseBookings(null, db))
+                {
+                    try
+                    {
+                        // Release the payment
+                        try
+                        {
+                            if (b.ReleasePayment())
+                            {
+                                items++;
+
+                                // Send messages
+
+                                // Notify customer and provider with an updated booking details:
+                                LcMessaging.SendBooking.For(b.bookingID).BookingCompleted();
+
+                                // Update MessagingLog for the booking
+                                db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 1H]");
+
+                                messages += 2;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            var errTitle = "Booking Release Payment after 1H to providers";
+                            var errDesc = String.Format(
+                                "BookingID: {0}, TransactionID: {1}. Not payed on [Release Payment 1H], error on Braintree 'release transaction from escrow': {2}",
+                                b.bookingID,
+                                b.paymentTransactionID,
+                                ex.Message
+                            );
+
+                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+
+                            logger.Log("Error on: " + errTitle + "; " + errDesc);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Booking Release Payment 1H", ex);
+                    }
+                }
+            }
+            logger.Log("Total of Booking Release Payment after 1H: {0}, messages sent: {1}", items, messages);
+            totalitems += items;
+            totalmessages += messages;
+
+            /*
+             * Check:: Setting No-Payment Bookings as Complete: 1 hour 15 min after service is performed
+             * If:: Performed bookings only
+             * If:: Current time is 1 hour 15 min after Confirmed Service EndTime
+             * Action:: set booking status as 'completed',
+             *          send messages.
+             */
+            messages = 0;
+            items = 0;
+            {
+                foreach (var b in LcRest.Booking.QueryPendingOfCompleteWithoutPaymentBookings(db))
+                {
+                    try
+                    {
+                        // Release the payment
+                        try
+                        {
+                            b.SetBookingAsCompleted();
+                            items++;
+
+                            // Send messages
+
+                            // Notify customer and provider with an updated booking details:
+                            LcMessaging.SendBooking.For(b.bookingID).BookingCompleted();
+
+                            // Update MessagingLog for the booking
+                            db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Complete - no payment]");
+
+                            messages += 2;
+                        }
+                        catch (Exception ex)
+                        {
+
+                            var errTitle = "Setting No-Payment Bookings as Complete after 1H15M to providers";
+                            var errDesc = String.Format(
+                                "BookingID: {0}, Error: {1}",
+                                b.bookingID,
+                                ex.Message
+                            );
+
+                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
+
+                            logger.Log("Error on: " + errTitle + "; " + errDesc);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogEx("Setting No-Payment Bookings as Complete 1H15M", ex);
+                    }
+                }
+            }
+            logger.Log("Total of No-Payment Bookings set as Complete after 1H15M: {0}, messages sent: {1}", items, messages);
+            totalitems += items;
+            totalmessages += messages;
+
 
             /*
              * Check:: [8AM Review Reminder] Booking Review Reminder Next day after service at 8AM
@@ -140,6 +456,7 @@ public class ScheduleTask
              * If:: Current time is 8AM on the day after the Confirmed Service EndTime
              * Action:: send a booking review reminder email
              */
+            /* DISABLED AS OF #844, 2016-01-26. Reminder information goes into the 'completed' email that happens sooner than before
             messages = 0;
             items = 0;
             var confirmedPerformedCompletedStatuses = String.Join(",", new List<int> { (int)LcEnum.BookingStatus.confirmed, (int)LcEnum.BookingStatus.servicePerformed, (int)LcEnum.BookingStatus.completed });
@@ -190,7 +507,7 @@ public class ScheduleTask
                         'b';
 
                     // Send message
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor, "review-firstreminder");
+                    LcMessaging.SendBooking.For((int)b.BookingID).RequestToReview();
 
                     // Update MessagingLog for the booking
                     db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[8AM Review Reminder]");
@@ -213,6 +530,7 @@ public class ScheduleTask
             logger.Log("Total of Booking Review Reminders Next 8AM: {0}, messages sent: {1}", items, messages);
             totalitems += items;
             totalmessages += messages;
+            */
 
             /*
              * Check:: [1W Review Reminder] Booking Review Reminder 1Week after service
@@ -270,7 +588,7 @@ public class ScheduleTask
                         'b';
 
                     // Send message
-                    LcMessaging.SendBookingUpdate(b.BookingID, 's', messageFor, "review");
+                    LcMessaging.SendBooking.For((int)b.BookingID).RequestToReviewReminder();
 
                     // Update MessagingLog for the booking
                     db.Execute(sqlAddBookingMessagingLog, b.BookingID, "[1W Review Reminder]");
@@ -293,265 +611,6 @@ public class ScheduleTask
             logger.Log("Total of Booking Review Reminders 1W: {0}, messages sent: {1}", items, messages);
             totalitems += items;
             totalmessages += messages;
-
-            /*
-             * Check:: Service Performed: 48H passed from Service
-             * If:: Confirmated bookings only, not cancelled, not set as performed, complete or dispute
-             * If:: Current time is 48 hours after Confirmed Service EndTime
-             * Action:: set booking status as 'service-performed'
-             */
-            messages = 0;
-            items = 0;
-            {
-                foreach (var b in LcRest.Booking.QueryConfirmed2ServicePerformedBookings(db))
-                {
-                    try
-                    {
-
-                        // Set as servicePerformed
-                        b.bookingStatusID = (int)LcEnum.BookingStatus.servicePerformed;
-                        LcRest.Booking.SetStatus(b, db);
-
-                        // Send messages
-
-                        // Notify customer and provider with an updated booking details:
-                        LcMessaging.SendBookingUpdate(b.bookingID, 's', 'b', null, 20);
-
-                        // Update MessagingLog for the booking
-                        db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[48H Service Performed]");
-
-                        items++;
-                        // Before Marketplace: messages += 3;
-                        messages += 2;
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogEx("Booking 48H Service Performed", ex);
-                    }
-                }
-            }
-            logger.Log("Total of Booking 48H Service Performed: {0}, messages sent: {1}", items, messages);
-            totalitems += items;
-            totalmessages += messages;
-
-            /*
-             * Check:: Release Payment for New Providers: 5 full days after the service is performed
-             * If:: If provider is a new provider (it has not previous completed bookings)
-             * If:: Performed bookings only, without pricing adjustment
-             * If:: Current time is 5 days after Confirmed Service EndTime
-             * Action:: set booking status as 'performed without pricing adjustment',
-             *          send a message to the provider notifying that payment is released.
-             */
-            messages = 0;
-            items = 0;
-            {
-                foreach (var b in LcRest.Booking.QueryPendingOfPaymentReleaseBookings(true, db))
-                {
-                    try
-                    {
-                        // Release the payment
-                        try
-                        {
-                            if (b.ReleasePayment())
-                            {
-                                items++;
-
-                                // Send messages
-
-                                // Notify customer and provider with an updated booking details:
-                                LcMessaging.SendBookingUpdate(b.bookingID, 's', 'b', null, 21);
-
-                                // Update MessagingLog for the booking
-                                db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 120H New Provider]");
-
-                                messages += 2;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                            var errTitle = "Booking Release Payment after 120H for new providers";
-                            var errDesc = String.Format(
-                                "BookingID: {0}, TransactionID: {1}. Not payed on [Release Payment 120H New Provider], error on Braintree 'release transaction from escrow': {2}",
-                                b.bookingID,
-                                b.paymentTransactionID,
-                                ex.Message
-                            );
-
-                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
-
-                            logger.Log("Error on: " + errTitle + "; " + errDesc);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogEx("Booking Release Payment after 120H for new providers", ex);
-                    }
-                }
-            }
-            logger.Log("Total of Booking Release Payment after 120H for new providers: {0}, messages sent: {1}", items, messages);
-            totalitems += items;
-            totalmessages += messages;
-
-
-            /*
-             * Check:: Release Payment for Service Complete: 1 day after the service is performed
-             * If:: Provider has already completed bookings (is not a new provider)
-             * If:: Performed bookings only, without pricing adjustment
-             * If:: Current time is 5 days after Confirmed Service EndTime
-             * Action:: set booking status as 'performed without pricing adjustment',
-             *          send a message to the provider notifying that payment is released.
-             */
-            messages = 0;
-            items = 0;
-            {
-                foreach (var b in LcRest.Booking.QueryPendingOfPaymentReleaseBookings(false, db))
-                {
-                    try
-                    {
-                        // Release the payment
-                        try
-                        {
-                            if (b.ReleasePayment())
-                            {
-                                items++;
-
-                                // Send messages
-
-                                // Notify customer and provider with an updated booking details:
-                                LcMessaging.SendBookingUpdate(b.bookingID, 's', 'b', null, 21);
-
-                                // Update MessagingLog for the booking
-                                db.Execute(sqlAddBookingMessagingLog, b.bookingID, "[Release Payment 24H]");
-
-                                messages += 2;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                            var errTitle = "Booking Release Payment after 120H for new providers";
-                            var errDesc = String.Format(
-                                "BookingID: {0}, TransactionID: {1}. Not payed on [Release Payment 24H], error on Braintree 'release transaction from escrow': {2}",
-                                b.bookingID,
-                                b.paymentTransactionID,
-                                ex.Message
-                            );
-
-                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
-
-                            logger.Log("Error on: " + errTitle + "; " + errDesc);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogEx("Booking Release Payment 24H", ex);
-                    }
-                }
-            }
-            logger.Log("Total of Booking Release Payment after 24H: {0}, messages sent: {1}", items, messages);
-            totalitems += items;
-            totalmessages += messages;
-
-            /*
-             * Check:: Authorize postponed transactions 48hours previous to service start-time
-             * If:: Confirmated or performed bookings only, not cancelled or in dispute or completed (completed may be
-             * and old booking already paid
-             * If:: Current time is 48 hours before Confirmed Service StartTime
-             * If:: BookingRequest PaymentTransactionID is a Card token rather than an actual TransactionID
-             * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
-             * Action:: authorize booking transaction
-             */
-            items = 0;
-            {
-                foreach (var b in LcRest.Booking.QueryPostponedPaymentAuthorizations(db))
-                {
-                    try
-                    {
-
-                        // Create transaction authorizing charge (but actually not charging still)
-                        // for saved customer credit card and update DB.
-                        try
-                        {
-                            if (b.AuthorizeTransaction())
-                            {
-                                items++;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-
-                            var errTitle = "Booking Authorize Postponed Transactions, 48h before Service Starts";
-                            var errDesc = String.Format(
-                                "BookingID: {0}, TransactionID: {1} Payment not allowed, error on Braintree 'sale transaction, authorizing only': {2}",
-                                b.bookingID,
-                                b.paymentTransactionID,
-                                ex.Message
-                            );
-
-                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
-
-                            logger.Log("Error on: " + errTitle + "; " + errDesc);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogEx("Booking Authorize Postponed Transactions, 48h before Service Starts", ex);
-                    }
-                }
-            }
-            logger.Log("Total of Booking Authorize Postponed Transactions, 48h before Service Starts: {0}", items);
-            totalitems += items;
-
-            /*
-             * Check:: Charge Customer the day of the service
-             * If:: Confirmated or performed bookings only, not cancelled or in dispute or completed (completed may be
-             * and old booking already paid
-             * If:: Current time is the 1 hour after the End Service, or later
-             * If:: Customer was still not charged / transaction was not submitted for settlement ([TotalPricePaidByCustomer] is null)
-             * Action:: settle booking transaction
-             *          set [TotalPricePaidByCustomer] and [TotalServiceFeesPaidByCustomer] values
-             */
-            items = 0;
-            {
-                // Get bookings affected by conditions
-
-                foreach (var b in LcRest.Booking.QueryPendingOfClientChargeBookings(db))
-                {
-                    try
-                    {
-
-                        // Charge customer and update DB
-                        try
-                        {
-                            if (b.SettleTransaction())
-                            {
-                                items++;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            var errTitle = "Booking Charge Customer, Receive Payment";
-                            var errDesc = String.Format(
-                                "BookingID: {0}, TransactionID: {1} Payment not received, error on Braintree 'settle transaction': {2}",
-                                b.bookingID,
-                                b.paymentTransactionID,
-                                ex.Message
-                            );
-
-                            LcMessaging.NotifyError(errTitle, "/ScheduleTask", errDesc);
-
-                            logger.Log("Error on: " + errTitle + "; " + errDesc);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogEx("Booking Charge Customer, Receive Payment", ex);
-                    }
-                }
-            }
-            logger.Log("Total of Booking Charge Customer, Receive Payment: {0}", items);
-            totalitems += items;
 
             // Ending work with database
         }

@@ -1,0 +1,122 @@
+@using WebMatrix.WebData;
+@*
+    Get, Update, Submit and Delete the logged user licenses/certifications.
+
+    Options:
+    - GET /{jobTitleID}
+        Gets the list of licenses/certificates for user on that jobTitle
+
+    - POST /{jobTitleID}
+        photo:binary image/jpeg A photo of the license/certificate that we manually will check and fill database with its information.
+        stateProvinceCode:string State that applies to the given certificate image
+
+    /*
+    - PUT /{jobTitleID}/{licenseCertificationID}
+        photo:binary image/jpeg
+
+    - DELETE /{jobTitleID}/{photoID}
+    */
+
+    - @Result LcRest.UserLicenseCertification class instance. On GET, it returns a list of them.
+
+    EXAMPLES {
+        "Submit a License/Certification": {
+            "url": "/api/v1/en-US/me/licenses-certifications/106",
+            "get": {},
+            "post": {
+                "photo": "binary image/* content"
+            }
+        },
+        "My licenses/certifications": {
+            "url": "/api/v1/en-US/me/licenses-certifications/106",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestMyLicensesCertifications : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                var userID = WebSecurity.CurrentUserId;
+                var jobTitleID = UrlData[0].AsInt();
+                var languageID = LcRest.Locale.Current.languageID;
+
+                return LcRest.UserLicenseCertification.GetList(userID, jobTitleID, languageID);
+            }
+
+            return base.Get();
+        }
+        
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 1) {
+                return SetPhoto();
+            }
+            return base.Post();
+        }
+
+        public dynamic SetPhoto()
+        {
+            // Input Data
+            var userID = WebSecurity.CurrentUserId;
+            var jobTitleID = UrlData[0].AsInt();
+            var licenseCertificationID = Request["licenseCertificationID"].AsInt();
+            
+            try {
+                Stream photoStream = null;
+                var fileuploaded = Request.Files["photo"];
+                if (fileuploaded != null && !String.IsNullOrEmpty(fileuploaded.FileName)) {
+                    photoStream = fileuploaded.InputStream;
+                }
+                if (photoStream == null) {
+                    ModelState.AddFormError("Please, include a photo");
+                }
+                else if (photoStream != null && photoStream.Length == 0) {
+                    // DOUBT: to check for this error, must be the photoStream or Request.InputStream.Length? Double check
+                    ModelState.AddFormError("Maximum request length exceeded");
+                }
+                else {
+                    LcRest.UserLicenseCertification.SubmitPhoto(userID, jobTitleID, licenseCertificationID, fileuploaded.FileName, photoStream);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddFormError(ex.Message);
+            }
+
+            if (ModelState.IsValid) {
+                return "OK";
+            }
+            else {
+                var errMsg = String.Join("; ", ModelState.Values.First().Errors);
+
+                // We don't want the ugly default asp.net message for file-size-exceeded
+                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+                if (errMsg.Contains("Maximum request length exceeded"))
+                {
+                    var max = LcHelpers.GetMaxRequestSize();
+                    var printMax = "";
+                    if (max > 0)
+                    {
+                        printMax = LcHelpers.PrettyFileSize(max * 1024);
+
+                        errMsg = "The file is too large, maximum file size is " + printMax;
+                    }
+                    else
+                    {
+                        errMsg = "The file is too large";
+                    }
+                    throw new ValidationException(errMsg, "profilePicture");
+                }
+
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestMyLicensesCertifications().JsonResponse(this);
+}

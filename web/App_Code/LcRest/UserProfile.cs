@@ -30,7 +30,7 @@ namespace LcRest
 
         public bool isServiceProfessional;
         public bool isClient;
-        public bool isMember;
+        public bool isCollaborator;
 
         /// <summary>
         /// Used in the app with a different set of names, but the first one is the same: 'welcome'.
@@ -39,6 +39,9 @@ namespace LcRest
         public int accountStatusID;
         public DateTime createdDate;
         public DateTime updatedDate;
+
+        public int? ownerStatusID;
+        public DateTime? ownerAnniversaryDate;
 
         // Automatic field right now, but is better
         // to communicate it than to expect the App or API client
@@ -74,12 +77,15 @@ namespace LcRest
 
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
-                isMember = record.isMember,
+                isCollaborator = record.isCollaborator,
 
                 onboardingStep = record.onboardingStep,
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
-                updatedDate = record.updatedDate
+                updatedDate = record.updatedDate,
+
+                ownerStatusID = record.ownerStatusID,
+                ownerAnniversaryDate = record.ownerAnniversaryDate
             };
         }
 
@@ -99,7 +105,7 @@ namespace LcRest
             -- User Type
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
-            ,isMember
+            ,isCollaborator
 
             ,alternativeEmail
             ,mobilePhone as phone
@@ -112,13 +118,16 @@ namespace LcRest
             ,createdDate
             ,updatedDate
 
+            ,ownerStatusID
+            ,ownerAnniversaryDate
+
         FROM Users
                 INNER JOIN
             UserProfile As UP
                 ON UP.UserID = Users.UserID
         WHERE Users.UserID = @0
             AND Active = 1
-    ";
+        ";
 
         private const string sqlUpdateProfile = @"
         DECLARE 
@@ -219,7 +228,7 @@ namespace LcRest
         EXEC TestAllUserAlerts @UserID
 
         COMMIT TRAN
-    ";
+        ";
         #endregion
 
         #region Fetch
@@ -228,6 +237,15 @@ namespace LcRest
             using (var db = Database.Open("sqlloco"))
             {
                 return FromDB(db.QuerySingle(sqlSelectProfile, userID));
+            }
+        }
+        public static string GetEmail(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return (string)db.QueryValue(@"
+                    SELECT email FROM UserProfile WHERE UserID = @0
+                ", userID);
             }
         }
         #endregion

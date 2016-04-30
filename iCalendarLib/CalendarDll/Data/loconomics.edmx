@@ -279,6 +279,7 @@
           <Property Name="TimeBlock" Type="time" />
           <Property Name="DayofWeek" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Deleted" Type="datetime" />
         </EntityType>
         <EntityType Name="CalendarEventsAttendees">
           <Key>
@@ -1308,6 +1309,7 @@
           <Property Type="Time" Name="TimeBlock" Precision="7" />
           <Property Type="Int32" Name="DayofWeek" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Deleted" Nullable="true" />
           <NavigationProperty Name="CalendarAvailabilityType" Relationship="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" FromRole="CalendarEvents" ToRole="CalendarAvailabilityType" />
           <NavigationProperty Name="CalendarEventComments" Relationship="loconomicsModel.FK_Comments_CalendarEvents" FromRole="CalendarEvents" ToRole="CalendarEventComments" />
           <NavigationProperty Name="CalendarEventExceptionsPeriodsList" Relationship="loconomicsModel.FK_CalendarEventExceptions_CalendarEvents" FromRole="CalendarEvents" ToRole="CalendarEventExceptionsPeriodsList" />
@@ -1872,6 +1874,7 @@
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1906,7 +1909,7 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram Name="loconomics" ZoomLevel="114">
+      <Diagram Name="loconomics" ZoomLevel="72">
         <EntityTypeShape EntityType="loconomicsModel.address" Width="1.5" PointX="0.75" PointY="0.75" Height="4.480205078125" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.addresstype" Width="1.5" PointX="2.75" PointY="0.75" Height="2.9417936197916656" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.CalendarAvailabilityType" Width="1.5" PointX="3.75" PointY="7.125" Height="2.1725878906249996" IsExpanded="true" />
@@ -1929,7 +1932,7 @@
         <EntityTypeShape EntityType="loconomicsModel.sysdiagrams" Width="1.5" PointX="10.75" PointY="3.75" Height="1.9802864583333388" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.transporttype" Width="1.5" PointX="12.75" PointY="0.75" Height="2.7494921875000031" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.users" Width="2.125" PointX="0.5" PointY="10.5" Height="7.9416308593750031" IsExpanded="true" />
-        <EntityTypeShape EntityType="loconomicsModel.CalendarEvents" Width="1.5" PointX="6" PointY="10.625" Height="7.5570279947916656" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEvents" Width="1.5" PointX="6" PointY="10.625" Height="7.7493294270833353" IsExpanded="true" />
         <EntityTypeShape EntityType="loconomicsModel.CalendarEventType" Width="1.5" PointX="3.75" PointY="19" Height="1.7879850260416674" IsExpanded="true" />
         <AssociationConnector Association="loconomicsModel.FK_CalendarProviderAttributes_users" ManuallyRouted="false">
           <ConnectorPoint PointX="2.625" PointY="12.345896809895834" />
@@ -1944,18 +1947,18 @@
           <ConnectorPoint PointX="3" PointY="16.134348958333334" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" ManuallyRouted="false">
-          <ConnectorPoint PointX="4.90625" PointY="9.297587890625" />
-          <ConnectorPoint PointX="4.90625" PointY="13.999746093750002" />
-          <ConnectorPoint PointX="6" PointY="13.999746093750002" />
+          <ConnectorPoint PointX="4.8203125" PointY="9.4898893229166656" />
+          <ConnectorPoint PointX="4.8203125" PointY="14.095896809895834" />
+          <ConnectorPoint PointX="6" PointY="14.095896809895834" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_Comments_CalendarEvents" ManuallyRouted="false">
-          <ConnectorPoint PointX="6.75" PointY="10.625" />
-          <ConnectorPoint PointX="6.75" PointY="6.8939925130208328" />
+          <ConnectorPoint PointX="6.57812625" PointY="10.625" />
+          <ConnectorPoint PointX="6.57812625" PointY="6.8939925130208328" />
           <ConnectorPoint PointX="8.25" PointY="6.8939925130208328" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptions_CalendarEvents" ManuallyRouted="false">
-          <ConnectorPoint PointX="7.1562525" PointY="10.625" />
-          <ConnectorPoint PointX="7.1562525" PointY="9.3939925130208337" />
+          <ConnectorPoint PointX="7.070315625" PointY="10.625" />
+          <ConnectorPoint PointX="7.070315625" PointY="9.3939925130208337" />
           <ConnectorPoint PointX="8.25" PointY="9.3939925130208337" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEventRecurrencesPeriodList_CalendarEvents" ManuallyRouted="false">
@@ -1963,28 +1966,26 @@
           <ConnectorPoint PointX="8.25" PointY="11.893992513020834" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_users" ManuallyRouted="false">
-          <ConnectorPoint PointX="2.625" PointY="18.069112955729167" />
-          <ConnectorPoint PointX="4.994791666666667" PointY="18.069112955729167" />
-          <ConnectorPoint PointX="5.161458333333333" PointY="18.069112955729167" />
-          <ConnectorPoint PointX="6" PointY="18.069112955729167" />
+          <ConnectorPoint PointX="2.625" PointY="18.165263671875003" />
+          <ConnectorPoint PointX="6" PointY="18.165263671875003" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEventsAttendees_CalendarEvents" ManuallyRouted="false">
           <ConnectorPoint PointX="7.5" PointY="14.5862939453125" />
           <ConnectorPoint PointX="8.25" PointY="14.5862939453125" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEventsContacts_CalendarEvents" ManuallyRouted="false">
-          <ConnectorPoint PointX="7.5" PointY="17.341013997395834" />
-          <ConnectorPoint PointX="8.25" PointY="17.341013997395834" />
+          <ConnectorPoint PointX="7.5" PointY="17.393992513020834" />
+          <ConnectorPoint PointX="8.25" PointY="17.393992513020834" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarReccursive_CalendarEvents" ManuallyRouted="false">
-          <ConnectorPoint PointX="6.75" PointY="18.182027994791667" />
+          <ConnectorPoint PointX="6.75" PointY="18.374329427083335" />
           <ConnectorPoint PointX="6.75" PointY="20.942047526041666" />
           <ConnectorPoint PointX="8.25" PointY="20.942047526041666" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarEventType" ManuallyRouted="false">
-          <ConnectorPoint PointX="5.078125" PointY="19" />
-          <ConnectorPoint PointX="5.078125" PointY="10.71875" />
-          <ConnectorPoint PointX="6" PointY="10.71875" />
+          <ConnectorPoint PointX="5.25" PointY="19.971023763020831" />
+          <ConnectorPoint PointX="6.3437475" PointY="19.971023763020831" />
+          <ConnectorPoint PointX="6.3437475" PointY="18.374329427083335" />
         </AssociationConnector>
         <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" >
           <ConnectorPoint PointX="9.75" PointY="9.3939925130208337" />

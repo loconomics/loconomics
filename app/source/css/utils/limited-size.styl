@@ -1,0 +1,30 @@
+/**
+    Small utility to limit the width of blocks
+    in medium and large size, following
+    the same limits that Boogstrap 'container' class,
+    but without it's padding and other side effects,
+    per size.
+**/
+@media $mediaMinSm {
+    .limited-size-sm {
+        margin-right: auto;
+        margin-left: auto;
+        width: 750px;
+    }
+}
+
+@media $mediaMinMd {
+    .limited-size-md {
+        margin-right: auto;
+        margin-left: auto;
+        width: 970px;
+    }
+}
+
+@media $mediaMinLg {
+    .limited-size-lg {
+        margin-right: auto;
+        margin-left: auto;
+        width: 1170px;
+    }
+}

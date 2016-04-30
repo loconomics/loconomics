@@ -6,7 +6,7 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function BackgroundCheckActivity() {
+var A = Activity.extend(function BackgroundCheckActivity() {
 
     Activity.apply(this, arguments);
 

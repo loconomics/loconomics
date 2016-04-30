@@ -6,6 +6,7 @@ using WebMatrix.Data;
 using WebMatrix.WebData;
 using WebMatrix.Security;
 using System.Web.WebPages;
+using System.Web.Security;
 
 /// <summary>
 /// Utilities class about authentication and authorization,
@@ -48,7 +49,8 @@ public static class LcAuth
         string marketingSource = null,
         int genderID = -1,
         string aboutMe = null,
-        string phone = null
+        string phone = null,
+        string signupDevice = null
     ) {
         using (var db = Database.Open("sqlloco"))
         {
@@ -86,6 +88,7 @@ public static class LcAuth
                 // Automatic transaction can be used now:
                 db.Execute("BEGIN TRANSACTION");
 
+                // TODO:CONFIRM: SQL executed inside a procedure is inside the transaction? Some errors on testing showed that maybe not, and that's a problem.
                 db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6,@7",
                     userid, firstname, lastname,
                     LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
@@ -118,6 +121,10 @@ public static class LcAuth
                 if (marketingSource != null)
                     db.Execute("UPDATE users SET MarketingSource = @1 WHERE UserID = @0", userid, marketingSource);
 
+                // Device
+                if (!string.IsNullOrEmpty(signupDevice))
+                    db.Execute("UPDATE users SET SignupDevice = @1 WHERE UserID = @0", userid, signupDevice);
+
                 db.Execute("COMMIT TRANSACTION");
 
                 // All done:
@@ -132,6 +139,9 @@ public static class LcAuth
             catch (Exception ex)
             {
                 db.Execute("ROLLBACK TRANSACTION");
+
+                // If profile creation failed, there was a rollback, now must ensure the userprofile record is removed too:
+                db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
 
                 throw ex;
             }
@@ -163,12 +173,11 @@ public static class LcAuth
     }
     public static void SendRegisterUserEmail(RegisteredUser user)
     {
-        var confirmationUrl = LcUrl.LangUrl + "Account/Confirm/?confirmationCode=" + HttpUtility.UrlEncode(user.ConfirmationToken);
         // Sent welcome email (if there is a confirmationUrl and token values, the email will contain it to perform the required confirmation)
         if (user.IsProvider)
-            LcMessaging.SendWelcomeProvider(user.UserID, user.Email, confirmationUrl);
+            LcMessaging.SendWelcomeProvider(user.UserID, user.Email);
         else
-            LcMessaging.SendWelcomeCustomer(user.UserID, user.Email, confirmationUrl, user.ConfirmationToken);
+            LcMessaging.SendWelcomeCustomer(user.UserID, user.Email);
     }
 
     public static void ConnectWithFacebookAccount(int userID, long facebookID)
@@ -255,6 +264,9 @@ public static class LcAuth
                     FROM    webpages_Membership
                     WHERE   UserId=@0
                 ", userid);
+                // TODO For performance and security, save a processed autologinkey in database
+                // and check against that rather than do this tasks every time; auto compute on
+                // any password change.
                 // Check if autologinkey and password (encrypted and then converted for url) match
                 if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
                 {
@@ -268,6 +280,7 @@ public static class LcAuth
                     // Clear current session to avoid conflicts:
                     if (HttpContext.Current.Session != null)
                         HttpContext.Current.Session.Clear();
+                    
                     // New authentication cookie: Logged!
                     System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
 
@@ -306,19 +319,34 @@ public static class LcAuth
     /// </summary>
     public static void RequestAutologin(HttpRequest Request)
     {
-        // Using custom headers first, best for security using the REST API.
-        var Q = Request.QueryString;
-        var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
-        var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
-
-        // Autologin feature for anonymous sessions with autologin parameters on request
-        if (!Request.IsAuthenticated
-            && alk != null
-            && alu != null)
+        // First, check standard 'Authorization' header
+        var auth = Request.Headers["Authorization"];
+        if (!String.IsNullOrEmpty(auth))
         {
-            // 'alk' url parameter stands for 'Auto Login Key'
-            // 'alu' url parameter stands for 'Auto Login UserID'
-            LcAuth.Autologin(alu, alk);
+            var m = System.Text.RegularExpressions.Regex.Match(auth, "^LC alu=([^,]+),alk=(.+)$");
+            if (m.Success)
+            {
+                var alu = m.Groups[1].Value;
+                var alk = m.Groups[2].Value;
+                LcAuth.Autologin(alu, alk);
+            }
+        }
+        else
+        {
+            // Using custom headers first, best for security using the REST API.
+            var Q = Request.QueryString;
+            var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
+            var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
+
+            // Autologin feature for anonymous sessions with autologin parameters on request
+            if (!Request.IsAuthenticated
+                && alk != null
+                && alu != null)
+            {
+                // 'alk' url parameter stands for 'Auto Login Key'
+                // 'alu' url parameter stands for 'Auto Login UserID'
+                LcAuth.Autologin(alu, alk);
+            }
         }
     }
     /// <summary>
@@ -333,5 +361,71 @@ public static class LcAuth
         return String.Format("alu={0}&alk={1}&",
             userID,
             GetAutologinKey(userID));
+    }
+
+    public static string GetConfirmationToken(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            return userID == -1 ? null :
+                // coalesce used to avoid the value 'DbNull' to be returned, just 'empty' when there is no token,
+                // is already confirmed
+                db.QueryValue("SELECT coalesce(ConfirmationToken, '') FROM webpages_Membership WHERE UserID=@0", userID);
+        }
+    }
+
+    public static LcRest.UserProfile ConfirmAccount(string confirmationCode)
+    {
+        using (var db = new LcDatabase())
+        {
+            var userID = (int?)db.QueryValue(@"
+                SELECT UserId FROM webpages_Membership
+                WHERE ConfirmationToken = @0
+            ", confirmationCode);
+
+            if (userID.HasValue)
+            {
+                // Check if the account requires to complete the sign-up:
+                // - it happens for user whose record was created by a professional (added him as client)
+                // - so, the user has an accountStatusID serviceProfessional's client
+                // -> On that case, we cannot confirm the account yet, since we need from the client to
+                // complete the sign-up, generating a password by itself. We just follow up returning the user
+                // profile data that can be used to pre-populate the 'client activation' sign-up form.
+                var user = LcRest.UserProfile.Get(userID.Value);
+                if (user.accountStatusID != (int)LcEnum.AccountStatus.serviceProfessionalClient)
+                {
+                    // User can confirm it's account, proceed:
+                    db.Execute(@"
+                        UPDATE webpages_Membership
+                        SET ConfirmationToken = null, IsConfirmed = 1
+                        WHERE ConfirmationToken like @0 AND UserID = @1
+                    ", confirmationCode, userID);
+                    // In the lines above, we cannot use the aps.net WebSecurity standard logic:
+                    // //WebSecurity.ConfirmAccount(confirmationToken)
+                    // because the change of confirmation first-time optional step, alert at dashboard
+                    // and (sometimes this business logic changes) required for second and following login attempts.
+                    // Because of this a hack is done on provider-sign-up login over the IsConfirmed field, and this becomes the ConfirmAccount
+                    // standard method unuseful (do nothing, really, because it checks IsConfirmed field previuosly and ever is true, doing nothing -we need set to null 
+                    // ConfirmationToken to off the alert-). On success, ConfirmationToken is set to null and IsConfirmed to 1 (true), supporting both cases, when IsConfirmed is
+                    // already true and when no.
+                    db.Execute("EXEC TestAlertVerifyEmail @0", userID);
+
+                    // IMPORTANT: Since 2012-09-27, issue #134, Auto-login is done on succesful confirmation;
+                    // some code after next lines (comented as 'starndard logic' will not be executed, and some html, but preserved as documentation)
+                    // Confirmation sucess, we need user name (email) to auto-login:
+                    FormsAuthentication.SetAuthCookie(user.email, false);
+                }
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public static bool HasMembershipRecord(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            return db.QueryValue("SELECT userid FROM webpages_Membership WHERE userid = @0", userID) != null;
+        }
     }
 }

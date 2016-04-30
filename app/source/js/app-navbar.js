@@ -11,7 +11,7 @@ var ko = require('knockout'),
     NavBar = require('./viewmodels/NavBar'),
     NavAction = require('./viewmodels/NavAction');
 
-exports.extends = function (app) {
+exports.extend = function (app) {
     
     // REVIEW: still needed? Maybe the per activity navBar means
     // this is not needed. Some previous logic was already removed
@@ -20,11 +20,40 @@ exports.extends = function (app) {
     // Adjust the navbar setup depending on current user,
     // since different things are need for logged-in/out.
     function adjustUserBar() {
+        //jshint maxcomplexity:8
 
         var user = app.model.user();
 
         if (user.isAnonymous()) {
-            app.navBar().leftAction(NavAction.menuOut);
+            var prev = app.navBar().leftAction();
+            if (prev !== NavAction.menuIn) {
+                app.navBar().leftAction(NavAction.menuIn);
+                app.navBar().prevLeftAction = prev;
+            }
+        }
+        else {
+            if (app.navBar().prevLeftAction) {
+                app.navBar().leftAction(app.navBar().prevLeftAction);
+                app.navBar().prevLeftAction = null;
+            }
+            // If we are in a 'section' activity, that is with the menuNewItem in the rightAction,
+            // we need to change it for just-client profiles:
+            if (!user.isServiceProfessional()) {
+                // Only if is menuNewItem, otherwise we do NOT restore preRightAction (thats why
+                // the nested 'if' rather than 'professional AND menuNewItem').
+                if (app.navBar().rightAction() === NavAction.menuNewItem) {
+                    // Replace default right-menu for professionals by
+                    // a client link to go marketplace
+                    app.navBar().preRightAction = app.navBar().rightAction();
+                    app.navBar().rightAction(NavAction.goMarketplace);
+                }
+            }
+            else if (app.navBar().preRightAction) {
+                // Recovering previous right action, like after change it to a just-client option
+                // and then entering with service-professional profile
+                app.navBar().rightAction(app.navBar().preRightAction);
+                app.navBar().preRightAction = null;
+            }
         }
     }
     // Commented lines, used previously but unused now, it must be enough with the update
@@ -49,6 +78,8 @@ exports.extends = function (app) {
 
     /**
         Update the nav model using the Activity defaults
+        // TODO Look a way to replace all this complex navbar logic, maybe per
+        // activity nabvars, more model helpers and global state helpers.
     **/
     app.updateAppNav = function updateAppNav(activity, state) {
 
@@ -70,11 +101,10 @@ exports.extends = function (app) {
             app.navBar(new NavBar());
         }
         
-        app.applyNavbarMustReturn(state);
-
-        // TODO Double check if needed.
-        // Latest changes, when needed
-        adjustUserBar();
+        if (!app.applyNavbarMustReturn(state)) {
+            // Changes depending on non-logged user
+            adjustUserBar();
+        }
         
         refreshNav();
         autoRefreshNav(app.navBar().leftAction());
@@ -87,7 +117,6 @@ exports.extends = function (app) {
             var returnLink = decodeURIComponent(state.route.query.mustReturn);
             // A text can be provided
             var returnText = decodeURIComponent(state.route.query.returnText || '');
-
             if (returnLink === '1' || returnLink === 'true') {
                 // Left action forced to be a go-back
                 app.navBar().leftAction(NavAction.goBack.model.clone({
@@ -133,15 +162,24 @@ exports.extends = function (app) {
         .filter(':visible')
         .collapse('hide');
     };
+
+    // Set model for the AppNav
+    app.navBarBinding = {
+        navBar: app.navBar,
+        // Both: are later filled with a call to the model once loaded and ready
+        photoUrl: ko.observable('about:blank'),
+        userName: ko.observable('Me'),
+        isServiceProfessional: ko.observable(false),
+        isClient: ko.observable(false),
+        isApp: ko.observable(!!window.cordova)
+    };
     
+    app.navBarBinding.isAnonymous = ko.pureComputed(function() {
+        return !this.isServiceProfessional() && !this.isClient();
+    }, app.navBarBinding);
+
     app.setupNavBarBinding = function setupNavBarBinding() {
-        // Set model for the AppNav
-        app.navBarBinding = {
-            navBar: app.navBar,
-            // Both: are later filled with a call to the model once loaded and ready
-            photoUrl: ko.observable('about:blank'),
-            userName: ko.observable('Me')
-        };
+        app.navBarBinding.isApp(!!window.cordova);
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
     

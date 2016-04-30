@@ -10,9 +10,9 @@ $Avatar-sizes = {
     xs: 40px,
     sm: 60px,
     md: 90px,
-    lg: 125px
+    lg: 120px
 };
-
+ 
 .Avatar
     overflow hidden 
     margin 0 auto
@@ -32,3 +32,8 @@ $Avatar-sizes = {
             &, img
                 height: $Avatar-sizes[$sizeName]
                 width: $Avatar-sizes[$sizeName]
+    
+    &.Avatar--upperLeft
+        margin 8px 0 0 20px
+        display block
+        float left

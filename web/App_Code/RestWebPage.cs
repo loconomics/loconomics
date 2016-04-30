@@ -153,6 +153,22 @@ public class RestWebPage
             }
 
         }
+        catch (ValidationException valEx)
+        {
+            result = new Dictionary<string, dynamic>();
+            result["errorMessage"] = LcRessources.ValidationSummaryTitle;
+            result["errorSource"] = "validation";
+
+            var errors = new System.Collections.Hashtable();
+            if (!String.IsNullOrEmpty(valEx.ContainerName))
+            {
+                errors[valEx.ContainerName + "." + valEx.ParamName] = valEx.Message;
+            }
+            errors[valEx.ParamName] = valEx.Message;
+            result["errors"] = errors;
+
+            WebPage.Response.StatusCode = 400;
+        }
         catch (HttpException http)
         {
             result = new Dictionary<string, dynamic>();
@@ -178,8 +194,8 @@ public class RestWebPage
         {
             result = new Dictionary<string, dynamic>();
             result["errorMessage"] = ex.Message;
-            // Internal server error:
-            WebPage.Response.StatusCode = 500;
+            // Bad Format code for "Constraint" or Internal server error:
+            WebPage.Response.StatusCode = ex is ConstraintException ? 400 : 500;
 
             if (ASP.LcHelpers.InDev)
                 result["exception"] = ex;
@@ -196,8 +212,20 @@ public class RestWebPage
     /// </summary>
     /// <param name="WebPage"></param>
     public void JsonResponse(System.Web.WebPages.WebPage WebPage)
-    {
-        ASP.LcHelpers.ReturnJson(Run(WebPage));
+    {   
+        var data = Run(WebPage);
+
+        WebPage.Response.ContentType = "application/json";
+        // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
+        // IMPORTANT: Ideally, we must return dates as UTC, but currently datetimes from database are not detected as 'local'
+        // so trying to return as 'utc' with DateTimezoneHandling.UTc results in the same time with a 'Z' in the end, that's an error.
+        // Almost, using 'Local' will append the correct offset and browsers/javascript engines do the conversion correctly.
+        WebPage.Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(data, new Newtonsoft.Json.JsonSerializerSettings
+        {
+            DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Local
+        }));
+        //Json.Write(jsondata, Response.Output);
+        WebPage.Response.End();
     }
 
     public void RequiresUser(LcData.UserInfo.UserType userType)

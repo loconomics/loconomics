@@ -25,3 +25,13 @@ function UserJobTitle(values) {
 }
 
 module.exports = UserJobTitle;
+
+// Public Enumeration for the 'statusID' property:
+UserJobTitle.status = {
+    // Profile is complete and public
+    on: 1,
+    // Profile cannot be On/public because is incomplete:
+    incomplete: 2,
+    // User choose to disable (it's supposed to be complete, but disabled by user and will double check before activation)
+    off: 3
+};

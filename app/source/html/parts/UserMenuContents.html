@@ -1,0 +1,29 @@
+<h4 class="App-menus-group-header" data-bind="visible: isAnonymous">WELCOME</h4>
+<li data-bind="visible: !isApp()" class="go-download"><a href="/downloadApp">Download the app</a></li>
+<li data-bind="visible: isAnonymous"><a href="/login">Log in</a></li>
+<li data-bind="visible: isAnonymous"><a href="/home/home-hiw">How it works</a></li>
+<li data-bind="visible: isAnonymous"><a href="/learnMoreProfessionals">List your services</a></li>
+<li data-bind="visible: isAnonymous"><a href="/feedback">Help</a></li>
+<h4 class="App-menus-group-header" data-bind="visible: isAnonymous">SIGN UP</h4>
+<li data-bind="visible: isAnonymous"><a href="/learnMoreProfessionals/coop-hiw">I'm a local service professional</a></li>
+<li data-bind="visible: isAnonymous"><a href="/signup/client">I'm a potential client</a></li>
+<li data-bind="visible: isAnonymous"><a href="/learnMoreProfessionals/coop-hiw">I'm both</a></li>
+<li data-bind="visible: !isAnonymous()" class="go-dashboard"><a href="/dashboard"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a></li>
+<li class="divider" data-bind="visible: !isServiceProfessional() && !isAnonymous()"></li>
+<h4 class="App-menus-group-header" data-bind="visible: isServiceProfessional">TOOLS</h4>
+<li data-bind="visible: isServiceProfessional"><a href="/calendar"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a></li>
+<li data-bind="visible: !isServiceProfessional() && !isAnonymous()"><a href="/myAppointments"><i class="fa ion ion-calendar" aria-hidden="true"></i> My appointments</a></li>
+<li data-bind="visible: !isAnonymous()"><a href="/inbox"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a></li>
+<li data-bind="visible: isServiceProfessional"><a href="/scheduling"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i> Scheduler</a></li>
+<li data-bind="visible: isServiceProfessional"><a href="/cms"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Client manager</a></li>
+<!--<li class="go-payments" data-bind="visible: isServiceProfessional"><a href="/payments"><i class="fa fa-fw ion-card" aria-hidden="true"></i> Payments</a></li>-->
+<!--<li class="go-performance" data-bind="visible: isServiceProfessional"><a href="/performance"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a></li>-->
+<li data-bind="visible: !isAnonymous()"><a href="/marketplaceProfile"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a></li>
+<h4 data-bind="visible: isServiceProfessional" class="App-menus-group-header">YOUR COOPERATIVE</h4>
+<li data-bind="visible: !isAnonymous()"><a href="/account"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a></li>
+<li data-bind="visible: isServiceProfessional" class="go-help"><a href="/help/categories/200431835-resources-for-service-professionals"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
+<li data-bind="visible: !isAnonymous() && !isServiceProfessional()" class="go-help"><a href="/help/categories/200474305-resources-for-clients"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
+<li data-bind="visible: isAnonymous()" class="go-help"><a href="/help"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
+<li data-bind="visible: isServiceProfessional" class="go-marketplace"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a></li>
+<li class="divider"></li>
+<li data-bind="visible: !isAnonymous()" class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a></li>

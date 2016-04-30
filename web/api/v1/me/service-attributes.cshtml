@@ -1,0 +1,23 @@
+﻿@*
+    Get and Update the list of service attributes assigned to a user job title
+
+    EXAMPLES {
+        "User Service Attributes IDs": {
+            "url": "/api/v1/en-US/me/service-attributes/106",
+            "get": { },
+            "put": {
+                "serviceAttributes": {
+                    "19": [ 57, 60, 59 ],
+                    "5": [ 25, 26 ],
+                    "49": [ 501 ],
+                    "48": [ 735, 733, "new attribute" ]
+                },
+                "experienceLevelID": 1
+            }
+        }
+    }
+*@
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestMyServiceAttributes().JsonResponse(this);
+}

@@ -6,17 +6,23 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extends(function PrivacySettingsActivity() {
+var A = Activity.extend(function PrivacySettingsActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-
-    this.navBar = Activity.createSubsectionNavBar('Account', {
-        backLink: 'account'
-    });
     
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201967106-protecting-your-privacy'
+    });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201960903-protecting-your-privacy'
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+        
     this.registerHandler({
         target: this.app.model.privacySettings,
         event: 'error',
@@ -32,16 +38,29 @@ var A = Activity.extends(function PrivacySettingsActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-        // Keep data updated:
+    // Keep data updated:
     this.app.model.privacySettings.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
+    
+    this.updateNavBarState();
 };
 
 function ViewModel(app) {
+    
+    this.user = app.model.userProfile.data;
 
     var privacySettings = app.model.privacySettings;
 

@@ -128,7 +128,7 @@ var app = {
 
 /** Continue app creation with things that need a reference to the app **/
 
-require('./app-navbar').extends(app);
+require('./app-navbar').extend(app);
 
 require('./app-components').registerAll(app);
 
@@ -183,8 +183,10 @@ var appInit = function appInit() {
     
     attachFastClick(document.body);
     
-    // Jquery-ui components used
-    require('jquery-ui/autocomplete');
+    // NOTE: Put any jQuery-UI used components here and document their use in the
+    //  activities that require them; do NOT require it there because will break
+    //  the use of touch-punch (few lines below). But is recommended to use
+    //  alternative approaches, like knockout--custom-css (like done in autocompletes)
     // Knockout binding for jquery-ui sortable.
     // It loads jquery-ui sortable and draggable as dependencies:
     require('knockout-sortable');
@@ -208,14 +210,37 @@ var appInit = function appInit() {
     };
     window.addEventListener('native.keyboardshow', trigLayout);
     window.addEventListener('native.keyboardhide', trigLayout);
+    
+    // IMPORTANT: WORKAROUND: iOS autoscroll problems
+    // Race conditions may happen, making need a second call just a delay
+    // after in case the first didn't make the trick
+    window.addEventListener('native.keyboardshow', function() {
+        // Removes iOS content scroll (no problems when used with an absolute positioned content)
+        // (minor flickering, best solution)
+        window.scrollTo(0, 0);
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 100);
+    });
 
     // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
     // and in any system, so any other systems fix its solved too if needed 
     // just updating the plugin (future proof) and ensure homogeneous cross plaftform behavior.
     if (window.StatusBar) {
-        // Fix iOS-7+ overlay problem
-        // Is in config.xml too, but seems not to work without next call:
+        // Fix iOS-7+ overlay problem, and customize it
+        // Is in config.xml too, but seems only affects to start-up splash screen,
+        // so here can go different values.
         window.StatusBar.overlaysWebView(false);
+        // background like our top navbar, since iOS styleguideline is to keep them homogeneous
+        window.StatusBar.backgroundColorByHexString('#ffffff');
+        window.StatusBar.styleDefault();
+        // Android needs special color, keeping the black because the 'style' doesn't works here
+        // the content keeps white, so cannot be read. And its styleguideline says to use a contrasting
+        // color:
+        if (window.cordova.platformId == 'android') {
+            // Just use the Loconomics color :-)
+            window.StatusBar.backgroundColorByHexString('#00989a');
+        }
     }
     
     // Force an update delayed to ensure update after some things did additional work
@@ -296,6 +321,9 @@ var appInit = function appInit() {
 
         // Update app navigation
         app.updateAppNav(activity, state);
+        
+        // For debugging purposes, give access to current activity
+        app._currentActivity = activity;
     });
     // When an activity is hidden
     app.shell.on(app.shell.events.closed, function($act) {
@@ -330,7 +358,17 @@ var appInit = function appInit() {
             var target = $(href);
             if (target.length) {
                 // Smooth scrolling with animation
-                scrollToElement(target, { animation: { duration: 300 } });
+                var opts = { animation: { duration: 300 } };
+                // Special case: if we are at the home page, the special, fixed header
+                // must be an offset to avoid the content to fall behind it
+                // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
+                // the header is still not-fixed -scroll still at the top).
+                var act = target.closest('[data-activity]');
+                var isHome = act.data('activity') === 'home';
+                if (isHome) {
+                    opts.topOffset = act.children('header').outerHeight();
+                }
+                scrollToElement(target, opts);
             }
         }
     });
@@ -357,7 +395,7 @@ var appInit = function appInit() {
         if (!togglingBackdrop) {
             togglingBackdrop = true;
             var enabled = e.type === 'show';
-            $('body').toggleClass('use-backdrop', enabled);
+//            $('body').toggleClass('use-backdrop', enabled);
             $('body').toggleClass('has-appNav-open', enabled);
             // Hide any other opened collapse
             $('.collapsing, .collapse.in').collapse('hide');
@@ -386,21 +424,41 @@ var appInit = function appInit() {
             error: err
         });
     };
+    
+    if (window.instabug) {
+        window.instabug.init({
+            iosToken: '515d9e90bd68a18182a05e2a68689897',
+            androidToken: '9856054e92e7ae7a8326f1666703d51d'
+        });
+    }
+    
+    require('./utils/toggleActionSheet').on();
+    
+    // Change website index activity
+    var indexAct = $('html').data('index');
+    if (indexAct) {
+        app.shell.indexName = indexAct;
+    }
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
     .then(function() {
-        // Mark the page as ready
-        $('html').addClass('is-ready');
-        // As app, hides splash screen
-        if (window.navigator && window.navigator.splashscreen) {
-            window.navigator.splashscreen.hide();
-        }
         
-        // Connect username in navbar
+        // TODO: Display a login popup/activity if a request require credentials and no log-in still??
+        /*app.model.rest.onAuthorizationRequired = function(retry) {
+            // Show login with a promise to know the result, retry if successfully.
+            // Note: no error must be returned, the caller of the original process
+            // must have it's own control.
+            xyz.showLogin().then(retry);
+        };*/
+        
+        // Connect username in navbar, and type flags
         ko.computed(function() {
-            var n = app.model.userProfile.data.firstName();
+            var u = app.model.userProfile.data,
+                n = u.firstName();
             app.navBarBinding.userName(n || 'Me');
+            app.navBarBinding.isServiceProfessional(u.isServiceProfessional());
+            app.navBarBinding.isClient(u.isClient());
         });
         // Connect photoUrl in navbar
         ko.computed(function() {
@@ -419,6 +477,12 @@ var appInit = function appInit() {
             app.shell.go(url);
         }
 
+        // Mark the page as ready
+        $('html').addClass('is-ready');
+        // As app, hides splash screen
+        if (window.navigator && window.navigator.splashscreen) {
+            window.navigator.splashscreen.hide();
+        }
     }, alertError);
 
     // DEBUG

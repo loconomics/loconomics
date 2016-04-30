@@ -192,7 +192,7 @@ namespace LcRest
         /// service professional by a good identifier.
         /// The LcRest.Client class is used for the returned data,
         /// and since the client is not in the service professional agend that means that
-        /// there is no data from [ProviderClient] table so some fields comes
+        /// there is no data from [ServiceProfessionalClient] table so some fields comes
         /// with values as null/default, with the special Editable:false because
         /// serviceProfessional will clearly not be able to edit the record. The control
         /// fields (createdDate, updatedDate) as null clearly state that the record
@@ -233,9 +233,9 @@ namespace LcRest
                           ON up.UserID = uc.UserID
                          LEFT JOIN
                         -- left join relation only to exclude the ones already related to the serviceProfessional
-                        ProviderClient As pc
+                        ServiceProfessionalClient As pc
                           ON uc.UserID = pc.ClientUserID
-                            AND pc.ProviderUserID = @0
+                            AND pc.ServiceProfessionalUserID = @0
                 WHERE   uc.Active = 1
                          -- Exclude the serviceProfessional user
                          AND uc.UserID <> @0
@@ -383,42 +383,21 @@ namespace LcRest
         }
 
         /// <summary>
-        /// Updates or creates a ProviderClient record with the given data
+        /// Updates or creates a ServiceProfessionalClient record with the given data, ever as created by professional
+        /// IMPORTANT: use directly the ServiceProfessionalClient API to provide more options, like referralSourceID.
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="client"></param>
-        private static void SetServiceProfessionalClient(int serviceProfessionalUserID, Client client)
+        private static void SetServiceProfessionalClient(int serviceProfessionalUserID, Client client, Database sharedDb = null)
         {
-            using (var db = Database.Open("sqlloco"))
-            {
-                db.Execute(@"
-                IF EXISTS (SELECT * FROM ProviderClient WHERE ProviderUserID = @0 AND ClientUserID = @1)
-                    UPDATE ProviderClient SET
-                        NotesAboutClient = @2,
-                        UpdatedDate = getdate()
-                    WHERE
-                        ProviderUserID = @0
-                         AND ClientUserID = @1
-                ELSE
-                    INSERT INTO ProviderClient (
-                        ProviderUserID,
-                        ClientUserID,
-                        NotesAboutClient,
-                        ReferralSourceID,
-                        CreatedDate,
-                        UpdatedDate,
-                        Active
-                    ) VALUES (
-                        @0, @1, @2,
-                        12, -- source: created by serviceProfessional (12:ProviderExistingClient)
-                        getdate(),
-                        getdate(),
-                        1 -- Active
-                    )
-            ", serviceProfessionalUserID,
-                 client.clientUserID,
-                 client.notesAboutClient ?? "");
-            }
+            var spc = new ServiceProfessionalClient {
+                serviceProfessionalUserID = serviceProfessionalUserID,
+                clientUserID = client.clientUserID,
+                notesAboutClient = client.notesAboutClient,
+                // source: created by serviceProfessional
+                referralSourceID = (int)LcEnum.ReferralSource.serviceProfessionalExistingClient
+            };
+            ServiceProfessionalClient.Set(spc, sharedDb);
         }
 
         /// <summary>
@@ -480,7 +459,7 @@ namespace LcRest
 		                SecondLastName,
 		                GenderID,
 		                IsProvider,
-		                IsClient,
+		                IsCustomer,
                         MobilePhone,
                         CanReceiveSms,
                         BirthMonth,
@@ -537,7 +516,7 @@ namespace LcRest
         #region Delete
         /// <summary>
         /// Delete a serviceProfessional client, with care of:
-        /// - Delete relationship ([ProviderClient]) ever
+        /// - Delete relationship ([ServiceProfessionalClient]) ever
         /// - Delete client user account only if the record is editable by the ServiceProfessional
         /// - and is not used by other ServiceProfessionals, in that case is left 'as is'.
         /// </summary>
@@ -547,35 +526,39 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
+                db.Execute("BEGIN TRANSACTION");
+                ServiceProfessionalClient.Delete(serviceProfessionalUserID, clientUserID, db);
+
                 db.Execute(@"
-                DELETE FROM ProviderClient
-                WHERE ProviderUserID = @0
-                      AND ClientUserID = @1
-
-                -- If there is no more providers linked to this client
-                IF 0 = (
-                        SELECT count(*) FROM ProviderClient WHERE ClientUserID = @1
-                    )
-                    -- And serviceProfessional own this user record (is editable for him)
-                    AND EXISTS (
-                        SELECT * FROM users
-                        WHERE UserID = @1 -- The client
-                            AND ReferredByUserID = @0 -- This serviceProfessional
+                    -- If there is no more providers linked to this client
+                    IF 0 = (
+                            SELECT count(*) FROM ServiceProfessionalClient WHERE ClientUserID = @1
+                        )
+                        -- And serviceProfessional own this user record (is editable for him)
+                        AND EXISTS (
+                            SELECT * FROM users
+                            WHERE UserID = @1 -- The client
+                                AND ReferredByUserID = @0 -- This serviceProfessional
+                                AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
+                    ) BEGIN          
+                        -- Try to delete the User record, but only if
+                        -- is owned by the serviceProfessional
+                        DELETE FROM users
+                        WHERE UserID = @1
+                            AND ReferredByUserID = @0
                             AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
-                ) BEGIN          
-                    -- Try to delete the User record, but only if
-                    -- is owned by the serviceProfessional
-                    DELETE FROM users
-                    WHERE UserID = @1
-                        AND ReferredByUserID = @0
-                        AND AccountStatusID = 6 -- In 'editable by serviceProfessional creator' state
 
-                    -- Delete the userprofile record
-                    DELETE FROM userprofile
-                    WHERE UserID = @1
-                END
-            ",
-                serviceProfessionalUserID, clientUserID);
+                        -- Can fail if was not removed from [users] because of the 'where', fail silently
+                        BEGIN TRY
+                            -- Delete the userprofile record
+                            DELETE FROM userprofile
+                            WHERE UserID = @1
+                        END TRY
+                        BEGIN CATCH
+                        END CATCH
+                    END
+                ", serviceProfessionalUserID, clientUserID);
+                db.Execute("COMMIT TRANSACTION");
             }
         }
         #endregion

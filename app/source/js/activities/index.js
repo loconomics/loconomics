@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function IndexActivity() {
+var A = Activity.extend(function IndexActivity() {
     
     Activity.apply(this, arguments);
 

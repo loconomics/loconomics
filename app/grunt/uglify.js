@@ -20,8 +20,10 @@ var conservativeOptions = {
         // I had set-up jshint to notify about actual unused bars/funcs so
         // compression stage is not reach if that happens.
         unused        : false, // drop unused variables/functions
-        hoist_funs    : false, // hoist function declarations
+        hoist_funs    : true,  // hoist function declarations. This fix some strict mode violations, caused by other optimizations.
         hoist_vars    : false, // hoist variable declarations
+        keep_fargs    : true,  // Avoid that mangle remove unused func args
+        keep_fnames   : true,  // Avoid that mangle remove function names. This allows enable mangling without causing the bug #709
         if_return     : true,  // optimize if-s followed by return/continue
         join_vars     : true,  // join var declarations
         cascade       : true,  // try to cascade `right` into `left` in sequences
@@ -37,11 +39,9 @@ var conservativeOptions = {
     },*/
 
     // Reduce variable names
-    // IMPORTANT: Disabled because it causes the bug #709, the problem is that
-    // it changes the functions names too and we are using them, for example when
-    // managing Activities singletons.
-    // See: http://lisperator.net/uglifyjs/mangle (third point, unavoidable)
-    // If in the future becomes an option to avoid mangle function names, can be used.
+    // IMPORTANT: Disabled because it causes bugs, even now that keep_fnames:true fixes #709 seems to
+    // break other things. Continue reviewing
+    // Know problem: entering the serviceProfessionalService activity shows bug of 'double knockout binding'
     mangle: false
 };
 
@@ -67,7 +67,8 @@ module.exports = {
         }
     },
     'splash': {
-        'options': { compress: false, mangle: false }, //conservativeOptions,
+        //'options': { compress: false, mangle: false }, //conservativeOptions,
+        'options': conservativeOptions,
         'files': {
             './build/assets/js/splash.min.js': ['<%= browserify.splash.dest %>']
         }

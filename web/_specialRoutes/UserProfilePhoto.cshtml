@@ -1,0 +1,15 @@
+﻿@using System.Drawing.Imaging;
+@{
+    LcHelpers.NotFoundOnInvalidLocaleURL();  
+    var userId = Context.GetRouteValue("userID").AsInt();
+    if (userId == 0 &&
+        WebSecurity.IsAuthenticated) {
+        userId = WebSecurity.CurrentUserId;
+    }
+
+    var type = Context.GetRouteValue("type");    
+
+    string userFolder = "img/userphotos/u" + userId.ToString() + "/";
+
+    LcData.Photo.OutputProfilePicture(userId, type);
+}

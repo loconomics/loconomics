@@ -17,7 +17,7 @@ namespace LcRest
         public int userID;
         public string message;
         public int vocElementID;
-        public bool becomeACollaborator;
+        public bool becomeCollaborator;
         public string userDevice;
         #endregion
 

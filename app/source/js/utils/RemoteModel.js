@@ -10,6 +10,12 @@
     Every instance or subclass must implement
     the fetch and pull methods that knows the specifics
     of the remotes.
+    
+    TODO Implement fix for Concurrent Requests. There are less chances
+    to that happens with the uses of this class, but still good to have.
+    Currently implemented in the others ListRemoteModel, GroupRemoteModel
+    and GroupListRemoteModel, but there is some logic here to re-order before
+    trying since seems easy to introduce a serious bug right now.
 **/
 'use strict';
 
@@ -106,7 +112,7 @@ function RemoteModel(options) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
                 // rethrow error
-                return error;
+                throw error;
             });
         }.bind(this);
 
@@ -174,7 +180,7 @@ function RemoteModel(options) {
             }
 
             // Rethrow error
-            return err;
+            throw err;
         }.bind(this));
     }.bind(this);
     
@@ -301,7 +307,7 @@ function RemoteModel(options) {
             }
             
             // Rethrow error
-            return err;
+            throw err;
         }.bind(this));
     };
     

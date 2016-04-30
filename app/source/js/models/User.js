@@ -41,8 +41,8 @@ function User(values) {
         
         isServiceProfessional: false,
         isClient: false,
-        isMember: false,
         isAdmin: false,
+        isCollaborator: false,
         
         photoUrl: null,
 

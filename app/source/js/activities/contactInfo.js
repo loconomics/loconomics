@@ -6,17 +6,22 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extends(function ContactInfoActivity() {
+var A = Activity.extend(function ContactInfoActivity() {
     
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: 'ownerInfo'
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201960743-adding-your-contact-information'
     });
-    this.defaultNavBar = this.navBar.model.toPlainObject();
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: '/help/sections/201960753-adding-your-contact-information'
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
     
     this.registerHandler({
         target: this.app.model.userProfile,
@@ -91,7 +96,8 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
-        this.navBar.model.updateWith(this.defaultNavBar);
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
     }
 };
 
@@ -109,6 +115,8 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    
+    this.user = app.model.userProfile.data;
 
     this.headerText = ko.pureComputed(function() {
         return app.model.onboarding.inProgress() ?

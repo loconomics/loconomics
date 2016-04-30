@@ -36,6 +36,15 @@
     .App-activities [data-activity] {
         // Replace the Activity default position, that takes care of a navbar
         top: 0 !important;
+        
+        // Fix for iOS smooth scrolling
+        overflow: auto;
+        // Smoother scrolling and inertia effect for iOS
+        // The property is inheret to every element with scroll enabled (overflow:auto|scroll)
+        // Be carefull since scrolling this way has a bug with fixed elements (typically navbar)
+        // on that cases is better to use 'absolute' positioning changing the scrolling to a
+        // content element rather than the document or the container of the absolute elements.
+        -webkit-overflow-scrolling: touch;
     }    
     
     $brandWidth = 100px;
@@ -77,6 +86,10 @@
 
         .btn {
             margin: 10px auto;
+        }
+        
+        @media $mediaMaxXs {
+            padding: 20px;
         }
     }
 }

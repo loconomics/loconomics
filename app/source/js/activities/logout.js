@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function LogoutActivity() {
+var A = Activity.extend(function LogoutActivity() {
     
     Activity.apply(this, arguments);
 

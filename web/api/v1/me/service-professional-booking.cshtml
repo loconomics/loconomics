@@ -1,4 +1,4 @@
-﻿@*
+@*
     It allows serviceProfessionals to create and update a booking.
     It has a different set of possibilities than a client or the normal booking process.
     NOTE: To query/get bookings, use the general 'bookings' API.
@@ -7,7 +7,7 @@
     TODO Complete documentation details (methods, params)
 
     EXAMPLES {
-        "Freelancer Bookings (post only)": {
+        "Service Professional Booking: Create booking": {
             "url": "/api/v1/en-US/me/service-professional-booking",
             "post": {
                 "clientUserID": 141,
@@ -20,7 +20,7 @@
                 "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
             }
         },
-        "Freelancer Bookings (single only)": {
+        "Service Professional Booking: Update booking": {
             "url": "/api/v1/en-US/me/service-professional-booking/73",
             "put": {
                 "addressID": 19,
@@ -31,6 +31,21 @@
                 "postNotesToClient": "",
                 "postNotesToSelf": "",
                 "api comment": "Fields of the Simplified Freelancer Booking, fits to the App needs. Services is a list of service attributes IDs included in the pricing."
+            }
+        },
+        "Service Professional Booking: Cancel booking": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/cancel",
+            "post": {}
+        },
+        "Service Professional Booking: Deny/decline booking": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/deny",
+            "post": {}
+        },
+        "Service Professional Booking: Confirm a client booking request": {
+            "url": "/api/v1/en-US/me/service-professional-booking/73/confirm",
+            "post": {
+                "dataType": "preferred",
+                "api comment": "dataType can be: preferred, alternative1 or alternative2. 'Preferred' will pick up the date currently on the 'serviceDateID'."
             }
         }
     }
@@ -74,18 +89,18 @@
                 * like the pricing estimate detail object.
             */
             if (!Request.Form.AllKeys.Contains<string>("pricing[]")) {
-                ModelState.AddError("pricing", "Choose almost one service");
+                ModelState.AddError("pricing", "Choose at least one service");
             }
             var pricing = Request.Form.GetValues("pricing[]");
             var pricingIds = new List<int>();
             if (pricing == null || pricing.Length < 1) {
-                ModelState.AddError("pricing", "Choose almost one service");
+                ModelState.AddError("pricing", "Choose at least one service");
             }
             else {
                 foreach(var pricingItem in pricing) {
                     var sid = pricingItem.AsInt(0);
                     if (sid == 0) {
-                        ModelState.AddError("pricing", "Some specified services are wrong");
+                        ModelState.AddError("pricing", "Some specified services are incorrect");
                         break;
                     }
                     pricingIds.Add(sid);
@@ -138,27 +153,52 @@
                         return null;
                     }
                 }
-                
-                // Send communication to client (email)
-                // TODO Reenable when reimplemented email templates
-                //LcMessaging.SendProviderBooking(itemID); 
             }
             catch (ConstraintException delEx)
             {
                 // The item cannot be inserted/updated:
                 throw new HttpException(400, delEx.Message);
             }
-            
+
             // Return database copy
             return GetItem(itemID);
         }
-        
+
         public override dynamic Post()
         {
-            if (UrlData.Count > 0)
-                throw new HttpException(405, "Method not allowed.");
-
-            return SetItem(0);
+            if (UrlData.Count == 0) {
+                return SetItem(0);
+            }
+            if (UrlData.Count ==  2) {
+                var userID = WebSecurity.CurrentUserId;
+                var bookingID = UrlData[0].AsInt();
+                // IMPORTANT: Internal use booking: (needed to confirm and other tasks)
+                // After any task, a new fetched, public, booking record is returned
+                var booking = LcRest.Booking.Get(bookingID, false, true, userID);
+                if (booking == null ||
+                    booking.serviceProfessionalUserID != userID) {
+                    throw new HttpException(404, "Not Found");
+                }
+                StatusCode = 200;
+                if (UrlData[1] == "cancel") {
+                    booking.CancelBookingByServiceProfessional();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+                else if (UrlData[1] == "deny") {
+                    booking.DeclineBooking();
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+                else if (UrlData[1] == "confirm")
+                {
+                    var dateType = Request["dateType"];
+                    booking.ConfirmBookingRequest(dateType);
+                    // fresh copy from db
+                    return LcRest.Booking.Get(bookingID, true);
+                }
+            }
+            throw new HttpException(405, "Method not allowed.");
         }
 
         public override dynamic Put()

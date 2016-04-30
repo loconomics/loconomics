@@ -7,15 +7,16 @@ var Activity = require('../components/Activity');
 var ko = require('knockout'),
     $ = require('jquery');
 
-var A = Activity.extends(function BookMeButtonActivity() {
+var A = Activity.extend(function BookMeButtonActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
-    
+    this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
+        backLink: 'scheduling' , helpLink: '/help/sections/201959943-add-scheduling-to-your-website'
+    });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.
@@ -24,7 +25,9 @@ var A = Activity.extends(function BookMeButtonActivity() {
         event: 'click',
         selector: 'textarea',
         handler: function() {
+            // Two versions, on Safari on setSelectionRange works
             $(this).select();
+            this.setSelectionRange(0, 99999);
         }
     });
     
@@ -40,6 +43,62 @@ var A = Activity.extends(function BookMeButtonActivity() {
             });
         }.bind(this)
     });
+
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // Get data for the Job title ID
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+            }
+        }.bind(this)
+    });
+    
+    
+    var $code = this.$activity.find('textarea');
+    this.viewModel.copyCode = function() {
+        var errMsg;
+        try {
+            // If Cordova Plugin available, use that
+            if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
+                window.cordova.plugins.clipboard.copy(this.viewModel.buttonHtmlCode());
+            }
+            else {
+                // Web standard version: will not work on old Firefox and current Safari (as of 2015-11-26)
+                // using setSelectionRange rather than select since seems more compatible (with Safari, but copy does not works
+                // there so...maybe for the future I hope :-)
+                $code
+                .select()
+                .get(0).setSelectionRange(0, 99999);
+                if (!document.execCommand('copy')) {
+                    errMsg = 'Impossible to copy text.';
+                }
+            }
+        } catch(err) {
+            errMsg = 'Impossible to copy text.';
+        }
+        if (errMsg) {
+            this.app.modals.showError({ error: errMsg });
+        }
+        else {
+            this.viewModel.copyText('Copied!');
+        }
+    }.bind(this);
 });
 
 exports.init = A.init;
@@ -53,11 +112,13 @@ A.prototype.show = function show(state) {
     // Set the job title
     var jobID = state.route.segments[0] |0;
     this.viewModel.jobTitleID(jobID);
+    this.viewModel.copyText('Copy');
 };
 
 function ViewModel(app) {
 
     var marketplaceProfile = app.model.marketplaceProfile;
+    this.jobTitleName = ko.observable('Job Title'); 
     
     // Actual data for the form:
     
@@ -68,8 +129,15 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     
-    // Button type, can be: 'small', 'medium', 'large', 'link'
-    this.type = ko.observable('medium');
+    this.copyText = ko.observable('Copy');
+    
+    // Button type, can be: 'icon', 'link'
+    this.type = ko.observable('icon');
+    
+    this.type.subscribe(function() {
+        // On any change, restore copy label
+        this.copyText('Copy');
+    }.bind(this));
 
     this.isLocked = marketplaceProfile.isLocked;
     
@@ -77,7 +145,7 @@ function ViewModel(app) {
     
     var buttonTemplate =
         '<!-- begin Loconomics book-me-button -->' +
-        '<a style="display:inline-block"><img alt="" style="border:none" /></a>' + 
+        '<a style="display:inline-block"><img alt="" style="border:none" width="200" height="50" /></a>' + 
         '<!-- end Loconomics book-me-button -->';
     
     var linkTemplate =
@@ -99,7 +167,7 @@ function ViewModel(app) {
 
             var siteUrl = $('html').attr('data-site-url'),
                 linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/',
-                imgUrl = siteUrl + '/img/extern/book-me-button-' + type + '.png';
+                imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
 
             var code = generateButtonCode({
                 tpl: tpl,
@@ -111,13 +179,14 @@ function ViewModel(app) {
             return code;
         }
     }, this);
-    
-    // TODO Copy feature; will need a native plugin
-    this.copyCode = function() { };
-    
-    this.sendByEmail = function() {
-        // TODO Send by email, with window.open('mailto:&body=code');
-    };
+
+    // Send email is disabled on html because on Android most of the code is cut (maybe is trying to be used as html?)
+    // and iOS simply do nothing (almost on WkWebView and iOS 9.1).
+    // AND NOT SO IMPORTANT
+    this.sendByEmailURL = ko.pureComputed(function() {
+        var btn = this.buttonHtmlCode().replace(/\n+/, '');
+        return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);
+    }, this);
 }
 
 function generateButtonCode(options) {

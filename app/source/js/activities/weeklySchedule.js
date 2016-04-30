@@ -6,20 +6,21 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extends(function WeeklyScheduleActivity() {
+var A = Activity.extend(function WeeklyScheduleActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
-        backLink: 'scheduling'
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: 'scheduling' , helpLink: '/help/sections/201964173-setting-your-weekly-schedule'
     });
-    this.defaultNavBar = this.navBar.model.toPlainObject();
+    
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     this.registerHandler({
-        target: this.app.model.simplifiedWeeklySchedule,
+        target: this.app.model.weeklySchedule,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving your weekly schedule.' : 'Error loading your weekly schedule.';
@@ -37,7 +38,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
-        this.navBar.model.updateWith(this.defaultNavBar);
+        this.navBar.model.updateWith(this.defaultNavBar, true);
     }
 };
 
@@ -47,16 +48,16 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
     
     // Keep data updated:
-    this.app.model.simplifiedWeeklySchedule.sync();
+    this.app.model.weeklySchedule.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };
 
 function ViewModel(app) {
 
-    var simplifiedWeeklySchedule = app.model.simplifiedWeeklySchedule;
+    var weeklySchedule = app.model.weeklySchedule;
 
-    var scheduleVersion = simplifiedWeeklySchedule.newVersion();
+    var scheduleVersion = weeklySchedule.newVersion();
     scheduleVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
             // new version from server while editing
@@ -74,8 +75,8 @@ function ViewModel(app) {
     // Actual data for the form:
     this.schedule = scheduleVersion.version;
 
-    this.isLocked = simplifiedWeeklySchedule.isLocked;
-    this.isSaving = simplifiedWeeklySchedule.isSaving;
+    this.isLocked = weeklySchedule.isLocked;
+    this.isSaving = weeklySchedule.isSaving;
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -87,7 +88,7 @@ function ViewModel(app) {
                         'saving...' : 
                         'Save'
         );
-    }, simplifiedWeeklySchedule);
+    }, weeklySchedule);
     
     this.discard = function discard() {
         scheduleVersion.pull({ evenIfNewer: true });

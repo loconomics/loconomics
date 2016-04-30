@@ -20,7 +20,7 @@ public static partial class LcPricingModel
         public string SlugName;
         public string AddNewLabel;
         public string ProviderDescription;
-        public PriceCalculationType PriceCalculation;
+        public LcEnum.PriceCalculationType PriceCalculation;
         /// <summary>
         /// NOT IN USE (future?): IsAddon flag is used as the simplest way to define this.
         /// It defines group names in that only one element can be selected

@@ -338,7 +338,7 @@ Parameter: extendedPermissions
     bool showFaces = false,
     string extendedPermissions = "") {
 
-    var redirectUrl = Href(string.Format("{0}?registerUrl={1}&returnUrl={2}", callbackUrl, HttpUtility.UrlEncode(registerUrl), HttpUtility.UrlEncode(returnUrl)));
+        var redirectUrl = Href(string.Format("{0}?registerUrl={1}&returnUrl={2}", callbackUrl, Uri.EscapeDataString(registerUrl), Uri.EscapeDataString(returnUrl)));
     var onLogin = string.Format("loginRedirect('{0}')", redirectUrl);
     extendedPermissions = extendedPermissions.IsEmpty() ? "email" : string.Concat("email,", extendedPermissions);
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -170,7 +170,7 @@ namespace LcRest
                         countryID != service.countryID)
                     {
                         // All services must be part of the same position
-                        throw new ConstraintException("All choosen services must belong to the same Job Title");
+                        throw new ConstraintException("All services must be selected from the same job title");
                     }
 
                     yield return service;

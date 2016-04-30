@@ -1,0 +1,296 @@
+<script type="text/html" id="client-appointment-card-template">    
+    <div class="Card AppointmentCard" data-bind="if: booking, css: { 'in-edit': canEdit() && isEditMode(), 'is-locked': isLocked, 'is-readonly': !isEditMode() }">
+        <div class="Card-title">
+            <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
+        </div>        
+        <div class="booking-steps">
+            <div class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
+                <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
+                <div data-bind="visible: supportsGratuity() && booking().paymentEnabled()">
+                    <h2 class="SectionTitle">Add gratuity</h2>
+                    <div class="center-block Box-sm PaddedBox-xs" style="text-align: center">
+                        <div class="btn-group ut-noRadioCheck">
+                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 10, disabled: isLocked, labelText: '10%' } } --><!-- /ko -->
+                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 15, disabled: isLocked, labelText:  '15%' } } --><!-- /ko -->
+                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 20, disabled: isLocked, labelText: '20%' } } --><!-- /ko -->
+                            <!-- ko template: { name: 'booking-gratuity-radioButton', data: { value: presetGratuity, itemValue: 'custom', disabled: isLocked, labelText: 'Custom' } } --><!-- /ko -->
+                        </div>
+                        <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'">
+                            <span>$</span>
+                            <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
+                        </div>
+                        <p class="isolated"><small>You’ll have until 1 hour after your app’t ends to adjust</small></p>
+                    </div>
+                </div>
+                <h2 class="SectionTitle">Summary</h2>
+                <div class="PricingSummary Box-sm PaddedBox-xs">
+                    <table>
+                        <tbody data-bind="foreach: booking().pricingSummary().items">
+                            <tr><td class="PricingSummary-concept" data-bind="text: serviceName"></td><td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th class="PricingSummary-concept">Total</th>
+                                <th class="PricingSummary-price"><span data-bind="text: booking().pricingSummary().totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
+                            </tr>
+                            <tr data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">
+                                <td class="PricingSummary-fees" colspan="2">
+                                    <span data-bind="text: booking().pricingSummary().feesMessage"></span>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <div class="PricingSummary-time isolated inset">
+                        <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
+                        <span data-bind="text: booking().pricingSummary().firstSessionDurationDisplay"></span>
+                    </div>
+                </div>
+                <div class="PaddedBox-xs-only isolated-sm">
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !hasServicesSelected(), click: nextStep">Save and continue</button>
+                    </div>
+                </div>
+            </div>            
+            <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
+                <h1 class="SectionTitle">
+                    <span data-bind="visible: isAtSelectTimes">Select up to 3 appointment times</span>
+                    <span data-bind="visible: isAtSelectTime">Select a start day and time</span>
+                    &nbsp;
+                </h1>
+
+                <div data-bind="visible: !timeFieldToBeSelected()" class="Box-sm">
+                    <ul class="TilesList">
+                        <li data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
+                            <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickServiceDate">
+                            <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <div><strong>First choice:</strong></div>
+                                <div data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
+                                <div data-bind="text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></div>
+                            </div>
+                            <div class="Tile-addon"><span class="fa fa-lg ion ion-edit" aria-hidden="true"></span></div>
+                        </button></li>
+                        <li data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())">
+                            <button class="ItemAddonTile" type="button" data-bind="click: pickServiceDate">
+                                <div class="Tile-marker"></div>
+                                <div class="Tile-content">
+                                    <p class="text-muted">Select a first choice</p>
+                                </div>
+                                <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
+                            </button>
+                        </li>
+                        <li data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
+                            <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate1">
+                            <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <div><strong>Second choice:</strong></div>
+                                <div data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
+                                <div data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></div>
+                            </div>
+                            <div class="Tile-addon"><span class="fa fa-lg ion ion-edit" aria-hidden="true"></span></div>
+                        </button></li>
+                        <li data-bind="visible: !(booking().alternativeDate1() && booking().alternativeDate1().startTime())">
+                            <button class="ItemAddonTile" type="button" data-bind="click: pickAlternativeDate1">
+                                <div class="Tile-marker"></div>
+                                <div class="Tile-content">
+                                    <p class="text-muted">Select a second choice</p>
+                                </div>
+                                <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
+                            </button>
+                        </li>
+
+                        <li data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
+                            <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate2">
+                            <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <div><strong>Third choice:</strong></div>
+                                <div data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
+                                <div data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></div>
+                            </div>
+                            <div class="Tile-addon"><span class="fa fa-lg ion ion-edit" aria-hidden="true"></span></div>
+                        </button></li>
+                        <li data-bind="visible: !(booking().alternativeDate2() && booking().alternativeDate2().startTime())">
+                            <button class="ItemAddonTile" type="button" data-bind="click: pickAlternativeDate2">
+                                <div class="Tile-marker"></div>
+                                <div class="Tile-content">
+                                    <p class="text-muted">Select a third choice</p>
+                                </div>
+                                <div class="Tile-addon"><span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span></div>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: timeFieldToBeSelected">
+                    <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
+                </div>
+                <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
+                    <div class="isolated bottom-only" data-bind="visible: isAtSelectTimes">
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                    </div>
+
+                    <div class="well" data-bind="visible: !timeFieldToBeSelected()">
+                        <h5><strong>Why am I choosing three times?</strong></h5>
+                        <p>This allows us to figure out a good appointment time on both ends.
+                        Your service professional has 18 hours to confirm your appointment.</p>
+                    </div>
+                </div>
+            </div>        
+            <div class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                <div data-bind="visible: !addressEditorOpened()">
+                    <h1 data-bind="visible: serviceAddresses.hasAddresses" class="SectionTitle">Select one of <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations</h1>
+                    <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                    <h1 data-bind="visible: clientAddresses.hasAddresses" class="SectionTitle">Select one of your locations</h1>
+                    <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                    <div class="Box-sm" data-bind="visible: hasServiceArea">
+                        <h1 class="SectionTitle">Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</h1>
+                        <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
+                            <li><button type="button" class="ItemAddonTile" data-bind="click: $parent.addAddress">
+                                <i class="Tile-marker" aria-hidden="true"></i>
+                                <div class="Tile-content">
+                                    <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
+                                </div>
+                                <div class="Tile-addon" aria-hidden="true">
+                                    <span class="fa fa-xl ion ion-ios-plus-outline" aria-hidden="true"></span>
+                                </div>
+                            </button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div data-bind="visible: addressEditorOpened(), with: booking().serviceAddress">
+                    <h1 class="SectionTitle">Add your location details</h1>
+                    <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
+                        <div class="form-group" data-bind="css: { 'has-error': $parent.errorMessages.postalCode() }">
+                            <input type="number" class="form-control"
+                                 placeholder="Zip code" aria-label="Zip code"
+                                 data-bind="value: postalCode, disable: $parent.isLocked,
+                                            popover: { content: $parent.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                        </div>
+                        <div class="form-group">
+                            <p class="form-control-static">
+                                <span data-bind="visible: city() || stateProvinceCode()">
+                                    <span data-bind="text: city"></span>, 
+                                    <span data-bind="text: stateProvinceCode"></span>
+                                </span>
+                                <!-- White space to reserve space -->
+                                &nbsp;
+                            </p>
+                        </div>
+                        <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
+                        <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">Save as:</span>
+                                <input type="text" class="form-control" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="Location name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
+                            <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
+                <ul class="TilesList TilesList--openEnd">
+                    <li data-bind="css: { 'Tile--success': booking().isCompleted() || booking().isConfirmed() || booking().isPerformed(), 'Tile--warning': booking().isRequest() || booking().isDispute(), 'Tile--danger': booking().isCancelled() || booking().isDenied() || booking().isIncomplete() || booking().isExpired()}" class="ItemTile">
+                        <i class="Tile-marker fa ion ion-ios-information-outline" aria-hidden="true"></i>
+                        <div class="Tile-content">
+                            <p data-bind="text: booking().bookingStatusLabel()"></p>
+                        </div>
+                    </li>
+                    <li>
+                        <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickDateTime">
+                            <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
+                            <div class="Tile-content" data-bind="visible: !booking().instantBooking() && booking().isRequest()">
+                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
+                                    <strong>1st choice: </strong>
+                                        <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
+                                </div>
+                                <div data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
+                                    <strong>2nd choice: </strong>
+                                        <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
+                                </div>
+                                <div data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
+                                    <strong>3rd choice: </strong>
+                                        <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
+                                </div>
+                                <p data-bind="visible: !hasSomeDateSelected()" class="text-muted">Select preferred times</p>
+                            </div>
+                            <div class="Tile-content" data-bind="visible: booking().instantBooking() || !booking().isRequest()">
+                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></div>
+                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></div>
+                                <p data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())" class="text-muted">Select date/time</p>
+                            </div>
+                            <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+                        </button>
+                    </li>
+                    <li data-bind="if: !isPhoneServiceOnly()">
+                        <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickLocation">
+                            <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <p data-bind="visible: booking().serviceAddress(), text: booking().serviceAddress() && booking().serviceAddress().singleLine()"></p>
+                                <p data-bind="visible: canEdit() && isEditMode() && !(booking().serviceAddress() && booking().serviceAddress().singleLine())" class="text-muted">Select/Add location</p>
+                            </div>
+                            <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickServices">
+                            <i class="Tile-marker fa ion ion-ios-pricetags-outline" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <p data-bind="visible: booking().pricingSummary() && booking().pricingSummary().servicesSummary(), text: booking().pricingSummary() && booking().pricingSummary().servicesSummary()"></p>
+                                <p data-bind="visible: canEdit() && isEditMode() && !(booking().pricingSummary() && booking().pricingSummary().servicesSummary())" class="text-muted">Select/Add service(s)</p>
+                            </div>
+                            <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="ItemTile">
+                            <i class="Tile-marker fa ion ion-social-usd" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <p>
+                                    <span data-bind="text: booking().pricingSummary() && booking().pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().totalPrice())}"></span>
+                                    <strong class="label label-warning" data-bind="visible: booking().displayPaymentAuthorizedLabel">AUTHORIZED</strong>
+                                    <strong class="label label-warning" data-bind="visible: booking().displayPaymentCollectedLabel">COLLECTED</strong>
+                                    <strong class="label label-success" data-bind="visible: booking().displayPaymentPaidLabel">PAID</strong>
+                                </p>
+                            </div>
+                        </button>
+                    </li>
+                    <li data-bind="if: supportsGratuity() && booking().paymentEnabled()">
+                        <button type="button" class="InfoTile" data-bind="click: isEditMode() && pickService">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-cash"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p><span data-bind="text: summary.gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(summary.gratuity())}"></span> <span>gratuity</span></p>
+                            </div>
+                        </button>
+                    </li>
+                    <li data-bind="visible: canEdit() || booking().specialRequests()">
+                        <button type="button" class="ItemTile" data-bind="click: canEdit() && isEditMode() && pickSpecialRequests">
+                            <i class="Tile-marker fa ion ion-clipboard" aria-hidden="true"></i>
+                            <div class="Tile-content">
+                                <p data-bind="visible: !booking().specialRequests(), text: specialRequestsPlaceholder" class="text-muted"></p>
+                                <p data-bind="visible: booking().specialRequests(), text: booking().specialRequests()"></p>
+                                <p data-bind="visible: canEdit() && isEditMode() && !booking().specialRequests()" class="text-muted"></p>
+                            </div>
+                            <div class="Tile-icon" data-bind="visible: isEditMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
+                        </button>
+                    </li>
+                </ul>
+                <div class="AppointmentCard-actions" data-bind="visible: isEditMode() || isCancelMode()">
+                    <button type="button" class="btn btn-primary btn-block" data-bind="visible: canEdit, click: save, text: submitText, disable: isLocked">Save changes</button>
+                    <button type="button" class="btn btn-danger btn-block" data-bind="visible: isCancelMode(), click: confirmCancelBookingByClient, disable: isLocked">Cancel booking</button>
+                    <button type="button" class="btn btn-default btn-block" data-bind="click: confirmCancel, disable: isLocked">Don't save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>

@@ -7,15 +7,15 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var moment = require('moment');
 
-var A = Activity.extends(function SchedulingPreferencesActivity() {
+var A = Activity.extend(function SchedulingPreferencesActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-
-    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
-        backLink: 'scheduling'
+    
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: '/scheduling' , helpLink: '/help/sections/201961423-setting-your-scheduling-preferences'
     });
     
     this.registerHandler({

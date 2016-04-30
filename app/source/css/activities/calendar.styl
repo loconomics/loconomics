@@ -8,6 +8,10 @@
     #calendarDailyView {
         padding-top: $SectionTitle-height;
         min-height: 100%;
+        
+        @media $mediaMinMd {
+          padding-top: 0;
+        }
     }
     
     .CalendarDateHeader {
@@ -20,8 +24,22 @@
         top: 0;
         left: 0;
         right: 0;
+        
+        button {
+            &:hover,
+            &:focus {
+                outline: none;
+            }
+        }
+        @media $mediaMinMd {
+          position: relative;
+          button {
+            margin-top: 15px;
+            font-size: 28px;
+            text-transform: none;
+          }
+        }
     }
-
     #calendarDatePicker {
         /* positioning */
         // absolute vs fixed because the iOS problem with scrolling
@@ -40,6 +58,10 @@
         background: white;
         box-shadow: 0 0 6px -1px #000;
         border-radius: 4px;
+        
+        @media $mediaMinMd {
+          top: 75px;
+        }
 
         /* repositioning the pop-arrow */
         .DatePicker:after {

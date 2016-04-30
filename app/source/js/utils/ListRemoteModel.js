@@ -5,6 +5,10 @@
     without paging/cursor, with indexed access to each item by its ID.
     Is good for lists that keep small in the time.
     
+    TODO IMPORTANT The getList method, reused as sync, is returning an observable rather
+    than direct data. There are uses right now, double check if this chas any sense and update
+    affected code.
+    
     TODO To implement single item update mode, not full list each time, by set-up or method
 **/
 'use strict';
@@ -115,12 +119,18 @@ function ListRemoteModel(settings) {
     **/
     api.getList = function getList() {
 
-        if (cache.control.mustRevalidate()) {
-            // Cache still not used, then is first load, try load from local
+        // Concurrent requests: First, check if there is a running/pending request already for this
+        if (cache.request) {
+            // reuse the request, rather than overload the app and server.
+            return cache.request;
+        }
+        // Cache needs fresh data:
+        else if (cache.control.mustRevalidate()) {
+            // Cache still not used, then is first load, try to load from local
             if (cache.unused) {
                 api.state.isLoading(true);
                 // From local
-                return this.fetchListFromLocal()
+                cache.request = this.fetchListFromLocal()
                 .then(function(data) {
                     // launch remote for sync
                     api.state.isSyncing(true);
@@ -143,7 +153,7 @@ function ListRemoteModel(settings) {
                         else {
                             // This promise is returned so will be consumed,
                             // just rethrow and let the other catch-blocks do the common stuff
-                            return err;
+                            throw err;
                         }
                     });
                     // Remote fallback: If no local, wait for remote
@@ -155,19 +165,22 @@ function ListRemoteModel(settings) {
                     cache.list = data;
                     this.pushListToLocal(data);
                     api.state.isLoading(false);
+                    cache.request = null;
 
                     return cache.list;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cache.request = null;
                     // rethrow error
-                    return err;
+                    throw err;
                 });
+                return cache.request;
             } else {
                 api.state.isSyncing(true);
                 // From remote
-                return this.fetchListFromRemote()
+                cache.request = this.fetchListFromRemote()
                 .then(function(data) {
                     // Ever a list, even if empty
                     data = data || [];
@@ -175,15 +188,18 @@ function ListRemoteModel(settings) {
                     this.pushListToLocal(data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
-
+                    cache.request = null;
+                    
                     return cache.list;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cache.request = null;
                     // rethrow error
-                    return err;
+                    throw err;
                 });
+                return cache.request;
             }
         }
         else {
@@ -347,7 +363,7 @@ function ListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isSaving(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -373,7 +389,7 @@ function ListRemoteModel(settings) {
         .catch(function(err) {
             api.state.isDeleting(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     

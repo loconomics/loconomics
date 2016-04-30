@@ -6,11 +6,11 @@
 'use strict';
 
 var ko = require('knockout'),
-    _ = require('lodash'),
+    groupBy = require('lodash/groupBy'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function ServiceProfessionalServiceActivity() {
+var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
     Activity.apply(this, arguments);
 
@@ -18,10 +18,10 @@ var A = Activity.extends(function ServiceProfessionalServiceActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling'
+        backLink: '/scheduling', helpLink: '/help/sections/201967166-listing-and-pricing-your-services'
     });
     // Save defaults to restore on updateNavBarState when needed:
-    this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
+    this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
     
     // On changing jobTitleID:
     // - load pricing
@@ -125,12 +125,12 @@ A.prototype.applyOwnNavbarRules = function() {
     }
     else {
         // Reset to defaults, or given title:
-        this.navBar.leftAction().model.updateWith(this.defaultLeftAction);
+        this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
         if (this.requestData.navTitle)
             this.navBar.leftAction().text(this.requestData.navTitle);
 
         var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling',
+            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
             url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling');
 
         this.navBar.leftAction().link(url);
@@ -264,7 +264,7 @@ function ViewModel(app) {
         var groups = [],
             groupsList = [];
         if (!this.isAdditionMode()) {
-            groups = _.groupBy(list, function(pricingItem) {
+            groups = groupBy(list, function(pricingItem) {
                 return pricingItem.pricingTypeID();
             });
 
@@ -364,10 +364,7 @@ function ViewModel(app) {
             // selected address:
             this.returnSelected(
                 this.selectedServices().map(function(pricing) {
-                    return {
-                        serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                        totalPrice: ko.unwrap(pricing.price)
-                    };
+                    return pricing.model.toPlainObject(true);
                 }),
                 this.jobTitleID()
             );
@@ -418,10 +415,7 @@ function ViewModel(app) {
         if (this.isSelectionMode()) {
             request.selectedServices = this.selectedServices()
             .map(function(pricing) {
-                return {
-                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                    totalPrice: ko.unwrap(pricing.totalPrice)
-                };
+                return pricing.model.toPlainObject(true);
             });
         }
 

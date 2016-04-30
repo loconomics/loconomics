@@ -20,9 +20,19 @@
         // Special cases (each page creates its own log file)
         if (ex is HttpException)
         {
+            // IMPORTANT: Catch several errors, like 404 "Not Found" works here because
+            // we have the custom url rewriting code at _AppStart.cshtml, like:
+            //  RouteTable.Routes.MapWebPageRoute("{customurl}/", "~/CustomURL.cshtml");
+            // That way, ANY URL that has not a static or asp.net page goes that cshtml page, and that
+            // returns an error that is catch here. Without that, this code will never run because IIS
+            // runs its own 'not found/errors' logic far before (and customErrors web.config seems to not
+            // work for some reason, maybe needs to be in the root config or something in the rewriting there
+            // breaks it or the hosting set-up avoids custom errors on web.config).
             switch (((HttpException)ex).GetHttpCode()){
                 case 404:
-                    Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    // IMPORTANT: To enable splash screen, all not founds goes to index silently
+                    //Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+                    Response.Redirect("/");
                     // Execution ends right here.
                     break;
                 case 403:
@@ -71,28 +81,6 @@
 
     void Session_Start(object sender, EventArgs e) 
     {
-        // We check if user browser sent an auth cookie (lcAuth), if is a non persistent cookie
-        // (have not expired date), we force logout; this is how non persistent sessions die
-        // when server-session timeout dies, sharing this configurable time 
-        // (web.config/system.web/sessionState/timeout)
-        // NOTE: Response.Write lines are debug code.
-        var c = Request.Cookies[FormsAuthentication.FormsCookieName]; //["lcAuth"];
-        if (c != null)
-        {
-            var t = FormsAuthentication.Decrypt(c.Value);
-            if (!t.IsPersistent)
-            {
-                // Non persistent
-                //Response.Write("session cookie!");
-                WebMatrix.WebData.WebSecurity.Logout();
-            }
-            /*else
-            {
-                // persistent
-                Response.Write("persistent cookie until: " + t.Expiration.ToString());
-            }*/
-        }
-        
     }
 
     void Session_End(object sender, EventArgs e) 

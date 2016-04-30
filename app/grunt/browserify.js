@@ -64,7 +64,7 @@ module.exports = function(/*grunt*/) {
                 'numeral',
                 'knockout',
                 'knockout.mapping',
-                'lodash',
+                //'lodash', // specific modules fetched on demand to minimize the size
                 'es6-promise',
                 'localforage',
                 'is_js',
@@ -78,6 +78,7 @@ module.exports = function(/*grunt*/) {
                 './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
                 './vendor/iagosrl/throttle:iagosrl/throttle',
                 'knockout-sortable',
+                'geocomplete'
             ],
             'shim': {
                 /*'jquery-ui':  {
@@ -90,10 +91,11 @@ module.exports = function(/*grunt*/) {
                     'exports': null,
                     'depends': { 'jquery': null }
                 },
-                'history': {
+                // NOTE: NOT USED RIGHT NOW, IS BUGGY with the app-shell-history
+                /*'history': {
                     'path': './vendor/history/jquery.history.js',
                     'exports': 'History'
-                },
+                },*/
                 'fastclick': {
                     path: './vendor/fastclick-forked/fastclick.js',
                     exports: 'FastClick'

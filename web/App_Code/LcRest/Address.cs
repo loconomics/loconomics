@@ -24,10 +24,10 @@ namespace LcRest
         private int postalCodeID;
         public string postalCode;
         public string city;
-        private int stateProvinceID;
+        internal int stateProvinceID;
         public string stateProvinceCode;
         public string stateProvinceName;
-        private int countryID;
+        internal int countryID;
         public string countryCode;
         public double? latitude;
         public double? longitude;
@@ -157,6 +157,49 @@ namespace LcRest
         {
             return addressID == NewAddressID;
         }
+
+        /// <summary>
+        /// Checks if current address data is empty in all user fields. It doesn't checks fields like addressID, or timestamps.
+        /// This is useful to read data given by a user into an Address instance
+        /// and check if the user passed in some data or not, on the case of not we
+        /// may check if a given addressID was given, that means the user wants to use
+        /// that ID without update the address data.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return (
+                String.IsNullOrWhiteSpace(this.addressLine1) &&
+                String.IsNullOrWhiteSpace(this.addressLine2) &&
+                String.IsNullOrWhiteSpace(this.addressName) &&
+                String.IsNullOrWhiteSpace(this.postalCode) &&
+                String.IsNullOrWhiteSpace(this.specialInstructions) &&
+                !this.latitude.HasValue &&
+                !this.longitude.HasValue
+            );
+        }
+
+        /// <summary>
+        /// Checks if current address and the given address are similar, by checking if the
+        /// values at user editable fields are the same.
+        /// It's not an 'IsEqual' comparision because not all fields (addressID, timestamps) are checked.
+        /// </summary>
+        public bool IsSimilar(Address other) {
+            return (
+                this.addressLine1 == other.addressLine1 &&
+                this.addressLine2 == other.addressLine2 &&
+                this.addressName == other.addressName &&
+                this.postalCode == other.postalCode &&
+                this.specialInstructions == other.specialInstructions &&
+                this.latitude == other.latitude &&
+                this.longitude == other.longitude
+            );
+        }
+
+        public bool IsAnonymous()
+        {
+            return String.IsNullOrWhiteSpace(this.addressName);
+        }
         #endregion
 
         #region SQL
@@ -192,35 +235,38 @@ namespace LcRest
 
                 ,L.AddressTypeID as addressTypeID
 
-        FROM    Address As L
-                 INNER JOIN
-                StateProvince As SP
-                  ON L.StateProvinceID = SP.StateProvinceID
-                 INNER JOIN
-                PostalCode As PC
-                  ON PC.PostalCodeID = L.PostalCodeID
-                 INNER JOIN
-                Country As C
-                  ON L.CountryID = C.CountryID
-                    AND C.LanguageID = @0
-                 LEFT JOIN
-                ServiceAddress As SA
-                  -- Special case when the jobtitle/position requested is zero
-                  -- just dont let make the relation to avoid bad results
-                  -- because of internally reused addressID.
-                  ON @2 > 0 AND L.AddressID = SA.AddressID
-        WHERE   L.Active = 1
-    ";
+            FROM    Address As L
+                     INNER JOIN
+                    StateProvince As SP
+                      ON L.StateProvinceID = SP.StateProvinceID
+                     INNER JOIN
+                    PostalCode As PC
+                      ON PC.PostalCodeID = L.PostalCodeID
+                     INNER JOIN
+                    Country As C
+                      ON L.CountryID = C.CountryID
+                        AND C.LanguageID = @0
+                     LEFT JOIN
+                    ServiceAddress As SA
+                      -- Special case when the jobtitle/position requested is zero
+                      -- just dont let make the relation to avoid bad results
+                      -- because of internally reused addressID.
+                      ON @2 > 0 AND L.AddressID = SA.AddressID
+            WHERE   L.Active = 1
+        ";
         private const string sqlAndUserID = @" AND L.UserID = @1 ";
         private const string sqlAndJobTitleID = @"
-        AND coalesce(SA.PositionID, 0) = @2
-    ";
+            AND coalesce(SA.PositionID, 0) = @2
+        ";
         private const string sqlAndAddressID = @"
-        AND L.AddressID = @3
-    ";
+            AND L.AddressID = @3
+        ";
         private const string sqlAndTypeID = @"
-        AND L.AddressTypeID = @4
-    ";
+            AND L.AddressTypeID = @4
+        ";
+        private const string sqlcondOnlyNamedAddresses = @"
+            AND L.AddressName is not null AND L.AddressName not like ''
+        ";
         // Since user can delete addresses from being available on its list but still
         // we need preserve that addresses information for cases in that is linked to 
         // a booking, that addresses get 'soft deleted', changing its flags for kind
@@ -245,7 +291,8 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-                return db.Query(sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlcondOnlyActiveServiceAddress,
+                var sql = sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
+                return db.Query(sql,
                     LcData.GetCurrentLanguageID(), userID, jobTitleID)
                     .Select(FromDB)
                     .ToList();
@@ -346,6 +393,8 @@ namespace LcRest
                 {
                     add = new Address
                     {
+                        // L10N
+                        addressName = "Home",
                         userID = userID,
                         kind = AddressKind.Home
                     };
@@ -457,7 +506,7 @@ namespace LcRest
             if (!AutosetByCountryPostalCode(address))
             {
                 // TODO l10n
-                throw new ValidationException("Invalid ZIP code", "postalCode", "address");
+                throw new ValidationException("Invalid postal code", "postalCode", "address");
             }
 
             // GPS
@@ -553,6 +602,14 @@ namespace LcRest
 
         #region Look up tasks
         /// <summary>
+        /// List used at AutosetByCountryPostalCode to apply validation only on full supported countries
+        /// TODO Update country filtering when postal code validation gets enabled for other countries.
+        /// </summary>
+        static readonly List<int> countryIdsWithPostalCodeValidation = new List<int>
+        {
+            1 // US
+        };
+        /// <summary>
         /// For an address with the Country (code or ID) and Postal Code information,
         /// it looks in database for the PostalCodeID, City and StateProvinceID and 
         /// set it in the passed address object.
@@ -566,11 +623,6 @@ namespace LcRest
         /// <returns>The success of the task.</returns>
         public static bool AutosetByCountryPostalCode(Address address)
         {
-            if (String.IsNullOrWhiteSpace(address.postalCode))
-            {
-                // TODO l10n
-                throw new ValidationException("Address must contain a postal code", "postalCode", "address");
-            }
             if (address.countryID <= 0)
             {
                 if (String.IsNullOrWhiteSpace(address.countryCode))
@@ -583,23 +635,43 @@ namespace LcRest
             else
             {
                 // Just ensure the Country Code is the correct for the given ID
-                address.countryCode = LcRest.Locale.GetCountryCodeByID(address.countryID);
+                if (address.countryCode == null)
+                    address.countryCode = LcRest.Locale.GetCountryCodeByID(address.countryID);
             }
 
-            // Get the information by postal code and country from database
-            var data = GetPostalCodeData(address.postalCode, address.countryID, false);
-            if (data != null)
+            // IMPORTANT: For now, only validate Postal Code for US since we only have that list complete, on the other
+            // cases we set some values to empty when null to avoid database not-null constraint errors.
+            if (countryIdsWithPostalCodeValidation.Contains(address.countryID))
             {
-                address.postalCodeID = data.PostalCodeID;
-                address.city = data.City;
-                address.stateProvinceID = data.StateProvinceID;
-                // Done:
-                return true;
+                if (String.IsNullOrWhiteSpace(address.postalCode))
+                {
+                    // TODO l10n
+                    throw new ValidationException("Address must contain a postal code", "postalCode", "address");
+                }
+
+                // Get the information by postal code and country from database
+                var data = GetPostalCodeData(address.postalCode, address.countryID, false);
+                if (data != null)
+                {
+                    address.postalCodeID = data.postalCodeID;
+                    address.city = data.city;
+                    address.stateProvinceID = data.stateProvinceID;
+                    address.stateProvinceCode = data.stateProvinceCode;
+                    address.stateProvinceName = data.stateProvinceName;
+                    // Done:
+                    return true;
+                }
+                else
+                {
+                    // Failed look-up
+                    return false;
+                }
             }
             else
             {
-                // Failed look-up
-                return false;
+                if (address.city == null)
+                    address.city = "";
+                return true;
             }
         }
 
@@ -627,11 +699,17 @@ namespace LcRest
                     PC.CountryID = @1
         ";
             var sqlGetPostalCodeData = @"
-            SELECT  PostalCodeID, City, StateProvinceID
-            FROM    PostalCode
-            WHERE   PostalCode = @0
+            SELECT  PC.postalCodeID, PC.city, PC.stateProvinceID,
+                    SP.StateProvinceCode As stateProvinceCode,
+                    SP.StateProvinceName As stateProvinceName
+            FROM    PostalCode As PC
+                     INNER JOIN
+                    StateProvince As SP
+                      ON PC.StateProvinceID = SP.StateProvinceID
+                          AND PC.CountryID = SP.CountryID
+            WHERE   PC.PostalCode = @0
                         AND
-                    CountryID = @1
+                    PC.CountryID = @1
         ";
             using (var db = Database.Open("sqlloco"))
             {

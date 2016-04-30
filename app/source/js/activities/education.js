@@ -5,15 +5,15 @@
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function EducationActivity() {
+var A = Activity.extend(function EducationActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
-backLink: '/marketplaceProfile'
+    this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
+        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201960833-adding-education-to-your-profile'
     });
 });
 

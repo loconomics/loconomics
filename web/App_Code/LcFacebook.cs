@@ -128,9 +128,9 @@ public static class LcFacebook
         var url = String.Format(
             "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={0}&redirect_uri={1}&client_secret={2}&code={3}",
             (Facebook.AppId),     // YOUR_APP_ID
-            HttpUtility.UrlEncode(LcUrl.LangUrl),   // YOUR_REDIRECT_URI
+            Uri.EscapeDataString(LcUrl.LangUrl),   // YOUR_REDIRECT_URI
             (Facebook.AppSecret), // YOUR_APP_SECRET
-            HttpUtility.UrlEncode(code)
+            Uri.EscapeDataString(code)
         );  // CODE_GENERATED_BY_FACEBOOK
 
         try

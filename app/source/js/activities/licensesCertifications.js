@@ -7,63 +7,102 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function LicensesCertificationsActivity() {
+var A = Activity.extend(function LicensesCertificationsActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Job Title');
-
+    
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/marketplaceProfile', helpLink: '/help/sections/201967966-adding-professional-licenses-and-certifications'
+    });
+    
     // On changing jobTitleID:
-    // - load licenses/certifications
-    /* TODO Uncomment and update on implementing REST API AppModel
+    // - load job title name
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
+
             if (jobTitleID) {
+                
+                ////////////
+                // Job Title
                 // Get data for the Job title ID
-                this.app.model.licensesCertifications.getList(jobTitleID)
-                .then(function(list) {
-                    // Save for use in the view
-                    this.viewModel.list(list);
+                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(jobTitle) {
+
+                // Fill in job title name
+                this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
-                .catch(function (err) {
+                .catch(function(err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'There was an error while loading the job title.',
                         error: err
                     });
                 }.bind(this));
             }
             else {
-                this.viewModel.list([]);
+                this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
-    });*/
-    // TODO Remove on implemented REST API
-    this.viewModel.list(testdata());
+    });
 });
-
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     var params = options && options.route && options.route.segments;
-    this.viewModel.jobTitleID(params[0] |0);
+    var jobTitleID = params[0] |0;
+    this.viewModel.jobTitleID(jobTitleID);
+    if (jobTitleID) {
+        // Get data for the Job title ID
+        this.app.model.userLicensesCertifications.getList(jobTitleID)
+        .then(function(list) {
+            // Save for use in the view
+            this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
+        
+        // Get required licenses for the Job title ID - an object, not a list
+        this.app.model.jobTitleLicenses.getItem(jobTitleID)
+        .then(function(item) {
+            // Save for use in the view
+            this.viewModel.jobTitleApplicableLicences(item);
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
+    }
+    else {
+        this.viewModel.list([]);
+        this.viewModel.jobTitleApplicableLicences(null);
+    }
 };
 
 function ViewModel(app) {
-
-    this.jobTitleID = ko.observable(0);
-    this.list = ko.observableArray([]);
     
-    this.isSyncing = app.model.licensesCertifications.state.isSyncing();
-    this.isLoading = app.model.licensesCertifications.state.isLoading();
+    this.jobTitleID = ko.observable(0);
+    this.submittedUserLicensesCertifications = ko.observableArray([]);
+    //is an object that happens to have arrays
+    this.jobTitleApplicableLicences = ko.observable(null);
+    this.jobTitleName = ko.observable('Job Title'); 
+    
+    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
+    this.isLoading = app.model.userLicensesCertifications.state.isLoading();
 
-    this.addNew = function() {
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID(),
+    this.addNew = function(item) {
+        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/' + item.licenseCertificationID() + '/new',
             cancelUrl = app.shell.currentRoute.url;
         var request = $.extend({}, this.requestData, {
             cancelLink: cancelUrl
@@ -75,130 +114,7 @@ function ViewModel(app) {
         var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
             item.licenseCertificationID() + '?mustReturn=' + 
             encodeURIComponent(app.shell.currentRoute.url) +
-            '&returnText=' + encodeURIComponent('Certifications/Licenses');
+            '&returnText=' + encodeURIComponent('Licenses/certifications');
         app.shell.go(url, this.requestData);
     }.bind(this);
-}
-
-
-               
-// TODO SAME CODE AS IN verifications activity, to refactor and share
-var Model = require('../models/Model');
-function Verification(values) {
-    Model(this);
-    
-    this.model.defProperties({
-        name: ''
-    }, values);
-}
-Verification.status = {
-    confirmed: 1,
-    pending: 2,
-    revoked: 3,
-    obsolete: 4
-};
-function enumGetName(value, enumList) {
-    var found = null;
-    Object.keys(enumList).some(function(k) {
-        if (enumList[k] === value) {
-            found = k;
-            return true;
-        }
-    });
-    return found;
-}
-
-
-/// TESTDATA
-var UserLicenseCertification = require('../models/UserLicenseCertification');
-var LicenseCertification = require('../models/LicenseCertification');
-function testdata() {
-    
-    var base = {
-        17: new LicenseCertification({
-            licenseCertificationID: 17,
-            name: 'Certified Massage Therapist (CMT)',
-            stateProvinceID: 1,
-            countryID: 1,
-            description: 'Required to complete at least 500 hours of massage education and training at an approved massage therapy school.  CMTs also must undergo background checks, including fingerprinting and other identification verification procedures.',
-            authority: 'The California Massage Therapy Council (CAMTC)',
-            verificationWebsiteUrl: 'https://www.camtc.org/VerifyCertification.aspx',
-            howToGetLicensedUrl: 'https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf',
-            optionGroup: 'Certified Massage',
-            createdDate: new Date(),
-            updatedDate: new Date()
-        }),
-        18: new LicenseCertification({
-            licenseCertificationID: 18,
-            name: 'Certified Massage Practitioner (CMP)',
-            stateProvinceID: 1,
-            countryID: 1,
-            description: 'Generally must complete at least 250 hours of education and training.  CMPs also must undergo background checks, including fingerprinting and other identification verification procedures.',
-            authority: 'The California Massage Therapy Council (CAMTC)',
-            verificationWebsiteUrl: 'https://www.camtc.org/VerifyCertification.aspx',
-            howToGetLicensedUrl: 'https://www.camtc.org/FormDownloads/CAMTCApplicationChecklist.pdf',
-            optionGroup: 'Certified Massage',
-            createdDate: new Date(),
-            updatedDate: new Date()
-        })
-    };
-    
-    // Augment Model with related info
-    function augment(m) {
-        m.licenseCertification = ko.computed(function() {
-            return base[this.licenseCertificationID()] || null;
-        }, m);
-        
-        // TODO statusText and isStatus copied from verifications, dedupe/refactor
-        m.statusText = ko.pureComputed(function() {
-            // L18N
-            var statusTextsenUS = {
-                'verification.status.confirmed': 'Confirmed',
-                'verification.status.pending': 'Pending',
-                'verification.status.revoked': 'Revoked',
-                'verification.status.obsolete': 'Obsolete'
-            };
-            var statusCode = enumGetName(this.statusID(), Verification.status);
-            return statusTextsenUS['verification.status.' + statusCode];
-        }, m);
-
-        /**
-            Check if verification has a given status by name
-        **/
-        m.isStatus = function (statusName) {
-            var id = this.statusID();
-            return Verification.status[statusName] === id;
-        }.bind(m);
-        
-        return m;
-    }
-
-    return [
-        augment(new UserLicenseCertification({
-            userID: 141,
-            jobTitleID: 106,
-            statusID: 2,
-            licenseCertificationID: 18,
-            licenseCertificationNumber: 21341234,
-            stateProvinceID: 1,
-            countryID: 1,
-            expirationDate: new Date(2016, 1, 20),
-            lastVerifiedDate: new Date(2015, 3, 20),
-            createdDate: new Date(),
-            updatedDate: new Date()
-        })),
-        augment(new UserLicenseCertification({
-            userID: 141,
-            jobTitleID: 106,
-            statusID: 1,
-            licenseCertificationID: 17,
-            licenseCertificationNumber: 987654321,
-            stateProvinceID: 1,
-            countryID: 1,
-            expirationDate: new Date(2016, 1, 20),
-            lastVerifiedDate: new Date(2015, 3, 20),
-            createdDate: new Date(),
-            updatedDate: new Date()
-        }))
-    ];
 }

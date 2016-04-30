@@ -18,6 +18,8 @@ module.exports = function(grunt) {
         'activities/signup.html',
         'activities/terms.html'
     ];
+    var moment = require('moment');
+    var version = moment().format('YYYYMMDDHHmm');
 
     return {
         app: {
@@ -32,6 +34,21 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
+            }
+          }
+        },
+        webapp: {
+          files: {
+            '../web/_specialRoutes/app.html': ['source/html/web.js.html']
+          },
+          options: {
+            context: {
+                debug: false,
+                includedFiles: includedFiles,
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang,
+                cssVersion: version,
+                jsVersion: version
             }
           }
         },
@@ -74,6 +91,21 @@ module.exports = function(grunt) {
                 debug: false,
                 includedFiles: includedFiles,
                 cordovajs: true,
+                siteUrl: 'https://loconomics.com',
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang
+            }
+          }
+        },
+        phonegapDev: {
+          files: {
+            'phonegap/www/index.html': ['source/html/app.js.html']
+          },
+          options: {
+            context: {
+                debug: true,
+                includedFiles: includedFiles,
+                cordovajs: true,
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
@@ -101,6 +133,24 @@ module.exports = function(grunt) {
                     id: '<%= package.appId %>',
                     version: '<%= package.version %>',
                     name: '<%= package.appName %>',
+                    description: '<%= package.appDescription %>',
+                    author: {
+                      email: 'support@loconomics.com',
+                      url: 'https://loconomics.com',
+                      text: '<%= package.author %>'
+                    }
+                }
+            }
+        },
+        cordovaConfigXmlDev: {
+            files: {
+                'phonegap/www/config.xml': ['source/cordova-config.js.xml']
+            },
+            options: {
+                context: {
+                    id: '<%= package.devAppId %>',
+                    version: '<%= package.version %>',
+                    name: '<%= package.devAppName %>',
                     description: '<%= package.appDescription %>',
                     author: {
                       email: 'support@loconomics.com',

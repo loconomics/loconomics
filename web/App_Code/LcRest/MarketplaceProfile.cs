@@ -41,7 +41,7 @@ namespace LcRest
                     // contains information like the city and the primary
                     // job title name (if some information is missed it fallbacks
                     // to the non-SEO, ID based, URL, ever a valid address).
-                    return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(this.userID);
+                    return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicSeoUrlPath(this.userID);
                 }
                 else
                 {
@@ -68,19 +68,21 @@ namespace LcRest
                 userID = record.userID,
                 publicBio = record.publicBio,
                 serviceProfessionalProfileUrlSlug = record.serviceProfessionalProfileUrlSlug,
-                serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUr,
+                serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
                 bookCode = record.bookCode,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
         }
 
+        public const string CustomUrlPrefix = "-";
+
         public static string BuildServiceProfessionalCustomURL(string slug)
         {
             if (String.IsNullOrWhiteSpace(slug))
                 return "";
             else
-                return LcUrl.AppUrl + ASP.LcHelpers.StringSlugify(slug);
+                return LcUrl.AppUrl + CustomUrlPrefix + ASP.LcHelpers.StringSlugify(slug);
         }
 
         #region SQL

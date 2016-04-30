@@ -11,29 +11,6 @@ var localforage = require('localforage');
 
 exports.plugIn = function (AppModel) {
     /**
-        Try to perform an automatic login if there is a local
-        copy of credentials to use on that,
-        calling the login method that save the updated
-        data and profile.
-    **/
-    AppModel.prototype.tryLogin = function tryLogin() {
-        // Get saved credentials
-        return localforage.getItem('credentials')
-        .then(function(credentials) {
-            // If we have ones, try to log-in
-            if (credentials) {
-                // Attempt login with that
-                return this.login(
-                    credentials.username,
-                    credentials.password
-                );
-            } else {
-                throw new Error('No saved credentials');
-            }
-        }.bind(this));
-    };
-
-    /**
         Performs a login attempt with the API by using
         the provided credentials.
     **/
@@ -47,6 +24,23 @@ exports.plugIn = function (AppModel) {
             password: password,
             returnProfile: true
         }).then(performLocalLogin(this, username, password));
+    };
+
+    /**
+        Performs a login attempt with the API by using
+        a Facebook accessToken.
+    **/
+    AppModel.prototype.facebookLogin = function facebookLogin(accessToken) {
+
+        // Reset the extra headers to attempt the login
+        this.rest.extraHeaders = null;
+
+        return this.rest.post('login/facebook', {
+            accessToken: accessToken,
+            returnProfile: true
+        }).then(function(logged) {
+            return performLocalLogin(this, logged.email, null);
+        }.bind(this));
     };
 
     /**
@@ -82,7 +76,7 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.signup = function signup(data) {
 
         // Reset the extra headers to attempt the signup
-        this.rest.extraHeadres = null;
+        this.rest.extraHeaders = null;
         
         data.returnProfile = true;
 
@@ -94,7 +88,7 @@ exports.plugIn = function (AppModel) {
     };
 };
 
-function performLocalLogin(thisAppModel, username, password) {
+function performLocalLogin(thisAppModel, username/*, password*/) {
 
     return function(logged) {
         
@@ -105,15 +99,13 @@ function performLocalLogin(thisAppModel, username, password) {
             // use authorization key for each
             // new Rest request
             thisAppModel.rest.extraHeaders = {
-                alu: logged.userID,
-                alk: logged.authKey
+                Authorization: 'LC alu=' + logged.userID + ',alk=' + logged.authKey
             };
 
             // async local save, don't wait
             localforage.setItem('credentials', {
                 userID: logged.userID,
                 username: username,
-                password: password,
                 authKey: logged.authKey
             });
             // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile

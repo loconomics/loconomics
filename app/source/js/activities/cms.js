@@ -7,7 +7,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 
-var A = Activity.extends(function CmsActivity() {
+var A = Activity.extend(function CmsActivity() {
     
     Activity.apply(this, arguments);
     

@@ -61,6 +61,8 @@ exports.create = function create(appModel) {
         if (rawItems) {
             rawItems.forEach(function(rawItem) {
                 var m = new UserJobTitle(rawItem);
+                // Extended feature: to know when is in background deletion process
+                m.isBeingDeleted = ko.observable(false);
                 cache.userJobProfile.list.push(m);
                 // Saving and indexed copy and per item cache info
                 setGetUserJobTitleToCache(rawItem);
@@ -90,6 +92,16 @@ exports.create = function create(appModel) {
         });
     }
     
+    function deleteUserJobTitleFromCache(jobTitleID) {
+        // Delete from index
+        delete cache.userJobTitles[jobTitleID];
+        
+        // Remove from profile list: do from observable, that modifies plain cache
+        // and notify observers too
+        api.list.remove(function(j) { return j.jobTitleID() === jobTitleID; });
+        cache.userJobProfile.cache.touch();
+    }
+    
     /**
         Set a raw userJobProfile record (from server) and set it in the
         cache, creating or updating the model (so all the time the same model instance
@@ -105,6 +117,8 @@ exports.create = function create(appModel) {
         else {
             // First time, create model
             c.model = new UserJobTitle(rawItem);
+            // Extended feature: to know when is in background deletion process
+            c.model.isBeingDeleted = ko.observable(false);
         }
         // Update cache control
         if (c.cache) {
@@ -159,6 +173,13 @@ exports.create = function create(appModel) {
             localforage.setItem('userJobProfile', raw);
             return mapToUserJobProfile(raw);
         });
+    };
+    
+    var saveCacheToLocal = function() {
+        var raw = cache.userJobProfile.list.map(function(j) {
+            return j.model.toPlainObject(true);
+        });
+        localforage.setItem('userJobProfile', raw);
     };
     
     /**
@@ -272,8 +293,70 @@ exports.create = function create(appModel) {
         }
     };
     
+    /**
+        Push changes to remote. StatusID can NOT be modified with this API, use specific
+        deactivate/reactivate methods
+    **/
+    api.setUserJobTitle = function (values) {
+        return appModel.rest.put('me/user-job-profile/' + values.jobTitleID, values)
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            
+            // TODO implement cache saving for single job-titles, currently
+            // it needs to save the profile cache, that may not exists if
+            // the first request is for a single job title.
+            // Next lines are to save full profile, not valid here.
+            // Save in local
+            //saveCacheInLocal();
+            
+            // Return model
+            return m;
+        });
+    };
+    
     api.createUserJobTitle = function (values) {
         return pushNewUserJobTitle(values);
+    };
+    
+    api.deactivateUserJobTitle = function(jobTitleID) {
+        return appModel.rest.post('me/user-job-profile/' + (jobTitleID|0) + '/deactivate')
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            return m;
+        });
+    };
+    
+    api.reactivateUserJobTitle = function(jobTitleID) {
+        return appModel.rest.post('me/user-job-profile/' + (jobTitleID|0) + '/reactivate')
+        .then(function(raw) {
+            // Save to cache and get model
+            var m = setGetUserJobTitleToCache(raw);
+            return m;
+        });
+    };
+    
+    api.deleteUserJobTitle = function(jobTitleID) {
+        var found = api.list().filter(function(j) {
+            if (j.jobTitleID() === jobTitleID)
+                j.isBeingDeleted(true);
+        });
+        return appModel.rest.delete('me/user-job-profile/' + (jobTitleID|0))
+        .then(function() {
+            // Remove from cache
+            deleteUserJobTitleFromCache(jobTitleID);
+            saveCacheToLocal();
+            return null;
+        })
+        .catch(function(err) {
+            // Uncheck deletion flag
+            found.forEach(function(j) {
+                j.isBeingDeleted(false);
+            });
+            // Propagate error
+            throw err;
+        });
     };
     
     /*************************/
@@ -287,8 +370,8 @@ exports.create = function create(appModel) {
                     name: 'Not Found',
                     message:
                         // LJDI:
-                        'You have not this job title in your profile. ' + 
-                        'Maybe was deleted from your profile recently.'
+                        "We don't have a record of this job title" + 
+                        'It may have been recently deleted.'
                 };
             }
 

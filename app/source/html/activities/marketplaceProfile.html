@@ -1,63 +1,104 @@
-<!-- marketplaceProfile activity -->
-<div class="container-fluid" data-activity="marketplaceProfile" data-bind="css: { 'is-loading': isLoading }">
-    <h2 class="SectionTitle">Job Profiles
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
-    <ul class="TilesList TilesList--openEnd">
-        <li><a class="CompactLinkTile" href="/addJobTitles">
-            <div class="Tile-content text-muted">Add a job profile</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </a></li>
-        <li class="LinkTile">
-            <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a></div>
-        </li>
-    </ul>
-    <h2 class="SectionTitle">About You</h2>
-    <ul class="TilesList TilesList--openEnd">
-        <li><a class="InfoTile" href="/profilePictureBio">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Profile picture and bio</p>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="/verifications">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
-                <em data-bind="text: verificationsSecondaryText"></em>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="/education">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-university" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Education</p>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="/serviceProfessionalWebsite">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-link" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Your website</p>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="/backgroundCheck">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <div>Background check</div>
-                <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
-            </div>
-        </a></li>
-    </ul>
+<!-- marketplaceProfile activity.-->
+<div data-activity="marketplaceProfile" DISABLEDdata-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+  <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+  <div class="container">
+      <div class="row">
+          <h1 class="hidden-xs hidden-sm">Be your shiny self</h1>
+        <div class="col-md-7 col-sm-reset">
+    
+        <!--<div class="LeadContent">
+            <h1>Coming soon!</h1>
+        </div>-->
 
-    <app-feedback-entry params="section: 'marketplaceProfile'"></app-feedback-entry>
+            <div data-bind="visible: user.isServiceProfessional">
+                <h2 class="SectionTitle">Job profiles
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>
+                <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
+                <ul class="TilesList TilesList--openEnd">
+                    <li>
+                        <a class="CompactLinkTile" href="/addJobTitles">
+                            <div class="Tile-content text-muted">Add a job profile</div>
+                            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                        </a>
+                    </li>
+                    <li class="LinkTile">
+                        <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview profile</a></div>
+                    </li>
+                </ul>
+            </div>
+            <h2 class="SectionTitle">About you</h2>
+            <ul class="TilesList TilesList--openEnd">
+                <li><a class="InfoTile" href="/profilePictureBio">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Public profile and bio</div>
+                        <em>Tell clients a bit about you</em>
+                    </div>
+                </a></li>
+                <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/serviceProfessionalProfileUrl">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa fa-bullhorn" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Custom marketplace profile URL</div>
+                        <em data-bind="text: marketplaceProfileUrl"></em>
+                    </div>
+                </a></li>
+                <!--DISABLED<li><a class="InfoTile" href="/verifications">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
+                        <em data-bind="text: verificationsSecondaryText"></em>
+                    </div>
+                </a></li>-->
+                <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/education">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-university" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Education</div>
+                        <em>List any relevant studies</em>
+                    </div>
+                </a></li>
+                <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/serviceProfessionalWebsite">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-link" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Your website</div>
+                        <em>Share it with clients</em>
+                    </div>
+                </a></li>
+                <!--DISABLED<li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/backgroundCheck">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Background check</div>
+                        <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
+                    </div>
+                </a></li>-->
+                <li data-bind="visible: user.isServiceProfessional"><a class="InfoTile" href="/paymentAccount">
+                    <div class="Tile-icon" aria-hidden="true">
+                        <span class="fa ion ion-social-usd" aria-hidden="true"></span>
+                    </div>
+                    <div class="Tile-content">
+                        <div>Merchant account settings</div>
+                        <em>How you get paid</em>
+                    </div>
+                </a></li>
+            </ul>
+
+            <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu></app-inline-side-menu>
+        </div>
+    </div>
+  </div>
 </div>

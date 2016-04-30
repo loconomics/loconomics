@@ -5,20 +5,33 @@
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function ConversationActivity() {
+var A = Activity.extend(function ConversationActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.loggedUser;
-    
-    this.navBar = Activity.createSubsectionNavBar('Inbox', {
-        backLink: 'inbox'
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Inbox', {
+        backLink: '/inbox' , helpLink: '/help/sections/201960743-adding-your-contact-information'
     });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Inbox', {
+        backLink: '/inbox' , helpLink: '/help/sections/201966996-sending-and-receiving-messages'
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
 });
 
 exports.init = A.init;
+
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
@@ -26,6 +39,8 @@ A.prototype.show = function show(state) {
     // Reset
     this.viewModel.threadID(0);
     this.viewModel.thread(null);
+    
+    this.updateNavBarState();
 
     // Params
     var params = state && state.route && state.route.segments || [],
@@ -57,6 +72,8 @@ A.prototype.show = function show(state) {
 var ko = require('knockout');
 
 function ViewModel(app) {
+    
+    this.user = app.model.userProfile.data;
 
     this.isLoading = app.model.messaging.state.isLoading;
     this.isSyncing = app.model.messaging.state.isSyncing;
@@ -73,6 +90,22 @@ function ViewModel(app) {
                 m && (m.subject() || '').replace(/^\s+|\s+$/g, '') || 'Conversation without subject'
         );
     }, this);
+    // User Profile
+    var userProfile = app.model.userProfile;
+    var profileVersion = userProfile.newVersion();
+    profileVersion.isObsolete.subscribe(function(itIs) {
+        if (itIs) {
+            // new version from server while editing
+            // FUTURE: warn about a new remote version asking
+            // confirmation to load them or discard and overwrite them;
+            // the same is need on save(), and on server response
+            // with a 509:Conflict status (its body must contain the
+            // server version).
+            // Right now, just overwrite current changes with
+            // remote ones:
+            profileVersion.pull({ evenIfNewer: true });
+        }
+    });
     
     // If the last message reference a booking, is
     // accessed with:

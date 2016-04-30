@@ -14,9 +14,9 @@ exports.create = function create(appModel) {
     });
 
     api.addLocalforageSupport('education');
-    // TODO swith next lines on REST API implementation
-    //api.addRestSupport(appModel.rest, 'education');
-    api.addMockedRemote(testdata());
+
+    api.addRestSupport(appModel.rest, 'me/education');
+    //api.addMockedRemote(testdata());
     
     appModel.on('clearLocalData', function() {
         api.clearCache();
@@ -24,26 +24,27 @@ exports.create = function create(appModel) {
 
     return api;
 };
-
+/*
 function testdata() {
     return [
         {
             educationID: 1,
-            school: 'A school',
-            degree: 'The degree',
-            field: 'Field of study',
-            startYear: 1993,
-            endYear: 1996
+            institutionName: 'A school',
+            degreeCertificate: 'The degree',
+            fieldOfStudy: 'Field of study',
+            fromYearAttended: 1993,
+            toYearAttended: 1996
         },
         {
             educationID: 2,
-            school: 'Empire Beauty School - Scottsdale'
+            institutionName: 'Empire Beauty School - Scottsdale'
         },
         {
             educationID: 3,
-            school: 'MIT',
-            degree: 'Computering',
-            field: 'Systems administration'
+            institutionName: 'MIT',
+            degreeCertificate: 'Computering',
+            fieldOfStudy: 'Systems administration'
         }
     ];
 }
+*/

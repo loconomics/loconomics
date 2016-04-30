@@ -11,7 +11,7 @@ require('../components/DatePicker');
 
 var Activity = require('../components/Activity');
 
-var A = Activity.extends(function AppointmentActivity() {
+var A = Activity.extend(function AppointmentActivity() {
     
     Activity.apply(this, arguments);
 
@@ -122,6 +122,17 @@ var A = Activity.extends(function AppointmentActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
+    
+    if (options && options.appointment) {
+        // We are editing an appointment, so avoid the scroll and that
+        // way the user don't forget the focus on the field was editing
+        this.resetScroll = false;
+    }
+    else {
+        // Wanted on any other case
+        this.resetScroll = true;
+    }
+    
     /* jshint maxcomplexity:10 */
     Activity.prototype.show.call(this, options);
     
@@ -134,7 +145,7 @@ A.prototype.show = function show(options) {
         //referrer && referrer.replace(/\/?appointment\//i, 'calendar/');
         var reg = /\/?appointment\/([^\/]*)\/((\-3)|(\-4))/i;
         if (referrer && reg.test(referrer)) {
-            referrer.replace(reg, '/appointment/$1/');
+            referrer = referrer.replace(reg, '/appointment/$1/');
         }
         
         this.requestData.cancelLink = referrer;

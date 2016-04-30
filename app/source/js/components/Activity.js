@@ -19,7 +19,10 @@ function Activity($activity, app) {
 
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
-    this.accessLevel = null; 
+    this.accessLevel = null;
+    
+    // By default, reset scroll to top on activity.show
+    this.resetScroll = true;
     
     // TODO: Future use of a viewState, plain object representation
     // of part of the viewModel to be used as the state passed to the
@@ -102,6 +105,10 @@ Activity.prototype.show = function show(options) {
         // changes from the same activity.
         this._handlersAreConnected = true;
     }
+    
+    // Scroll to top immediately, if wanted by the activity (defaults to true):
+    if (this.resetScroll)
+        this.$activity.scrollTop(0);
 };
 
 /**
@@ -205,14 +212,23 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
         goBackOptions.isShell = false;
     }
 
+    var helpLink = options.helpLink;
+    if (helpLink) {
+        var del = helpLink.indexOf('?') > -1 ? '&' : '?';
+        helpLink += del + 'mustReturn=true&returnText=' + encodeURIComponent(title);
+    }
+
+    var rightOptions = helpLink ?
+        NavAction.goHelpIndex.model.clone({
+            link: helpLink,
+            text: "Help"
+        }) :
+        NavAction.goHelpIndex;
+
     return new NavBar({
         title: '', // No title
         leftAction: NavAction.goBack.model.clone(goBackOptions),
-        rightAction: options.helpId ?
-            NavAction.goHelpIndex.model.clone({
-                link: '#' + options.helpId
-            }) :
-            NavAction.goHelpIndex
+        rightAction: rightOptions
     });
 };
 
@@ -222,7 +238,7 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
     
     var action = new NavAction({
         link: cancelLink,
-        text: 'cancel',
+        text: 'Cancel',
         handler: function(event) {
             var link = this.link(),
                 eoptions = event && event.options || {};
@@ -287,8 +303,10 @@ var createSingleton = function createSingleton(ActivityClass, $activity, app) {
     Static method extends to help inheritance.
     Additionally, it adds a static init method ready for the new class
     that generates/retrieves the singleton.
+    NOTE: 'extends' cannot be used, reserved keyword, breaks some browsers and some future may broke too
+    (so just removed the 's').
 **/
-Activity.extends = function extendsActivity(ClassFn) {
+Activity.extend = function extendsActivity(ClassFn) {
     
     ClassFn._inherits(Activity);
     
