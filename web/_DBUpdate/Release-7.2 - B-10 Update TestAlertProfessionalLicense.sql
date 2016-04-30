@@ -42,46 +42,314 @@ BEGIN
 			-- Check that user has that position (this is a position related alert). If it has not (=0), alert will off because doesn't affect:
 			(SELECT count(*) FROM userprofilepositions WHERE UserID=@UserID AND PositionID=@PositionID) = 0 OR
 			-- Check if the user has all the required licenses (can be 0 if 0 are required)
-			(
-				SELECT	count(*)
-				FROM	jobTitleLicense As PL
-						 INNER JOIN
-                        [Address] As L
-                          ON L.UserID = @UserID
-                            AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
-                            AND PL.StateProvinceID = L.StateProvinceID
-                            AND PL.CountryID = L.CountryID
-				WHERE
-					PL.[Required] = @IsRequired
-					 AND
-					PL.PositionID = @PositionID
-			) = 0  -- There is no (required) licenses for the position, off alert
+			(  
+                -- Check Country-level 
+                (SELECT
+                    COUNT(*)
+                FROM
+                    jobTitleLicense JL
+                    INNER JOIN
+                    Country C
+                    ON JL.countryID = C.countryID
+                    LEFT JOIN
+                    userLicenseCertifications UL
+                    ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                    AND UL.ProviderUserID = @userID
+                WHERE
+                    JL.positionID in (@PositionID, -1) 
+                    AND C.languageID = (SELECT PreferredLanguageID FROM users WHERE UserID = @userID)
+                    AND C.countryID in ((SELECT
+                    P.countryID
+                FROM
+                    serviceaddress As SA
+                     INNER JOIN
+                    address As A
+                      ON A.AddressID = SA.AddressID
+                     INNER JOIN
+                    postalcode As P
+                    ON A.PostalCodeID = P.PostalCodeID
+                WHERE
+                    SA.UserID = @userID
+                    AND SA.PositionID = @PositionID
+                    AND JL.Active = 1
+                    AND P.countryID not in ('0','-1')
+                    AND JL.Required = @IsRequired
+                GROUP BY
+                    P.countryID))
+                ) = 0 
+                -- Check StateProvince-level 
+                AND
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    jobTitleLicense JL
+                    INNER JOIN
+                    StateProvince SP
+                    ON JL.stateProvinceID = SP.stateProvinceID
+                    LEFT JOIN
+                    userLicenseCertifications UL
+                    ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                    AND UL.ProviderUserID = @userID
+                WHERE
+                    JL.positionID = @PositionID
+                    AND SP.stateProvinceID in ((SELECT
+                    P.stateProvinceID
+                FROM
+                    serviceaddress As SA
+                     INNER JOIN
+                    address As A
+                      ON A.AddressID = SA.AddressID
+                     INNER JOIN
+                    postalcode As P
+                    ON A.PostalCodeID = P.PostalCodeID
+                WHERE
+                    SA.UserID = @userID
+                    AND SA.PositionID = @PositionID
+                    AND JL.Active = 1
+                    AND P.stateProvinceID not in ('0','-1')
+                    AND JL.Required = @IsRequired
+                GROUP BY
+                    P.stateProvinceID))
+                ) = 0 
+                -- Check County-level 
+                AND
+                (
+                SELECT
+                    COUNT(*)
+                FROM
+                    jobTitleLicense JL
+                    INNER JOIN
+                    county CT
+                    ON JL.countyID = CT.countyID
+                    LEFT JOIN
+                    userLicenseCertifications UL
+                    ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                    AND UL.ProviderUserID = @userID
+                WHERE
+                    JL.positionID = @PositionID
+                    AND CT.countyID in ((SELECT
+                    P.countyID
+                FROM
+                    serviceaddress As SA
+                     INNER JOIN
+                    address As A
+                      ON A.AddressID = SA.AddressID
+                     INNER JOIN
+                    postalcode As P
+                    ON A.PostalCodeID = P.PostalCodeID
+                WHERE
+                    SA.UserID = @userID
+                    AND SA.PositionID = @PositionID
+                    AND JL.Active = 1
+                    AND P.countyID not in ('0','-1')
+                    AND JL.Required = @IsRequired
+                GROUP BY
+                    P.countyID))
+                ) = 0 
+                -- Check Municipal-level 
+                AND
+                ( 
+                SELECT
+                    COUNT(*)
+                FROM
+                    jobTitleLicense JL
+                    INNER JOIN
+                    municipality M
+                    ON JL.MunicipalityID = M.MunicipalityID
+                    LEFT JOIN
+                    userLicenseCertifications UL
+                    ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                    AND UL.ProviderUserID = @userID
+                WHERE
+                    JL.positionID = @PositionID
+                    AND M.MunicipalityID in ((SELECT
+                    P.MunicipalityID
+                FROM
+                    serviceaddress As SA
+                     INNER JOIN
+                    address As A
+                      ON A.AddressID = SA.AddressID
+                     INNER JOIN
+                    postalcode As P
+                    ON A.PostalCodeID = P.PostalCodeID
+                WHERE
+                    SA.UserID = @userID
+                    AND SA.PositionID = @PositionID
+                    AND JL.Active = 1
+                    AND P.MunicipalityID not in ('0','-1')
+                    AND JL.Required = @IsRequired
+                GROUP BY
+                    P.MunicipalityID))
+                ) = 0
+            )  
+             -- If there are no (required) licenses for the job title, turn off alert
 			OR
-			(
-				-- With next subquery, we get all the number of valid license requests
-				-- for the user and position
-				SELECT	count(*)
-				FROM	UserLicenseVerification As UL
-						 INNER JOIN
-                        [Address] As L
-                          ON L.UserID = @UserID
-                            AND L.AddressTypeID = 1 -- Only one address with type 1 (home) can exists
-                            AND UL.StateProvinceID = L.StateProvinceID
-                            AND UL.CountryID = L.CountryID
-						 INNER JOIN
-						jobTitleLicense As PL
-						  ON PL.LicenseCertificationID = UL.LicenseCertificationID
-							AND UL.PositionID = PL.PositionID
-							AND UL.ProviderUserID = @UserID
-							AND UL.StateProvinceID = PL.StateProvinceID
-							AND UL.CountryID = PL.CountryID
-						 AND
-						-- Valid requests to off alert, depending on Status:
-						UL.VerificationStatusID IN (1, 2, 3)
-				WHERE
-					PL.[Required] = @IsRequired
-					 AND
-					PL.PositionID = @PositionID
+			(            
+                 SELECT *
+                 FROM
+                (SELECT
+                    JL.OptionGroup
+                    ,COUNT(DISTINCT(JL.licenseCertificationID)) as numberOfLicenseOptions
+                    ,SUM(CASE WHEN UL.StatusID IN (1, 2, 3, 5, 6) THEN 1 ELSE 0 END) as numberVerified
+                FROM
+                (SELECT
+                    JL.OptionGroup
+                    ,JL.licenseCertificationID
+                FROM
+                    JobTitleLicense JL
+                WHERE
+                    JL.Required = @IsRequired
+                    AND licenseCertificationID in (
+                    (SELECT
+                        JL.licenseCertificationID
+                    FROM
+                        jobTitleLicense JL
+                        INNER JOIN
+                        Country C
+                        ON JL.countryID = C.countryID
+                        LEFT JOIN
+                        userLicenseCertifications UL
+                        ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                        AND UL.ProviderUserID = @userID
+                    WHERE
+                        JL.positionID in (@PositionID, -1) 
+                        AND C.languageID = (SELECT PreferredLanguageID FROM users WHERE UserID = @userID)
+                        AND C.countryID in ((SELECT
+                        P.countryID
+                    FROM
+                        serviceaddress As SA
+                         INNER JOIN
+                        address As A
+                          ON A.AddressID = SA.AddressID
+                         INNER JOIN
+                        postalcode As P
+                        ON A.PostalCodeID = P.PostalCodeID
+                    WHERE
+                        SA.UserID = @userID
+                        AND SA.PositionID = @PositionID
+                        AND JL.Active = 1
+                        AND P.countryID not in ('0','-1')
+                        AND JL.Required = @IsRequired
+                    GROUP BY
+                        P.countryID))
+                    ),
+                    (
+                    SELECT
+                        JL.licenseCertificationID
+                    FROM
+                        jobTitleLicense JL
+                        INNER JOIN
+                        StateProvince SP
+                        ON JL.stateProvinceID = SP.stateProvinceID
+                        LEFT JOIN
+                        userLicenseCertifications UL
+                        ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                        AND UL.ProviderUserID = @userID
+                    WHERE
+                        JL.positionID = @PositionID
+                        AND SP.stateProvinceID in ((SELECT
+                        P.stateProvinceID
+                    FROM
+                        serviceaddress As SA
+                         INNER JOIN
+                        address As A
+                          ON A.AddressID = SA.AddressID
+                         INNER JOIN
+                        postalcode As P
+                        ON A.PostalCodeID = P.PostalCodeID
+                    WHERE
+                        SA.UserID = @userID
+                        AND SA.PositionID = @PositionID
+                        AND JL.Active = 1
+                        AND P.stateProvinceID not in ('0','-1')
+                        AND JL.Required = @IsRequired
+                    GROUP BY
+                        P.stateProvinceID))
+                    ),
+                    (
+                    SELECT
+                        JL.licenseCertificationID
+                    FROM
+                        jobTitleLicense JL
+                        INNER JOIN
+                        county CT
+                        ON JL.countyID = CT.countyID
+                        LEFT JOIN
+                        userLicenseCertifications UL
+                        ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                        AND UL.ProviderUserID = @userID
+                    WHERE
+                        JL.positionID = @PositionID
+                        AND CT.countyID in ((SELECT
+                        P.countyID
+                    FROM
+                        serviceaddress As SA
+                         INNER JOIN
+                        address As A
+                          ON A.AddressID = SA.AddressID
+                         INNER JOIN
+                        postalcode As P
+                        ON A.PostalCodeID = P.PostalCodeID
+                    WHERE
+                        SA.UserID = @userID
+                        AND SA.PositionID = @PositionID
+                        AND JL.Active = 1
+                        AND P.countyID not in ('0','-1')
+                        AND JL.Required = @IsRequired
+                    GROUP BY
+                        P.countyID))
+                    ),
+                    ( 
+                    SELECT
+                        JL.licenseCertificationID
+                    FROM
+                        jobTitleLicense JL
+                        INNER JOIN
+                        municipality M
+                        ON JL.MunicipalityID = M.MunicipalityID
+                        LEFT JOIN
+                        userLicenseCertifications UL
+                        ON JL.LicenseCertificationID = UL.LicenseCertificationID
+                        AND UL.ProviderUserID = @userID
+                    WHERE
+                        JL.positionID = @PositionID
+                        AND M.MunicipalityID in ((SELECT
+                        P.MunicipalityID
+                    FROM
+                        serviceaddress As SA
+                         INNER JOIN
+                        address As A
+                          ON A.AddressID = SA.AddressID
+                         INNER JOIN
+                        postalcode As P
+                        ON A.PostalCodeID = P.PostalCodeID
+                    WHERE
+                        SA.UserID = @userID
+                        AND SA.PositionID = @PositionID
+                        AND JL.Active = 1
+                        AND P.MunicipalityID not in ('0','-1')
+                        AND JL.Required = @IsRequired
+                    GROUP BY
+                        P.MunicipalityID))
+                    ))
+                    GROUP BY
+                        JL.OptionGroup
+                        ,JL.licenseCertificationID) as JL
+                    LEFT JOIN    	
+                (SELECT 
+                    V.licenseCertificationID,
+                    V.VerificationStatusID as statusID
+                FROM
+                    userlicensecertifications As V
+                WHERE
+                    V.ProviderUserID = @userID
+                     AND
+                    V.PositionID = @PositionID) as UL
+                ON
+                    JL.LicenseCertificationID = UL.LicenseCertificationID
+                GROUP BY 
+                    OptionGroup) as hasAllRequiredLicenses
 			) > 0 -- User has almost one license of the required list of licenses (changed on 2013-03-26 issue #203)
 		BEGIN
 			-- PASSED: disable alert
