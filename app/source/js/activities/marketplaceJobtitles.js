@@ -73,6 +73,31 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
+                ////////////
+                // Submitted Licenses
+                this.app.model.userLicensesCertifications.getList(jobTitleID)
+                .then(function(list) {
+                    // Save for use in the view
+                    this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+                // Get required licenses for the Job title ID - an object, not a list
+                this.app.model.jobTitleLicenses.getItem(jobTitleID)
+                .then(function(item) {
+                    // Save for use in the view
+                    this.viewModel.jobTitleApplicableLicences(item);
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
@@ -155,7 +180,8 @@ function ViewModel(app) {
     }, this);
 
     /// Related models information
-    this.licenseCertifications = ko.observable([]);
+    this.submittedUserLicensesCertifications = ko.observableArray([]);
+    this.jobTitleApplicableLicences = ko.observable(null);
     this.workPhotos = ko.observable([]);
 
     // Computed since it can check several externa loadings
@@ -168,23 +194,30 @@ function ViewModel(app) {
     }, this);
  
     this.licensesCertificationsSummary = ko.pureComputed(function() {
-        var lc = this.licenseCertifications();
+        var lc = this.submittedUserLicensesCertifications();
+        //jshint maxcomplexity:8
         if (lc && lc.length) {
-            // TODO Detect 
-            var verified = 0,
+            var verified = 0, 
+                other = 0,
                 pending = 0;
             lc.forEach(function(l) {
                 if (l && l.statusID() === 1)
                     verified++;
                 else if (l && l.statusID() === 2)
                     pending++;
+                else if (l && l.statusID() === 4)
+                    return 'Expired, please update';
+                else if (l && l.statusID() === 5)
+                    other++;
+                else if (l && l.statusID() === 6)
+                    return 'Expiring soon, please update';
+                else if (l && l.statusID() === 3)
+                    return 'Please contact us';
             });
-            // L18N
-            return verified + ' verified, ' + pending + ' pending';
+            return verified + ' verified, ' + pending + ' pending, ' + other + ' supplemental';
         }
         else {
-            // L18N
-            return 'There are not verifications';
+            return 'None verified';
         }
     }, this);
     

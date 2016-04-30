@@ -18,7 +18,7 @@ CREATE TABLE [dbo].[OwnerStatus](
 	[UpdatedDate] [datetime] NOT NULL,
 	[Active] [bit] NOT NULL,
 	[UpdatedBy] [varchar](3) NULL,
-PRIMARY KEY CLUSTERED 
+   CONSTRAINT PK__OwnerSta__2EFF691C5AAF56EE PRIMARY KEY CLUSTERED 
 (
 	[OwnserStatusID] ASC,
 	[LanguageID] ASC,

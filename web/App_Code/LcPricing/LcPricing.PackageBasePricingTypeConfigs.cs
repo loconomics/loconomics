@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -57,10 +57,11 @@ public static partial class LcPricingModel
                 SelectionGroups = new string[]{"package"},
         
                 NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
-                NumberOfSessionsLabel = "Number of appointments included:",
+                //NumberOfSessionsLabel = "Number of appointments included:",
                 PriceLabel = "Price for package:",
                 PriceNote = "(this should be all-inclusive)",
-                DurationLabel = "Duration (per appointment):",
+//                DurationLabel = "Duration (per appointment):",
+                DurationLabel = "Duration:",
                 RequireDuration = true,
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)",
                 FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",

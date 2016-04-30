@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -1090,7 +1090,7 @@ public static partial class LcData
                     ,L.LicenseCertificationAuthority
                     ,L.LicenseCertificationTypeDescription
                     ,UL.Comments
-            FROM    UserLicenseVerification As UL
+            FROM    UserLicenseCertifications As UL
                      INNER JOIN
                     LicenseCertification As L
                       ON UL.LicenseCertificationID = L.LicenseCertificationID

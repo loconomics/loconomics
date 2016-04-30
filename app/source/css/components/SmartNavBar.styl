@@ -240,9 +240,20 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
     z-index: 210;
     overflow: hidden;
 
+    // IMPORTANT: temporary fix for use at desktop sizes, where the view goes inside a Bootstrap column
     @media $mediaMinSm {
-      position: relative;
-      height: 1100px;
+        position: relative !important;
+        //height: 1100px;
+        overflow: visible;
+        
+        .SmartNavContent {
+            position: relative !important;
+            overflow: visible;
+        }
+        
+        .ActionSheet[hidden] {
+            display: none !important;
+        }
     }  
     
     // On implementation of transitions/animations, a background must exists to avoid ugly overlays
