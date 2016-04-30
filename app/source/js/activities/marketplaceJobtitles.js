@@ -34,7 +34,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     // Fill the job title record
                     this.viewModel.jobTitle(job.jobTitle);
                     this.viewModel.userJobTitle(job.userJobTitle);
-                    this.viewModel.userID(job.userID);
+                    this.viewModel.userID(job.userJobTitle.userID());
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({

@@ -27,9 +27,8 @@
                     </div>
                 </div>
                 <div class="PaddedBox-xs" data-bind="visible: isActiveStatus">
-                    <button class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;">
-                        <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">Preview <span data-bind="text: jobTitleName"></span> profile</a>
-                    </button>
+                    <a class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;"
+                       href="/profile" data-bind="attr: { href: '/profile/' + userID() + '/' + jobTitleID() }">Preview <span data-bind="text: jobTitleName"></span> profile</a>
                 </div>
                 <h2 class="SectionTitle">
                     <span>About your&nbsp;<span data-bind="text: jobTitleName"></span>&nbsp;services</span>
