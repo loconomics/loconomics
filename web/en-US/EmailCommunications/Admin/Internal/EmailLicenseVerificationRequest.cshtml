@@ -1,4 +1,4 @@
-﻿@*TODO Refactor*@
+@*TODO Refactor*@
 @using WebMatrix.Data;
 @{
     LcMessaging.SecureTemplate();
@@ -31,7 +31,7 @@
         FROM
             LicenseCertification As L
              INNER JOIN
-            userlicenseverification As V
+            UserLicenseCertifications As V
               ON L.LicenseCertificationID = V.LicenseCertificationID
              INNER JOIN
             Status As S
