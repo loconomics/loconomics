@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[TestAlertProfessionalLicense]
+ALTER PROCEDURE [dbo].[TestAlertProfessionalLicense]
 	@UserID int
 	,@PositionID int
 AS
