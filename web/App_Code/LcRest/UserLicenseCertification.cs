@@ -201,7 +201,7 @@ namespace LcRest
 
         /// Note: On Update/Insert SQL, remember next: EXEC TestAlertProfessionalLicense @0, @1
 
-       #region Request of Review / Submit photo
+        #region Request of Review / Submit photo
         const string photoPrefix = "$licenseCertification-";
         public static void SubmitPhoto(int userID, int jobTitleID, int licenseCertificationID, string originalFileName, Stream photo)
         {
