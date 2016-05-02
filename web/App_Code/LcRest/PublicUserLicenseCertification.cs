@@ -43,7 +43,7 @@ namespace LcRest
         public static PublicUserLicenseCertification FromDB(dynamic record)
         {
             if (record == null) return null;
-            return new PublicUserLicenseCertification
+            var item = new PublicUserLicenseCertification
             {           
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
@@ -62,6 +62,8 @@ namespace LcRest
                 submittedImageLocalURL = record.submittedImageLocalURL,
                 languageID = record.languageID
             };
+            item.FillLicenseCertification();
+            return item;
         }
         #endregion
 

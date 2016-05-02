@@ -32,7 +32,7 @@ FROM			UserAlert
 WHERE userid = @UserID
 
 delete
-FROM            userlicenseverification
+FROM            UserLicenseCertifications
 where provideruserid =  @UserId
 
 delete
@@ -126,3 +126,5 @@ where userid = @UserId
 delete
 FROM            webpages_facebookcredentials
 where userid = @UserId
+
+
