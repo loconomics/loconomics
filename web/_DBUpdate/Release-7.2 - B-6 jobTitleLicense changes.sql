@@ -6,7 +6,7 @@ ALTER TABLE jobTitleLicense ALTER COLUMN CountryID int NOT NULL
 
 ALTER TABLE jobTitleLicense ALTER COLUMN StateProvinceID int NOT NULL
 
-ALTER TABLE jobTitleLicense ADD PRIMARY KEY (PositionID, LicenseCertificationID, StateProvinceID, CountryID, MunicipalityID, CountyID)
+ALTER TABLE jobTitleLicense ADD CONSTRAINT PK__jobTitle__5E077F7A5FC911C6 PRIMARY KEY (PositionID, LicenseCertificationID, StateProvinceID, CountryID, MunicipalityID, CountyID)
                 
 UPDATE jobTitleLicense SET StateProvinceID = 0 WHERE StateProvinceID = -1
 
