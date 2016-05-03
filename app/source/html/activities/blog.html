@@ -53,13 +53,12 @@
                             <a href="mailto:support@@loconomics.com?subject=Idea%20for%20a%20blog%20topic!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
                         </div>
                     </div>
-<!--
-                    <div class="Content" data-bind="visible: viewType() == 'postView' && fullPostData().length > 0">
-                        <h2 class="SectionTitle" data-bind="text: fullPostData()[0].title()"></h2>
-                        <span data-bind="text: fullPostData()[0].date()"></span>
-                        <span data-bind="html: fullPostData()[0].content()"></span>
+
+                    <div class="Content" data-bind="visible: viewType() == 'postView', with: fullPostData()">
+                        <h2 class="SectionTitle" data-bind="text: title"></h2>
+                        <span data-bind="text: date"></span>
+                        <span data-bind="html: content"></span>
                     </div>
--->
                 </div>
             </div>
         </div>
