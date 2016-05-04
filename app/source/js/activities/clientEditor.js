@@ -14,7 +14,7 @@ var A = Activity.extend(function ClientEditionActivity() {
     
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'clients' , helpLink: '/help/sections/201966046-adding-new-clients'
+        backLink: 'clients' , helpLink: '/help/relatedArticles/201966046-adding-new-clients'
     });
     
     // If there is a change on the clientID, the updates must match

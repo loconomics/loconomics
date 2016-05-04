@@ -14,7 +14,7 @@ var A = Activity.extend(function FeedbackFormActivity() {
     
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Back', {
-        helpLink: '/help/sections/201960863-providing-feedback-to-us'
+        helpLink: '/help/relatedArticles/201960863-providing-feedback-to-us'
     });
 });
 

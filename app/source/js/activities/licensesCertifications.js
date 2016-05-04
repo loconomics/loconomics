@@ -16,7 +16,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     // Defaults settings for navBar.
     
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: '/help/sections/201967966-adding-professional-licenses-and-certifications'
+        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
     
     // On changing jobTitleID:

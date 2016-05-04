@@ -18,7 +18,7 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Services', {
-        helpLink: '/help/sections/201967166-listing-and-pricing-your-services'
+        helpLink: '/help/relatedArticles/201967166-listing-and-pricing-your-services'
     });
     /// Go out after save succesfully an item.
     /// Pricing is a plain object

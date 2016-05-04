@@ -25,7 +25,7 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Locations', {
-        backLink: '/scheduling' , helpLink: '/help/sections/201965996-setting-your-service-locations-areas'
+        backLink: '/scheduling' , helpLink: '/help/relatedArticles/201965996-setting-your-service-locations-areas'
     });
     
     // Remote postal code look-up

@@ -13,7 +13,7 @@ var A = Activity.extend(function PaymentAccountActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201967096-accepting-and-receiving-payments'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201967096-accepting-and-receiving-payments'
     });
     
     this.registerHandler({
