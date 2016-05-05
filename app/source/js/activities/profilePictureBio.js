@@ -73,13 +73,7 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
             else if (file.preview) {
                 this.viewModel.localPhotoPreview(file.preview);
             }
-        }.bind(this))/*
-        .on('fileuploaddone', function (e, res) {
-            // uploaded
-        })
-        .on('fileuploadfail', function(e, data) {
-            // upload error data.jqXHR
-        })*/;
+        }.bind(this));
     }
 });
 
@@ -163,15 +157,26 @@ function ViewModel(app) {
     }.bind(this);
 
     this.save = function save() {
-        Promise.all([
+        // Because of problems with image cache, we need to ensure the
+        // loading of the new photoUrl with timestamp updated AFTER we actually
+        // uploaded a new photo, that prevents us from use parallel requests (by using Promise.all)
+        // that is more performant, but uploading first the photo and then profile details we avoid 'cached image' problems.
+        /*Promise.all([
             profileVersion.pushSave(),
             this.uploadPhoto()
-        ])
+        .then(function(data) {
+        ])*/
+        this.uploadPhoto()
+        .then(function(data) {
+            profileVersion.pushSave();
+            return data;
+        })
         .then(function(data) {
             app.successSave();
-            if (data && data[1])
-                $.get(data[1].profilePictureUrl);
-            // TODO Enforce refresh element image (the file is refreshed by previous get already, but seems to not be enough)
+            // Request the photo from remote to force cache to refresh
+            if (data) {
+                $.get(data.profilePictureUrl);
+            }
         })
         .catch(function(err) {
             app.modals.showError({

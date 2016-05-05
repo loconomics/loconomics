@@ -75,6 +75,7 @@ module.exports = function(/*grunt*/) {
                 // dependencies as 'utils'.
                 './node_modules/events:events',
                 './vendor/iagosrl/ko/formatBinding:ko/formatBinding',
+                './vendor/iagosrl/ko/domElementBinding:ko/domElementBinding',
                 './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
                 './vendor/iagosrl/throttle:iagosrl/throttle',
                 'knockout-sortable',
