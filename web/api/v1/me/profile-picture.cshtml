@@ -84,7 +84,7 @@
                 //LcHelpers.DebugLogger.Log("PUT profile-picture:valid:return:" + LcData.Photo.PublicUserProfilePictureUrl);
                 return new
                 {
-                    profilePictureUrl = LcData.Photo.PublicUserProfilePictureUrl,
+                    profilePictureUrl = LcData.Photo.PublicUserProfilePictureUrl + userID,
                     updatedDate = DateTime.Now
                 };
             }

@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout'),
     photoTools = require('../utils/photoTools'),
     $ = require('jquery');
+require('jquery.fileupload-image');
 
 var A = Activity.extend(function ProfilePictureBioActivity() {
     
@@ -25,7 +26,6 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
         
-    
     this.registerHandler({
         target: this.app.model.marketplaceProfile,
         event: 'error',
@@ -38,6 +38,49 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
             }
         }.bind(this)
     });
+    
+    if (!photoTools.takePhotoSupported()) {
+        // Web version to pick a photo/file
+        var $input = this.$activity.find('#profilePictureBio-photoFile');//input[type=file]
+        var $avatar = this.$activity.find('.Avatar');
+        $input.fileupload({
+            url: this.viewModel.photoUploadUrl,
+            dataType: 'json',
+            type: 'PUT',
+            paramName: this.viewModel.photoUploadFieldName,
+            autoUpload: false,
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            maxFileSize: 5000000, // 5MB
+            disableImageResize: true,
+            // // Enable image resizing, except for Android and Opera,
+            // // which actually support image resizing, but fail to
+            // // send Blob objects via XHR requests:
+            // disableImageResize: /Android(?!.*Chrome)|Opera/
+            // .test(window.navigator.userAgent),
+            previewMaxWidth: $avatar.width(),
+            previewMaxHeight: $avatar.height(),
+            previewCrop: true
+        })
+        .on('fileuploadadd', function (e, data) {
+            this.viewModel.localPhotoData(data);
+        }.bind(this))
+        .on('fileuploadprocessalways', function (e, data) {
+            var file = data.files[data.index];
+            if (file.error) {
+                // TODO Show preview error?
+                console.error('Photo Preview', file.error);
+            }
+            else if (file.preview) {
+                this.viewModel.localPhotoPreview(file.preview);
+            }
+        }.bind(this))/*
+        .on('fileuploaddone', function (e, res) {
+            // uploaded
+        })
+        .on('fileuploadfail', function(e, data) {
+            // upload error data.jqXHR
+        })*/;
+    }
 });
 
 exports.init = A.init;
@@ -64,8 +107,14 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    //jshint maxstatements:30
     
     this.user = app.model.userProfile.data;
+    this.photoUploadUrl = app.model.rest.baseUrl + 'me/profile-picture';
+    this.photoUploadFieldName = 'profilePicture';
+    this.localPhotoData = ko.observable();
+    this.localPhotoPreview = ko.observable();
+    this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
 
     // Marketplace Profile
     var marketplaceProfile = app.model.marketplaceProfile;
@@ -109,6 +158,8 @@ function ViewModel(app) {
         profileVersion.pull({ evenIfNewer: true });
         this.localPhotoUrl('');
         this.previewPhotoUrl('');
+        this.localPhotoData(null);
+        this.localPhotoPreview(null);
     }.bind(this);
 
     this.save = function save() {
@@ -120,6 +171,7 @@ function ViewModel(app) {
             app.successSave();
             if (data && data[1])
                 $.get(data[1].profilePictureUrl);
+            // TODO Enforce refresh element image (the file is refreshed by previous get already, but seems to not be enough)
         })
         .catch(function(err) {
             app.modals.showError({
@@ -129,7 +181,6 @@ function ViewModel(app) {
         });
     }.bind(this);
     
-    this.takePhotoSupported = photoTools.takePhotoSupported;
     var cameraSettings = {
         targetWidth: 600,
         targetHeight: 600,
@@ -172,14 +223,31 @@ function ViewModel(app) {
         takePickPhoto(false);
     }.bind(this);
     
-    this.uploadPhoto = function() {
-        if (!this.localPhotoUrl()) return null;
+    var nativeUploadPhoto = function() {
+        if (!this.localPhotoUrl()) return Promise.resolve(null);
         var uploadSettings = {
-            fileKey: 'profilePicture',
+            fileKey: this.photoUploadFieldName,
             mimeType: 'image/jpeg',
             httpMethod: 'PUT',
             headers: $.extend(true, {}, app.model.rest.extraHeaders)
         };
-        return photoTools.uploadLocalFileJson(this.localPhotoUrl(), app.model.rest.baseUrl + 'me/profile-picture', uploadSettings);
+        return photoTools.uploadLocalFileJson(this.localPhotoUrl(), this.photoUploadUrl, uploadSettings);
+    }.bind(this);
+    
+    var webUploadPhoto = function() {
+        var fd = this.localPhotoData();
+        if (!fd) return Promise.resolve(null);
+        // NOTE: If URL needs update before upload: fd.url = ..;
+        fd.headers = $.extend(true, {}, app.model.rest.extraHeaders);
+        return Promise.resolve(fd.submit());
+    }.bind(this);
+
+    this.uploadPhoto = function() {
+        if (photoTools.takePhotoSupported()) {
+            return nativeUploadPhoto();
+        }
+        else {
+            return webUploadPhoto();
+        }
     }.bind(this);
 }

@@ -143,6 +143,8 @@ public static partial class LcData
                     modImg.Save(folder + avatarNamePrefix + sizeName + "-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
                 // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
+
+                cropImg.Dispose();
             }
         }
 
