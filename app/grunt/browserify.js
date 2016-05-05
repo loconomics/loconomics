@@ -104,6 +104,68 @@ module.exports = function(/*grunt*/) {
                     path: './vendor/touch-punch/jquery.ui.touch-punch.min',
                     exports: null,
                     'depends': { 'jquery': null }
+                },
+                
+                /// JQUERY FILEUPLOAD WITH IMAGE PREVIEW SUPPORT
+                // the jquery-ui widget constructor is needed, but this included dependency
+                // can be avoided if jquery-ui is included already in the project
+                'jquery.ui.widget': {
+                    path: './vendor/jquery.fileupload/js/vendor/jquery.ui.widget.js',
+                    exports: null,
+                    depends: { jquery: 'jquery' }
+                },
+                // Basic fileupload through XHR component
+                'jquery.fileupload': {
+                    path: './vendor/jquery.fileupload/js/jquery.fileupload.js',
+                    exports: null,
+                    depends: {
+                        jquery: 'jquery',
+                        // jquery-ui is included in the project, use it rather than add duplicated content
+                        'jquery-ui': null
+                        //'jquery.ui.widget': 'jquery.ui.widget'
+                    }
+                },
+                // Image Preview support, requires the loadImage lib with its dependecies, a polyfill for canvas.toBlob
+                // and the fileupload-process plugin
+                'load-image': {
+                    path: './vendor/js.loadImage/js/load-image.js',
+                    exports: 'loadImage',
+                    depends: {
+                        'jquery': null
+                    }
+                },
+                'load-image.meta': {
+                    path: './vendor/js.loadImage/js/load-image-meta.js',
+                    exports: null,
+                    depends: {
+                        'load-image': null
+                    }
+                },
+                'load-image.ios': {
+                    path: './vendor/js.loadImage/js/load-image-ios.js',
+                    exports: null,
+                    depends: {
+                        'load-image': null
+                    }
+                },
+                'jquery.fileupload-process': {
+                    path: './vendor/jquery.fileupload/js/jquery.fileupload-process.js',
+                    exports: null,
+                    depends: {
+                        'jquery.fileupload': null
+                    }
+                },
+                'jquery.fileupload-image': {
+                    path: './vendor/jquery.fileupload/js/jquery.fileupload-image.js',
+                    exports: null,
+                    depends: {
+                        'jquery.fileupload': null,
+                        'jquery.fileupload-process': null,
+                        'load-image': null,
+                        'load-image.ios': null,
+                        'load-image.meta': null,
+                        'blueimp-canvas-to-blob': null
+                    }
                 }
             }
         }
