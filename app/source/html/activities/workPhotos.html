@@ -25,7 +25,8 @@
                             data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
                             <li>
                                 <div class="WorkPhotos-imgBtn">
-                                    <img alt="Work photo" data-bind="attr: { src: url, alt: caption }" />
+                                    <img alt="Work photo" class="WorkPhotos-img" data-bind="visible: !localTempPhotoPreview(), attr: { src: url, alt: caption }" />
+                                    <div data-label="Work photo" class="WorkPhotos-img" data-bind="visible: localTempPhotoPreview, domElement: localTempPhotoPreview"></div>
                                     <div class="WorkPhotos-editionLayer">
                                         <div class="WorkPhotos-toolbar">
                                             <a href="#move" type="button" class="btn btn-link btn-lg WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
@@ -39,10 +40,17 @@
                             </li>
                         </ul>
                         <div id="workPhotos-addNewButton" data-bind="visible: jobTitleID()">
-                            <button type="button" class="CompactLinkTile" data-bind="disable: state.isLocked" data-toggle="ActionSheet" data-target="workPhotos-photoSheet">
+                            <button type="button" class="CompactLinkTile"
+                                    data-bind="visible: takePhotoSupported, disable: state.isLocked"
+                                    data-toggle="ActionSheet" data-target="workPhotos-photoSheet">
                                 <div class="Tile-content text-muted">Upload/take photo</div>
                                 <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
                             </button>
+                            <span class="CompactLinkTile btn-file" data-bind="visible: !takePhotoSupported(), attr: { disabled: state.isLocked }">
+                                <div class="Tile-content text-muted">Upload/take photo</div>
+                                <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                                <input type="file" id="workPhotos-photoFile" data-bind="disable: state.isLocked">
+                            </span>
                         </div>
                         <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
                             <button type="button" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>

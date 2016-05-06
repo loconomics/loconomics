@@ -30,6 +30,7 @@ exports.create = function create(appModel) {
     // We replace default:
     var pushJustBasicDataToRemote = api.pushItemToRemote.bind(api);
     // With a file-uploader logic
+    var photoUploadFieldName = 'photo';
     // TODO Support web upload from input/jquery.uploader, right now only Cordova FileTransfer
     api.pushItemToRemote = function pushToRemote(data) {
         // If no file to upload:
@@ -55,7 +56,7 @@ exports.create = function create(appModel) {
             
             // Upload with FileTransfer
             var uploadSettings = {
-                fileKey: 'photo',
+                fileKey: photoUploadFieldName,
                 mimeType: 'image/jpeg',
                 httpMethod: method,
                 params: data,
