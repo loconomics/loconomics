@@ -25,13 +25,13 @@ var A = Activity.extend(function WorkPhotosActivity() {
     this.registerHandler({
         target: this.$activity,
         selector: '.WorkPhotos-imgBtn',
-        event: 'click',
+        event: 'click mouseenter mouseleave',
         handler: function(event) {
             if (!this.viewModel.state.isLocked())
-                $(event.target).closest('li').toggleClass('is-selected');
+                $(event.target).closest('li').toggleClass('is-selected', event.type === 'mouseenter' || event.type === 'click');
         }.bind(this)
     });
-    
+
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
         var $input = this.$activity.find('#workPhotos-photoFile');//input[type=file]
