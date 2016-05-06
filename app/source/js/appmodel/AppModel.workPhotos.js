@@ -74,6 +74,16 @@ exports.create = function create(appModel) {
             fd.url = options.url;
             fd.type = options.method;
             fd.paramName = photoUploadFieldName;
+            fd.formData = Object.keys(data)
+            .filter(function(k) {
+                return k !== 'localTempFileData' && k !== 'localTempPhotoPreview';
+            })
+            .map(function(k) {
+                return {
+                    name: k,
+                    value: data[k]
+                };
+            });
             fd.headers = $.extend(true, {}, appModel.rest.extraHeaders);
             return Promise.resolve(fd.submit());
         }
