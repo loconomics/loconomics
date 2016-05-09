@@ -61,10 +61,10 @@ function BaseClientBookingCardVM(app) {
 
     ///
     /// URLs (constants, don't need reset)
-    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
-    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
-    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
-    this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');    
+    this.urlTos = ko.observable('https://loconomics.com/en-US/terms#!terms/terms-of-service?mustReturn=true');
+    this.urlPp = ko.observable('https://loconomics.com/en-US/terms#!terms/privacy-policy?mustReturn=true');
+    this.urlBcp = ko.observable('https://loconomics.com/en-US/terms#!terms/background-check-policy?mustReturn=true');
+    this.urlCp = ko.observable('https://loconomics.com/en-US/terms#!terms/terms-of-service?mustReturn=true');    
     ///
     // List of possible error messages registered by name
     this.errorMessages = {
