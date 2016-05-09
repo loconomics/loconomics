@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
     photoTools = require('../utils/photoTools');
+require('jquery.fileupload-image');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
     
@@ -46,11 +47,17 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
         })
         .on('fileuploadadd', function (e, data) {
             this.viewModel.item().localTempFileData(data);
+            if (!data.originalFiles.length ||
+                !/^image\//.test(data.originalFiles[0].type)) {
+                this.viewModel.item().localTempPhotoPreview(null);
+            }
+            this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
         }.bind(this))
         .on('fileuploadprocessalways', function (e, data) {
             var file = data.files[data.index];
             if (file.error) {
                 // TODO Show preview error?
+                this.viewModel.item().localTempPhotoPreview(null);
                 console.error('Photo Preview', file.error);
             }
             else if (file.preview) {
@@ -149,7 +156,7 @@ function ViewModel(app) {
     }, this);
     this.isReady = ko.pureComputed(function() {
         var it = this.item();
-        return !!(it && it.localTempFilePath());
+        return !!(it && (it.localTempFilePath() || it.localTempFileData()));
     }, this);
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
     

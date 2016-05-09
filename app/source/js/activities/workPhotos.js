@@ -9,6 +9,7 @@ var ko = require('knockout'),
 
 var WorkPhoto = require('../models/WorkPhoto'),
     photoTools = require('../utils/photoTools');
+require('jquery.fileupload-image');
 
 var A = Activity.extend(function WorkPhotosActivity() {
 

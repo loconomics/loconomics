@@ -2,6 +2,7 @@
 <div data-activity="licensesCertificationsForm" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
+
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
@@ -21,21 +22,23 @@
                             </span>
                         </h2>
                         <form class="LightForm PaddedBox-xs" style="background-color: white;" role="form" data-bind="submit: save">
-                            <fieldset data-bind="visible: isNew, with: item">
-                                <div class="form-group">
-                                    <label>Description:</label>
-                                    <div class="form-control-static" data-bind="text: licenseCertification().description"></div>
-                                </div>
-                                <div class="form-group" data-bind="visible: licenseCertification().authority">
-                                    <label>Certifying authority:</label>
-                                    <div class="form-control-static">
-                                        <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().howToGetLicensedUrl }, text: licenseCertification().authority"></a>
+                            <fieldset data-bind="visible: isNew() && item()">
+                                <div data-bind="with: item">
+                                    <div class="form-group">
+                                        <label>Description:</label>
+                                        <div class="form-control-static" data-bind="text: licenseCertification().description"></div>
                                     </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: licenseCertification().verificationWebsiteUrl">
-                                    <label>How to obtain:</label>
-                                    Need to apply or renew this license/certification? Please
-                                    <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().verificationWebsiteUrl }">visit this site.</a>
+                                    <div class="form-group" data-bind="visible: licenseCertification().authority">
+                                        <label>Certifying authority:</label>
+                                        <div class="form-control-static">
+                                            <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().howToGetLicensedUrl }, text: licenseCertification().authority"></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: licenseCertification().verificationWebsiteUrl">
+                                        <label>How to obtain:</label>
+                                        Need to apply or renew this license/certification? Please
+                                        <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().verificationWebsiteUrl }">visit this site.</a>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Upload yours for us to verify:</label>
@@ -48,18 +51,19 @@
                                     </button>
                                     <div class="btn-file btn btn-default btn-block"
                                         style="margin: 0 10% 20px 10%; width: 80%;"
-                                        data-bind="visible: !$root.takePhotoSupported(), attr: { disabled: $root.isLocked }">
+                                        data-bind="visible: !takePhotoSupported(), attr: { disabled: isLocked }">
                                         <div>Upload/take photo</div>
-                                        <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: $root.isLocked">
+                                        <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: isLocked">
                                     </div>
                                 </div>
-                                <div>
-                                    <img alt="License Preview" class="WorkPhotos-img" data-bind="visible: localTempPhotoPreviewUrl, attr: { src: localTempPhotoPreviewUrl }" />
-                                    <div data-label="License Preview" class="WorkPhotos-img" data-bind="visible: localTempPhotoPreview, domElement: localTempPhotoPreview"></div>
+                                <div data-bind="with: item" id="licensesCertificationsForm-preview">
+                                    <img alt="License Preview" data-bind="visible: localTempPhotoPreviewUrl, attr: { src: localTempPhotoPreviewUrl }" />
+                                    <div data-label="License Preview" data-bind="visible: localTempPhotoPreview, domElement: localTempPhotoPreview"></div>
+                                    <strong data-bind="text: localTempFileName, visible: localTempFileName() && !localTempPhotoPreview()"></strong>
                                 </div>
-                                <div class="LightForm-submitBar" data-bind="visible: localTempFilePath() || localTempFileData()">
-                                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $root.isLocked() || !$root.isReady(), visible: $root.isNew, text: $root.submitText">Save</button>
-                                 </div>
+                                <div class="LightForm-submitBar" data-bind="visible: isReady">
+                                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !isReady(), visible: isNew, text: submitText">Save</button>
+                                </div>
                             </fieldset>
                             <fieldset data-bind="visible: !isNew(), with: item">
                                 <div class="form-group">
