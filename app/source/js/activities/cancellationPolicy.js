@@ -134,30 +134,26 @@ function ViewModel(app) {
     }.bind(this);
 
     this.policies = ko.observableArray([
-        
         new CancellationPolicy({
-            cancellationPolicyID: 3,
-            name: 'Flexible',
-            description: 'No cancellation fees if changed or cancelled at least 24 hours in advance, otherwise a cancellation fee of 50% the price of booked services apply (including no-shows).',
-            hoursRequired: 24,
-            cancellationFeeBefore: 0,
-            cancellationFeeAfter: 0.5
+            cancellationPolicyID: 1,
+            name: 'Strict',
+            description: '50% refund up to 5 days before booking, except fees',
+            hoursRequired: 120,
+            refundIfCancelledBefore: 0.5
         }),
         new CancellationPolicy({
             cancellationPolicyID: 2,
             name: 'Moderate',
-            description: 'No cancellation fees if changed or cancelled at least 24 hours in advance, otherwise a cancellation fee of 100% the price of booked services apply (including no-shows).',
+            description: '100% refund up to 24 hours before booking, except fees.  No refund for under 24 hours and no-shows.',
             hoursRequired: 24,
-            cancellationFeeBefore: 0,
-            cancellationFeeAfter: 1.0
+            refundIfCancelledBefore: 1
         }),
         new CancellationPolicy({
-            cancellationPolicyID: 1,
-            name: 'Strict',
-            description: 'Cancellation fees of 50% of the price of booked services up to 5 days before the booking start time and 100% after.',
-            hoursRequired: 120,
-            cancellationFeeBefore: 0.5,
-            cancellationFeeAfter: 1.0
+            cancellationPolicyID: 3,
+            name: 'Flexible',
+            description: '100% refund up to 24 hours before booking, except fees.  50% refund for under 24 hours and no-shows.',
+            hoursRequired: 24,
+            refundIfCancelledBefore: 1
         })
     ]);
 }
@@ -178,21 +174,11 @@ function CancellationPolicy(values) {
         name: '',
         description: '',
         hoursRequired: 0,
-        cancellationFeeBefore: 0,
-        cancellationFeeAfter: 0
+        refundIfCancelledBefore: 0
     }, values);
     
-    this.cancellationFeeBeforeDisplay = ko.pureComputed(function() {
-        if (this.cancellationFeeBefore()>0){
-            return 'be charged a ' + Math.floor(this.cancellationFeeBefore() * 100) + '% cancellation fee';
-        }
-        else {
-            return 'not be charged any cancellation fee';
-        }
-    }, this);
-    
-    this.cancellationFeeAfterDisplay = ko.pureComputed(function() {
-        return Math.floor(this.cancellationFeeAfter() * 100) + '%';
+    this.refundIfCancelledBeforeDisplay = ko.pureComputed(function() {
+        return Math.floor(this.refundIfCancelledBefore() * 100) + '%';
     }, this);
 
     this.refundLimitDate = ko.computed(function() {
