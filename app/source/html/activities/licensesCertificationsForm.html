@@ -40,9 +40,26 @@
                                 <div class="form-group">
                                     <label>Upload yours for us to verify:</label>
                                     <p>Upload a photo or document of your license/certification, and we'll do our best to verify it.</p>
-                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet" data-bind="disable: $root.isLocked">Upload/take photo
+                                    <button type="button" class="btn btn-default btn-block"
+                                            style="margin: 0 10% 20px 10%; width: 80%;"
+                                            data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet"
+                                            data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
+                                        Upload/take photo
                                     </button>
+                                    <div class="btn-file btn btn-default btn-block"
+                                        style="margin: 0 10% 20px 10%; width: 80%;"
+                                        data-bind="visible: !$root.takePhotoSupported(), attr: { disabled: $root.isLocked }">
+                                        <div>Upload/take photo</div>
+                                        <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: $root.isLocked">
+                                    </div>
                                 </div>
+                                <div>
+                                    <img alt="License Preview" class="WorkPhotos-img" data-bind="visible: localTempPhotoPreviewUrl, attr: { src: localTempPhotoPreviewUrl }" />
+                                    <div data-label="License Preview" class="WorkPhotos-img" data-bind="visible: localTempPhotoPreview, domElement: localTempPhotoPreview"></div>
+                                </div>
+                                <div class="LightForm-submitBar" data-bind="visible: localTempFilePath() || localTempFileData()">
+                                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $root.isLocked() || !$root.isReady(), visible: $root.isNew, text: $root.submitText">Save</button>
+                                 </div>
                             </fieldset>
                             <fieldset data-bind="visible: !isNew(), with: item">
                                 <div class="form-group">

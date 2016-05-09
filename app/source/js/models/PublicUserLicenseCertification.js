@@ -23,7 +23,6 @@ function PublicUserLicenseCertification(values) {
         status: null,
         statusDescription: null,
         lastVerifiedDate: null,
-        submittedImageLocalURL: null,
                 
         licenseCertification: new LicenseCertification()
     }, values);
