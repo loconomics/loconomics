@@ -105,10 +105,14 @@ a {
     }
 }
 .btn-link {
+    color: $brand-secondary;
+    background-color: transparent;
     &:hover,
-    &:focus {
+    &:focus,
+    &:active{
         text-decoration: none;
         outline: none;
+        color: $brand-secondary-dark;
     }
 }
 // Only bottom border to look flatty
@@ -313,8 +317,8 @@ ResetSectionTitleMargin() {
 .well {
     margin: 15px 35px;
     padding: 20px 20px -5px 20px;
-    background-color: #FFFFA5;
-    border: none;
+    background-color: #FFFFFF;
+    border: 1px solid $gray-dark;
     
     .list-group {      
       margin-bottom: 0px;
