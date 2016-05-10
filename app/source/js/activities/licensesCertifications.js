@@ -102,7 +102,7 @@ function ViewModel(app) {
     this.isLoading = app.model.userLicensesCertifications.state.isLoading();
 
     this.addNew = function(item) {
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/' + item.licenseCertificationID() + '/new',
+        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID(),
             cancelUrl = app.shell.currentRoute.url;
         var request = $.extend({}, this.requestData, {
             cancelLink: cancelUrl
@@ -112,7 +112,7 @@ function ViewModel(app) {
     
     this.selectItem = function(item) {
         var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
-            item.licenseCertificationID() + '?mustReturn=' + 
+            item.userLicenseCertificationID() + '?mustReturn=' + 
             encodeURIComponent(app.shell.currentRoute.url) +
             '&returnText=' + encodeURIComponent('Licenses/certifications');
         app.shell.go(url, this.requestData);

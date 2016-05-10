@@ -88,11 +88,12 @@ A.prototype.show = function show(state) {
 
     // Params
     var params = state && state.route && state.route.segments || [];
+    var query = state && state.route && state.route.query || {};
     
     this.viewModel.jobTitleID(params[0] |0);
-    this.viewModel.licenseCertificationID(params[1] |0);
-    this.viewModel.isNew(params[2] === 'new');
-    
+    this.viewModel.userLicenseCertificationID(params[1] |0);
+    this.viewModel.licenseCertificationID(query.licenseCertificationID |0);
+
     this.updateNavBarState();
     
     var ModelVersion = require('../utils/ModelVersion'),
@@ -100,7 +101,7 @@ A.prototype.show = function show(state) {
     
     if (!this.viewModel.isNew()) {
         this.app.model.userLicensesCertifications
-        .getItem(this.viewModel.jobTitleID(), this.viewModel.licenseCertificationID())
+        .getItem(this.viewModel.jobTitleID(), this.viewModel.userLicenseCertificationID())
         .then(function(data) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
         }.bind(this))
@@ -119,7 +120,10 @@ A.prototype.show = function show(state) {
         this.app.model.licenseCertification
         .getItem(this.viewModel.licenseCertificationID())
         .then(function(data) {
-            var item = new UserLicenseCertification();
+            var item = new UserLicenseCertification({
+                jobTitleID: this.viewModel.jobTitleID(),
+                licenseCertificationID: this.viewModel.licenseCertificationID()
+            });
             item.licenseCertification().model.updateWith(data);
             this.viewModel.version(new ModelVersion(item));
         }.bind(this))
@@ -138,6 +142,7 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
+    this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.jobTitleNamePlural = ko.observable(); 
@@ -164,7 +169,9 @@ function ViewModel(app) {
         return (this.isLoading() || this.isSyncing()) ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
     }, this);
 
-    this.isNew = ko.observable(false);
+    this.isNew = ko.pureComputed(function() {
+        return !this.userLicenseCertificationID();
+    }, this);
     
     this.version = ko.observable(null);
     this.item = ko.pureComputed(function() {
@@ -189,14 +196,15 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        var data = this.item().model.toPlainObject();
-        data.licenseCertificationID = this.licenseCertificationID();
+        var data = this.item().model.toPlainObject(true);
         app.model.userLicensesCertifications.setItem(data)
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
             // Push version so it appears as saved
             this.version().push({ evenIfObsolete: true });
+            // Cache of licenses info for the user and job title is dirty, clean up so is updated later
+            app.model.jobTitleLicenses.clearCache();
             // Go out
             app.successSave();
         }.bind(this))
@@ -223,7 +231,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.licenseCertificationID())
+        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
         .then(function() {
             // Go out
             app.successSave();

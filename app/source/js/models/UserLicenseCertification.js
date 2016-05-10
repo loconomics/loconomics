@@ -44,7 +44,7 @@ function UserLicenseCertification(values) {
         localTempFileName: null
     }, values);
     
-    this.model.defID(['userID', 'jobTitleID', 'licenseCertificationID']);
+    this.model.defID(['userLicenseCertificationID']);
 }
 
 module.exports = UserLicenseCertification;

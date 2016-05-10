@@ -120,8 +120,7 @@ namespace LcRest
                 userlicensecertifications As V
                  INNER JOIN
                 verificationstatus As VS
-                  ON V.VerificationStatusID = VS.VerificationStatusID 
-                                 
+                  ON V.VerificationStatusID = VS.VerificationStatusID                     
             WHERE
                 V.ProviderUserID = @userID
                  AND
@@ -129,9 +128,33 @@ namespace LcRest
                  AND 
                 VS.LanguageID = @languageID 
         ";
+        const string sqlGetItem = sqlGetList + @"
+            AND V.userLicenseCertificationID = @3
+        ";
         #endregion
 
+        public static UserLicenseCertification Get(int userID, int jobTitleID, int languageID, int userLicenseCertificationID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetItem, userID, jobTitleID, languageID, userLicenseCertificationID));
+            }
+        }
+
+        public static IEnumerable<UserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
+            }
+        }
+        #endregion
+
+        #region Request of Review / Submit photo
+        const string photoPrefix = "$licenseCertification-";
         const string sqlInsertNew = @"
+            SET NOCOUNT ON
+
             INSERT into userlicensecertifications (
                 ProviderUserID,
                 PositionID,
@@ -158,52 +181,40 @@ namespace LcRest
                     @16, 
                     @17  
                 )
+
+                -- EXEC TestAlertProfessionalLicense @0, @1
+
                 SELECT @@Identity
         ";
-
-        private static void insertNew (int userID, int jobTitleID, int licenseCertificationID, string submittedImageLocalURL)
+        private static int insertNew(int userID, int jobTitleID, int licenseCertificationID, string submittedImageLocalURL)
         {
             var user = UserProfile.Get(userID);
             using (var db = new LcDatabase())
             {
-                db.Execute(sqlInsertNew,
-                userID,
-                jobTitleID,
-                licenseCertificationID,
-                2,
-                "",
-                "",
-                "",
-                "",
-                user.firstName,
-                user.lastName,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                userID,
-                submittedImageLocalURL
+                return (int)db.QueryValue(sqlInsertNew,
+                    userID,
+                    jobTitleID,
+                    licenseCertificationID,
+                    2,
+                    "",
+                    "",
+                    null,
+                    "",
+                    user.firstName,
+                    user.lastName,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    userID,
+                    submittedImageLocalURL
                 );
             }
         }
-
-        public static IEnumerable<UserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
-        {
-            using (var db = new LcDatabase())
-            {
-                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
-            }
-        }
-        #endregion
-
-        /// Note: On Update/Insert SQL, remember next: EXEC TestAlertProfessionalLicense @0, @1
-
-        #region Request of Review / Submit photo
-        const string photoPrefix = "$licenseCertification-";
-        public static void SubmitPhoto(int userID, int jobTitleID, int licenseCertificationID, string originalFileName, Stream photo)
+        public static int SubmitPhoto(int userID, int jobTitleID, int licenseCertificationID, string originalFileName, Stream photo)
         {
             // File name with special prefix
             var autofn = Guid.NewGuid().ToString().Replace("-", "");
@@ -225,7 +236,7 @@ namespace LcRest
             var email = "support@loconomics.zendesk.com";
 
             LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
-            insertNew(userID, jobTitleID, licenseCertificationID, submittedImageLocalURL);
+            return insertNew(userID, jobTitleID, licenseCertificationID, submittedImageLocalURL);
         }
         #endregion
     }

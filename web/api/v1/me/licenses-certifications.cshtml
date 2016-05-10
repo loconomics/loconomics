@@ -7,14 +7,14 @@
         Gets the list of licenses/certificates for user on that jobTitle
 
     - POST /{jobTitleID}
+        licenseCertificationID:int Required license ID, even if is a wildcard like -1 or 0
         photo:binary image/jpeg A photo of the license/certificate that we manually will check and fill database with its information.
-        stateProvinceCode:string State that applies to the given certificate image
 
     /*
-    - PUT /{jobTitleID}/{licenseCertificationID}
+    - PUT /{jobTitleID}/{userLicenseCertificationID}
         photo:binary image/jpeg
 
-    - DELETE /{jobTitleID}/{photoID}
+    - DELETE /{jobTitleID}/{userLicenseCertificationID}
     */
 
     - @Result LcRest.UserLicenseCertification class instance. On GET, it returns a list of them.
@@ -24,6 +24,7 @@
             "url": "/api/v1/en-US/me/licenses-certifications/106",
             "get": {},
             "post": {
+                "licenseCertificationID": -1,
                 "photo": "binary image/* content"
             }
         },
@@ -63,6 +64,8 @@
             var userID = WebSecurity.CurrentUserId;
             var jobTitleID = UrlData[0].AsInt();
             var licenseCertificationID = Request["licenseCertificationID"].AsInt();
+            var languageID = LcRest.Locale.Current.languageID;
+            var itemID = 0;
             
             try {
                 Stream photoStream = null;
@@ -78,7 +81,7 @@
                     ModelState.AddFormError("Maximum request length exceeded");
                 }
                 else {
-                    LcRest.UserLicenseCertification.SubmitPhoto(userID, jobTitleID, licenseCertificationID, fileuploaded.FileName, photoStream);
+                    itemID = LcRest.UserLicenseCertification.SubmitPhoto(userID, jobTitleID, licenseCertificationID, fileuploaded.FileName, photoStream);
                 }
             }
             catch (Exception ex)
@@ -87,7 +90,7 @@
             }
 
             if (ModelState.IsValid) {
-                return "OK";
+                return LcRest.UserLicenseCertification.Get(userID, jobTitleID, languageID, itemID);
             }
             else {
                 var errMsg = String.Join("; ", ModelState.Values.First().Errors);

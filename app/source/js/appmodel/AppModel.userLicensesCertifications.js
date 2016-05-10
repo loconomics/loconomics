@@ -15,11 +15,11 @@ exports.create = function create(appModel) {
         // Conservative cache, just 1 minute
         listTtl: { minutes: 1 },
         groupIdField: 'jobTitleID',
-        itemIdField: 'licenseCertificationID',
+        itemIdField: 'userLicenseCertificationID',
         Model: UserLicenseCertification
     });
     
-    api.addLocalforageSupport('licensesCertifications');
+    api.addLocalforageSupport('userLicensesCertifications/');
     api.addRestSupport(appModel.rest, baseUrl);
 
     appModel.on('clearLocalData', function() {
@@ -34,7 +34,7 @@ exports.create = function create(appModel) {
     var photoUploadFieldName = 'photo';
     var pushWithoutFile = function(data) {
         // On new photos, the photo is required!
-        if (data.licenseCertificationID === 0) {
+        if (data.userLicenseCertificationID === 0) {
             return Promise.reject('An image of the license/certification is required');
         }
         else {
@@ -73,7 +73,7 @@ exports.create = function create(appModel) {
             fd.paramName = photoUploadFieldName;
             fd.formData = Object.keys(data)
             .filter(function(k) {
-                return k !== 'localTempFileData' && k !== 'localTempPhotoPreview';
+                return !/^local/.test(k);
             })
             .map(function(k) {
                 return {
@@ -94,12 +94,17 @@ exports.create = function create(appModel) {
             method: itemID ? 'put' : 'post',
             url: appModel.rest.baseUrl + baseUrl + groupID + (itemID ? '/' + itemID : '')
         };
+        
+        var after = function(serverData) {
+            api._pushItemToCache(serverData);
+            return serverData;
+        };
 
         if (photoTools.takePhotoSupported()) {
-            return nativeUploadFile(data, options);
+            return nativeUploadFile(data, options).then(after);
         }
         else {
-            return webUploadFile(data, options);
+            return webUploadFile(data, options).then(after);
         }
     }.bind(api);
     
