@@ -28,6 +28,7 @@ function UserLicenseCertification(values) {
         lastVerifiedDate: null,
         submitDate: null, // Autofilled by server
         submittedBy: null,
+        submittedImageLocalURL: null,
         status: null,
         statusDescription: null,
                 

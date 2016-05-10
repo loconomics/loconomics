@@ -224,7 +224,7 @@ namespace LcRest
                     "",
                     "",
                     "",
-                    "",
+                    null,
                     item.userID,
                     item.submittedImageLocalURL
                 );

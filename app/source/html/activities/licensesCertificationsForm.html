@@ -102,6 +102,9 @@
                                 </div>
                                 <div data-bind="visible: !isNew()">
                                     <label>Submit an update:</label>
+                                    <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsForm-submittedImage" class="isolated">
+                                        <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
+                                    </div>
                                     <p>Upload a photo or document of your updated license/certification.</p>
                                 </div>
                                 <button type="button" class="btn btn-default btn-block"
