@@ -63,7 +63,7 @@ namespace LcRest
             DECLARE @languageID AS int
             SET @languageID = @2
              
-            SELECT
+            SELECT distinct
                 JL.positionID as jobTitleID
                 ,JL.licenseCertificationID
                 ,JL.required

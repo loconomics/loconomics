@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
     photoTools = require('../utils/photoTools');
+require('jquery.fileupload-image');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
     
@@ -18,6 +19,53 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
         backLink: '/marketplaceProfile', helpLink: '/help/sections/201967966-adding-professional-licenses-and-certifications'
     });
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
+    
+    if (!photoTools.takePhotoSupported()) {
+        // Web version to pick a photo/file
+        var $input = this.$activity.find('#licensesCertificationsForm-photoFile');//input[type=file]
+        // Constant size: is the maximum as defined in the CSS and server processing.
+        var PHOTO_WIDTH = 442;
+        var PHOTO_HEIGHT = 332;
+        $input.fileupload({
+            // Asigned per file uploaded:
+            //url: 'assigned per file uploaded',
+            //type: 'PUT',
+            //paramName: 'file',
+            dataType: 'json',
+            autoUpload: false,
+            acceptFileTypes: /(\.|\/)(png|gif|tiff|pdf|jpe?g)$/i,
+            maxFileSize: 20000000, // 20MB
+            disableImageResize: true,
+            // // Enable image resizing, except for Android and Opera,
+            // // which actually support image resizing, but fail to
+            // // send Blob objects via XHR requests:
+            // disableImageResize: /Android(?!.*Chrome)|Opera/
+            // .test(window.navigator.userAgent),
+            previewMaxWidth: PHOTO_WIDTH,
+            previewMaxHeight: PHOTO_HEIGHT,
+            previewCrop: true
+        })
+        .on('fileuploadadd', function (e, data) {
+            this.viewModel.item().localTempFileData(data);
+            if (!data.originalFiles.length ||
+                !/^image\//.test(data.originalFiles[0].type)) {
+                this.viewModel.item().localTempPhotoPreview(null);
+            }
+            this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
+        }.bind(this))
+        .on('fileuploadprocessalways', function (e, data) {
+            var file = data.files[data.index];
+            if (file.error) {
+                // TODO Show preview error?
+                this.viewModel.item().localTempPhotoPreview(null);
+                console.error('Photo Preview', file.error);
+            }
+            else if (file.preview) {
+                //this.viewModel.item().localTempFileData(data);
+                this.viewModel.item().localTempPhotoPreview(file.preview);
+            }
+        }.bind(this));
+    }
 });
 
 exports.init = A.init;
@@ -40,11 +88,12 @@ A.prototype.show = function show(state) {
 
     // Params
     var params = state && state.route && state.route.segments || [];
+    var query = state && state.route && state.route.query || {};
     
     this.viewModel.jobTitleID(params[0] |0);
-    this.viewModel.licenseCertificationID(params[1] |0);
-    this.viewModel.isNew(params[2] === 'new');
-    
+    this.viewModel.userLicenseCertificationID(params[1] |0);
+    this.viewModel.licenseCertificationID(query.licenseCertificationID |0);
+
     this.updateNavBarState();
     
     var ModelVersion = require('../utils/ModelVersion'),
@@ -52,7 +101,7 @@ A.prototype.show = function show(state) {
     
     if (!this.viewModel.isNew()) {
         this.app.model.userLicensesCertifications
-        .getItem(this.viewModel.jobTitleID(), this.viewModel.licenseCertificationID())
+        .getItem(this.viewModel.jobTitleID(), this.viewModel.userLicenseCertificationID())
         .then(function(data) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
         }.bind(this))
@@ -71,7 +120,10 @@ A.prototype.show = function show(state) {
         this.app.model.licenseCertification
         .getItem(this.viewModel.licenseCertificationID())
         .then(function(data) {
-            var item = new UserLicenseCertification();
+            var item = new UserLicenseCertification({
+                jobTitleID: this.viewModel.jobTitleID(),
+                licenseCertificationID: this.viewModel.licenseCertificationID()
+            });
             item.licenseCertification().model.updateWith(data);
             this.viewModel.version(new ModelVersion(item));
         }.bind(this))
@@ -90,6 +142,7 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
+    this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.jobTitleNamePlural = ko.observable(); 
@@ -108,14 +161,17 @@ function ViewModel(app) {
     }, this);
     this.isReady = ko.pureComputed(function() {
         var it = this.item();
-        return !!(it && it.localTempFilePath());
+        return !!(it && (it.localTempFilePath() || it.localTempFileData()));
     }, this);
+    this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
     
     this.submitText = ko.pureComputed(function() {
         return (this.isLoading() || this.isSyncing()) ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
     }, this);
 
-    this.isNew = ko.observable(false);
+    this.isNew = ko.pureComputed(function() {
+        return !this.userLicenseCertificationID();
+    }, this);
     
     this.version = ko.observable(null);
     this.item = ko.pureComputed(function() {
@@ -140,14 +196,15 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        var data = this.item().model.toPlainObject();
-        data.licenseCertificationID = this.licenseCertificationID();
+        var data = this.item().model.toPlainObject(true);
         app.model.userLicensesCertifications.setItem(data)
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
             // Push version so it appears as saved
             this.version().push({ evenIfObsolete: true });
+            // Cache of licenses info for the user and job title is dirty, clean up so is updated later
+            app.model.jobTitleLicenses.clearCache();
             // Go out
             app.successSave();
         }.bind(this))
@@ -174,7 +231,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.licenseCertificationID())
+        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
         .then(function() {
             // Go out
             app.successSave();
@@ -197,7 +254,7 @@ function ViewModel(app) {
             return photoTools.cameraGetPicture(settings)
             .then(function(imgLocalUrl) {
                 this.item().localTempFilePath(imgLocalUrl);
-                //photoTools.getPreviewPhotoUrl(imgLocalUrl)
+                this.item().localTempPhotoPreviewUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
             }.bind(this))
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1

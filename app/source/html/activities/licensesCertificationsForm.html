@@ -1,7 +1,7 @@
 <!-- licensesCertificationsForm activity -->
 <div data-activity="licensesCertificationsForm" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-    <div class="container">
+    <div class="container" data-bind="css: { 'is-loading': isLoading }">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
@@ -20,8 +20,12 @@
                             <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                             </span>
                         </h2>
-                        <form class="LightForm" style="background-color: white;" role="form" data-bind="submit: save">
-                            <fieldset data-bind="visible: isNew, with: item">
+                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                        <form class="LightForm PaddedBox-xs" style="background-color: white;" role="form" data-bind="submit: save, visible: item">
+                            <div data-bind="with: item">
+                                <div class="form-group" data-bind="visible: !$root.isNew()">
+                                    <label>Status<span data-bind= "visible: lastVerifiedDate"> (last updated: <span data-bind= "text: lastVerifiedDate, format: { type: 'datetime', format: 'L'}"></span>)</span>:</label> <div class="form-control-static"><strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong><span data-bind="visible: statusID() === 1 || statusID() === 6">  (Expiry date: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</span> – <em data-bind="text: statusDescription"></em></div>
+                                </div>
                                 <div class="form-group">
                                     <label>Description:</label>
                                     <div class="form-control-static" data-bind="text: licenseCertification().description"></div>
@@ -32,102 +36,98 @@
                                         <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().howToGetLicensedUrl }, text: licenseCertification().authority"></a>
                                     </div>
                                 </div>
-                                <div class="form-group" data-bind="visible: licenseCertification().verificationWebsiteUrl">
+                                <div class="form-group" data-bind="visible: $root.isNew() && licenseCertification().verificationWebsiteUrl()">
                                     <label>How to obtain:</label>
                                     Need to apply or renew this license/certification? Please
                                     <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().verificationWebsiteUrl }">visit this site.</a>
                                 </div>
-                                <div class="form-group">
+                                <div data-bind="visible: !$root.isNew()">
+                                    <div class="form-group">
+                                        <label>Expires:</label>
+                                        <div class="form-control-static" data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: licenseCertificationNumber">
+                                        <label>Number:</label>
+                                        <div class="form-control-static">
+                                            <span data-bind="text: licenseCertificationNumber"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: businessName">
+                                        <label>Business name:</label>
+                                        <div class="form-control-static">
+                                            <span data-bind="text: businessName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: firstName">
+                                        <label>First name:</label>
+                                        <div class="form-control-static">
+                                            <span data-bind="text: firstName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: lastName">
+                                        <label>Last name:</label>
+                                        <div class="form-control-static">
+                                            <span data-bind="text: lastName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: middleInitial">
+                                        <label>Middle initial:</label>
+                                        <div class="form-control-static">
+                                            <span data-bind="text: middleInitial"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: comments">
+                                        <label>Comments:</label>
+                                        <div class="form-control-static">
+                                            <span data-bind="text: comments"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" data-bind="visible: licenseCertificationUrl">
+                                        <label>Link to license:</label>
+                                        <div class="form-control-static">
+                                            <a target="_blank" data-bind="attr: { href: licenseCertificationUrl }, text: licenseCertificationUrl"></a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Renewal information:</label>
+                                         <div class="form-control-static">Need to renew this license/certification? Please<a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().verificationWebsiteUrl }"> visit this site.</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div data-bind="visible: isNew">
                                     <label>Upload yours for us to verify:</label>
                                     <p>Upload a photo or document of your license/certification, and we'll do our best to verify it.</p>
-                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet" data-bind="disable: $root.isLocked">Upload/take photo
-                                    </button>
                                 </div>
-                            </fieldset>
-                            <fieldset data-bind="visible: !isNew(), with: item">
-                                <div class="form-group">
-                                    <label>Status<span data-bind= "visible: lastVerifiedDate"> (last updated: <span data-bind= "text: lastVerifiedDate, format: { type: 'datetime', format: 'L'}"></span>)</span>:</label> <div class="form-control-static"><strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong>  (expires on: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>) – <em data-bind="text: statusDescription"></em></div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Description:</label>
-                                    <div class="form-control-static" data-bind="text: licenseCertification().description"></div>
-                                </div>
-                                <div class="form-group" data-bind="visible: licenseCertification().authority">
-                                    <label>Certifying authority:</label>
-                                    <div class="form-control-static">
-                                        <a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().howToGetLicensedUrl }, text: licenseCertification().authority"></a>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Expires:</label>
-                                    <div class="form-control-static" data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></div>
-                                </div>
-                                <div class="form-group" data-bind="visible: licenseCertificationNumber">
-                                    <label>Number:</label>
-                                    <div class="form-control-static">
-                                        <span data-bind="text: licenseCertificationNumber"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: businessName">
-                                    <label>Business name:</label>
-                                    <div class="form-control-static">
-                                        <span data-bind="text: businessName"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: firstName">
-                                    <label>First name:</label>
-                                    <div class="form-control-static">
-                                        <span data-bind="text: firstName"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: lastName">
-                                    <label>Last name:</label>
-                                    <div class="form-control-static">
-                                        <span data-bind="text: lastName"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: middleInitial">
-                                    <label>Middle initial:</label>
-                                    <div class="form-control-static">
-                                        <span data-bind="text: middleInitial"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: comments">
-                                    <label>Comments:</label>
-                                    <div class="form-control-static">
-                                        <span data-bind="text: comments"></span>
-                                    </div>
-                                </div>
-                                <div class="form-group" data-bind="visible: licenseCertificationUrl">
-                                    <label>Link to license:</label>
-                                    <div class="form-control-static">
-                                        <a target="_blank" data-bind="attr: { href: licenseCertificationUrl }, text: licenseCertificationUrl"></a>
-                                    </div>
-                                </div>
-<!--
-                                <div class="form-group" data-bind="visible: !licenseCertificationUrl() && submittedImageLocalURL">
-                                    <label>Your uploaded image:</label>
-                                    <ul class="list-unstyled WorkPhotos">
-                                        <li>
-                                            <div class="WorkPhotos-imgBtn">
-                                                <img alt="Uploded license" data-bind="attr: { src: submittedImageLocalURL, alt: caption }" />
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
--->
-                                <div class="form-group">
-                                    <label>Renewal information:</label>
-                                     <div class="form-control-static">Need to renew this license/certification? Please<a target="_blank" class="text-secondary" data-bind="attr: { href: licenseCertification().verificationWebsiteUrl }"> visit this site.</a>
-                                    </div>
-                                </div>
-                                <div class="form-group">
+                                <div data-bind="visible: !isNew()">
                                     <label>Submit an update:</label>
+                                    <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsForm-submittedImage" class="isolated">
+                                        <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
+                                    </div>
                                     <p>Upload a photo or document of your updated license/certification.</p>
-                                    <button type="button" class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;" data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet" data-bind="disable: $root.isLocked">Upload/take photo
-                                    </button>
                                 </div>
-                            </fieldset>
+                                <button type="button" class="btn btn-default btn-block"
+                                        style="margin: 0 10% 20px 10%; width: 80%;"
+                                        data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet"
+                                        data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
+                                    Upload/take photo
+                                </button>
+                                <div class="btn-file btn btn-default btn-block"
+                                    style="margin: 0 10% 20px 10%; width: 80%;"
+                                    data-bind="visible: !takePhotoSupported(), attr: { disabled: isLocked }">
+                                    <div>Upload/take photo</div>
+                                    <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: isLocked">
+                                </div>
+                            </div>
+                            <div data-bind="with: item" id="licensesCertificationsForm-preview">
+                                <img alt="License Preview" data-bind="visible: localTempPhotoPreviewUrl, attr: { src: localTempPhotoPreviewUrl }" />
+                                <div data-label="License Preview" data-bind="visible: localTempPhotoPreview, domElement: localTempPhotoPreview"></div>
+                                <strong data-bind="text: localTempFileName, visible: localTempFileName() && !localTempPhotoPreview()"></strong>
+                            </div>
+                            <div class="LightForm-submitBar" data-bind="visible: isReady">
+                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !isReady(), text: submitText">Save</button>
+                            </div>
                         </form>
                     </div>
                     <div class="ActionSheetBackdrop"></div>
