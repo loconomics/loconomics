@@ -8,7 +8,7 @@
                     <li>
                         <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind="text: jobTitleName"></span> marketplace profile
+                            <span data-bind="text: jobTitleName"></span> Marketplace Profile
                         </a>
                     </li>
                 </ul>
@@ -27,7 +27,7 @@
                             </div>
                             <div class="Tile-content">
                                 <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
-                                <em><span> Status:</span> <strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong>  (expires on: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</em>
+                                <em><span> Status:</span> <strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong><span data-bind="visible: statusID() === 1 || statusID() === 6">  (Expiry date: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</span></em>
                             </div>
                         </button>
                     </li>
