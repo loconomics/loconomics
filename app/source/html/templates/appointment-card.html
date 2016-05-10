@@ -16,7 +16,7 @@
                 <span class="icon fa ion ion-load-c"></span>
             </div>
         </div>
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: newAppointmentVisible()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: newAppointmentVisible()">
             <li>
                 <a class="LinkTile" href="#appointment/-4"
                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-4' }">
@@ -40,7 +40,7 @@
         </ul>
 
         <div class="Card-title" data-bind="visible: currentID() > 0, css: headerClass">
-            <button type="button" class="LinkTile" data-bind="click: !isBookingRequest() && currentID() > 0 && !editMode() && edit, disable: item().readOnly">
+            <button type="button" class="LinkTile LinkTile-CardHeader" data-bind="click: !isBookingRequest() && currentID() > 0 && !editMode() && edit, disable: item().readOnly">
                 <div class="Tile-content">
                     <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
                     <div><strong data-bind="text: item().summary()"></strong></div>
@@ -53,7 +53,7 @@
             </button>
         </div>
         
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: isEvent()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: isEvent()">
             <li>
                 <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="Tile-content">
                         <div data-bind="visible: item().startTime()"><strong>Start date/time: </strong><br><span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span></div>
-                        <p data-bind="visible: editMode() && !item().startTime()" class="text-mute">Select start date/time</p>
+                        <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select start date/time</p>
                     </div>
                 </button>
             </li>
@@ -73,7 +73,7 @@
                     <div class="Tile-content">
                         <div data-bind="visible: item().endTime()"><strong>End date/time: </strong><br><span data-bind="text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span> 
                         </div>
-                        <p data-bind="visible: editMode() && !item().endTime()" class="text-mute">Select end date/time</p>
+                        <p data-bind="visible: editMode() && !item().endTime()" class="text-muted">Select end date/time</p>
                     </div>
                 </button>
             </li>
@@ -121,7 +121,7 @@
             </li>
         </ul>
         
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: isBooking()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: isBooking()">
             <li data-bind="visible: !isBookingRequest()">
                 <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
@@ -241,7 +241,7 @@
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
         </div>
 
-        <ul class="TilesList TilesList--opendEnd" data-bind="if: isBookingRequest()">
+        <ul class="TilesList TilesList--openEnd" data-bind="if: isBookingRequest()">
             <li class="LineTile LineTile--title">
                 Confirm a time or decline request
             </li>
