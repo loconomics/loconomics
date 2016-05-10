@@ -1,11 +1,5 @@
 <!-- Component Template appointment-card -->
 <script type="text/html" id="appointment-card-template">
-    <h2 class="SectionTitle">
-        <span data-bind="visible: currentID() == -4">Add a new booking</span>
-        <span data-bind="visible: currentID() == -3">Add a calendar block</span>
-        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-        </span>
-    </h2>
     <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
         <div class="Card-title ItemTile" data-bind="visible: currentID() == -2">
             <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
@@ -51,9 +45,11 @@
                     <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
                     <div><strong data-bind="text: item().summary()"></strong></div>
                 </div>
+<!--
                 <div class="Tile-icon" data-bind="visible: !isBookingRequest()">
                     <i class="fa ion ion-edit" aria-hidden="true"></i>
                 </div>
+-->
             </button>
         </div>
         
@@ -259,7 +255,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('preferred'), 'ion-ios-circle-outline': !observerSelected('preferred')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
             <li data-bind="if: item().sourceBooking().alternativeDate1()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative1'), css: { active: observerSelected('alternative1') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                 <div class="Tile-content">
@@ -270,7 +266,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('alternative1'), 'ion-ios-circle-outline': !observerSelected('alternative1')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
             <li data-bind="if: item().sourceBooking().alternativeDate2()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative2'), css: { active: observerSelected('alternative2') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                 <div class="Tile-content">
@@ -281,7 +277,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('alternative2'), 'ion-ios-circle-outline': !observerSelected('alternative2')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
             <li><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'deny'), css: { active: observerSelected('deny') }">
                 <i class="Tile-marker fa fa-ban" aria-hidden="true"></i>
                 <div class="Tile-content">
@@ -291,7 +287,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('deny'), 'ion-ios-circle-outline': !observerSelected('deny')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
         </ul>
         <div class="AppointmentCard-actions" data-bind="visible: isBookingRequest()">
             <button type="button" class="btn btn-danger btn-block" data-bind="click: performSelectedBookingRequestAnswer, disable: isLocked">Confirm</button>

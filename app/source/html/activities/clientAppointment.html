@@ -9,7 +9,6 @@
                         <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> <span data-bind="text: returnText"></span></a>
                     </li>
                 </ul>
-                <button class="btn btn-default" data-bind="visible: isEditButtonVisible, click: isEditButtonVisible() && currentItem.edit">Edit this booking</button>
             </div>
             <div class="col-md-7 col-sm-reset">            
                 <h2 class="SectionTitle">
@@ -19,13 +18,18 @@
                     <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: isEditButtonVisible() && currentItem.edit">Edit</button>
                     </span>
                 </h2>
+                <div class="hidden-xs hidden-sm" style="margin: 10px;">
+                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-left" data-bind="event: { click: goPrevious}"></button>
+                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-right" data-bind="event: { click: goNext}"></button>
+                    <button class="btn btn-default pull-right" data-bind="visible: isEditButtonVisible, click: isEditButtonVisible() && currentItem.edit">Edit</button>
+                </div>
                 <div class="CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
                     <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
                     <div data-bind="visible: isEmpty" class="isolated">
                         No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a> 
                     </div>
                     <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
-                    <div class="CardsDeck-dots" data-bind="foreach: list, visible: currentIndex() > -1">
+                    <div class="CardsDeck-dots visible-xs visible-sm" data-bind="foreach: list, visible: currentIndex() > -1">
                         <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
                     </div>
                 </div>            
