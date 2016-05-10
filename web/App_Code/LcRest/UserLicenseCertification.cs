@@ -150,8 +150,9 @@ namespace LcRest
         }
         #endregion
 
-        #region Request of Review / Submit photo
-        const string photoPrefix = "$licenseCertification-";
+        #region Insert
+
+        #region SQL Insert
         const string sqlInsertNew = @"
             SET NOCOUNT ON
 
@@ -186,15 +187,30 @@ namespace LcRest
 
                 SELECT @@Identity
         ";
-        private static int insertNew(int userID, int jobTitleID, int licenseCertificationID, string submittedImageLocalURL)
+        #endregion
+
+        private static int Insert(UserLicenseCertification item, bool internalUpdate = false)
         {
-            var user = UserProfile.Get(userID);
+            // TODO, for an admin dashboard, we may need to implement internalUpdate allowing for update of all non-ID fields.
+            if (internalUpdate) throw new NotImplementedException("Internal update not implemented");
+            var user = UserProfile.Get(item.userID);
             using (var db = new LcDatabase())
             {
+                // Constraint: licenses cannot be duplicated for an existant licenseID (>0), but they can for the special wildcard IDs (-1, 0)
+                if (item.licenseCertificationID > 0)
+                {
+                    var many = (int)db.QueryValue("SELECT count(*) FROM UserLicenseCertifications WHERE ProviderUserID = @0 AND PositionID = @1 AND LicenseCertificationID = @2",
+                        item.userID, item.jobTitleID, item.licenseCertificationID);
+                    if (many > 0)
+                    {
+                        throw new ConstraintException("You have already registered that license, please try to update it if you want to submit a new file.");
+                    }
+                }
+
                 return (int)db.QueryValue(sqlInsertNew,
-                    userID,
-                    jobTitleID,
-                    licenseCertificationID,
+                    item.userID,
+                    item.jobTitleID,
+                    item.licenseCertificationID,
                     2,
                     "",
                     "",
@@ -209,19 +225,75 @@ namespace LcRest
                     "",
                     "",
                     "",
-                    userID,
-                    submittedImageLocalURL
+                    item.userID,
+                    item.submittedImageLocalURL
                 );
             }
         }
-        public static int SubmitPhoto(int userID, int jobTitleID, int licenseCertificationID, string originalFileName, Stream photo)
+
+        #endregion
+
+        #region Update
+        private static void Update(UserLicenseCertification item, bool internalUpdate = false)
         {
+            // TODO, for an admin dashboard, we may need to implement internalUpdate allowing for update of all non-ID fields.
+            if (internalUpdate) throw new NotImplementedException("Internal update not implemented");
+            using (var db = new LcDatabase())
+            {
+                db.Execute(@"
+                    UPDATE userlicensecertifications SET
+                         submittedImageLocalURL = @3
+                    WHERE
+                        ProviderUserID = @0
+                        AND PositionID = @1
+                        AND userLicenseCertificationID = @2
+                ", item.userID, item.jobTitleID, item.userLicenseCertificationID, item.submittedImageLocalURL);
+            }
+        }
+        #endregion
+
+        #region Set
+        static int Set(UserLicenseCertification item, bool internalUpdate = false)
+        {
+            if (item.userLicenseCertificationID > 0)
+            {
+                Update(item, internalUpdate);
+                return item.userLicenseCertificationID;
+            }
+            else
+            {
+                return Insert(item, internalUpdate);
+            }
+        }
+        #endregion
+
+        #region Request of Review / Submit photo
+        const string photoPrefix = "$licenseCertification-";
+
+
+        public static int SubmitPhoto(UserLicenseCertification item, string originalFileName, Stream photo)
+        {
+            // For updates, needs to remove previous file
+            if (item.userLicenseCertificationID > 0)
+            {
+                var oldItem = Get(item.userID, item.jobTitleID, item.languageID, item.userLicenseCertificationID);
+                if (oldItem == null)
+                    // Not found:
+                    return 0;
+                if (!String.IsNullOrEmpty(oldItem.submittedImageLocalURL))
+                {
+                    var localPath = oldItem.submittedImageLocalURL.Replace(LcUrl.AppUrl, "");
+                    localPath = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + localPath);
+                    File.Delete(localPath);
+                }
+            }
+
             // File name with special prefix
             var autofn = Guid.NewGuid().ToString().Replace("-", "");
             string fileName =  photoPrefix + autofn + (System.IO.Path.GetExtension(originalFileName) ?? ".jpg");
-            string virtualPath = LcUrl.RenderAppPath + LcData.Photo.GetUserPhotoFolder(userID);
+            string virtualPath = LcUrl.RenderAppPath + LcData.Photo.GetUserPhotoFolder(item.userID);
             var path = HttpContext.Current.Server.MapPath(virtualPath);
-            var submittedImageLocalURL = LcUrl.AppUrl + LcData.Photo.GetUserPhotoFolder(userID) + fileName;
+            item.submittedImageLocalURL = LcUrl.AppUrl + LcData.Photo.GetUserPhotoFolder(item.userID) + fileName;
             // Check folder or create
             if (!Directory.Exists(path))
             {
@@ -232,11 +304,11 @@ namespace LcRest
                 photo.CopyTo(file);
             }
             
-            var msg = "UserID: " + userID + " submitted a photo of their License/Certification to being verified and added. It can be found in the FTP an folder: " + virtualPath;
+            var msg = "UserID: " + item.userID + " submitted a photo of their License/Certification to being verified and added. It can be found in the FTP an folder: " + virtualPath;
             var email = "support@loconomics.zendesk.com";
-
             LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
-            return insertNew(userID, jobTitleID, licenseCertificationID, submittedImageLocalURL);
+
+            return Set(item);
         }
         #endregion
     }

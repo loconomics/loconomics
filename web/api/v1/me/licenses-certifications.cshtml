@@ -52,17 +52,29 @@
         
         public override dynamic Post()
         {
-            if (UrlData.Count == 1) {
-                return SetPhoto();
+            if (UrlData.Count == 1 &&
+                UrlData[0].IsInt())
+            {
+                return SetPhoto(UrlData[0].AsInt());
             }
             return base.Post();
         }
 
-        public dynamic SetPhoto()
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 2 &&
+                UrlData[0].IsInt() &&
+                UrlData[1].IsInt())
+            {
+                return SetPhoto(UrlData[0].AsInt(), UrlData[1].AsInt());
+            }
+            return base.Put();
+        }
+
+        public dynamic SetPhoto(int jobTitleID, int userLicenseCertificationID = 0)
         {
             // Input Data
             var userID = WebSecurity.CurrentUserId;
-            var jobTitleID = UrlData[0].AsInt();
             var licenseCertificationID = Request["licenseCertificationID"].AsInt();
             var languageID = LcRest.Locale.Current.languageID;
             var itemID = 0;
@@ -81,7 +93,13 @@
                     ModelState.AddFormError("Maximum request length exceeded");
                 }
                 else {
-                    itemID = LcRest.UserLicenseCertification.SubmitPhoto(userID, jobTitleID, licenseCertificationID, fileuploaded.FileName, photoStream);
+                    itemID = LcRest.UserLicenseCertification.SubmitPhoto(new LcRest.UserLicenseCertification {
+                        userID = userID,
+                        jobTitleID = jobTitleID,
+                        userLicenseCertificationID = userLicenseCertificationID,
+                        licenseCertificationID = licenseCertificationID,
+                        languageID = languageID
+                    }, fileuploaded.FileName, photoStream);
                 }
             }
             catch (Exception ex)
