@@ -177,10 +177,11 @@ namespace LcRest
                 submittedBy,
                 submittedImageLocalURL
                 ) VALUES (
-                    @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, 
+                    @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14,
+                    null,
                     getdate(), 
-                    @16, 
-                    @17  
+                    @15, 
+                    @16  
                 )
 
                 -- EXEC TestAlertProfessionalLicense @0, @1
@@ -223,8 +224,6 @@ namespace LcRest
                     "",
                     "",
                     "",
-                    "",
-                    null,
                     item.userID,
                     item.submittedImageLocalURL
                 );
