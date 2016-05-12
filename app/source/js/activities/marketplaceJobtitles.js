@@ -139,6 +139,9 @@ function ViewModel(app) {
     this.jobTitleName = ko.pureComputed(function() {
         return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
     }, this);
+    this.userID = ko.pureComputed(function() {
+        return app.model.userProfile.data.userID();
+    }, this);
     
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
