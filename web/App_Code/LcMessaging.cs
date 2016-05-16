@@ -870,7 +870,7 @@ public class LcMessaging
     public static void SendResetPassword(int userID, string userEmail)
     {
         SendMail(userEmail, "Forget being forgetful",
-            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/ResetPassword/",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToUser/ResetPassword/",
             new Dictionary<string, object> {
                 { "UserID", userID }
         }));
