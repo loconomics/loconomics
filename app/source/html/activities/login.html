@@ -21,11 +21,39 @@
                 <label for="accountPassword">Password</label>
                 <input type="password" class="form-control" id="accountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
             </div>
+            <div class="isolated">
+                <!--      data-bind="attr: { 'aria-pressed': rememberMe }" 
+                data-bind="css: { 'ion-android-checkbox-outline': rememberMe, 'ion-android-checkbox-outline-blank': !rememberMe() }"
+                 data-bind="checked: rememberMe" 
+                <span role="button" class="fa fa-lg ion ion-android-checkbox-outline"></span>
+                <input type="checkbox" hidden /> Remember me
+                -->
+                <span class="pull-right text-secondary">Forget password?</span>
+                <br> 
+            </div>
             <button type="submit" data-loading-text="Logging you in..." class="btn btn-primary btn-block" autocomplete="off">Log in</button>
         </form>
-        <div class="isolated text-center">
-            <a href="#!terms/terms-of-service?mustReturn=true">Terms of Use</a> &amp;
-            <a href="#!terms/privacy-policy?mustReturn=true">Privacy Policy</a>
-        </div>
+    </div>
+    <div class="LightForm LeadContent">
+        <h2>Reset your password</h2>
+        <p class="isolated text-center">Enter your email address that's associated with your account. We’ll send you a link so you can reset your password.</p>      
+        <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
+            <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
+                <input type="email" class="form-control" id="accountEmail" placeholder="Email Address" data-bind="value: username, popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+<!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
+            </div>
+            <button type="submit" data-loading-text="Logging you in..." class="btn btn-primary btn-block" autocomplete="off">Reset my password</button>
+        </form> 
+    </div>
+    <div class="LightForm LeadContent">
+        <h2>You're welcome!</h2>
+        <p class="isolated text-center">Instructions to reset your password have been sent to <span data-bind""></span>. Please check your spam folder if you don't see it.</p>      
+        <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
+            <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
+                <input type="email" class="form-control" id="accountEmail" placeholder="Email Address" data-bind="value: username, popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+<!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
+            </div>
+            <button type="submit" data-loading-text="Logging you in..." class="btn btn-primary btn-block" autocomplete="off">Reset my password</button>
+        </form> 
     </div>
 </div>
