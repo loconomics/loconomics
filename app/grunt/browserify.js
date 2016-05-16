@@ -110,19 +110,20 @@ module.exports = function(/*grunt*/) {
                 /// JQUERY FILEUPLOAD WITH IMAGE PREVIEW SUPPORT
                 // the jquery-ui widget constructor is needed, but this included dependency
                 // can be avoided if jquery-ui is included already in the project
-                'jquery.ui.widget': {
+                /*'jquery.ui.widget': {
                     path: './vendor/jquery.fileupload/js/vendor/jquery.ui.widget.js',
                     exports: null,
                     depends: { jquery: 'jquery' }
-                },
+                },*/
                 // Basic fileupload through XHR component
                 'jquery.fileupload': {
                     path: './vendor/jquery.fileupload/js/jquery.fileupload.js',
                     exports: null,
                     depends: {
                         jquery: 'jquery',
-                        // jquery-ui is included in the project, use it rather than add duplicated content
-                        'jquery-ui': null
+                        // jquery-ui is included in the project, use it rather than add duplicated content, and the specific widget module if possible
+                        'jquery-ui/widget': null
+                        //'jquery-ui': null
                         //'jquery.ui.widget': 'jquery.ui.widget'
                     }
                 },
