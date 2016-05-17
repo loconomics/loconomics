@@ -27,6 +27,7 @@
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/me/{page}/{*urldata}", "~/api/v1/me/{page}.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/users/{userID}", "~/api/v1/users/index.cshtml");
     RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/users/{userID}/{page}/{*urldata}", "~/api/v1/users/{page}.cshtml");
+    RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/auth/{page}/{*urldata}", "~/api/v1/auth/{page}.cshtml");
     // Disabled experimental icalendar route
     //RouteTable.Routes.MapWebPageRoute("api/v1/{locale}/icalendar/{page}", "~/api/v1/icalendar/{page}.cshtml");
     // Catch-all pages route, will route to any page inmediately in the API folder, or Not Found

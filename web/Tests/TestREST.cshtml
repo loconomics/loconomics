@@ -995,6 +995,21 @@
                 "origLong": "-122.40297199999998",
                 "searchDistance": "30"
             }
+        },
+
+        "Reset password: Request e-mail / reset token": {
+            "url": "/api/v1/en-US/auth/reset-password",
+            "post": {
+                "username": "some user email"
+            }
+        },
+        "Reset password: Confirm reset by providing the valid token and new password": {
+            "url": "/api/v1/en-US/auth/reset-password/confirm",
+            "post": {
+                "token": "a-valid-reset-code-token",
+                "password": "new password",
+                "confirm": "repeated new password"
+            }
         }
     };
 

@@ -867,12 +867,13 @@ public class LcMessaging
                 { "userID", userID }
         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
-    public static void SendResetPassword(int userID, string userEmail)
+    public static void SendResetPassword(int userID, string userEmail, string token)
     {
         SendMail(userEmail, "Forget being forgetful",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToUser/ResetPassword/",
             new Dictionary<string, object> {
-                { "UserID", userID }
+                { "UserID", userID },
+                { "passwordResetToken", token }
         }));
     }
     #endregion
