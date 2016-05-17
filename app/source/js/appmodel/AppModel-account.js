@@ -86,6 +86,38 @@ exports.plugIn = function (AppModel) {
         return this.rest.post('signup?utm_source=app', data)
         .then(performLocalLogin(this, data.email, data.password));
     };
+    
+    /**
+        Request an email with token to reset the password for a given user
+        @param data:Object {
+            username:string
+            email:string Alias to username value
+        }
+        @result Promise<Object {
+            message:string Server-side message about the result
+        }>
+        The e-mail will contain the URL 'login/reset-password/?token='
+        and the token value in the parameter.
+    **/
+    AppModel.prototype.resetPassword = function resetPassword(data) {
+        var username = data.username || data.email;
+        return this.rest.post('auth/reset-password', { username: username });
+    };
+
+    /**
+        Confirm to reset a password providing a new password and valid token
+        @param data:Object {
+            token:string Value provided in an URL from the resetting e-mail
+            password:string New password
+            confirm:string Repeated password for confirmation
+        }
+        @result Promise<Object {
+            message:string Server-side message about the result
+        }>
+    **/
+    AppModel.prototype.confirmResetPassword = function confirmResetPassword(data) {
+        return this.rest.post('auth/reset-password/confirm', data);
+    };
 };
 
 function performLocalLogin(thisAppModel, username/*, password*/) {
