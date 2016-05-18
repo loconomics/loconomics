@@ -54,8 +54,13 @@
     // Auth
     RouteTable.Routes.MapWebPageRoute("{locale}/auth/login", "~/_specialRoutes/Login.cshtml");
     RouteTable.Routes.MapWebPageRoute("{locale}/auth/confirm", "~/_specialRoutes/Confirm.cshtml");
+    
+    // App/Webapp explicit rules
+    // TODO: some day this list needs to be automatic, from the activity list, right now has some explicit rules to avoid conflicts with
+    // more generic rules after this (the problematic is the customURL rule, basically)
+    RouteTable.Routes.MapWebPageRoute("login/{*urldata}", "~/Default.cshtml");
 
-    // NORMAL ROUTES
+    // Special Server ROUTES
     // Booking with service professional bookcode URL
     RouteTable.Routes.MapWebPageRoute("book/{bookcode}", "~/_specialRoutes/Book.cshtml");
     RouteTable.Routes.MapWebPageRoute("book/{bookcode}/{jobTitleID}", "~/_specialRoutes/Book.cshtml");
