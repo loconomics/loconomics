@@ -429,7 +429,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "login/reset-password/?token=" + Uri.EscapeDataString(passwordResetToken);
+                return LcUrl.AppUrl + "login/reset-password/confirm?token=" + Uri.EscapeDataString(passwordResetToken);
             }
         }
         /// <summary>

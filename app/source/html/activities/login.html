@@ -1,6 +1,6 @@
 <!-- Activity login -->
 <div class="LightForm" data-activity="login">
-    <div class="LeadContent">
+    <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'login' }">
         <h3>Log in to your account</h3>
         <!-- HIDDEN UNTIL GETS IMPLEMENTED ON APP -only web version works of Facebook Connect
         <div>
@@ -12,10 +12,10 @@
         or
         </p>
         -->
-        <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
+        <form role="form" data-bind="submit: performLogin" novalidate>
             <div class="form-group" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
-                <label for="accountEmail">Email address</label>
-                <input type="email" class="form-control" id="accountEmail" placeholder="Enter email" data-bind="value: username, popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                <label for="login-username">Email address</label>
+                <input type="email" class="form-control" id="login-username" placeholder="Enter email" data-bind="value: username, popover: { content: username.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
             </div>
             <div class="form-group" data-bind="css: { 'has-warning': password.error }, 'has-success': !password.error()">
                 <label for="accountPassword">Password</label>
@@ -28,32 +28,44 @@
                 <span role="button" class="fa fa-lg ion ion-android-checkbox-outline"></span>
                 <input type="checkbox" hidden /> Remember me
                 -->
-                <span class="pull-right text-secondary">Forget password?</span>
+                <button type="button" class="btn btn-link pull-right text-secondary" data-bind="click: goReset">Forget password?</button>
                 <br> 
             </div>
-            <button type="submit" data-loading-text="Logging you in..." class="btn btn-primary btn-block" autocomplete="off">Log in</button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: loginButtonText"></button>
         </form>
     </div>
-    <div class="LightForm LeadContent">
+    <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'reset-password' }">
         <h2>Reset your password</h2>
         <p class="isolated text-center">Enter your email address that's associated with your account. We’ll send you a link so you can reset your password.</p>      
-        <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
+        <form role="form" data-bind="submit: requestReset" novalidate>
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
-                <input type="email" class="form-control" id="accountEmail" placeholder="Email Address" data-bind="value: username, popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                <label for="login-reset-username" class="sr-only">Email address</label>
+                <input type="email" class="form-control" id="login-reset-username" placeholder="Email Address" data-bind="value: username, popover: { content: username.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
 <!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
             </div>
-            <button type="submit" data-loading-text="Logging you in..." class="btn btn-primary btn-block" autocomplete="off">Reset my password</button>
-        </form> 
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: requestResetButtonText"></button>
+        </form>
     </div>
-    <div class="LightForm LeadContent">
+    <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'confirm-reset' }">
         <h2>You're welcome!</h2>
-        <p class="isolated text-center">Instructions to reset your password have been sent to <span data-bind""></span>. Please check your spam folder if you don't see it.</p>      
-        <form role="form" data-bind="event: { submit: performLogin }, css: { 'has-error': loginError }" novalidate>
-            <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
-                <input type="email" class="form-control" id="accountEmail" placeholder="Email Address" data-bind="value: username, popover: { content: username.error() || loginError(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+        <p class="isolated text-center" data-bind="text: requestResetMessage"></p>
+        <form role="form" data-bind="submit: confirmReset" novalidate>
+            <div class="form-group has-feedback">
+                <label for="login-confirm-reset-resetToken">Reset code</label>
+                <input type="text" id="login-confirm-reset-resetToken" class="form-control" placeholder="The reset code we sent you" data-bind="value: resetToken">
 <!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
             </div>
-            <button type="submit" data-loading-text="Logging you in..." class="btn btn-primary btn-block" autocomplete="off">Reset my password</button>
+            <div class="form-group has-feedback">
+                <label for="login-confirm-reset-pwd">New password</label>
+                <input type="password" id="login-confirm-reset-pwd" class="form-control" placeholder="New password" data-bind="value: password">
+<!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
+            </div>
+            <div class="form-group has-feedback">
+                <label for="login-confirm-reset-confirmPassword">Confirm password</label>
+                <input type="password" id="login-confirm-reset-confirmPassword" class="form-control" placeholder="Repeat password" data-bind="value: confirmPassword">
+<!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: confirmResetButtonText"></button>
         </form> 
     </div>
 </div>
