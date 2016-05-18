@@ -31,6 +31,9 @@
     
     <!-- Customize your app and platform with the preference element. -->
     <preference name="phonegap-version" value="cli-5.2.0" />
+    <!-- Latest plugins require Gradle (like Facebook), and this enforce PhonegapBuild to use it,
+        because the 'default' behavior is getting Ant (even PGB says the opposite) -->
+    <preference name="android-build-tool"         value="gradle" />
 
     <!-- all: default means both landscape and portrait are enabled -->
     <preference name="orientation" value="default" />
@@ -52,8 +55,8 @@
     <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="disable-cursor" value="false" />
     <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
-    <!-- Android: 7->2.1, 10->2.3.3, 11->3.0, 14->4.0. All: https://en.wikipedia.org/wiki/Android_version_history -->
-    <preference name="android-minSdkVersion" value="14" />
+    <!-- Android: 7->2.1, 10->2.3.3, 11->3.0, 14->4.0., 15->4.0.3 All: https://en.wikipedia.org/wiki/Android_version_history -->
+    <preference name="android-minSdkVersion" value="15" />
     <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
     <preference name="android-installLocation" value="auto" />
     
@@ -90,6 +93,10 @@
     <plugin name="cordova-plugin-file" spec="3.0.0" />
     <plugin name="cordova-plugin-file-transfer" spec="1.2.1" />
     <plugin name="cordova-universal-clipboard" spec="0.1.0" />
+    <plugin name="cordova-plugin-facebook4" spec="1.7.1"><!--name="phonegap-facebook-plugin" spec="0.12.0">-->
+        <param name="APP_ID" value="@(facebookAppID)" />
+        <param name="APP_NAME" value="@(facebookAppName)" />
+    </plugin>
     <!--<plugin name="com.instabug.phonegap" spec="0.1.6" />-->
     
     <!--

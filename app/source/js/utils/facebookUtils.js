@@ -19,7 +19,9 @@ var settings = {
 
 // Private API loading/ready status
 var apiStatus = {
-    ready: false,
+    // We may start with a ready state if we found that the Facebook lib is already loaded when
+    // initializing this, allowing some use cases, optimizations-preloads, or even native-binding-js case replicating the same api(with a facebook phonegap plugin)
+    ready: !!window.FB,
     loading: false,
     // Private static collection of callbacks registered
     stack: []

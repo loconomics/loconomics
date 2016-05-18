@@ -2,16 +2,14 @@
 <div class="LightForm" data-activity="login">
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'login' }">
         <h3>Log in to your account</h3>
-        <!-- HIDDEN UNTIL GETS IMPLEMENTED ON APP -only web version works of Facebook Connect
-        <div>
-        <a href="#facebook" class="btn btn-default btn-block btn-facebook" data-bind="click: facebook">Facebook</a>
-        <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-- >
+        <div class="isolated">
+            <a href="#facebook" class="btn btn-default btn-block btn-facebook" data-bind="click: facebook">Facebook</a>
+            <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
         </div>
 
         <p class="isolated text-center">
         or
         </p>
-        -->
         <form role="form" data-bind="submit: performLogin" novalidate>
             <div class="form-group" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
                 <label for="login-username">Email address</label>

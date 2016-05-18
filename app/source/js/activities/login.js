@@ -69,7 +69,24 @@ A.prototype.show = function show(state) {
 };
 
 var FormCredentials = require('../viewmodels/FormCredentials');
-var fb = require('../utils/facebookUtils');
+
+// Facebook login support: native/plugin or web?
+var facebookLogin = null;
+if (window.facebookConnectPlugin) {
+    // native/plugin
+    facebookLogin = function() {
+        return new Promise(function(s, e) {
+            window.facebookConnectPlugin.login(['email'], s, e);
+        });
+    };
+}
+else {
+    var fb = require('../utils/facebookUtils');
+    // email,user_about_me
+    facebookLogin = function() {
+        return fb.login({ scope: 'email' });
+    };
+}
 
 function ViewModel(app) {
 
@@ -185,10 +202,10 @@ function ViewModel(app) {
     // Facebook Login
     this.facebook = function() {
         this.isWorking(true);
-        // email,user_about_me
-        fb.login({ scope: 'email' })
+        facebookLogin()
         .then(function (result) {
-            return app.model.facebookLogin(result.auth.accessToken)
+            var accessToken = result.authResponse && result.authResponse.accessToken || result.auth && result.auth.accessToken;
+            return app.model.facebookLogin(accessToken)
             .then(function(/*loginData*/) {
                 // Is implicit at reset: this.isWorking(false);
                 this.reset();
