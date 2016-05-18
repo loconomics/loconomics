@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -420,7 +420,7 @@ public static class LcEmailTemplate
         /// <summary>
         /// Internal field to set the password reset token, only preset when processing a 'reset password request' email.
         /// </summary>
-        internal string passwordResetToken;
+        public string passwordResetToken;
         /// <summary>
         /// Link back to the 'reset password' providing the user specific 'reset token',
         /// the page will prompts user with a password field, confirmation and 'reset' button.
