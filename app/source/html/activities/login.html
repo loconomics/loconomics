@@ -21,17 +21,17 @@
                 <label for="accountPassword">Password</label>
                 <input type="password" class="form-control" id="accountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
             </div>
-            <div class="isolated">
+            <div class="text-right">
                 <!--      data-bind="attr: { 'aria-pressed': rememberMe }" 
                 data-bind="css: { 'ion-android-checkbox-outline': rememberMe, 'ion-android-checkbox-outline-blank': !rememberMe() }"
                  data-bind="checked: rememberMe" 
                 <span role="button" class="fa fa-lg ion ion-android-checkbox-outline"></span>
                 <input type="checkbox" hidden /> Remember me
                 -->
-                <button type="button" class="btn btn-link pull-right text-secondary" data-bind="click: goReset">Forget password?</button>
+                <button type="button" class="btn btn-link text-secondary" data-bind="click: goReset">Forget password?</button>
                 <br> 
             </div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: loginButtonText"></button>
+            <button type="submit" class="btn btn-primary btn-block isolated" data-bind="text: loginButtonText"></button>
         </form>
     </div>
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'reset-password' }">
