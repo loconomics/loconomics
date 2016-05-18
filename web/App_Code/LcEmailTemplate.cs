@@ -446,7 +446,7 @@ public static class LcEmailTemplate
                 {
                     confirmationToken = LcAuth.GetConfirmationToken(userID) ?? "";
                 }
-                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
+                return LcUrl.AppUrl + "auth/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
             }
         }
         public string viewDownloadAppURL

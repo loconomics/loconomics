@@ -52,10 +52,8 @@
     RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
     
     // Auth
-    RouteTable.Routes.MapWebPageRoute("{locale}/account/login", "~/_specialRoutes/Login.cshtml");
-    RouteTable.Routes.MapWebPageRoute("{locale}/account/confirm", "~/_specialRoutes/Confirm.cshtml");
-    RouteTable.Routes.MapWebPageRoute("account/login", "~/_specialRoutes/Login.cshtml");
-    RouteTable.Routes.MapWebPageRoute("account/confirm", "~/_specialRoutes/Confirm.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/auth/login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("{locale}/auth/confirm", "~/_specialRoutes/Confirm.cshtml");
 
     // NORMAL ROUTES
     // Booking with service professional bookcode URL
