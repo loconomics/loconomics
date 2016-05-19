@@ -87,7 +87,7 @@
     <plugin name="cordova-plugin-splashscreen" spec="3.0.0" />
     <plugin name="cordova-plugin-inappbrowser" spec="1.0.1" />
     <plugin name="cordova-plugin-device" spec="1.0.1" />
-    <plugin name="cordova-plugin-wkwebview" spec="0.6.5" />
+    <plugin name="cordova-plugin-wkwebview" spec="0.6.9" />
     <plugin name="cordova-plugin-whitelist" spec="1.0.0" />
     <plugin name="cordova-plugin-camera" spec="1.2.0" />
     <plugin name="cordova-plugin-file" spec="3.0.0" />
