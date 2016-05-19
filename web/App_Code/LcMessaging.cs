@@ -1024,7 +1024,10 @@ public class LcMessaging
             if (data != null)
             foreach (var d in data)
             {
-                w.QueryString.Add(d.Key, (d.Value ?? "").ToString());
+                // IMPORTANT: Expectation about the QueryString and WebClient was that they perform the correct
+                // management of URL encoding for the given data, but it does nothing so needs to be manually done
+                // using Uri.EscapeDataString to avoid bugs (fixed a bug at #965)
+                w.QueryString.Add(d.Key, (Uri.EscapeDataString((d.Value ?? "").ToString())).ToString());
             }
             if (!w.QueryString.AllKeys.Contains<string>("RequestKey"))
                 w.QueryString["RequestKey"] = SecurityRequestKey;
