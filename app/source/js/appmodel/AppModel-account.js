@@ -39,7 +39,7 @@ exports.plugIn = function (AppModel) {
             accessToken: accessToken,
             returnProfile: true
         }).then(function(logged) {
-            return performLocalLogin(this, logged.email, null);
+            return performLocalLogin(this, logged.profile.email, null)(logged);
         }.bind(this));
     };
 
