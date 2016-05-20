@@ -29,7 +29,7 @@
                 <button type="button" class="btn btn-link text-secondary" data-bind="click: goReset">Forget password?</button>
                 <br> 
             </div>
-            <button type="submit" class="btn btn-primary btn-block isolated" data-bind="text: loginButtonText"></button>
+            <button type="submit" class="btn btn-primary btn-block isolated" data-bind="text: loginButtonText, disable: isWorking"></button>
         </form>
     </div>
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'reset-password' }">
@@ -41,7 +41,7 @@
                 <input type="email" class="form-control" id="login-reset-username" placeholder="Email Address" data-bind="value: username, popover: { content: username.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
 <!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
             </div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: requestResetButtonText"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: requestResetButtonText, disable: isWorking"></button>
         </form>
     </div>
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'confirm-reset' }">
@@ -63,7 +63,7 @@
                 <input type="password" id="login-confirm-reset-confirmPassword" class="form-control" placeholder="Repeat password" data-bind="value: confirmPassword">
 <!--                <icon class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></icon>-->
             </div>
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: confirmResetButtonText"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="text: confirmResetButtonText, disable: isWorking"></button>
         </form> 
     </div>
 </div>
