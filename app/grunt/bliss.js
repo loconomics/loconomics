@@ -138,7 +138,10 @@ module.exports = function(grunt) {
                       email: 'support@loconomics.com',
                       url: 'https://loconomics.com',
                       text: '<%= package.author %>'
-                    }
+                    },
+                    facebookAppID: facebookAppID,
+                    facebookLang: facebookLang,
+                    facebookAppName: '<%= package.appName %>'
                 }
             }
         },
@@ -156,7 +159,10 @@ module.exports = function(grunt) {
                       email: 'support@loconomics.com',
                       url: 'https://loconomics.com',
                       text: '<%= package.author %>'
-                    }
+                    },
+                    facebookAppID: facebookAppID,
+                    facebookLang: facebookLang,
+                    facebookAppName: '<%= package.appName %>'
                 }
             }
         }

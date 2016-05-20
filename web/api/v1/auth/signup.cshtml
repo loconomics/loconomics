@@ -40,7 +40,7 @@
 
     EXAMPLES {
         "Signup, detailed data required": {
-            "url": "/api/v1/en-US/signup",
+            "url": "/api/v1/en-US/auth/signup",
             "post": {
                  "email": "some user email",
                  "password": "",
@@ -58,7 +58,7 @@
             }
         },
         "Quick Signup, simplified to require just email and password": {
-            "url": "/api/v1/en-US/signup/quick",
+            "url": "/api/v1/en-US/auth/signup/quick",
             "post": {
                  "email": "some user email",
                  "password": "",
@@ -68,7 +68,7 @@
             }
         },
         "Facebook Signup (quick signup that will retrieve basic user data from Facebook, server2server)": {
-            "url": "/api/v1/en-US/signup/facebook",
+            "url": "/api/v1/en-US/auth/signup/facebook",
             "post": {
                 "accessToken": "Facebook Access Token",
                 "profileType": "service-professional",
