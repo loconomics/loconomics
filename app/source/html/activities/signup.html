@@ -3,16 +3,14 @@
   <div class="LeadContent container Signup-formcontainer" data-bind="visible: profile">
       <p class="Signup-login"><span>Already have an account? </span><a class="btn btn-link" href="/login">Login</a></p>
       <hr>
-  <!-- HIDDEN UNTIL GETS IMPLEMENTED   ON APP -only web version works of Facebook Connect
     <div data-bind="visible: !facebookUserID()">
       <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
-      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-- >
+      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
     </div>
 
     <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()">
       <span>or</span>
     </p>
-    -->
     <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
         <script type="text/html" id="signup-field">
           <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
