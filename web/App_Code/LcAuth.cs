@@ -211,7 +211,7 @@ public static class LcAuth
         int? userId = GetFacebookUserID(facebookID);
         if (userId.HasValue)
         {
-            var userData = LcData.UserInfo.GetUserRow(userId.Value);
+            var userData = LcRest.UserProfile.Get(userId.Value);
             // Check is valid (only edge cases will not be a valid record,
             // as incomplete manual deletion of user accounts that didn't remove
             // the Facebook connection).
@@ -219,8 +219,8 @@ public static class LcAuth
             {
                 return new RegisteredUser
                 {
-                    Email = userData.Email,
-                    IsProvider = userData.IsProvider,
+                    Email = userData.email,
+                    IsProvider = userData.isServiceProfessional,
                     UserID = userId.Value
                 };
             }

@@ -71,6 +71,20 @@ A.prototype.show = function show(state) {
 var FormCredentials = require('../viewmodels/FormCredentials');
 var fb = require('../utils/facebookUtils');
 
+// Facebook login support: native/plugin or web?
+var facebookLogin = function() {
+    if (window.facebookConnectPlugin) {
+        // native/plugin
+        return new Promise(function(s, e) {
+            window.facebookConnectPlugin.login(['email'], s, e);
+        });
+    }
+    else {        
+        // email,user_about_me
+        return fb.login({ scope: 'email' });
+    }  
+};
+
 function ViewModel(app) {
 
     var credentials = new FormCredentials();    
@@ -125,6 +139,7 @@ function ViewModel(app) {
         ).then(function(/*loginData*/) {
             // Is implicit at reset: this.isWorking(false);
             this.reset();
+            this.isWorking(false);
 
             if (this.redirectUrl())
                 app.shell.go(this.redirectUrl());
@@ -184,14 +199,15 @@ function ViewModel(app) {
     
     // Facebook Login
     this.facebook = function() {
-        this.isWorking(true);
-        // email,user_about_me
-        fb.login({ scope: 'email' })
+        facebookLogin()
         .then(function (result) {
-            return app.model.facebookLogin(result.auth.accessToken)
+            var accessToken = result.authResponse && result.authResponse.accessToken || result.auth && result.auth.accessToken;
+            this.isWorking(true);
+            return app.model.facebookLogin(accessToken)
             .then(function(/*loginData*/) {
                 // Is implicit at reset: this.isWorking(false);
                 this.reset();
+                this.isWorking(false);
 
                 if (this.redirectUrl())
                     app.shell.go(this.redirectUrl());
@@ -199,7 +215,7 @@ function ViewModel(app) {
                     app.goDashboard();
 
             }.bind(this));
-        })
+        }.bind(this))
         .catch(function(err) {
             this.isWorking(false);
             var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
