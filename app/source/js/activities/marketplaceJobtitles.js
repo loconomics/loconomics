@@ -26,7 +26,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
             if (jobTitleID) {
                 ////////////
-                // Job Title
+                // User Job Title
                 // Get data for the Job Title and User Profile
                 this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
                 //this.app.model.jobTitles.getJobTitle(jobTitleID)
@@ -34,7 +34,6 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     // Fill the job title record
                     this.viewModel.jobTitle(job.jobTitle);
                     this.viewModel.userJobTitle(job.userJobTitle);
-                    this.viewModel.userID(job.userJobTitle.userID());
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
@@ -43,6 +42,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     });
                 }.bind(this));
                 
+                /* NOTE: job title comes in the previous userJobProfile call, so is no need to duplicate the task
                 ////////////
                 // Job Title
                 // Get data for the Job title ID
@@ -57,7 +57,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         title: 'There was an error while loading the job title.',
                         error: err
                     });
-                }.bind(this));
+                }.bind(this));*/
                 
                 ////////////
                 // Work Photos
@@ -100,7 +100,9 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                 }.bind(this));
             }
             else {
-                this.viewModel.jobTitleName('Job Title');
+                this.viewModel.jobTitle(null);
+                this.viewModel.userJobTitle(null);
+                //this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -132,9 +134,14 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
-    this.userID = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title'); 
     this.returnText = ko.observable('Back'); 
+    //this.jobTitleName = ko.observable('Job Title'); 
+    this.jobTitleName = ko.pureComputed(function() {
+        return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
+    }, this);
+    this.userID = ko.pureComputed(function() {
+        return app.model.userProfile.data.userID();
+    }, this);
     
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route

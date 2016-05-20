@@ -9,6 +9,7 @@ var ko = require('knockout'),
 
 var WorkPhoto = require('../models/WorkPhoto'),
     photoTools = require('../utils/photoTools');
+require('jquery.fileupload-image');
 
 var A = Activity.extend(function WorkPhotosActivity() {
 
@@ -25,12 +26,58 @@ var A = Activity.extend(function WorkPhotosActivity() {
     this.registerHandler({
         target: this.$activity,
         selector: '.WorkPhotos-imgBtn',
-        event: 'click',
+        event: 'click mouseenter mouseleave',
         handler: function(event) {
             if (!this.viewModel.state.isLocked())
-                $(event.target).closest('li').toggleClass('is-selected');
+                $(event.target).closest('li').toggleClass('is-selected', event.type === 'mouseenter' || event.type === 'click');
         }.bind(this)
     });
+
+    if (!photoTools.takePhotoSupported()) {
+        // Web version to pick a photo/file
+        var $input = this.$activity.find('#workPhotos-photoFile');//input[type=file]
+        // Constant size: is the maximum as defined in the CSS and server processing.
+        var PHOTO_WIDTH = 442;
+        var PHOTO_HEIGHT = 332;
+        $input.fileupload({
+            // Asigned per file uploaded:
+            //url: 'assigned per file uploaded',
+            //type: 'PUT',
+            //paramName: 'file',
+            dataType: 'json',
+            autoUpload: false,
+            acceptFileTypes: /(\.|\/)(jpe?g)$/i,
+            maxFileSize: 5000000, // 5MB
+            disableImageResize: true,
+            // // Enable image resizing, except for Android and Opera,
+            // // which actually support image resizing, but fail to
+            // // send Blob objects via XHR requests:
+            // disableImageResize: /Android(?!.*Chrome)|Opera/
+            // .test(window.navigator.userAgent),
+            previewMaxWidth: PHOTO_WIDTH,
+            previewMaxHeight: PHOTO_HEIGHT,
+            previewCrop: true
+        })
+        .on('fileuploadprocessalways', function (e, data) {
+            var file = data.files[data.index];
+            if (file.error) {
+                // TODO Show preview error?
+                console.error('Photo Preview', file.error);
+            }
+            else if (file.preview) {
+                //this.viewModel.list()[data.index].localTempPhotoPreview(file.preview);
+                var newItem = new WorkPhoto({
+                    workPhotoID: 0,
+                    jobTitleID: this.viewModel.jobTitleID(),
+                    url: null,
+                    localTempFileData: data,
+                    localTempPhotoPreview: file.preview,
+                    caption: ''
+                });
+                this.viewModel.list.push(newItem);
+            }
+        }.bind(this));
+    }
 });
 
 exports.init = A.init;
@@ -70,6 +117,8 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.list = ko.observableArray([]);
     this.removedItems = ko.observableArray([]);
+    
+    this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
     
     this.state = app.model.workPhotos.state;
     

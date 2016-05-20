@@ -6,6 +6,7 @@ require('jquery-mobile');
 require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
+ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
 var bootknock = require('./utils/bootknockBindingHelpers');
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
