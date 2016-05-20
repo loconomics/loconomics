@@ -69,24 +69,21 @@ A.prototype.show = function show(state) {
 };
 
 var FormCredentials = require('../viewmodels/FormCredentials');
+var fb = require('../utils/facebookUtils');
 
 // Facebook login support: native/plugin or web?
-var facebookLogin = null;
-if (window.facebookConnectPlugin) {
-    // native/plugin
-    facebookLogin = function() {
+var facebookLogin = function() {
+    if (window.facebookConnectPlugin) {
+        // native/plugin
         return new Promise(function(s, e) {
             window.facebookConnectPlugin.login(['email'], s, e);
         });
-    };
-}
-else {
-    var fb = require('../utils/facebookUtils');
-    // email,user_about_me
-    facebookLogin = function() {
+    }
+    else {        
+        // email,user_about_me
         return fb.login({ scope: 'email' });
-    };
-}
+    }  
+};
 
 function ViewModel(app) {
 
