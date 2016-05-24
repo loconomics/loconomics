@@ -6,16 +6,15 @@
         <h3 data-bind="visible: !forServiceProfessional">Sign up for free</h3>
         <h3 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h3>    
 
-  <!-- HIDDEN UNTIL GETS IMPLEMENTED ON  APP -only web version works of Facebook Connect
-    <div data-bind="visible: !facebookUserID()">
-      <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
-      <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-- >
+    <div class="Signup-providers">
+        <div data-bind="visible: !facebookUserID()">
+          <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
+          <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
+        </div>
+        <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()">
+          <span>or</span>
+        </p>
     </div>
-
-    <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()">
-      <span>or</span>
-    </p>
-    -->
       
     <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
         <label for="firstName">First Name</label>

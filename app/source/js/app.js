@@ -264,6 +264,8 @@ var appInit = function appInit() {
         // on input focus, else a bug will happen specially on iOS where input
         // fields gets hidden by the on screen keyboard.
         window.cordova.plugins.Keyboard.disableScroll(false);
+        // Fix bug on iOS 9.x with plugin version 2.2.0
+        window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
     }
     
     // Easy links to shell actions, like goBack, in html elements
