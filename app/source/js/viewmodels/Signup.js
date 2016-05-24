@@ -17,6 +17,39 @@ var newFieldObs = function() {
     return obs;
 };
 
+
+// Facebook login support: native/plugin or web?
+var fb = require('../utils/facebookUtils');
+var facebookLogin = function() {
+    if (window.facebookConnectPlugin) {
+        // native/plugin
+        return new Promise(function(s, e) {
+            window.facebookConnectPlugin.login(['email'], s, e);
+        });
+    }
+    else {        
+        // email,user_about_me
+        return fb.login({ scope: 'email' });
+    }  
+};
+var facebookMe = function() {
+    if (window.facebookConnectPlugin) {
+        return new Promise(function(s, e) {
+            window.facebookConnectPlugin.api('/me?fields=email,first_name,last_name', ['email'], s, e);
+        });
+    }
+    else if (window.FB) {
+        return new Promise(function(s, e) {
+            window.FB.api('/me', { fields: 'email,first_name,last_name' }, function(r) {
+                if (!r || r.error)
+                    e(r && r.error);
+                else
+                    s(r);
+            });
+        });
+    }
+};
+
 function SignupVM(app) {
     
     EventEmitter.call(this);
@@ -119,6 +152,14 @@ function SignupVM(app) {
 
             err = err && err.responseJSON;
 
+            var msg = err && err.errorMessage;
+            if (msg) {
+                // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
+                app.modals.showError({
+                    title: 'There was an error signing-up',
+                    error: msg
+                });
+            }
             // Process validation errors, tagging fields or general error
             if (err && err.errorSource === 'validation' && err.errors) {
                 Object.keys(err.errors).forEach(function(fieldKey) {
@@ -128,12 +169,7 @@ function SignupVM(app) {
                 }.bind(this));
             }
             else {
-                var msg = err && err.errorMessage ||
-                    err && err.statusText ||
-                    'Invalid username or password';
-
-                this.signupError(msg);
-                this.email.error(msg);
+                this.signupError(msg || err && err.statusText || 'Invalid username or password');
             }
 
             this.isSigningUp(false);
@@ -159,24 +195,21 @@ function SignupVM(app) {
     }, this);
     
     this.facebook = function() {
-        var fb = require('../utils/facebookUtils');
         var vm = this;
 
         // email,user_about_me
-        fb.login({ scope: 'email' }).then(function (result) {
-            var auth = result.auth,
-                FB = result.FB;
+        facebookLogin().then(function (result) {
+            var auth = result.authResponse || result.auth;
             // Set FacebookId to link accounts:
             vm.facebookUserID(auth.userID);
             vm.facebookAccessToken(auth.accessToken);
             // Request more user data
-            FB.api('/me', function (user) {
+            facebookMe().then(function (user) {
                 //Fill Data
                 vm.email(user.email);
                 vm.firstName(user.first_name);
                 vm.lastName(user.last_name);
-                //(user.gender);
-                //(user.about);
+                //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
             });
         });
     };
