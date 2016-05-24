@@ -11,7 +11,7 @@ var A = Activity.extend(function HelpActivity() {
     
     this.viewModel = new ViewModel();
     this.accessLevel = null;    
-    this.navBar = Activity.createSubsectionNavBar('Blog');
+    this.navBar = Activity.createSectionNavBar('Blog');
     
     // TestingData
     //setSomeTestingData(this.viewModel);
