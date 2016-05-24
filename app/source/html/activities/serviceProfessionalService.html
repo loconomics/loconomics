@@ -2,15 +2,11 @@
 <div data-activity="serviceProfessionalService" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
-        <div class="row">
-            <h1 class="hidden-xs hidden-sm">Add new pricing</h1>  
-            <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: jobTitleID() !== 0">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind="">Job Title</span> Scheduler
-                        </a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
