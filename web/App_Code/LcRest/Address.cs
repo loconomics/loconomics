@@ -41,6 +41,10 @@ namespace LcRest
         /// A valid AddressKind string.
         /// </summary>
         public string kind;
+        /// <summary>
+        /// UserID of the user that created the address. Usually the same as userID.
+        /// </summary>
+        public int createdBy;
         #endregion
 
         #region Enums
@@ -147,7 +151,8 @@ namespace LcRest
                 serviceRadius = N.D(record.serviceRadius) == null ? null : DataTypes.GetTypedValue<decimal?>(record.serviceRadius, 0),
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                kind = AddressKind.GetFromAddressDBRecord(record)
+                kind = AddressKind.GetFromAddressDBRecord(record),
+                createdBy = record.createdBy
             };
         }
         #endregion
@@ -200,6 +205,11 @@ namespace LcRest
         {
             return String.IsNullOrWhiteSpace(this.addressName);
         }
+
+        public bool IsCreatedByItself()
+        {
+            return this.createdBy == 0 || this.userID == this.createdBy;
+        }
         #endregion
 
         #region SQL
@@ -235,6 +245,8 @@ namespace LcRest
 
                 ,L.AddressTypeID as addressTypeID
 
+                ,L.CreatedBy as createdBy
+
             FROM    Address As L
                      INNER JOIN
                     StateProvince As SP
@@ -267,6 +279,8 @@ namespace LcRest
         private const string sqlcondOnlyNamedAddresses = @"
             AND L.AddressName is not null AND L.AddressName not like ''
         ";
+        private const string sqlAndCreatedBy = @" AND L.CreatedBy = @3";
+        private const string sqlAndCreatedByItself = @" AND L.CreatedBy = L.UserID";
         // Since user can delete addresses from being available on its list but still
         // we need preserve that addresses information for cases in that is linked to 
         // a booking, that addresses get 'soft deleted', changing its flags for kind
@@ -291,7 +305,7 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-                var sql = sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
+                var sql = sqlSelect + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
                 return db.Query(sql,
                     LcData.GetCurrentLanguageID(), userID, jobTitleID)
                     .Select(FromDB)
@@ -306,10 +320,29 @@ namespace LcRest
                 // Parameter jobTitleID needs to be specified as 0 to avoid to join
                 // the service-address table
                 // Null value as 3th parameter since that placeholder is reserved for addressID
-                return db.Query(sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
+                return db.Query(sqlSelect + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
                     LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Billing)
                     .Select(FromDB)
                     .ToList();
+            }
+        }
+
+        /// <summary>
+        /// Get the list of active service addresses created by a given user on behalf of another user, optionally for a specific
+        /// jobTitleID
+        /// </summary>
+        /// <param name="createdByUserID"></param>
+        /// <param name="onBehalfOfUserID"></param>
+        /// <param name="jobTitleID"></param>
+        /// <returns></returns>
+        public static IEnumerable<Address> GetAddressesCreatedByOnBehalfOf(int createdByUserID, int onBehalfOfUserID, int jobTitleID = -1)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                var sql = sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
+                return db.Query(sql,
+                    LcData.GetCurrentLanguageID(), onBehalfOfUserID, jobTitleID, createdByUserID)
+                    .Select(FromDB);
             }
         }
 
@@ -330,7 +363,7 @@ namespace LcRest
             using (var db = Database.Open("sqlloco"))
             {
                 return GetSingleFrom(db.Query(
-                    sqlSelectOne + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlcondOnlyActiveServiceAddress,
+                    sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlcondOnlyActiveServiceAddress,
                     LcData.GetCurrentLanguageID(), userID, jobTitleID, addressID
                 ));
             }
@@ -368,7 +401,7 @@ namespace LcRest
                 // Parameter jobTitleID needs to be specified as 0 to avoid to join
                 // the service-address table
                 return GetSingleFrom(db.Query(
-                    sqlSelectOne + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlAndTypeID,
+                    sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndAddressID + sqlAndTypeID,
                     LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, addressID, AddressType.Billing
                 ));
             }
@@ -385,7 +418,7 @@ namespace LcRest
                 // user exists, just default/null values per field are returned but a record
                 // is returned.
                 var add = GetSingleFrom(db.Query(
-                    sqlSelectOne + sqlFields + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
+                    sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
                     LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Home
                 ));
 
@@ -455,6 +488,7 @@ namespace LcRest
                 WHERE UserID = @0 AND PositionID = @1
                         AND TravelFromLocation = 1 -- Only travel from addresses
                         AND AddressID <> @2 --Don't count this address!
+                        AND CreatedBy = UserID
             ", userID, jobTitleID, addressID) == 0;
             }
         }
@@ -588,6 +622,7 @@ namespace LcRest
                     address.latitude,
                     address.longitude,
                     null, // old unused field "google-map-url",
+                    address.createdBy == 0 ? address.userID : address.createdBy,
                     // Beggining of service-address specific fields:
                     address.jobTitleID,
                     address.isServiceLocation,
