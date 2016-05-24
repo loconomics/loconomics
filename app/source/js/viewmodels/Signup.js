@@ -152,6 +152,14 @@ function SignupVM(app) {
 
             err = err && err.responseJSON;
 
+            var msg = err && err.errorMessage;
+            if (msg) {
+                // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
+                app.modals.showError({
+                    title: 'There was an error signing-up',
+                    error: msg
+                });
+            }
             // Process validation errors, tagging fields or general error
             if (err && err.errorSource === 'validation' && err.errors) {
                 Object.keys(err.errors).forEach(function(fieldKey) {
@@ -161,12 +169,7 @@ function SignupVM(app) {
                 }.bind(this));
             }
             else {
-                var msg = err && err.errorMessage ||
-                    err && err.statusText ||
-                    'Invalid username or password';
-
-                this.signupError(msg);
-                this.email.error(msg);
+                this.signupError(msg || err && err.statusText || 'Invalid username or password');
             }
 
             this.isSigningUp(false);
