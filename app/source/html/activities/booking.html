@@ -334,27 +334,28 @@
                             <span class="text-secondary">Log In</span>
                         </a>
                     </div>
-                    <div class="Signup" data-bind="visible: isAnonymous(), with: signupVM">
-                        <h1 class="SectionTitle">Create account</h1>
-                        <div class="Signup-formcontainer">                        
-                            <div data-bind="visible: !facebookUserID()">
-                              <a href="#facebook" data-bind="click: facebook" class="btn btn-default btn-block btn-facebook"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;<span>Sign up with Facebook</span></a>
-                              <!--<a href="#google" class="btn btn-default btn-block btn-google">Google</a>-->
+                    <div class="Signup-Login" data-bind="visible: isAnonymous(), with: signupVM">
+                        <h2 class="SectionTitle">Create a free account</h2>
+                        <div class="LightForm LeadContent">
+                            <div data-bind="visible: !facebookUserID()"> 
+                                <a href="#facebook" class="btn btn-block btn-facebook" data-bind="click: facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
+<!--                                <a href="#google" class="btn btn-block btn-google "><i class="Icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>-->
                             </div>
-                            <p class="isolated text-center Signup-or" data-bind="visible: !facebookUserID()">
-                              <span>or</span>
-                            </p>
+                            <p class="isolated text-center">
+                                <svg height="5" width="45%">
+                                    <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
+                                </svg>  
+                                <span> or </span> 
+                                <svg height="5" width="45%">
+                                    <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
+                                </svg>
+                            </p>           
                             <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }" novalidate>
-                                <script type="text/html" id="signup-field">
-                                  <div class="form-group has-feedback" data-bind="css: { 'has-error': field.error }">
-                                    <input type="email" class="form-control" data-bind="value: field, attr: { placeholder: label, 'aria-label': label }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-                                    <span class="form-control-feedback" aria-hidden="true" data-bind="css: icon"></span>
-                                  </div>
-                                </script>
                                 <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
                                 <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
                                 <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
-                                    <select data-bind="value: countryID" class="form-control btn">
+                                    <label for="countryID">Country</label>
+                                    <select data-bind="value: countryID" class="form-control">
                                          <option value="1">United States</option>
                                          <option value="2">Spain</option>
                                          <option value="3">Afghanistan</option>
@@ -595,22 +596,31 @@
                                          <option value="238">Zambia</option>
                                          <option value="239">Zimbabwe</option>
                                     </select>
-                                    <span class="ion-ios-world-outline form-control-feedback" aria-hidden="true"></span>
+                                    <i class="fa ion-ios-world-outline form-control-feedback text-muted pull-right icon-right" aria-hidden="true"></i>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Zip or Postal code', icon: 'ion-ios-home-outline' } }"></div>
+                                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Postal code', icon: 'ion-ios-home-outline' } }"></div>
                                     <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', icon: 'ion-android-contacts' } }"></div>
                                 </div>
-                                <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
+                                <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
+                                    <label for="device">Device</label>
+                                    <select data-bind="value: device" class="form-control">
+                                        <option value="">Select your device</option>
+                                        <option value="ios">iPhone/iPad</option>
+                                        <option value="android">Android</option>
+                                    </select>
+                                    <i class="fa ion-iphone form-control-feedback text-muted pull-right icon-right" aria-hidden="true"></i>
+                                </div>
+                                <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Mobile phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
                                 <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-                                    <label for="signupAccountEmail" class="sr-only">E-mail address</label>
-                                    <input type="email" class="form-control" id="signupAccountEmail" placeholder="E-mail address" data-bind="textInput: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }">
-                                    <span class="form-control-feedback ion-ios-at-outline" aria-hidden="true"></span>
+                                    <label for="signupAccountEmail">Email address</label>
+                                    <input type="email" class="form-control" id="signupAccountEmail" placeholder="Email address" data-bind="value: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }, disable: emailIsLocked">
+                                    <i class="fa ion-ios-at-outline form-control-feedback text-muted pull-right icon-right" aria-hidden="true"></i>
                                 </div>
                                 <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
-                                    <label for="signupAccountPassword" class="sr-only">Password</label>
-                                    <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="textInput: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }">
-                                    <span class="ion-ios-locked-outline form-control-feedback" aria-hidden="true"></span>
+                                    <label for="signupAccountPassword">Password</label>
+                                    <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'top' }">
+                                    <i class="fa ion-ios-locked-outline form-control-feedback text-muted pull-right icon-right" aria-hidden="true"></i>
                                 </div>
                             </form>
                         </div>
