@@ -74,9 +74,9 @@ exports.create = function create(appModel) {
             bookingID: apt.sourceBooking().bookingID(),
             jobTitleID: apt.jobTitleID(),
             clientUserID: apt.clientUserID(),
-            addressID: apt.addressID(),
+            serviceAddressID: apt.addressID(),
             startTime: apt.startTime(),
-            pricing: apt.pricing().map(function(pricing) {
+            services: apt.pricing().map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
                 // not objects, so next line is replaced:
                 //return pricing.model.toPlainObject(true);
@@ -95,13 +95,13 @@ exports.create = function create(appModel) {
         ONLY FOR SERVICE-PROFESSIONAL-BOOKINGS
     **/
     api.bookingToSimplifiedBooking = function(booking) {
-        console.log('DEBUG to simplified booking', booking.pricingSummary());
+        //console.log('DEBUG to simplified booking', booking.pricingSummary());
         return {
             bookingID: booking().bookingID(),
             clientUserID: booking.clientUserID(),
-            addressID: booking.addressID(),
+            serviceAddressID: booking.addressID(),
             startTime: booking.startTime(),
-            pricing: booking.pricingSummary() && booking.pricingSummary().details().pricing
+            services: booking.pricingSummary() && booking.pricingSummary().details().pricing
             .map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
                 // not objects, so next line is replaced:
