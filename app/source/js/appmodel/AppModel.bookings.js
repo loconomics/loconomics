@@ -74,7 +74,7 @@ exports.create = function create(appModel) {
             bookingID: apt.sourceBooking().bookingID(),
             jobTitleID: apt.jobTitleID(),
             clientUserID: apt.clientUserID(),
-            serviceAddressID: apt.addressID(),
+            serviceAddress: apt.address().model.toPlainObject(),
             startTime: apt.startTime(),
             services: apt.pricing().map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
@@ -99,7 +99,7 @@ exports.create = function create(appModel) {
         return {
             bookingID: booking().bookingID(),
             clientUserID: booking.clientUserID(),
-            serviceAddressID: booking.addressID(),
+            serviceAddressID: booking.serviceAddressID(),
             startTime: booking.startTime(),
             services: booking.pricingSummary() && booking.pricingSummary().details().pricing
             .map(function(pricing) {

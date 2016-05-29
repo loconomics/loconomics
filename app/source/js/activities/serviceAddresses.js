@@ -71,7 +71,12 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         // And go back
         this.app.shell.goBack(this.requestData);
     }.bind(this);
-    
+    this.viewModel.returnUnsavedAddress = function(addressDetails) {
+        this.requestData.unsavedAddress = addressDetails;
+        // And go back
+        this.app.shell.goBack(this.requestData);
+    }.bind(this);
+
     this.returnRequest = function returnRequest() {
         this.app.shell.goBack(this.requestData);
     }.bind(this);
@@ -144,21 +149,21 @@ A.prototype.show = function show(options) {
     this.viewModel.requestData = this.requestData;
 
     this.viewModel.serviceAddresses.isSelectionMode(options.selectAddress === true);
-    this.viewModel.clientID(options.clientID || null);
+    this.viewModel.clientUserID(options.clientUserID || null);
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
     
     // Check if it comes from an addressEditor that
-    // received the flag 'returnNewAsSelected' and an
-    // addressID: we were in selection mode->creating address->must
+    // received the flag 'returnNewAsSelected': we were in selection mode->creating address->must
     // return the just created address to the previous page
-    if (options.returnNewAsSelected === true &&
-        options.addressID) {
-        
+    if (options.returnNewAsSelected === true) {
         setTimeout(function() {
             delete options.returnNewAsSelected;
-            this.viewModel.returnSelected(options.addressID, jobTitleID);
+            if (options.address)
+                this.viewModel.returnUnsavedAddress(options.address);
+            else if (options.addressID)
+                this.viewModel.returnSelected(options.addressID, jobTitleID);
         }.bind(this), 1);
         // quick return
         return;
@@ -184,9 +189,9 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
-    // Optionally, some times a clientID can be passed in order to create
+    // Optionally, some times a clientUserID can be passed in order to create
     // a location for that client where perform a work.
-    this.clientID = ko.observable(null);
+    this.clientUserID = ko.observable(null);
     this.jobTitleName = ko.observable('Job Title'); 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
@@ -249,7 +254,7 @@ function ViewModel(app) {
     }.bind(this);
     
     this.addClientLocation = function() {
-        var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientID();
+        var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientUserID();
         var request = $.extend({}, this.requestData, {
             returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });

@@ -502,7 +502,8 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
             selectAddress: true,
-            selectedAddressID: this.item().addressID()
+            selectedAddressID: this.item().address().addressID(),
+            clientUserID: this.item().clientUserID()
         });
     }.bind(this);
 
@@ -554,7 +555,7 @@ function AppointmentCardViewModel(params) {
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:20,maxstatements:40 */
+    /*jshint maxcomplexity:23,maxstatements:40 */
     
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
@@ -593,7 +594,10 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
     }
     if (requestData.selectAddress === true) {
-        this.item().addressID(requestData.selectedAddressID);
+        if (requestData.unsavedAddress)
+            this.item().address().model.updateWith(requestData.unsavedAddress, true);
+        else if (requestData.selectedAddressID)
+            this.item().address().addressID(requestData.selectedAddressID);
     }
     if (requestData.selectPricing === true) {
         this.item().pricing(
