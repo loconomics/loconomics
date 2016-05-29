@@ -42,10 +42,11 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                     return this.app.model.serviceAddresses.getList(jobTitleID);
                 }.bind(this))
                 .then(function(list) {
-
                     list = this.app.model.serviceAddresses.asModel(list);
                     this.viewModel.serviceAddresses.sourceAddresses(list);
-
+                    if (this.requestData.selectedAddressID) {
+                        this.viewModel.serviceAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
+                    }
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -56,6 +57,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
             }
             else {
                 this.viewModel.serviceAddresses.sourceAddresses([]);
+                this.viewModel.serviceAddresses.selectedAddress(null);
                 this.viewModel.jobTitle(null);
                 this.updateNavBarState();
                 this.viewModel.jobTitleName('Job Title');
@@ -72,10 +74,14 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                 .then(function(list) {
                     list = this.app.model.clientAddresses.asModel(list);
                     this.viewModel.clientAddresses.sourceAddresses(list);
+                    if (this.requestData.selectedAddressID) {
+                        this.viewModel.clientAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
+                    }
                 }.bind(this));
             }
             else {
                 this.viewModel.clientAddresses.sourceAddresses([]);
+                this.viewModel.clientAddresses.selectedAddress(null);
             }
         }.bind(this)
     });
@@ -163,6 +169,7 @@ A.prototype.show = function show(options) {
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
+    this.viewModel.clientUserID(0);
     this.viewModel.requestData = this.requestData;
 
     this.viewModel.serviceAddresses.isSelectionMode(options.selectAddress === true);
