@@ -63,6 +63,23 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         }.bind(this)
     });
     
+    // On changing clientUserID: load its addresses
+    this.registerHandler({
+        target: this.viewModel.clientUserID,
+        handler: function(clientUserID) {
+            if (clientUserID) {
+                this.app.model.clientAddresses.getList(clientUserID)
+                .then(function(list) {
+                    list = this.app.model.clientAddresses.asModel(list);
+                    this.viewModel.clientAddresses.sourceAddresses(list);
+                }.bind(this));
+            }
+            else {
+                this.viewModel.clientAddresses.sourceAddresses([]);
+            }
+        }.bind(this)
+    });
+
     // Go back with the selected address when triggered in the form/view
     this.viewModel.returnSelected = function(addressID, jobTitleID) {
         // Pass the selected client in the info
@@ -71,8 +88,8 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         // And go back
         this.app.shell.goBack(this.requestData);
     }.bind(this);
-    this.viewModel.returnUnsavedAddress = function(addressDetails) {
-        this.requestData.unsavedAddress = addressDetails;
+    this.viewModel.returnAddress = function(addressDetails) {
+        this.requestData.address = addressDetails;
         // And go back
         this.app.shell.goBack(this.requestData);
     }.bind(this);
@@ -161,7 +178,7 @@ A.prototype.show = function show(options) {
         setTimeout(function() {
             delete options.returnNewAsSelected;
             if (options.address)
-                this.viewModel.returnUnsavedAddress(options.address);
+                this.viewModel.returnAddress(options.address);
             else if (options.addressID)
                 this.viewModel.returnSelected(options.addressID, jobTitleID);
         }.bind(this), 1);
@@ -189,9 +206,14 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
+
     // Optionally, some times a clientUserID can be passed in order to create
     // a location for that client where perform a work.
     this.clientUserID = ko.observable(null);
+    this.clientAddresses = new ServiceAddresses();
+    // The list of client addresses is used only in selection mode
+    this.clientAddresses.isSelectionMode(true);
+
     this.jobTitleName = ko.observable('Job Title'); 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
@@ -204,9 +226,10 @@ function ViewModel(app) {
 
     this.isSyncing = app.model.serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
-        var add = app.model.serviceAddresses.state.isLoading(),
-            jobs = this.jobTitles.isLoading();
-        return add || jobs;
+        var add = app.model.serviceAddresses.state.isLoading();
+        var jobs = this.jobTitles.isLoading();
+        var cli = app.model.clientAddresses.state.isLoading();
+        return add || jobs || cli;
     }, this);
     
     this.goNext = function() {
@@ -237,6 +260,18 @@ function ViewModel(app) {
 
     }.bind(this);
     
+    this.clientAddresses.selectAddress = function(selectedAddress, event) {
+        if (this.clientAddresses.isSelectionMode() === true) {
+            // Run method injected by the activity to return a
+            // selected address:
+            this.returnAddress(selectedAddress.model.toPlainObject());
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+    }.bind(this);
+
     this.addServiceLocation = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceLocation';
         var request = $.extend({}, this.requestData, {

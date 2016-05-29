@@ -594,8 +594,8 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
     }
     if (requestData.selectAddress === true) {
-        if (requestData.unsavedAddress)
-            this.item().address().model.updateWith(requestData.unsavedAddress, true);
+        if (requestData.address)
+            this.item().address().model.updateWith(requestData.address, true);
         else if (requestData.selectedAddressID)
             this.item().address().addressID(requestData.selectedAddressID);
     }
