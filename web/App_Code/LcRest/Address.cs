@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -263,7 +263,7 @@ namespace LcRest
                       -- Special case when the jobtitle/position requested is zero
                       -- just dont let make the relation to avoid bad results
                       -- because of internally reused addressID.
-                      ON @2 > 0 AND L.AddressID = SA.AddressID
+                      ON @2 > -1 AND L.AddressID = SA.AddressID
             WHERE   L.Active = 1
         ";
         private const string sqlAndUserID = @" AND L.UserID = @1 ";
@@ -335,11 +335,16 @@ namespace LcRest
         /// <param name="onBehalfOfUserID"></param>
         /// <param name="jobTitleID"></param>
         /// <returns></returns>
-        public static IEnumerable<Address> GetAddressesCreatedByOnBehalfOf(int createdByUserID, int onBehalfOfUserID, int jobTitleID = -1)
+        public static IEnumerable<Address> GetAddressesCreatedByOnBehalfOf(int createdByUserID, int onBehalfOfUserID, int jobTitleID = 0)
         {
             using (var db = Database.Open("sqlloco"))
             {
-                var sql = sqlSelect + sqlFields + sqlAndUserID + sqlAndJobTitleID + (jobTitleID > 0 ? sqlcondOnlyActiveServiceAddress : sqlcondOnlyNamedAddresses);
+                var sql = sqlSelect + sqlFields + sqlAndUserID + sqlcondOnlyActiveServiceAddress;
+                if (jobTitleID > 0)
+                {
+                    sql += sqlAndJobTitleID;
+                }
+                sql += sqlAndCreatedBy;
                 return db.Query(sql,
                     LcData.GetCurrentLanguageID(), onBehalfOfUserID, jobTitleID, createdByUserID)
                     .Select(FromDB);
