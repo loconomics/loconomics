@@ -7,11 +7,12 @@
             <div class="container-fluid LightForm col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">Contact us</h2>
                 <div class="form-group">
-                <p class="isolated">
-                If you've searched the <a href="/help" class="text-secondary">Help Center</a> and can't find the help you need, please send us a note.
-                </p>
-                <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
-                    </div>
+                    <p class="isolated">
+                        If you've searched the <a href="/help" class="text-secondary">Help Center</a> and can't find the help you need, please send us a note.
+                    </p>
+                    <p data-bind="visible: emailSubject"><strong>Subject:</strong> <span data-bind="text: emailSubject"></span></p>
+                    <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
+                </div>
                 <div class="LightForm-submitBar">
                     <button class="btn btn-primary btn-block" data-bind="click: send, text: submitText, disable: isSending() || !isValid(), visible: !anonymousButtonUrl()">Send</button>
                     <a data-bind="attr: { href: anonymousButtonUrl }, visible: anonymousButtonUrl"
