@@ -34,6 +34,8 @@ $gray = lighten(#000, 33.5%);
       text-transform: none;
     }
     
+    // Modifier to use the title as a button. Requires to use a children
+    // element with the Bootstrap button class '.btn'.
     &.SectionTitle--withBtn {
         padding: 0;
         > .btn {
@@ -53,7 +55,9 @@ $gray = lighten(#000, 33.5%);
             }
         }
     }
-    &.SectionTitle-article { 
+
+    // Modifier for articles titles
+    &.SectionTitle--article {
         text-align: center;
         background: none;
         border: none;
