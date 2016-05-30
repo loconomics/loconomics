@@ -15,7 +15,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling', helpLink: '/help/sections/201965996-setting-your-service-locations-areas'
+        backLink: '/scheduling', helpLink: '/help/relatedArticles/201965996-setting-your-service-locations-areas'
     });
     
     // Save defaults to restore on updateNavBarState when needed:

@@ -14,12 +14,12 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span>We'd love to hear from you</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201960863-providing-feedback-to-us" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/relatedArticles/201960863-providing-feedback-to-us" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
                 <form class="container-fluid LightForm">
                     <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
-                    <div class="checkbox" data-bind="visible: !isCollaborator()">
+                    <div class="checkbox" data-bind="visible: !isCollaborator() && !anonymousButtonUrl()">
                         <label>
                         <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending" />
                         I'd like to become a collaborator and help develop new tools 
@@ -27,7 +27,9 @@
                         </label>
                     </div>
                     <div class="LightForm-submitBar">
-                        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending() || !isValid()">Send</button>
+                        <button class="btn btn-primary btn-block" data-bind="click: send, text: submitText, disable: isSending() || !isValid(), visible: !anonymousButtonUrl()">Send</button>
+                        <a data-bind="attr: { href: anonymousButtonUrl }, visible: anonymousButtonUrl"
+                            class="btn btn-primary btn-block" >Send</a>
                     </div>
                 </form>
             </div>

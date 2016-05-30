@@ -13,7 +13,7 @@ var A = Activity.extend(function EducationActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201960833-adding-education-to-your-profile'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201960833-adding-education-to-your-profile'
     });
 });
 

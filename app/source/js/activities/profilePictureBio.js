@@ -17,11 +17,11 @@ var A = Activity.extend(function ProfilePictureBioActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201960933-writing-your-profile-bio'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201960933-writing-your-profile-bio'
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201213895-managing-your-marketplace-profile'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201213895-managing-your-marketplace-profile'
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;

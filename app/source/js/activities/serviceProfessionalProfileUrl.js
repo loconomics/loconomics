@@ -16,7 +16,7 @@ var A = Activity.extend(function ServiceProfessionalProfileUrlActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201961853-setting-a-custom-marketplace-profile-url'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201961853-setting-a-custom-marketplace-profile-url'
     });
     
     this.registerHandler({

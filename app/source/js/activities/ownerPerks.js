@@ -12,7 +12,7 @@ var A = Activity.extend(function OwnerPerksActivity() {
     this.viewModel = {};
     
     this.navBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: '/ownerInfo', helpLink: '/help/sections/201973183-owner-perks-and-benefits'
+        backLink: '/ownerInfo', helpLink: '/help/relatedArticles/201973183-owner-perks-and-benefits'
     });
 });
 
