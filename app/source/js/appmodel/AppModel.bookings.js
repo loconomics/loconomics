@@ -99,7 +99,7 @@ exports.create = function create(appModel) {
         return {
             bookingID: booking().bookingID(),
             clientUserID: booking.clientUserID(),
-            serviceAddressID: booking.serviceAddressID(),
+            serviceAddress: booking.serviceAddress().model.toPlainObject(),
             startTime: booking.startTime(),
             services: booking.pricingSummary() && booking.pricingSummary().details().pricing
             .map(function(pricing) {
@@ -134,6 +134,19 @@ exports.create = function create(appModel) {
 
         return appModel.rest[method]('me/service-professional-booking/' + id, booking)
         .then(function(serverBooking) {
+            // IMPORTANT: If the booking included a new address, we need to invalidate the cache
+            // for the addresses APIs, to force a load for the newest addresses on that APIs
+            if (!booking.serviceAddress.addressID) {
+                // If client address
+                if (booking.serviceAddress.userID == booking.clientUserID) {
+                    appModel.clientAddresses.clearCache();
+                    appModel.clientAddresses.removeGroupFromLocalCache(booking.clientUserID);
+                }
+                else { // professional service address
+                    appModel.serviceAddresses.clearCache();
+                    appModel.serviceAddresses.removeGroupFromLocalCache(booking.jobTitleID);
+                }
+            }
             return new Booking(serverBooking);
         });
     };
