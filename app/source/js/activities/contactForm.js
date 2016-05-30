@@ -73,8 +73,12 @@ function ViewModel(app) {
             return;
         }
         this.isSending(true);
+        var msg = this.message();
+        if (this.emailSubject()) {
+            msg = this.emailSubject() + ': ' + msg;
+        }
         app.model.feedback.postSupport({
-            message: this.message(),
+            message: msg,
             vocElementID: this.vocElementID()
         })
         .then(function() {
