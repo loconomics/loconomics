@@ -26,7 +26,7 @@
                 <div id="addressesListView">
                     <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
                 </div>
-                <ul id="addressesAddNewButtons" class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">  
+                <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
                     <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
                         <div class="Tile-content text-muted">Add a service location</div>
                         <div class="Tile-icon text-muted">
@@ -39,13 +39,19 @@
                             <span class="fa ion ion-plus"></span>
                         </div>
                     </button>
-                    <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientID()">
+                </div>
+                <div data-bind="visible: clientAddresses.isSelectionMode() && clientAddresses.hasAddresses()">
+                    <h2 class="SectionTitle">Select a client location</h2>
+                    <div data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                </div>
+                <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
+                    <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientUserID()">
                         <div class="Tile-content text-muted">Add a client location</div>
                         <div class="Tile-icon text-muted">
                             <span class="fa ion ion-plus"></span>
                         </div>
                     </button>
-                </ul>
+                </div>
                 <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
                 </div>

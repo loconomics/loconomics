@@ -108,7 +108,13 @@ var A = Activity.extend(function AddressEditorActivity() {
         if (this.requestData.returnNewAsSelected === true) {
             // Go to previous activity that required
             // to select an address
-            this.requestData.addressID = addressID;
+            // It's a new non-saved address
+            if (this.viewModel.clientUserID()) {
+                this.requestData.address = this.viewModel.address().model.toPlainObject(true);
+            }
+            else {
+                this.requestData.addressID = addressID;
+            }
             this.app.shell.goBack(this.requestData);
         }
         else {
@@ -128,7 +134,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10    
+    //jshint maxcomplexity:12
     Activity.prototype.show.call(this, options);
     
     // Reset
@@ -144,10 +150,13 @@ A.prototype.show = function show(options) {
         // Only used on service address creation, instead an ID we get
         // a string for 'serviceArea' or 'serviceLocation')
         serviceType = params[2] || '';
+    // Special type: clientLocation
+    var clientUserID = serviceType === 'clientLocation' ? params[3] : null;
     
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.addressID(addressID);
-    
+    this.viewModel.clientUserID(clientUserID);
+
     this.updateNavBarState();
 
     if (addressID) {
@@ -186,6 +195,14 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a service location');
                 break;
+            case 'clientLocation':
+                // A service professional is adding a location to perform a service that belongs
+                // to the client of the booking, on behalf of.
+                this.viewModel.address().userID(clientUserID);
+                this.viewModel.address().isServiceArea(false);
+                this.viewModel.address().isServiceLocation(true);
+                this.viewModel.header('Add a client location');
+                break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
@@ -207,8 +224,9 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
+    this.clientUserID = ko.observable(0);
     this.jobTitleName = ko.observable('Job Title'); 
-    
+
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {
         var v = this.addressVersion();
@@ -259,23 +277,34 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
+        if (this.clientUserID()) {
+            // We want to return the in-memory data for the address rather
+            // than save it.
+            // NOTE: This feature 'clientLocation' is used by the serviceProfessional booking
+            // process to use a 'new client location' as address rather than a new serviceProfessiona address
+            // Just call the onSave, it knows what to do
+            this.onSave();
+        }
+        else {
+            // Normal use: save the user (serviceProfessional) address and provide the generated
+            // addressID to the onSave method.
+            app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
+            .then(function(serverData) {
+                // Update version with server data.
+                this.address().model.updateWith(serverData);
+                // Push version so it appears as saved
+                this.addressVersion().push({ evenIfObsolete: true });
 
-        app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
-        .then(function(serverData) {
-            // Update version with server data.
-            this.address().model.updateWith(serverData);
-            // Push version so it appears as saved
-            this.addressVersion().push({ evenIfObsolete: true });
-            
-            // Special save, function provided by the activity on set-up
-            this.onSave(serverData.addressID);
-        }.bind(this))
-        .catch(function(err) {
-            app.modals.showError({
-                title: 'There was an error while saving.',
-                error: err
+                // Special save, function provided by the activity on set-up
+                this.onSave(serverData.addressID);
+            }.bind(this))
+            .catch(function(err) {
+                app.modals.showError({
+                    title: 'There was an error while saving.',
+                    error: err
+                });
             });
-        });
+        }
 
     }.bind(this);
     

@@ -310,6 +310,11 @@ GroupListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSu
     this.pushGroupToLocal = function pushToLocal(groupID, data) {
         return localforage.setItem(baseName + groupID, data);
     };
+
+    // Extras
+    this.removeGroupFromLocalCache = function(groupID) {
+        return localforage.removeItem(baseName + groupID);
+    };
 };
 
 GroupListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, baseUrl) {

@@ -1,3 +1,4 @@
-
+.brackets.json
+.vs
 app/phonegap/.cordova/config.json
 app/phonegap/www/config.xml
