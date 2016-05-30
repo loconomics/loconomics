@@ -13,7 +13,9 @@
                 <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
                     </div>
                 <div class="LightForm-submitBar">
-                    <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending() || !isValid()">Send</button>
+                    <button class="btn btn-primary btn-block" data-bind="click: send, text: submitText, disable: isSending() || !isValid(), visible: !anonymousButtonUrl()">Send</button>
+                    <a data-bind="attr: { href: anonymousButtonUrl }, visible: anonymousButtonUrl"
+                        class="btn btn-primary btn-block" >Send</a>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

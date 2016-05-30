@@ -24,7 +24,7 @@
             <h1 class="hidden-xs hidden-sm">We're here to help</h1> 
             <div class="container-fluid LightForm col-md-7 col-sm-reset">
                 <div data-bind="visible: viewType() == 'viewAllCategories'">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p> 
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm?subject=I%20need%20help!" class="text-secondary">send us a note!</a></p>
                     <h2 class="SectionTitle">Select a category</h2>
                     <ul class="TilesList" data-bind="foreach: categories">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div data-bind="visible: viewType() == 'helpView'">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p> 
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
                     <h2 class="SectionTitle">Related help articles</h2>
                     <ul class="TilesList" data-bind="foreach: filteredSectionArticles">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -89,7 +89,7 @@
                     </a>
                 </div>
                 <div data-bind="visible: viewType() == 'viewAllArticles'">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p> 
+                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
                     <div class="isolated inset">
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -108,7 +108,7 @@
                     <div data-bind="visible: !filteredArticles()" class="isolated inset text-center">
                         <div>Nothing on that topic yet...send us a note!</div>
                         <hr>
-                        <a href="mailto:support@@loconomics.com?subject=I%20need%20help!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
+                        <a href="/contactForm?subject=I%20need%20help!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
                     </div>   
                 </div>                             
             </div>
