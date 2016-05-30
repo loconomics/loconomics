@@ -61,7 +61,7 @@ function ViewModel(app) {
     this.anonymousButtonUrl = ko.pureComputed(function() {
         if (!app.model.user().isAnonymous()) return '';
 
-        var subject = encodeURIComponent(this.emailSubject()) || 'I need help!';
+        var subject = encodeURIComponent(this.emailSubject() || 'I need help!');
         var body = encodeURIComponent(this.message());
         var url = 'mailto:support@loconomics.com?subject=' + subject + '&body=' + body;
         return url;
