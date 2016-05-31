@@ -32,7 +32,7 @@ public static class LcAuth
     /// - English lowercase characters (a through z)
     /// </summary>
     public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
-    public static string InvalidPasswordErrorMessage = @"Invalid password.Must have almost 8 characters, with lowercase, uppercase and non-alphabetic characters, and digits.";
+    public static string InvalidPasswordErrorMessage = @"Invalid password. Must have almost 8 characters, with lowercase, uppercase and non-alphabetic characters, and digits.";
     public class RegisteredUser
     {
         public string Email;
