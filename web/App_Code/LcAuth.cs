@@ -234,6 +234,11 @@ public static class LcAuth
 
     public static bool Login(string email, string password, bool persistCookie = false)
     {
+        // As requested at #974, for HIPAA compliance:
+        // - Lock account after 5 unsuccesfully attempts
+        // - Lock it for 5 minutes
+        if (WebSecurity.IsAccountLockedOut(email, 5, 5 * 60))
+            throw new ConstraintException("Account locked");
         // Navigate back to the homepage and exit
         var result = WebSecurity.Login(email, password, persistCookie);
 
