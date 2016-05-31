@@ -3,7 +3,7 @@
     <h2 class="SectionTitle">
         <span data-bind="visible: currentID() == -4">Add a new booking</span>
         <span data-bind="visible: currentID() == -3">Add a calendar block</span>
-        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/relatedArticles/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
         </span>
     </h2>
     <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
@@ -22,7 +22,7 @@
                 <span class="icon fa ion ion-load-c"></span>
             </div>
         </div>
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: newAppointmentVisible()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: newAppointmentVisible()">
             <li>
                 <a class="LinkTile" href="#appointment/-4"
                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-4' }">
@@ -57,7 +57,7 @@
             </button>
         </div>
         
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: isEvent()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: isEvent()">
             <li>
                 <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
@@ -125,7 +125,7 @@
             </li>
         </ul>
         
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: isBooking()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: isBooking()">
             <li data-bind="visible: !isBookingRequest()">
                 <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
                     <div class="Tile-icon" aria-hidden="true">
@@ -245,7 +245,7 @@
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
         </div>
 
-        <ul class="TilesList TilesList--opendEnd" data-bind="if: isBookingRequest()">
+        <ul class="TilesList TilesList--openEnd" data-bind="if: isBookingRequest()">
             <li class="LineTile LineTile--title">
                 Confirm a time or decline request
             </li>

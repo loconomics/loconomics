@@ -479,12 +479,14 @@ public static partial class LcData
                 ,[UpdatedDate]
                 ,[ModifiedBy]
                 ,[Active]
+                ,[CreatedBy]
             ) VALUES (
                 @1, @9,
                 @8, @2, @3, @4, @5, @6, @7, 
                 @10,
                 @11, @12, @13,
-                getdate(), getdate(), 'sys', 1
+                getdate(), getdate(), 'sys', 1,
+                @14
             )
 
             SET @AddressID = @@Identity
@@ -534,22 +536,22 @@ public static partial class LcData
             UPDATE ServiceAddress SET
                 PreferredAddress = 0
             WHERE
-                UserID = @1 AND PositionID = @14
+                UserID = @1 AND PositionID = @15
 
         -- First, try to update, if nothing updated (rowcount=0), try to insert
         UPDATE ServiceAddress SET
-            ServicesPerformedAtLocation = @15
-            ,TravelFromLocation = @16
-            ,ServiceRadiusFromLocation = @17
-            ,TransportType = @18
-            ,PreferredAddress = @19
+            ServicesPerformedAtLocation = @16
+            ,TravelFromLocation = @17
+            ,ServiceRadiusFromLocation = @18
+            ,TransportType = @19
+            ,PreferredAddress = @20
             ,UpdatedDate = getdate()
             ,ModifiedBy = 'sys'
             ,Active = 1
         WHERE
             AddressID = @AddressID
              AND
-            UserID = @1 AND PositionID = @14
+            UserID = @1 AND PositionID = @15
 
         IF @@rowcount = 0
             INSERT INTO [ServiceAddress] (
@@ -566,14 +568,14 @@ public static partial class LcData
                 ,[ModifiedBy]
                 ,[Active]
             ) VALUES (
-                @1, @AddressId, @14,
-                @15, @16, @17, @18, @19, getdate(), getdate(), 'sys', 1
+                @1, @AddressId, @15,
+                @16, @17, @18, @19, @20, getdate(), getdate(), 'sys', 1
             )
 
         COMMIT TRAN
 
         -- Test Alert
-        EXEC TestAlertLocation @1, @14
+        EXEC TestAlertLocation @1, @15
 
         SELECT @AddressID As AddressID
     ";

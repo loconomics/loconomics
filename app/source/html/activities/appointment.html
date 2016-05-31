@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <!-- Appointment View (cards) -->
-                <div id="calendarAppointmentView" class="row container-fluid CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
+                <div id="calendarAppointmentView" class="container-fluid CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
                     <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
                     <div class="CardsDeck-dots" data-bind="foreach: appointments">
                         <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>

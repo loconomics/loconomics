@@ -14,11 +14,11 @@ var A = Activity.extend(function ContactInfoActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/sections/201960743-adding-your-contact-information'
+        backLink: '/account' , helpLink: '/help/relatedArticles/201960743-adding-your-contact-information'
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/sections/201960753-adding-your-contact-information'
+        backLink: '/account' , helpLink: '/help/relatedArticles/201960753-adding-your-contact-information'
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
