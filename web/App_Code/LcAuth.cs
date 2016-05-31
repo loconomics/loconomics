@@ -23,6 +23,16 @@ public static class LcAuth
             return db.QuerySingle("EXEC CheckUserEmail @0", email) != null;
         }
     }
+    /// <summary>
+    /// For HIPAA compliance (#974) and strong security, passwords must be checked against next regex. It requires:
+    /// - Almost 8 characters
+    /// - Non-alphabetic characters: ~!@#$%^*&;?.+_
+    /// - Base 10 digits (0 through 9)
+    /// - English uppercase characters (A through Z)
+    /// - English lowercase characters (a through z)
+    /// </summary>
+    public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
+    public static string InvalidPasswordErrorMessage = @"Invalid password.Must have almost 8 characters, with lowercase, uppercase and non-alphabetic characters, and digits.";
     public class RegisteredUser
     {
         public string Email;
@@ -33,6 +43,10 @@ public static class LcAuth
     /// <summary>
     /// Register an user and returns relevant registration information about the new account,
     /// or raise and exception on error of type System.Web.Security.MembershipCreateUserException.
+    /// IMPORTANT: For code that doesn't uses this but the CreateAccount directly,
+    /// is required to validate the password against ValidPasswordRegex. 
+    /// It's recommended to use form validation with that regex before even call this to avoid extra computation, checks,
+    /// but this will check the regex too.
     /// </summary>
     /// <param name="email"></param>
     /// <param name="firstname"></param>
@@ -52,6 +66,12 @@ public static class LcAuth
         string phone = null,
         string signupDevice = null
     ) {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+
         using (var db = Database.Open("sqlloco"))
         {
             // IMPORTANT: The whole process must be complete or rollback, but since

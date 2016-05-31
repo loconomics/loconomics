@@ -165,19 +165,6 @@ public static class LcAuthHelper
         
         return redirect;
     }
-    
-    public static void checkAccountIsLocked(string username) {
-        
-        if (WebSecurity.UserExists(username) && 
-            WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && 
-            WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
-
-            //throw new HttpException(303, LcUrl.LangPath + "Account/AccountLockedOut/");
-            /// http 409:Conflict
-            throw new HttpException(409, "Your account has been locked due to too many unsuccessful login attempts.\n " +
-                "Please try logging in again after 60 minutes.");
-        }
-    }
 
     public static void checkAccountIsConfirmed(string username) {
         
@@ -223,8 +210,9 @@ public static class LcAuthHelper
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    public static LoginResult QuickSignup(WebPage page) {
-
+    public static LoginResult QuickSignup(WebPage page)
+    {
+        page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
         if (page.Validation.GetHtml("email") == null)
         {
             page.Validation.RequireField("email", "You must specify an email.");
@@ -289,7 +277,7 @@ public static class LcAuthHelper
     /// <returns></returns>
     public static LoginResult DetailedSignup(WebPage page)
     {
-
+        page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
         page.Validation.RequireField("email", "You must specify an email.");
         // Username is an email currently, so need to be restricted
         page.Validation.Add("email",
