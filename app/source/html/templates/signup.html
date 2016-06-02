@@ -1,6 +1,6 @@
 <!-- Sign up -->
 <script type="text/html" id="signup-template">
-    <div class="Signup-Login">
+    <div class="SignupLogin">
         <div class="LightForm LeadContent" data-bind="visible: profile">
             <div class="isolated">
                 <span>Already have an account?</span>
@@ -8,12 +8,12 @@
             </div>
             <h2 data-bind="visible: !forServiceProfessional">Sign up for free</h2>
             <h2 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h2>
-            <div class="Signup-providers">
+            <div>
                 <div data-bind="visible: !facebookUserID()">
                   <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
-<!--                  <a href="#google" class="btn btn-block btn-google "><i class="Icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
+<!--                  <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
                 </div>
-                <p class="isolated text-center">
+                <p class="isolated text-center" data-bind="visible: !facebookUserID()">
                     <svg height="5" width="45%">
                         <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
                     </svg>  
@@ -307,20 +307,20 @@
 
               <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
                 <span data-bind="visible: facebookUserID"><i class="fa fa-lg ion ion-social-facebook"></i>&nbsp;&nbsp;</span>
-                <span data-bind="text: submitText">Create account</span>
+                <span data-bind="text: submitText"></span>
               </button>
             </form>
 
-            <p class="isolated Signup-agreement">
-              By clicking on "Create account", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
+            <p class="isolated">
+              By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
                 <a href="#!terms/privacy-policy?mustReturn=true" class="text-secondary">Privacy Policy</a>
             </p>
         </div>
-        <div class="download-app">
+        <div class="DownloadApp">
             <h2>Download our app:</h2>
                 <ul>
-                    <li class="Icon-appleStore"></li>
-                    <li class="Icon-googlePlay"></li>            
+                    <li class="btn-appleStore"></li>
+                    <li class="btn-googlePlay"></li>            
                 </ul>   
         </div>
     </div>
