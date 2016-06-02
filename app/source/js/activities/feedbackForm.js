@@ -12,20 +12,23 @@ var A = Activity.extend(function FeedbackFormActivity() {
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.loggedUser;
+    this.accessLevel = null;
     this.navBar = Activity.createSubsectionNavBar('Back', {
-        helpLink: '/help/sections/201960863-providing-feedback-to-us'
+        helpLink: '/help/relatedArticles/201960863-providing-feedback-to-us'
     });
 });
 
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
+    //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
 
     var params = this.requestData.route.segments || [];
     var elementName = params[0] || '',
         elementID = VocElementEnum[elementName] |0;
+
+    this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
     
     if (!elementName) {
         console.log('Feedback Ideas: Accessing feedback without specify an element, using General (0)');
@@ -46,6 +49,7 @@ function ViewModel(app) {
     this.isCollaborator = app.model.userProfile.data.isCollaborator;
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
+    this.emailSubject = ko.observable('');
 
     this.submitText = ko.pureComputed(function() {
         return this.isSending() ? 'Sending..' : 'Send';
@@ -56,9 +60,18 @@ function ViewModel(app) {
         return m && !/^\s*$/.test(m);
     }, this);
 
+    this.anonymousButtonUrl = ko.pureComputed(function() {
+        if (!app.model.user().isAnonymous()) return '';
+
+        var subject = encodeURIComponent('Feedback');
+        var body = encodeURIComponent(this.message());
+        var url = 'mailto:support@loconomics.com?subject=' + subject + '&body=' + body;
+        return url;
+    }, this);
+
     this.send = function send() {
         // Check is valid, and do nothing if not
-        if (!this.isValid()) {
+        if (!this.isValid() || app.model.user().isAnonymous()) {
             return;
         }
         this.isSending(true);

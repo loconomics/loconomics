@@ -16,7 +16,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     // Defaults settings for navBar.
     
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: '/help/sections/201967966-adding-professional-licenses-and-certifications'
+        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
     
     // On changing jobTitleID:
@@ -102,7 +102,7 @@ function ViewModel(app) {
     this.isLoading = app.model.userLicensesCertifications.state.isLoading();
 
     this.addNew = function(item) {
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/' + item.licenseCertificationID() + '/new',
+        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID(),
             cancelUrl = app.shell.currentRoute.url;
         var request = $.extend({}, this.requestData, {
             cancelLink: cancelUrl
@@ -112,7 +112,7 @@ function ViewModel(app) {
     
     this.selectItem = function(item) {
         var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
-            item.licenseCertificationID() + '?mustReturn=' + 
+            item.userLicenseCertificationID() + '?mustReturn=' + 
             encodeURIComponent(app.shell.currentRoute.url) +
             '&returnText=' + encodeURIComponent('Licenses/certifications');
         app.shell.go(url, this.requestData);

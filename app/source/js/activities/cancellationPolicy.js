@@ -14,7 +14,7 @@ var A = Activity.extend(function CancellationPolicyActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling' , helpLink: '/help/sections/201966026-setting-your-cancellation-policy'
+        backLink: 'scheduling' , helpLink: '/help/relatedArticles/201966026-setting-your-cancellation-policy'
     });
     
     // On changing jobTitleID:

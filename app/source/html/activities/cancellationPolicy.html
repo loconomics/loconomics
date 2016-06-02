@@ -16,7 +16,7 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span>Cancellation policy</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
                 <script type="text/html" id="cancellationPolicy-item-tpl">
@@ -40,7 +40,7 @@
                     </div>
                 </script>
                 <form data-bind="submit: save" class="LightForm" style="background-color: white">
-                    <div data-bind="foreach: { data: policies, as: 'policy' }">
+                    <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs">
                         <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue: $parent.selectedCancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled: $parent.isLocked, itemLabel: policy.name } } --><!-- /ko -->
                         <!-- ko template: { name: 'cancellationPolicy-info-tpl', data: { policy: policy } } --><!-- /ko -->
                     </div>

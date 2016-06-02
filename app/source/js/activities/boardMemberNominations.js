@@ -11,7 +11,7 @@ var A = Activity.extend(function BoardMemberNominationsActivity() {
     this.accessLevel = null;
     this.viewModel = {};
     this.navBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: '/ownerInfo' , helpLink: '/help/sections/201959913-electing-board-members'
+        backLink: '/ownerInfo' , helpLink: '/help/relatedArticles/201959913-electing-board-members'
     });
 });
 

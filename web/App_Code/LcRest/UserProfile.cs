@@ -51,7 +51,7 @@ namespace LcRest
         {
             get
             {
-                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID;
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID + "?v=" + updatedDate.ToString("s");
             }
         }
         #endregion

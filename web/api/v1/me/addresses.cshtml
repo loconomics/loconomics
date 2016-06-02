@@ -1,8 +1,8 @@
 ﻿@using WebMatrix.WebData;
 @*
-    Addresses API: addresses organized by Kind of address for the logged user.
+    Addresses API: manage addresses created by the logged user.
 
-    Kind:
+    The API allows to manage addresses depending of the Kind of the address, like:
         /home
         /billing
         /service
@@ -13,6 +13,9 @@
     billing addresses (when booking a service professional, as client), and the service addresses
     attached to a Job Title. Service addresses can be attached to the special JobTitleID:0, that
     means is a client address where a servicie is performed by other user (the service professional).
+
+    It allows to get addresses created on belong other users, like professionals adding a client-user for a specific service:
+        /clients
 
     Technical back-end notes: Current database scheme is two tables for addresses, generic address and service specific address details.
     It's more complex than need to be (see issue #677), so in the API is treated as a unique, flat table,
@@ -67,6 +70,9 @@
 
         - DELETE: deletes the address. If the address is internally linked, will be soft deleted.
 
+    /addresses/clients/:clientUserID
+        - GET: get a list of addresses created by the logged user on behalf of the given clientUserID. Kind=service
+
     ### Structures
         address {
             addressID:int Auto
@@ -96,6 +102,7 @@
             kind:string Computed Note: possible set of server-set values is: home, billing, service. It matches every API path, and all addresses returned
                                     from each path will have the same value for Kind matching that API path. Is just an informative field and cannot be 
                                     specified by the user.
+            createdBy:int UserID for the user that created the address
         }
 
     EXAMPLES {
@@ -165,6 +172,10 @@
                 "api_comment": "Try setting isServiceLocation false for validation of almost one, and then isServiceArea:true to make address line1 and name optional."
             },
             "delete": { }
+        },
+        "Addresses: client addresses": {
+            "url": "/api/v1/en-US/me/addresses/clients/141",
+            "get": { }
         }
     }
 *@
@@ -188,6 +199,14 @@
             // TODO: Strictly, if jobTitleID does not exists for the user, the result must be a Not Found rather than empty
 
             return LcRest.Address.GetBillingAddresses(userId);
+        }
+
+        private dynamic GetClientAddresses(int clientUserID)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            return LcRest.Address.GetAddressesCreatedByOnBehalfOf(userId, clientUserID);
         }
         
         private dynamic GetHomeAddress()
@@ -291,6 +310,17 @@
                         // Route: /home
                         
                         return GetHomeAddress();
+                    }
+                    case "clients": {
+                        
+                        // Route: /clients/:clientID
+
+                        if (UrlData.Count == 2 && UrlData[1].IsInt()) {
+                            return GetClientAddresses(UrlData[1].AsInt());
+                        }
+
+                        // Any other case, continue to Not Found
+                        break;
                     }
                 }
             }
