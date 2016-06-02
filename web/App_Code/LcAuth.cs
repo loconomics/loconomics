@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -32,7 +32,7 @@ public static class LcAuth
     /// - English lowercase characters (a through z)
     /// </summary>
     public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
-    public static string InvalidPasswordErrorMessage = @"Invalid password. Must have almost 8 characters, with lowercase, uppercase and non-alphabetic characters, and digits.";
+    public static string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.";
     public class RegisteredUser
     {
         public string Email;
@@ -258,7 +258,7 @@ public static class LcAuth
         // - Lock account after 5 unsuccesfully attempts
         // - Lock it for 5 minutes
         if (WebSecurity.IsAccountLockedOut(email, 5, 5 * 60))
-            throw new ConstraintException("Account locked");
+            throw new ConstraintException("Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password");
         // Navigate back to the homepage and exit
         var result = WebSecurity.Login(email, password, persistCookie);
 
