@@ -180,6 +180,16 @@ public static class LcAuth
         return WebSecurity.ResetPassword(token, password);
     }
 
+    public static bool ChangePassword(string email, string currentPassword, string newPassword)
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(newPassword, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+        return WebSecurity.ChangePassword(email, currentPassword, newPassword);
+    }
+
     public static void BecomeProvider(int userID, Database db = null)
     {
         var ownDb = db == null;
