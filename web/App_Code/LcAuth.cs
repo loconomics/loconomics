@@ -66,7 +66,8 @@ public static class LcAuth
         string aboutMe = null,
         string phone = null,
         string signupDevice = null
-    ) {
+    )
+    {
         // Check password validity.
         if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
         {
@@ -168,6 +169,17 @@ public static class LcAuth
             }
         }
     }
+
+    public static bool ResetPassword(string token, string password)
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+        return WebSecurity.ResetPassword(token, password);
+    }
+
     public static void BecomeProvider(int userID, Database db = null)
     {
         var ownDb = db == null;

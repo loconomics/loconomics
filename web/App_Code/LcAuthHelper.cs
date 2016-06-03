@@ -277,7 +277,6 @@ public static class LcAuthHelper
     /// <returns></returns>
     public static LoginResult DetailedSignup(WebPage page)
     {
-        page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
         page.Validation.RequireField("email", "You must specify an email.");
         // Username is an email currently, so need to be restricted
         page.Validation.Add("email",
@@ -303,6 +302,7 @@ public static class LcAuthHelper
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
             page.Validation.RequireField("password", "You must specify a password.");
+            page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
         }
 
         if (useFacebookConnect)
@@ -431,7 +431,7 @@ public static class LcAuthHelper
                             LcAuth.ConfirmAccount(confirmationCode);
                             // set the password provided by the user. Trick: we need to generate a reset token in order to set the password.
                             var token = WebSecurity.GeneratePasswordResetToken(email);
-                            WebSecurity.ResetPassword(token, password);
+                            LcAuth.ResetPassword(token, password);
                             // Left continue with profile data update..
                         }
                         else
