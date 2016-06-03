@@ -22,10 +22,5 @@ module.exports = {
         files: {
             'build/assets/css/app.css': ['./source/css/app.styl']
         }
-    },
-    splash: {
-        files: {
-            'build/assets/css/splash.css': ['./source/css/splash.styl']
-        }
     }
 };
