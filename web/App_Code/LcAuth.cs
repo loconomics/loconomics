@@ -33,6 +33,7 @@ public static class LcAuth
     /// </summary>
     public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
     public static string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.";
+    public static string AccountLockedErrorMessage = @"Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password";
     public class RegisteredUser
     {
         public string Email;
@@ -252,13 +253,22 @@ public static class LcAuth
         }
     }
 
+    /// <summary>
+    /// Returns true if account is locked.
+    /// It uses the general rules: As requested at #974, for HIPAA compliance:
+    /// - Lock account after 5 unsuccesfully attempts
+    /// - Lock it for 5 minutes
+    /// </summary>
+    /// <returns></returns>
+    private static bool IsAccountLockedOut(string email)
+    {
+        return WebSecurity.IsAccountLockedOut(email, 5, 5 * 60);
+    }
+
     public static bool Login(string email, string password, bool persistCookie = false)
     {
-        // As requested at #974, for HIPAA compliance:
-        // - Lock account after 5 unsuccesfully attempts
-        // - Lock it for 5 minutes
-        if (WebSecurity.IsAccountLockedOut(email, 5, 5 * 60))
-            throw new ConstraintException("Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password");
+        if (IsAccountLockedOut(email))
+            throw new ConstraintException(AccountLockedErrorMessage);
         // Navigate back to the homepage and exit
         var result = WebSecurity.Login(email, password, persistCookie);
 
@@ -280,6 +290,9 @@ public static class LcAuth
     /// <param name="autologinkey"></param>
     public static void Autologin(string userid, string autologinkey)
     {
+        if (IsAccountLockedOut(userid))
+            throw new ConstraintException(AccountLockedErrorMessage);
+
         try
         {
             using (var db = Database.Open("sqlloco"))
