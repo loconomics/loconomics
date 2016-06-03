@@ -26,7 +26,6 @@ module.exports = {
     'textEditor': require('./activities/textEditor'),
     'dashboard': require('./activities/dashboard'),
     'appointment': require('./activities/appointment'),
-    'index': require('./activities/index'),
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
     'signup': require('./activities/signup'),
