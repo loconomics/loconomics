@@ -82,5 +82,6 @@ module.exports = {
     'viewBooking': require('./activities/viewBooking'),
     'blog': require('./activities/blog'),
     'instantBooking': require('./activities/instantBooking'),
-    'ownerPerks': require('./activities/ownerPerks')
+    'ownerPerks': require('./activities/ownerPerks'),
+    'cancellationPolicies': require('./activities/cancellationPolicies')
 };

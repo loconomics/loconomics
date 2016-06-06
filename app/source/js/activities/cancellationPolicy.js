@@ -4,7 +4,6 @@
 'use strict';
 
 var ko = require('knockout'),
-    moment = require('moment'),
     Activity = require('../components/Activity');
 
 var A = Activity.extend(function CancellationPolicyActivity() {
@@ -85,6 +84,9 @@ A.prototype.show = function show(state) {
 
     var params = state && state.route && state.route.segments;
     this.viewModel.jobTitleID(params[0] |0);
+    
+    // Request to sync policies, just in case there are remote changes
+    this.app.model.cancellationPolicies.sync();
 };
 
 function ViewModel(app) {
@@ -133,73 +135,6 @@ function ViewModel(app) {
         }
     }.bind(this);
 
-    this.policies = ko.observableArray([
-        
-        new CancellationPolicy({
-            cancellationPolicyID: 3,
-            name: 'Flexible',
-            description: 'No cancellation fees if changed or cancelled at least 24 hours in advance, otherwise a cancellation fee of 50% the price of booked services apply (including no-shows).',
-            hoursRequired: 24,
-            cancellationFeeBefore: 0,
-            cancellationFeeAfter: 0.5
-        }),
-        new CancellationPolicy({
-            cancellationPolicyID: 2,
-            name: 'Moderate',
-            description: 'No cancellation fees if changed or cancelled at least 24 hours in advance, otherwise a cancellation fee of 100% the price of booked services apply (including no-shows).',
-            hoursRequired: 24,
-            cancellationFeeBefore: 0,
-            cancellationFeeAfter: 1.0
-        }),
-        new CancellationPolicy({
-            cancellationPolicyID: 1,
-            name: 'Strict',
-            description: 'Cancellation fees of 50% of the price of booked services up to 5 days before the booking start time and 100% after.',
-            hoursRequired: 120,
-            cancellationFeeBefore: 0.5,
-            cancellationFeeAfter: 1.0
-        })
-    ]);
+    this.policies = app.model.cancellationPolicies.list;
 }
 
-var Model = require('../models/Model');
-
-var observableTime = ko.observable(new Date());
-setInterval(function() {
-    observableTime(new Date());
-}, 1 * 60 * 1000);
-
-function CancellationPolicy(values) {
-    
-    Model(this);
-    
-    this.model.defProperties({
-        cancellationPolicyID: 0,
-        name: '',
-        description: '',
-        hoursRequired: 0,
-        cancellationFeeBefore: 0,
-        cancellationFeeAfter: 0
-    }, values);
-    
-    this.cancellationFeeBeforeDisplay = ko.pureComputed(function() {
-        if (this.cancellationFeeBefore()>0){
-            return 'be charged a ' + Math.floor(this.cancellationFeeBefore() * 100) + '% cancellation fee';
-        }
-        else {
-            return 'not be charged any cancellation fee';
-        }
-    }, this);
-    
-    this.cancellationFeeAfterDisplay = ko.pureComputed(function() {
-        return Math.floor(this.cancellationFeeAfter() * 100) + '%';
-    }, this);
-
-    this.refundLimitDate = ko.computed(function() {
-        var d = moment(observableTime()).clone();
-        d
-        .add(7, 'days')
-        .subtract(this.hoursRequired(), 'hours');
-        return d.toDate();
-    }, this);
-}

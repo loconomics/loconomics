@@ -34,27 +34,13 @@
                         </div>
                     </div>
                 </script>
-                <script type="text/html" id="cancellationPolicy-info-tpl">
-                    <div class="collapse container-fluid" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }">
-                        <strong><span data-bind="text: policy.name"></span>: </strong><span data-bind="text: policy.description"></span><em><span> For example, if a booking was made by a client for one week from now and cancelled by <strong data-bind="text: policy.refundLimitDate, format: { type: 'datetime', format: 'LT dddd, LL' }"></strong>, they would <strong><span data-bind="text: policy.cancellationFeeBeforeDisplay"></span></strong>. If they cancelled after, they would be charged a <strong><span data-bind="text: policy.cancellationFeeAfterDisplay"></span> cancellation fee.</strong></span></em>
-                    </div>
-                </script>
                 <form data-bind="submit: save" class="LightForm" style="background-color: white">
                     <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs">
                         <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue: $parent.selectedCancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled: $parent.isLocked, itemLabel: policy.name } } --><!-- /ko -->
-                        <!-- ko template: { name: 'cancellationPolicy-info-tpl', data: { policy: policy } } --><!-- /ko -->
+                        <div class="collapse container-fluid" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }, template: { name: 'cancellationPolicy-info-template', data: { policy: policy } }"></div>
                     </div>
                     <h2 class="SectionTitle">General policy</h2>
-                    <div class="well Box-xs">
-                        <ul class="list-group">
-                            <li>The Loconomics service fee is non-refundable.</li>
-                            <li>Loconomics must be notified of any no-shows or complaints by either party within 24 hours after a booking is scheduled to end.</li>
-                            <li>Loconomics will help faciliate dispute resolution but has the final say should a dispute not be resolved between parties.</li>
-                            <li>A booking is officially canceled when the client clicks "Edit" and "Cancel booking" on the appointment, which they can find in their <a href="/clientAppointment" class="text-secondary">upcoming appointments</a>.</li>
-                            <li>You will have the option to waive a cancellation fee for a client on a case-by-case basis when cancellations occur.</li>
-                            <li>Loconomics reserves the right to waive a cancellation fee under extenuating circumstances of which you’ll be notified.</li>
-                        </ul>
-                    </div>
+                    <div class="well Box-xs" data-bind="template: { name: 'generalCancellationPolicy-template' }"></div>
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
                     </div>
