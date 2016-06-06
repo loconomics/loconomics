@@ -17,12 +17,13 @@ var A = Activity.extend(function TermsActivity() {
     // null for logos
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
+    var shell = this.app.shell;
     this.$activity.find('#terms-index a').click(function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         $(this).tab('show');
         var link = $(this).attr('href').replace(/^#terms-/, '');
-        this.app.shell.replaceState(null, null, '#!terms/' + link);
+        shell.replaceState(null, null, '#!terms/' + link);
     });
 });
 
