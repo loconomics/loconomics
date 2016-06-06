@@ -105,16 +105,24 @@ a {
     }
 }
 .btn-link {
-    color: $brand-secondary;
-    background-color: transparent;
     &:hover,
     &:focus,
     &:active{
         text-decoration: none;
         outline: none;
+    }
+}
+
+.btn-link.text-secondary {
+    color: $brand-secondary;
+    background-color: transparent;
+    &:hover,
+    &:focus,
+    &:active{
         color: $brand-secondary-dark;
     }
 }
+
 // Only bottom border to look flatty
 .form-control,
 .input-group-addon,
