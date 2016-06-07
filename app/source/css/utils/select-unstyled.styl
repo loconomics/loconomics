@@ -1,0 +1,40 @@
+/**
+    select-unstyled
+    It removes the browser built-in appearance, allowing full customization with other
+    styles and classes. Mainly, it removes the drop-down button on the right from desktop browsers.
+    
+    NOTE: It relies in non standard behaviors and some tricks, but includes the use of css 'appearance'
+    that was in the track of css3 standard but removed from the draft, may be re-added in a future.
+**/
+.select-unstyled {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    // Text align reassigned to default because cause a misalignment on selects
+    // Can be forced to centered with '--centered' variant
+    text-align: left;
+    // Hack to make it work on some browsers, like Firefox (some versions before 2016)
+    // worked to align to left and remote the extra space on the left, but modern versions
+    // had still the problem, that's why the Firefox specific hack later
+    text-indent: 0.01px;
+    text-overflow: '';
+
+    /* for IE 10+ */
+    &::-ms-expand {
+        display: none;
+    }
+
+    &.select-unstyled--centered {
+        // Webkit does not allow to change text-align on dropdowns, but still for others
+        text-align: center;
+    }
+}
+
+// Firefox only hacks
+@-moz-document url-prefix() {
+    // Re-align to left without unwanted whitespace at left.
+    // A value of '-2px' seems to work on modern versions of Firefox
+    .select-unstyled {
+        text-indent: -2px;
+    }
+}

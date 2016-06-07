@@ -30,7 +30,7 @@
                 <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
                 <label for="countryID">Country</label>
                 <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
-                    <select data-bind="value: countryID" class="form-control">
+                    <select data-bind="value: countryID" class="form-control select-unstyled">
                          <option value="1">United States</option>
                          <option value="2">Spain</option>
                          <option value="3">Afghanistan</option>
@@ -283,7 +283,7 @@
                 </div>
                 <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
                     <label for="device">Device</label>
-                    <select data-bind="value: device" class="form-control">
+                    <select data-bind="value: device" class="form-control select-unstyled">
                         <option value="">Select your device</option>
                         <option value="ios">iPhone/iPad</option>
                         <option value="android">Android</option>
