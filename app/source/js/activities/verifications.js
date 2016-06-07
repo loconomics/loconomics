@@ -15,7 +15,7 @@ var A = Activity.extend(function VerificationsActivity() {
     // Defaults settings for navBar.
     
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile', helpLink: '/help/sections/201967776-adding-verifications-to-your-profile'
+        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967776-adding-verifications-to-your-profile'
     });
     
     // Setup special links behavior to add/perform specific verifications

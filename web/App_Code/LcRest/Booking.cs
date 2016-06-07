@@ -2029,7 +2029,7 @@ namespace LcRest
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="clientUserID"></param>
-        /// <param name="serviceAddressID"></param>
+        /// <param name="serviceAddress"></param>
         /// <param name="startTime"></param>
         /// <param name="services"></param>
         /// <param name="preNotesToClient"></param>
@@ -2044,7 +2044,7 @@ namespace LcRest
             int clientUserID,
             int serviceProfessionalUserID,
             int jobTitleID,
-            int serviceAddressID,
+            Address serviceAddress,
             DateTime startTime,
             IEnumerable<int> services,
             string preNotesToClient,
@@ -2092,7 +2092,7 @@ namespace LcRest
                 db.Execute("BEGIN TRANSACTION");
 
                 // Create event
-                var serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                booking.serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
                     serviceProfessionalUserID,
                     LcEnum.CalendarAvailabilityType.busy,
                     eventSummary, // summary
@@ -2109,10 +2109,11 @@ namespace LcRest
                 booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
                 booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
-                // 4º: persisting booking on database
+                // 4º: Validate addressID or save the new one provided
+                ProcessAddressForServiceProfessionalBooking(serviceAddress, booking, db);
+
+                // 5º: persisting booking on database
                 booking.bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
-                booking.serviceAddressID = serviceAddressID;
-                booking.serviceDateID = serviceDateID;
                 booking.preNotesToClient = preNotesToClient;
                 booking.preNotesToSelf = preNotesToSelf;
                 Booking.Set(booking, serviceProfessionalUserID, db.Db);
@@ -2153,7 +2154,7 @@ namespace LcRest
         public static bool UpdServiceProfessionalBooking(
             int bookingID,
             int serviceProfessionalUserID,
-            int serviceAddressID,
+            Address serviceAddress,
             DateTime startTime,
             IEnumerable<int> services,
             string preNotesToClient,
@@ -2165,7 +2166,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 // 0: previous data and checks
-                var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
+                var booking = LcRest.Booking.Get(bookingID, false, true, serviceProfessionalUserID);
                 if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
                     return false;
 
@@ -2236,8 +2237,10 @@ namespace LcRest
                     booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
                 }
 
-                // 4º: persisting booking on database
-                booking.serviceAddressID = serviceAddressID;
+                // 4º: Validate addressID or save the new one provided
+                ProcessAddressForServiceProfessionalBooking(serviceAddress, booking, db);
+
+                // 5º: persisting booking on database
                 booking.preNotesToClient = preNotesToClient;
                 booking.preNotesToSelf = preNotesToSelf;
                 booking.postNotesToClient = postNotesToClient;
@@ -2261,6 +2264,62 @@ namespace LcRest
                 LcMessaging.SendBooking.For(booking.bookingID).BookingUpdatedByServiceProfessional();
 
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Internal utility, means to use only at the 'insert/update serviceProfessional booking'.
+        /// It checks if a address needs to be created for the booking, and setting it's id in place, or use the
+        /// addressID, validating the owner user for the booking, sanitizing any value (the address can be prepopulated from
+        /// form).
+        /// Must be executed after proper booking initialization/load.
+        /// Throws ConstraintException if ownership of the addressID fails for the booking.
+        /// </summary>
+        /// <param name="serviceAddress"></param>
+        /// <param name="booking"></param>
+        /// <param name="db"></param>
+        private static void ProcessAddressForServiceProfessionalBooking(Address serviceAddress, Booking booking, LcDatabase db)
+        {
+            if (!serviceAddress.IsNewAddress())
+            {
+                // Validate the address is one from client or service professional
+                if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                {
+                    throw new ConstraintException("Selected location is not valid.");
+                }
+                else
+                {
+                    booking.serviceAddressID = serviceAddress.addressID;
+                }
+            }
+            else
+            {
+                // Save new address for the service (client or serviceProfessional address)
+                // Check the owner of the address or default to the professional userID
+                if (serviceAddress.userID == booking.clientUserID)
+                {
+                    // Save anonymous address on behalf the user for this service
+                    serviceAddress.addressName = "";
+                    serviceAddress.createdBy = booking.serviceProfessionalUserID;
+                    // Is a client service address, where perform a service but not related to
+                    // a job title but as customer
+                    serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                }
+                else
+                {
+                    // By default, it belongs to the professional:
+                    serviceAddress.userID = booking.serviceProfessionalUserID;
+                    // Enforce is the same job title than the booking
+                    serviceAddress.jobTitleID = booking.jobTitleID;
+                }
+                // This is ever a service address location, so enforce some values
+                // to prevent from invalid input
+                serviceAddress.kind = Address.AddressKind.Service;
+                serviceAddress.isServiceLocation = true;
+                serviceAddress.isServiceArea = false;
+                serviceAddress.serviceRadius = null;
+                // Save and get ID (passed in the connection to be in the same transaction)
+                booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
             }
         }
 

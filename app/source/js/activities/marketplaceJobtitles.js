@@ -13,7 +13,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201152759-managing-your-marketplace-profile'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/202034083-managing-your-marketplace-profile'
     });
 
     // On changing jobTitleID:

@@ -12,12 +12,6 @@ module.exports = function(grunt) {
     var facebookAppID = '180579422039773',
         facebookLang = 'en-US';
     
-    var splashIncludedFiles = [
-        'activities/splashIndex.html',
-        'activities/splashThanks.html',
-        'activities/signup.html',
-        'activities/terms.html'
-    ];
     var moment = require('moment');
     var version = moment().format('YYYYMMDDHHmm');
 
@@ -65,20 +59,6 @@ module.exports = function(grunt) {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang
                 //siteUrl: 'http://localhost/source'
-            }
-          }
-        },
-        splash: {
-          files: {
-            'build/splash.html': ['source/html/splash.js.html']
-          },
-          options: {
-            context: {
-                debug: false,
-                includedFiles: splashIncludedFiles,
-                siteUrl: '',
-                facebookAppID: facebookAppID,
-                facebookLang: facebookLang
             }
           }
         },

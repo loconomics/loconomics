@@ -12,7 +12,7 @@ var A = Activity.extend(function UserFeesActivity() {
     this.viewModel = {};
     
     this.navBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: '/ownerInfo', helpLink: '/help/sections/201964153-how-owner-user-fees-work'
+        backLink: '/ownerInfo', helpLink: '/help/relatedArticles/201964153-how-owner-user-fees-work'
     });
 });
 

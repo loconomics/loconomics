@@ -194,46 +194,5 @@ module.exports = function(/*grunt*/) {
         }
     };
     
-    /**
-        Splash bundle
-    **/
-    bconfig.splash = {
-        'src': [
-            './source/js/splash.js'
-        ],
-        'dest': './build/assets/js/splash.js',
-        'options': {
-            debug: true,
-            shim: {
-                // Using a shim we avoid jquery to detect the CommonJS loader and 
-                // it attachs itself to the global namespace (window) what let
-                // the plugins works fine.
-                jquery: {
-                    path: './vendor/jquery/jquery-2.1.4.js',
-                    exports: 'jQuery'
-                },
-                'bootstrap': {
-                    // Using latest Bootstrap version:
-                    path: './vendor/bootstrap/js/bootstrap.js',
-                    exports: null,
-                    depends: { 'jquery': 'jquery' }
-                },
-                'fastclick': {
-                    path: './vendor/fastclick-forked/fastclick.js',
-                    exports: 'FastClick'
-                },
-                'jquery.ajaxQueue': {
-                    path: './vendor/caoglish/jquery.ajaxQueue.js',
-                    exports: null,
-                    depends: { 'jquery': 'jquery' }
-                }
-            },
-            'alias': [
-                'knockout',
-                'es6-promise'
-            ]
-        }
-    };
-
     return bconfig;
 };

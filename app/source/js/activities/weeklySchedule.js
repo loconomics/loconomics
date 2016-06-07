@@ -14,7 +14,7 @@ var A = Activity.extend(function WeeklyScheduleActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling' , helpLink: '/help/sections/201964173-setting-your-weekly-schedule'
+        backLink: 'scheduling' , helpLink: '/help/relatedArticles/201964173-setting-your-weekly-schedule'
     });
     
     this.defaultNavBar = this.navBar.model.toPlainObject(true);

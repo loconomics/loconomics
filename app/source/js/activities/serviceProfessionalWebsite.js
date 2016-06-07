@@ -14,7 +14,7 @@ var A = Activity.extend(function ServiceProfessionalWebsiteActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201967756-listing-your-personal-or-business-website'
+        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201967756-listing-your-personal-or-business-website'
     });
     
     this.registerHandler({

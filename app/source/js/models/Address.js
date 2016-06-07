@@ -42,6 +42,17 @@ function Address(values) {
         
         return list.filter(function(v) { return !!v; }).join(', ');
     }, this);
+
+    this.singleLineDetailed = ko.pureComputed(function() {
+        return (
+            this.addressLine1() + ' ' +
+            this.addressLine2() + ' - ' +
+            this.city() + ' ' +
+            '(' + this.stateProvinceCode() + ') ' +
+            this.postalCode() +
+            (this.specialInstructions() ? ' (' + this.specialInstructions() + ')' : '')
+        );
+    }, this);
     
     this.addressLine = ko.computed(function() {
         var list = [

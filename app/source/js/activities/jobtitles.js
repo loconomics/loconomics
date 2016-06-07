@@ -13,7 +13,7 @@ var A = Activity.extend(function JobtitlesActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: '/scheduling' , helpLink: '/help/sections/201967086-managing-your-scheduler'
+        backLink: '/scheduling' , helpLink: '/help/relatedArticles/201967086-managing-your-scheduler'
     });
     
     // On changing jobTitleID:
