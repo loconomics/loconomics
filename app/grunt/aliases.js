@@ -103,20 +103,5 @@ module.exports = {
     'atwork': [
         'connect:atbuild',
         'watch'
-    ],
-    'build-splash': [
-		'jshint',//'newer:jshint',
-		'browserify:splash',
-		'uglify:splash',//'newer:uglify:splash'
-        'notify:browserify',
-        'concat:css-splash-libs',
-		'stylus:splash',
-		'cssmin:splash',//'newer:cssmin:splash'
-        'notify:css',
-        'bliss:splash',
-        'notify:html',
-        'build-fonts',
-        'copyto:images',
-        'notify:build'
     ]
 };

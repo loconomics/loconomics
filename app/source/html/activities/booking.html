@@ -258,7 +258,7 @@
                                 <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
                             </div>
                         </div>
-                        <div class="well" data-bind="visible: !timeFieldToBeSelected()">
+                        <div class="well Box-xs" data-bind="visible: !timeFieldToBeSelected()">
                             <h5><strong>Why am I choosing three times?</strong></h5>
                             <p>This allows us to figure out a good appointment time on both ends. Your service professional has 18 hours to confirm your appointment.</p>
                         </div>
@@ -315,7 +315,7 @@
                                 This is a secure 128 bit SSL encrypted form, and we're PCI compliant
                             </span>
                         </div>
-                        <div class="well">
+                        <div class="well Box-xs">
                             <h5><strong>How payment works:</strong></h5>
                             <p>
                                 Your card will be authorized for $<span data-bind="text: booking().pricingSummary().totalPrice"></span>.
@@ -715,10 +715,10 @@
                         </div>
                         <div class="isolated">
                             By tapping sign up &amp; confirm, I agree to Loconomics'
-                            <a target="_blank" data-bind="attr: { href: urlTos }">Terms of Service</a>,
-                            <a target="_blank" data-bind="attr: { href: urlBcp }">Background Check Policy</a>,
-                            <a target="_blank" data-bind="attr: { href: urlPp }">Privacy Policy</a>, &amp;
-                            <a target="_blank" data-bind="attr: { href: urlCp }"><span data-bind="text:  serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s Cancellation Policy</a>
+                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlTos }">Terms of Service</a>,
+                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlBcp }">Background Check Policy</a>,
+                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlPp }">Privacy Policy</a>, &amp;
+                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlCp }"><span data-bind="text:  serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s Cancellation Policy</a>
                         </div>
                     </div>
                 </div>

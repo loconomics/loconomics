@@ -4,7 +4,6 @@
 'use strict';
 
 var ko = require('knockout'),
-    moment = require('moment'),
     Activity = require('../components/Activity');
 
 var A = Activity.extend(function CancellationPolicyActivity() {
@@ -85,6 +84,9 @@ A.prototype.show = function show(state) {
 
     var params = state && state.route && state.route.segments;
     this.viewModel.jobTitleID(params[0] |0);
+    
+    // Request to sync policies, just in case there are remote changes
+    this.app.model.cancellationPolicies.sync();
 };
 
 function ViewModel(app) {
@@ -133,59 +135,6 @@ function ViewModel(app) {
         }
     }.bind(this);
 
-    this.policies = ko.observableArray([
-        new CancellationPolicy({
-            cancellationPolicyID: 1,
-            name: 'Strict',
-            description: '50% refund up to 5 days before booking, except fees',
-            hoursRequired: 120,
-            refundIfCancelledBefore: 0.5
-        }),
-        new CancellationPolicy({
-            cancellationPolicyID: 2,
-            name: 'Moderate',
-            description: '100% refund up to 24 hours before booking, except fees.  No refund for under 24 hours and no-shows.',
-            hoursRequired: 24,
-            refundIfCancelledBefore: 1
-        }),
-        new CancellationPolicy({
-            cancellationPolicyID: 3,
-            name: 'Flexible',
-            description: '100% refund up to 24 hours before booking, except fees.  50% refund for under 24 hours and no-shows.',
-            hoursRequired: 24,
-            refundIfCancelledBefore: 1
-        })
-    ]);
+    this.policies = app.model.cancellationPolicies.list;
 }
 
-var Model = require('../models/Model');
-
-var observableTime = ko.observable(new Date());
-setInterval(function() {
-    observableTime(new Date());
-}, 1 * 60 * 1000);
-
-function CancellationPolicy(values) {
-    
-    Model(this);
-    
-    this.model.defProperties({
-        cancellationPolicyID: 0,
-        name: '',
-        description: '',
-        hoursRequired: 0,
-        refundIfCancelledBefore: 0
-    }, values);
-    
-    this.refundIfCancelledBeforeDisplay = ko.pureComputed(function() {
-        return Math.floor(this.refundIfCancelledBefore() * 100) + '%';
-    }, this);
-
-    this.refundLimitDate = ko.computed(function() {
-        var d = moment(observableTime()).clone();
-        d
-        .add(7, 'days')
-        .subtract(this.hoursRequired(), 'hours');
-        return d.toDate();
-    }, this);
-}
