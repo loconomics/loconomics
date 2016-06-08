@@ -27,7 +27,7 @@ var A = Activity.extend(function AppointmentActivity() {
     // later used to instantiate a new NavAction that will
     // dynamically change depending on viewModel data.
     var backActionSettings = {
-        link: 'calendar/', // Preserve last slash, for later use
+        link: this.viewModel.defaultBackToCalendarUrl,
         icon: Activity.NavAction.goBack.icon(),
         isTitle: true,
         text: 'Calendar'
@@ -41,9 +41,8 @@ var A = Activity.extend(function AppointmentActivity() {
     // NavBar must update depending on editMode state (to allow cancel and goBack)
     // and appointment date (on read-only, to go back to calendar on current date)
     ko.computed(function() {
-        var editMode = this.viewModel.editMode(),
-            isNew = this.viewModel.appointmentCardView() && this.viewModel.appointmentCardView().isNew(),
-            date = this.viewModel.currentDate();
+        var editMode = this.viewModel.editMode();
+        var isNew = this.viewModel.appointmentCardView() && this.viewModel.appointmentCardView().isNew();
 
         if (editMode) {
             // Is cancel action
@@ -68,10 +67,9 @@ var A = Activity.extend(function AppointmentActivity() {
         }
         else {
             // Is go to calendar/date action
-            var defLink = backActionSettings.link,
-                defBackText = backActionSettings.text;
+            var defBackText = backActionSettings.text;
             
-            var link = date ? defLink + date.toISOString() : defLink;
+            var link = this.viewModel.backToCalendarUrl();
             var text = this.viewModel.formattedCurrentDate() || defBackText;
             
             this.navBar.leftAction().model.updateWith($.extend({}, backActionSettings, {
@@ -247,6 +245,13 @@ function ViewModel(app) {
     this.formattedCurrentDate = ko.pureComputed(function() {
         var date = this.currentDate();
         return date ? moment(date).format('dddd [(]M/D[)]') : '';
+    }, this);
+    
+    // Preserve last slash, for later use
+    this.defaultBackToCalendarUrl = 'calendar/';
+    this.backToCalendarUrl = ko.pureComputed(function() {
+        var date = this.currentDate();
+        return date ? this.defaultBackToCalendarUrl + date.toISOString() : this.defaultBackToCalendarUrl;
     }, this);
 
     // To access the component API we use next observable,
