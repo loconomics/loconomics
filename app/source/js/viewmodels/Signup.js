@@ -80,6 +80,9 @@ function SignupVM(app) {
     
     this.emailIsLocked = ko.observable(false);
     
+    // A static utility (currently only used to conditionally show/hide DownloadApp links)
+    this.inApp = ko.observable(!!window.cordova);
+    
     this.reset = function() {
         this.confirmationCode(null);
         this.firstName('');
