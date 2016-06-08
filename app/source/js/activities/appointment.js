@@ -224,6 +224,7 @@ var CalendarEvent = require('../models/CalendarEvent'),
     Booking = require('../models/Booking');
 
 function ViewModel(app) {
+    //jshint maxstatements:30
     this.app = app;
     this.currentDate = ko.observable(new Date());
     this.currentID = ko.observable(0);
@@ -235,6 +236,12 @@ function ViewModel(app) {
     this.appointments = ko.pureComputed(function() {
         var dateAvail = this.dateAvailability();
         return dateAvail && dateAvail.appointmentsList() || [];            
+    }, this);
+    
+    this.specialAppointmentIds = Appointment.specialIds;
+    this.isNewCard = ko.pureComputed(function() {
+        var id = this.currentID();
+        return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
     }, this);
     
     // To access the component API we use next observable,

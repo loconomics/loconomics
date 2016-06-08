@@ -12,8 +12,8 @@
             </div>
             <div class="col-md-7 col-sm-reset">         
                 <h2 class="SectionTitle" style="margin: 10px;">
-                    <span data-bind="visible: currentID() == -4">Add a new booking</span>
-                    <span data-bind="visible: currentID() == -3">Add a calendar block</span>
+                    <span data-bind="visible: currentID() == specialAppointmentIds.newBooking">Add a new booking</span>
+                    <span data-bind="visible: currentID() == specialAppointmentIds.newEvent">Add a calendar block</span>
                     <span data-bind="visible: currentID() > 0">Upcoming</span>
                     <span class="pull-right hidden-xs hidden-sm"><a href="https://loconomics.com/en-US/help/sections/201983163-making-changes-canceling-appointments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
@@ -21,8 +21,8 @@
                     </span>
                 </h2>
                 <div class="hidden-xs hidden-sm" style="margin: 10px;">
-                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-left" data-bind="visible: currentID() > 0, event: { click: goPrevious}"></button>
-                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-right" data-bind="visible: currentID() > 0, event: { click: goNext}"></button>
+                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-left" data-bind="visible: !isNewCard(), click: goPrevious"></button>
+                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-right" data-bind="visible: !isNewCard(), click: goNext"></button>
                     <button class="btn btn-default pull-right" data-bind="visible: currentID() > 0">Edit</button>
                 </div>
                 <!-- Appointment View (cards) -->
