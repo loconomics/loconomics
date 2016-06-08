@@ -72,7 +72,7 @@ var A = Activity.extend(function AppointmentActivity() {
                 defBackText = backActionSettings.text;
             
             var link = date ? defLink + date.toISOString() : defLink;
-            var text = date ? moment(date).format('dddd [(]M/D[)]') : defBackText;
+            var text = this.viewModel.formattedCurrentDate() || defBackText;
             
             this.navBar.leftAction().model.updateWith($.extend({}, backActionSettings, {
                 link: link,
@@ -244,6 +244,11 @@ function ViewModel(app) {
         return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
     }, this);
     
+    this.formattedCurrentDate = ko.pureComputed(function() {
+        var date = this.currentDate();
+        return date ? moment(date).format('dddd [(]M/D[)]') : '';
+    }, this);
+
     // To access the component API we use next observable,
     // updated by the component with its view
     this.appointmentCardView = ko.observable(null);

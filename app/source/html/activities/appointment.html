@@ -14,7 +14,7 @@
                 <h2 class="SectionTitle" style="margin: 10px;">
                     <span data-bind="visible: currentID() == specialAppointmentIds.newBooking">Add a new booking</span>
                     <span data-bind="visible: currentID() == specialAppointmentIds.newEvent">Add a calendar block</span>
-                    <span data-bind="visible: currentID() > 0">Upcoming</span>
+                    <span data-bind="visible: !isNewCard(), text: formattedCurrentDate"></span>
                     <span class="pull-right hidden-xs hidden-sm"><a href="https://loconomics.com/en-US/help/sections/201983163-making-changes-canceling-appointments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                     <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: currentID() > 0">Edit</button>
