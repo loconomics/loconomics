@@ -19,9 +19,9 @@
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div class="TilesList TilesList--openEnd container-fluid LightForm" >
+                <div class="LightForm" >
                     <div data-bind="visible: list().length">
-                        <ul data-bind="foreach: list">
+                        <ul data-bind="foreach: list" class="TilesList TilesList--openEnd">
                             <li>
                                 <a class="InfoTile" href="/educationForm" data-bind="attr: { href: '/educationForm/' + educationID() }">
                                     <div class="Tile-icon" aria-hidden="true">
