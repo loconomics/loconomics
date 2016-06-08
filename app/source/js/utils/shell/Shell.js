@@ -65,8 +65,8 @@ function Shell(settings) {
     /**
         A function to decide if the
         access is allowed (returns 'null')
-        or not (return a state object with information
-        that will be passed to the 'nonAccessName' item;
+        or forbidden (return a state object with information
+        that will be passed to the 'forbiddenAccessName' item;
         the 'route' property on the state is automatically filled).
         
         The default buit-in just allow everything 
@@ -77,8 +77,8 @@ function Shell(settings) {
         information about the URL.
     **/
     this.accessControl = settings.accessControl || deps.accessControl;
-    // What item load on non access
-    this.nonAccessName = settings.nonAccessName || 'index';
+    // What item to load when access is forbidden
+    this.forbiddenAccessName = settings.forbiddenAccessName || this.indexName;
     
     // Access to the current route
     this.currentRoute = null;
@@ -237,7 +237,7 @@ Shell.prototype.replace = function replace(state) {
     // Access control
     var accessError = this.accessControl(state.route);
     if (accessError) {
-        return this.go(this.nonAccessName, accessError);
+        return this.go(this.forbiddenAccessName, accessError);
     }
 
     // Locating the container
