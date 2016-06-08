@@ -91,3 +91,12 @@ $gray = lighten(#000, 33.5%);
         }
     }
 }
+
+/* Inside a PaddingBox or Box, remove the margins */
+[class^=PaddedBox],
+[class^=Box] {
+    > .SectionTitle {
+        margin: 0;
+    }
+}
+

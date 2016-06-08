@@ -3,6 +3,18 @@
 @import '../components/AppointmentCard.styl'
 
 [data-activity=appointment] {
+    
+    #appointment-toolbar {
+        // Needs positioning to avoid an overlay problem with the Cards below
+        position: relative;
+        z-index: 9999;
+    }
+    
+    #appointment-titleBar {
+        @media $mediaMaxSm {
+            margin-top: 15px;
+        }
+    }
 
     &.in-edit {
         
