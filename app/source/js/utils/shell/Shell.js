@@ -101,7 +101,17 @@ module.exports = Shell;
 
 /** API definition **/
 
-Shell.prototype.go = function go(url, state) {
+/**
+    Move shell to the given url appending the change to the history.
+    @url:string
+    @state:object Optional. Default: null. State information to provide to the item to load
+    @useReplace:bool Optional. Default: false. Ask to replace current history state
+    rather than append it to the history (using history.replaceState). This is recommended
+    when a transparent redirect wants to be performed, since helps keep the history 'sane'
+    (allowing the user to go back, rather than enter in a situation where clicking back
+    seems doing nothing because gets automatically redirected again to the same url).
+**/
+Shell.prototype.go = function go(url, state, useReplace) {
 
     if (this.forceHashbang) {
         if (!/^#!/.test(url)) {
@@ -111,8 +121,12 @@ Shell.prototype.go = function go(url, state) {
     else {
         url = this.absolutizeUrl(url);
     }
-    this.history.pushState(state, undefined, url);
-    // pushState do NOT trigger the popstate event, so
+    if (useReplace) {
+        this.history.replaceState(state, undefined, url);
+    } else {
+        this.history.pushState(state, undefined, url);
+    }
+    // pushState/replaceState do NOT trigger the popstate event, so
     return this.replace(state);
 };
 
@@ -237,7 +251,7 @@ Shell.prototype.replace = function replace(state) {
     // Access control
     var accessError = this.accessControl(state.route);
     if (accessError) {
-        return this.go(this.forbiddenAccessName, accessError);
+        return this.go(this.forbiddenAccessName, accessError, true);
     }
 
     // Locating the container
