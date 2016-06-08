@@ -412,6 +412,7 @@ function BaseClientBookingCardVM(app) {
     /// Special steps preparation processes
     /// Run some logic every time an step is accessed
     ko.computed(function() {
+        if (!this.booking()) return;
         switch (this.progress.currentStep()) {
             case 'selectTime':
                 this.prepareDatePicker('serviceDate');
