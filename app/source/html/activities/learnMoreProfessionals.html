@@ -183,15 +183,11 @@
                     </li>
                 </ul>
         </div>
-        <div class="coop-signup" data-bind="visible: !isServiceProfessional()">
+        <div id="signup-professional" class="coop-signup" data-bind="visible: !isServiceProfessional()">
                 <h1 class="coop-title">Become an owner.</h1>
                 <p class="coop-tagline">Provide local services &amp; work for yourself? Join the movement.</p>
-                <div data-bind="template: {name: 'signup-template', data: signup}"></div>
-                <p class="coop-tagline">Download our app:</p>
-                <ul id="download-icons">
-                    <li class="Icon-appleStore"></li>
-                    <li class="Icon-googlePlay"></li>            
-                </ul>
+                <div data-bind="visible: !isClient(), template: {name: 'signup-template', data: signup}"></div>
+                <button href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</button>
         </div>
     </div>
     <div>@render('parts/WebsiteFooter.html')</div>

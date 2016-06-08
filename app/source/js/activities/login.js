@@ -152,7 +152,7 @@ function ViewModel(app) {
                 err && err.statusText ||
                 'Invalid username or password';
             app.modals.showError({
-                title: 'Error loging in',
+                title: 'Error logging in',
                 error: msg
             });
         }.bind(this));
@@ -191,7 +191,7 @@ function ViewModel(app) {
         .catch(function(error) {
             this.isWorking(false);
             app.modals.showError({
-                title: 'Error reseting the password',
+                title: 'Error resetting the password',
                 error: error
             });
         }.bind(this));
@@ -222,7 +222,7 @@ function ViewModel(app) {
                 err && err.statusText ||
                 'Invalid Facebook login';
             app.modals.showError({
-                title: 'Error loging in',
+                title: 'Error logging in',
                 error: msg
             });
         }.bind(this));

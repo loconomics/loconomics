@@ -71,16 +71,6 @@
                     // gap between padding and the beggining of the text. Thats make it a bit wider
                     // in Chrome/Android, but not enought to have problems from 320px screen width.
                     padding: 6px 5px;
-                    // Remove the arrow, it's breaking layout in iPhone (too wide)
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    // Hack to make it work on some browsers, like Firefox
-                    text-indent: 0.01px;
-                    text-overflow: '';
-                    /* for IE 10+ */
-                    &::-ms-expand {
-                        display: none;
-                    }
                 }
             }
 

@@ -275,6 +275,11 @@
                   @media (max-width: 520px) {
                     margin-top: 30px;
                   }
+                  
+                
+                  @media $mediaMaxXs {
+                      margin-top: 0px;
+                  }
                 }
             }
             @media (max-width: 520px) {
@@ -375,23 +380,27 @@
                         color: $gray-dark;
                         font-size: 16px;
                     }
+                
+                  @media $mediaMaxXs {
+                    max-width: 280px;
+                    margin: 15px auto;
+                  }
                 }
                 
                 .coop-or {
-                  display: inline-block;
+                  display: block;
                   margin: 20px 30px;
                   text-align: center;
-                  
-                  @media (max-width: 520px) {
-                    display: block;
+                  @media $mediaMinMd {
+                    display: inline-block;
                   }
                 }
                 
                 // Setting margin for small screens since the items margin is auto there
                 //@media $mediaMaxXs {
-                @media (max-width: 520px) {
-                    margin: 0 $grid-gap;
-                }
+//                @media (max-width: 520px) {
+//                    margin: 0 $grid-gap;
+//                }
             }
         }
         
@@ -449,6 +458,7 @@
         
         .coop-signup {
             padding-top: 32px;
+            padding-bottom: 32px;
             background: no-repeat center / cover;
             background-image:  
               linear-gradient(
@@ -482,142 +492,47 @@
                 padding: 0 $grid-gap;
             }
             
-            .Signup-providers {
-                max-width: 450px;
-                margin: 40px auto 0;
+            .btn-add-profile{
                 display: block;
-                .Signup-or {
-                    color: White;
+                height: 56px;
+                width: 300px
+                font-size: 24px;
+                color: white;
+                border-color: white;
+                margin: auto;
+                &:hover,
+                &:focus,
+                &:active {
+                    color: $brand-secondary;
+                    border-color: $brand-secondary;
                 }
             }
-
-            form {
-                margin: 0 auto;
-                max-width: 450px;
-                
-                .form-group {
-                  margin-bottom: 5px;
+            .DownloadApp {
+                h2 {
+                    color: white;
                 }
-                
-                button {
-                  margin-top: 15px;
-                }
-
-                .form-control {
-                    background: White;
-                    font-size: 15px;
-                }
-
-                .form-control:focus {
-                  border-bottom: 3px solid $brand-success;
-                  border-top: none;
-                  border-right: none;              
-                }
-                  
-                input: focus {
-                  border: none;
-                }
-
-                // Reduce column gaps by a 20px in total
-                // for sizes bigger than XS (so keep standar in phone where
-                // forms goes vertical)
-                @media $mediaMinSm {
-                    > * {
-                        padding-left: 10px;
-                        padding-right: 10px;
+            }
+            .SignupLogin {
+                .LeadContent {
+                    background: transparent;
+                    padding-bottom: 32px;
+                    border: none;
+                    color: white;
+                    .btn-default {
+                        color: white;
+                        border-color: white;
+                    }
+                    .fa {
+                        font-size: 29px !important;
+                    }
+                    .icon-right {
+                        margin-top: -35px;
+                    }
+                    .form-control {
+                        height: 40px;
+                        font-size: 14px;
                     }
                 }
-                
-               .has-feedback:focus,
-               .btn:focus {
-                    border: none;
-                    border-bottom: none;
-                    color: $gray-dark;
-                  }
-                
-               .has-feedback:hover,
-               .btn:hover {
-                    border: none;
-                    border-bottom: none;
-                    color: $gray-dark;
-                  }
-            }
-            
-            ul {
-              text-align: center;
-              margin: 0 auto;
-              padding-bottom: 10px;
-              -webkit-padding-start: 0px;
-              
-              li {
-                margin: auto;
-                padding: 12px;
-                vertical-align: middle;
-              }
-            }
-            
-            .Icon-appleStore {
-                margin: 20px 8px;
-                display: inline-block;
-                width: 187px;
-                height: 61px;
-                background-size: 187px 61px;
-                background-image: 
-                  linear-gradient(transparent, transparent),
-                  url('../images/Download_on_the_App_Store_Badge_US-UK_135x40.svg');
-            }
-            
-            .Icon-googlePlay {
-                margin: 20px 8px;
-                display: inline-block;
-                width: 187px;
-                height: 61px;
-                background-size: 187px 61px;
-                background-image: url('../images/en-play-badge-border.png');
-            }
-            
-            .Signup-formcontainer {
-                padding-top: 0;
-                padding-bottom: 10px;
-
-                @media $mediaMinSm {
-                    padding: 15px 20px;
-                }
-                @media $mediaMinMd {
-                    padding: 15px 30px;
-                }
-                h3 {
-                  color: white;
-                  font-size: 32px;
-                }
-                label {
-                  color: white;
-                  font-size: 11px;
-                }
-            }
-            .Signup-login {
-                text-align: center;
-                color: white;
-                font-weight: 700;
-                padding: 0px 20px;
-                margin: 0;
-                > * {
-                    vertical-align: middle;
-                }
-                .btn-link {
-                  color: white;
-                  text-decoration: underline;
-                }
-            } 
-            
-            .Signup-agreement {
-              color: white;
-              font-weight: 700;
-              text-align: center;
-              a {
-               color: white;
-               text-decoration: underline;
-              }
             }
         }
     }
