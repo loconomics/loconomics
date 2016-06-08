@@ -148,6 +148,8 @@ AppModel.prototype.loadModules = function loadModules() {
     this.clientAppointments = require('./AppModel.clientAppointments').create(this);
     this.jobTitleLicenses = require('./AppModel.jobTitleLicenses').create(this);
     this.licenseCertification = require('./AppModel.licenseCertification').create(this);
+    this.clientAddresses = require('./AppModel.clientAddresses').create(this);
+    this.cancellationPolicies = require('./AppModel.cancellationPolicies').create(this);
 };
 
 /**

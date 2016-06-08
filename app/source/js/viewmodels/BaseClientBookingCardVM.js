@@ -61,10 +61,12 @@ function BaseClientBookingCardVM(app) {
 
     ///
     /// URLs (constants, don't need reset)
-    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
-    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
-    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
-    this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');    
+    var siteUrl = (app.model.config.siteUrl || 'https://loconomics.com') + '/';
+    this.urlTos = ko.observable(siteUrl + '#!terms/terms-of-service?mustReturn=true');
+    this.urlPp = ko.observable(siteUrl + '#!terms/privacy-policy?mustReturn=true');
+    this.urlBcp = ko.observable(siteUrl + '#!terms/background-check-policy?mustReturn=true');
+    // this.urlCp defined as computed later (depends upon other observables)
+
     ///
     // List of possible error messages registered by name
     this.errorMessages = {
@@ -275,6 +277,13 @@ function BaseClientBookingCardVM(app) {
         }.bind(this));
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
+    this.urlCp = ko.pureComputed(function() {
+        var info = this.serviceProfessionalInfo();
+        info = info && info.selectedJobTitle();
+        var id = info && info.cancellationPolicyID() || '';
+        return siteUrl + '#!cancellationPolicies/' + id + '?mustReturn=true';
+    }, this);
+    
     ///
     /// Date time picker(s)
     /* It returns true if user can only choose one time, that is
@@ -403,6 +412,7 @@ function BaseClientBookingCardVM(app) {
     /// Special steps preparation processes
     /// Run some logic every time an step is accessed
     ko.computed(function() {
+        if (!this.booking()) return;
         switch (this.progress.currentStep()) {
             case 'selectTime':
                 this.prepareDatePicker('serviceDate');

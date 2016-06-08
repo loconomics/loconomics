@@ -35,7 +35,7 @@ var shell = new Shell({
     
     forceHashbang: hashBang,
 
-    indexName: 'index',
+    indexName: 'home',
 
     linkEvent: 'click',
 

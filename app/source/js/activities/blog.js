@@ -11,7 +11,7 @@ var A = Activity.extend(function HelpActivity() {
     
     this.viewModel = new ViewModel();
     this.accessLevel = null;    
-    this.navBar = Activity.createSubsectionNavBar('Blog');
+    this.navBar = Activity.createSectionNavBar('Blog');
     
     // TestingData
     //setSomeTestingData(this.viewModel);
@@ -54,7 +54,7 @@ var A = Activity.extend(function HelpActivity() {
 
     this.subSectionFunction = {
         "posts": function(tailId){
-            this.viewModel.selectedPostId(Number(tailId));
+            this.viewModel.selectedPostId(parseInt(tailId, 10));
             this.viewModel.viewType('postView');
         }.bind(this),
     };
@@ -123,10 +123,11 @@ function ViewModel() {
 
     this.fullPostData = ko.pureComputed(function() {
         var selectedPostId = this.selectedPostId();
-        return this.blog().filter(function(post) {
-            var postIsSelected = post.ID() === selectedPostId;
+        var result = this.blog().filter(function(post) {
+            var postIsSelected = post.id() === selectedPostId;
             return postIsSelected;
         });
+        return result.length ? result[0]:null;
     }, this);
     
     this.filteredPostsBySearch = ko.pureComputed(function() {

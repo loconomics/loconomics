@@ -13,7 +13,7 @@ var A = Activity.extend(function OwnerInfoActivity() {
     this.viewModel = new ViewModel();
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.navBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/sections/201096629-ownership-in-loconomics'
+        backLink: '/account' , helpLink: '/help/relatedArticles/201096629-ownership-in-loconomics'
     });
 });
 

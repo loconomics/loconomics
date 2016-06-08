@@ -30,6 +30,11 @@ exports.extend = function (app) {
                 app.navBar().leftAction(NavAction.menuIn);
                 app.navBar().prevLeftAction = prev;
             }
+            var prevRight = app.navBar().rightAction();
+            if (prevRight === NavAction.menuNewItem) {
+                app.navBar().rightAction(null);
+                app.navBar().prevRightAction = prevRight;
+            }
         }
         else {
             if (app.navBar().prevLeftAction) {

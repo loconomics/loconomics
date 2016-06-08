@@ -153,6 +153,24 @@ function GroupListRemoteModel(settings) {
             return cacheItem.item;
         });
     };
+    
+    /**
+        Internal API exposed only for use at subclasses.
+        It adds an item to the memory cache and local storage given plain server data;
+        this is done automatically on setItem, but some subclasses may need to call it manually
+        if normal requests cannot be done (like in file uploads)
+    **/
+    api._pushItemToCache = function(serverData) {
+        if (!serverData) return;
+        var groupID = serverData[settings.groupIdField];
+        // Save in cache
+        cache.setItemCache(groupID, serverData[settings.itemIdField], serverData);
+        // Save in local storage
+        // In local need to be saved all the grouped data, not just
+        // the item; since we have the cache list updated, use that
+        // full list to save local
+        this.pushGroupToLocal(groupID, cache.getGroupCache(groupID).list);
+    };
 
     /**
         Save an item in cache, local and remote.
@@ -172,14 +190,7 @@ function GroupListRemoteModel(settings) {
             // by the server, as updates dates and itemID when creating
             // a new item.
             if (serverData) {
-                var groupID = serverData[settings.groupIdField];
-                // Save in cache
-                cache.setItemCache(groupID, serverData[settings.itemIdField], serverData);
-                // Save in local storage
-                // In local need to be saved all the grouped data, not just
-                // the item; since we have the cache list updated, use that
-                // full list to save local
-                this.pushGroupToLocal(groupID, cache.getGroupCache(groupID).list);
+                api._pushItemToCache(serverData);
             }
             api.state.isSaving(false);
 
@@ -298,6 +309,11 @@ GroupListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSu
     };
     this.pushGroupToLocal = function pushToLocal(groupID, data) {
         return localforage.setItem(baseName + groupID, data);
+    };
+
+    // Extras
+    this.removeGroupFromLocalCache = function(groupID) {
+        return localforage.removeItem(baseName + groupID);
     };
 };
 

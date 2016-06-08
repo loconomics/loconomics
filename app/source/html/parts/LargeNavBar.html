@@ -2,6 +2,7 @@
     <div class="LargeNavBar-brand">
         <a class="navbar-brand" href="/home">Loconomics</a>
     </div>
+<!-- hidden until issue #958 implemented
     <div class="LargeNavBar-searchBar">
         <div class="input-group">
             <span class="input-group-addon">
@@ -10,6 +11,7 @@
             <input id="navbar-search" type="text" name="s" class="form-control" placeholder="Search for a (e.g. Garderner, Tutor...)" />
         </div>
     </div>
+-->
     <!-- Anonymous nav -->
     <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: isAnonymous()">
         <li class="dropdown toggle">
@@ -26,6 +28,7 @@
     </ul>
     <!-- User nav -->
     <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
+<!-- hidden until location component (issue #959) implemented
         <li class="dropdown toggle">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <span class="LargeNavBar-label">Browse</span> <b class="caret"></b>
@@ -42,6 +45,7 @@
                 <li><a href="#">Office</a></li>
             </ul>
         </li>
+-->
         <li class="LargeNavBar-userMenu dropdown text-right">
             <a href="#user-menu" class="dropdown-toggle toggle" data-toggle="dropdown">
                 <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" /></i>
@@ -112,6 +116,10 @@
             <a data-bind="visible: isServiceProfessional() && !isAnonymous()" href="/help/categories/200431835-resources-for-service-professionals"><span class="LargeNavBar-label">Help</span></a>
             <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
             <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
+        </li>
+        <li>
+            <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
+            <a data-bind="visible: isServiceProfessional() && !isAnonymous()" href="/learnMoreProfessionals"><span class="LargeNavBar-label">How it works</span></a>
         </li>
     </ul>
 </div>

@@ -13,7 +13,7 @@ var A = Activity.extend(function EducationFormActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Education', {
-        backLink: '/education' , helpLink: '/help/sections/201960833-adding-education-to-your-profile'
+        backLink: '/education' , helpLink: '/help/relatedArticles/201960833-adding-education-to-your-profile'
     });
 });
 

@@ -12,11 +12,11 @@ var A = Activity.extend(function ConversationActivity() {
     this.viewModel = new ViewModel(this.app);
     
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Inbox', {
-        backLink: '/inbox' , helpLink: '/help/sections/201960743-adding-your-contact-information'
+        backLink: '/inbox' , helpLink: '/help/relatedArticles/201960743-adding-your-contact-information'
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Inbox', {
-        backLink: '/inbox' , helpLink: '/help/sections/201966996-sending-and-receiving-messages'
+        backLink: '/inbox' , helpLink: '/help/relatedArticles/201966996-sending-and-receiving-messages'
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;

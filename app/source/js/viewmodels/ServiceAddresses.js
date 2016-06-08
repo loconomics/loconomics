@@ -59,6 +59,18 @@ function ServiceAddressesViewModel() {
             return sid === iid;
         }, this);
     }.bind(this);
+
+    this.presetSelectedAddressID = function(addressID) {
+        if (!this.isSelectionMode()) return;
+        this.selectedAddress(null);
+        this.addresses().some(function(add) {
+            if (add.addressID() === addressID) {
+                this.selectedAddress(add);
+                // End loop early:
+                return true;
+            }
+        }.bind(this));
+    }.bind(this);
 }
 
 module.exports = ServiceAddressesViewModel;

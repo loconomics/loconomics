@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,6 +23,17 @@ public static class LcAuth
             return db.QuerySingle("EXEC CheckUserEmail @0", email) != null;
         }
     }
+    /// <summary>
+    /// For HIPAA compliance (#974) and strong security, passwords must be checked against next regex. It requires:
+    /// - Almost 8 characters
+    /// - Non-alphabetic characters: ~!@#$%^*&;?.+_
+    /// - Base 10 digits (0 through 9)
+    /// - English uppercase characters (A through Z)
+    /// - English lowercase characters (a through z)
+    /// </summary>
+    public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
+    public static string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.";
+    public static string AccountLockedErrorMessage = @"Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password";
     public class RegisteredUser
     {
         public string Email;
@@ -33,6 +44,10 @@ public static class LcAuth
     /// <summary>
     /// Register an user and returns relevant registration information about the new account,
     /// or raise and exception on error of type System.Web.Security.MembershipCreateUserException.
+    /// IMPORTANT: For code that doesn't uses this but the CreateAccount directly,
+    /// is required to validate the password against ValidPasswordRegex. 
+    /// It's recommended to use form validation with that regex before even call this to avoid extra computation, checks,
+    /// but this will check the regex too.
     /// </summary>
     /// <param name="email"></param>
     /// <param name="firstname"></param>
@@ -51,7 +66,14 @@ public static class LcAuth
         string aboutMe = null,
         string phone = null,
         string signupDevice = null
-    ) {
+    )
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+
         using (var db = Database.Open("sqlloco"))
         {
             // IMPORTANT: The whole process must be complete or rollback, but since
@@ -147,6 +169,27 @@ public static class LcAuth
             }
         }
     }
+
+    public static bool ResetPassword(string token, string password)
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+        return WebSecurity.ResetPassword(token, password);
+    }
+
+    public static bool ChangePassword(string email, string currentPassword, string newPassword)
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(newPassword, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+        return WebSecurity.ChangePassword(email, currentPassword, newPassword);
+    }
+
     public static void BecomeProvider(int userID, Database db = null)
     {
         var ownDb = db == null;
@@ -211,7 +254,7 @@ public static class LcAuth
         int? userId = GetFacebookUserID(facebookID);
         if (userId.HasValue)
         {
-            var userData = LcData.UserInfo.GetUserRow(userId.Value);
+            var userData = LcRest.UserProfile.Get(userId.Value);
             // Check is valid (only edge cases will not be a valid record,
             // as incomplete manual deletion of user accounts that didn't remove
             // the Facebook connection).
@@ -219,8 +262,8 @@ public static class LcAuth
             {
                 return new RegisteredUser
                 {
-                    Email = userData.Email,
-                    IsProvider = userData.IsProvider,
+                    Email = userData.email,
+                    IsProvider = userData.isServiceProfessional,
                     UserID = userId.Value
                 };
             }
@@ -232,8 +275,22 @@ public static class LcAuth
         }
     }
 
+    /// <summary>
+    /// Returns true if account is locked.
+    /// It uses the general rules: As requested at #974, for HIPAA compliance:
+    /// - Lock account after 5 unsuccesfully attempts
+    /// - Lock it for 5 minutes
+    /// </summary>
+    /// <returns></returns>
+    private static bool IsAccountLockedOut(string email)
+    {
+        return WebSecurity.IsAccountLockedOut(email, 5, 5 * 60);
+    }
+
     public static bool Login(string email, string password, bool persistCookie = false)
     {
+        if (IsAccountLockedOut(email))
+            throw new ConstraintException(AccountLockedErrorMessage);
         // Navigate back to the homepage and exit
         var result = WebSecurity.Login(email, password, persistCookie);
 
@@ -255,6 +312,9 @@ public static class LcAuth
     /// <param name="autologinkey"></param>
     public static void Autologin(string userid, string autologinkey)
     {
+        if (IsAccountLockedOut(userid))
+            throw new ConstraintException(AccountLockedErrorMessage);
+
         try
         {
             using (var db = Database.Open("sqlloco"))

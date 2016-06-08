@@ -26,7 +26,6 @@ module.exports = {
     'textEditor': require('./activities/textEditor'),
     'dashboard': require('./activities/dashboard'),
     'appointment': require('./activities/appointment'),
-    'index': require('./activities/index'),
     'login': require('./activities/login'),
     'logout': require('./activities/logout'),
     'signup': require('./activities/signup'),
@@ -83,5 +82,6 @@ module.exports = {
     'viewBooking': require('./activities/viewBooking'),
     'blog': require('./activities/blog'),
     'instantBooking': require('./activities/instantBooking'),
-    'ownerPerks': require('./activities/ownerPerks')
+    'ownerPerks': require('./activities/ownerPerks'),
+    'cancellationPolicies': require('./activities/cancellationPolicies')
 };

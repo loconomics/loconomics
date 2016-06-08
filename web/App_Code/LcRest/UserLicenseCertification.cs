@@ -120,8 +120,7 @@ namespace LcRest
                 userlicensecertifications As V
                  INNER JOIN
                 verificationstatus As VS
-                  ON V.VerificationStatusID = VS.VerificationStatusID 
-                                 
+                  ON V.VerificationStatusID = VS.VerificationStatusID                     
             WHERE
                 V.ProviderUserID = @userID
                  AND
@@ -129,9 +128,34 @@ namespace LcRest
                  AND 
                 VS.LanguageID = @languageID 
         ";
+        const string sqlGetItem = sqlGetList + @"
+            AND V.userLicenseCertificationID = @3
+        ";
         #endregion
 
+        public static UserLicenseCertification Get(int userID, int jobTitleID, int languageID, int userLicenseCertificationID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetItem, userID, jobTitleID, languageID, userLicenseCertificationID));
+            }
+        }
+
+        public static IEnumerable<UserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
+            }
+        }
+        #endregion
+
+        #region Insert
+
+        #region SQL Insert
         const string sqlInsertNew = @"
+            SET NOCOUNT ON
+
             INSERT into userlicensecertifications (
                 ProviderUserID,
                 PositionID,
@@ -153,64 +177,122 @@ namespace LcRest
                 submittedBy,
                 submittedImageLocalURL
                 ) VALUES (
-                    @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, 
+                    @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14,
+                    null,
                     getdate(), 
-                    @16, 
-                    @17  
+                    @15, 
+                    @16  
                 )
+
+                -- EXEC TestAlertProfessionalLicense @0, @1
+
                 SELECT @@Identity
         ";
+        #endregion
 
-        private static void insertNew (int userID, int jobTitleID, int licenseCertificationID, string submittedImageLocalURL)
+        private static int Insert(UserLicenseCertification item, bool internalUpdate = false)
         {
-            var user = UserProfile.Get(userID);
+            // TODO, for an admin dashboard, we may need to implement internalUpdate allowing for update of all non-ID fields.
+            if (internalUpdate) throw new NotImplementedException("Internal update not implemented");
+            var user = UserProfile.Get(item.userID);
             using (var db = new LcDatabase())
             {
-                db.Execute(sqlInsertNew,
-                userID,
-                jobTitleID,
-                licenseCertificationID,
-                2,
-                "",
-                "",
-                "",
-                "",
-                user.firstName,
-                user.lastName,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                userID,
-                submittedImageLocalURL
+                // Constraint: licenses cannot be duplicated for an existant licenseID (>0), but they can for the special wildcard IDs (-1, 0)
+                if (item.licenseCertificationID > 0)
+                {
+                    var many = (int)db.QueryValue("SELECT count(*) FROM UserLicenseCertifications WHERE ProviderUserID = @0 AND PositionID = @1 AND LicenseCertificationID = @2",
+                        item.userID, item.jobTitleID, item.licenseCertificationID);
+                    if (many > 0)
+                    {
+                        throw new ConstraintException("You have already registered that license, please try to update it if you want to submit a new file.");
+                    }
+                }
+
+                return (int)db.QueryValue(sqlInsertNew,
+                    item.userID,
+                    item.jobTitleID,
+                    item.licenseCertificationID,
+                    2,
+                    "",
+                    "",
+                    null,
+                    "",
+                    user.firstName,
+                    user.lastName,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    item.userID,
+                    item.submittedImageLocalURL
                 );
             }
         }
 
-        public static IEnumerable<UserLicenseCertification> GetList(int userID, int jobTitleID, int languageID)
+        #endregion
+
+        #region Update
+        private static void Update(UserLicenseCertification item, bool internalUpdate = false)
         {
+            // TODO, for an admin dashboard, we may need to implement internalUpdate allowing for update of all non-ID fields.
+            if (internalUpdate) throw new NotImplementedException("Internal update not implemented");
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID, jobTitleID, languageID).Select(FromDB);
+                db.Execute(@"
+                    UPDATE userlicensecertifications SET
+                         submittedImageLocalURL = @3
+                    WHERE
+                        ProviderUserID = @0
+                        AND PositionID = @1
+                        AND userLicenseCertificationID = @2
+                ", item.userID, item.jobTitleID, item.userLicenseCertificationID, item.submittedImageLocalURL);
             }
         }
         #endregion
 
-        /// Note: On Update/Insert SQL, remember next: EXEC TestAlertProfessionalLicense @0, @1
+        #region Set
+        static int Set(UserLicenseCertification item, bool internalUpdate = false)
+        {
+            if (item.userLicenseCertificationID > 0)
+            {
+                Update(item, internalUpdate);
+                return item.userLicenseCertificationID;
+            }
+            else
+            {
+                return Insert(item, internalUpdate);
+            }
+        }
+        #endregion
 
         #region Request of Review / Submit photo
         const string photoPrefix = "$licenseCertification-";
-        public static void SubmitPhoto(int userID, int jobTitleID, int licenseCertificationID, string originalFileName, Stream photo)
+
+
+        public static int SubmitPhoto(UserLicenseCertification item, string originalFileName, Stream photo)
         {
+            // For updates, needs to remove previous file
+            if (item.userLicenseCertificationID > 0)
+            {
+                var oldItem = Get(item.userID, item.jobTitleID, item.languageID, item.userLicenseCertificationID);
+                if (oldItem == null)
+                    // Not found:
+                    return 0;
+                if (!String.IsNullOrEmpty(oldItem.submittedImageLocalURL))
+                {
+                    var localPath = oldItem.submittedImageLocalURL.Replace(LcUrl.AppUrl, "");
+                    localPath = HttpContext.Current.Server.MapPath(LcUrl.RenderAppPath + localPath);
+                    File.Delete(localPath);
+                }
+            }
+
             // File name with special prefix
             var autofn = Guid.NewGuid().ToString().Replace("-", "");
             string fileName =  photoPrefix + autofn + (System.IO.Path.GetExtension(originalFileName) ?? ".jpg");
-            string virtualPath = LcUrl.RenderAppPath + LcData.Photo.GetUserPhotoFolder(userID);
+            string virtualPath = LcUrl.RenderAppPath + LcData.Photo.GetUserPhotoFolder(item.userID);
             var path = HttpContext.Current.Server.MapPath(virtualPath);
-            var submittedImageLocalURL = LcUrl.AppUrl + LcData.Photo.GetUserPhotoFolder(userID) + fileName;
+            item.submittedImageLocalURL = LcUrl.AppUrl + LcData.Photo.GetUserPhotoFolder(item.userID) + fileName;
             // Check folder or create
             if (!Directory.Exists(path))
             {
@@ -221,11 +303,11 @@ namespace LcRest
                 photo.CopyTo(file);
             }
             
-            var msg = "UserID: " + userID + " submitted a photo of their License/Certification to being verified and added. It can be found in the FTP an folder: " + virtualPath;
+            var msg = "UserID: " + item.userID + " submitted a photo of their License/Certification to being verified and added. It can be found in the FTP an folder: " + virtualPath;
             var email = "support@loconomics.zendesk.com";
-
             LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
-            insertNew(userID, jobTitleID, licenseCertificationID, submittedImageLocalURL);
+
+            return Set(item);
         }
         #endregion
     }
