@@ -1,7 +1,7 @@
 <!-- Component Template appointment-card -->
 <script type="text/html" id="appointment-card-template">
     <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
-        <div class="Card-title ItemTile" data-bind="visible: currentID() == -2">
+        <div class="Card-title ItemTile" data-bind="visible: currentID() == specialAppointmentIds.free">
             <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
             <div class="Tile-content">
                 <h4>You're free</h4>
@@ -18,15 +18,15 @@
         </div>
         <ul class="TilesList TilesList--openEnd" data-bind="visible: newAppointmentVisible()">
             <li>
-                <a class="LinkTile" href="#appointment/-4"
-                   data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-4' }">
+                <a class="LinkTile"
+                   data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newBooking }">
                     <div class="Tile-content"><p>Add a new booking</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
                 </a>
             </li>
             <li>
-                <a class="LinkTile" href="#appointment/-3"
-                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-3' }">
+                <a class="LinkTile"
+                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newEvent }">
                     <div class="Tile-content"><p>Add a new calendar block</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
                 </a>
@@ -236,9 +236,9 @@
         <div class="AppointmentCard-actions" data-bind="visible: !isBookingRequest() && editMode()">
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
-            <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent() && currentID() > 0, click: deleteEvent, disable: isLocked">Delete</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
         </div>
 
         <ul class="TilesList TilesList--openEnd" data-bind="if: isBookingRequest()">

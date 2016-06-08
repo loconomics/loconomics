@@ -18,14 +18,14 @@
                         <span data-bind="visible: !isNewCard(), text: formattedCurrentDate"></span>
                         <span class="pull-right hidden-xs hidden-sm"><a href="https://loconomics.com/en-US/help/sections/201983163-making-changes-canceling-appointments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                         </span>
-                        <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: currentID() > 0">Edit</button>
+                        <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
                         </span>
                     </h2>
                 </div>
                 <div id="appointment-toolbar" class="hidden-xs hidden-sm container-fluid">
                     <button class="btn btn-default fa fa-lg ion ion-ios-arrow-left" data-bind="visible: !isNewCard(), click: goPrevious"></button>
                     <button class="btn btn-default fa fa-lg ion ion-ios-arrow-right" data-bind="visible: !isNewCard(), click: goNext"></button>
-                    <button class="btn btn-default pull-right" data-bind="visible: currentID() > 0">Edit</button>
+                    <button class="btn btn-default pull-right" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
                 </div>
                 <!-- Appointment View (cards) -->
                 <div id="calendarAppointmentView" class="container-fluid CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">

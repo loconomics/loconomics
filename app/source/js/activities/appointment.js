@@ -252,6 +252,11 @@ function ViewModel(app) {
     // To access the component API we use next observable,
     // updated by the component with its view
     this.appointmentCardView = ko.observable(null);
+    
+    this.isEditButtonVisible = ko.pureComputed(function() {
+        var a = this.appointmentCardView();
+        return this.currentID() > 0 && a && !a.isLocked() && !a.editMode();
+    }, this);
 
     var loadingAppointment = new Appointment({
         id: Appointment.specialIds.loading,

@@ -33,6 +33,8 @@ function AppointmentCardViewModel(params) {
     
     this.allowBookUnavailableTime = ko.observable(false);
     
+    this.specialAppointmentIds = Appointment.specialIds;
+    
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
         return it && it.id() || 0;
