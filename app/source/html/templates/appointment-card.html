@@ -53,7 +53,8 @@
                 <button type="button" class="ItemTile" data-bind="click: editMode() && pickDateTime">
                     <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime()"><strong>Start date/time: </strong><br><span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span></div>
+                        <strong data-bind="visible: item().startTime()">Start date/time: </strong>
+                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select start date/time</p>
                     </div>
                     <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
@@ -63,8 +64,8 @@
                 <button type="button" class="ItemTile" data-bind="click: editMode() && pickEndDateTime">
                     <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().endTime()"><strong>End date/time: </strong><br><span data-bind="text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span> 
-                        </div>
+                        <strong data-bind="visible: item().endTime()">End date/time: </strong>
+                        <div data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></div>
                         <p data-bind="visible: editMode() && !item().endTime()" class="text-muted">Select end date/time</p>
                     </div>
                     <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
