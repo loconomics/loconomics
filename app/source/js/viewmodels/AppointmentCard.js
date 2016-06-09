@@ -519,14 +519,28 @@ function AppointmentCardViewModel(params) {
 
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
+        
+        app.modals.showTextEditor({
+            title: textFieldsHeaders[field],
+            text: this.item()[field]()
+        })
+        .then(function(text) {
+            this.item()[field](text);
+        }.bind(this))
+        .catch(function(err) {
+            if (err) {
+                app.modals.showError({ error: err });
+            }
+            // No error, do nothing just was dismissed
+        });
 
-        editFieldOn('textEditor', {
+        /*editFieldOn('textEditor', {
             request: 'textEditor',
             field: field,
             title: this.isNew() ? 'New booking' : 'Booking',
             header: textFieldsHeaders[field],
             text: this.item()[field]()
-        });
+        });*/
     }.bind(this);
     
     // pass this ready model view as an API to the outside
