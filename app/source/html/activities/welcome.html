@@ -1,21 +1,23 @@
 <!-- Activity welcome -->
-<div data-activity="welcome" class="limited-size-md limited-size-lg">
-   <div class="welcome-message">
-		<h2>Things to test:</h2>
-		<p>-Set up your job title(s)</p>
-        <p>-Set your weekly schedule</p>
-        <p>-Add pricing</p>
-        <p>-Add service location(s) and/or area(s)</p>
-        <p>-Add some clients</p>
-        <p>-Add a calendar block (for example, a                dentist appointment in the middle of your            schedule)</p>
-        <p>-Add a booking</p>
+<div data-activity="welcome" class="SignupLogin">
+   <div class="LeadContent">
+       <!-- data-bind="visible: isServiceProfessional()" -->
+       <div>
+		<h2>Welcome in, Joshua!</h2><!-- data-bind="text: userProfile.firstName" -->
+           <p>You're making history as a founding owner in our cooperative. Together, we'll manage and grow our local services businesses using technology and community.</p> 
+           <p>We're just getting started and want to hear your feedback and help you have a better user experience.</p>
+           <p>First things first, let's get your scheduler set up so you can start booking clients!</p>
 		<br>
-		<h2>Report problems by:</h2>
-		<p>–E-mailing support@@loconomics.com</p>
-		<p>–Clicking on "help" in the upper-right corner of the app</p>
-       <p>–Sending feedback where you see <span class="fa ion ion-ios-lightbulb" aria-hidden="true"></span></p>
+            <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Set up scheduling</button>
+       </div>
+       <!-- data-bind="visible: !isServiceProfessional()" -->
+       <div>
+		<h2>Welcome in, Joshua!</h2><!-- data-bind="text: userProfile.firstName" -->
+           <p>You're making history. We're currently recruiting local service professionals (our owners) in the SF Bay Area. We will keep you in the loop as we grow.</p> 
+           <p>In the meantime, take a look around and  please share our story with any local service professionals you think might be interested in becoming founding owners.</p>
 		<br>
-		
-    <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Set up scheduling</button>
-  </div>
+            <button type="button" class="btn btn-block btn-secondary" href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0D%0A%0D%0AI+just+wanted+to+share+with+you+a+new+app%2Fsite+for+local+services+that+could+really+help+you+with+your+business.+It%27s+cooperatively+owned+by+the+service+professionals%2C+which+sounds+pretty+cool.+%0D%0A%0D%0ACheck+them+out+here%3A%0D%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0D%0A%0D%0ACheers%21" target="_blank">Help us recruit</button>
+           <a class="text-secondary" href="/">Go to home page</a>
+       </div>
+    </div>
 </div>
