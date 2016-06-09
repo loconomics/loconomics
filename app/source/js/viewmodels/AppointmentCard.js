@@ -533,14 +533,6 @@ function AppointmentCardViewModel(params) {
             }
             // No error, do nothing just was dismissed
         });
-
-        /*editFieldOn('textEditor', {
-            request: 'textEditor',
-            field: field,
-            title: this.isNew() ? 'New booking' : 'Booking',
-            header: textFieldsHeaders[field],
-            text: this.item()[field]()
-        });*/
     }.bind(this);
     
     // pass this ready model view as an API to the outside
@@ -594,10 +586,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
 
     /// Manage specific single data from externally provided
     
-    // It comes back from the textEditor.
-    if (requestData.request === 'textEditor') {
-        this.item()[requestData.field](requestData.text);
-    }
     if (requestData.selectClient === true) {
         this.item().clientUserID(requestData.selectedClientID);
     }
