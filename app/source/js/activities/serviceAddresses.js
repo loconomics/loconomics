@@ -17,6 +17,8 @@ var A = Activity.extend(function ServiceAddressesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
         backLink: '/scheduling', helpLink: '/help/relatedArticles/201965996-setting-your-service-locations-areas'
     });
+    // Make navBar available at viewModel, needed for dekstop navigation
+    this.viewModel.navBar = this.navBar;
     
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);

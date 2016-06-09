@@ -5,12 +5,7 @@
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
-                    <li>
-                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind="text: jobTitleName"></span> Scheduler
-                        </a>
-                    </li>
+                    <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
