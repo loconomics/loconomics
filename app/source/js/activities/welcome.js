@@ -16,7 +16,9 @@ var A = Activity.extend(function WelcomeActivity() {
     this.viewModel = {
         startOnboarding: function startOnboarding() {
             app.model.onboarding.goNext();
-        }
+        },
+        userProfile: app.model.userProfile.data,
+        isServiceProfessional: app.model.userProfile.data.isServiceProfessional
     };
     
     this.navBar = new Activity.NavBar({
