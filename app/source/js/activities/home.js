@@ -143,13 +143,22 @@ A.prototype.show = function show(state) {
         this._registerSnapPoints();
         this._notFirstShow = true;
         
-        this.app.modals.showAnnouncement({
-            message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland.',
-            primaryButtonText: 'Sign up',
-            primaryButtonLink: '#!/learnMoreProfessionals',
-            secondaryButtonText: 'I\'m a potential client',
-            secondaryButtonLink: '#!/signup/client'
-        });
+        // Check if pop-up was displayed already to don't bother users
+        // And of course we must not attempt that ones that are already users :-)
+        var showIt = !localStorage.sanFranciscoLaunchPopup && this.app.model.userProfile.data.isAnonymous();
+        if (showIt) {
+            this.app.modals.showAnnouncement({
+                message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland.',
+                primaryButtonText: 'Sign up',
+                primaryButtonLink: '#!/learnMoreProfessionals',
+                secondaryButtonText: 'I\'m a potential client',
+                secondaryButtonLink: '#!/signup/client'
+            })
+            .then(function() {
+                // Once closed (from clicking everywhere, close button or clicking main buttons)
+                localStorage.sanFranciscoLaunchPopup = true;
+            });
+        }
     }
 };
 
