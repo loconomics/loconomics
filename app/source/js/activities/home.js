@@ -142,6 +142,14 @@ A.prototype.show = function show(state) {
     if (!this._notFirstShow) {
         this._registerSnapPoints();
         this._notFirstShow = true;
+        
+        this.app.modals.showAnnouncement({
+            message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland.',
+            primaryButtonText: 'Sign up',
+            primaryButtonLink: '#!/learnMoreProfessionals',
+            secondaryButtonText: 'I\'m a potential client',
+            secondaryButtonLink: '#!/signup/client'
+        });
     }
 };
 
