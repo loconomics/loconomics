@@ -23,7 +23,6 @@ module.exports = {
     'clients': require('./activities/clients'),
     'serviceProfessionalService': require('./activities/serviceProfessionalService'),
     'serviceAddresses': require('./activities/serviceAddresses'),
-    'textEditor': require('./activities/textEditor'),
     'dashboard': require('./activities/dashboard'),
     'appointment': require('./activities/appointment'),
     'login': require('./activities/login'),

@@ -22,6 +22,8 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
+    // Make navBar available at viewModel, needed for dekstop navigation
+    this.viewModel.navBar = this.navBar;
     
     // On changing jobTitleID:
     // - load pricing

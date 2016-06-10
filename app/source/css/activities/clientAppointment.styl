@@ -1,10 +1,10 @@
-/** Appointment activity styles */
+/** ClientAppointment activity styles */
 
-@import '../components/AppointmentCard.styl'
-
-[data-activity=appointment] {
+[data-activity=clientAppointment] {
     
-    #appointment-toolbar {
+    // Same toolbar, titleBar styles like at appointment.styl
+
+    #clientAppointment-toolbar {
         // Needs positioning to avoid an overlay problem with the Cards below
         position: relative;
         z-index: 9999;
@@ -16,21 +16,14 @@
         }
     }
     
-    #appointment-titleBar {
+    #clientAppointment-titleBar {
         @media $mediaMaxSm {
             margin-top: 15px;
         }
     }
 
     &.in-edit {
-        
-        .CardsDeck-dots,
-        .CalendarDateHeader-switch {
-            visibility: hidden;
-        }
-        
-        .ActivityTitle-action {
-            pointer-events: none;
+        .CardsDeck-dots {
             visibility: hidden;
         }
     }
