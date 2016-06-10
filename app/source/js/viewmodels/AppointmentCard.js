@@ -33,6 +33,8 @@ function AppointmentCardViewModel(params) {
     
     this.allowBookUnavailableTime = ko.observable(false);
     
+    this.specialAppointmentIds = Appointment.specialIds;
+    
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
         return it && it.id() || 0;
@@ -517,13 +519,19 @@ function AppointmentCardViewModel(params) {
 
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
-
-        editFieldOn('textEditor', {
-            request: 'textEditor',
-            field: field,
-            title: this.isNew() ? 'New booking' : 'Booking',
-            header: textFieldsHeaders[field],
+        
+        app.modals.showTextEditor({
+            title: textFieldsHeaders[field],
             text: this.item()[field]()
+        })
+        .then(function(text) {
+            this.item()[field](text);
+        }.bind(this))
+        .catch(function(err) {
+            if (err) {
+                app.modals.showError({ error: err });
+            }
+            // No error, do nothing just was dismissed
         });
     }.bind(this);
     
@@ -578,10 +586,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
 
     /// Manage specific single data from externally provided
     
-    // It comes back from the textEditor.
-    if (requestData.request === 'textEditor') {
-        this.item()[requestData.field](requestData.text);
-    }
     if (requestData.selectClient === true) {
         this.item().clientUserID(requestData.selectedClientID);
     }

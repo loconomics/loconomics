@@ -2,7 +2,7 @@
 <div data-activity="dashboard" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container">
-        <h1 class="hidden-xs hidden-sm">Everything you need to know</h1>
+        <h1 class="hidden-xs hidden-sm">At a glance</h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
                 <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()" style="background-color: white">
@@ -60,7 +60,7 @@
                     <div data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     </div>
-                    <ul id="dashboardUpcomingBookings" class="TilesList" data-bind="foreach: upcomingBookings.items">
+                    <ul id="dashboardUpcomingBookings" class="TilesList TilesList--openEnd" data-bind="foreach: upcomingBookings.items">
                         <li><a href="#" class="LineTile"
                            data-bind="attr: { href: url }">
                             <strong data-bind="text: quantity"></strong>
