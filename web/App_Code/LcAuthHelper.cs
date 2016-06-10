@@ -84,10 +84,6 @@ public static class LcAuthHelper
 
     public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false, bool allowUnconfirmed = false)
     {
-        // AVOID FRUSTRATION IN BETA PERIOD REMOVING THE LOCK CHECK
-        // TODO: RE-ENABLE AFTER BETA
-        //checkAccountIsLocked(username);
-
         // DISABLED CONFIRMATION CHECK FOR BETA PERIOD, BECAUSE WE HAVE NOT THE EMAIL CONFIRMATION READY
         // AFTER THE WHOLE SITE AND MESSAGING CHANGE.
         // TODO: RE-ENABLE AFTER BETA
