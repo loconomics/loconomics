@@ -1,4 +1,9 @@
 .SignupLogin {
+    // Workaround for a layout problem at webkit mobile (both iOS Safari and Chrome for Android) where
+    // the element didn't take enought height and ending showing up a weird black background under the DownloadApp element
+    position: relative;
+    z-index: 1;
+    
     .LeadContent {
         margin: 0px auto 30px auto;
         background: white;

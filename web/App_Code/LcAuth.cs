@@ -123,6 +123,11 @@ public static class LcAuth
                 {
                     BecomeProvider(userid, db);
                 }
+                else
+                {
+                    // Per #978, clients have an onboarding starting with 'welcome' too
+                    db.Execute(@"UPDATE Users SET OnboardingStep = 'welcome' WHERE UserID = @0", userid);
+                }
 
                 // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
                 // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
