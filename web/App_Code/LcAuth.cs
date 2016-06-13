@@ -283,13 +283,13 @@ public static class LcAuth
     /// <summary>
     /// Returns true if account is locked.
     /// It uses the general rules: As requested at #974, for HIPAA compliance:
-    /// - Lock account after 5 unsuccesfully attempts
+    /// - Lock account after 5 unsuccesfully attempts (in code is 4, because seems to add 1 extra attempt to the count)
     /// - Lock it for 5 minutes
     /// </summary>
     /// <returns></returns>
     private static bool IsAccountLockedOut(string email)
     {
-        return WebSecurity.IsAccountLockedOut(email, 5, 5 * 60);
+        return WebSecurity.IsAccountLockedOut(email, 4, 5 * 60);
     }
 
     public static bool Login(string email, string password, bool persistCookie = false)
@@ -297,15 +297,28 @@ public static class LcAuth
         if (IsAccountLockedOut(email))
             throw new ConstraintException(AccountLockedErrorMessage);
         // Navigate back to the homepage and exit
-        var result = WebSecurity.Login(email, password, persistCookie);
+        var logged = WebSecurity.Login(email, password, persistCookie);
 
-        LcData.UserInfo.RegisterLastLoginTime(0, email);
+        if (logged)
+        {
+            LcData.UserInfo.RegisterLastLoginTime(0, email);
 
-        // mark the user as logged in via a normal account,
-        // as opposed to via an OAuth or OpenID provider.
-        System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+            // mark the user as logged in via a normal account,
+            // as opposed to via an OAuth or OpenID provider.
+            System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+        }
+        else
+        {
+            // Per issue #982, HIPAA rules:
+            // Check if, by failling this login attempt, the user gets it's account locked-out
+            if (IsAccountLockedOut(email))
+            {
+                // then, notify us
+                LcMessaging.NotifyLockedAccount(email, WebSecurity.GetUserId(email), DateTime.Now);
+            }
+        }
 
-        return result;
+        return logged;
     }
     /// <summary>
     /// Check a user autologinkey to performs the automatic login if

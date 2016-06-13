@@ -919,6 +919,16 @@ public class LcMessaging
     #endregion
 
     #region Type:Admin/Internal Notifications to Loconomics Stuff/Support
+    public static void NotifyLockedAccount(string lockedEmail, int lockedUserID, DateTime whenHappened)
+    {
+        try
+        {
+            SendMail("hipaasecurityofficial@loconomics.com", "Account Locked Out",
+                String.Format("Attempt to log-in ended in 'Account Lock Out' message for userID:{0}, email:{1} at {2}", lockedUserID, lockedEmail, whenHappened)
+            );
+        }
+        catch { }
+    }
     public static void NotifyError(string where, string url, string exceptionPageContent)
     {
         try
