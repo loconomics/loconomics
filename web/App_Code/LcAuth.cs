@@ -315,6 +315,10 @@ public static class LcAuth
             {
                 // then, notify us
                 LcMessaging.NotifyLockedAccount(email, WebSecurity.GetUserId(email), DateTime.Now);
+                // Rather than communicate a 'invalid user password' let the user know that now it's user
+                // is locked out due to many unsuccessful attempts (preventing from try again something that, by sure, will be locked,
+                // and avoiding misperception of 6 allowed attempts).
+                throw new ConstraintException(AccountLockedErrorMessage);
             }
         }
 
