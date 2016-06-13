@@ -278,13 +278,13 @@ public static class LcAuth
     /// <summary>
     /// Returns true if account is locked.
     /// It uses the general rules: As requested at #974, for HIPAA compliance:
-    /// - Lock account after 5 unsuccesfully attempts
+    /// - Lock account after 5 unsuccesfully attempts (in code is 4, because seems to add 1 extra attempt to the count)
     /// - Lock it for 5 minutes
     /// </summary>
     /// <returns></returns>
     private static bool IsAccountLockedOut(string email)
     {
-        return WebSecurity.IsAccountLockedOut(email, 5, 5 * 60);
+        return WebSecurity.IsAccountLockedOut(email, 4, 5 * 60);
     }
 
     public static bool Login(string email, string password, bool persistCookie = false)
