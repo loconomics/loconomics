@@ -1,0 +1,40 @@
+Domain DNS set-up Loconomics
+
+IP Winhost      96.31.36.25
+IP Azure        104.210.152.122
+
+
+AFTER UPDATE TO Azure:
+
+DNS
+A RECORDS
+
+loconomics.com	104.210.152.122	3600	Edit 	Delete
+www.loconomics.com	104.210.152.122	3600	Edit 	Delete
+ftp.loconomics.com	96.31.36.25	3600	Edit 	Delete
+mail.loconomics.com	64.79.170.147	3600	Edit 	Delete
+*.loconomics.com	104.210.152.122	3600	Edit 	Delete
+providertesting.loconomics.com	96.31.36.25	3600	Edit 	Delete  REMOVED
+devjosh.loconomics.com	96.31.36.25	3600	Edit 	Delete          REMOVED
+
+
+Manage CNAME Records 	 
+Domain Name	Destination	TTL	 	 
+awverify.www.loconomics.com	loconomics.azurewebsites.net	3600	Edit 	Delete
+awverify.loconomics.com	loconomics.azurewebsites.net	3600	Edit 	Delete
+
+
+Manage MX Records 	 
+Domain Name	Mail Server	Priority	TTL	 	 
+loconomics.com	ASPMX.L.GOOGLE.COM	1	3600	Edit 	Delete
+loconomics.com	ALT3.ASPMX.L.GOOGLE.COM	10	3600	Edit 	Delete
+loconomics.com	ALT4.ASPMX.L.GOOGLE.COM	10	3600	Edit 	Delete
+loconomics.com	ALT1.ASPMX.L.GOOGLE.COM	5	3600	Edit 	Delete
+loconomics.com	ALT2.ASPMX.L.GOOGLE.COM	5	3600	Edit 	Delete
+
+Manage Service Records 	 
+You do not have any Service records.
+
+
+Manage TXT Records 	 
+You do not have any TXT records. 
