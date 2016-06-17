@@ -436,6 +436,12 @@ var appInit = function appInit() {
     }
     
     require('./utils/toggleActionSheet').on();
+    
+    // Supporting sub-domain/channels, set the site-url same like baseUrl
+    // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
+    if (app.shell.baseUrl) {
+        $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
+    }
 
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
