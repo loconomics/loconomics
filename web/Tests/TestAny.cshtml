@@ -8,7 +8,8 @@
     dynamic data;
 
     try {
-        data = LcRest.Booking.NewFor(547, 540, 106, 1, 1, null, false);
+        data = System.Configuration.ConfigurationManager.ConnectionStrings["test"];
+        //data = LcRest.Booking.NewFor(547, 540, 106, 1, 1, null, false);
         /*data = LcRest.Booking.InsClientBooking(547, 540, 106, new LcRest.Address{
             addressLine1 = "asdf",
             postalCode = "90001",
@@ -26,5 +27,3 @@
 @ObjectInfo.Print(data)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
-
-@Uri.EscapeDataString("l/aEY+GgacTFPKckndhv7w==")
