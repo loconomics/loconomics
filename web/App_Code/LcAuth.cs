@@ -329,48 +329,59 @@ public static class LcAuth
     /// match.
     /// If success, the request continue being processing but with a
     /// new session and new authentication cookie being sent in the response.
+    /// If no user, no key matches, just continue without auth session, the code after this
+    /// must check if authentication is effective (with WebSecurity.IsAuthenticated, for example);
+    /// even on fail, it ends current session (anyway, at the beggining).
     /// </summary>
     /// <param name="userid"></param>
     /// <param name="autologinkey"></param>
     public static void Autologin(string userid, string autologinkey)
     {
-        if (IsAccountLockedOut(userid))
-            throw new ConstraintException(AccountLockedErrorMessage);
+        // Clear current session to avoid conflicts:
+        if (HttpContext.Current.Session != null)
+            HttpContext.Current.Session.Clear();
 
-        try
+        using (var db = Database.Open("sqlloco"))
         {
-            using (var db = Database.Open("sqlloco"))
-            {
-                var p = db.QueryValue(@"
-                    SELECT  Password
-                    FROM    webpages_Membership
-                    WHERE   UserId=@0
-                ", userid);
-                // TODO For performance and security, save a processed autologinkey in database
-                // and check against that rather than do this tasks every time; auto compute on
-                // any password change.
-                // Check if autologinkey and password (encrypted and then converted for url) match
-                if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
-                {
-                    // Autologin Success
-                    // Get user email by userid
-                    var userEmail = db.QueryValue(@"
-                        SELECT  email
-                        FROM    userprofile
-                        WHERE   userid = @0
-                    ", userid);
-                    // Clear current session to avoid conflicts:
-                    if (HttpContext.Current.Session != null)
-                        HttpContext.Current.Session.Clear();
-                    
-                    // New authentication cookie: Logged!
-                    System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+            // Get user email by userid
+            var userEmail = db.QueryValue(@"
+                SELECT  email
+                FROM    userprofile
+                WHERE   userid = @0
+            ", userid);
 
-                    LcData.UserInfo.RegisterLastLoginTime(userid.AsInt(), userEmail);
-                }
+            // Invalid ID? Out
+            if (String.IsNullOrEmpty(userEmail))
+                return;
+
+            if (IsAccountLockedOut(userEmail))
+                throw new ConstraintException(AccountLockedErrorMessage);
+
+            var p = db.QueryValue(@"
+                SELECT  Password
+                FROM    webpages_Membership
+                WHERE   UserId=@0
+            ", userid);
+
+            // No password saved? out! (avoid exception with encryptor later)
+            if (String.IsNullOrEmpty(p))
+                return;
+
+            // If auto
+
+            // TODO For performance and security, save a processed autologinkey in database
+            // and check against that rather than do this tasks every time; auto compute on
+            // any password change.
+            // Check if autologinkey and password (encrypted and then converted for url) match
+            if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
+            {
+                // Autologin Success                     
+                // New authentication cookie: Logged!
+                System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+
+                LcData.UserInfo.RegisterLastLoginTime(userid.AsInt(), userEmail);
             }
         }
-        catch (Exception ex) { HttpContext.Current.Response.Write(ex.Message); }
     }
     /// <summary>
     /// Get the key that enable the user to autologged from url, to
