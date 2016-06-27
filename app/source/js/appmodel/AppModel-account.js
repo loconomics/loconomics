@@ -8,6 +8,8 @@
 'use strict';
 
 var localforage = require('localforage');
+var getUrlQuery = require('../utils/getUrlQuery');
+var $ = require('jquery');
 
 exports.plugIn = function (AppModel) {
     /**
@@ -79,11 +81,24 @@ exports.plugIn = function (AppModel) {
         this.rest.extraHeaders = null;
         
         data.returnProfile = true;
+        
+        // Prepare 'utm' information passed into the query
+        var query = getUrlQuery();
+        var utm = {
+            // Default source
+            utm_source: window.cordova ? 'app' : 'web'
+        };
+        // Get only 'utm_' prefixed names, prepare object
+        query.forEach(function(name) {
+            if (/^utm_/.test(name)) {
+                utm[name] = query[name];
+            }
+        });
 
         // The result is the same as in a login, and
         // we do the same as there to get the user logged
         // on the app on sign-up success.
-        return this.rest.post('signup?utm_source=app', data)
+        return this.rest.post('signup?' + $.param(utm), data)
         .then(performLocalLogin(this, data.email, data.password));
     };
     
