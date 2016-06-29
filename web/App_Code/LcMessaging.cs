@@ -1104,8 +1104,11 @@ public class LcMessaging
     internal static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
     {
-        if ((LcHelpers.InLive && !HttpContext.Current.Request.IsLocal) ||
-            HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
+        // Removed the extra check 'is live and is not local' because fails on Azure. Not sure
+        // if something in the server set-up or that the template request and the requester runs
+        // at different instances
+        // Removed: (LcHelpers.InLive && !HttpContext.Current.Request.IsLocal)
+        if (HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
     }
     #endregion
