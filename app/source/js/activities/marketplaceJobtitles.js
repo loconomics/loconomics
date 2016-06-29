@@ -155,23 +155,24 @@ function ViewModel(app) {
         }, this);
     };
     
+    var UserJobTitle = require('../models/UserJobTitle');
     this.isActiveStatus = ko.pureComputed({
         read: function() {
             var j = this.userJobTitle();
-            return j && j.statusID() === 1 || false;
+            return j && j.statusID() === UserJobTitle.status.on || false;
         },
         write: function(v) {
             var status = this.userJobTitle() && this.userJobTitle().statusID();
-            if (v === true && status === 3) {
-                this.userJobTitle().statusID(1);
+            if (v === true && status === UserJobTitle.status.off) {
+                this.userJobTitle().statusID(UserJobTitle.status.on);
                 // Push change to back-end
                 app.model.userJobProfile.reactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error enabling a Job Title', error: err });
                 });
             }
-            else if (v === false && status === 1) {
-                this.userJobTitle().statusID(3);
+            else if (v === false && status === UserJobTitle.status.on) {
+                this.userJobTitle().statusID(UserJobTitle.status.off);
                 // Push change to back-end
                 app.model.userJobProfile.deactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {

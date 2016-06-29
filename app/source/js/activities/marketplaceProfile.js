@@ -88,6 +88,14 @@ function ViewModel(app) {
         var url = app.model.marketplaceProfile.data.serviceProfessionalProfileUrl();
         return slug ? url : example;
     }, jobVm);
+    
+    var UserJobTitle = require('../models/UserJobTitle');
+    jobVm.isPreviewReady = ko.pureComputed(function() {
+        return this.userJobProfile().reduce(function(a, b) {
+            if (b.statusID() === UserJobTitle.status.on) return true;
+            else return a;
+        }, false);
+    }, jobVm);
 
     return jobVm;
 }
