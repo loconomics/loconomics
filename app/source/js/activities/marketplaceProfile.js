@@ -30,7 +30,7 @@ A.prototype.show = function show(state) {
             case 'welcome': // Schedule complete
                 this.app.modals.showNotification({
                     title: 'Nice work!',
-                    message: 'You\'ll now be taken to your marketplace profile.' +
+                    message: 'You\'ll now be taken to your marketplace profile. ' +
                         'Please complete the following: \n' +
                         '1. Fill in the "About you" section \n' +
                         '2. Add details about your services \n' +
