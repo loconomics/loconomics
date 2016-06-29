@@ -282,7 +282,7 @@ BEGIN
                                         GROUP BY
                                             P.countryID
                                     )
-                                ),(
+                                ) UNION (
                                 SELECT
                                     JL.licenseCertificationID
                                 FROM
@@ -317,7 +317,7 @@ BEGIN
                                         GROUP BY
                                             P.stateProvinceID
                                     )
-                                ),(
+                                ) UNION (
                                 SELECT
                                     JL.licenseCertificationID
                                 FROM
@@ -352,7 +352,7 @@ BEGIN
                                         GROUP BY
                                             P.countyID
                                     )
-                                ),(
+                                ) UNION (
                                 SELECT
                                     JL.licenseCertificationID
                                 FROM
