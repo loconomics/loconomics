@@ -8,11 +8,11 @@
               Change category <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Home</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Self</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Child</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Senior</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Pet</a></li>
+            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Home Care</a></li>
+            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Self Care</a></li>
+            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Child Care</a></li>
+            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Senior Care</a></li>
+            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Pet Care</a></li>
             <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Celebration</a></li>
             <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Transport</a></li>
             <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Office</a></li>
@@ -20,11 +20,11 @@
         </div>    
         <div class="PageMenu-list">
             <ul>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==1}">Home</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==2}">Self</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==3}">Child</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==4}">Senior</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==5}">Pet</a></li>
+                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==1}">Home Care</a></li>
+                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==2}">Self Care</a></li>
+                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==3}">Child Care</a></li>
+                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==4}">Senior Care</a></li>
+                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==5}">Pet Care</a></li>
                 <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==6}">Celebration</a></li>
                 <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==7}">Transport</a></li>
                 <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==8}">Office</a></li>
@@ -37,8 +37,8 @@
                 <div data-bind="with: categorySearchResult">
                     <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
                         <div class="SearchResultsBackground-text">
-                            <h1>Services for your <span data-bind="text: categoryName"></span></h1>
-                            <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> professionals near you)</p>                    
+                            <h1><span data-bind="text: categoryName"></span> Professionals</h1>
+                            <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>                    
                             <h2><span data-bind="text: searchDescription"></span></h2>
                         </div>
                     </div>
