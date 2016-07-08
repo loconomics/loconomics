@@ -50,7 +50,7 @@
                            <h3><span data-bind="text: pluralName"></span></h3>
                          </div>
                          <div class="ServiceProfessionalInfo-meta">
-                           <app-stars-rating params="rating: averageRating, total: totalRatings" class="text-secondary"></app-stars-rating>
+                           <app-stars-rating data-bind="visible: totalRatings" params="rating: averageRating, total: totalRatings" class="text-secondary"></app-stars-rating>
                          </div>
                        </div>
                        <div class="CategoryResult-description">
