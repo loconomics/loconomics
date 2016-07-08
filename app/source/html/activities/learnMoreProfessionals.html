@@ -21,31 +21,31 @@
                                             <span class="Result-name" data-bind="text: singularName, visible: description"></span>  
                                             <span class="Result-description" data-bind="text: description, visible: description"></span> 
                                           </div>
-                                          <button type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="visible: description">Sign up</button>
+                                          <span class="btn btn-secondary btn-md btn-inline" data-bind="visible: description">Sign up</span>
                                       </a>
                                     </li>
                                 </ul>  
                                 <ul>
-                                   <li class="Result clearfix">
-                                      <a href="#">
-                                          <div class="Result-info">
-                                            <span class="Result-name">No?</span>  
-                                            <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
-                                          </div>
-                                          <button type="submit" class="btn btn-secondary btn-md btn-inline">Sign up</button>
-                                      </a>
+                                    <li class="Result clearfix">
+                                        <a href="#learnMoreProfessionals-signup" data-bind="click: clickNoJobTitle">
+                                            <div class="Result-info">
+                                                <span class="Result-name">No?</span>  
+                                                <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
+                                            </div>
+                                            <span class="btn btn-secondary btn-md btn-inline" data-bind="text: resultsButtonText">Sign up</span>
+                                        </a>
                                     </li>
                                 </ul>  
                             </li>
                             <li data-bind="visible: searchResults.jobTitles().length==0">
                                  <ul>
                                    <li class="Result clearfix">
-                                      <a href="#">
+                                      <a href="#learnMoreProfessionals-signup" data-bind="click: clickNoJobTitle">
                                           <div class="Result-info">
                                             <span class="Result-name">You're our first!</span>  
                                             <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
                                           </div>
-                                          <button type="submit" class="btn btn-secondary btn-md btn-inline">Sign up</button>
+                                          <span type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: resultsButtonText">Sign up</span>
                                       </a>
                                     </li>
                                  </ul>   
@@ -195,7 +195,7 @@
                     </li>
                 </ul>
         </div>
-        <div id="signup-professional" class="coop-signup" data-bind="visible: !isServiceProfessional()">
+        <div id="learnMoreProfessionals-signup" class="coop-signup" data-bind="visible: !isServiceProfessional()">
                 <h1 class="coop-title">Become an owner.</h1>
                 <p class="coop-tagline">Provide local services &amp; work for yourself? Join the movement.</p>
                 <div data-bind="visible: !isClient(), template: {name: 'signup-template', data: signup}"></div>

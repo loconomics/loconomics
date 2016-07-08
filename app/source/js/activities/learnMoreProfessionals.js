@@ -215,4 +215,25 @@ function ViewModel(app) {
         var s = this.searchTerm();
         return s && s.length > 2;
     }, this);
+    
+    this.clickNoJobTitle = function(d, e) {
+        // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
+        // For logged users, assist them to add the job title:
+        if (!app.model.userProfile.data.isAnonymous()) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            // Go to addJobTitles
+            var url = 'addJobTitles?s=' + encodeURIComponent(this.searchTerm());
+            // If given text doesn't exists, just auto-add it to avoid extra work from user
+            if (this.searchResults.jobTitles().length === 0) {
+                url += '&autoAddNew=true';
+            }
+            app.shell.go(url);
+        }
+    };
+    
+    this.resultsButtonText = ko.pureComputed(function() {
+        var anon = app.model.userProfile.data.isAnonymous();
+        return anon ? 'Sign up' : 'Add';
+    }, this);
 }

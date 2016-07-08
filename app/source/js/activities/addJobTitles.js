@@ -32,11 +32,19 @@ A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
     
+    // Allow to preset an incoming value
+    var s = options.route.query.s;
+
     // Reset
-    this.viewModel.searchText('');
+    this.viewModel.searchText(s);
     this.viewModel.jobTitles.removeAll();
     
     this.updateNavBarState();
+
+    // Allow auto add the search text as new proposed job-title
+    if (options.route.query.autoAddNew === 'true') {
+        this.viewModel.add();
+    }
 };
 
 function ViewModel(app) {
