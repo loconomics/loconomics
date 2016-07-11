@@ -20,7 +20,7 @@
                     <span class="switchLine-label">
                         <span> Marketplace profile:</span> <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
                     </span>
-                    <div class="switchLine-switch">
+                    <div class="switchLine-switch" data-bind="visible: isToggleReady">
                         <label>
                             <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
                         </label>
