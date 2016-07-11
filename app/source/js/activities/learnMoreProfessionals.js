@@ -216,6 +216,14 @@ function ViewModel(app) {
         return s && s.length > 2;
     }, this);
     
+    this.clickJobtitle = function(d, e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        
+        var url = 'addJobTitles?s=' + encodeURIComponent(d.singularName()) + '&id=' + encodeURIComponent(d.jobTitleID());
+        app.shell.go(url);
+    };
+    
     this.clickNoJobTitle = function(d, e) {
         // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
         // For logged users, assist them to add the job title:
@@ -223,11 +231,7 @@ function ViewModel(app) {
             e.preventDefault();
             e.stopImmediatePropagation();
             // Go to addJobTitles
-            var url = 'addJobTitles?s=' + encodeURIComponent(this.searchTerm());
-            // If given text doesn't exists, just auto-add it to avoid extra work from user
-            if (this.searchResults.jobTitles().length === 0) {
-                url += '&autoAddNew=true';
-            }
+            var url = 'addJobTitles?s=' + encodeURIComponent(this.searchTerm()) + '&autoAddNew=true';
             app.shell.go(url);
         }
     };
@@ -235,5 +239,10 @@ function ViewModel(app) {
     this.resultsButtonText = ko.pureComputed(function() {
         var anon = app.model.userProfile.data.isAnonymous();
         return anon ? 'Sign up' : 'Add';
+    }, this);
+    
+    this.thereAreJobTitles = ko.pureComputed(function() {
+        var jts = this.searchResults.jobTitles();
+        return jts.length > 0;
     }, this);
 }

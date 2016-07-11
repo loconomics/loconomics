@@ -12,16 +12,16 @@
                         <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search for your profession" >
                     </div>
                     <ul class="SearchResultsPreview" data-bind="visible: isInput">
-                            <li data-bind="visible: searchResults.jobTitles().length>0">
+                            <li data-bind="visible: thereAreJobTitles">
                               <h3>Sound like you?</h3>
                                  <ul data-bind="foreach: searchResults.jobTitles">
                                    <li class="Result clearfix">
-                                      <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
+                                      <a href="#" data-bind="click: $root.clickJobtitle">
                                           <div class="Result-info">
                                             <span class="Result-name" data-bind="text: singularName, visible: description"></span>  
                                             <span class="Result-description" data-bind="text: description, visible: description"></span> 
                                           </div>
-                                          <span class="btn btn-secondary btn-md btn-inline" data-bind="visible: description">Sign up</span>
+                                          <span class="btn btn-secondary btn-md btn-inline" data-bind="visible: description, text: resultsButtonText">Sign up</span>
                                       </a>
                                     </li>
                                 </ul>  
@@ -37,7 +37,7 @@
                                     </li>
                                 </ul>  
                             </li>
-                            <li data-bind="visible: searchResults.jobTitles().length==0">
+                            <li data-bind="visible: !thereAreJobTitles()">
                                  <ul>
                                    <li class="Result clearfix">
                                       <a href="#learnMoreProfessionals-signup" data-bind="click: clickNoJobTitle">

@@ -45,6 +45,18 @@ A.prototype.show = function show(options) {
     if (options.route.query.autoAddNew === 'true') {
         this.viewModel.add();
     }
+    else if (options.route.query.id) {
+        // An ID is passed in and added with the text (if any)
+        // as a valid presset job-title ID/name (is not validated at frontend
+        // to don't delay, server will double check anyway).
+        if (s) {
+            this.viewModel.addItem({
+                value: +options.route.query.id,
+                label: s
+            });
+            this.viewModel.searchText('');
+        }
+    }
 };
 
 function ViewModel(app) {
