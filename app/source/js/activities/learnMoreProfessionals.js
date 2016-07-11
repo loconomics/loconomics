@@ -217,11 +217,15 @@ function ViewModel(app) {
     }, this);
     
     this.clickJobtitle = function(d, e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        
-        var url = 'addJobTitles?s=' + encodeURIComponent(d.singularName()) + '&id=' + encodeURIComponent(d.jobTitleID());
-        app.shell.go(url);
+        // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
+        // For logged users, assist them to add the job title:
+        if (!app.model.userProfile.data.isAnonymous()) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var url = 'addJobTitles?s=' + encodeURIComponent(d.singularName()) + '&id=' + encodeURIComponent(d.jobTitleID());
+            app.shell.go(url);
+        }
     };
     
     this.clickNoJobTitle = function(d, e) {
