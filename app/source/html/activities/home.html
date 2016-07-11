@@ -75,17 +75,17 @@
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-ios-search"></i>
                         <h3>Search and book</h3>
-                        <p>Find the perfect person to help you with your service needs. Profiles include clear pricing and verified reviews.</p>
+                        <p>Find the perfect professional. Profiles include clear pricing and verified reviews.</p>
                     </li>
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-bowtie"></i>
                         <h3>Service completed</h3>
-                        <p>Let the professional do the work and focus your efforts on enjoying the time and stress you've saved.</p>
+                        <p>Let the professional do the work and enjoy the time and stress you've saved.</p>
                     </li>
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-ios-star"></i>
                         <h3>Review &amp; repeat</h3>
-                        <p>Help improve your provider's services &amp; share the love of them with your neighbors. Karma is good.</p>
+                        <p>Help improve your professional's services by sharing your experience. Karma is good.</p>
                     </li>
                 </ul>
             </div>
@@ -135,52 +135,68 @@
             <div class="home-section-listing">
                 <ul class="list-unstyled">
                     <li class="SearchCategory-home">
-                        <h3>Home</h3>
-                        <div class="SearchCategoryBackground Icon-home"></div>
-                        <p>Need some help around the house? Painters, housekeepers, handymen and more await you.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Home Care</h3>
+                            <div class="SearchCategoryBackground Icon-home"></div>
+                            <p>Need some help around the house? Painters, housekeepers, handymen and more await you.</p>
+                                <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-children">
-                        <h3>Child</h3>
-                        <div class="SearchCategoryBackground Icon-child"></div>
-                        <p>Help your child learn a language, play an instrument, or give you a night out on the town.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Child Care</h3>
+                            <div class="SearchCategoryBackground Icon-child"></div>
+                            <p>Give yourself a night out on the town, help your child learn a language, or play an instrument.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-pet">
-                        <h3>Pet</h3>
-                        <div class="SearchCategoryBackground Icon-pet"></div>
-                        <p>Throw your dog a bone. Treat your pet to grooming services, walkers, sitters, and more.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Pet Care</h3>
+                            <div class="SearchCategoryBackground Icon-pet"></div>
+                            <p>Throw your dog a bone. Treat your pet to grooming services, walkers, sitters, and more.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-self">
-                        <h3>Self Care</h3>
-                        <div class="SearchCategoryBackground Icon-self"></div>
-                        <p>You need a massage. Personal trainers, music teachers, and a number of therapists are here.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Self Care</h3>
+                            <div class="SearchCategoryBackground Icon-self"></div>
+                            <p>You need a massage. Personal trainers, music teachers, and a number of therapists are here.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-transport">
-                        <h3>Transport</h3>
-                        <div class="SearchCategoryBackground Icon-transport"></div>
-                        <p>Mechanics, bicycle repairers, and car detailers all ready to help you get where you need to go.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Transport</h3>
+                            <div class="SearchCategoryBackground Icon-transport"></div>
+                            <p>Mechanics, bicycle repairers, and car detailers all ready to help you get where you need to go.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-office">
-                        <h3>Office</h3>
-                        <div class="SearchCategoryBackground Icon-office"></div>
-                        <p>Tax season have you nervous? Get some help for your business or family matters.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Office</h3>
+                            <div class="SearchCategoryBackground Icon-office"></div>
+                            <p>Tax season have you nervous? Get some help for your business or family matters.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-senior">
-                        <h3>Senior</h3>
-                        <div class="SearchCategoryBackground Icon-senior"></div>
-                        <p>Do you or a family member need a little extra help around the house? Help make life easier.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Senior Care</h3>
+                            <div class="SearchCategoryBackground Icon-senior"></div>
+                            <p>Do you or a family member need a little extra help around the house? Help make life easier.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                     <li class="SearchCategory-celebration">
-                        <h3>Celebration</h3>
-                        <div class="SearchCategoryBackground Icon-celebration"></div>
-                        <p>Make your next celebration a real blowout with help from some very talented professionals.</p>
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" class="btn btn-secondary btn-block btn-lg">View and book</a>
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                            <h3>Celebration</h3>
+                            <div class="SearchCategoryBackground Icon-celebration"></div>
+                            <p>Make your next celebration a real blowout with help from some very talented professionals.</p>
+                            <div class="btn btn-secondary btn-block btn-lg">View and book</div>
+                        </a>
                     </li>
                 </ul>
             </div>

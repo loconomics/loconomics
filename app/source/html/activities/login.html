@@ -45,7 +45,7 @@
     </div>
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'reset-password' }">
         <h2>Reset your password</h2>
-        <p class="isolated text-center">Enter your email address that's associated with your account. We’ll send you a link so you can reset your password.</p>      
+        <p class="isolated text-center">Enter your email address that's associated with your account. We'll send you a link so you can reset your password.</p>      
         <form role="form" data-bind="submit: requestReset" novalidate>
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
                 <label for="login-reset-username" class="sr-only">Email address</label>

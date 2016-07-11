@@ -156,6 +156,10 @@ function ViewModel(app) {
     };
     
     var UserJobTitle = require('../models/UserJobTitle');
+    this.isToggleReady = ko.pureComputed(function() {
+        var j = this.userJobTitle();
+        return j && j.statusID() !== UserJobTitle.status.incomplete;
+    }, this);
     this.isActiveStatus = ko.pureComputed({
         read: function() {
             var j = this.userJobTitle();
@@ -184,7 +188,16 @@ function ViewModel(app) {
     });
     
     this.statusLabel = ko.pureComputed(function() {
-        return this.isActiveStatus() ? 'ON' : 'OFF';
+        var statusID = this.userJobTitle() && this.userJobTitle().statusID();
+        switch (statusID) {
+            case UserJobTitle.status.on:
+                return 'ON';
+            case UserJobTitle.status.off:
+                return 'OFF';
+            //case UserJobTitle.status.incomplete:
+            default:
+                return 'INCOMPLETE (There are steps left to activate)';
+        }
     }, this);
 
     /// Related models information
