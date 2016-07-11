@@ -192,7 +192,7 @@ A.prototype.show = function show(options) {
     }
     else {
         // Set this page as cancelLink for editor links in the view
-        this.viewModel.cancelLink('/serviceProfessionalService/' + this.viewModel.jobTitleID());
+        this.viewModel.cancelLink('/serviceProfessionalService/' + jobTitleID);
     }
 
     this.viewModel.isAdditionMode(isAdditionMode);
