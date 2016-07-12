@@ -336,11 +336,17 @@
             {
                 ModelState.AddError("startTime", requiredStartTimeName + " is not valid");
             }
-
-            var serviceAddress = GetFormServiceAddress(userID, locale);
-            if (serviceAddress.IsNewAddress())
-            {
-                ApplyServiceAddressValidation();
+            
+            // Check if the services require an address
+            var pricingSummary = new LcRest.PricingSummary();
+            pricingSummary.SetDetailServices(serviceProfessionalUserID, servicesIds);
+            LcRest.Address serviceAddress = null;
+            if (!pricingSummary.isPhoneServiceOnly) {
+                serviceAddress = GetFormServiceAddress(userID, locale);
+                if (serviceAddress.IsNewAddress())
+                {
+                    ApplyServiceAddressValidation();
+                }
             }
 
             if (!Validation.IsValid() || !ModelState.IsValid) {

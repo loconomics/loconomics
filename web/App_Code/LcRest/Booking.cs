@@ -1448,7 +1448,6 @@ namespace LcRest
             pricingSummary.pricingSummaryRevision = pricingSummaryRevision;
 
             var jobTitleID = pricingSummary.SetDetailServices(serviceProfessionalUserID, services);
-
             pricingSummary.CalculateDetails();
             pricingSummary.CalculateFees();
 
@@ -2643,7 +2642,11 @@ namespace LcRest
                 booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
                 // 4º: Validate addressID or save the new one provided
-                if (!serviceAddress.IsNewAddress())
+                if (booking.pricingSummary.isPhoneServiceOnly)
+                {
+                    booking.serviceAddressID = null;
+                }
+                else if (!serviceAddress.IsNewAddress())
                 {
                     // Validate the address is one from client or service professional
                     if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
