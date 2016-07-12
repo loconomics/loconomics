@@ -465,7 +465,7 @@ var appInit = function appInit() {
         });
         // Connect photoUrl in navbar
         ko.computed(function() {
-            var n = app.model.marketplaceProfile.data.photoUrl();
+            var n = app.model.userProfile.data.photoUrl() || app.model.marketplaceProfile.data.photoUrl();
             app.navBarBinding.photoUrl(n || 'about:blank');
         });
         
