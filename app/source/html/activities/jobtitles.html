@@ -42,6 +42,16 @@
                         </a>
                     </li>
                     <li>
+                        <a class="InfoTile" href="/marketplaceJobtitles/" data-bind="attr: {href: getJobUrlTo('marketplaceJobtitles')}">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-android-contact" aria-hidden="true"></span>
+                            </div>                
+                            <div class="Tile-content">
+                                <p>Marketplace profile</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
                         <a class="InfoTile" href="/cancellationPolicy" data-bind="attr: { href: getJobUrlTo('cancellationPolicy') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-close" aria-hidden="true"></span>
@@ -82,14 +92,6 @@
                                 <p>Delete your <span data-bind="text: jobTitleName"></span> profile</p>
                             </div>
                         </button>
-                    </li>
-                    <li>
-                        <a class="CompactLinkTile" href="/marketplaceJobtitles/" data-bind="attr: {href: getJobUrlTo('marketplaceJobtitles')}">
-                            <div class="Tile-content text-muted">Edit marketplace profile</div>
-                            <div class="Tile-icon text-muted">
-                                <span class="fa ion ion-ios-arrow-right"></span>
-                            </div>
-                        </a>
                     </li>
                 </ul>
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'scheduling'"></app-feedback-entry>

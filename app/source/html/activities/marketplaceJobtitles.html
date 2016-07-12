@@ -44,6 +44,14 @@
                             <p>Overview of your <span data-bind="text: jobTitleName"></span> services</p>
                         </div>
                     </a></li>
+                    <li><a class="InfoTile" href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-android-calendar" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <p>Scheduler (services, pricing &amp; locations)</p>
+                        </div>
+                    </a></li>
                     <li><a class="InfoTile" href="/licensesCertifications" data-bind="attr: { href: getJobUrlTo('licensesCertifications') }">
                         <div class="Tile-icon" aria-hidden="true">
                             <span class="fa fa-certificate" aria-hidden="true"></span>
@@ -70,10 +78,6 @@
                             <p>Delete your <span data-bind="text: jobTitleName"></span> profile</p>
                         </div>
                     </button></li>
-                    <li><a class="CompactLinkTile" href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                        <div class="Tile-content text-muted">Edit scheduler settings (services, pricing &amp; locations)</div>
-                        <div class="Tile-icon text-muted"><span class="fa ion ion-ios-arrow-right"></span></div>
-                    </a></li>
                 </ul>
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
             </div>
