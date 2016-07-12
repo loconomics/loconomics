@@ -423,8 +423,8 @@ namespace LcRest
                 // user exists, just default/null values per field are returned but a record
                 // is returned.
                 var add = GetSingleFrom(db.Query(
-                    sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndJobTitleID + sqlAndTypeID,
-                    LcData.GetCurrentLanguageID(), userID, NotAJobTitleID, null, AddressType.Home
+                    sqlSelectOne + sqlFields + sqlAndCreatedByItself + sqlAndUserID + sqlAndTypeID,
+                    LcData.GetCurrentLanguageID(), userID, null, null, AddressType.Home
                 ));
 
                 if (add == null)
