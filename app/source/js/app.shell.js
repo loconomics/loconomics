@@ -3,7 +3,7 @@
 **/
 'use strict';
 
-var baseUrl = window.location.pathname;
+var baseUrl = ''; // NEVER: window.location.pathname will broke inside Cordova
 var hashBang = true;
 if (!window.cordova) {
     var t = /^http.?:\/\/[^\/]+(\/[^#]*)/.exec(window.document.baseURI);
