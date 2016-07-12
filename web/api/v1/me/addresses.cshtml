@@ -328,7 +328,7 @@
             throw new HttpException(404, "Not found");
         }
         
-        private bool IsValidAddress(int jobTitleID) {
+        private bool IsValidAddress(int jobTitleID, string kind) {
 
             Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
             Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
@@ -353,7 +353,10 @@
             var isServiceArea = Request.Form["isServiceArea"].AsBool(false);
             if (!isServiceArea)
             {
-                Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
+                if (kind != LcRest.Address.AddressKind.Home)
+                {
+                    Validation.RequireField("addressName", LcRessources.RequiredField("Address Name"));
+                }
                 Validation.RequireField("addressLine1", LcRessources.RequiredField("Address Line 1"));
             }
             
@@ -395,18 +398,20 @@
         /// <param name="kind"></param>
         /// <returns></returns>
         private LcRest.Address SetAddress(int userId, int jobTitleID, int addressID, string kind) {
+            // validate kind
+            if (!LcRest.Address.AddressKind.IsValid(kind))
+            {
+                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+            }
+
             // Validation
-            if (!IsValidAddress(jobTitleID)) {
+            if (!IsValidAddress(jobTitleID, kind)) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
                 
             // Get data
             var address = GetFormAddress(userId, jobTitleID, addressID);
 
-            // validate kind
-            if (!LcRest.Address.AddressKind.IsValid(kind)) {
-                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
-            }
             // Set kind
             address.kind = kind;
             

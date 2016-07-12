@@ -533,6 +533,10 @@ namespace LcRest
             {
                 case AddressKind.Home:
                     internalTypeID = AddressType.Home;
+                    if (String.IsNullOrEmpty(address.addressName))
+                    {
+                        address.addressName = "Home";
+                    }
                     break;
                 case AddressKind.Billing:
                     internalTypeID = AddressType.Billing;
