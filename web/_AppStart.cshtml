@@ -68,6 +68,8 @@
     RouteTable.Routes.MapWebPageRoute("{city}/{jobTitle}/{user}", "~/_specialRoutes/PublicProfileURL.cshtml");
     // CustomURL:
     RouteTable.Routes.MapWebPageRoute(LcRest.MarketplaceProfile.CustomUrlPrefix + "{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
+    // Refer professionals
+    RouteTable.Routes.MapWebPageRoute("refer/", "~/_specialRoutes/refer.cshtml");
 
     // MANAGE SPA ROUTES REDIRECTING TO INDEX
     // CATCH-ALL:
