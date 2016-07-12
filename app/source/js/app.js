@@ -463,10 +463,18 @@ var appInit = function appInit() {
             app.navBarBinding.isServiceProfessional(u.isServiceProfessional());
             app.navBarBinding.isClient(u.isClient());
         });
-        // Connect photoUrl in navbar
+        // Connect photoUrl in navbar: there are two sources, keep with more recent
         ko.computed(function() {
-            var n = app.model.userProfile.data.photoUrl() || app.model.marketplaceProfile.data.photoUrl();
-            app.navBarBinding.photoUrl(n || 'about:blank');
+            var p = app.model.userProfile.data.photoUrl();
+            if (p) {
+                app.navBarBinding.photoUrl(p);
+            }
+        });
+        ko.computed(function() {
+            var p = app.model.marketplaceProfile.data.photoUrl();
+            if (p) {
+                app.navBarBinding.photoUrl(p);
+            }
         });
         
         // Onboarding model needs initialization
