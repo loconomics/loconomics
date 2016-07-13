@@ -433,7 +433,7 @@
         // Compatibility modes on IE11 uses white space on Trident string like: Trident / 4.0  rather than Trident/4.0
         var iePattern = @"(?:\b(?:MS)?IE\s)(\d+)";
         var tridentPattern = @"(?:\bTrident\s?\/\s?)(\d+)";
-        var m = Regex.Match(Request.UserAgent, iePattern);
+        var m = Regex.Match(Request.UserAgent ?? "", iePattern);
         var ieVersion = 0;
         if (m.Success)
         {
