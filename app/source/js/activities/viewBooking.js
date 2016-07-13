@@ -14,8 +14,7 @@ var A = Activity.extend(function ViewBookingActivity() {
     
     Activity.apply(this, arguments);
 
-    // Any user can access this
-    this.accessLevel = null;
+    this.accessLevel = this.app.UserType.loggedUser;
 });
 
 exports.init = A.init;

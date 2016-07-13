@@ -449,9 +449,13 @@ var appInit = function appInit() {
         
         // TODO: Display a login popup/activity if a request require credentials and no log-in still??
         /*app.model.rest.onAuthorizationRequired = function(retry) {
+        // Go to login activity if a request require credentials:
+        /*app.model.rest.onAuthorizationRequired = function(retry) {
             // Show login with a promise to know the result, retry if successfully.
             // Note: no error must be returned, the caller of the original process
             // must have it's own control.
+            //var url = '#!login?redirectUrl=' + encodeURIComponent();
+            //app.shell.go(url);
             xyz.showLogin().then(retry);
         };*/
         

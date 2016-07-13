@@ -47,9 +47,17 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     this.viewModel.reset();
-    this.viewModel.redirectUrl(state.redirectUrl);
     var params = state && state.route && state.route.segments;
     var query = state && state.route && state.route.query;
+    
+    var redirectUrl = state.redirectUrl || query.redirectUrl;
+    if (!redirectUrl && state.requiredLevel) {
+        // Called from the shell access control after a failed access to an activity,
+        // automatically use previous activity and returning URL
+        redirectUrl = this.app.shell.referrerRoute && this.app.shell.referrerRoute.url;
+    }
+    this.viewModel.redirectUrl(redirectUrl);
+    
     if (params[0] === 'reset-password') {
         var t = query.token || '';
         this.viewModel.resetToken(t);
