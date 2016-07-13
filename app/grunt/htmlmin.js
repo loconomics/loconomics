@@ -6,7 +6,7 @@ module.exports = {
             collapseWhitespace: true,
             // keep 1 whitespace, since some elements may expect some space between them rather than rely on CSS margins
             conservativeCollapse: true,
-            removeTagWhitespace: true,
+            removeTagWhitespace: false,
             removeAttributeQuotes: true,
             removeComments: true,
             // ignore knockout comments
