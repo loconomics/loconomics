@@ -124,6 +124,7 @@ internal class ServiceProfessionalClient
         using (var db = new LcDatabase(sharedDb))
         {
             db.Execute(@"
+                -- NOTE: this same check was copied and used at Booking.Delete, so any change to it need to be reflected there
                 -- Allow If there is no bookings (discarding Denied:4 and Expired:5)
                 IF NOT EXISTS (SELECT * FROM Booking WHERE serviceProfessionalUserID = @0 AND clientUserID = @1 AND BookingStatusID NOT IN (4, 5))
                 BEGIN

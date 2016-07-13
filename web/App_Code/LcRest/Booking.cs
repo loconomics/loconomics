@@ -1063,15 +1063,31 @@ namespace LcRest
             DECLARE @d2 int
             DECLARE @d3 int
             DECLARE @ps int
+            DECLARE @cid int
+            DECLARE @pid int
 
             -- Get Service Address ID to be (maybe) removed later
             SELECT  @ServiceAddressID = ServiceAddressID,
                     @d1 = ServiceDateID ,
                     @d2 = AlternativeDate1ID,
                     @d3 = AlternativeDate2ID,
-                    @ps = PricingSummaryID
+                    @ps = PricingSummaryID,
+                    @cid = ClientUserID,
+                    @pid = ServiceProfessionalUserID
             FROM    Booking
             WHERE   BookingID = @0
+
+            IF EXISTS (SELECT * FROM ServiceProfessionalClient WHERE CreatedByBookingID = @0)
+            BEGIN
+                -- NOTE: same check than at ServiceProfessionalClient.Delete
+                -- Allow If there is no bookings (discarding Denied:4 and Expired:5)
+                IF NOT EXISTS (SELECT * FROM Booking WHERE serviceProfessionalUserID = @pid AND clientUserID = @cid AND BookingStatusID NOT IN (4, 5))
+                    DELETE FROM ServiceProfessionalClient
+                    WHERE CreatedByBookingID = @0
+                ELSE
+					-- Just remove the bookingID to avoid constraint error
+					UPDATE ServiceProfessionalClient SET CreatedByBookingID = null WHERE CreatedByBookingID = @0
+			END
 
             DELETE FROM Booking
             WHERE BookingID = @0
