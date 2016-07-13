@@ -252,6 +252,8 @@ namespace LcRest
             // Payment is required for client bookings, but avoided on bookNow bookings. That's excludes service professional bookings too
             // TODO Per #590, a new check by job-title and bookNow preference may be required, allowing
             // optionally enabling payment through bookNow.
+            // IMPORTANT: After bug found at #1002, paymentEnabled can be changed to false later if the pricing/services attached sum zero,
+            // so nothing need to be charged, no payment to be collected
             booking.paymentEnabled = false;
             if (!isServiceProfessionalBooking && booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
             {
@@ -2594,6 +2596,11 @@ namespace LcRest
                     throw new ConstraintException("Chosen services does not belong to the Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
                     throw new ConstraintException("Bookings require the selection of at least one service");
+                // If total price is zero, there is no payment needed even if requested by the 'NewFor' rules
+                if (booking.paymentEnabled && booking.pricingSummary.totalPrice == 0)
+                {
+                    booking.paymentEnabled = false;
+                }
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);

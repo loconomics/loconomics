@@ -378,10 +378,19 @@ namespace LcRest
             // Can only calculate with a notnull totalPrice and feePrice, otherwise serviceFeeAmount is null to state the impossibility of the calculation
             if (totalPrice.HasValue && clientServiceFeePrice.HasValue)
             {
-                // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
-                // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
-                // or present more precision to the service professional (who will show how much received on their bank account).
-                serviceFeeAmount = Math.Round(paymentProcessingFeeFixed + ((paymentProcessingFeePercentage/100) * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
+                // IMPORTANT: If the total price is strictly just zero, there is nothing to charge so there is no 
+                // possibility to charge a serviceFeeAmount: there is no payment but we have a fee of zero too
+                if (totalPrice.Value == 0)
+                {
+                    serviceFeeAmount = 0;
+                }
+                else
+                {
+                    // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
+                    // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
+                    // or present more precision to the service professional (who will show how much received on their bank account).
+                    serviceFeeAmount = Math.Round(paymentProcessingFeeFixed + ((paymentProcessingFeePercentage / 100) * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
+                }
             }
             else
             {
