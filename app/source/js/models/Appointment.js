@@ -168,8 +168,13 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     
     // Include booking in apt
     apt.clientUserID(booking.clientUserID());
-    apt.address().model.updateWith(booking.serviceAddress(), true);
     apt.address().addressID(booking.serviceAddressID());
+    if (booking.serviceAddress()) {
+        apt.address().model.updateWith(booking.serviceAddress(), true);
+    }
+    else {
+        apt.address(null);
+    }
     apt.jobTitleID(booking.jobTitleID());
     apt.pricing(booking.pricingSummary() && booking.pricingSummary().details());
     apt.preNotesToClient(booking.preNotesToClient());
