@@ -32,10 +32,14 @@
                             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                         </a></li>
                     </ul>
-                    <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content"><p>View all help articles</p></div>
-                        <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
-                    </a>
+                    <ul class=TilesList>
+                        <li>
+                            <a class="LinkTile" href="/help/articles">
+                                <div class="Tile-content"><p>View all help articles</p></div>
+                                <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                            </a>
+                        </li>
+                    </ul>
                 </div>                
                 <div data-bind="visible: viewType() == 'categoryView'">
                     <span class="hidden-xs hidden-sm" data-bind="html: categories().description"></span> 
@@ -55,20 +59,46 @@
                             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                         </a></li>
                     </ul>
-                    <a class="LinkTile" href="/help/articles">
-                        <div class="Tile-content">
-                            <p>View all help articles</p>
-                        </div>
-                        <div class="Tile-icon">
-                            <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
-                        </div>
-                    </a>
+                    <ul class="TilesList">
+                        <li>
+                            <a class="LinkTile" href="/help/articles">
+                                <div class="Tile-content">
+                                    <p>View all help articles</p>
+                                </div>
+                                <div class="Tile-icon">
+                                    <span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <h2 class="SectionTitle">Still need help or have feedback?</h2>
+                    <ul class="TilesList">
+                        <li><a class="LinkTile" href="/contactForm?subject=I%20need%20help!">
+                            <div class="Tile-content"><p>Contact us</p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
+                        <li><a class="LinkTile" href="/feedbackForm/dashboard">
+                            <div class="Tile-content"><p>Feedback &amp; ideas</p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
+                    </ul>
                 </div>
                 <div class="Content" data-bind="visible: viewType() == 'articleView'"> 
                     <div data-bind="with: fullArticleData">
                         <h2 class="SectionTitle SectionTitle--article" data-bind="text: title"></h2>
                         <span data-bind="html: description"></span>
                     </div>
+                    <h2 class="SectionTitle">Still need help or have feedback?</h2>
+                    <ul class="TilesList">
+                        <li><a class="LinkTile" href="/contactForm?subject=I%20need%20help!">
+                            <div class="Tile-content"><p>Contact us</p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
+                        <li><a class="LinkTile" href="/feedbackForm/dashboard">
+                            <div class="Tile-content"><p>Feedback &amp; ideas</p></div>
+                            <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
+                        </a></li>
+                    </ul>
                 </div>
                 <div data-bind="visible: viewType() == 'helpView'">
                     <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm?subject=I%20need%20help!" target="_blank" class="text-secondary">send us a note!</a></p>
