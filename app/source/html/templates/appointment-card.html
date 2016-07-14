@@ -273,6 +273,7 @@
         </ul>
         <div class="AppointmentCard-actions" data-bind="visible: isBookingRequest()">
             <button type="button" class="btn btn-danger btn-block" data-bind="click: performSelectedBookingRequestAnswer, disable: isLocked">Confirm</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="visible: editMode() && currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
         </div>
     </div>
 </script>

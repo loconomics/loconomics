@@ -54,6 +54,8 @@
     // Auth
     RouteTable.Routes.MapWebPageRoute("{locale}/auth/login", "~/_specialRoutes/Login.cshtml");
     RouteTable.Routes.MapWebPageRoute("{locale}/auth/confirm", "~/_specialRoutes/Confirm.cshtml");
+    RouteTable.Routes.MapWebPageRoute("auth/login", "~/_specialRoutes/Login.cshtml");
+    RouteTable.Routes.MapWebPageRoute("auth/confirm", "~/_specialRoutes/Confirm.cshtml");
     
     // App/Webapp explicit rules
     // TODO: some day this list needs to be automatic, from the activity list, right now has some explicit rules to avoid conflicts with

@@ -14,8 +14,7 @@ var A = Activity.extend(function ViewBookingActivity() {
     
     Activity.apply(this, arguments);
 
-    // Any user can access this
-    this.accessLevel = null;
+    this.accessLevel = this.app.UserType.loggedUser;
 });
 
 exports.init = A.init;
@@ -27,8 +26,8 @@ A.prototype.show = function show(state) {
     var currentUserID = this.app.model.userProfile.data.userID();
     this.app.model.bookings.getBooking(bookingID)
     .then(function(booking) {
-        if (booking.serviceProfessionalUserID === currentUserID) {
-            this.app.shell.go('/appointment/' + booking.serviceDateID);
+        if (booking.serviceProfessionalUserID() === currentUserID) {
+            this.app.shell.go('/appointment/' + booking.serviceDateID());
         }
         else {
             this.app.shell.go('/clientAppointment/' + bookingID);

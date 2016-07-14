@@ -24,7 +24,7 @@
                 // Check that the position exists for the user and is public
                 if (LcData.UserInfo.GetUserPositionStatus(userid, posID) == 1){
                     // Redirects to the booking page for that provider and position
-                    Response.Redirect("/#!booking/" + userid + "/" + posID);
+                    Response.Redirect("/#!booking/" + userid + "/" + posID + "?bookCode=" + Uri.EscapeDataString(bookcode));
                 }
             } else {
                 // Redirect to the providers public profile

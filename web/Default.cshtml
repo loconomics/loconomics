@@ -1,6 +1,6 @@
 ﻿@{
     if (LcHelpers.IsVeryOldBrowser()) {
-        @RenderPage("/en-US/HelpCenter/UpgradeBrowser/");
+        @RenderPage(LcUrl.RenderAppPath + "en-US/HelpCenter/UpgradeBrowser.cshtml");
         return;
     }
     var s = System.IO.File.ReadAllText(Server.MapPath("~/_specialRoutes/app.html"));

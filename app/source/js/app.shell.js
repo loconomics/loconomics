@@ -36,6 +36,8 @@ var shell = new Shell({
     forceHashbang: hashBang,
 
     indexName: 'home',
+    
+    forbiddenAccessName: 'login',
 
     linkEvent: 'click',
 

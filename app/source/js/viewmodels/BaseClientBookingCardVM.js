@@ -436,7 +436,7 @@ function BaseClientBookingCardVM(app) {
 
             list.push(this.singleTimeOption() ? 'selectTime' : 'selectTimes');
 
-            if (this.booking().paymentEnabled())
+            if (this.booking().paymentEnabled() && this.booking().pricingSummary().totalPrice() > 0)
                 list.push('payment');
         }
         // The final fixed steps
