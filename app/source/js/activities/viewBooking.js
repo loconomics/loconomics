@@ -26,8 +26,8 @@ A.prototype.show = function show(state) {
     var currentUserID = this.app.model.userProfile.data.userID();
     this.app.model.bookings.getBooking(bookingID)
     .then(function(booking) {
-        if (booking.serviceProfessionalUserID === currentUserID) {
-            this.app.shell.go('/appointment/' + booking.serviceDateID);
+        if (booking.serviceProfessionalUserID() === currentUserID) {
+            this.app.shell.go('/appointment/' + booking.serviceDateID());
         }
         else {
             this.app.shell.go('/clientAppointment/' + bookingID);
