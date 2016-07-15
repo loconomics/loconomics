@@ -29,7 +29,7 @@
                         We're working with Braintree to set up your merchant account. Please check back in 24 hours for an update.
                     </p>
                     <div data-bind="visible: paymentAccount.status() === 'suspended'" class="bg-danger PaddedBox-xs">
-                        <p>We're having problems setting up your Braintree account. Please <a href="//contactForm/general?mustReturn=true">contact us</a> for further assistance.</p>
+                        <p>We're having problems setting up your Braintree account. Please <a href="/contactForm/payments?mustReturn=true">contact us</a> for further assistance.</p>
                         <div data-bind="visible: paymentAccount.errors().length">
                             <p>Error(s) reported by Braintree:</p>
                             <ul data-bind="foreach: paymentAccount.errors()">
@@ -95,7 +95,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
             </div>
         </div>
     </div>

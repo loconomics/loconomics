@@ -59,7 +59,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "feedback";
+                return LcUrl.AppUrl + "help";
             }
         }
         /// <summary>
@@ -99,7 +99,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "feedback";
+                return LcUrl.AppUrl + "help/categories/200431835-resources-for-service-professionals";
             }
         }
         public string viewCommunicationPreferences

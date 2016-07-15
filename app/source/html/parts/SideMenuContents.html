@@ -6,6 +6,6 @@
     <li data-bind="visible: isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200431835-resources-for-service-professionals">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: !isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200474305-resources-for-clients">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: isAnonymous()"><a href="/help">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
-    <li><a href="/feedbackForm/dashboard">Feedback &amp; ideas <i class="fa fa-fw ion-ios-lightbulb-outline" aria-hidden="true"></i></a></li>
-    <li><a href="/contactForm/general">Contact us <i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i></a></li>
+    <li><a href="/feedbackForm/general" data-bind="attr: { href: feedbackLink }">Feedback &amp; ideas <i class="fa fa-fw ion-ios-lightbulb-outline" aria-hidden="true"></i></a></li>
+    <li><a href="/contactForm/general" data-bind="attr: { href: contactLink }">Contact us <i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i></a></li>
 </ul>

@@ -67,7 +67,22 @@ exports.registerAll = function(app) {
     /// inline-side-menu
     ko.components.register('app-inline-side-menu', {
         template: { element: 'inline-side-menu-template' },
-        viewModel: { instance: app.navBarBinding }
+        viewModel: function(params) { //{ instance: app.navBarBinding }
+            // create a viewModel that extends from the live instance of navBarBinding
+            var vm = this;
+            Object.keys(app.navBarBinding).forEach(function(prop) {
+                vm[prop] = app.navBarBinding[prop];
+            });
+
+            // Additional specific properties
+            vm.vocElement = getObservable(params.vocElement || 'general');
+            vm.feedbackLink = ko.pureComputed(function() {
+                return 'feedbackForm/' + this.vocElement();
+            }, vm);
+            vm.contactLink = ko.pureComputed(function() {
+                return 'contactForm/' + this.vocElement();
+            }, vm);
+        }
     });
     
     /// feedback-entry
