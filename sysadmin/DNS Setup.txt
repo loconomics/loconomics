@@ -4,33 +4,29 @@ IP Winhost      96.31.36.25
 IP Azure        104.210.152.122
 
 
-AFTER UPDATE TO Azure:
+AFTER UPDATE TO Azure & GoDaddy (7/15/2016):
 
 DNS
 A RECORDS
-
-loconomics.com	104.210.152.122	3600	Edit 	Delete
-www.loconomics.com	104.210.152.122	3600	Edit 	Delete
-ftp.loconomics.com	96.31.36.25	3600	Edit 	Delete
-mail.loconomics.com	64.79.170.147	3600	Edit 	Delete
-*.loconomics.com	104.210.152.122	3600	Edit 	Delete
-providertesting.loconomics.com	96.31.36.25	3600	Edit 	Delete  REMOVED
-devjosh.loconomics.com	96.31.36.25	3600	Edit 	Delete          REMOVED
-
+Host	Points To	TTL	
+	*	104.210.152.122	1 Hour	
+	@	104.210.152.122	1 Hour	
+	mail	64.79.170.147	1 Hour	
+	www	104.210.152.122	1 Hour
 
 Manage CNAME Records 	 
-Domain Name	Destination	TTL	 	 
-awverify.www.loconomics.com	loconomics.azurewebsites.net	3600	Edit 	Delete
-awverify.loconomics.com	loconomics.azurewebsites.net	3600	Edit 	Delete
+Host	Points To	TTL		 
+awverify	loconomics.azurewebsites.net	1 Hour	
+awverify.www	loconomics.azurewebsites.net	1 Hour
 
 
 Manage MX Records 	 
-Domain Name	Mail Server	Priority	TTL	 	 
-loconomics.com	ASPMX.L.GOOGLE.COM	1	3600	Edit 	Delete
-loconomics.com	ALT3.ASPMX.L.GOOGLE.COM	10	3600	Edit 	Delete
-loconomics.com	ALT4.ASPMX.L.GOOGLE.COM	10	3600	Edit 	Delete
-loconomics.com	ALT1.ASPMX.L.GOOGLE.COM	5	3600	Edit 	Delete
-loconomics.com	ALT2.ASPMX.L.GOOGLE.COM	5	3600	Edit 	Delete
+Host	Points To	TTL	
+	5	@	ALT1.ASPMX.L.GOOGLE.COM	1 Hour	
+	5	@	ALT2.ASPMX.L.GOOGLE.COM	1 Hour	
+	10	@	ALT3.ASPMX.L.GOOGLE.COM	1 Hour	
+	10	@	ALT4.ASPMX.L.GOOGLE.COM	1 Hour	
+	1	@	ASPMX.L.GOOGLE.COM	1 Hour
 
 Manage Service Records 	 
 You do not have any Service records.
@@ -38,3 +34,8 @@ You do not have any Service records.
 
 Manage TXT Records 	 
 You do not have any TXT records. 
+
+NS (Nameserver) 
+Host	Points To	TTL	
+@ (Informational)	ns75.domaincontrol.com (Informational)	1 Hour (Informational)	
+@ (Informational)	ns76.domaincontrol.com (Informational)	1 Hour (Informational)	
