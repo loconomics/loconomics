@@ -32,7 +32,7 @@ module.exports = {
     phonegap: {
         expand: true,
         cwd: 'build/',
-        src: ['assets/**/*.*'],
+        src: ['assets/js/{app,libs,styleguidelibs}.min.js', 'assets/css/{app,libs}.min.css', 'assets/images/**/*.*', 'assets/fonts/**/*.*'],
         dest: 'phonegap/www/',
         filter: 'isFile'
     },
