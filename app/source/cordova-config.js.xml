@@ -78,9 +78,8 @@
         <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
         <!-- Android: 7->2.1, 10->2.3.3, 11->3.0, 14->4.0., 15->4.0.3, .. 22->5.1, 23->6.0 All: https://en.wikipedia.org/wiki/Android_version_history -->
         <preference name="android-minSdkVersion" value="15" />
-        <!-- Android 6 (API Level 23) introduced a new permissions management that breaks current camera plugin (v2.2.0),
-            needs to limit up to previous version of the SDK
-            (app will still work on Android 6 devices and higher, but without using all its latest APIs) -->
+        <!-- Setting an specific target of the SDK to avoid unexpected problems because of auto increment the target and new incompatible platform
+            changes, and the limitation at Google Play to upload an APK with a lower target than a previous package. -->
         <preference name="android-targetSdkVersion" value="23" />
         <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
         <preference name="android-installLocation" value="auto" />
