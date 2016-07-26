@@ -165,7 +165,7 @@ function ViewModel(app) {
             if (type === 'link')
                 tpl = linkTemplate;
 
-            var siteUrl = $('html').attr('data-site-url'),
+            var siteUrl = $('html').attr('data-site-url') || window.location.origin,
                 linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/',
                 imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
 
