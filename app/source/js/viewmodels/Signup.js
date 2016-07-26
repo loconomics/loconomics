@@ -216,6 +216,8 @@ function SignupVM(app) {
             });
         });
     };
+    
+    this.passwordRequirements = ko.observable('Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.');
 }
 
 SignupVM._inherits(EventEmitter);
