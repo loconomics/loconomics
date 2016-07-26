@@ -50,6 +50,9 @@ var facebookMe = function() {
     }
 };
 
+var pwdRequirementsLabel = 'Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.';
+var pwdRegex = /(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/;
+
 function SignupVM(app) {
     
     EventEmitter.call(this);
@@ -217,7 +220,10 @@ function SignupVM(app) {
         });
     };
     
-    this.passwordRequirements = ko.observable('Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.');
+    this.passwordRequirements = ko.pureComputed(function() {
+        var pwd = this.password();
+        return pwdRegex.test(pwd) ? '' : pwdRequirementsLabel;
+    }, this);
 }
 
 SignupVM._inherits(EventEmitter);

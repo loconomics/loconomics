@@ -308,7 +308,7 @@
 
               <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
                 <label for="signupAccountPassword">Password</label>
-                <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error() || passwordRequirements(), trigger: 'focus', container: 'body', placement: 'top' }">
+                <input type="password" class="form-control" id="signupAccountPassword" placeholder="Password" data-bind="textInput: password, popover: { content: password.error() || passwordRequirements(), trigger: 'focus', container: 'body', placement: 'top' }">
                 <i class="fa ion-ios-locked-outline form-control-feedback text-muted pull-right icon-right" aria-hidden="true"></i>
               </div>
 
