@@ -180,7 +180,7 @@ app.successSave = function successSave(settings) {
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:50,maxcomplexity:16 */
+    /*jshint maxstatements:60,maxcomplexity:16 */
     
     attachFastClick(document.body);
     
@@ -441,6 +441,35 @@ var appInit = function appInit() {
     // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
     if (app.shell.baseUrl) {
         $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
+    }
+    
+    // Set-up Google Analytics
+    if (window.ga) {
+        var gaTrackerId = 'UA-72265353-4';
+        var appVersion = $('html').data('app-version');
+        if (window.cordova) {
+            window.ga.startTrackerWithId(gaTrackerId);
+            window.ga.setAppVersion(appVersion);
+            window.ga.trackView('/');
+        }
+        else {
+            window.ga('create', gaTrackerId, 'auto');
+            window.ga('set', 'appVersion', appVersion);
+            window.ga('set', 'page', '/');
+            window.ga('send', 'pageview');
+        }
+        app.shell.on(app.shell.events.itemReady, function($act, state) {
+            // state.route.name (activity name only)
+            var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
+            url = url.replace(/^#!/, '');
+            if (window.cordova) {
+                window.ga.trackView(url);
+            }
+            else {
+                window.ga('set', 'page', url);
+                window.ga('send', 'pageview');
+            }
+        });
     }
 
     app.model.init()

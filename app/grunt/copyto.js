@@ -32,7 +32,8 @@ module.exports = {
     phonegap: {
         expand: true,
         cwd: 'build/',
-        src: ['assets/js/{app,libs,styleguidelibs}.min.js', 'assets/css/{app,libs}.min.css', 'assets/images/**/*.*', 'assets/fonts/**/*.*'],
+        // NOTE: all files, minified and debug, are copied into phonegap, we include only minified css/js when ziping for phonegap-build
+        src: ['assets/js/*.js', 'assets/css/*.css', 'assets/images/**/*.*', 'assets/fonts/**/*.*'],
         dest: 'phonegap/www/',
         filter: 'isFile'
     },

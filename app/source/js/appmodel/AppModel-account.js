@@ -160,6 +160,16 @@ function performLocalLogin(thisAppModel, username/*, password*/) {
 
             // Set user data
             thisAppModel.user().model.updateWith(logged.profile);
+            
+            // Google Analytics
+            if (window.ga) {
+                if (window.cordova) {
+                    window.ga.setUserId(logged.userID);
+                }
+                else {
+                    window.ga('set', 'userId', logged.userID);
+                }
+            }
 
             return logged;
         });
