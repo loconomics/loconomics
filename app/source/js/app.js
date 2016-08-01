@@ -445,13 +445,22 @@ var appInit = function appInit() {
     
     // Set-up Google Analytics
     if (window.ga) {
-        window.ga.startTrackerWithId('UA-72265353-1');
-        window.ga.setAppVersion($('html').data('app-version'));
-
+        var gaTrackerId = 'UA-72265353-1';
+        var appVersion = $('html').data('app-version');
+        if (window.cordova) {
+            window.ga.startTrackerWithId(gaTrackerId);
+            window.ga.setAppVersion(appVersion);
+            window.ga.trackView('/');
+        }
+        else {
+            window.ga('create', gaTrackerId, 'auto');
+            window.ga('set', 'appVersion', appVersion);
+            window.ga('send', '/');
+        }
         app.shell.on(app.shell.events.itemReady, function($act, state) {
             // state.route.name (activity name only)
             var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
-            window.ga.trackView(url);
+            window.cordova ? window.ga.trackView(url) : window.ga('send', url);
         });
     }
 

@@ -163,7 +163,12 @@ function performLocalLogin(thisAppModel, username/*, password*/) {
             
             // Google Analytics
             if (window.ga) {
-                window.ga.setUserId(logged.userID);
+                if (window.cordova) {
+                    window.ga.setUserId(logged.userID);
+                }
+                else {
+                    window.ga('set', 'userId', logged.userID);
+                }
             }
 
             return logged;
