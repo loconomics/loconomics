@@ -51,6 +51,16 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 };
                 // Load User Profile, from local with server fallback and server synchronization, silently
                 this.userProfile.load().then(resolve, resolveAnyway);
+                
+                // Google Analytics
+                if (window.ga) {
+                    if (window.cordova) {
+                        window.ga.setUserId(credentials.userID);
+                    }
+                    else {
+                        window.ga('set', 'userId', credentials.userID);
+                    }
+                }
             }
             else {
                 // End successfully. Not loggin is not an error,
