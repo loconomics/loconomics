@@ -28,7 +28,8 @@ public static partial class LcData
                         u.CancellationPolicyID As cancellationPolicyID,
                         u.InstantBooking As instantBooking,
                         u.CreateDate As createdDate,
-                        u.UpdatedDate As updatedDate
+                        u.UpdatedDate As updatedDate,
+                        u.bookMeButtonReady As bookMeButtonReady
                     FROM
                         userprofilepositions as u
                          INNER JOIN

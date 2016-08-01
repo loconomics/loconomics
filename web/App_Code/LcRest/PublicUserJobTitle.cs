@@ -69,16 +69,19 @@ namespace LcRest
         const string sqlAndActiveProfiles = " AND u.StatusID = 1 ";
         // filter by active or inactive profiles, but still discarding user deleted profiles (StatusID=0).
         const string sqlAndActiveOrInactiveProfiles = " AND u.StatusID > 0 ";
+        const string sqlAndBookMeButtonReady = " AND bookMeButtonReady = 1";
         const string sqlGetActiveItem = sqlSelectFromCommonWhere + sqlAndActiveProfiles + sqlAndJobTitleID;
         const string sqlGetActiveOrInactiveItem = sqlSelectFromCommonWhere + sqlAndActiveOrInactiveProfiles + sqlAndJobTitleID;
         const string sqlGetList = sqlSelectFromCommonWhere + sqlAndActiveProfiles;
         #endregion
 
-        public static PublicUserJobTitle Get(int serviceProfessionalUserID, int languageID, int countryID, int jobTitleID, bool includeDeactivatedProfile = false)
+        public static PublicUserJobTitle Get(int serviceProfessionalUserID, int languageID, int countryID, int jobTitleID, bool includeDeactivatedProfile = false, bool bookMeButtonRequired = false)
         {
             using (var db = new LcDatabase())
             {
                 var sql = includeDeactivatedProfile ? sqlGetActiveOrInactiveItem : sqlGetActiveItem;
+                if (bookMeButtonRequired)
+                    sql += sqlAndBookMeButtonReady;
                 return FromDB(db.QuerySingle(sql, serviceProfessionalUserID, languageID, countryID, jobTitleID));
             }
         }

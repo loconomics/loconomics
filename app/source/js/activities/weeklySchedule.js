@@ -97,6 +97,11 @@ function ViewModel(app) {
     this.save = function save() {
         scheduleVersion.pushSave()
         .then(function() {
+            // A weekly schedule change may change the status of userJobTitles and bookMeButtonReady, so
+            // force a refresh of that data
+            app.model.userJobProfile.clearCache();
+            app.model.userJobProfile.syncList();
+            // Move forward:
             if (app.model.onboarding.inProgress()) {
                 app.model.onboarding.goNext();
             } else {

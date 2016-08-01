@@ -849,7 +849,8 @@ namespace LcRest
                 throw new Exception("BookingTypeID must be set before calling FillUserJobTitle");
 
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
-            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking);
+            var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
+            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking);
         }
 
         /// <summary>

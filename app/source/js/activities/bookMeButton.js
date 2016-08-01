@@ -50,11 +50,14 @@ var A = Activity.extend(function BookMeButtonActivity() {
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
             if (jobTitleID) {
-                // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
+                // User Job Title
+                // Get data for the Job Title and User Profile
+                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(job) {
+                    this.viewModel.userJobTitle(job.userJobTitle);
                     // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
+                    this.viewModel.jobTitleName(job.jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -65,6 +68,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
+                this.viewModel.userJobTitle(null);
             }
         }.bind(this)
     });
@@ -104,6 +108,9 @@ var A = Activity.extend(function BookMeButtonActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
+    // reset
+    this.viewModel.jobTitleID(false);
+    
     Activity.prototype.show.call(this, state);
     
     // Keep data updated:
@@ -186,6 +193,12 @@ function ViewModel(app) {
     this.sendByEmailURL = ko.pureComputed(function() {
         var btn = this.buttonHtmlCode().replace(/\n+/, '');
         return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);
+    }, this);
+    
+    this.userJobTitle = ko.observable(null);
+    this.bookMeButtonReady = ko.pureComputed(function() {
+        var j = this.userJobTitle();
+        return j && j.bookMeButtonReady() || false;
     }, this);
 }
 
