@@ -455,12 +455,20 @@ var appInit = function appInit() {
         else {
             window.ga('create', gaTrackerId, 'auto');
             window.ga('set', 'appVersion', appVersion);
-            window.ga('send', '/');
+            window.ga('set', 'page', '/');
+            window.ga('send', 'pageview');
         }
         app.shell.on(app.shell.events.itemReady, function($act, state) {
             // state.route.name (activity name only)
             var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
-            window.cordova ? window.ga.trackView(url) : window.ga('send', url);
+            url = url.replace(/^#!/, '');
+            if (window.cordova) {
+                window.ga.trackView(url);
+            }
+            else {
+                window.ga('set', 'page', url);
+                window.ga('send', 'pageview');
+            }
         });
     }
 
