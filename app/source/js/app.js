@@ -445,7 +445,7 @@ var appInit = function appInit() {
     
     // Set-up Google Analytics
     if (window.ga) {
-        var gaTrackerId = 'UA-72265353-1';
+        var gaTrackerId = 'UA-72265353-4';
         var appVersion = $('html').data('app-version');
         if (window.cordova) {
             window.ga.startTrackerWithId(gaTrackerId);
