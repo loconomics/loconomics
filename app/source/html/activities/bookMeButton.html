@@ -19,6 +19,11 @@
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201959943-add-scheduling-to-your-website" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
+                <p data-bind="visible: !bookMeButtonReady()" class="bg-warning PaddedBox-xs">
+                    <strong>Your profile is incomplete and this button cannot be used still.</strong>
+                    <br/>
+                    Tip: you need to specify your services, locations and weekly schedule.
+                </p>
                 <script type="text/html" id="bookMeButton-radioButton">
                     <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
                         <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
