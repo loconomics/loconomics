@@ -160,6 +160,11 @@ function performLocalLogin(thisAppModel, username/*, password*/) {
 
             // Set user data
             thisAppModel.user().model.updateWith(logged.profile);
+            
+            // Google Analytics
+            if (window.ga) {
+                window.ga.setUserId(logged.userID);
+            }
 
             return logged;
         });

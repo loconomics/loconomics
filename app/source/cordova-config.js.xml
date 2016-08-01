@@ -106,6 +106,7 @@
     <plugin name="cordova-plugin-file" spec="4.2.0" />
     <plugin name="cordova-plugin-file-transfer" spec="1.5.1" />
     <plugin name="cordova-universal-clipboard" spec="0.1.0" />
+    <plugin name="cordova-plugin-google-analytics" spec="1.0.0" />
     <plugin name="cordova-plugin-facebook4" spec="1.7.1"><!--name="phonegap-facebook-plugin" spec="0.12.0">-->
         <param name="APP_ID" value="@(facebookAppID)" />
         <param name="APP_NAME" value="@(facebookAppName)" />

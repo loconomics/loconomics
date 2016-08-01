@@ -180,7 +180,7 @@ app.successSave = function successSave(settings) {
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:50,maxcomplexity:16 */
+    /*jshint maxstatements:60,maxcomplexity:16 */
     
     attachFastClick(document.body);
     
@@ -441,6 +441,18 @@ var appInit = function appInit() {
     // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
     if (app.shell.baseUrl) {
         $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
+    }
+    
+    // Set-up Google Analytics
+    if (window.ga) {
+        window.ga.startTrackerWithId('UA-72265353-1');
+        window.ga.setAppVersion($('html').data('app-version'));
+
+        app.shell.on(app.shell.events.itemReady, function($act, state) {
+            // state.route.name (activity name only)
+            var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
+            window.ga.trackView(url);
+        });
     }
 
     app.model.init()
