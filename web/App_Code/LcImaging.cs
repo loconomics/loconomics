@@ -119,6 +119,24 @@ public static class LcImaging
         return bmPhoto;
     }
 
+    public static void Rotate(Image imgPhoto, float angle)
+    {
+        if (angle != 0)
+        {
+            Graphics grPhoto = Graphics.FromImage(imgPhoto);
+            //move rotation point to center of image
+            grPhoto.TranslateTransform((float)imgPhoto.Width / 2, (float)imgPhoto.Height / 2);
+            // rotate
+            grPhoto.RotateTransform(angle);
+            //move image back
+            grPhoto.TranslateTransform(-(float)imgPhoto.Width / 2, -(float)imgPhoto.Height / 2);
+            // save
+            grPhoto.DrawImage(imgPhoto, new Point(0, 0));
+
+            grPhoto.Dispose();
+        }
+    }
+
     public static Image Crop(
         Image imgPhoto,
         int startX,

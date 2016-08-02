@@ -154,6 +154,7 @@ function ViewModel(app) {
         this.previewPhotoUrl('');
         this.localPhotoData(null);
         this.localPhotoPreview(null);
+        this.rotationAngle(0);
     }.bind(this);
 
     this.save = function save() {
@@ -177,7 +178,7 @@ function ViewModel(app) {
             if (data) {
                 $.get(data.profilePictureUrl);
             }
-        })
+        }.bind(this))
         .catch(function(err) {
             app.modals.showError({
                 title: 'Error saving your data.',
@@ -234,7 +235,10 @@ function ViewModel(app) {
             fileKey: this.photoUploadFieldName,
             mimeType: 'image/jpeg',
             httpMethod: 'PUT',
-            headers: $.extend(true, {}, app.model.rest.extraHeaders)
+            headers: $.extend(true, {}, app.model.rest.extraHeaders),
+            params: {
+                rotationAngle: this.rotationAngle()
+            }
         };
         return photoTools.uploadLocalFileJson(this.localPhotoUrl(), this.photoUploadUrl, uploadSettings);
     }.bind(this);
@@ -244,6 +248,10 @@ function ViewModel(app) {
         if (!fd) return Promise.resolve(null);
         // NOTE: If URL needs update before upload: fd.url = ..;
         fd.headers = $.extend(true, {}, app.model.rest.extraHeaders);
+        fd.formData = [{
+            name: 'rotationAngle',
+            value: this.rotationAngle()
+        }];
         return Promise.resolve(fd.submit());
     }.bind(this);
 
@@ -255,4 +263,14 @@ function ViewModel(app) {
             return webUploadPhoto();
         }
     }.bind(this);
+    
+    this.rotationAngle = ko.observable(0);
+    this.rotatePhoto = function() {
+        var d = this.rotationAngle() |0;
+        this.rotationAngle((d + 90) % 360);
+    };
+    this.photoRotationStyle = ko.pureComputed(function() {
+        var d = this.rotationAngle() |0;
+        return 'transform: rotate(' + d + 'deg);';
+    }, this);
 }
