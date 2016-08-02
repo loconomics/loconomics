@@ -158,6 +158,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.save = function save() {
+        this.isSaving(true);
         // Because of problems with image cache, we need to ensure the
         // loading of the new photoUrl with timestamp updated AFTER we actually
         // uploaded a new photo, that prevents us from use parallel requests (by using Promise.all)
@@ -178,13 +179,15 @@ function ViewModel(app) {
             if (data) {
                 $.get(data.profilePictureUrl);
             }
+            this.isSaving(false);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
                 title: 'Error saving your data.',
                 error: err && err.error || err
             });
-        });
+            this.isSaving(false);
+        }.bind(this));
     }.bind(this);
     
     var cameraSettings = {
