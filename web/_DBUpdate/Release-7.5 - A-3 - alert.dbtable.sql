@@ -23,7 +23,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('1'
    ,'2'
@@ -45,7 +46,8 @@ VALUES
    ,'True'
    ,'4'
    ,'True'
-   ,'False')
+   ,'False'
+   ,'True')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -68,7 +70,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('2'
    ,'2'
@@ -90,7 +93,8 @@ VALUES
    ,'False'
    ,'3'
    ,'True'
-   ,'False')
+   ,'False'
+   ,'True')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -113,7 +117,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('3'
    ,'2'
@@ -135,7 +140,8 @@ VALUES
    ,'False'
    ,'10'
    ,'True'
-   ,'False')
+   ,'False'
+   ,'True')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -158,7 +164,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('4'
    ,'3'
@@ -180,7 +187,8 @@ VALUES
    ,'False'
    ,'5'
    ,'True'
-   ,'True')
+   ,'True'
+   ,'False')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -203,7 +211,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('5'
    ,'4'
@@ -225,6 +234,7 @@ VALUES
    ,'False'
    ,'1'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -248,7 +258,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('6'
    ,'4'
@@ -270,6 +281,7 @@ VALUES
    ,'False'
    ,'2'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -293,7 +305,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('8'
    ,'2'
@@ -315,7 +328,8 @@ VALUES
    ,'True'
    ,'2'
    ,'True'
-   ,'False')
+   ,'False'
+   ,'True')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -338,7 +352,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('9'
    ,'3'
@@ -360,7 +375,8 @@ VALUES
    ,'False'
    ,'6'
    ,'True'
-   ,'True')
+   ,'True'
+   ,'False')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -383,7 +399,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('10'
    ,'3'
@@ -405,6 +422,7 @@ VALUES
    ,'False'
    ,'1'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -428,7 +446,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('11'
    ,'3'
@@ -450,7 +469,8 @@ VALUES
    ,'False'
    ,'2'
    ,'True'
-   ,'True')
+   ,'True'
+   ,'False')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -473,7 +493,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('12'
    ,'3'
@@ -495,6 +516,7 @@ VALUES
    ,'True'
    ,'1'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -518,7 +540,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('13'
    ,'3'
@@ -540,6 +563,7 @@ VALUES
    ,'True'
    ,'8'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -563,7 +587,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('14'
    ,'3'
@@ -585,6 +610,7 @@ VALUES
    ,'True'
    ,'3'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -608,7 +634,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('15'
    ,'2'
@@ -630,6 +657,54 @@ VALUES
    ,'False'
    ,'11'
    ,'True'
+   ,'True'
+   ,'False')
+
+INSERT INTO [alert]
+   ([AlertID]
+   ,[AlertTypeID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[AlertName]
+   ,[AlertHeadlineDisplay]
+   ,[AlertTextDisplay]
+   ,[AlertDescription]
+   ,[AlertEmailText]
+   ,[ProviderProfileCompletePoints]
+   ,[CustomerProfileCompletePoints]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[AlertPageURL]
+   ,[Required]
+   ,[PositionSpecific]
+   ,[DisplayRank]
+   ,[ProviderAlert]
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
+VALUES
+   ('16'
+   ,'2'
+   ,'1'
+   ,'1'
+   ,'location'
+   ,'Where can you work?'
+   ,'Tell customers where you perform your services'
+   ,''
+   ,''
+   ,'0'
+   ,'0'
+   ,'8/1/2012 12:00:00 AM'
+   ,'2/20/2014 1:28:00 PM'
+   ,'il'
+   ,'True'
+   ,'dashboard/your-work/@(PositionID)/#DashboardLocations'
+   ,'True'
+   ,'True'
+   ,'9'
+   ,'True'
+   ,'False'
    ,'True')
 
 INSERT INTO [alert]
@@ -653,52 +728,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
-VALUES
-   ('16'
-   ,'2'
-   ,'1'
-   ,'1'
-   ,'location'
-   ,'Where can you work?'
-   ,'Tell customers where you perform your services'
-   ,''
-   ,''
-   ,'0'
-   ,'0'
-   ,'8/1/2012 12:00:00 AM'
-   ,'2/20/2014 1:28:00 PM'
-   ,'il'
-   ,'True'
-   ,'dashboard/your-work/@(PositionID)/#DashboardLocations'
-   ,'True'
-   ,'True'
-   ,'9'
-   ,'True'
-   ,'False')
-
-INSERT INTO [alert]
-   ([AlertID]
-   ,[AlertTypeID]
-   ,[LanguageID]
-   ,[CountryID]
-   ,[AlertName]
-   ,[AlertHeadlineDisplay]
-   ,[AlertTextDisplay]
-   ,[AlertDescription]
-   ,[AlertEmailText]
-   ,[ProviderProfileCompletePoints]
-   ,[CustomerProfileCompletePoints]
-   ,[CreatedDate]
-   ,[UpdatedDate]
-   ,[ModifiedBy]
-   ,[Active]
-   ,[AlertPageURL]
-   ,[Required]
-   ,[PositionSpecific]
-   ,[DisplayRank]
-   ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('17'
    ,'3'
@@ -720,6 +751,7 @@ VALUES
    ,'True'
    ,'1'
    ,'True'
+   ,'False'
    ,'False')
 
 INSERT INTO [alert]
@@ -743,7 +775,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('18'
    ,'2'
@@ -765,7 +798,8 @@ VALUES
    ,'True'
    ,'1'
    ,'True'
-   ,'False')
+   ,'False'
+   ,'True')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -788,7 +822,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('19'
    ,'2'
@@ -810,7 +845,8 @@ VALUES
    ,'True'
    ,'8'
    ,'True'
-   ,'False')
+   ,'False'
+   ,'True')
 
 INSERT INTO [alert]
    ([AlertID]
@@ -833,7 +869,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    ('20'
    ,'3'
@@ -855,6 +892,7 @@ VALUES
    ,'False'
    ,'11'
    ,'True'
+   ,'False'
    ,'False')
 
 
