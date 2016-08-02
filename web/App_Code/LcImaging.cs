@@ -104,7 +104,10 @@ public static class LcImaging
 
         Graphics grPhoto = Graphics.FromImage(bmPhoto);
         if (sizeMode == SizeMode.Contain)
-            grPhoto.Clear(Color.Black);
+        {
+            // Using a clear gray as background, the previous black was too dark
+            grPhoto.Clear(Color.FromArgb(0xF5, 0xF5, 0xF5));
+        }
 
         grPhoto.SmoothingMode = SmoothingMode.HighQuality;
         grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
