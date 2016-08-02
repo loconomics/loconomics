@@ -56,7 +56,7 @@ var A = Activity.extend(function WorkPhotosActivity() {
             // .test(window.navigator.userAgent),
             previewMaxWidth: PHOTO_WIDTH,
             previewMaxHeight: PHOTO_HEIGHT,
-            previewCrop: true
+            previewCrop: false
         })
         .on('fileuploadprocessalways', function (e, data) {
             var file = data.files[data.index];
