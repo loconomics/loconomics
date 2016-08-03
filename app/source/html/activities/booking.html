@@ -60,7 +60,7 @@
                             <tfoot>
                                 <tr>
                                     <th class="PricingSummary-concept">Total</th>
-                                    <th class="PricingSummary-price"><span data-bind="text: booking().pricingSummary().totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span>*</th>
+                                    <th class="PricingSummary-price"><span data-bind="text: booking().pricingSummary().totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span><span data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">*</span></th>
                                 </tr>
                                 <tr data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">
                                     <td class="PricingSummary-fees" colspan="2">
@@ -69,7 +69,7 @@
                                 </tr>
                             </tfoot>
                         </table>
-                        <div class="PricingSummary-time isolated inset">
+                        <div class="PricingSummary-time isolated inset" data-bind="visible: booking().pricingSummary().firstSessionDurationDisplay">
                             <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
                             <span data-bind="text: booking().pricingSummary().firstSessionDurationDisplay"></span>
                         </div>
