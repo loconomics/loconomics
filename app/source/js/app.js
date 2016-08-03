@@ -447,27 +447,27 @@ var appInit = function appInit() {
     if (window.ga) {
         var gaTrackerId = 'UA-72265353-4';
         var appVersion = $('html').data('app-version');
+        var appId = $('html').data('app-id');
         if (window.cordova) {
             window.ga.startTrackerWithId(gaTrackerId);
             window.ga.setAppVersion(appVersion);
-            window.ga.trackView('/');
+            window.ga.trackView('index');
         }
         else {
             window.ga('create', gaTrackerId, 'auto');
             window.ga('set', 'appVersion', appVersion);
-            window.ga('set', 'page', '/');
-            window.ga('send', 'pageview');
+            window.ga('set', 'appName', appId);
+            window.ga('send', 'screenview', { screenName: 'index' });
         }
         app.shell.on(app.shell.events.itemReady, function($act, state) {
-            // state.route.name (activity name only)
-            var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
-            url = url.replace(/^#!/, '');
+            var view = state.route.name;
+            //var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
+            //url = url.replace(/^#!/, '');
             if (window.cordova) {
-                window.ga.trackView(url);
+                window.ga.trackView(view);
             }
             else {
-                window.ga('set', 'page', url);
-                window.ga('send', 'pageview');
+                window.ga('send', 'screenview', { screenName: view });
             }
         });
     }

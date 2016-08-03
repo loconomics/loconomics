@@ -28,7 +28,8 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>'
+                appVersion: '<% package.version %>',
+                appId: '<% package.appId %>'
             }
           }
         },
@@ -44,7 +45,8 @@ module.exports = function(grunt) {
                 facebookLang: facebookLang,
                 cssVersion: version,
                 jsVersion: version,
-                appVersion: '<% package.version %>'
+                appVersion: '<% package.version %>',
+                appId: '<% package.appId %>'
             }
           }
         },
@@ -60,7 +62,8 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>'
+                appVersion: '<% package.version %>',
+                appId: '<% package.devAppId %>'
                 //siteUrl: 'http://localhost/source'
             }
           }
@@ -77,7 +80,8 @@ module.exports = function(grunt) {
                 siteUrl: 'https://loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>'
+                appVersion: '<% package.version %>',
+                appId: '<% package.appId %>'
             }
           }
         },
@@ -93,7 +97,8 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>'
+                appVersion: '<% package.version %>',
+                appId: '<% package.devAppId %>'
             }
           }
         },
