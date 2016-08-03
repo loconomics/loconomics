@@ -458,7 +458,7 @@ public static partial class LcCalendar
                 {
                     StartTime = startTime,
                     EndTime = notBeforeTime,
-                    AvailabilityTypeID = (int)AvailabilityType.Unavailable
+                    AvailabilityTypeID = (int)AvailabilityType.Busy
                 };
                 yield return past;
             }
@@ -485,9 +485,19 @@ public static partial class LcCalendar
         {
             var result = new Dictionary<string, object>();
 
+            var prefs = LcCalendar.GetSchedulingPreferences(userID);
+            /*if (useAdvanceTime)
+            {
+                var notBeforeTime = DateTime.Now.AddHours((double)prefs.advanceTime);
+                if (startTime < notBeforeTime)
+                {
+                    startTime = notBeforeTime;
+                }
+            }*/
+
             var cu = new CalendarDll.CalendarUtils();
             var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
-            var prefs = LcCalendar.GetSchedulingPreferences(userID);
+            
 
             if (useAdvanceTime)
             {
