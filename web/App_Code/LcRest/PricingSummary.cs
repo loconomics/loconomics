@@ -360,8 +360,18 @@ namespace LcRest
             // otherwise clientServiceFeePrice will remain without value to mark it as not possible to calculate.
             if (subtotalPrice.HasValue)
             {
-                var amount = Math.Round(firstTimeServiceFeeFixed + ((firstTimeServiceFeePercentage / 100) * subtotalPrice.Value), 2);
-                clientServiceFeePrice = Math.Min(Math.Max(amount, firstTimeServiceFeeMinimum), firstTimeServiceFeeMaximum);
+                // Per decission at #1005, if subtotal (professional services) is 0 (only free services chosen by client),
+                // we do NOT charge a first time fee even if the kind of booking had required that; but just for tracking information, we keep
+                // the preset fee information (firsttimeService** fields), only setting to 0 the computed value.
+                if (subtotalPrice.Value == 0)
+                {
+                    clientServiceFeePrice = 0;
+                }
+                else
+                {
+                    var amount = Math.Round(firstTimeServiceFeeFixed + ((firstTimeServiceFeePercentage / 100) * subtotalPrice.Value), 2);
+                    clientServiceFeePrice = Math.Min(Math.Max(amount, firstTimeServiceFeeMinimum), firstTimeServiceFeeMaximum);
+                }
             }
             else
             {
