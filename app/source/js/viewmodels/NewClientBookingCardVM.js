@@ -234,7 +234,10 @@ function NewClientBookingCardVM(app) {
     
     
     this.confirmBtnText = ko.pureComputed(function() {
-        return this.isAnonymous() ? 'Sign up and confirm' : 'Confirm';
+        return (
+            this.isSaving() ? 'Confirming...' :
+            this.isAnonymous() ? 'Sign up and confirm' : 'Confirm'
+        );
     }, this);
     
     // Displayed text when there is a payment card
