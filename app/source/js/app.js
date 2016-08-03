@@ -446,9 +446,14 @@ var appInit = function appInit() {
     // Set-up Google Analytics
     if (window.ga) {
         var gaTrackerId = 'UA-72265353-4';
-        var appVersion = $('html').data('app-version');
         var appId = $('html').data('app-id');
         var appName = $('html').data('app-name');
+        var appVersion = $('html').data('app-version');
+        // We want to track exactly the different platforms where
+        // we run: web, android, ios (from cordova device property)
+        // and we use the version field for that
+        appVersion = (window.device && window.device.platform || 'web') + '-' + appVersion;
+
         if (window.cordova) {
             window.ga.startTrackerWithId(gaTrackerId);
             window.ga.setAppVersion(appVersion);
