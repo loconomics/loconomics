@@ -9,7 +9,7 @@ module.exports = {
         // expected. (In other grunt tasks is different, like copy-to)
         src: [
             'phonegap/www/*.*',
-            'phonegap/www/res/*.*',
+            'phonegap/www/res/**/*.*',
             'phonegap/www/assets/js/{app,libs,styleguidelibs}.min.js',
             'phonegap/www/assets/css/{app,libs}.min.css',
             'phonegap/www/assets/images/**/*.*',
