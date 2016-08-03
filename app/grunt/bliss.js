@@ -28,8 +28,9 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>',
-                appId: '<% package.appId %>'
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.appId %>',
+                appName: '<%= package.appName %>'
             }
           }
         },
@@ -45,8 +46,9 @@ module.exports = function(grunt) {
                 facebookLang: facebookLang,
                 cssVersion: version,
                 jsVersion: version,
-                appVersion: '<% package.version %>',
-                appId: '<% package.appId %>'
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.appId %>',
+                appName: '<%= package.appName %>'
             }
           }
         },
@@ -62,8 +64,9 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>',
-                appId: '<% package.devAppId %>'
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.devAppId %>',
+                appName: '<%= package.devAppName %>'
                 //siteUrl: 'http://localhost/source'
             }
           }
@@ -80,8 +83,9 @@ module.exports = function(grunt) {
                 siteUrl: 'https://loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>',
-                appId: '<% package.appId %>'
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.appId %>',
+                appName: '<%= package.appName %>'
             }
           }
         },
@@ -97,8 +101,9 @@ module.exports = function(grunt) {
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                appVersion: '<% package.version %>',
-                appId: '<% package.devAppId %>'
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.devAppId %>',
+                appName: '<%= package.devAppName %>'
             }
           }
         },

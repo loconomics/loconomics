@@ -180,7 +180,7 @@ app.successSave = function successSave(settings) {
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:60,maxcomplexity:16 */
+    /*jshint maxstatements:70,maxcomplexity:16 */
     
     attachFastClick(document.body);
     
@@ -448,15 +448,18 @@ var appInit = function appInit() {
         var gaTrackerId = 'UA-72265353-4';
         var appVersion = $('html').data('app-version');
         var appId = $('html').data('app-id');
+        var appName = $('html').data('app-name');
         if (window.cordova) {
             window.ga.startTrackerWithId(gaTrackerId);
             window.ga.setAppVersion(appVersion);
+            // app Id and Names seems to be automatic at native
             window.ga.trackView('index');
         }
         else {
             window.ga('create', gaTrackerId, 'auto');
             window.ga('set', 'appVersion', appVersion);
-            window.ga('set', 'appName', appId);
+            window.ga('set', 'appName', appName);
+            window.ga('set', 'appId', appId);
             window.ga('send', 'screenview', { screenName: 'index' });
         }
         app.shell.on(app.shell.events.itemReady, function($act, state) {
