@@ -427,14 +427,7 @@ var appInit = function appInit() {
             error: err
         });
     };
-    
-    if (window.instabug) {
-        window.instabug.init({
-            iosToken: '515d9e90bd68a18182a05e2a68689897',
-            androidToken: '9856054e92e7ae7a8326f1666703d51d'
-        });
-    }
-    
+
     require('./utils/toggleActionSheet').on();
     
     // Supporting sub-domain/channels, set the site-url same like baseUrl

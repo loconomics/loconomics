@@ -111,7 +111,6 @@
         <param name="APP_ID" value="@(facebookAppID)" />
         <param name="APP_NAME" value="@(facebookAppName)" />
     </plugin>
-    <!--<plugin name="com.instabug.phonegap" spec="0.1.6" />-->
     
     <!--
         Define access to external domains.

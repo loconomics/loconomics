@@ -288,15 +288,6 @@
                     <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label:                        'Postal code', icon: 'ion-ios-home-outline' } }"></div>
                     <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label:                      'Referral code', icon: 'ion-android-contacts' } }"></div>
                 </div>
-                <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }, visible: forServiceProfessional">
-                    <label for="device">Device</label>
-                    <select data-bind="value: device" class="form-control select-unstyled">
-                        <option value="">Select your device</option>
-                        <option value="ios">iPhone/iPad</option>
-                        <option value="android">Android</option>
-                    </select>
-                    <i class="fa ion-iphone text-muted pull-right icon-right form-control-feedback" aria-hidden="true"></i>
-                </div>
                 <label for="phone" data-bind="visible: forServiceProfessional">Mobile Phone</label>
                 <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Mobile phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
 
