@@ -293,7 +293,8 @@ public static class LcAuthHelper
         if (isServiceProfessional)
         {
             page.Validation.RequireField("phone", "You must specify your mobile phone number.");
-            page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
+            // Disabled after removal from UI at commit#fd68f69fbdd04a777135cfae092b9c16c4e2d182
+            //page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
         }
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
