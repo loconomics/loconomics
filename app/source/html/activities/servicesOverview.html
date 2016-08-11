@@ -28,7 +28,7 @@
                         <h2 class="SectionTitle" data-bind="text: category().name"></h2>
                         <div class="form-group">
                             <div class="input-group">
-                                <input type="text" class="form-control" data-bind="textInput: attributeSearch, disable: $parent.isLocked" />
+                                <input type="text" class="form-control" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-primary" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
                                     <button type="button" class="btn btn-primary" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-android-arrow-dropdown" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
