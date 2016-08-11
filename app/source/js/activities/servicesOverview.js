@@ -242,6 +242,7 @@ function AttributesCategoryVM(cat, userAtts) {
         }
         
         this.attributeSearch('');
+        this.autocompleteOpenedByUser(false);
     };
     
     this.selectAttribute = function(att) {
@@ -267,22 +268,35 @@ function AttributesCategoryVM(cat, userAtts) {
         var s = this.attributeSearch(),
             a = this.availableAttributes();
         
+        if (!s) {
+            return a;
+        }
+
         var result = a.filter(function(att) {
             return textSearch(s, att.name());
         });
         
-        // if there is a search text, append it as a selectable option at the beggining of the list
-        if (s) {
-            result.unshift(new ServiceAttribute({
-                serviceAttributeID: 0,
-                name: 'Add new: ' + s
-            }));
-        }
+        // Append the search text as a selectable option at the beggining of the list
+        result.unshift(new ServiceAttribute({
+            serviceAttributeID: 0,
+            name: 'Add new: ' + s
+        }));
         
         return result;
     }, this);
     
     this.clearAttributeSearch = function() {
         this.attributeSearch('');
+        this.autocompleteOpenedByUser(false);
+    }.bind(this);
+    
+    this.autocompleteOpenedByUser = ko.observable();
+    
+    this.showFullAutocomplete = function() {
+        this.autocompleteOpenedByUser(true);
+    }.bind(this);
+    
+    this.hideFullAutocomplete = function() {
+        this.autocompleteOpenedByUser(false);
     }.bind(this);
 }
