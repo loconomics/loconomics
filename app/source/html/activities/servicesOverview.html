@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <input type="text" class="form-control" data-bind="textInput: attributeSearch, disable: $parent.isLocked" />
-                                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-bind="click: addAttribute">Add</button></span>
+                                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-bind="click: clearAttributeSearch">X</button></span>
                             </div>
                             <div class="TagsListAutocomplete" data-bind="visible: attributeSearch() && autocompleteAttributes().length">
                                 <ul data-bind="foreach: autocompleteAttributes" class="list-unstyled">

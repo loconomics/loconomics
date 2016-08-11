@@ -245,8 +245,13 @@ function AttributesCategoryVM(cat, userAtts) {
     };
     
     this.selectAttribute = function(att) {
-        userAtts.serviceAttributes.push(catID, att.serviceAttributeID());
-    };
+        if (att.serviceAttributeID()) {
+            userAtts.serviceAttributes.push(catID, att.serviceAttributeID());
+        }
+        else {
+            this.addAttribute();
+        }
+    }.bind(this);
 
     this.removeAttribute = function(att) {
         var id = att.serviceAttributeID();
@@ -262,8 +267,22 @@ function AttributesCategoryVM(cat, userAtts) {
         var s = this.attributeSearch(),
             a = this.availableAttributes();
         
-        return a.filter(function(att) {
+        var result = a.filter(function(att) {
             return textSearch(s, att.name());
         });
+        
+        // if there is a search text, append it as a selectable option at the beggining of the list
+        if (s) {
+            result.unshift(new ServiceAttribute({
+                serviceAttributeID: 0,
+                name: 'Add new: ' + s
+            }));
+        }
+        
+        return result;
     }, this);
+    
+    this.clearAttributeSearch = function() {
+        this.attributeSearch('');
+    }.bind(this);
 }
