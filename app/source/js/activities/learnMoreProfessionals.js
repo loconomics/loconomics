@@ -146,6 +146,7 @@ A.prototype.show = function show(state) {
         this._registerSnapPoints();
         this._notFirstShow = true;
     }
+    this.viewModel.searchTerm('');
 };
 
 
