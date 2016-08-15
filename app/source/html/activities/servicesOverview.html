@@ -28,23 +28,32 @@
                         <h2 class="SectionTitle" data-bind="text: category().name"></h2>
                         <div class="form-group">
                             <div class="input-group">
-                                <input type="text" class="form-control" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
+                                <input type="text" class="form-control" placeholder="Search suggested or add new" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
                                 <span class="input-group-btn">
-                                    <button type="button" class="btn btn-primary" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
-                                    <button type="button" class="btn btn-primary" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-android-arrow-dropdown" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
-                                    <button type="button" class="btn btn-primary" data-bind="visible: !attributeSearch() && autocompleteOpenedByUser(), click: hideFullAutocomplete"><i class="fa ion ion-android-arrow-dropup" aria-hidden="true"></i><span class="sr-only">Close</span></button>
+                                    <button type="button" class="btn btn-default" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
+                                    <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
+                                    <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && autocompleteOpenedByUser(), click: hideFullAutocomplete"><i class="fa ion ion-arrow-up-b" aria-hidden="true"></i><span class="sr-only">Close</span></button>
                                 </span>
                             </div>
-                            <div class="TagsListAutocomplete" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                <ul data-bind="foreach: autocompleteAttributes" class="list-unstyled">
-                                    <li>
-                                        <button type="button" class="btn btn-link btn-block" data-bind="text: name, click: $parent.selectAttribute"></button>
-                                    </li>
-                                </ul>
-                                <div data-bind="visible: autocompleteAttributes().length === 0">
-                                    There are no more attributes (you have added all!!)
-                                </div>
-                            </div>
+                            <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
+                                <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
+                                  <h3>Suggestions (or add new):</h3>
+                                     <ul data-bind="foreach: autocompleteAttributes">
+                                       <li class="Result clearfix">
+                                          <a data-bind="click: $parent.selectAttribute">
+                                              <div class="Result-info">
+                                                <span class="Result-name" data-bind="text: name"></span>  
+                                                <span class="Result-description hidden-xs hidden-sm" data-bind="text: description, visible: description"></span> 
+                                              </div>
+                                              <span class="btn btn-secondary btn-md btn-inline">Add</span>
+                                          </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                 <li data-bind="visible: autocompleteAttributes().length === 0">
+                                   <h3>You've added all suggestions.</h3>  
+                                </li>
+                            </ul>
                         </div>
                         <ol class="TagsList" data-bind="foreach: selectedAttributes">
                             <li class="TagsList-item">
