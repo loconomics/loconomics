@@ -1,351 +1,365 @@
 /**
     Search Results component
-    
-        background linear-gradient(rgba(255, 103, 101, .8), transparent 90%), 
+
+    background linear-gradient(rgba(255, 103, 101, .8), transparent 90%), 
                $brand-secondary  url('../images/self-header.jpg') no-repeat center / cover
 **/
 
 .SearchResultsPreview {
-  background-color: white;
-  display: block;
-  padding: 0;
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 7;
-  margin: 0 15px;
-  box-shadow: 0 1.5px 0 0 $gray-background;
+    background-color: white;
+    display: block;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 7;
+    margin: 0 15px;
+    box-shadow: 0 1px 5px rgba(50,50,50,0.2);
+    border-top: 1px solid #e6e6e6;
+    border: 1px solid #c4c4c4;
 
-  @media $mediaMinSm {
-    margin: 0 10px;
-  }  
+    @media $mediaMinSm {
+        margin: 0 10px;
+    }  
 
-  li {
-    list-style: none;
+    li {
+        list-style: none;
 
-    a {
-      text-decoration: none;
+        a {
+            text-decoration: none;
+        }
+
+        h3 {
+            padding-top: 5px;
+            font-size: 18px;
+            text-align: center;
+            margin: 10px 0;
+            color: $gray-dark;
+        }
+
+        ul {
+            width: 100%;
+            padding: 0;
+
+            .Result {
+                clearfix();
+                border-bottom: 1px solid $gray-background;
+                display: block;
+                padding: 15px;
+                height: auto;
+                clear: both;
+
+                .Result-info {
+                    width: 75%;
+                    float: left;
+                    padding-left: 15px;         
+                }
+
+                .Result-name { 
+                    color: $gray-dark;
+                    font-size: 15px;         
+                    // Height paired with the usual button placed at right (thats why we set a percentage width at 'info')
+                    // that way it looks vertically centered with the button, both when there is description and when not.
+                    // Height of a usual .btn class
+                    line-height: 34px;
+                }
+
+                .Result-count { 
+                    font-size: 15px;
+                    color: $gray;         
+                }
+
+                .Result-description { 
+                    display: block;
+                    font-size: 12px;
+                    color: $gray;      
+                }
+
+                .btn-inline {
+                    width: 20%;
+                    float: right;
+                    margin-right: auto;        
+                }
+            }
+
+            .Result:hover {
+                background-color: $gray-background;
+            }
+            
+            a.Result {
+                cursor: pointer;
+            }
+        }
     }
-
-    h3 {
-      padding-top: 5px;
-      font-size: 18px;
-      text-align: center;
-      margin: 10px 0;
-      color: $gray-dark;
-    }
-
-    ul {
-      width: 100%;
-      padding: 0;
-
-      .Result {
-        border-bottom: 1px solid $gray-background;
-        display: block;
-        padding: 15px ;
-        height: auto;
-        clear: both;
-
-        .Result-info {
-          width: 75%;
-          float: left;
-          padding-left: 15px;         
-        }
-        .Result-name { 
-          color: $gray-dark;
-          font-size: 15px;         
-        }
-
-        .Result-count { 
-          font-size: 15px;
-          color: $gray;         
-        }
-
-        .Result-description { 
-          display: block;
-          font-size: 12px;
-          color: $gray;      
-        }
-
-        .btn-inline {
-          width: 20%;
-          float: right;
-          margin-right: auto;
-          margin-top: 5px;         
-        }
-    }
-
-    .Result:hover {
-       background-color: $gray-background;
-     }
-   }
-  }
 }
 
 .SearchResults
-  background-color $gray-background
+    background-color $gray-background
 
-  h3
-    margin-top 10px
-    margin-bottom 5px
-    text-align center
-    
-  h5
-    color $gray-light
-    margin-top 0
-    margin-bottom 5px
-    text-align center
-    
-  p
-    text-align left
-    margin-left 15px
-    margin-right 15px
-  
-  #categories-home
-    position relative
+    h3
+        margin-top 10px
+        margin-bottom 5px
+        text-align center
 
-  #job-titles-results
-    position relative
-    
-  ul
-    position relative
-    z-index 999
-    top -40px
-    margin-bottom -25px
-    display flex
-    margin 0
-    padding 0
-    flex-wrap wrap
-    justify-content center
+    h5
+        color $gray-light
+        margin-top 0
+        margin-bottom 5px
+        text-align center
+
+    p
+        text-align left
+        margin-left 15px
+        margin-right 15px
+
+    #categories-home
+        position relative
+
+    #job-titles-results
+        position relative
+
+    ul
+        position relative
+        z-index 999
+        top -40px
+        margin-bottom -25px
+        display flex
+        margin 0
+        padding 0
+        flex-wrap wrap
+        justify-content center
 
     @media $mediaMinSm {
-      top -100px;
+        top -100px;
     }
-    
-  li
-    list-style none
-    background-color rgba(255,255,255,1)
-    box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
-    width 290px
-    margin 15px
-    padding-top 20px
-    padding-bottom 20px
-    
+
+    li
+        list-style none
+        background-color rgba(255,255,255,1)
+        box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
+        width 290px
+        margin 15px
+        padding-top 20px
+        padding-bottom 20px
+
     a
-      text-decoration none
+        text-decoration none
 
-  .SearchResultsBackground {
-    padding-top: 10px;
-    height: auto;
-    padding-bottom: 60px;
-    background: $brand-primary no-repeat center / cover; 
-    @media $mediaMinSm {
-      padding-bottom: 120px;
-    }
-
-    h1 {
-      color: White;
-      font-size: 30px;
-      font-weight: bold;
-      text-align: center;
-
-      @media $mediaMinSm {
-        font-size: 44px;
-      }
-    }
-    
-    &.CategoryBackground-1 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_383231.jpg');
-    }
-    
-    &.CategoryBackground-2 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_32232.jpg');
-    }
-
-    &.CategoryBackground-3 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_210692.jpg');
-    }
-      
-    &.CategoryBackground-4 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_42639.jpg');
-    }
-
-    &.CategoryBackground-5 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_85410.jpg');
-    }
-
-    &.CategoryBackground-6 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_491656.jpg');
-    }
-
-    &.CategoryBackground-7 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_392432.jpg');
-    }
-
-    &.CategoryBackground-8 {
-      background-image:  
-      linear-gradient(
-        rgba(0, 0, 0, 0.5),
-        rgba(0, 0, 0, 0.5)
-      ),
-      url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
-    }
-    
-    .SearchResultsBackground-text {
-      width: 80%;
-      height: auto;
-      overflow: auto;
-      margin: auto;
-
-      h2 {
-        display: none;
-        font-size: 20px;
-        color: White;
-        text-align: center;   
-
+    .SearchResultsBackground {
+        padding-top: 10px;
+        height: auto;
+        padding-bottom: 60px;
+        background: $brand-primary no-repeat center / cover; 
+        
         @media $mediaMinSm {
-          display: inherit;
+            padding-bottom: 120px;
         }
-      }
 
-      p {
-        font-size: 18px;
-        color: White;
-        text-align: center;
-        display: none;
+        h1 {
+            color: White;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
 
-        @media $mediaMinSm {
-          display: inherit;
-        }        
-      }
+            @media $mediaMinSm {
+                font-size: 44px;
+            }
+        }
+
+        &.CategoryBackground-1 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_383231.jpg');
+        }
+
+        &.CategoryBackground-2 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_32232.jpg');
+        }
+
+        &.CategoryBackground-3 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+             url('../images/Stocksy_txp67b81859qys000_Small_210692.jpg');
+        }
+
+        &.CategoryBackground-4 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_42639.jpg');
+        }
+
+        &.CategoryBackground-5 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_85410.jpg');
+        }
+
+        &.CategoryBackground-6 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_491656.jpg');
+        }
+
+        &.CategoryBackground-7 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_392432.jpg');
+        }
+
+        &.CategoryBackground-8 {
+            background-image:  
+            linear-gradient(
+                rgba(0, 0, 0, 0.5),
+                rgba(0, 0, 0, 0.5)
+            ),
+            url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
+        }
+
+        .SearchResultsBackground-text {
+            width: 80%;
+            height: auto;
+            overflow: auto;
+            margin: auto;
+
+            h2 {
+                display: none;
+                font-size: 20px;
+                color: White;
+                text-align: center;   
+
+                @media $mediaMinSm {
+                    display: inherit;
+                }
+            }
+
+            p {
+                font-size: 18px;
+                color: White;
+                text-align: center;
+                display: none;
+
+                @media $mediaMinSm {
+                    display: inherit;
+                }        
+            }
+        }
     }
-  }
-    
+
+
 .ServiceProfessionalResult-summary
-  width 69%
-  float left
-  text-align center
-  color $gray-dark
+    width 69%
+    float left
+    text-align center
+    color $gray-dark
 
-  h3
-    margin-top 0
-    margin-bottom 0
+    h3
+        margin-top 0
+        margin-bottom 0
 
-  h5
-    margin-top 0
-    margin-bottom 0
+    h5
+        margin-top 0
+        margin-bottom 0
+
 
 .ServiceProfessionalResult-verificationsRating
-  font-size 18px
+    font-size 18px
 
 .ServiceProfessionalResult-description
-  text-align center
-  padding-top 5px
-  clear both 
+    text-align center
+    padding-top 5px
+    clear both 
 
-  h5
-    margin-top 8px
-    display block
+    h5
+        margin-top 8px
+        display block
 
-  .FromPrice
-    color $gray-dark
-    font-size 16px
-    font-weight bold
+    .FromPrice
+        color $gray-dark
+        font-size 16px
+        font-weight bold
+
 
 .ServiceProfessionalResult-actions
-  text-align center
-  padding-top 5px
-  clear both 
+    text-align center
+    padding-top 5px
+    clear both 
 
-  a
-    margin-top 8px
-    display block
-    color $brand-secondary
+    a
+        margin-top 8px
+        display block
+        color $brand-secondary
 
-  .btn
-    width 80%
-    margin auto
-    color white
-        
+    .btn
+        width 80%
+        margin auto
+        color white
+
 .CategoryResult-summary
-  text-align center
-  color $gray-dark
+    text-align center
+    color $gray-dark
 
-  h3
-    margin-top 0
-    margin-bottom 0
+    h3
+        margin-top 0
+        margin-bottom 0
 
-  h5
-    margin-top 0
-    margin-bottom 0
+    h5
+        margin-top 0
+        margin-bottom 0
 
 .CategoryResult-description
-  padding-top 5px
-  padding-left 15px
-  padding-right 15px
-  clear both 
-  color $gray-dark
-  font-size 14px
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3; /* number of lines to show */
-  line-height: 1.42857143;        /* fallback */
-  max-height: 4.28571429;       /* fallback */
-  
-
-  h5  
-    text-align justify
-    margin-top 8px
-    display block
-
-  .FromPrice
+    padding-top 5px
+    padding-left 15px
+    padding-right 15px
+    clear both 
     color $gray-dark
-    font-size 16px
-    font-weight bold
+    font-size 14px
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    line-height: 1.42857143;        /* fallback */
+    max-height: 4.28571429;       /* fallback */
+
+    h5  
+        text-align justify
+        margin-top 8px
+        display block
+
+    .FromPrice
+        color $gray-dark
+        font-size 16px
+        font-weight bold
 
 .Avatar-default {
-  margin: 0 auto;
-  background-repeat: round;
-  display: inline-block;
-  background-image: url('../images/avatar.png');
-  background-image: 
-    linear-gradient(transparent, transparent),
-    url('../images/avatar.svg');
+    margin: 0 auto;
+    background-repeat: round;
+    display: inline-block;
+    background-image: url('../images/avatar.png');
+    background-image: 
+        linear-gradient(transparent, transparent),
+        url('../images/avatar.svg');
 }
