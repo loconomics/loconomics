@@ -146,6 +146,7 @@ A.prototype.show = function show(state) {
         this._registerSnapPoints();
         this._notFirstShow = true;
     }
+    this.viewModel.searchTerm('');
 };
 
 
@@ -226,7 +227,9 @@ function ViewModel(app) {
             var url = 'addJobTitles?s=' + encodeURIComponent(d.singularName()) + '&id=' + encodeURIComponent(d.jobTitleID());
             app.shell.go(url);
         }
-    };
+        // Close suggestions
+        this.searchTerm('');
+    }.bind(this);
     
     this.clickNoJobTitle = function(d, e) {
         // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
@@ -238,7 +241,9 @@ function ViewModel(app) {
             var url = 'addJobTitles?s=' + encodeURIComponent(this.searchTerm()) + '&autoAddNew=true';
             app.shell.go(url);
         }
-    };
+        // Close suggestions
+        this.searchTerm('');
+    }.bind(this);
     
     this.resultsButtonText = ko.pureComputed(function() {
         var anon = app.model.userProfile.data.isAnonymous();

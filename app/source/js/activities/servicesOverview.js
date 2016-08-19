@@ -242,11 +242,17 @@ function AttributesCategoryVM(cat, userAtts) {
         }
         
         this.attributeSearch('');
+        this.autocompleteOpenedByUser(false);
     };
     
     this.selectAttribute = function(att) {
-        userAtts.serviceAttributes.push(catID, att.serviceAttributeID());
-    };
+        if (att.serviceAttributeID()) {
+            userAtts.serviceAttributes.push(catID, att.serviceAttributeID());
+        }
+        else {
+            this.addAttribute();
+        }
+    }.bind(this);
 
     this.removeAttribute = function(att) {
         var id = att.serviceAttributeID();
@@ -262,8 +268,35 @@ function AttributesCategoryVM(cat, userAtts) {
         var s = this.attributeSearch(),
             a = this.availableAttributes();
         
-        return a.filter(function(att) {
+        if (!s) {
+            return a;
+        }
+
+        var result = a.filter(function(att) {
             return textSearch(s, att.name());
         });
+        
+        // Append the search text as a selectable option at the beggining of the list
+        result.unshift(new ServiceAttribute({
+            serviceAttributeID: 0,
+            name: 'Add new: ' + s
+        }));
+        
+        return result;
     }, this);
+    
+    this.clearAttributeSearch = function() {
+        this.attributeSearch('');
+        this.autocompleteOpenedByUser(false);
+    }.bind(this);
+    
+    this.autocompleteOpenedByUser = ko.observable();
+    
+    this.showFullAutocomplete = function() {
+        this.autocompleteOpenedByUser(true);
+    }.bind(this);
+    
+    this.hideFullAutocomplete = function() {
+        this.autocompleteOpenedByUser(false);
+    }.bind(this);
 }

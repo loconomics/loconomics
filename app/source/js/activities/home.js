@@ -160,6 +160,7 @@ A.prototype.show = function show(state) {
             });
         }
     }
+    this.viewModel.searchTerm('');
 };
 
 

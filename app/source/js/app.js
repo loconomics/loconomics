@@ -257,6 +257,8 @@ var appInit = function appInit() {
     bootknock.plugIn(ko);
     require('./utils/bootstrapSwitchBinding').plugIn(ko);
     
+    require('./utils/pressEnterBindingHandler').plugIn(ko);
+    
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
         // Explicitely, we WANT auto scroll on keyboard show up.
