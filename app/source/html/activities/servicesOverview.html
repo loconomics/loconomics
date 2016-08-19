@@ -22,13 +22,13 @@
                     </h2>
                     <div class="form-group">
                         <textarea aria-label="Job title intro" rows="6"
-                        class="form-control" data-bind="value: intro, disable: isLocked"></textarea>
+                                  class="form-control" placeholder="What makes your services special? Avoid mentioning information you'll fill out below." data-bind="value: intro, disable: isLocked"></textarea>
                     </div>
                     <div data-bind="foreach: categoriesView">
                         <h2 class="SectionTitle" data-bind="text: category().name"></h2>
                         <div class="form-group">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search suggested or add new" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
+                                <input type="text" class="form-control" placeholder="Select suggested or add new" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
                                     <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
