@@ -5,6 +5,7 @@
 @import '../utils/styleguideVars.styl'
 @import 'AppNav.styl'
 @import 'AppNav--home.styl'
+@import '../utils/input-placeholder.styl';
 
 /* More app specific styles */
 .App {
@@ -128,5 +129,11 @@
     .has-ActionSheet-open .AppNav:after {
         opacity: 1;
         pointer-events: auto;
+    }
+    
+    input {
+        +input-placeholder() {
+            font-weight: 200;
+        }
     }
 }
