@@ -37,10 +37,10 @@
                             </div>
                             <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
                                 <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                  <h3>Suggestions (or add new):</h3>
+                                  <h3 data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h3>
                                      <ul data-bind="foreach: autocompleteAttributes">
-                                       <li class="Result clearfix">
-                                          <a data-bind="click: $parent.selectAttribute">
+                                       <li>
+                                          <a class="Result" data-bind="click: $parent.selectAttribute">
                                               <div class="Result-info">
                                                 <span class="Result-name" data-bind="text: name"></span>  
                                                 <span class="Result-description hidden-xs hidden-sm" data-bind="text: description, visible: description"></span> 
