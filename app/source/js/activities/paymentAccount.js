@@ -142,10 +142,10 @@ function ViewModel(app) {
     this.isVenmoAccount = ko.pureComputed(function() {
         // Quick return: on user selection
         if (this.userSelectedBank()) return false;
-        // By default, on new record, show as 'is bank', so 'false' here:
-        var defaultValue = !!this.paymentAccount.status();
+        // On new record, no status, show as 'is bank', so 'false' here:
+        if (!this.paymentAccount.status()) return false;
         // If there is no bank data, is Venmo
-        return !(this.paymentAccount.accountNumber() && this.paymentAccount.routingNumber()) || defaultValue;
+        return !(this.paymentAccount.accountNumber() && this.paymentAccount.routingNumber());
     }, this);
     this.isBankAccount = ko.pureComputed(function() {
         return !this.isVenmoAccount();
