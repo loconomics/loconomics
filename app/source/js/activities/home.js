@@ -148,11 +148,11 @@ A.prototype.show = function show(state) {
         var showIt = !localStorage.sanFranciscoLaunchPopup && this.app.model.userProfile.data.isAnonymous();
         if (showIt) {
             this.app.modals.showAnnouncement({
-                message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland.',
-                primaryButtonText: 'Sign up as a professional',
+                message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
+                primaryButtonText: 'I\'m a service professional',
                 primaryButtonLink: '#!/learnMoreProfessionals',
                 secondaryButtonText: 'I\'m a potential client',
-                secondaryButtonLink: '#!/signup/client'
+                secondaryButtonLink: '#!/'
             })
             .then(function() {
                 // Once closed (from clicking everywhere, close button or clicking main buttons)
