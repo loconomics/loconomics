@@ -136,7 +136,7 @@ function ViewModel(app) {
         this.formVisible(true);
     };
     
-    this.userSelectedBank = ko.observable(false);
+    this.userSelectedBank = ko.observable(true);
     this.isVenmoAccount = ko.pureComputed(function() {
         // Quick return: on user selection
         if (this.userSelectedBank()) return false;
