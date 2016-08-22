@@ -9,7 +9,7 @@ var A = Activity.extend(function AddJobTitlesActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.serviceProfessional;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: '/scheduling' , helpLink: '/help/relatedArticles/201211055-adding-job-profiles'

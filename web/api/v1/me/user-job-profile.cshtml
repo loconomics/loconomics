@@ -1,7 +1,8 @@
 ﻿@*
     Get the list and details of job titles attached to the logged user (a service professional).
     The collection of job titles is called the "User Job Profile".
-    It allows to edit the data of each one, and special actions on each like deactive/reactive
+    It allows to edit the data of each one, and special actions on each like deactive/reactive.
+    We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals.
 
     TODO Complete docs
 
@@ -45,6 +46,8 @@
         /// <returns></returns>
         public override dynamic Get()
         {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+
             // Item ID
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 return GetItem(UrlData[0].AsInt(0));
@@ -84,7 +87,9 @@
             throw new HttpException(404, "Job Title not found.");
         }
         
-        private dynamic PerformAction() {
+        private dynamic PerformAction()
+        {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
             
             // Two segments:
             // - jobTitleID
@@ -225,6 +230,10 @@
                         LcRest.Locale.Current.languageID,
                         LcRest.Locale.Current.countryID
                     );
+                    
+                    // If user is just a client, needs to become a professional
+                    LcAuth.BecomeProvider(userID);
+                    LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
                 }
                 else {
                     throw new HttpException(404, "Job Title not found or disapproved");
@@ -301,6 +310,8 @@
         /// <returns></returns>
         public override dynamic Put()
         {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+            
             // Item ID
             var itemID = CheckAndGetItemID();
 
@@ -334,6 +345,8 @@
         /// <returns></returns>
         public override dynamic Delete()
         {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+            
             // Item ID
             var itemID = CheckAndGetItemID();
             
@@ -355,6 +368,7 @@
     }
 }
 @{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    // We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestUserJobProfile().JsonResponse(this);
 }
