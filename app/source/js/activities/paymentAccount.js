@@ -79,7 +79,7 @@ function ViewModel(app) {
     this.discard = function discard() {
         dataVersion.pull({ evenIfNewer: true });
         this.formVisible(!dataVersion.version.status());
-        this.userSelectedBank(null);
+        this.userSelectedAccount(null);
     }.bind(this);
 
     this.save = function save() {
@@ -138,10 +138,12 @@ function ViewModel(app) {
     };
     
     // Null by default, since it represents an immediate selection from the user for current session.
-    this.userSelectedBank = ko.observable(null);
+    this.userSelectedAccount = ko.observable(null);
     this.isVenmoAccount = ko.pureComputed(function() {
         // Quick return: on user selection
-        if (this.userSelectedBank()) return false;
+        if (this.userSelectedAccount()) {
+            return this.userSelectedAccount() === 'venmo';
+        }
         // On new record, no status, show as 'is bank', so 'false' here:
         if (!this.paymentAccount.status()) return false;
         // If there is no bank data, is Venmo
@@ -152,9 +154,9 @@ function ViewModel(app) {
     }, this);
 
     this.chooseVenmoAccount = function() {
-        this.userSelectedBank(false);
+        this.userSelectedAccount('venmo');
     }.bind(this);
     this.chooseBankAccount = function() {
-        this.userSelectedBank(true);
+        this.userSelectedAccount('bank');
     }.bind(this);
 }
