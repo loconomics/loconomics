@@ -135,4 +135,24 @@ function ViewModel(app) {
     this.showForm = function() {
         this.formVisible(true);
     };
+    
+    this.userSelectedBank = ko.observable(false);
+    this.isVenmoAccount = ko.pureComputed(function() {
+        // Quick return: on user selection
+        if (this.userSelectedBank()) return false;
+        // By default, on new record, show as 'is bank', so 'false' here:
+        var defaultValue = !!this.paymentAccount.status();
+        // If there is no bank data, is Venmo
+        return !(this.paymentAccount.accountNumber() && this.paymentAccount.routingNumber()) || defaultValue;
+    }, this);
+    this.isBankAccount = ko.pureComputed(function() {
+        return !this.isVenmoAccount();
+    }, this);
+
+    this.chooseVenmoAccount = function() {
+        this.userSelectedBank(false);
+    }.bind(this);
+    this.chooseBankAccount = function() {
+        this.userSelectedBank(true);
+    }.bind(this);
 }
