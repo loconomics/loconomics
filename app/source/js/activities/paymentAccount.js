@@ -79,6 +79,7 @@ function ViewModel(app) {
     this.discard = function discard() {
         dataVersion.pull({ evenIfNewer: true });
         this.formVisible(!dataVersion.version.status());
+        this.userSelectedBank(null);
     }.bind(this);
 
     this.save = function save() {
@@ -136,7 +137,8 @@ function ViewModel(app) {
         this.formVisible(true);
     };
     
-    this.userSelectedBank = ko.observable(true);
+    // Null by default, since it represents an immediate selection from the user for current session.
+    this.userSelectedBank = ko.observable(null);
     this.isVenmoAccount = ko.pureComputed(function() {
         // Quick return: on user selection
         if (this.userSelectedBank()) return false;
