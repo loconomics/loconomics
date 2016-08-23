@@ -42,7 +42,8 @@ namespace LcRest
         {
             PaymentAccount acc = null;
             var btAccount = LcPayment.GetProviderPaymentAccount(userID);
-            if (btAccount != null)
+            if (btAccount != null &&
+                btAccount.IndividualDetails != null)
             {
                 acc = new PaymentAccount
                 {
@@ -57,11 +58,12 @@ namespace LcRest
                     postalCode = btAccount.IndividualDetails.Address.PostalCode,
                     stateProvinceCode = btAccount.IndividualDetails.Address.Region,
                     countryCode = btAccount.IndividualDetails.Address.CountryCodeAlpha2,
-                    birthDate = btAccount.IndividualDetails.DateOfBirth.IsDateTime() ?
+                    birthDate = btAccount.IndividualDetails.DateOfBirth == null ? null :
+                        btAccount.IndividualDetails.DateOfBirth.IsDateTime() ?
                         (DateTime?)btAccount.IndividualDetails.DateOfBirth.AsDateTime() :
                         null,
                     ssn = String.IsNullOrEmpty(btAccount.IndividualDetails.SsnLastFour) ? "" : btAccount.IndividualDetails.SsnLastFour.PadLeft(10, '*'),
-                    status = btAccount.Status.ToString().ToLower()
+                    status = (btAccount.Status ?? Braintree.MerchantAccountStatus.PENDING).ToString().ToLower()
                 };
                 // IMPORTANT: We need to strictly check for the null value of IndividualDetails and FundingDetails
                 // since errors can arise, see #554
