@@ -149,7 +149,7 @@ function ViewModel(app) {
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');
     
-    // Utility to get a filtered list of clients based on clients
+    // Utility to get a filtered list of clients based on search and deleted property
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
         // Search the client by:
@@ -158,6 +158,7 @@ function ViewModel(app) {
         // - (else) phone
         return this.clients().filter(function(client) {
             if (!client) return false;
+            if (client.deleted()) return false;
             var found = textSearch(s, client.fullName());
             if (found) return true;
             found = textSearch(s, client.email());

@@ -36,7 +36,7 @@
                         <div data-bind="css: { 'is-loading': isLoading }">
                             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                         </div>
-                        <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">
+                        <div class="isolated" data-bind="visible: !searchText() && filteredClients().length === 0 && !isLoading()">
                             You have no clients yet. Search for clients that may already be on Loconomics or add clients of your own.
                         </div>
                     </div>

@@ -18,6 +18,7 @@ internal class ServiceProfessionalClient
     public string notesAboutClient;
     public int referralSourceID;
     public int? createdByBookingID;
+    internal bool deletedByServiceProfessional;
     #endregion
 
     #region Instances
@@ -30,7 +31,8 @@ internal class ServiceProfessionalClient
             clientUserID = record.clientUserID,
             notesAboutClient = record.notesAboutClient,
             referralSourceID = record.referralSourceID,
-            createdByBookingID = record.createdByBookingID
+            createdByBookingID = record.createdByBookingID,
+            deletedByServiceProfessional = record.deletedByServiceProfessional
         };
     }
     #endregion
@@ -68,6 +70,7 @@ internal class ServiceProfessionalClient
                         NotesAboutClient = coalesce(@2, NotesAboutClient),
                         UpdatedDate = getdate()
                         -- Other fields are not allowed to be updated
+                        ,DeletedByServiceProfessional = @5
                     WHERE
                         ServiceProfessionalUserID = @0
                          AND ClientUserID = @1
@@ -95,7 +98,8 @@ internal class ServiceProfessionalClient
                 spc.clientUserID,
                 spc.notesAboutClient,
                 spc.referralSourceID,
-                spc.createdByBookingID
+                spc.createdByBookingID,
+                spc.deletedByServiceProfessional
             );
         }
     }
@@ -114,7 +118,8 @@ internal class ServiceProfessionalClient
     }
     /// <summary>
     /// Just remove relationship between professional and client.
-    /// Will work only if there is no bookings that related both users, unless 'declined', 'expired' ones. 
+    /// Will work only hard-delete if there is no bookings that related both users, unless 'declined', 'expired' ones,
+    /// other cases will soft-delete it.
     /// </summary>
     /// <param name="serviceProfessionalUserID"></param>
     /// <param name="clientUserID"></param>
@@ -129,6 +134,13 @@ internal class ServiceProfessionalClient
                 IF NOT EXISTS (SELECT * FROM Booking WHERE serviceProfessionalUserID = @0 AND clientUserID = @1 AND BookingStatusID NOT IN (4, 5))
                 BEGIN
                     DELETE FROM ServiceProfessionalClient
+                    WHERE ServiceProfessionalUserID = @0
+                        AND ClientUserID = @1
+                END
+                ELSE
+                BEGIN
+                    UPDATE ServiceProfessionalClient SET
+                        DeletedByServiceProfessional = 1
                     WHERE ServiceProfessionalUserID = @0
                         AND ClientUserID = @1
                 END
