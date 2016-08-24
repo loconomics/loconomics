@@ -17,16 +17,20 @@ var A = Activity.extend(function ClientEditionActivity() {
         backLink: 'clients' , helpLink: '/help/relatedArticles/201966046-adding-new-clients'
     });
     
-    // If there is a change on the clientID, the updates must match
-    // that (if is not already that)
+    // If there is a change on the clientID, the URL must match
+    // that (if is not already that).
+    // NOTE: Except for call from another activity with returning, to avoid bug trying to do a goBack
     this.registerHandler({
         target: this.viewModel.clientID,
         handler: function (clientID) {
             if (!clientID)
                 return;
 
-            var found = /clientEditor\/(\-?\d+)/i.exec(window.location),
-                urlID = found && found[1] |0;
+            var nope = this.requestData.returnNewAsSelected === true;
+            if (nope) return;
+
+            var found = /clientEditor\/(\-?\d+)/i.exec(window.location);
+            var urlID = found && found[1] |0;
 
             // If is different URL and current ID
             if (!found ||
