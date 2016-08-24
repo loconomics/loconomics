@@ -201,10 +201,10 @@
                 </ul>
         </div>
         <div id="learnMoreProfessionals-signup" class="coop-signup" data-bind="visible: !isServiceProfessional()">
-                <h1 class="coop-title">Become an owner.</h1>
-                <p class="coop-tagline">Provide local services &amp; work for yourself? Join the movement.</p>
-                <div data-bind="visible: !isClient(), template: {name: 'signup-template', data: signup}"></div>
-                <button href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</button>
+            <h1 class="coop-title">Become an owner.</h1>
+            <p class="coop-tagline">Provide local services &amp; work for yourself? Join the movement.</p>
+            <div data-bind="visible: !isClient(), template: {name: 'signup-template', data: signup}"></div>
+            <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
         </div>
     </div>
     <div>@render('parts/WebsiteFooter.html')</div>

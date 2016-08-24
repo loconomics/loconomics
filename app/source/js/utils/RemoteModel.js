@@ -184,8 +184,10 @@ function RemoteModel(options) {
         }.bind(this));
     }.bind(this);
     
-    this.load = function load() {
-        if (this.cache.mustRevalidate()) {
+    this.load = function load(options /*{ forceRemoteUpdate:false }*/) {
+        //jshint maxcomplexity:9
+        options = options || {};
+        if (options.forceRemoteUpdate || this.cache.mustRevalidate()) {
             
             if (firstTimeLoad)
                 this.isLoading(true);
@@ -196,7 +198,8 @@ function RemoteModel(options) {
             
             // If local storage is set for this, load first
             // from local, then follow with syncing from remote
-            if (firstTimeLoad &&
+            if (!options.forceRemoteUpdate &&
+                firstTimeLoad &&
                 this.localStorageName) {
 
                 promise = localforage.getItem(this.localStorageName)
@@ -318,10 +321,10 @@ function RemoteModel(options) {
         IMPORTANT: right now is just a request for 'load'
         that avoids promise errors from throwing.
     **/
-    this.sync = function sync() {
+    this.sync = function sync(options) {
         // Call for a load, that will be treated as 'syncing' after the
         // first load
-        this.load()
+        this.load(options)
         // Avoid errors from throwing in the console,
         // the 'error' event is there to track anyone.
         .catch(function() {});

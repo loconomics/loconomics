@@ -31,6 +31,13 @@ namespace LcRest
         /// the data.
         /// </summary>
         public bool editable;
+        /// <summary>
+        /// This fields is an alias for the internal field DeletedByServiceProfessional from the relationship since
+        /// we don't want to expose the pair of fields for deletedBy* to users, just the one affecting
+        /// them, on this case a Client record is exposed to professionals, so what matters are records deleted
+        /// by the professional
+        /// </summary>
+        public bool deleted;
         #endregion
 
         #region Tools
@@ -100,7 +107,8 @@ namespace LcRest
                 notesAboutClient = record.notesAboutClient,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                editable = record.editable
+                editable = record.editable,
+                deleted = record.deletedByServiceProfessional
             };
         }
         #endregion
@@ -122,6 +130,7 @@ namespace LcRest
                 ,pc.CreatedDate as createdDate
                 ,pc.UpdatedDate as updatedDate
                 ,(CASE WHEN uc.AccountStatusID = 6 AND uc.ReferredByUserID = @0 THEN Cast(1 as bit) ELSE Cast(0 as bit) END) as editable
+                ,pc.DeletedByServiceProfessional as deletedByServiceProfessional
         FROM    ServiceProfessionalClient As pc
                  INNER JOIN
                 Users As uc
@@ -227,15 +236,17 @@ namespace LcRest
                         -- All records are no editable, because the editable ones will get
                         -- filtered out on the Where
                         ,cast(0 as bit) as editable
+                        ,coalesce(pc.DeletedByServiceProfessional, cast(0 as bit)) as deletedByServiceProfessional
                 FROM    Users As uc
                          INNER JOIN
                         UserProfile As up
                           ON up.UserID = uc.UserID
                          LEFT JOIN
-                        -- left join relation only to exclude the ones already related to the serviceProfessional
+                        -- left join relation only to exclude the ones already related to the serviceProfessional but include ones deleted
                         ServiceProfessionalClient As pc
                           ON uc.UserID = pc.ClientUserID
                             AND pc.ServiceProfessionalUserID = @0
+                            AND pc.DeletedByServiceProfessional = 0
                 WHERE   uc.Active = 1
                          -- Exclude the serviceProfessional user
                          AND uc.UserID <> @0
@@ -395,7 +406,9 @@ namespace LcRest
                 clientUserID = client.clientUserID,
                 notesAboutClient = client.notesAboutClient,
                 // source: created by serviceProfessional
-                referralSourceID = (int)LcEnum.ReferralSource.serviceProfessionalExistingClient
+                referralSourceID = (int)LcEnum.ReferralSource.serviceProfessionalExistingClient,
+                // Undeleted if soft-deleted!
+                deletedByServiceProfessional = false
             };
             ServiceProfessionalClient.Set(spc, sharedDb);
         }
@@ -516,9 +529,9 @@ namespace LcRest
         #region Delete
         /// <summary>
         /// Delete a serviceProfessional client, with care of:
-        /// - Delete relationship ([ServiceProfessionalClient]) ever
+        /// - Delete relationship ([ServiceProfessionalClient]) or mark as deleted if cannot be deleted.
         /// - Delete client user account only if the record is editable by the ServiceProfessional
-        /// - and is not used by other ServiceProfessionals, in that case is left 'as is'.
+        /// - and is not used by any ServiceProfessionals, in that case is left 'as is'.
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="clientUserID"></param>
@@ -530,7 +543,7 @@ namespace LcRest
                 ServiceProfessionalClient.Delete(serviceProfessionalUserID, clientUserID, db);
 
                 db.Execute(@"
-                    -- If there is no more providers linked to this client
+                    -- If there is no providers linked to this client
                     IF 0 = (
                             SELECT count(*) FROM ServiceProfessionalClient WHERE ClientUserID = @1
                         )

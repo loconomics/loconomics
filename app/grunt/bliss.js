@@ -42,6 +42,7 @@ module.exports = function(grunt) {
             context: {
                 debug: false,
                 includedFiles: includedFiles,
+                cordovajs: false,
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
                 cssVersion: version,

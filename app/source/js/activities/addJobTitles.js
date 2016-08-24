@@ -9,7 +9,7 @@ var A = Activity.extend(function AddJobTitlesActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.serviceProfessional;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: '/scheduling' , helpLink: '/help/relatedArticles/201211055-adding-job-profiles'
@@ -140,6 +140,9 @@ function ViewModel(app) {
     
     this.save = function save() {
         this.isSaving(true);
+        
+        // We need to do different stuff if user is not a proffesional when requesting this
+        var becomingProfessional = !app.model.userProfile.data.isServiceProfessional();
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
             return app.model.userJobProfile.createUserJobTitle({
@@ -148,18 +151,32 @@ function ViewModel(app) {
             });
         }))
         .then(function(/*results*/) {
-            this.searchText('');
-            this.isSaving(false);
-            // Reset list
-            this.jobTitles.removeAll();
-            
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
+            var onEnd = function onEnd() {
+                this.isSaving(false);
+                // Reset UI list
+                this.searchText('');
+                this.jobTitles.removeAll();
+                if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.goNext();
+                }
+                else {
+                    app.successSave();
+                }
+            }.bind(this);
+            if (becomingProfessional) {
+                return app.model.userProfile
+                .load({ forceRemoteUpdate: true })
+                .then(function(profile) {
+                    // Start onboarding
+                    if (app.model.onboarding) {
+                        app.model.onboarding.setStep(profile.onboardingStep());
+                    }
+                    onEnd();
+                });
             }
             else {
-                app.successSave();
+                onEnd();
             }
-            
         }.bind(this))
         .catch(function(error) {
             this.searchText('');

@@ -7,12 +7,9 @@
     
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
-    $indexTop = 96px;
+    $indexTop = 100px;
     
-    .container-fluid {
-        padding-left: 0;
-    }
-    .SectionTitle {
+    #clientsActivityTitle {
         position: absolute;
         left: 0px;
         right: 0px;
@@ -32,6 +29,9 @@
         position: absolute;
         right: 0px;
         top: $indexTop;
+        // reset container-fluid pad
+        padding-left: 0;
+        padding-right: 0;
         z-index: 20;
         overflow: auto;
         bottom: 0;
@@ -45,8 +45,9 @@
                 text-align: center;
                 font-weight: bold;
                 padding: 3px 6px 3px 15px;
+                width: 100%;
                 border: none;
-                border-radius: 0; 
+                border-radius: 0;
                 &:hover,
                 &:focus {
                     background-color: transparent;
@@ -55,15 +56,15 @@
             }
         }
         @media $mediaMinSm {
-          position: relative;
-          top: 110px;
-          right: -350px;
-        }  
+            top: 106px;
+            right: 0;
+        }
         @media $mediaMinMd {
-          right: -270px;
+            position: relative;
+            right: -270px;
         }  
         @media $mediaMinLg {
-          right: -325px;
+            right: -325px;
         }
     }
     
@@ -72,28 +73,40 @@
         // because the need to left space (sometimes) for the SectionTitle on top
         overflow: auto;
         position: absolute;
+        // reseting container* gaps
+        padding-left: 0;
+        padding-right: 0;
+        // reseting container* gaps
         top: 38px;
-        // Using padding for left positioning to allow negative margin on the list
+        // IMPORTANT: If needed, use padding for left positioning to allow negative margin on the list
         left: 0;
-        padding-left: $container-padding-left;
         right: $fullIndexWidth;
         bottom: 0;
-        @media $mediaMinSm {
-          top: 44px;
-        }  
+
+        @media $mediaMinMd {
+            top: 44px;
+        }
+        
+        
+        #clientsContentMeta {
+            padding-left: $container-padding-left;
+            
+            @media $mediaMinMd {
+                // reseting container* gap at big size
+                padding-left: 0;
+            }
+        }
 
         #clientsListView {
-            // List must start on the edge, per design
-            margin-left: (0 - $container-padding-left);
             
             .SimpleList-item {
                 background-color: white;
                 
                 a {
-                  &:hover,
-                  &:focus {
-                    color: $brand-secondary;
-                  }
+                    &:hover,
+                    &:focus {
+                        color: $brand-secondary;
+                    }
                 }
             }
             
