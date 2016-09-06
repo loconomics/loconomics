@@ -1,8 +1,8 @@
-/** WeeklySchedule activity styles **/
+/** WeeklySchedule component styles **/
 
 @import '../utils/isolated.styl';
 
-[data-activity=weeklySchedule] {
+.WeeklySchedule {
 
     // Some values from the Bootstrap-Switch plugin styles
     $switchBtn-partsWidth = 53px;
@@ -22,7 +22,7 @@
         text-align: left;
     }
 
-    .weeklySchedule-weekDay {
+    .WeeklySchedule-weekDay {
         
         margin-bottom: 14px;
     
@@ -32,7 +32,7 @@
         label > div + span {
             pointer-events: none;
             // IMPORTANT: A gap carefully aligned in vertical
-            // with the dropdowns .weeklySchedule-weekDay-timeSelectors
+            // with the dropdowns .WeeklySchedule-weekDay-timeSelectors
             padding-left: $gapWithSwitch;
             // To be vertically aligned with the Switch button,
             // using the Switch height:
@@ -48,13 +48,13 @@
             }
         }
 
-        .weeklySchedule-weekDay-timeSelectors {
+        .WeeklySchedule-weekDay-timeSelectors {
             // IMPORTANT: the remove/add buttons are aligned in the right with the top switch button
             padding-left: $switchBtn-width - $addRemBtn-width; //68px;
 
             // IMPORTANT: Next left margins and select paddings are carefully choosen so
             // it fits one row in a screen size of 320px (original iPhone).
-            .weeklySchedule-weekDay-timeRange {
+            .WeeklySchedule-weekDay-timeRange {
                 .btn + select {
                     margin-left: 6px;
                 }
@@ -80,7 +80,7 @@
         }
     }
 
-    .weeklySchedule-allTime {
+    .WeeklySchedule-allTime {
         
         isolated();
     
