@@ -78,7 +78,7 @@ OnboardingProgress.predefinedStepGroups = {
         // disabled on 2015-06-16 as of #575 comments
         //'serviceProfessionalService',
         //'serviceAddresses',
-        'weeklySchedule',
+        'schedulingPreferences',
         'contactInfo'
     ],
     marketplace: [
