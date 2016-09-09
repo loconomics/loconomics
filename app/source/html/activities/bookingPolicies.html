@@ -19,7 +19,7 @@
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
-                <div class="PaddedBox-xs Box-md LightForm bg-white">
+                <div class="PaddedBox-xs Box-md bg-white">
                     <div class="radio">
                         <label class="form-control-static btn-block">
                             <input type="radio" data-bind="checked: instantBooking, value: false, disable: isLocked" name="bookingPolicies-instantBooking" />
@@ -55,7 +55,7 @@
                     </div>
                 </script>
                 
-                <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs Box-md LightForm bg-white">
+                <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs Box-md bg-white">
                     <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue: $parent.selectedCancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled: $parent.isLocked, itemLabel: policy.name } } --><!-- /ko -->
                     <div class="collapse container-fluid" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }, template: { name: 'cancellationPolicy-info-template', data: { policy: policy } }"></div>
                 </div>
@@ -63,8 +63,10 @@
                     <h2 class="SectionTitle">Loconomics cancellation policy</h2>
                     <div class="well Box-xs" data-bind="template: { name: 'generalCancellationPolicy-template' }"></div>
                 </div>
-                <div class="LightForm-submitBar">
-                    <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+                <div class="LightForm">
+                    <div class="LightForm-submitBar">
+                        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+                    </div>
                 </div>
             </form>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
