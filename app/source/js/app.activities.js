@@ -57,7 +57,7 @@ module.exports = {
     'serviceProfessionalWebsite': require('./activities/serviceProfessionalWebsite'),
     'backgroundCheck': require('./activities/backgroundCheck'),
     'educationForm': require('./activities/educationForm'),
-    'cancellationPolicy': require('./activities/cancellationPolicy'),
+    'bookingPolicies': require('./activities/bookingPolicies'),
     'licensesCertifications': require('./activities/licensesCertifications'),
     'licensesCertificationsForm': require('./activities/licensesCertificationsForm'),
     'workPhotos': require('./activities/workPhotos'),
