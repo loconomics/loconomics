@@ -19,7 +19,7 @@
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
-                <div class="PaddedBox-xs Box-md LightForm">
+                <div class="PaddedBox-xs Box-md LightForm bg-white">
                     <div class="radio">
                         <label class="form-control-static btn-block">
                             <input type="radio" data-bind="checked: instantBooking, value: false, disable: isLocked" name="bookingPolicies-instantBooking" />
@@ -29,13 +29,13 @@
                     <div class="radio">
                         <label class="form-control-static btn-block">
                             <input type="radio" data-bind="checked: instantBooking, value: true, disable: isLocked" name="bookingPolicies-instantBooking" />
-                            <span><strong>Instant booking:</strong> Clients love the ability to book you on the spot, but this works only if you keep your calendar up-to-date. Don't forget you can sync your other calendars to make this easier for you!</span>
+                            <span><strong>Instant booking:</strong> Clients love the ability to book you on the spot, but this works only if you keep your calendar up-to-date. Don't forget you can <a class="text-secondary" href="/calendarSyncing">sync your other calendars</a> to make this easier for you!</span>
                         </label>
                     </div> 
                 </div>
                 
                 <h2 class="SectionTitle">
-                    <span>Cancellation policy</span>
+                    <span>Your cancellation policy</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
@@ -55,12 +55,12 @@
                     </div>
                 </script>
                 
-                <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs Box-md LightForm">
+                <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs Box-md LightForm bg-white">
                     <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue: $parent.selectedCancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled: $parent.isLocked, itemLabel: policy.name } } --><!-- /ko -->
                     <div class="collapse container-fluid" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }, template: { name: 'cancellationPolicy-info-template', data: { policy: policy } }"></div>
                 </div>
-                <div style="background: White">
-                    <h2 class="SectionTitle">General policy</h2>
+                <div class="bg-white">
+                    <h2 class="SectionTitle">Loconomics cancellation policy</h2>
                     <div class="well Box-xs" data-bind="template: { name: 'generalCancellationPolicy-template' }"></div>
                 </div>
                 <div class="LightForm-submitBar">
