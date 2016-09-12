@@ -112,14 +112,6 @@ function ViewModel(app) {
         );
     }, this);
     
-    this.instantBookingLabel = ko.pureComputed(function() {
-        return this.instantBooking() ? 'ON' : 'OFF';
-    }, this);
-    
-    this.toggleInstantBooking = function() {
-        this.instantBooking(!this.instantBooking());
-    };
-    
     this.save = function() {
         var ujt = this.userJobTitle();
         if (ujt) {
