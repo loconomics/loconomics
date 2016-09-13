@@ -109,14 +109,14 @@ module.exports = function ProfilePictureBioVM(app) {
         ])*/
         return this.uploadPhoto()
         .then(function(data) {
-            profileVersion.pushSave();
-            return data;
-        })
-        .then(function(data) {
             // Request the photo from remote to force cache to refresh
             if (data) {
                 $.get(data.profilePictureUrl);
             }
+            // Save marketplace data and wait to finish:
+            return profileVersion.pushSave();
+        })
+        .then(function() {
             this.isSaving(false);
         }.bind(this))
         .catch(function(err) {
