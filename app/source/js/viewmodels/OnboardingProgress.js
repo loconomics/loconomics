@@ -72,13 +72,26 @@ OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
 **/
 OnboardingProgress.predefinedStepGroups = {
     // Scheduling onboarding, aka welcome
-    welcome: [
+    // testing bigger list as of #760
+    /*welcome: [
         'welcome',
         'addJobTitles',
         // disabled on 2015-06-16 as of #575 comments
         //'serviceProfessionalService',
         //'serviceAddresses',
         'schedulingPreferences',
+        'aboutMe'
+    ],*/
+    welcome: [
+        'welcome',
+        'addJobTitles',
+        'schedulingPreferences',
+        'servicesOverview',
+        'serviceProfessionalService',
+        'serviceAddresses',
+        'bookingPolicies',
+        'licensesCertifications',
+        'paymentAccount',
         'aboutMe'
     ],
     marketplace: [
