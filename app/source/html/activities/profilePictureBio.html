@@ -20,16 +20,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="ActionSheetBackdrop"></div>
-                    <div class="ActionSheet" id="profilePictureBio-photoSheet" hidden="hidden">
-                        <ul>
-                            <li><a href="#takePhoto" data-bind="click: takePhoto">Take a photo</a></li>
-                            <li><a href="#pickPhoto" data-bind="click: pickPhoto">Select a photo</a></li>
-                        </ul>
-                        <ul class="ActionSheet-close">
-                            <li><a href="#close">Cancel</a></li>
-                        </ul>
-                    </div>
+                    <div data-bind="template: { name: 'profile-picture-bio-photo-sheet-template' }"></div>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
