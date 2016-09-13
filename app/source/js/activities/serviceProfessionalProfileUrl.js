@@ -37,37 +37,18 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
-    // Keep data updated:
-    this.app.model.marketplaceProfile.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
+    // Keep data updated:
+    this.viewModel.sync();
 };
 
+var MarketplaceProfileVM = require('../viewmodels/MarketplaceProfileVM');
+
 function ViewModel(app) {
-
-    var marketplaceProfile = app.model.marketplaceProfile;
-
-    var profileVersion = marketplaceProfile.newVersion();
-    profileVersion.isObsolete.subscribe(function(itIs) {
-        if (itIs) {
-            // new version from server while editing
-            // FUTURE: warn about a new remote version asking
-            // confirmation to load them or discard and overwrite them;
-            // the same is need on save(), and on server response
-            // with a 509:Conflict status (its body must contain the
-            // server version).
-            // Right now, just overwrite current changes with
-            // remote ones:
-            profileVersion.pull({ evenIfNewer: true });
-        }
-    });
+    var t = new MarketplaceProfileVM(app);
     
-    // Actual data for the form:
-    this.profile = profileVersion.version;
-
-    this.isLocked = marketplaceProfile.isLocked;
-
-    this.submitText = ko.pureComputed(function() {
+    t.submitText = ko.pureComputed(function() {
         return (
             this.isLoading() ? 
                 'loading...' : 
@@ -75,19 +56,17 @@ function ViewModel(app) {
                     'saving...' : 
                     'Save'
         );
-    }, marketplaceProfile);
+    }, t);
     
-    this.discard = function discard() {
-        profileVersion.pull({ evenIfNewer: true });
-    };
-
-    this.save = function save() {
-        profileVersion.pushSave()
-        .then(function() {
+    var save = t.save;
+    t.save = function() {
+        save().then(function() {
             app.successSave();
         })
         .catch(function() {
             // catch error, managed on event
         });
     };
+    
+    return t;
 }

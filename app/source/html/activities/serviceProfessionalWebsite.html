@@ -11,16 +11,8 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Your website</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967756-listing-your-personal-or-business-website" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
                 <form class="container-fluid LightForm" data-bind="submit: save">
-                    <div class="form-group">
-                        <label for="serviceProfessionalWebsite-url">Enter your website's URL:</label>
-                        <input type="url" id="serviceProfessionalWebsite-url" class="form-control" data-bind="value: profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
-                    </div>
+                    <div data-bind="template: { name: 'service-professional-website-fieldset-template' }"></div>
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
                     </div>
@@ -31,4 +23,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
