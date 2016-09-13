@@ -79,7 +79,7 @@ OnboardingProgress.predefinedStepGroups = {
         //'serviceProfessionalService',
         //'serviceAddresses',
         'schedulingPreferences',
-        'contactInfo'
+        'aboutMe'
     ],
     marketplace: [
     ],
