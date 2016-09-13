@@ -18,8 +18,8 @@
                         <form class="container-fluid LightForm" role="form" data-bind="submit: save">
                             <div data-bind="template: { name: 'contact-info-fieldset-template', data: contactInfo }"></div>
                             <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: marketplaceProfilePicture }"></div>
-                            <div data-bind="template: { name: 'service-professional-profile-url-fieldset-template', data: marketplaceProfilePicture }"></div>
-                            <div data-bind="template: { name: 'service-professional-website-fieldset-template', data: marketplaceProfilePicture }"></div>
+                            <div data-bind="template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
+                            <div data-bind="template: { name: user.isServiceProfessional() ? 'service-professional-website-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
                             <div class="LightForm-submitBar">
                                 <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                             </div>
