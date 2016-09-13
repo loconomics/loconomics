@@ -1,11 +1,21 @@
+/**
+    MarketplaceProfilePicture ViewModel extends the MarketplaceProfileVM
+    to add the posibility to upload a profile photo additionally to other marketplace
+    profile changes.
+    REMEMBER: Even if the profile photo URL comes at a GET request to the marketplace profile REST API,
+    the ability to upload a new photo exist at a different end-point in the API.
+**/
 'use strict';
 var $ = require('jquery');
 var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
+var MarketplaceProfileVM = require('./MarketplaceProfileVM');
 
-module.exports = function ProfilePictureBioVM(app) {
-    //jshint maxstatements:35
-    
+module.exports = function MarketplaceProfilePictureVM(app) {
+    //jshint maxstatements:30
+    // Base class:
+    MarketplaceProfileVM.call(this, app);
+
     this.user = app.model.userProfile.data;
     this.photoUploadUrl = app.model.rest.baseUrl + 'me/profile-picture';
     this.photoUploadFieldName = 'profilePicture';
@@ -54,37 +64,11 @@ module.exports = function ProfilePictureBioVM(app) {
         this.uploaderEventHandlers = null;
     }
     
-    // Marketplace Profile
-    var marketplaceProfile = app.model.marketplaceProfile;
-    var profileVersion = marketplaceProfile.newVersion();
-    profileVersion.isObsolete.subscribe(function(itIs) {
-        if (itIs) {
-            // new version from server while editing
-            // FUTURE: warn about a new remote version asking
-            // confirmation to load them or discard and overwrite them;
-            // the same is need on save(), and on server response
-            // with a 509:Conflict status (its body must contain the
-            // server version).
-            // Right now, just overwrite current changes with
-            // remote ones:
-            profileVersion.pull({ evenIfNewer: true });
-        }
-    });
-    
-    // Actual data for the form:
-    this.profile = profileVersion.version;
-    
-    // Control observables: special because must a mix
-    // of the both remote models used in this viewmodel
-    this.isLocked = marketplaceProfile.isLocked;
-    this.isLoading = marketplaceProfile.isLoading;
-    this.isSaving = marketplaceProfile.isSaving;
-
-    
     // Actions
 
+    var baseDiscard = this.discard;
     this.discard = function discard() {
-        profileVersion.pull({ evenIfNewer: true });
+        baseDiscard();
         this.localPhotoUrl('');
         this.previewPhotoUrl('');
         this.localPhotoData(null);
@@ -92,10 +76,7 @@ module.exports = function ProfilePictureBioVM(app) {
         this.rotationAngle(0);
     }.bind(this);
     
-    this.sync = function sync() {
-        app.model.marketplaceProfile.sync();
-    };
-
+    var baseSave = this.save;
     this.save = function save() {
         this.isSaving(true);
         // Because of problems with image cache, we need to ensure the
@@ -103,7 +84,7 @@ module.exports = function ProfilePictureBioVM(app) {
         // uploaded a new photo, that prevents us from use parallel requests (by using Promise.all)
         // that is more performant, but uploading first the photo and then profile details we avoid 'cached image' problems.
         /*Promise.all([
-            profileVersion.pushSave(),
+            baseSave(),
             this.uploadPhoto()
         .then(function(data) {
         ])*/
@@ -114,7 +95,7 @@ module.exports = function ProfilePictureBioVM(app) {
                 $.get(data.profilePictureUrl);
             }
             // Save marketplace data and wait to finish:
-            return profileVersion.pushSave();
+            return baseSave();
         })
         .then(function() {
             this.isSaving(false);
@@ -125,6 +106,9 @@ module.exports = function ProfilePictureBioVM(app) {
             throw err;
         }.bind(this));
     }.bind(this);
+    
+
+    /// Photo/file management code:
     
     var cameraSettings = {
         targetWidth: 600,
@@ -213,3 +197,6 @@ module.exports = function ProfilePictureBioVM(app) {
         return 'transform: rotate(' + d + 'deg);';
     }, this);
 };
+
+// Base class
+module.exports._inherits(MarketplaceProfileVM);

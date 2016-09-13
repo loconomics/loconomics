@@ -95,18 +95,16 @@ A.prototype.show = function show(state) {
 };
 
 var ContactInfoVM = require('../viewmodels/ContactInfoVM');
-var ProfilePictureBioVM = require('../viewmodels/ProfilePictureBioVM');
-var MarketplaceProfileVM = require('../viewmodels/MarketplaceProfileVM');
+var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictureVM');
 
 function ViewModel(app) {
 
     this.contactInfo = new ContactInfoVM(app);
-    this.profilePictureBio = new ProfilePictureBioVM(app);
-    this.marketplaceProfile = new MarketplaceProfileVM(app);
+    this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
     
     this.user = this.contactInfo.user;
     
-    var vms = [this.contactInfo, this.profilePictureBio, this.marketplaceProfile];
+    var vms = [this.contactInfo, this.marketplaceProfilePicture];
     
     this.submitText = ko.pureComputed(function() {
         return (

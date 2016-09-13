@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var ProfilePictureBioVM = require('../viewmodels/ProfilePictureBioVM');
+var ProfilePictureBioVM = require('../viewmodels/MarketplaceProfilePictureVM');
 
 var A = Activity.extend(function ProfilePictureBioActivity() {
     
