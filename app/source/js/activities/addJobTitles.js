@@ -59,9 +59,11 @@ A.prototype.show = function show(options) {
     }
 };
 
+var ko = require('knockout');
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     
-    var ko = require('knockout');
     this.isSearching = ko.observable(false);
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
