@@ -17,6 +17,7 @@ var A = Activity.extend(function ServicesOverviewActivity() {
         backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967766-describing-your-services-to-clients'
     });
     
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     // On changing jobTitleID:
     // - load job title name
@@ -51,6 +52,14 @@ var A = Activity.extend(function ServicesOverviewActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     // Reset
     this.viewModel.jobTitleID(null);
@@ -58,6 +67,8 @@ A.prototype.show = function show(state) {
     this.viewModel.serviceAttributes.proposedServiceAttributes({});
     
     Activity.prototype.show.call(this, state);
+    
+    this.updateNavBarState();
     
     var params = state && state.route && state.route.segments;
     var jid = params[0] |0;
@@ -134,11 +145,13 @@ function ViewModel(app) {
     
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ?
-                    'saving...' : 
-                    'Save'
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isLoading() ? 
+                    'loading...' : 
+                    this.isSaving() ? 
+                        'saving...' : 
+                        'Save'
         );
     }, this);
     
@@ -174,7 +187,12 @@ function ViewModel(app) {
                 // Cleanup
                 this.serviceAttributes.proposedServiceAttributes({});
                 
-                app.successSave();
+                // Move forward:
+                if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.goNext();
+                } else {
+                    app.successSave();
+                }
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);

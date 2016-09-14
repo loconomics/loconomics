@@ -135,6 +135,9 @@
                         </ul>
                     </div>
                 </div>
+                <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
+                    <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
+                </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>

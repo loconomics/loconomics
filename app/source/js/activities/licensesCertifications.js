@@ -19,6 +19,8 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
         backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
     
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
+    
     // On changing jobTitleID:
     // - load job title name
     this.registerHandler({
@@ -51,8 +53,18 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
 });
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar, true);
+    }
+};
+
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
+    
+    this.updateNavBarState();
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
@@ -117,4 +129,20 @@ function ViewModel(app) {
             '&returnText=' + encodeURIComponent('Licenses/certifications');
         app.shell.go(url, this.requestData);
     }.bind(this);
+    
+    this.onboardingNextReady = ko.computed(function() {
+        var groups = this.jobTitleApplicableLicences();
+        if (!groups) return false;
+        var isin = app.model.onboarding.inProgress();
+        
+        // TODO check if all required from all groups are filled with a valid status
+        
+        return isin;
+    }, this);
+    
+    this.goNext = function() {
+        if (app.model.onboarding.inProgress()) {
+            app.model.onboarding.goNext();
+        }
+    };
 }

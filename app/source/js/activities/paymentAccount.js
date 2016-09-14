@@ -17,6 +17,8 @@ var A = Activity.extend(function PaymentAccountActivity() {
         backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201967096-accepting-and-receiving-payments'
     });
     
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
+    
     this.registerHandler({
         target: this.app.model.paymentAccount,
         event: 'error',
@@ -32,8 +34,18 @@ var A = Activity.extend(function PaymentAccountActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+    
+    this.updateNavBarState();
 
     // Discard any previous unsaved edit
     this.viewModel.discard();
@@ -69,11 +81,13 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
-                    'Save'
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isLoading() ? 
+                    'loading...' : 
+                    this.isSaving() ? 
+                        'saving...' : 
+                        'Save'
         );
     }, paymentAccount);
 
@@ -86,7 +100,12 @@ function ViewModel(app) {
     this.save = function save() {
         dataVersion.pushSave()
         .then(function() {
-            app.successSave();
+            // Move forward:
+            if (app.model.onboarding.inProgress()) {
+                app.model.onboarding.goNext();
+            } else {
+                app.successSave();
+            }
         })
         .catch(function() {
             // catch error, managed on event

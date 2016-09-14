@@ -18,6 +18,8 @@ var A = Activity.extend(function BookingPoliciesActivity() {
         // TODO helpLink must be updated to booking policies and include instant booking information
     });
     
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
+    
     // On changing jobTitleID:
     // - load job title name
     // - load job profile with policies preferences
@@ -70,6 +72,14 @@ var A = Activity.extend(function BookingPoliciesActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     // Reset
     this.viewModel.jobTitleID(null);
@@ -77,6 +87,8 @@ A.prototype.show = function show(state) {
     this.viewModel.instantBooking(null);
     
     Activity.prototype.show.call(this, state);
+    
+    this.updateNavBarState();
 
     var params = state && state.route && state.route.segments;
     this.viewModel.jobTitleID(params[0] |0);
@@ -104,11 +116,13 @@ function ViewModel(app) {
     
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
-                    'Save'
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isLoading() ? 
+                    'loading...' : 
+                    this.isSaving() ? 
+                        'saving...' : 
+                        'Save'
         );
     }, this);
     
@@ -124,7 +138,12 @@ function ViewModel(app) {
             app.model.userJobProfile.setUserJobTitle(plain)
             .then(function() {
                 this.isSaving(false);
-                app.successSave();
+                // Move forward:
+                if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.goNext();
+                } else {
+                    app.successSave();
+                }
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);
