@@ -8,9 +8,10 @@
     <div class="form-group">
         <label for="serviceProfessionalProfileUrl-url">Create your custom URL:</label>
         <div class="input-group">
-            <span class="input-group-addon">www.loconomics.com/-</span>
+            <span class="input-group-addon" data-bind="text: customUrlDomainPrefix"></span>
             <input type="text" id="serviceProfessionalProfileUrl-url" class="form-control"
-data-bind="value: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
         </div>
-    </div> 
+    </div>
+    <button type="button" class="btn btn-default btn-block" data-bind="click: copyCustomUrl, disable: isLocked, text: copyCustomUrlButtonText">Copy</button>
 </script>
