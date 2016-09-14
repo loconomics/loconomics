@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 var A = Activity.extend(function PaymentAccountActivity() {
     
@@ -97,46 +98,17 @@ function ViewModel(app) {
     };
     
     // On change to a valid code, do remote look-up
-    var postalError = this.errorMessages.postalCode;
-    ko.computed(function() {
-        if (!paymentAccount.isLoading()) {
-            var postalCode = this.postalCode();
-            if (postalCode && !/^\s*$/.test(postalCode)) {
-                app.model.postalCodes.getItem(postalCode)
-                .then(function(info) {
-                    if (info) {
-                        this.city(info.city);
-                        this.stateProvinceCode(info.stateProvinceCode);
-                        postalError('');
-                    }
-                }.bind(this))
-                .catch(function(err) {
-                    this.city('');
-                    this.stateProvinceCode('');
-                    // Expected errors, a single message, set
-                    // on the observable
-                    var msg = typeof(err) === 'string' ? err : null;
-                    if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                        postalError(msg || err.responseJSON.errorMessage);
-                    }
-                    else {
-                        // Log to console for debugging purposes, on regular use an error on the
-                        // postal code is not critical and can be transparent; if there are 
-                        // connectivity or authentification errors will throw on saving the address
-                        console.error('Server error validating Postal Code', err);
-                    }
-                }.bind(this));
-            }
-        }
-    }, this.paymentAccount)
-    // Avoid excessive requests by setting a timeout since the latest change
-    .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
+    createPostalCodeAutolookup({
+        appModel: app.model,
+        address: this.paymentAccount,
+        postalCodeError: this.errorMessages.postalCode
+    });
     
     this.formVisible = ko.observable(false);
     this.showForm = function() {
         this.formVisible(true);
     };
-    
+
     // Null by default, since it represents an immediate selection from the user for current session.
     this.userSelectedAccount = ko.observable(null);
     this.isVenmoAccount = ko.pureComputed(function() {
