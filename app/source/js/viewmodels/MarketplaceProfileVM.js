@@ -1,7 +1,7 @@
 'use strict';
 // IMPORTANT: it requires access to DOM with jQuery in order to the COPY LINK to work on browsers
-var $ = require('jquery');
 var ko = require('knockout');
+var clipboard = require('../utils/clipboard');
 
 module.exports = function MarketplaceProfileVM(app) {
 
@@ -57,33 +57,8 @@ module.exports = function MarketplaceProfileVM(app) {
         this.copyCustomUrlButtonText('Copy');
     }.bind(this));
     this.copyCustomUrl = function() {
-        var errMsg;
         var url = this.customUrlDraft();
-        try {
-            // If Cordova Plugin available, use that
-            if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
-                window.cordova.plugins.clipboard.copy(url);
-            }
-            else {
-                // Web standard version: will not work on old Firefox and current Safari (as of 2015-11-26)
-                // using setSelectionRange rather than select since seems more compatible (with Safari, but copy does not works
-                // there so...maybe for the future I hope :-)
-                // IMPORTANT: We need an element with the text and attached to the document DOM, visually hidden to avoid any flicker (if any)
-                // but with care to avoid type=hidden or display:none just in case some engines may forbide the copy command on that ones.
-                var $code = $('<input type="text" style="position:absolute;left:-90999px;z-index:-9000"/>"');
-                $code.appendTo('body').val(url);
-                // Copying
-                $code
-                .select()
-                .get(0).setSelectionRange(0, 99999);
-                if (!document.execCommand('copy')) {
-                    errMsg = 'Impossible to copy text.';
-                }
-                $code.remove();
-            }
-        } catch(err) {
-            errMsg = 'Impossible to copy text.';
-        }
+        var errMsg = clipboard.copy(url);
         if (errMsg) {
             app.modals.showError({ error: errMsg });
         }
