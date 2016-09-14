@@ -91,11 +91,18 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
 
     var params = state && state.route && state.route.segments;
-    this.viewModel.jobTitleID(params[0] |0);
+    var jid = params[0] |0;
+    this.viewModel.jobTitleID(jid);
     
     // Request to sync policies, just in case there are remote changes
     this.app.model.cancellationPolicies.sync();
+    if (!jid) {
+        // Load titles to display for selection
+        this.viewModel.jobTitles.sync();
+    }
 };
+
+var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
 
@@ -113,6 +120,15 @@ function ViewModel(app) {
     this.isLocked = ko.pureComputed(function() {
         return this.isLoading() || this.isSaving();
     }, this);
+    
+    this.jobTitles = new UserJobProfile(app);
+    this.jobTitles.baseUrl('/bookingPolicies');
+    this.jobTitles.selectJobTitle = function(jobTitle) {
+        
+        this.jobTitleID(jobTitle.jobTitleID());
+        
+        return false;
+    }.bind(this);
     
     this.submitText = ko.pureComputed(function() {
         return (

@@ -44,9 +44,37 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                // Get data for the Job title ID
+                this.app.model.userLicensesCertifications.getList(jobTitleID)
+                .then(function(list) {
+                    // Save for use in the view
+                    this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+
+                // Get required licenses for the Job title ID - an object, not a list
+                this.app.model.jobTitleLicenses.getItem(jobTitleID)
+                .then(function(item) {
+                    // Save for use in the view
+                    this.viewModel.jobTitleApplicableLicences(item);
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
+                this.viewModel.submittedUserLicensesCertifications([]);
+                this.viewModel.jobTitleApplicableLicences(null);
             }
         }.bind(this)
     });
@@ -69,38 +97,13 @@ A.prototype.show = function show(options) {
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
     this.viewModel.jobTitleID(jobTitleID);
-    if (jobTitleID) {
-        // Get data for the Job title ID
-        this.app.model.userLicensesCertifications.getList(jobTitleID)
-        .then(function(list) {
-            // Save for use in the view
-            this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
-        }.bind(this))
-        .catch(function (err) {
-            this.app.modals.showError({
-                title: 'There was an error while loading.',
-                error: err
-            });
-        }.bind(this));
-        
-        // Get required licenses for the Job title ID - an object, not a list
-        this.app.model.jobTitleLicenses.getItem(jobTitleID)
-        .then(function(item) {
-            // Save for use in the view
-            this.viewModel.jobTitleApplicableLicences(item);
-        }.bind(this))
-        .catch(function (err) {
-            this.app.modals.showError({
-                title: 'There was an error while loading.',
-                error: err
-            });
-        }.bind(this));
-    }
-    else {
-        this.viewModel.list([]);
-        this.viewModel.jobTitleApplicableLicences(null);
+    if (!jobTitleID) {
+        // Load titles to display for selection
+        this.viewModel.jobTitles.sync();
     }
 };
+
+var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
     
@@ -112,6 +115,15 @@ function ViewModel(app) {
     
     this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
     this.isLoading = app.model.userLicensesCertifications.state.isLoading();
+    
+    this.jobTitles = new UserJobProfile(app);
+    this.jobTitles.baseUrl('/licensesCertifications');
+    this.jobTitles.selectJobTitle = function(jobTitle) {
+        
+        this.jobTitleID(jobTitle.jobTitleID());
+        
+        return false;
+    }.bind(this);
 
     this.addNew = function(item) {
         var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID(),

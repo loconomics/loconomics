@@ -42,9 +42,35 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                
+                // Services data
+                this.viewModel.isLoadingUserJobTitle(true);
+                Promise.all([
+                    this.app.model.userJobProfile.getUserJobTitle(jobTitleID),
+                    this.viewModel.serviceAttributesControl.load(jobTitleID),
+                    this.viewModel.jobTitleServiceAttributesControl.load(jobTitleID)
+                ])
+                .then(function(datas) {
+                    var userJobTitle = datas && datas[0];
+                    // we need the full record for the saving
+                    this.viewModel.userJobTitle(userJobTitle);
+                    // local copy of intro
+                    this.viewModel.intro(userJobTitle.intro());
+                    this.viewModel.isLoadingUserJobTitle(false);
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                    this.viewModel.isLoadingUserJobTitle(false);
+                }.bind(this));
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
+                this.viewModel.serviceAttributesControl.reset();
+                this.viewModel.jobTitleServiceAttributesControl.reset();
             }
         }.bind(this)
     });
@@ -74,43 +100,29 @@ A.prototype.show = function show(state) {
     var jid = params[0] |0;
     this.viewModel.jobTitleID(jid);
 
-    if (jid) {
-        // Load it
-        this.viewModel.isLoadingUserJobTitle(true);
-        Promise.all([
-            this.app.model.userJobProfile.getUserJobTitle(jid),
-            this.viewModel.serviceAttributesControl.load(jid),
-            this.viewModel.jobTitleServiceAttributesControl.load(jid)
-        ])
-        .then(function(datas) {
-            var userJobTitle = datas && datas[0];
-            // we need the full record for the saving
-            this.viewModel.userJobTitle(userJobTitle);
-            // local copy of intro
-            this.viewModel.intro(userJobTitle.intro());
-            this.viewModel.isLoadingUserJobTitle(false);
-        }.bind(this))
-        .catch(function(err) {
-            this.app.modals.showError({
-                title: 'There was an error while loading.',
-                error: err
-            });
-            this.viewModel.isLoadingUserJobTitle(false);
-        }.bind(this));
-    }
-    else {
-        // Just empty
-        this.viewModel.serviceAttributesControl.reset();
-        this.viewModel.jobTitleServiceAttributesControl.reset();
+    if (!jid) {
+        // Load titles to display for selection
+        this.viewModel.jobTitles.sync();
     }
 };
+
+var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     
     this.isLoadingUserJobTitle = ko.observable(false);
     this.userJobTitle = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title'); 
+    this.jobTitleName = ko.observable('Job Title');
+    
+    this.jobTitles = new UserJobProfile(app);
+    this.jobTitles.baseUrl('/servicesOverview');
+    this.jobTitles.selectJobTitle = function(jobTitle) {
+        
+        this.jobTitleID(jobTitle.jobTitleID());
+        
+        return false;
+    }.bind(this);
     
     // Local copy of the intro, rather than use
     // it directly from the userJobTitle to avoid that gets saved
