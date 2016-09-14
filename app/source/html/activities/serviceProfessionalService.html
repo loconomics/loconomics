@@ -5,9 +5,7 @@
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
-                    <li>
-                        <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
-                    </li>
+                    <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
@@ -46,8 +44,12 @@
                             </a>
                         </li>
                     </ul>
-                    <a class="LinkTile" type="button" href="#!serviceProfessionalServiceEditor/"
-                    data-bind="click: $root.tapNewService, text: type() && type().addNewLabel()"></a>
+                    <a class="CompactLinkTile" type="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
+                        <div class="Tile-content text-muted"data-bind="text: type() && type().addNewLabel()"></div>
+                        <div class="Tile-icon text-muted">
+                         <span class="fa ion ion-plus"></span>
+                        </div>
+                    </a>
                 </div>
                 <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
