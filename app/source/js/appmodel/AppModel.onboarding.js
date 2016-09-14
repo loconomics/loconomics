@@ -104,5 +104,20 @@ exports.create = function create(appModel) {
         this.app.shell.go(this.stepUrl());
     };
     
+    /**
+        Check if onboarding is enabled on the user profile
+        and redirects to the current step, or do nothing
+    **/
+    api.goIfEnabled = function() {
+        var step = api.app.model.user().onboardingStep();
+        if (step && 
+            api.setStep(step)) {
+            var url = api.stepUrl();
+            api.app.shell.go(url);
+            return true;
+        }
+        return false;
+    };
+    
     return api;
 };

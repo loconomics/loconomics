@@ -516,13 +516,8 @@ var appInit = function appInit() {
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
 
-        // Check onboarding step to redirect there on app start
-        var step = app.model.user().onboardingStep();
-        if (step && 
-            app.model.onboarding.setStep(step)) {
-            var url = app.model.onboarding.stepUrl();
-            app.shell.go(url);
-        }
+        // Check onboarding
+        app.model.onboarding.goIfEnabled();
 
         // Mark the page as ready
         $('html').addClass('is-ready');
