@@ -72,6 +72,8 @@ A.prototype.show = function show(state) {
 /// View Models
 
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     
     this.schedulingPreferences = new SchedulingPreferencesVM(app);
     this.weeklySchedule = new WeeklyScheduleVM(app);

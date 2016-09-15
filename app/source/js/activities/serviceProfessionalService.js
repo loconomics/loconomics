@@ -210,6 +210,8 @@ var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.headerText = ko.observable('Services');
     
     this.jobTitleID = ko.observable(0);

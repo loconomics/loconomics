@@ -142,6 +142,8 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);

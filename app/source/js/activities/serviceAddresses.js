@@ -208,6 +208,8 @@ var UserJobProfile = require('../viewmodels/UserJobProfile'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     
     this.serviceAddresses = new ServiceAddresses();
 

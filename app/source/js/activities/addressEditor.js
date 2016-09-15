@@ -172,6 +172,8 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.header = ko.observable('Edit location');
     
     // List of possible error messages registered

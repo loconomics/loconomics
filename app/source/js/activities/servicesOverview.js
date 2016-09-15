@@ -109,6 +109,8 @@ A.prototype.show = function show(state) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     this.jobTitleID = ko.observable(0);
     
     this.isLoadingUserJobTitle = ko.observable(false);

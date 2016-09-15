@@ -99,6 +99,8 @@ var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictu
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.contactInfo = new ContactInfoVM(app);
     this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
     

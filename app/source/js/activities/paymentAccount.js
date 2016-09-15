@@ -55,6 +55,8 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     var paymentAccount = app.model.paymentAccount;
     this.errorMessages = paymentAccount.errorMessages;
     
