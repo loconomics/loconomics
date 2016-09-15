@@ -1,9 +1,16 @@
 <!-- cancellationPolicy activity -->
 <div data-activity="bookingPolicies" data-bind="css: { 'is-loading': isLoading, 'is-saving': isSaving }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
-        <div class="row">
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <div class="row">  
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
@@ -14,6 +21,16 @@
                 </ul>
             </div>
             <form data-bind="submit: save" class="col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <ul>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set  your <span data-bind="text: jobTitleName"></span> booking policies</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Choose a cancellation policy below. We'll make sure it's clear and enforceable. </p>
+            
                 <h2 class="SectionTitle">
                     <span>Instant booking policy</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>

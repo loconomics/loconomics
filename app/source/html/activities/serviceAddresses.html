@@ -1,14 +1,30 @@
 <!-- Activity locations -->
 <div data-activity="serviceAddresses" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <ul>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Add service areas or locations for your <span data-bind="text: jobTitleName"></span> services</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
                 <h2 class="SectionTitle">
                     <span data-bind="visible: headerText, text: headerText"></span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>

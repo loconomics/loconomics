@@ -1,9 +1,16 @@
 <!-- Activity addressEditor -->
 <div data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
@@ -11,6 +18,13 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <ul>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                    </ul>
+                </div>
                 <form role="form" data-bind="submit: save" class="container-fluid LightForm">
                     <h2 class="SectionTitle">
                         <span data-bind="text: header"></span>

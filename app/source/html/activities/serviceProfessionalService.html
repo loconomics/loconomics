@@ -1,14 +1,31 @@
 <!-- ServiceProfessionalService activity -->
 <div data-activity="serviceProfessionalService" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <ul>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Price your services</div>
+<!--                <span data-bind="text: jobTitleName"></span>-->
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Keeping your prices clear and realistic is a good idea so clients can see if you'll be within their budget. We're working on more pricing tools–let us know what you'd like to see.</p>
                 <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">
                     <span>Select a job title</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
