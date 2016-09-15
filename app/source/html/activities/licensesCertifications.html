@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
-                    <span>Your licenses/certifications</span>
+                    <span>Your credentials</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
@@ -40,7 +40,7 @@
                     <div data-bind="with: jobTitleApplicableLicences()">
                         <div data-bind="visible: country().length">
                             <h2 class="SectionTitle">
-                                <span>Generally required licenses</span>
+                                <span>Generally required credentials</span>
                                 <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                                 </span>
                             </h2>
@@ -127,7 +127,7 @@
                     </div>
                     <div data-bind="with: jobTitleApplicableLicences()">
                         <div data-bind="visible: country().length">
-                            <h2 class="SectionTitle">Supplemental professional certifications</h2>
+                            <h2 class="SectionTitle">Supplemental credentials</h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
                                 <li data-bind="visible: licenseCertificationID() === 0">
                                     <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
