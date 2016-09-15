@@ -1,23 +1,36 @@
 <div data-activity="paymentAccount" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/marketplaceProfile"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Marketplace profile</a>
                     </li>
                 </ul>
             </div>
-            <div class="LightForm col-md-7 col-sm-reset">
+            <div class="col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <ul>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell us how you'd like to be paid</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Getting paid is the easy part. We've partnered with Braintree (a leading credit card merchant provider) to deposit payments directly into your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is automatically subtracted from your payment. Easy, right? Just complete the information below.</p>
                 <h2 class="SectionTitle">
                     <span>Payout preference</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967096-accepting-and-receiving-payments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
-                <div class="container-fluid">
-                    Getting paid is the easy part. We've partnered with Braintree (a leading credit card merchant provider) to deposit any marketplace payments directly to your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is subtracted from your payment. Easy, right? Complete the information below.
-                </div>
                 <div class="container-fluid" data-bind="visible: paymentAccount.status()">
                     <h2 class="SectionTitle">Merchant account status</h2>
                     <p data-bind="visible: paymentAccount.status() === 'active'" class="bg-success PaddedBox-xs">
