@@ -4,13 +4,13 @@
     <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
         <div class="PageMenu-list">
             <ul>
-                <li><a href="/">PUT HERE A MENU FOR WHEN IN ONBOARDING</a></li>
+                <li><a href="/">Get started</a></li>
             </ul>
         </div>
     </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
@@ -18,8 +18,32 @@
                 </ul>
             </div>
             <div class="LightForm col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <ul>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
+                        </li>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark-outline text-success" aria-hidden="true"></span>
+                        </li>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark-outline" aria-hidden="true"></span>
+                        </li>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark-outline" aria-hidden="true"></span>
+                        </li>
+                        <li>
+                            <span class="fa ion ion-ios-checkmark-outline" aria-hidden="true"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">What kind of work do you do?</div>
+                <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Clients will find you by searching by job title in our marketplace. Search for your job title(s) below. Keep in mind that even though you're obviously talented in an amazing number of ways, clients will find you by typing, say, “photographer” rather than “product photographer.” You will be able to list your specialties in a second, but for now, stay general. Relatedly, we've worked long and hard to come up with the most appealing titles for Loconomics professionals—so even if you consider yourself a “housecleaner,” here you might be a “cleaning professional.” As always, your feedback is welcome!</p>
                 <h2 class="SectionTitle">
-                    <span>Add one or more job profiles</span>
+                    <span>Add one or more job titles</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201211055-adding-job-profiles" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
