@@ -82,6 +82,22 @@ exports.registerAll = function(app) {
             vm.contactLink = ko.pureComputed(function() {
                 return 'contactForm/' + this.vocElement();
             }, vm);
+            
+            // FAQs
+            vm.helpLink = getObservable(params.helpLink || '');
+            vm.articles = ko.observableArray();
+            ko.computed(function() {
+                var link = this.helpLink();
+                var list = [];
+                if (link) {
+                    // TODO Connect to remote load (refactor help activity into appModel, with cache and link format detection?)
+                    // End with a list like
+                    list = [
+                        { link: link, label: 'Index' }
+                    ];
+                }
+                vm.articles(list);
+            }, vm);
         }
     });
     
