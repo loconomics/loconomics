@@ -21,11 +21,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <ul>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
-                        </li>
-                    </ul>
+                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
                 </div>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set up your schedule</div>
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">What are your hours? We'd like clients to know when they can expect to schedule your appointments. You can add multiple blocks per day.</p>

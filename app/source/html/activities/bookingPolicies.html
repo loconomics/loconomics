@@ -22,11 +22,7 @@
             </div>
             <form data-bind="submit: save" class="col-md-7 col-sm-reset">
                 <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <ul>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
-                        </li>
-                    </ul>
+                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
                 </div>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set  your <span data-bind="text: jobTitleName"></span> booking policies</div>
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Choose a cancellation policy below. We'll make sure it's clear and enforceable. </p>

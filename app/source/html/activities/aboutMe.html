@@ -24,11 +24,7 @@
                     <div class="SmartNavContent container-fluid nogaps-md nogaps-lg">
                         <form class="LightForm" role="form" data-bind="submit: save">
                             <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                                <ul>
-                                    <li>
-                                        <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
-                                    </li>
-                                </ul>
+                                <app-onboarding-progress-mark></app-onboarding-progress-mark>
                             </div>
                             <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell Loconomics a little about yourself</div>
                             <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Please fill out the information below. Confirmed clients will only receive your email and phone number once they book you. As always, all of your data is safe with us.</p>

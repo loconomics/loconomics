@@ -18,11 +18,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <ul>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
-                        </li>
-                    </ul>
+                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
                 </div>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell us how you'd like to be paid</div>
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Getting paid is the easy part. We've partnered with Braintree (a leading credit card merchant provider) to deposit payments directly into your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is automatically subtracted from your payment. Easy, right? Just complete the information below.</p>

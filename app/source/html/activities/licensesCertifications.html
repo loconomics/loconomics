@@ -1,6 +1,13 @@
 <!-- Activity licensesCertifications -->
 <div data-activity="licensesCertifications" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -14,6 +21,9 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
+                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
+                </div>
                 <h2 class="SectionTitle">
                     <span>Your credentials</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
