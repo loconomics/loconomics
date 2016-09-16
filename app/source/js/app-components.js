@@ -300,4 +300,11 @@ exports.registerAll = function(app) {
             }
         }
     });
+    
+    // Onboarding
+    var OnboardingProgressMarkVM = require('./viewmodels/OnboardingProgressMarkVM');
+    ko.components.register('app-onboarding-progress-mark', {
+        template: { element: 'onboarding-progress-mark-template' },
+        viewModel: { createViewModel: function() { return new OnboardingProgressMarkVM(app); } }
+    });
 };

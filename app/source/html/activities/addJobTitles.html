@@ -19,26 +19,7 @@
             </div>
             <div class="LightForm col-md-7 col-sm-reset">
                 <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <ul>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
-                        </li>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark text-success" aria-hidden="true"></span>
-                        </li>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark-outline text-success" aria-hidden="true"></span>
-                        </li>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark-outline" aria-hidden="true"></span>
-                        </li>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark-outline" aria-hidden="true"></span>
-                        </li>
-                        <li>
-                            <span class="fa ion ion-ios-checkmark-outline" aria-hidden="true"></span>
-                        </li>
-                    </ul>
+                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
                     <p class="text-secondary pull-right OnboardingRequiredPopUp">What's required?</p>
                 </div>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">What kind of work do you do?</div>
