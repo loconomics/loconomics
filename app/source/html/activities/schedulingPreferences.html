@@ -20,9 +20,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
-                </div>
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set up your schedule</div>
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">What are your hours? We'd like clients to know when they can expect to schedule your appointments. You can add multiple blocks per day.</p>
                 <form data-bind="submit: save" class="LightForm">

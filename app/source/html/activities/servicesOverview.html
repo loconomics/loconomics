@@ -21,9 +21,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
-                </div>
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell clients about your <span data-bind="text: jobTitleName"></span> services</div>
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Show clients what services you provide. Make sure your passion and experience shine through! And keep it simple and clear—so that clients know what to expect from you.</p>
                 <form class="container-fluid LightForm" role="form" data-bind="submit: save">
