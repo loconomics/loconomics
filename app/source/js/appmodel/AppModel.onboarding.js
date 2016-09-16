@@ -60,10 +60,18 @@ exports.create = function create(appModel) {
 //                api.goPrevious();
 //                return false;
 //            });
+            
+            // On 2016-09-16 #760, changed decission from use a 'log out' action and progress
+            // info as title to new design:
             // to use the Log-out action
-            navBar.leftAction(NavAction.goLogout);
-
-            navBar.title(this.progressText());            
+            //#575
+//            navBar.leftAction(NavAction.goLogout);
+//            navBar.title(this.progressText());
+            
+            
+            //#760: Menu on left and fixed message on title
+            navBar.leftAction(NavAction.menuIn);
+            navBar.title('Get Started');
         }
         return yep;
     };
