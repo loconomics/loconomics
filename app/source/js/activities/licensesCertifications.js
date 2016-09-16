@@ -147,11 +147,11 @@ function ViewModel(app) {
     this.onboardingNextReady = ko.computed(function() {
         if (!app.model.onboarding.inProgress()) return false;
         var groups = this.jobTitleApplicableLicences();
-        var userCredentials = this.submittedUserLicensesCertifications();
         if (!groups) return false;
 
         //If at some point the user credential status need to be checked, this
         // utility can be used (lines commented inside the other function too
+        //var userCredentials = this.submittedUserLicensesCertifications();
         /*var findUserCredential = function(credentialID) {
             var found = null;
             userCredentials.some(function(uc) {
@@ -192,8 +192,6 @@ function ViewModel(app) {
             hasAllRequiredOfGroup(groups.stateProvince()) &&
             hasAllRequiredOfGroup(groups.country())
         );
-
-        return isin;
     }, this);
     
     this.goNext = function() {
