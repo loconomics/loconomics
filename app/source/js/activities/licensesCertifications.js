@@ -145,13 +145,53 @@ function ViewModel(app) {
     }.bind(this);
     
     this.onboardingNextReady = ko.computed(function() {
+        if (!app.model.onboarding.inProgress()) return false;
         var groups = this.jobTitleApplicableLicences();
         if (!groups) return false;
-        var isin = app.model.onboarding.inProgress();
+
+        //If at some point the user credential status need to be checked, this
+        // utility can be used (lines commented inside the other function too
+        //var userCredentials = this.submittedUserLicensesCertifications();
+        /*var findUserCredential = function(credentialID) {
+            var found = null;
+            userCredentials.some(function(uc) {
+                if (uc.licenseCertificationID() == credentialID) {
+                    found = uc;
+                    // stop loop
+                    return true;
+                }
+            });
+            return found;
+        };*/
+        var hasAllRequiredOfGroup = function(group) {
+            if (!group || !group.length) return true;
+            var allAccomplished = !group.some(function(credential) {
+                // IMPORTANT: The credential record holds a special field, 'submitted',
+                // that tell us already if the userCredential for that was submitted and then pass
+                // the requirement, so we do not need to search and check the userCredential.
+                // Still, sample code was wrote for that if in a future something more like the status
+                // needs to be checked (but the status, initially -in the onboarding- will be not-reviewed)
+                /*if (credential.required()) {
+                    var userCredential = findUserCredential(credential.licenseCertificationID());
+                    return (userCredential && userCredential.statusID() === ???);
+                }*/
+                
+                if (credential.required()) {
+                    // NOTE: It returns the negated result, that means that when a required credential
+                    // is not fullfilled, returning true we stop immediately the loop and know the requirements
+                    // are not accomplished.
+                    return !credential.submitted();
+                }
+            });
+            return allAccomplished;
+        };
         
-        // TODO check if all required from all groups are filled with a valid status
-        
-        return isin;
+        return (
+            hasAllRequiredOfGroup(groups.municipality()) &&
+            hasAllRequiredOfGroup(groups.county()) &&
+            hasAllRequiredOfGroup(groups.stateProvince()) &&
+            hasAllRequiredOfGroup(groups.country())
+        );
     }, this);
     
     this.goNext = function() {

@@ -160,6 +160,8 @@ AppModel.prototype.loadModules = function loadModules() {
     this.licenseCertification = require('./AppModel.licenseCertification').create(this);
     this.clientAddresses = require('./AppModel.clientAddresses').create(this);
     this.cancellationPolicies = require('./AppModel.cancellationPolicies').create(this);
+    
+    this.emit('modulesLoaded');
 };
 
 /**

@@ -176,8 +176,13 @@ exports.extend = function (app) {
         userName: ko.observable('Me'),
         isServiceProfessional: ko.observable(false),
         isClient: ko.observable(false),
-        isApp: ko.observable(!!window.cordova)
+        isApp: ko.observable(!!window.cordova),
+        isInOnboarding: ko.observable(false)
     };
+
+    app.model.on('modulesLoaded', function() {
+        app.model.onboarding.inProgress.subscribe(app.navBarBinding.isInOnboarding);
+    });
     
     app.navBarBinding.isAnonymous = ko.pureComputed(function() {
         return !this.isServiceProfessional() && !this.isClient();
