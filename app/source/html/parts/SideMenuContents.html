@@ -1,8 +1,8 @@
-<ul data-bind="visible: isServiceProfessional() && !isAnonymous()" class="nav navbar-nav">
+<ul data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" class="nav navbar-nav">
     @render('parts/AddNewMenuContents.html')
 </ul>
 <ul class="nav navbar-nav">
-    <h4 class="App-menus-group-header">WE'RE HERE TO HELP</h4>
+    <li><h4 class="App-menus-group-header">WE'RE HERE TO HELP</h4></li>
     <li data-bind="visible: isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200431835-resources-for-service-professionals">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: !isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200474305-resources-for-clients">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: isAnonymous()"><a href="/help">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
