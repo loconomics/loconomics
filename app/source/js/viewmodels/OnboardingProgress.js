@@ -91,8 +91,8 @@ OnboardingProgress.predefinedStepGroups = {
         'serviceAddresses',
         'bookingPolicies',
         'licensesCertifications',
-        'paymentAccount',
-        'aboutMe'
+        'aboutMe',
+        'paymentAccount'
     ],
     marketplace: [
     ],
