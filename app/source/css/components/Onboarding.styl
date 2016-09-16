@@ -12,9 +12,19 @@
   margin-left: 10px;
   margin-bottom: 10px;
 }
-.OnboardingRequiredPopUp {
-  font-size: 12px;
-  position: absolute;
-  top: 0px;
-  right: 5px;
+.OnboardingProgressBar {
+  text-align: left;
+  padding-left: 5px;
+  @media $mediaMinSm {
+      text-align: center;
+      padding-left: 0px;
+  }
+  a {
+    color: $brand-secondary;
+    font-size: 12px;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    text-align: right;
+  }
 }
