@@ -72,6 +72,10 @@ exports.create = function create(appModel) {
             //#760: Menu on left and fixed message on title
             navBar.leftAction(NavAction.menuIn);
             navBar.title('Get Started');
+            navBar.rightAction(new NavAction({
+                link: '/help',
+                text: 'What\'s required?'
+            }));
         }
         return yep;
     };
