@@ -307,4 +307,9 @@ exports.registerAll = function(app) {
         template: { element: 'onboarding-progress-mark-template' },
         viewModel: { createViewModel: function() { return new OnboardingProgressMarkVM(app); } }
     });
+    var OnboardingProgressBarVM = require('./viewmodels/OnboardingProgressBarVM');
+    ko.components.register('app-onboarding-progress-bar', {
+        template: { element: 'onboarding-progress-bar-template' },
+        viewModel: { createViewModel: function() { return new OnboardingProgressBarVM(app); } }
+    });
 };

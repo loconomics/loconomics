@@ -16,9 +16,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <div data-bind="visible: isInOnboarding()" class="SubSectionNavBar text-center">
-                    <app-onboarding-progress-mark></app-onboarding-progress-mark>
-                </div>
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Add service areas or locations for your <span data-bind="text: jobTitleName"></span> services</div>
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
                 <h2 class="SectionTitle">
