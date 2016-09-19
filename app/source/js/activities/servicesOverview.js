@@ -203,6 +203,8 @@ function ViewModel(app) {
                 
                 // Move forward:
                 if (app.model.onboarding.inProgress()) {
+                    // Ensure we keep the same jobTitleID in next steps as here:
+                    app.model.onboarding.selectedJobTitleID(this.jobTitleID());
                     app.model.onboarding.goNext();
                 } else {
                     app.successSave();
