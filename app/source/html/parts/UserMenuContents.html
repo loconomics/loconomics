@@ -21,9 +21,9 @@
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding }"><a data-bind="attr: { href: isInOnboarding() ? null : '/marketplaceProfile' }"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a></li>
 <li><h4 data-bind="visible: isServiceProfessional" class="App-menus-group-header">YOUR COOPERATIVE</h4></li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding }"><a data-bind="attr: { href: isInOnboarding() ? null : '/account' }"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a></li>
-<li data-bind="visible: isServiceProfessional" class="go-help"><a href="/help/categories/200431835-resources-for-service-professionals"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
+<li data-bind="visible: isServiceProfessional && !isInOnboarding()" class="go-help"><a href="/help/categories/200431835-resources-for-service-professionals"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
 <li data-bind="visible: !isAnonymous() && !isServiceProfessional()" class="go-help"><a href="/help/categories/200474305-resources-for-clients"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
 <li data-bind="visible: isAnonymous()" class="go-help"><a href="/help"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>
-<li data-bind="visible: isServiceProfessional" class="go-marketplace"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a></li>
+<li data-bind="visible: isServiceProfessional && !isInOnboarding()" class="go-marketplace"><a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search Marketplace</a></li>
 <li class="divider"></li>
 <li data-bind="visible: !isAnonymous()" class="go-logout"><a href="/logout"><i class="fa fa-fw ion-power" aria-hidden="true"></i> Logout</a></li>

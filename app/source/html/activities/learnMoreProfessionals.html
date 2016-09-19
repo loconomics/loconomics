@@ -56,8 +56,11 @@
                                  </ul>   
                             </li>
                         </ul>
-                </div>
-            </form> 
+                </div> 
+            </form>
+            <div class="coop-join-up">
+                <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
+            </div>
         </div>
         <div id="coop-hiw" class="coop-hiw">
             <h2 class="coop-section-title">What Loconomics offers:</h2>
@@ -159,8 +162,8 @@
 -->
                 </ul>
             </div>
-            <div class="coop-about-us">
-                <a href="/about" class="btn btn-secondary btn-lg btn-block">About us</a>
+            <div class="coop-join-up">
+                <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
             </div>
         </div>
         <div id="coop-ownership" class="coop-ownership">
@@ -184,6 +187,9 @@
                     </li>
                 </ul>
             </div>
+            <div class="coop-join-up">
+                <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
+            </div>
         </div>
        <div id="coop-pricing" class="coop-pricing">
             <h2 class="coop-section-title">Owner pricing:</h2>
@@ -192,17 +198,19 @@
                         <h3>Monthly</h3>
                         <h1>$29.95</h1>
                     </li>
+<!--
                     <div class="coop-or"><h3>OR</h3></div>
                     <li>
                         <h3>Annual</h3>
                         <h1>$299.95</h1>
                         <p>12 MONTHS FOR THE PRICE OF 10</p>
                     </li>
+-->
                 </ul>
         </div>
         <div id="learnMoreProfessionals-signup" class="coop-signup" data-bind="visible: !isServiceProfessional()">
-            <h1 class="coop-title">Become an owner.</h1>
-            <p class="coop-tagline">Provide local services &amp; work for yourself? Join the movement.</p>
+            <h1 class="coop-title">Join up.</h1>
+            <p class="coop-tagline">Provide local services? Work for yourself? Become a Loconomics owner.</p>
             <div data-bind="visible: !isClient(), template: {name: 'signup-template', data: signup}"></div>
             <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
         </div>
