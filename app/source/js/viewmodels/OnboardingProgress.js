@@ -12,7 +12,9 @@ function OnboardingProgress(values) {
     this.model.defProperties({
         group: '',
         stepNumber: -1,
-        steps: []
+        steps: [],
+        // Let's set a job title to pass in to jobTitleSpecific steps as URL segment
+        selectedJobTitleID: null
     }, values);
     
     this.totalSteps = ko.pureComputed(function() {
@@ -36,9 +38,17 @@ function OnboardingProgress(values) {
     }, this);
     
     this.stepUrl = ko.pureComputed(function() {
-        var url = this.stepName();
-        if (url && !/^\//.test(url))
-            url = '/' + url;
+        var name = this.stepName();
+        var url = '/' + name;
+
+        // Check if there is need for a jobTitleID in the URL
+        var defs = OnboardingProgress.stepsDefinitions[this.group()];
+        var def = defs && defs[name];
+        var jobID = this.selectedJobTitleID();
+        if (jobID && def && def.jobTitleSpecific) {
+            url += '/' + jobID;
+        }
+
         return url;
     }, this);
 
@@ -98,4 +108,31 @@ OnboardingProgress.predefinedStepGroups = {
     ],
     payment: [
     ]
+};
+
+// Definitions of the steps for 'welcome' onboarding, for any relevant set-up needed
+// on there, like if they need a jobTitleID
+OnboardingProgress.stepsDefinitions = {
+    welcome: {
+        welcome: {},
+        addJobTitles: {},
+        schedulingPreferences: {},
+        servicesOverview: {
+            jobTitleSpecific: true
+        },
+        serviceProfessionalService: {
+            jobTitleSpecific: true
+        },
+        serviceAddresses: {
+            jobTitleSpecific: true
+        },
+        bookingPolicies: {
+            jobTitleSpecific: true
+        },
+        licensesCertifications: {
+            jobTitleSpecific: true
+        },
+        aboutMe: {},
+        paymentAccount: {}
+    }
 };
