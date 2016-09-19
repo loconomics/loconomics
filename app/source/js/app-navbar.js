@@ -181,7 +181,9 @@ exports.extend = function (app) {
     };
 
     app.model.on('modulesLoaded', function() {
-        app.model.onboarding.inProgress.subscribe(app.navBarBinding.isInOnboarding);
+        ko.computed(function() {
+            app.navBarBinding.isInOnboarding(app.model.onboarding.inProgress());
+        });
     });
     
     app.navBarBinding.isAnonymous = ko.pureComputed(function() {
