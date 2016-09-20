@@ -63,6 +63,12 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 .then(function(item) {
                     // Save for use in the view
                     this.viewModel.jobTitleApplicableLicences(item);
+                    // SPECIAL CASE:
+                    // If we are in onboarding and there are no required licenses applicable to the job title,
+                    // we automatically jump to next step (we just check if the condition to continue is matched)
+                    if (this.viewModel.onboardingNextReady()) {
+                        this.viewModel.goNext();
+                    }
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
