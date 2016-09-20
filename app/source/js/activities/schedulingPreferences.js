@@ -122,17 +122,8 @@ function ViewModel(app) {
                 this.isLoading() ? 
                     'loading...' : 
                     this.isSaving() ? 
-                        'saving...' : 
+                        'Saving...' : 
                         'Save'
-        );
-    }, this);
-    this.submitText = ko.pureComputed(function() {
-        return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
-                    'Save'
         );
     }, this);
 }
