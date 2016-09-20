@@ -76,6 +76,16 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                // Fix URL
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /licensesCertifications\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/licensesCertifications/' + jobTitleID;
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.jobTitleName('Job Title');

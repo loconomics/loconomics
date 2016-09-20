@@ -120,8 +120,12 @@ exports.create = function create(appModel) {
         var step = api.app.model.user().onboardingStep();
         if (step && 
             api.setStep(step)) {
-            var url = api.stepUrl();
-            api.app.shell.go(url);
+            // Go to the step URL if we are NOT already there, by checking name to
+            // not overwrite additional details, like a jobTitleID at the URL
+            if (api.app.shell.currentRoute.name !== api.stepName()) {
+                var url = api.stepUrl();
+                api.app.shell.go(url);
+            }
             return true;
         }
         return false;
