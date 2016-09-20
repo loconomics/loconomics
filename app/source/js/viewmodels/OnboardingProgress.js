@@ -39,6 +39,7 @@ function OnboardingProgress(values) {
     
     this.stepUrl = ko.pureComputed(function() {
         var name = this.stepName();
+        if (!name) return null;
         var url = '/' + name;
 
         // Check if there is need for a jobTitleID in the URL
