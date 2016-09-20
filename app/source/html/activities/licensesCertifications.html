@@ -69,16 +69,16 @@
                             <h2 class="SectionTitle">Required by your municipality</h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: municipality">
                                 <li>
-                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted() === 1">
+                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
                                         <div class="Tile-content text-muted">
                                             <span data-bind="text: licenseCertification().name"></span>
                                             <div>
                                                 <em data-bind="text: licenseCertification().authority"></em>
                                             </div>
-                                            <div data-bind="visible: submitted() === 1" class="Tile-icon text-success">      
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
                                                 <span class="fa ion ion-ios-checkmark-outline"></span>
                                             </div>
-                                            <div data-bind="visible: submitted() === 0" class="Tile-icon text-muted">      
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
                                                 <span class="fa ion ion-plus"></span>
                                             </div>
                                         </div>
@@ -92,16 +92,16 @@
                             <h2 class="SectionTitle">Required by your county</h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: county">
                                 <li>
-                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted() === 1">
+                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
                                         <div class="Tile-content text-muted">
                                             <span data-bind="text: licenseCertification().name"></span>
                                             <div>
                                                 <em data-bind="text: licenseCertification().authority"></em>
                                             </div>
-                                            <div data-bind="visible: submitted() === 1" class="Tile-icon text-success">      
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
                                                 <span class="fa ion ion-ios-checkmark-outline"></span>
                                             </div>
-                                            <div data-bind="visible: submitted() === 0" class="Tile-icon text-muted">      
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
                                                 <span class="fa ion ion-plus"></span>
                                             </div>
                                         </div>
@@ -115,16 +115,16 @@
                             <h2 class="SectionTitle">Required by your state</h2>
                             <ul class="TilesList TilesList--openEnd" data-bind="foreach: stateProvince">
                                 <li>
-                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted() === 1">
+                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
                                         <div class="Tile-content text-muted">
                                             <span data-bind="text: licenseCertification().name"></span>
                                             <div>
                                                 <em data-bind="text: licenseCertification().authority"></em>
                                             </div>
-                                            <div data-bind="visible: submitted() === 1" class="Tile-icon text-success">      
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
                                                 <span class="fa ion ion-ios-checkmark-outline"></span>
                                             </div>
-                                            <div data-bind="visible: submitted() === 0" class="Tile-icon text-muted">      
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
                                                 <span class="fa ion ion-plus"></span>
                                             </div>
                                         </div>

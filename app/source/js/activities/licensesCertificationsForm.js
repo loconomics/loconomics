@@ -207,6 +207,7 @@ function ViewModel(app) {
             this.version().push({ evenIfObsolete: true });
             // Cache of licenses info for the user and job title is dirty, clean up so is updated later
             app.model.jobTitleLicenses.clearCache();
+            app.model.userLicensesCertifications.clearCache();
             // Go out
             app.successSave();
         }.bind(this))
