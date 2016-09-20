@@ -66,6 +66,16 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                     });
                     this.viewModel.isLoadingUserJobTitle(false);
                 }.bind(this));
+                
+                // Fix URL
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /servicesOverview\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/servicesOverview/' + jobTitleID;
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.jobTitleName('Job Title');

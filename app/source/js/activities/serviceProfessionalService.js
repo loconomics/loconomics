@@ -84,6 +84,21 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                /// Rewrite URL
+                // IMPORTANT: When in isSelectionMode, pushState cannot be use
+                // because it conflicts with the selection logic (on new-booking progress)
+                // TODO: discarded URL rewrite until the bug with replaceState in HashbangHistory is fixed
+                if (this.viewModel.isSelectionMode()) return;
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /serviceProfessionalService\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/serviceProfessionalService/' + jobTitleID;
+                    if (this.viewModel.isAdditionMode()) url += '/new';
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.list([]);
@@ -222,16 +237,7 @@ function ViewModel(app) {
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceProfessionalService');
     this.jobTitles.selectJobTitle = function(jobTitle) {
-        
         this.jobTitleID(jobTitle.jobTitleID());
-        var url = 'serviceProfessionalService/' + jobTitle.jobTitleID();
-        if (this.isAdditionMode())
-            url += '/new';
-        // pushState cannot be used because it conflicts with the 
-        // selection logic (on new-booking progress)
-        // TODO: commented until the bug with replaceState in HashbangHistory is fixed
-        //app.shell.replaceState(null, null, url);
-        
         return false;
     }.bind(this);
 

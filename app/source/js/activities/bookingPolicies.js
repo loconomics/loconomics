@@ -59,6 +59,16 @@ var A = Activity.extend(function BookingPoliciesActivity() {
                     // Finally
                     this.viewModel.isLoading(false);
                 }.bind(this));
+                
+                // Fix URL
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /bookingPolicies\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/bookingPolicies/' + jobTitleID;
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
