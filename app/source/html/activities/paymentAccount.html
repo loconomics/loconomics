@@ -80,13 +80,13 @@
                         a <a href="https://venmo.com" target="_system">Venmo</a> account will be created and linked to your email.
                         You will then have to set up your Venmo account to release payments. We do not recommend this option as it requires you to cash out every time you get a payment.
                     </p>
-                    <div class="form-group" data-bind="visible: $parent.isBankAccount">
+                    <div class="form-group has-feedback" data-bind="visible: $parent.isBankAccount">
                         <label for="paymentAccount-routingNumber" class="control-label" data-bind="css: { 'sr-only': !status() }">ABA Routing Number</label>
-                        <input type="text" class="form-control" data-bind="textInput: routingNumber, disable: $root.isLocked" placeholder="ABA Routing number">
+                        <input type="text" class="form-control" data-bind="textInput: routingNumber, disable: $root.isLocked" placeholder="ABA Routing number"><i class="fa ion-ios-locked-outline form-control-feedback text-muted pull-right icon-secure" aria-hidden="true"></i>
                     </div>
-                    <div class="form-group" data-bind="visible: $parent.isBankAccount">
+                    <div class="form-group has-feedback" data-bind="visible: $parent.isBankAccount">
                         <label for="paymentAccount-routingNumber" class="control-label" data-bind="css: { 'sr-only': !status() }">Account number</label>
-                        <input type="text" class="form-control" data-bind="textInput: accountNumber, disable: $root.isLocked" placeholder="Account number">
+                        <input type="text" class="form-control" data-bind="textInput: accountNumber, disable: $root.isLocked" placeholder="Account number"><i class="fa ion-ios-locked-outline form-control-feedback text-muted pull-right icon-secure" aria-hidden="true"></i>
                     </div>
                     <app-unlabeled-input params="placeholder: 'Date of birth (mm/dd/yyyy)', value: birthDate, disable: $root.isLocked"></app-unlabeled-input>
 
