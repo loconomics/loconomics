@@ -106,6 +106,9 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
+    // Reset
+    this.viewModel.jobTitleID(0);
+
     Activity.prototype.show.call(this, options);
     
     this.updateNavBarState();
