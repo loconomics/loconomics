@@ -18,13 +18,26 @@
             <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown">Sign up <b class="caret"></b>
             </a>
             <ul class="dropdown-menu Category-menu">
-                <li><a href="/signup/service-professional">I'm a local service professional</a></li>
-                <li><a href="/signup/client">I'm a potential client</a></li>
-                <li><a href="/signup/service-professional">I'm both</a></li>
+                <li>
+                    <a href="/signup/service-professional">I'm a local service professional</a>
+                </li>
+                <li>
+                    <a href="/signup/client">I'm a potential client</a>
+                </li>
+                <li>
+                    <a href="/signup/service-professional">I'm both</a>
+                </li>
             </ul>
         </li>
-        <li><a href="/login" class="btn btn-link">Log in</a></li>
-            <li><a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a></li>
+        <li>
+            <a href="/login" class="btn btn-link">Log in</a>
+        </li>
+        <li>
+            <a href="/learnMoreProfessionals" class="btn btn-link" style="padding-right: 0px" >Provide local services?</a>
+        </li>
+        <li>
+            <a href="/learnMoreProfessionals"><button class="btn btn-secondary">Join our co-op</button></a>
+        </li>
     </ul>
     <!-- User nav -->
     <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
@@ -117,9 +130,12 @@
             <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
             <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
         </li>
+        <li data-bind="visible: !isServiceProfessional() && !isAnonymous()">
+            <a href="/learnMoreProfessionals" class="btn btn-link" style="padding-right: 0px" >Provide local services?</a>
+        </li>
         <li>
-            <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
-            <a data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/learnMoreProfessionals"><span class="LargeNavBar-label">How it works</span></a>
+            <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/learnMoreProfessionals"><button class="btn btn-secondary">Join our co-op</button></a>
+            <a data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/learnMoreProfessionals"><span class="LargeNavBar-label">Our co-op</span></a>
         </li>
     </ul>
 </div>
