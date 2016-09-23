@@ -14,9 +14,10 @@
     for model.serviceAdddresses for example.
 **/
 'use strict';
-var ko = require('knockout'),
-    Address = require('../models/Address'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Address = require('../models/Address');
+var Activity = require('../components/Activity');
+var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -28,54 +29,11 @@ var A = Activity.extend(function AddressEditorActivity() {
         backLink: '/scheduling' , helpLink: '/help/relatedArticles/201965996-setting-your-service-locations-areas'
     });
     
-    // Remote postal code look-up
-    // NOTE: copied the code inside the postalCode computed handler in contactInfo.js with slight changes
-    var app = this.app,
-        viewModel = this.viewModel;
-    this.registerHandler({
-        target: this.viewModel.address,
-        handler: function(address) {
-            if (address &&
-               !address.postalCode._hasLookup) {
-                address.postalCode._hasLookup = true;
-                
-                // On change to a valid code, do remote look-up
-                ko.computed(function() {
-                    var postalCode = this.postalCode();
-                    
-                    if (postalCode && !/^\s*$/.test(postalCode)) {
-                        app.model.postalCodes.getItem(postalCode)
-                        .then(function(info) {
-                            if (info) {
-                                address.city(info.city);
-                                address.stateProvinceCode(info.stateProvinceCode);
-                                address.stateProvinceName(info.stateProvinceName);
-                                viewModel.errorMessages.postalCode('');
-                            }
-                        })
-                        .catch(function(err) {
-                            address.city('');
-                            address.stateProvinceCode('');
-                            address.stateProvinceName('');
-                            // Expected errors, a single message, set
-                            // on the observable
-                            var msg = typeof(err) === 'string' ? err : null;
-                            if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                                viewModel.errorMessages.postalCode(msg || err.responseJSON.errorMessage);
-                            }
-                            else {
-                                // Log to console for debugging purposes, on regular use an error on the
-                                // postal code is not critical and can be transparent; if there are 
-                                // connectivity or authentification errors will throw on saving the address
-                                console.error('Server error validating Zip Code', err);
-                            }
-                        });
-                    }
-                }, address)
-                // Avoid excessive requests by setting a timeout since the latest change
-                .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
-            }
-        }
+    // On change to a valid code, do remote look-up
+    createPostalCodeAutolookup({
+        appModel: this.app.model,
+        address: this.viewModel.address,
+        postalCodeError: this.viewModel.errorMessages.postalCode
     });
 
     // On changing jobTitleID:
@@ -213,6 +171,8 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.header = ko.observable('Edit location');
     

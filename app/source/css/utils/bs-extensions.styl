@@ -216,20 +216,23 @@ ResetSectionTitleMargin() {
         margin-right: 0;
     }
 }
-.container {
+.container,
+.container-fluid {
     @media $mediaMaxXs {
         &.nogaps-xs {
             padding: 0;
             ResetSectionTitleMargin();
         }
     }
-    @media $mediaMaxSm {
+    $mediaOnly = $mediaMinSm + ' and ' + $mediaMaxSm;
+    @media $mediaOnly {
         &.nogaps-sm {
             padding: 0;
             ResetSectionTitleMargin();
         }
     }
-    @media $mediaMaxMd {
+    $mediaOnly = $mediaMinMd + ' and ' + $mediaMaxMd;
+    @media $mediaOnly {
         &.nogaps-md {
             padding: 0;
             ResetSectionTitleMargin();
@@ -344,5 +347,13 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
+}
+
+.bg-white {
+    background-color: white;
+}
+.icon-secure {
+    font-size: 29px !important;
+    top: 27px;
 }
 

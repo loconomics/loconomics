@@ -1,23 +1,28 @@
 /**
-    Cancellation Policy activity
+    Booking Policies activity
 **/
 'use strict';
 
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 
-var A = Activity.extend(function CancellationPolicyActivity() {
+var A = Activity.extend(function BookingPoliciesActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling' , helpLink: '/help/relatedArticles/201966026-setting-your-cancellation-policy'
+        backLink: 'scheduling',
+        helpLink: '/help/relatedArticles/201966026-setting-your-cancellation-policy'
+        // TODO helpLink must be updated to booking policies and include instant booking information
     });
+    
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     // On changing jobTitleID:
     // - load job title name
+    // - load job profile with policies preferences
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
@@ -34,18 +39,7 @@ var A = Activity.extend(function CancellationPolicyActivity() {
                         error: err
                     });
                 }.bind(this));
-            }
-            else {
-                this.viewModel.jobTitleName('Job Title');
-            }
-        }.bind(this)
-    });
-    // On changing jobTitleID:
-    // - load addresses
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
+                
                 this.viewModel.isLoading(true);
                 // Get data for the Job title ID
                 this.app.model.userJobProfile.getUserJobTitle(jobTitleID)
@@ -53,6 +47,7 @@ var A = Activity.extend(function CancellationPolicyActivity() {
                     // Save for use in the view
                     this.viewModel.userJobTitle(userJobTitle);
                     this.viewModel.selectedCancellationPolicyID(userJobTitle.cancellationPolicyID());
+                    this.viewModel.instantBooking(userJobTitle.instantBooking());
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -64,10 +59,22 @@ var A = Activity.extend(function CancellationPolicyActivity() {
                     // Finally
                     this.viewModel.isLoading(false);
                 }.bind(this));
+                
+                // Fix URL
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /bookingPolicies\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/bookingPolicies/' + jobTitleID;
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
+                this.viewModel.jobTitleName('Job Title');
                 this.viewModel.userJobTitle(null);
                 this.viewModel.selectedCancellationPolicyID(null);
+                this.viewModel.instantBooking(null);
             }
         }.bind(this)
     });
@@ -75,21 +82,41 @@ var A = Activity.extend(function CancellationPolicyActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     // Reset
     this.viewModel.jobTitleID(null);
     this.viewModel.selectedCancellationPolicyID(null);
+    this.viewModel.instantBooking(null);
     
     Activity.prototype.show.call(this, state);
+    
+    this.updateNavBarState();
 
     var params = state && state.route && state.route.segments;
-    this.viewModel.jobTitleID(params[0] |0);
+    var jid = params[0] |0;
+    this.viewModel.jobTitleID(jid);
     
     // Request to sync policies, just in case there are remote changes
     this.app.model.cancellationPolicies.sync();
+    if (!jid) {
+        // Load titles to display for selection
+        this.viewModel.jobTitles.sync();
+    }
 };
 
+var UserJobProfile = require('../viewmodels/UserJobProfile');
+
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
@@ -98,6 +125,7 @@ function ViewModel(app) {
     // it directly from the userJobTitle to avoid that gets saved
     // in memory without press 'save'
     this.selectedCancellationPolicyID = ko.observable(null);
+    this.instantBooking = ko.observable(null);
     
     this.isLoading = ko.observable(false);
     this.isSaving = ko.observable(false);
@@ -105,13 +133,24 @@ function ViewModel(app) {
         return this.isLoading() || this.isSaving();
     }, this);
     
+    this.jobTitles = new UserJobProfile(app);
+    this.jobTitles.baseUrl('/bookingPolicies');
+    this.jobTitles.selectJobTitle = function(jobTitle) {
+        
+        this.jobTitleID(jobTitle.jobTitleID());
+        
+        return false;
+    }.bind(this);
+    
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
-                    'Save'
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isLoading() ? 
+                    'loading...' : 
+                    this.isSaving() ? 
+                        'saving...' : 
+                        'Save'
         );
     }, this);
     
@@ -122,15 +161,23 @@ function ViewModel(app) {
             
             var plain = ujt.model.toPlainObject();
             plain.cancellationPolicyID = this.selectedCancellationPolicyID();
+            plain.instantBooking = this.instantBooking();
 
             app.model.userJobProfile.setUserJobTitle(plain)
             .then(function() {
                 this.isSaving(false);
-                app.successSave();
+                // Move forward:
+                if (app.model.onboarding.inProgress()) {
+                    // Ensure we keep the same jobTitleID in next steps as here:
+                    app.model.onboarding.selectedJobTitleID(this.jobTitleID());
+                    app.model.onboarding.goNext();
+                } else {
+                    app.successSave();
+                }
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);
-                app.modals.showError({ title: 'Error saving Cancellation Policy preference', error: err });
+                app.modals.showError({ title: 'Error saving your Booking Policies', error: err });
             }.bind(this));
         }
     }.bind(this);

@@ -20,8 +20,8 @@
 var Booking = require('./Booking');
 module.exports = Booking;
 
-var ko = require('knockout');
 var PricingSummary = require('./PricingSummary.editable');
+var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 Booking.editable = function(obj) {
     // Get base instance
@@ -65,44 +65,12 @@ Booking.editable = function(obj) {
     **/
     booking.connectPostalCodeLookup = function(app, enabledObservable, errorMessageObservable) {
         // On change to a valid code, do remote look-up
-        ko.computed(function() {
-            var address = this.serviceAddress();
-
-            if (!enabledObservable()) return;
-
-            var postalCode = address.postalCode();
-
-            if (postalCode && !/^\s*$/.test(postalCode)) {
-                app.model.postalCodes.getItem(postalCode)
-                .then(function(info) {
-                    if (info) {
-                        address.city(info.city);
-                        address.stateProvinceCode(info.stateProvinceCode);
-                        address.stateProvinceName(info.stateProvinceName);
-                        errorMessageObservable('');
-                    }
-                })
-                .catch(function(err) {
-                    address.city('');
-                    address.stateProvinceCode('');
-                    address.stateProvinceName('');
-                    // Expected errors, a single message, set
-                    // on the observable
-                    var msg = typeof(err) === 'string' ? err : null;
-                    if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                        errorMessageObservable(msg || err.responseJSON.errorMessage);
-                    }
-                    else {
-                        // Log to console for debugging purposes, on regular use an error on the
-                        // postal code is not critical and can be transparent; if there are 
-                        // connectivity or authentification errors will throw on saving the address
-                        console.error('Server error validating Zip Code', err);
-                    }
-                });
-            }
-        }, this)
-        // Avoid excessive requests by setting a timeout since the latest change
-        .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
+        createPostalCodeAutolookup({
+            appModel: app.model,
+            address: this.serviceAddress,
+            postalCodeError: errorMessageObservable,
+            enabled: enabledObservable
+        });
     };
 };
 

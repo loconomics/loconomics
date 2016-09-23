@@ -142,38 +142,6 @@ function ViewModel(app) {
         }, this);
     };
     
-    this.cancellationPolicyLabel = ko.pureComputed(function() {
-        var pid = this.userJobTitle() && this.userJobTitle().cancellationPolicyID();
-        // TODO fetch policy ID label
-        return pid === 3 ? 'Flexible' : pid === 2 ? 'Moderate' : 'Strict';
-    }, this);
-    
-    this.instantBooking = ko.pureComputed(function() {
-        return this.userJobTitle() && this.userJobTitle().instantBooking();
-    }, this);
-    
-    this.instantBookingLabel = ko.pureComputed(function() {
-        return this.instantBooking() ? 'ON' : 'OFF';
-    }, this);
-    
-    this.toggleInstantBooking = function() {
-        var current = this.instantBooking();
-        if (this.userJobTitle()) {
-            // Change immediately, while saving in background
-            this.userJobTitle().instantBooking(!current);
-            // Push change to server
-            var plain = this.userJobTitle().model.toPlainObject();
-            plain.instantBooking = !current;
-
-            app.model.userJobProfile.setUserJobTitle(plain)
-            .catch(function(err) {
-                app.modals.showError({ title: 'Error saving Instant Booking preference', error: err });
-                // On error, original value must be restored (so can attempt to change it again)
-                this.userJobTitle().instantBooking(current);
-            }.bind(this));
-        }
-    };
-    
     this.addresses = ko.observable([]);
     this.pricing = ko.observable([]);
 

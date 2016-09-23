@@ -141,6 +141,7 @@ namespace LcRest
             WHERE se.PositionReference = @0
                 AND se.LanguageID = @1
                 AND se.CountryID = @2
+                AND se.Active = 1
         ";
 
         private static IEnumerable<dynamic> GetUserJobTitleListData(int userID, int jobTitleID, int serviceAttributeCategoryID, int languageID, int countryID)

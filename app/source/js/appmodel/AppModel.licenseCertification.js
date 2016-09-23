@@ -9,8 +9,8 @@ var GroupRemoteModel = require('../utils/GroupRemoteModel');
 exports.create = function create(appModel) {
     
     var api = new GroupRemoteModel({
-        // Types does not changes usually, so very big ttl
-        ttl: { years: 1 },
+        // Types does not changes usually, so big ttl
+        ttl: { month: 1 },
         itemIdField: 'licenseCertificationID',
         Model: LicenseCertification
     });

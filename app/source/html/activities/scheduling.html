@@ -1,6 +1,6 @@
 <!-- Scheduling activity -->
 <div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
             <h1 class="hidden-xs hidden-sm">Get booked</h1>
@@ -17,16 +17,6 @@
                 </a>
                 <h2 class="SectionTitle">Availability</h2>
                 <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="InfoTile" href="/weeklySchedule">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa fa-calendar" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Weekly schedule</p>
-                            </div>
-                        </a>
-                    </li>
                     <li>
                         <a class="InfoTile" href="/schedulingPreferences">
                             <div class="Tile-icon" aria-hidden="true">

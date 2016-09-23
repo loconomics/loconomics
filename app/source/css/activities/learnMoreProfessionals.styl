@@ -36,6 +36,29 @@
                 line-height: $sectionTitleLineHeightSmall;
             }
         }
+            
+        .coop-join-up {
+            $boxSize = 340px;
+            $boxMargin = 1.5%;
+            width: $boxSize;
+            margin: auto;
+            padding-bottom: 2em;
+
+            @media $mediaMaxXs {
+                width: auto;
+                display: block;
+                margin: 0 $grid-gap;
+
+                > .btn {
+                    max-width: $boxSize;
+                    margin: 0 auto;
+                }
+            }
+
+            .btn {
+                border-color: White;
+            }
+        }
         
         .coop-search {
             padding-top: $LargeNavBar-height + 32px;
@@ -220,27 +243,6 @@
                     color: $brand-secondary;
                     font-size: 3em;
                     display: block;
-                }
-            }
-            
-            .coop-about-us {
-                width: $boxSize;
-                margin: auto;
-                padding-bottom: 2em;
-                
-                @media $mediaMaxXs {
-                    width: auto;
-                    display: block;
-                    margin: 0 $grid-gap;
-                    
-                    > .btn {
-                        max-width: $boxSize;
-                        margin: 0 auto;
-                    }
-                }
-
-                .btn {
-                    border-color: White;
                 }
             }
         }
@@ -518,6 +520,7 @@
                     padding-bottom: 32px;
                     border: none;
                     color: white;
+                    margin-bottom: 30px;
                     .btn-default {
                         color: white;
                         border-color: white;

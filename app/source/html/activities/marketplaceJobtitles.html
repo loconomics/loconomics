@@ -1,6 +1,6 @@
 <!-- marketplaceJobtitles activity -->
 <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -57,7 +57,7 @@
                             <span class="fa fa-certificate" aria-hidden="true"></span>
                         </div>
                         <div class="Tile-content">
-                            <div><span data-bind="text: jobTitleName"></span> licenses/certifications</div>
+                            <div><span data-bind="text: jobTitleName"></span> credentials</div>
                             <em data-bind="text: licensesCertificationsSummary"></em>
                         </div>
                     </a></li>

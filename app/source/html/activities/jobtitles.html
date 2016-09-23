@@ -1,6 +1,6 @@
 <!-- Jobtitles activity -->
 <div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -52,26 +52,14 @@
                         </a>
                     </li>
                     <li>
-                        <a class="InfoTile" href="/cancellationPolicy" data-bind="attr: { href: getJobUrlTo('cancellationPolicy') }">
+                        <a class="InfoTile" href="/bookingPolicies" data-bind="attr: {href: getJobUrlTo('bookingPolicies')}">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-close" aria-hidden="true"></span>
-                            </div>                
+                            </div>
                             <div class="Tile-content">
-                                <div>Cancellation policy</div>
-                                <em data-bind="text: cancellationPolicyLabel"></em>
+                                <p>Booking policies</p>
                             </div>
                         </a>
-                    </li>
-                    <li>
-                        <button type="button" class="InfoTile" data-bind="click: toggleInstantBooking">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-bolt-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <div>Instant booking</div>
-                                <strong data-bind="text: instantBookingLabel, css: { 'text-success': instantBooking, 'text-danger': !instantBooking() }"></strong>
-                            </div>
-                        </button>
                     </li>
                     <li>
                         <a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">

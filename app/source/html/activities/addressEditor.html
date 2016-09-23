@@ -1,9 +1,16 @@
 <!-- Activity addressEditor -->
 <div data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
@@ -19,7 +26,7 @@
                     </h2>
                     <div data-bind="with: address()">
                         <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="value: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                         </div>
                         <div data-bind="visible: isServiceArea">
                             <div class="form-group">

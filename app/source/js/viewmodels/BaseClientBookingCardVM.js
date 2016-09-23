@@ -124,7 +124,7 @@ function BaseClientBookingCardVM(app) {
         // Not allowed in request state (only cancellation is allowed there), so just only on 'confirmed' ones
         // (other states are not valid too).
         // Allowed only for instant-booking
-        if (!this.originalBooking()) return false;
+        if (!this.originalBooking() || !this.booking()) return false;
         return !this.booking().bookingID() || this.booking().instantBooking() && this.booking().isConfirmed();
     }, this);
     /**
@@ -429,7 +429,7 @@ function BaseClientBookingCardVM(app) {
         // Starting list, with fixed first steps:
         var list = ['services'];
         
-        if (this.originalBooking()) {
+        if (this.originalBooking() && this.booking()) {
 
             if (!this.isPhoneServiceOnly())
                 list.push('selectLocation');
