@@ -22,11 +22,9 @@
                     <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Getting paid is the easy part. We've partnered with Braintree (a leading credit card merchant provider) to deposit payments directly into your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is automatically subtracted from your payment. Easy, right? Just complete the information below.</p>
                 <h2 class="SectionTitle" data-bind="visible: !paymentAccount.status()">
                     <span>Choose payout preference</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967096-accepting-and-receiving-payments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
                 </h2>
                 <div class="container-fluid" data-bind="visible: paymentAccount.status()">
-                    <h2 class="SectionTitle">Merchant account status</h2>
+                    <h2 class="SectionTitle">Merchant account status</h2> 
                     <p data-bind="visible: paymentAccount.status() === 'active'" class="bg-success PaddedBox-xs">
                         You're all set up with Braintree. We'll deposit any payments due to you
                         <span data-bind="visible: paymentAccount.accountNumber">to your account ending in <span data-bind="text: paymentAccount.accountNumber"></span></span>
