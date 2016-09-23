@@ -25,6 +25,7 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
+    /* NOTE: Commented out since we have now an OnboardingSuccess activity
     if (this.requestData.completedOnboarding) {
         switch (this.requestData.completedOnboarding) {
             case 'welcome': // Schedule complete
@@ -39,7 +40,7 @@ A.prototype.show = function show(state) {
                 });
                 break;
         }
-    }
+    }*/
 
     if (this.viewModel.user.isServiceProfessional()) {
         this.viewModel.sync();

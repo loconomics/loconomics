@@ -3,9 +3,10 @@
     // the element didn't take enought height and ending showing up a weird black background under the DownloadApp element
     position: relative;
     z-index: 1;
+    top: 0px;
     
     .LeadContent {
-        margin: 0px auto 30px auto;
+        margin: 0px auto 0px auto;
         background: white;
         padding: 32px;
         color: $gray;
@@ -15,7 +16,7 @@
         }
         @media $mediaMinSm {
           max-width: 450px;
-          margin: 30px auto;
+          margin: 30px auto 100% auto;
           border: 1px solid #ccc;
         } 
     }

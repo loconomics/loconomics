@@ -1,0 +1,94 @@
+<!-- cancellationPolicy activity -->
+<div data-activity="bookingPolicies" data-bind="css: { 'is-loading': isLoading, 'is-saving': isSaving }" class="Boxes-sm animated">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">  
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <span data-bind="text: jobTitleName"></span> Scheduler
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <form data-bind="submit: save" class="col-md-7 col-sm-reset">
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set  your <span data-bind="text: jobTitleName"></span> booking policies</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Choose a cancellation policy below. We'll make sure it's clear and enforceable. </p>
+            
+                <h2 class="SectionTitle">
+                    <span>Instant booking policy</span>
+                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                    </span>
+                </h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
+                <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+                <div data-bind="visible: jobTitleID">
+                    <div class="PaddedBox-xs Box-md bg-white">
+                        <div class="radio">
+                            <label class="form-control-static btn-block">
+                                <input type="radio" data-bind="checked: instantBooking, value: false, disable: isLocked" name="bookingPolicies-instantBooking" />
+                                <span><strong>Acceptance required (default):</strong> Clients will choose up to three times for their appointment and you'll have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</span>
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label class="form-control-static btn-block">
+                                <input type="radio" data-bind="checked: instantBooking, value: true, disable: isLocked" name="bookingPolicies-instantBooking" />
+                                <span><strong>Instant booking:</strong> Clients love the ability to book you on the spot, but this works only if you keep your calendar up-to-date. Don't forget you can <a class="text-secondary" href="/calendarSyncing">sync your other calendars</a> to make this easier for you!</span>
+                            </label>
+                        </div> 
+                    </div>
+
+                    <h2 class="SectionTitle">
+                        <span>Your cancellation policy</span>
+                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                        </span>
+                    </h2>
+                    <script type="text/html" id="cancellationPolicy-item-tpl">
+                        <div class="radio">
+                            <div class="input-group">
+                                <label class="form-control-static btn-block">
+                                    <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
+                                    <span data-bind="text: itemLabel"></span>
+                                </label>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false" data-bind="attr: { 'data-target': '#cancellationPolicy-info-' + itemValue(), 'data-controls': '#cancellationPolicy-info-' + itemValue() }">
+                                        View details
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </script>
+
+                    <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs Box-md bg-white">
+                        <!-- ko template: { name: 'cancellationPolicy-item-tpl', data: { checkedValue: $parent.selectedCancellationPolicyID, itemValue: policy.cancellationPolicyID, disabled: $parent.isLocked, itemLabel: policy.name } } --><!-- /ko -->
+                        <div class="collapse container-fluid" data-bind="attr: { id: 'cancellationPolicy-info-' + policy.cancellationPolicyID() }, template: { name: 'cancellationPolicy-info-template', data: { policy: policy } }"></div>
+                    </div>
+                    <div class="bg-white">
+                        <h2 class="SectionTitle">Loconomics cancellation policy</h2>
+                        <div class="well Box-xs" data-bind="template: { name: 'generalCancellationPolicy-template' }"></div>
+                    </div>
+                    <div class="LightForm">
+                        <div class="LightForm-submitBar">
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>    

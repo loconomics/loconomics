@@ -165,6 +165,8 @@ A.prototype.show = function show(options) {
 function ViewModel(app) {
     /*jshint maxstatements: 35*/
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.isLoading = ko.observable(false);
     // managed manually instead of
     //app.model.serviceProfessionalServices.state.isLoading;

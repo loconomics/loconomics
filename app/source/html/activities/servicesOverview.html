@@ -1,9 +1,16 @@
 <!-- Activity profilePictureBio -->
 <div data-activity="servicesOverview" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
@@ -14,63 +21,72 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell clients about your <span data-bind="text: jobTitleName"></span> services</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Show clients what services you provide. Make sure your passion and experience shine through! And keep it simple and clear—so that clients know what to expect from you.</p>
                 <form class="container-fluid LightForm" role="form" data-bind="submit: save">
                     <h2 class="SectionTitle">
                         <span>Brief description of your services</span>
                         <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967766-describing-your-services-to-clients" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                         </span>
                     </h2>
-                    <div class="form-group">
-                        <textarea aria-label="Job title intro" rows="6"
-                                  class="form-control" placeholder="What makes your services special? Avoid mentioning information you'll fill out below." data-bind="value: intro, disable: isLocked"></textarea>
+                    <div data-bind="css: { 'is-loading': isLoading }">
+                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     </div>
-                    <div data-bind="foreach: categoriesView">
-                        <h2 class="SectionTitle" data-bind="text: category().name"></h2>
+                    <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+                    <div data-bind="visible: jobTitleID">
                         <div class="form-group">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Select suggested or add new" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
-                                    <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
-                                    <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && autocompleteOpenedByUser(), click: hideFullAutocomplete"><i class="fa ion ion-arrow-up-b" aria-hidden="true"></i><span class="sr-only">Close</span></button>
-                                </span>
-                            </div>
-                            <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                  <h3 data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h3>
-                                     <ul data-bind="foreach: autocompleteAttributes">
-                                       <li>
-                                          <a class="Result" data-bind="click: $parent.selectAttribute">
-                                              <div class="Result-info">
-                                                <span class="Result-name" data-bind="text: name"></span>  
-                                                <span class="Result-description hidden-xs hidden-sm" data-bind="text: description, visible: description"></span> 
-                                              </div>
-                                              <span class="btn btn-secondary btn-md btn-inline">Add</span>
-                                          </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                 <li data-bind="visible: autocompleteAttributes().length === 0">
-                                   <h3>You've added all suggestions.</h3>  
-                                </li>
-                            </ul>
+                            <textarea aria-label="Job title intro" rows="6"
+                                      class="form-control" placeholder="What makes your services special? Avoid mentioning information you'll fill out below." data-bind="value: intro, disable: isLocked"></textarea>
                         </div>
-                        <ol class="TagsList" data-bind="foreach: selectedAttributes">
-                            <li class="TagsList-item">
-                                <span data-bind="text: name"></span>
-                                <button type="button" class="btn btn-link" data-bind="click: $parent.removeAttribute, disable: $parent.isLocked">
-                                    <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i> 
-                                    <span class="sr-only">Remove</span>
-                                </button>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="form-group">
-                        <h2 class="SectionTitle">Experience Level</h2>
-                        <select class="form-control" data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
-                    </div>
-                    <div class="LightForm-submitBar">
-                        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                        <div data-bind="foreach: categoriesView">
+                            <h2 class="SectionTitle" data-bind="text: category().name"></h2>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Select suggested or add new" data-bind="textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
+                                        <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
+                                        <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && autocompleteOpenedByUser(), click: hideFullAutocomplete"><i class="fa ion ion-arrow-up-b" aria-hidden="true"></i><span class="sr-only">Close</span></button>
+                                    </span>
+                                </div>
+                                <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
+                                    <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
+                                      <h3 data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h3>
+                                         <ul data-bind="foreach: autocompleteAttributes">
+                                           <li>
+                                              <a class="Result" data-bind="click: $parent.selectAttribute">
+                                                  <div class="Result-info">
+                                                    <span class="Result-name" data-bind="text: name"></span>  
+                                                    <span class="Result-description hidden-xs hidden-sm" data-bind="text: description, visible: description"></span> 
+                                                  </div>
+                                                  <span class="btn btn-secondary btn-md btn-inline">Add</span>
+                                              </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                     <li data-bind="visible: autocompleteAttributes().length === 0">
+                                       <h3>You've added all suggestions.</h3>  
+                                    </li>
+                                </ul>
+                            </div>
+                            <ol class="TagsList" data-bind="foreach: selectedAttributes">
+                                <li class="TagsList-item">
+                                    <span data-bind="text: name"></span>
+                                    <button type="button" class="btn btn-link" data-bind="click: $parent.removeAttribute, disable: $parent.isLocked">
+                                        <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i> 
+                                        <span class="sr-only">Remove</span>
+                                    </button>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="form-group">
+                            <h2 class="SectionTitle">Experience Level</h2>
+                            <select class="form-control" data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
+                        </div>
+                        <div class="LightForm-submitBar">
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                        </div>
                     </div>
                 </form>
             </div>

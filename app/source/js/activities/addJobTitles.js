@@ -59,9 +59,11 @@ A.prototype.show = function show(options) {
     }
 };
 
+var ko = require('knockout');
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     
-    var ko = require('knockout');
     this.isSearching = ko.observable(false);
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
@@ -139,10 +141,12 @@ function ViewModel(app) {
     }.bind(this);
     
     this.save = function save() {
+        if (this.jobTitles().length === 0) return;
         this.isSaving(true);
-        
+
         // We need to do different stuff if user is not a proffesional when requesting this
         var becomingProfessional = !app.model.userProfile.data.isServiceProfessional();
+        var firstJobID = this.jobTitles()[0].value;
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
             return app.model.userJobProfile.createUserJobTitle({
@@ -157,6 +161,7 @@ function ViewModel(app) {
                 this.searchText('');
                 this.jobTitles.removeAll();
                 if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.selectedJobTitleID(firstJobID);
                     app.model.onboarding.goNext();
                 }
                 else {

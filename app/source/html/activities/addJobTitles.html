@@ -1,9 +1,16 @@
 <!-- AddJobTitles activity -->
 <div data-activity="addJobTitles"  class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
@@ -11,8 +18,11 @@
                 </ul>
             </div>
             <div class="LightForm col-md-7 col-sm-reset">
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">What kind of work do you do?</div>
+                <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Clients will find you by searching by job title in our marketplace. Search for your job title(s) below. Keep in mind that even though you're obviously talented in an amazing number of ways, clients will find you by typing, say, “photographer” rather than “product photographer.”</p>
                 <h2 class="SectionTitle">
-                    <span>Add one or more job profiles</span>
+                    <span>Add one or more job titles</span>
                     <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201211055-adding-job-profiles" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
                     </span>
                 </h2>
@@ -48,7 +58,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'scheduling'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: '/help/categories/200431835-resources-for-service-professionals'"></app-inline-side-menu>
             </div>
         </div>
     </div>

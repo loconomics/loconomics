@@ -56,6 +56,20 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                /// Rewrite URL
+                // IMPORTANT: When in isSelectionMode, pushState cannot be use
+                // because it conflicts with the selection logic (on new-booking progress)
+                // TODO: discarded URL rewrite until the bug with replaceState in HashbangHistory is fixed
+                if (this.viewModel.serviceAddresses.isSelectionMode()) return;
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /serviceAddresses\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/serviceAddresses/' + jobTitleID;
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.serviceAddresses.sourceAddresses([]);
@@ -208,6 +222,8 @@ var UserJobProfile = require('../viewmodels/UserJobProfile'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     
     this.serviceAddresses = new ServiceAddresses();
 
@@ -243,9 +259,11 @@ function ViewModel(app) {
     
     this.goNext = function() {
         if (app.model.onboarding.inProgress()) {
+            // Ensure we keep the same jobTitleID in next steps as here:
+            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
             app.model.onboarding.goNext();
         }
-    };
+    }.bind(this);
 
     // Replace default selectAddress
     this.serviceAddresses.selectAddress = function(selectedAddress, event) {

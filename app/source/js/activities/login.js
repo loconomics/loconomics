@@ -148,8 +148,10 @@ function ViewModel(app) {
             // Is implicit at reset: this.isWorking(false);
             this.reset();
             this.isWorking(false);
-
-            if (this.redirectUrl())
+            
+            if (app.model.onboarding.goIfEnabled())
+                return;
+            else if (this.redirectUrl())
                 app.shell.go(this.redirectUrl());
             else
                 app.goDashboard();

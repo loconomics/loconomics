@@ -142,6 +142,8 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
@@ -205,6 +207,7 @@ function ViewModel(app) {
             this.version().push({ evenIfObsolete: true });
             // Cache of licenses info for the user and job title is dirty, clean up so is updated later
             app.model.jobTitleLicenses.clearCache();
+            app.model.userLicensesCertifications.clearCache();
             // Go out
             app.successSave();
         }.bind(this))

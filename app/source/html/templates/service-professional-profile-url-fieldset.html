@@ -1,0 +1,17 @@
+<!-- service-professional-profile-url-fieldset -->
+<script type="text/html" id="service-professional-profile-url-fieldset-template">
+    <h2 class="SectionTitle">
+        <span>Use your profile as your website</span>
+        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201961853-setting-a-custom-marketplace-profile-url" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+        </span>
+    </h2>
+    <div class="form-group">
+        <label for="serviceProfessionalProfileUrl-url">Create your custom URL:</label>
+        <div class="input-group">
+            <span class="input-group-addon" data-bind="text: customUrlDomainPrefix"></span>
+            <input type="text" id="serviceProfessionalProfileUrl-url" class="form-control"
+data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+        </div>
+    </div>
+    <button type="button" class="btn btn-default btn-block" data-bind="click: copyCustomUrl, disable: isLocked, text: copyCustomUrlButtonText">Copy</button>
+</script>

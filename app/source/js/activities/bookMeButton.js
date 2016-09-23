@@ -4,8 +4,9 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var ko = require('knockout'),
-    $ = require('jquery');
+var ko = require('knockout');
+var $ = require('jquery');
+var clipboard = require('../utils/clipboard');
 
 var A = Activity.extend(function BookMeButtonActivity() {
     
@@ -72,37 +73,6 @@ var A = Activity.extend(function BookMeButtonActivity() {
             }
         }.bind(this)
     });
-    
-    
-    var $code = this.$activity.find('textarea');
-    this.viewModel.copyCode = function() {
-        var errMsg;
-        try {
-            // If Cordova Plugin available, use that
-            if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
-                window.cordova.plugins.clipboard.copy(this.viewModel.buttonHtmlCode());
-            }
-            else {
-                // Web standard version: will not work on old Firefox and current Safari (as of 2015-11-26)
-                // using setSelectionRange rather than select since seems more compatible (with Safari, but copy does not works
-                // there so...maybe for the future I hope :-)
-                $code
-                .select()
-                .get(0).setSelectionRange(0, 99999);
-                if (!document.execCommand('copy')) {
-                    errMsg = 'Impossible to copy text.';
-                }
-            }
-        } catch(err) {
-            errMsg = 'Impossible to copy text.';
-        }
-        if (errMsg) {
-            this.app.modals.showError({ error: errMsg });
-        }
-        else {
-            this.viewModel.copyText('Copied!');
-        }
-    }.bind(this);
 });
 
 exports.init = A.init;
@@ -200,6 +170,17 @@ function ViewModel(app) {
         var j = this.userJobTitle();
         return j && j.bookMeButtonReady() || false;
     }, this);
+    
+    this.copyCode = function() {
+        var text = this.buttonHtmlCode();
+        var errMsg = clipboard.copy(text);
+        if (errMsg) {
+            app.modals.showError({ error: errMsg });
+        }
+        else {
+            this.copyText('Copied!');
+        }
+    }.bind(this);
 }
 
 function generateButtonCode(options) {

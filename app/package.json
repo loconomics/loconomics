@@ -28,6 +28,7 @@
     "es6-promise": "~2.0.1",
     "events": "~1.0.2",
     "geocomplete": "^1.6.5",
+    "google-libphonenumber": "^2.0.0",
     "grunt": "~0.4.2",
     "grunt-bliss": "0.0.2",
     "grunt-browserify": "1.3.2",

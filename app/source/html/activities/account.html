@@ -1,23 +1,62 @@
 <!-- Activity account -->
 <div data-activity="account" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <h1 data-bind="visible: isServiceProfessional" class="hidden-xs hidden-sm">You own this place</h1>
         <h1 data-bind="visible: !isServiceProfessional()" class="hidden-xs hidden-sm">Your account</h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <h1 class="SectionTitle has-HelpPoint">Important info</h1>  
+                <h1 class="SectionTitle has-HelpPoint">Community profile</h1>  
                 <ul class="TilesList TilesList--openEnd">
                     <li>
-                        <a class="InfoTile" href="/contactInfo">
+                        <a class="InfoTile" href="/aboutMe">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
                             </div>
                             <div class="Tile-content">
-                                <p>Contact information</p>
+                                <p>About me</p>
                             </div>
                         </a>
                     </li>
+                    <!--DISABLED<li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/backgroundCheck">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Background check</div>
+                            <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
+                        </div>
+                    </a></li>-->
+                    <!--DISABLED<li><a class="InfoTile" href="/verifications">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
+                            <em data-bind="text: verificationsSecondaryText"></em>
+                        </div>
+                    </a></li>-->
+                    <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/education">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-university" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Education</div>
+                            <em>List any relevant studies</em>
+                        </div>
+                    </a></li>
+                </ul>
+                <h1 class="SectionTitle has-HelpPoint">Important information</h1>  
+                <ul class="TilesList TilesList--openEnd">
+                    <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/paymentAccount">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-social-usd" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Merchant account settings</div>
+                            <em>How you get paid</em>
+                        </div>
+                    </a></li>
                     <li data-bind="visible: isServiceProfessional">
                         <a class="InfoTile" href="/ownerInfo">
                             <div class="Tile-icon" aria-hidden="true">
