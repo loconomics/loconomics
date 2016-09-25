@@ -1,7 +1,7 @@
 <!-- BookMeButton activity -->
 <div data-activity="bookMeButton" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
-    <div class="container">
+    <div class="container ServiceProfessionalPricing">
         <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
@@ -13,24 +13,29 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-7 col-sm-reset">
+            <div class="col-md-7 col-sm-reset ">
+                <form class="container-fluid LightForm" role="form">
+                <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must complete your marketplace profile before using this feature. Specify your pricing and services, locations, and weekly schedule.</p>
                 <h2 class="SectionTitle">
                     <span>Add scheduling to your website</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201959943-add-scheduling-to-your-website" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
                 </h2>
-                <p data-bind="visible: !bookMeButtonReady()" class="bg-warning PaddedBox-xs">
-                    <strong>You must complete your profile before using this feature</strong>
-                    <br/>
-                    Tip: Specify your pricing and services, locations, and weekly schedule.
-                </p>
+                <div class="PricingSection">
+                    <div class="row">
+                        <label>Should we collect payment from clients when they book from your website?</label>
+                        <div class="Select Select-block">
+                            <select class="select-unstyled selectpicker">
+                                <option value="1">No</option>
+                                <option value="2">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <script type="text/html" id="bookMeButton-radioButton">
                     <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
                         <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
                         <span data-bind="text: labelText"></span>
                     </label>
                 </script>
-                <form class="container-fluid LightForm">
                     <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
                     <div class="center-block row isolated" style="text-align: center">
                         <div class="btn-group ut-noRadioCheck">
@@ -45,7 +50,7 @@
                         <textarea id="bookMeButton-code" rows="6" readonly data-bind="value: buttonHtmlCode" class="form-control">
                         </textarea>
                     </div>
-                        <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked, text: copyText">Copy</button>
+                        <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked, text: copyText"></button>
                         <!--<a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>-->
                 </form>
             </div>
