@@ -79,6 +79,7 @@ module.exports = {
     'instantBooking': require('./activities/instantBooking'),
     'ownerPerks': require('./activities/ownerPerks'),
     'cancellationPolicies': require('./activities/cancellationPolicies'),
+    'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
     'onboardingSuccess': require('./activities/onboardingSuccess')
 };
