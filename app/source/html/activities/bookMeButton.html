@@ -1,7 +1,7 @@
 <!-- BookMeButton activity -->
 <div data-activity="bookMeButton" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
-    <div class="container ServiceProfessionalPricing">
+    <div class="container">
         <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
@@ -15,27 +15,27 @@
             </div>
             <div class="col-md-7 col-sm-reset ">
                 <form class="container-fluid LightForm" role="form">
-                <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must complete your marketplace profile before using this feature. Specify your pricing and services, locations, and weekly schedule.</p>
-                <h2 class="SectionTitle">
-                    <span>Add scheduling to your website</span>
-                </h2>
-                <div class="PricingSection">
-                    <div class="row">
-                        <label>Should we collect payment from clients when they book from your website?</label>
-                        <div class="Select Select-block">
-                            <select class="select-unstyled selectpicker">
-                                <option value="1">No</option>
-                                <option value="2">Yes</option>
-                            </select>
+                    <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must complete your marketplace profile before using this feature. Specify your pricing and services, locations, and weekly schedule.</p>
+                    <h2 class="SectionTitle">
+                        <span>Add scheduling to your website</span>
+                    </h2>
+                    <div class="LightForm-Section">
+                        <div class="row">
+                            <label>Should we collect payment from clients when they book from your website?</label>
+                            <div class="Select Select-block">
+                                <select class="select-unstyled selectpicker">
+                                    <option value="1">No</option>
+                                    <option value="2">Yes</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <script type="text/html" id="bookMeButton-radioButton">
-                    <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
-                        <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                        <span data-bind="text: labelText"></span>
-                    </label>
-                </script>
+                    <script type="text/html" id="bookMeButton-radioButton">
+                        <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
+                            <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+                            <span data-bind="text: labelText"></span>
+                        </label>
+                    </script>
                     <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
                     <div class="center-block row isolated" style="text-align: center">
                         <div class="btn-group ut-noRadioCheck">
