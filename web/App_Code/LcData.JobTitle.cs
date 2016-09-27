@@ -29,7 +29,8 @@ public static partial class LcData
                         u.InstantBooking As instantBooking,
                         u.CreateDate As createdDate,
                         u.UpdatedDate As updatedDate,
-                        u.bookMeButtonReady As bookMeButtonReady
+                        u.bookMeButtonReady As bookMeButtonReady,
+                        u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton
                     FROM
                         userprofilepositions as u
                          INNER JOIN
@@ -110,7 +111,7 @@ public static partial class LcData
                 SET     PositionIntro = @4,
                         CancellationPolicyID = @5,
                         InstantBooking = @6,
-                        collectPaymentAtBookMeButton = @7
+                        collectPaymentAtBookMeButton = @7,
                         UpdatedDate = getdate()
                 WHERE   UserID = @0 AND PositionID = @1
                     AND LanguageID = @2

@@ -28,9 +28,9 @@
                             <div class="row">
                                 <label>Should we collect payment from clients when they book from your website?</label>
                                 <div class="Select Select-block">
-                                    <select class="select-unstyled selectpicker">
-                                        <option value="1">No</option>
-                                        <option value="2">Yes</option>
+                                    <select class="select-unstyled selectpicker" data-bind="value: collectPaymentAtBookMeButtonString, event: { change: save }">
+                                        <option value="false">No</option>
+                                        <option value="true">Yes</option>
                                     </select>
                                 </div>
                             </div>
