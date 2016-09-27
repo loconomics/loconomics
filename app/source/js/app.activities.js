@@ -80,5 +80,6 @@ module.exports = {
     'ownerPerks': require('./activities/ownerPerks'),
     'cancellationPolicies': require('./activities/cancellationPolicies'),
     'aboutMe': require('./activities/aboutMe'),
-    'onboardingSuccess': require('./activities/onboardingSuccess')
+    'onboardingSuccess': require('./activities/onboardingSuccess'),
+    'ownerDisclosure': require('./activities/ownerDisclosure')
 };

@@ -1,0 +1,15 @@
+/**
+    Owner Disclosure activity styles.
+**/
+[data-activity=ownerDisclosure]
+    
+    // Ensure contents don't create horizontal scroll
+    .container-fluid
+        margin-top: 15px;
+        overflow: hidden;
+        // Multiline for large words, like links. Seems only needed for Webkit;
+        // with and without it, Firefox do it similar and slightly better by default
+        word-wrap: break-word;
+        // Legal text better justified
+        text-align: justify;
+        

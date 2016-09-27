@@ -145,6 +145,41 @@
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
+                <div data-bind="visible: user.isServiceProfessional">
+                    <h1 class="SectionTitle">To become a Loconomics Owner:</h1>
+                    <ul class="TilesList TilesList--openEnd">
+                        <li>
+                            <a class="InfoTile" href="/userFees">
+                                <div class="Tile-icon" aria-hidden="true">
+                                    <span class="fa ion ion-card fa-lg" aria-hidden="true"></span>
+                                </div>
+                                <div class="Tile-content">
+                                    <p>Pay user fees</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="InfoTile" href="/appointment/-4">
+                                <div class="Tile-icon" aria-hidden="true">
+                                    <span class="ion-ios-calendar-outline" aria-hidden="true"></span>
+                                </div>
+                                <div class="Tile-content">
+                                    <p>Make two client bookings</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="InfoTile" href="/ownerDisclosure">
+                                <div class="Tile-icon" aria-hidden="true">
+                                    <span class="fa ion ion-ios-list-outline" aria-hidden="true"></span>
+                                </div>
+                                <div class="Tile-content">
+                                    <p>Acknowledge Owner Disclosure</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <!-- HIDDEN UNTIL MARKETPLACE-PROFILE IS FULLY IMPLEMENTED
             <div data-bind="visible: getMore.items().length">
