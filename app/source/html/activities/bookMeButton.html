@@ -13,40 +13,51 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Add scheduling to your website</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201959943-add-scheduling-to-your-website" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
-                <p data-bind="visible: !bookMeButtonReady()" class="bg-warning PaddedBox-xs">
-                    <strong>You must complete your profile before using this feature</strong>
-                    <br/>
-                    Tip: Specify your pricing and services, locations, and weekly schedule.
-                </p>
-                <script type="text/html" id="bookMeButton-radioButton">
-                    <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
-                        <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                        <span data-bind="text: labelText"></span>
-                    </label>
-                </script>
-                <form class="container-fluid LightForm">
-                    <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
-                    <div class="center-block row isolated" style="text-align: center">
-                        <div class="btn-group ut-noRadioCheck">
-                            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'icon', disabled: isLocked, labelText: 'Button' } } --><!-- /ko -->
-                            <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'link', disabled: isLocked, labelText: 'Link only' } } --><!-- /ko -->
+            <div class="col-md-7 col-sm-reset ">
+                <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must specify pricing, locations, and any required credentials for your <span data-bind="text: jobTitleName"></span> services before adding scheduling to your website.</p>
+                <form class="container-fluid LightForm" role="form">
+                    <div data-bind="visible: !bookMeButtonReady()">
+                        <a class="btn btn-block btn-secondary"href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">Complete 
+                            <span data-bind="text: jobTitleName"></span> profile</a>      
+                    </div>
+                    <div data-bind="visible: bookMeButtonReady()">
+                        <h2 class="SectionTitle">
+                            <span>Add scheduling to your website</span>
+                        </h2>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>Should we collect payment from clients when they book from your website?</label>
+                                <div class="Select Select-block">
+                                    <select class="select-unstyled selectpicker" data-bind="value: collectPaymentAtBookMeButtonString, event: { change: save }">
+                                        <option value="false">No</option>
+                                        <option value="true">Yes</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
+                        <script type="text/html" id="bookMeButton-radioButton">
+                            <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
+                                <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+                                <span data-bind="text: labelText"></span>
+                            </label>
+                        </script>
+                        <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
+                        <div class="center-block row isolated" style="text-align: center">
+                            <div class="btn-group ut-noRadioCheck">
+                                <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'icon', disabled: isLocked, labelText: 'Button' } } --><!-- /ko -->
+                                <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'link', disabled: isLocked, labelText: 'Link only' } } --><!-- /ko -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookMeButton-code">
+                            Using "Source" or "Code" view in your website editor, copy the code below and paste it into yours:
+                            </label>
+                            <textarea id="bookMeButton-code" rows="6" readonly data-bind="value: buttonHtmlCode" class="form-control">
+                            </textarea>
+                        </div>
+                            <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked, text: copyText"></button>
+                            <!--<a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>-->
                     </div>
-                    <div class="form-group">
-                        <label for="bookMeButton-code">
-                        Using "Source" or "Code" view in your website editor, copy the code below and paste it into yours:
-                        </label>
-                        <textarea id="bookMeButton-code" rows="6" readonly data-bind="value: buttonHtmlCode" class="form-control">
-                        </textarea>
-                    </div>
-                        <button type="button" class="btn btn-default btn-block" data-bind="event: { click: copyCode }, disable: isLocked, text: copyText">Copy</button>
-                        <!--<a href="#" class="btn btn-default btn-block" data-bind="attr: { href: sendByEmailURL }, visible: !isLocked()">E-mail to your tech person</a>-->
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
