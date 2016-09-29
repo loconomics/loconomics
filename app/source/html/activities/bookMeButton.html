@@ -14,16 +14,12 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must complete your <span data-bind="text: jobTitleName"></span> marketplace profile before using this feature. Specify your pricing and services, locations, and weekly schedule.
+                </p>
                 <h2 class="SectionTitle">
                     <span>Add scheduling to your website</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201959943-add-scheduling-to-your-website" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
-                <p data-bind="visible: !bookMeButtonReady()" class="bg-warning PaddedBox-xs">
-                    <strong>You must complete your profile before using this feature</strong>
-                    <br/>
-                    Tip: Specify your pricing and services, locations, and weekly schedule.
-                </p>
                 <script type="text/html" id="bookMeButton-radioButton">
                     <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
                         <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
