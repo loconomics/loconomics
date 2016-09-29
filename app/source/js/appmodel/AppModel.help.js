@@ -74,6 +74,8 @@ exports.create = function create(appModel) {
         api.clearCache();
     });
     
+    // Collections
+    
     var HelpCategory = require('../models/HelpCategory');
     api.isLoadingCategories = ko.observable(false);
     api.getCategories = function() {
@@ -140,6 +142,51 @@ exports.create = function create(appModel) {
         else {
             return Promise.resolve(cached.data);
         }
+    };
+    
+    // Items
+    // TODO Implement a cache for found by ID? Or create cache for all once data is loaded?
+    api.findByIdAt = function(id, atList) {
+        var found;
+        atList.some(function(item) {
+            if (item.id() == id) {
+                found = item;
+                return true;
+            }
+        });
+        return found;
+    };
+
+    api.getCategory = function(id) {
+        return api.getCategories().then(function(list) {
+            return api.findByIdAt(id, list);
+        });
+    };
+    api.getSection = function(id) {
+        return api.getSections().then(function(list) {
+            return api.findByIdAt(id, list);
+        });
+    };
+    api.getArticle = function(id) {
+        return api.getArticles().then(function(list) {
+            return api.findByIdAt(id, list);
+        });
+    };
+    
+    api.getArticlesBySection = function(sectionID) {
+        return api.getArticles().then(function(list) {
+            return list.filter(function(item) {
+                return item.section_id() == sectionID;
+            });
+        });
+    };
+    
+    api.getSectionsByCategory = function(categoryID) {
+        return api.getSections().then(function(list) {
+            return list.filter(function(item) {
+                return item.category_id() == categoryID;
+            });
+        });
     };
 
     return api;

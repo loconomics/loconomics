@@ -85,18 +85,97 @@ exports.registerAll = function(app) {
             
             // FAQs
             vm.helpLink = getObservable(params.helpLink || '');
-            vm.articles = ko.observableArray();
+            // List or objects { link: link, label: 'Index' }
+            vm.items = ko.observableArray();
+            var category2Item = function(a) {
+                return {
+                    label: a && a.name(),
+                    link: a && a.urlPath()
+                };
+            };
+            var section2Item = category2Item;
+            var article2Item = function(a) {
+                return {
+                    label: a && a.title(),
+                    link: a && a.urlPath()
+                };
+            };
+            var idFromLink = function(link) {
+                var result = /\/(\d+)/i.exec(link);
+                return result && result[1] |0;
+            };
+            var types = {
+                categories: function(link) {
+                    var id = idFromLink(link);
+                    if (id) {
+                        // By ID
+                        //return app.model.help.getCategory(id).then(category2Item);
+                        return app.model.help.getSectionsByCategory(id).then(function(d) {
+                            return d.map(section2Item);
+                        });
+                    }
+                    else {
+                        // All categories
+                        return app.model.help.getCategories().then(function(d) {
+                            return d.map(category2Item);
+                        });
+                    }
+                },
+                sections: function(link) {
+                    var id = idFromLink(link);
+                    if (id) {
+                        // By ID
+                        //return app.model.help.getSection(id).then(section2Item);
+                        return app.model.help.getArticlesBySection(id).then(function(d) {
+                            return d.map(article2Item);
+                        });
+                    }
+                    else {
+                        // All categories
+                        return app.model.help.getSections().then(function(d) {
+                            return d.map(section2Item);
+                        });
+                    }
+                },
+                articles: function(link) {
+                    var id = idFromLink(link);
+                    if (id) {
+                        // By ID
+                        return app.model.help.getArticle(id).then(article2Item);
+                    }
+                    else {
+                        // All categories
+                        return app.model.help.getArticles().then(function(d) {
+                            return d.map(article2Item);
+                        });
+                    }
+                }
+            };
             ko.computed(function() {
                 var link = this.helpLink();
-                var list = [];
                 if (link) {
-                    // TODO Connect to remote load (refactor help activity into appModel, with cache and link format detection?)
-                    // End with a list like
-                    list = [
-                        { link: link, label: 'Index' }
-                    ];
+                    var type;
+                    Object.keys(types).some(function(t) {
+                        if (link.indexOf(t) > -1) {
+                            type = t;
+                            return true;
+                        }
+                    });
+                    if (type) {
+                        types[type](link).then(function(list) {
+                            // Supports null/undefined, single items and lists at 'list'
+                            vm.items(list ? list.length ? list : [list] : []);
+                        });
+                    }
+                    else {
+                        // Not recognized link
+                        console.warn('Help Link not recognized', link);
+                        vm.items([]);
+                        return;
+                    }
+                } else {
+                    vm.items([]);
                 }
-                vm.articles(list);
             }, vm);
         }
     });

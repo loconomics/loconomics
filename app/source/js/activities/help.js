@@ -9,7 +9,7 @@ var A = Activity.extend(function HelpActivity() {
     
     Activity.apply(this, arguments);
     
-    this.viewModel = new ViewModel();
+    this.viewModel = new ViewModel(this.app);
     this.accessLevel = null;    
 
     this.navBar = Activity.createSubsectionNavBar('Back');
@@ -123,7 +123,7 @@ A.prototype.show = function show(state) {
 
 var ko = require('knockout');
 
-function ViewModel() {
+function ViewModel(app) {
 
 
     this.articles = ko.observableArray([]);
@@ -145,30 +145,15 @@ function ViewModel() {
     this.selectedSectionId = ko.observable(0);
 
     this.fullArticleData = ko.pureComputed(function() {
-        var selectedArticleId = this.selectedArticleId();
-         var result = this.articles().filter(function(article) {
-            var articleIsSelected = article.id() === selectedArticleId;
-            return articleIsSelected;
-        });
-        return result.length ? result[0]:null;
+        return app.model.help.findByIdAt(this.selectedArticleId(), this.articles());
     }, this);
 
     this.selectedSection = ko.pureComputed(function(){
-        var selectedSectionId = this.selectedSectionId();
-         var result = this.sections().filter(function(section) {
-            var sectionIsSelected = section.id() === selectedSectionId;
-            return sectionIsSelected;
-        });
-        return result.length ? result[0]:null;
+        return app.model.help.findByIdAt(this.selectedSectionId(), this.sections());
     }, this);
 
     this.selectedCategory = ko.pureComputed(function(){
-        var selectedCategoryId = this.selectedCategoryId();
-         var result = this.categories().filter(function(category) {
-            var categoryIsSelected = category.id() === selectedCategoryId;
-            return categoryIsSelected;
-        });
-        return result.length ? result[0]:null;
+        return app.model.help.findByIdAt(this.selectedCategoryId(), this.categories());
     }, this);
 
     this.filteredSectionArticles = ko.pureComputed(function() {
