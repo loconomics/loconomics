@@ -151,6 +151,11 @@ exports.registerAll = function(app) {
                     }
                 }
             };
+            // There is an especial view at 'help' activity for 'relatedArticles' type, but
+            // internally loads the same data as 'sections' and the provided ID is a sectionID
+            // so just make an alias to recognize the links
+            types.relatedArticles = types.sections;
+
             ko.computed(function() {
                 var link = this.helpLink();
                 if (link) {
@@ -164,7 +169,7 @@ exports.registerAll = function(app) {
                     if (type) {
                         types[type](link).then(function(list) {
                             // Supports null/undefined, single items and lists at 'list'
-                            vm.items(list ? list.length ? list : [list] : []);
+                            vm.items(list ? Array.isArray(list) ? list : [list] : []);
                         });
                     }
                     else {
