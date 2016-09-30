@@ -114,7 +114,7 @@ var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
     
-    this.helpLink = '/help/relatedArticles/201966026-Setting-your-cancellation-policy';
+    this.helpLink = '/help/relatedArticles/202884403-Setting-Your-Booking-Policies';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
