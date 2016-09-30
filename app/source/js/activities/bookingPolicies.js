@@ -13,9 +13,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling',
-        helpLink: '/help/relatedArticles/201966026-setting-your-cancellation-policy'
-        // TODO helpLink must be updated to booking policies and include instant booking information
+        backLink: 'scheduling', helpLink: this.viewModel.helpLink
     });
     
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
@@ -115,6 +113,8 @@ A.prototype.show = function show(state) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    
+    this.helpLink = '/help/relatedArticles/201966026-Setting-your-cancellation-policy';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
