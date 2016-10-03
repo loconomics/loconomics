@@ -81,5 +81,7 @@ module.exports = {
     'cancellationPolicies': require('./activities/cancellationPolicies'),
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
-    'onboardingSuccess': require('./activities/onboardingSuccess')
+    'onboardingSuccess': require('./activities/onboardingSuccess'),
+    'reviewServiceProfessional': require('./activities/reviewServiceProfessional'),
+    'reviewClient': require('./activities/reviewClient')
 };
