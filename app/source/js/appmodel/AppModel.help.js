@@ -5,9 +5,9 @@
 'use strict';
 var ko = require('knockout');
 
-var articlesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/articles.json?label_names=';
-var categoriesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/categories.json';
-var sectionsUrl = 'https://loconomics.zendesk.com/api/v2/help_center/sections.json';
+var articlesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/en-us/articles.json?label_names=';
+var categoriesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/en-us/categories.json';
+var sectionsUrl = 'https://loconomics.zendesk.com/api/v2/help_center/en-us/sections.json';
 
 function getArticlesUrl(labels) {
     return articlesUrl + encodeURIComponent(labels);
@@ -16,18 +16,36 @@ function getArticlesUrl(labels) {
 var $ = require('jquery');
 
 function getRemoteArticles(labels) {
-    return Promise.resolve($.get(getArticlesUrl(labels))).then(function(data) {
-        return data.articles || [];
+    var result = [];
+    return Promise.resolve($.get(getArticlesUrl(labels))).then(function next(data) {
+        if (data.articles)
+            result = result.concat(data.articles);
+        if (data.next_page)
+            return $.get(data.next_page).then(next);
+        else
+            return result;
     });
 }
 function getRemoteCategories() {
-    return Promise.resolve($.get(categoriesUrl)).then(function(data) {
-        return data.categories || [];
+    var result = [];
+    return Promise.resolve($.get(categoriesUrl)).then(function next(data) {
+        if (data.categories)
+            result = result.concat(data.categories);
+        if (data.next_page)
+            return $.get(data.next_page).then(next);
+        else
+            return result;
     });
 }
 function getRemoteSections() {
-    return Promise.resolve($.get(sectionsUrl)).then(function(data) {
-        return data.sections || [];
+    var result = [];
+    return Promise.resolve($.get(sectionsUrl)).then(function next(data) {
+        if (data.sections)
+            result = result.concat(data.sections);
+        if (data.next_page)
+            return $.get(data.next_page).then(next);
+        else
+            return result;
     });
 }
 
