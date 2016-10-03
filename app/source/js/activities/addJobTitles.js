@@ -86,11 +86,15 @@ function ViewModel(app) {
         return !!this.jobTitles().length;
     }, this);
 
+    var latestRequest = null;
     this.searchBy = function searchBy(text) {
-        return app.model.rest.get('job-titles/autocomplete', { search: text })
-        .catch(function (err) {
+        if (latestRequest) latestRequest.xhr.abort();
+        latestRequest = app.model.rest.get('job-titles/autocomplete', { search: text });
+        latestRequest.catch(function (err) {
+            if (err && err.statusText === 'abort') return;
             app.modals.showError({ error: err });
         });
+        return latestRequest;
     }.bind(this);
     
     this.search = function search() {
@@ -197,7 +201,8 @@ function ViewModel(app) {
     
     // Autocomplete suggestions
     this.autocompleteSuggestions = ko.observableArray();
-    this.searchText.subscribe(function(text) {
+    ko.computed(function() {
+        var text = this.searchText();
         if (text) {
             // Server search
             this.searchBy(text)
@@ -212,8 +217,8 @@ function ViewModel(app) {
         else {
             this.autocompleteSuggestions([]);
         }
-    }, this);
-    
+    }, this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 500 } });
+
     // TODO: Implement a local search with a local copy of all available job-titles (if is not too much data)
     // rather than the previous server search on each typing
     // Next suggestion code based on servicesOverview attributes search
