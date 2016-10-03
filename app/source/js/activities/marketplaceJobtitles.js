@@ -183,6 +183,12 @@ function ViewModel(app) {
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error disabling a Job Title', error: err });
                 });
+                // Per #1001, notify user about availability of bookMeNow button even with public marketplace profile
+                // disabled/hidden
+                app.modals.showNotification({
+                    message: 'Clients will no longer be able to find you in the marketplace. However, any "book me now" links you have posted will still be active.',
+                    buttonText: 'Got it!'
+                });
             }
         },
         owner: this
