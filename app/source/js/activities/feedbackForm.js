@@ -49,9 +49,14 @@ A.prototype.show = function show(options) {
 
 var ko = require('knockout');
 function ViewModel(app) {
+    
+    this.user = app.model.userProfile.data;
     this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
-    
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
+    this.helpLink = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
     // Get reference to know if is already a collaborator
