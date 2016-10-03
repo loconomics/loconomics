@@ -14,7 +14,7 @@ var A = Activity.extend(function ClientAppointmentActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('', {
-        backLink: '/myAppointments' , helpLink: '/help/relatedArticles/201983163-making-changes-canceling-appointments'
+        backLink: '/myAppointments' , helpLink: this.viewModel.helpLink
     });
 });
 
@@ -34,6 +34,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201983163-making-changes-canceling-appointments';
     this.list = app.model.clientAppointments.list;
     this.currentIndex = ko.observable(-1);
     this.currentItem = new EditClientBookingCardVM(app);

@@ -18,7 +18,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling', helpLink: '/help/relatedArticles/201967166-listing-and-pricing-your-services'
+        backLink: '/scheduling', helpLink: this.viewModel.helpLink
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
@@ -224,6 +224,7 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 

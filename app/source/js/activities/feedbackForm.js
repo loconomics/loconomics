@@ -14,7 +14,7 @@ var A = Activity.extend(function FeedbackFormActivity() {
     
     this.accessLevel = null;
     this.navBar = Activity.createSubsectionNavBar('Back', {
-        helpLink: '/help/relatedArticles/201960863-providing-feedback-to-us'
+        helpLink: this.viewModel.helpLink
     });
 });
 
@@ -42,6 +42,7 @@ A.prototype.show = function show(options) {
 
 var ko = require('knockout');
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201960863-providing-feedback-to-us';
     
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);

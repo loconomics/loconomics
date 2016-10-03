@@ -16,7 +16,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
-        backLink: 'scheduling' , helpLink: '/help/relatedArticles/201959943-add-scheduling-to-your-website'
+        backLink: 'scheduling' , helpLink: this.viewModel.helpLink
     });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
@@ -93,6 +93,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
     var marketplaceProfile = app.model.marketplaceProfile;
     this.jobTitleName = ko.observable('Job Title'); 

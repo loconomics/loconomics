@@ -9,10 +9,14 @@ var A = Activity.extend(function BoardMemberNominationsActivity() {
     Activity.apply(this, arguments);
 
     this.accessLevel = null;
-    this.viewModel = {};
+    this.viewModel = new ViewModel();
     this.navBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: '/ownerInfo' , helpLink: '/help/relatedArticles/201959913-electing-board-members'
+        backLink: '/ownerInfo' , helpLink: this.viewModel.helpLink
     });
 });
 
 module.exports = A;
+
+function ViewModel() {
+    this.helpLink = '/help/relatedArticles/201959913-electing-board-members';
+}

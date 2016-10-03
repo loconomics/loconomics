@@ -18,11 +18,11 @@ var A = Activity.extend(function AboutMeActivity() {
     // on next lines, simplifying. If not, just update the links for each one; since there are more fields
     // for proffessionals than clients (marketplace profile info like URLs) I suppose 2 different are needed
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/relatedArticles/201960743-adding-your-contact-information'
+        backLink: '/account' , helpLink: this.viewModel.helpLinkProfessionals
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/relatedArticles/201960753-adding-your-contact-information'
+        backLink: '/account' , helpLink: this.viewModel.helpLinkClients
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
@@ -98,6 +98,12 @@ var ContactInfoVM = require('../viewmodels/ContactInfoVM');
 var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictureVM');
 
 function ViewModel(app) {
+    
+    this.helpLinkProfessionals = '/help/relatedArticles/201960743-adding-your-contact-information';
+    this.helpLinkClients = '/help/relatedArticles/201960753-adding-your-contact-information';
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
