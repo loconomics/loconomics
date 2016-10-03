@@ -99,8 +99,8 @@ var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictu
 
 function ViewModel(app) {
     
-    this.helpLinkProfessionals = '/help/relatedArticles/201960743-adding-your-contact-information';
-    this.helpLinkClients = '/help/relatedArticles/201960753-adding-your-contact-information';
+    this.helpLinkProfessionals = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
+    this.helpLinkClients = '/help/relatedArticles/201960753-telling-the-community-about-yourself';
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);

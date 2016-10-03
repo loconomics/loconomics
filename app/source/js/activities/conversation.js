@@ -74,7 +74,7 @@ var ko = require('knockout');
 function ViewModel(app) {
     
     this.user = app.model.userProfile.data;
-    this.helpLinkProfessionals = '/help/relatedArticles/201960743-adding-your-contact-information';
+    this.helpLinkProfessionals = '/help/relatedArticles/201966986-sending-and-receiving-messages';
     this.helpLinkClients = '/help/relatedArticles/201966996-sending-and-receiving-messages';
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
