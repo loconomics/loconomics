@@ -31,13 +31,35 @@ var A = Activity.extend(function WelcomeActivity() {
         isServiceProfessional: app.model.userProfile.data.isServiceProfessional
     };
     
-    this.navBar = new Activity.NavBar({
-        title: null,
-        leftAction: Activity.NavAction.goLogout,
-        rightAction: null
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Get started', {
+        leftAction: Activity.NavAction.goLogout, helpLink: this.viewModel.helpLinkProfessionals
     });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Get started', {
+        leftAction: Activity.NavAction.goLogout, helpLink: this.viewModel.helpLinkClients
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
     
+//    this.navBar = new Activity.NavBar({
+//        title: null,
+//        leftAction: Activity.NavAction.goLogout,
+//        rightAction: null
+//    });
+//    
     
 });
 
 exports.init = A.init;
+
+//var ko = require('knockout');
+//
+////function ViewModel(app) {
+////    
+////    this.user = app.model.userProfile.data;
+////    this.helpLinkProfessionals = '/help/relatedArticles/201211855-getting-started';
+////    this.helpLinkClients = '/help/relatedArticles/201313875-getting-started';
+////    this.helpLink = ko.pureComputed(function() {
+////        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+////    }, this);
+////}

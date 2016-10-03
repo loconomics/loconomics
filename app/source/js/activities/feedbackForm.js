@@ -13,9 +13,16 @@ var A = Activity.extend(function FeedbackFormActivity() {
     this.viewModel = new ViewModel(this.app);
     
     this.accessLevel = null;
-    this.navBar = Activity.createSubsectionNavBar('Back', {
-        helpLink: this.viewModel.helpLink
+    
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: this.viewModel.helpLinkProfessionals
     });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: this.viewModel.helpLinkClients
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
 });
 
 exports.init = A.init;
@@ -42,7 +49,8 @@ A.prototype.show = function show(options) {
 
 var ko = require('knockout');
 function ViewModel(app) {
-    this.helpLink = '/help/relatedArticles/201960863-providing-feedback-to-us';
+    this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
+    this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
     
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
