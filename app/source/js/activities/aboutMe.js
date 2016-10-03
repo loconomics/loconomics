@@ -14,9 +14,6 @@ var A = Activity.extend(function AboutMeActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    // TODO @dani0198 If the article will keep the same for client and professional, we can remove some code
-    // on next lines, simplifying. If not, just update the links for each one; since there are more fields
-    // for proffessionals than clients (marketplace profile info like URLs) I suppose 2 different are needed
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account' , helpLink: this.viewModel.helpLinkProfessionals
     });
