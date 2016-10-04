@@ -10,10 +10,12 @@
             <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
                 <ul><li class="Result">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                    <p>Give us a sec..</p>
+                    <div class="Result-info">
+                        <span class="Result-name">Give us a sec..</span>
+                    </div>
                 </li></ul>
             </li>
-            <li data-bind="visible: thereAreJobTitles">
+            <li data-bind="visible: thereAreJobTitles() && !isLoading()">
                 <h3>Sound like you?</h3>
                 <ul data-bind="foreach: searchResults.jobTitles">
                     <li class="Result">
@@ -38,7 +40,7 @@
                     </li>
                 </ul>
             </li>
-            <li data-bind="visible: !thereAreJobTitles()">
+            <li data-bind="visible: !thereAreJobTitles() && !isLoading()">
                 <ul>
                     <li class="Result">
                         <a data-bind="click: clickNoJobTitle, attr: { href: $parent.noJobTitleHref }">
