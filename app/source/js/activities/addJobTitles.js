@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 
 var A = Activity.extend(function AddJobTitlesActivity() {
     
@@ -43,7 +44,7 @@ A.prototype.show = function show(options) {
 
     // Allow auto add the search text as new proposed job-title
     if (options.route.query.autoAddNew === 'true') {
-        this.viewModel.add();
+        this.viewModel.addNewItem(s);
     }
     else if (options.route.query.id) {
         // An ID is passed in and added with the text (if any)
@@ -65,12 +66,41 @@ function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201211055-adding-job-profiles';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
-    
-    this.isSearching = ko.observable(false);
+
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
-    this.searchText = ko.observable('');
     this.jobTitles = ko.observableArray([]);
+    
+    this.addItem = function(item) {
+        var foundIndex = this.findItem(item);
+        if (foundIndex === -1) {
+            this.jobTitles.push(item);
+        }
+    };
+    this.addNewItem = function(jobTitleName) {
+        if (jobTitleName) {
+            this.addItem({
+                value: 0,
+                label: jobTitleName
+            });
+        }
+    };
+    
+    // API entry-point for search component
+    this.search = ko.observable(new SearchJobTitlesVM(app));
+    this.search().onClickJobTitle = function(jobTitle) {
+        // Add to the list, if is not already in it
+        var item = {
+            value: jobTitle.jobTitleID(),
+            label: jobTitle.singularName()
+        };
+        this.addItem(item);
+    }.bind(this);
+    this.search().onClickNoJobTitle = function(jobTitleName) {
+        this.addNewItem(jobTitleName);
+    }.bind(this);
+    this.search().customResultsButtonText('Add');
+    this.searchText = this.search().searchTerm;
     
     this.submitText = ko.pureComputed(function() {
         return (
@@ -86,42 +116,6 @@ function ViewModel(app) {
         return !!this.jobTitles().length;
     }, this);
 
-    var latestRequest = null;
-    this.searchBy = function searchBy(text) {
-        if (latestRequest) latestRequest.xhr.abort();
-        latestRequest = app.model.rest.get('job-titles/autocomplete', { search: text });
-        latestRequest.catch(function (err) {
-            if (err && err.statusText === 'abort') return;
-            app.modals.showError({ error: err });
-        });
-        return latestRequest;
-    }.bind(this);
-    
-    this.search = function search() {
-        this.searchBy(this.searchText());
-    }.bind(this);
-    
-    this.addItem = function addItem(item) {
-        // Add to the list, if is not already in it
-        var foundIndex = this.findItem(item);
-        if (foundIndex === -1) {
-            this.jobTitles.push(item);
-        }
-        // Clear search, closing suggestions too
-        this.searchText('');
-    }.bind(this);
-
-    this.add = function add() {
-        var s = this.searchText();
-        if (s) {
-            this.addItem({
-                value: 0,
-                label: s
-            });
-            this.searchText('');
-        }
-    }.bind(this);
-    
     /**
         Look for an item in the current list, returning
         its index in the list or -1 if nothing.
@@ -199,7 +193,45 @@ function ViewModel(app) {
         }.bind(this));
     }.bind(this);
     
+    /*
     // Autocomplete suggestions
+    this.searchText = ko.observable('');
+    
+    this.addItem = function addItem(item) {
+        // Add to the list, if is not already in it
+        var foundIndex = this.findItem(item);
+        if (foundIndex === -1) {
+            this.jobTitles.push(item);
+        }
+        // Clear search, closing suggestions too
+        this.searchText('');
+    }.bind(this);
+
+    this.add = function add() {
+        var s = this.searchText();
+        if (s) {
+            this.addItem({
+                value: 0,
+                label: s
+            });
+            this.searchText('');
+        }
+    }.bind(this);
+    
+    var latestRequest = null;
+    this.searchBy = function searchBy(text) {
+        if (latestRequest) latestRequest.xhr.abort();
+        latestRequest = app.model.rest.get('job-titles/autocomplete', { search: text });
+        latestRequest.catch(function (err) {
+            if (err && err.statusText === 'abort') return;
+            app.modals.showError({ error: err });
+        });
+        return latestRequest;
+    }.bind(this);
+    
+    this.search = function search() {
+        this.searchBy(this.searchText());
+    }.bind(this);
     this.autocompleteSuggestions = ko.observableArray();
     ko.computed(function() {
         var text = this.searchText();
@@ -218,7 +250,7 @@ function ViewModel(app) {
             this.autocompleteSuggestions([]);
         }
     }, this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 500 } });
-
+*/
     // TODO: Implement a local search with a local copy of all available job-titles (if is not too much data)
     // rather than the previous server search on each typing
     // Next suggestion code based on servicesOverview attributes search

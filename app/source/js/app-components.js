@@ -412,4 +412,28 @@ exports.registerAll = function(app) {
         template: { element: 'onboarding-progress-bar-template' },
         viewModel: { createViewModel: function() { return new OnboardingProgressBarVM(app); } }
     });
+    
+    /// search components
+    var SearchJobTitlesVM = require('./viewmodels/SearchJobTitlesVM');
+    ko.components.register('app-search-job-titles', {
+        template: { element: 'search-job-titles-template' },
+        viewModel: {
+            createViewModel: function(params/*, componentInfo*/) {
+                var view = new SearchJobTitlesVM(app);
+                if (params && params.api)
+                    params.api(view);
+
+                if (params)
+                    Object.keys(params).forEach(function(key) {
+                        if (ko.isObservable(view[key])) {
+                            view[key](ko.unwrap(params[key]));
+                            if (ko.isObservable(params[key]))
+                                view[key].subscribe(params[key]);
+                        }
+                    });
+                
+                return view;
+            }
+        }
+    });
 };
