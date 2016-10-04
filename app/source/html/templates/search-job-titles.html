@@ -11,8 +11,8 @@
                 <ul><li class="Result">
                     <div class="Result-info">
                         <span class="Result-name">Give us a sec..</span>
-                        <span class="Result-description"><app-loading-spinner></app-loading-spinner></span>
                     </div>
+                    <span class="btn btn-secondary btn-md btn-inline"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
                 </li></ul>
             </li>
             <li data-bind="visible: thereAreJobTitles() && !isLoading()">
