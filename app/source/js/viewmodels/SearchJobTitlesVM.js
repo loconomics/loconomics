@@ -36,7 +36,7 @@ module.exports = function SearchJobTitlesVM(app) {
             origLong: lng || DEFAULT_LOCATION.lng,
             searchDistance: DEFAULT_LOCATION.searchDistance
         });
-        latestRequest.then(function(searchResults) {
+        return latestRequest.then(function(searchResults) {
             if(searchResults){
                 //update searchResults object with all the data from the API
                 this.searchResults.model.updateWith(searchResults, true);
@@ -50,7 +50,6 @@ module.exports = function SearchJobTitlesVM(app) {
             this.isLoading(false);
             if (err && err.statusText === 'abort') return null;
         }.bind(this));
-        return latestRequest;
     };
     //creates a handler function for the html search button (event)
     this.search = function() {

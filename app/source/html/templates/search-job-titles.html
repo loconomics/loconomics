@@ -9,9 +9,9 @@
         <ul class="SearchResultsPreview" data-bind="visible: isInput">
             <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
                 <ul><li class="Result">
-                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="Result-info">
                         <span class="Result-name">Give us a sec..</span>
+                        <span class="Result-description"><app-loading-spinner></app-loading-spinner></span>
                     </div>
                 </li></ul>
             </li>
