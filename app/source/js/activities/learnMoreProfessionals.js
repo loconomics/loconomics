@@ -42,7 +42,8 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         target: this.viewModel.signup,
         event: 'signedup',
         handler: function() {
-            this.app.goDashboard();
+            var url = '/addJobTitles' + this.viewModel.onboardingUrlParamsString();
+            this.app.shell.go(url);
         }.bind(this)
     });
 
@@ -151,6 +152,8 @@ function ViewModel(app) {
     //Signup
     this.signup = new SignupVM(app); 
     this.signup.profile('service-professional');
+    
+    this.onboardingUrlParamsString = ko.observable();
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
     this.search().onClickJobTitle = function(jobTitle, e) {
@@ -163,7 +166,11 @@ function ViewModel(app) {
             var url = 'addJobTitles?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
             app.shell.go(url);
         }
-    };
+        else {
+            // After sign-up, the parameters must be provided to the onboarding
+            this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID()));
+        }
+    }.bind(this);
     this.search().onClickNoJobTitle = function(jobTitleName, e) {
         // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
         // For logged users, assist them to add the job title:
@@ -173,6 +180,10 @@ function ViewModel(app) {
             // Go to addJobTitles
             var url = 'addJobTitles?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
             app.shell.go(url);
+        }
+        else {
+            // After sign-up, the parameters must be provided to the onboarding
+            this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true');
         }
     };
     this.search().jobTitleHref('#learnMoreProfessionals-signup');
