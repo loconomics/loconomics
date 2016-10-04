@@ -10,9 +10,9 @@
             <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
                 <ul><li class="Result">
                     <div class="Result-info">
-                        <span class="Result-name">Give us a sec..</span>
+                        <span class="Result-name">Searching...</span>
                     </div>
-                    <span class="btn btn-secondary btn-md btn-inline"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
+                    <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
                 </li></ul>
             </li>
             <li data-bind="visible: thereAreJobTitles() && !isLoading()">
