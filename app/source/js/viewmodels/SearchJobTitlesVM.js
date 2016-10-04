@@ -67,7 +67,7 @@ module.exports = function SearchJobTitlesVM(app) {
     ko.computed(function() {
         this.search();
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
-    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 400 } });
+    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
     
     this.isInput = ko.pureComputed(function() {
         var s = this.searchTerm();

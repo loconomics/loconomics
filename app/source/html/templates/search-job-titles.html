@@ -7,6 +7,12 @@
             <input type="text" data-bind="textInput: searchTerm" class="form-control inset" name="s" placeholder="Search for your profession" autocomplete="off">
         </div>
         <ul class="SearchResultsPreview" data-bind="visible: isInput">
+            <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
+                <ul><li class="Result">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                    <p>Give us a sec..</p>
+                </li></ul>
+            </li>
             <li data-bind="visible: thereAreJobTitles">
                 <h3>Sound like you?</h3>
                 <ul data-bind="foreach: searchResults.jobTitles">
