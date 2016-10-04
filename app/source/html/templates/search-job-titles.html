@@ -10,7 +10,7 @@
             <li data-bind="visible: thereAreJobTitles">
                 <h3>Sound like you?</h3>
                 <ul data-bind="foreach: searchResults.jobTitles">
-                    <li class="Result clearfix">
+                    <li class="Result">
                         <a data-bind="click: $parent.clickJobTitle, href: jobTitleHref">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: singularName, visible: description"></span>  
@@ -21,7 +21,7 @@
                     </li>
                 </ul>  
                 <ul>
-                    <li class="Result clearfix">
+                    <li class="Result">
                         <a data-bind="click: clickNoJobTitle, href: noJobTitleHref">
                             <div class="Result-info">
                                 <span class="Result-name">No?</span>  
@@ -34,7 +34,7 @@
             </li>
             <li data-bind="visible: !thereAreJobTitles()">
                 <ul>
-                    <li class="Result clearfix">
+                    <li class="Result">
                         <a data-bind="click: clickNoJobTitle, href: noJobTitleHref">
                             <div class="Result-info">
                                 <span class="Result-name">You're our first!</span>  
