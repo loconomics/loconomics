@@ -23,7 +23,7 @@ var A = Activity.extend(function AboutActivity() {
         $(this).tab('show');
         var link = $(this).attr('href').replace(/^#about-/, '');
         this.app.shell.replaceState(null, null, '#!about/' + link);
-    });
+    }.bind(this));
 });
 
 exports.init = A.init;
