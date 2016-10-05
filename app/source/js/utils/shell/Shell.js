@@ -379,7 +379,9 @@ Shell.prototype.run = function run() {
         //DEBUG console.log('Shell on', linkEvent, e.type, 'href', href, 'element', $t);
 
         // Do nothing if the URL contains the protocol
-        if (/^[a-z]+:/i.test(href)) {
+        // and when the link has a target value (will open in new window/tab)
+        var target = $t.attr('target');
+        if (/^[a-z]+:/i.test(href) || target) {
             return;
         }
         else if (!this.useSingleHashForRouting && /^#([^!]|$)/.test(href)) {

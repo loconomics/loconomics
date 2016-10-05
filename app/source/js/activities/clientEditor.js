@@ -182,7 +182,7 @@ function clientDataFromSearchText(txt, client) {
 
 function ViewModel(app) {
     /*jshint maxstatements:80 */
-    this.helpLink = '/help/relatedArticles/201966046-adding-new-clients';
+    this.helpLink = '/help/relatedArticles/201152639-managing-clients';
     
     this.clientID = ko.observable(0);
     

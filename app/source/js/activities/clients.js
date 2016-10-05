@@ -134,7 +134,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
-    this.helpLink = '/help/relatedArticles/201152639-managing-clients';
+    this.helpLink = '/help/relatedArticles/201966046-adding-new-clients';
 
     this.headerText = ko.observable('');
 

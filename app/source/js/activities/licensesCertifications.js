@@ -125,7 +125,7 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
-    this.helpLink = '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications';
+    this.helpLink = '/help/relatedArticles/201967966-adding-credentials';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     

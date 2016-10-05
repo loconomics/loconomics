@@ -14,9 +14,6 @@ var A = Activity.extend(function AboutMeActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    // TODO @dani0198 If the article will keep the same for client and professional, we can remove some code
-    // on next lines, simplifying. If not, just update the links for each one; since there are more fields
-    // for proffessionals than clients (marketplace profile info like URLs) I suppose 2 different are needed
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account' , helpLink: this.viewModel.helpLinkProfessionals
     });
@@ -99,8 +96,8 @@ var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictu
 
 function ViewModel(app) {
     
-    this.helpLinkProfessionals = '/help/relatedArticles/201960743-adding-your-contact-information';
-    this.helpLinkClients = '/help/relatedArticles/201960753-adding-your-contact-information';
+    this.helpLinkProfessionals = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
+    this.helpLinkClients = '/help/relatedArticles/201960753-telling-the-community-about-yourself';
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
