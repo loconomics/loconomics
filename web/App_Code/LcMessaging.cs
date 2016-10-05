@@ -853,7 +853,7 @@ public class LcMessaging
     #region Type:Admin Account
     public static void SendWelcomeProvider(int userID, string userEmail)
     {
-        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
+        SendMail(userEmail, "[Action Required] Welcome to Loconomics!",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/Welcome/",
             new Dictionary<string,object> {
                 { "userID", userID }
@@ -861,7 +861,7 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail)
     {
-        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
+        SendMail(userEmail, "[Action Required] Welcome to Loconomics!",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/Welcome/",
             new Dictionary<string, object> {
                 { "userID", userID }
