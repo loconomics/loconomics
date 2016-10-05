@@ -19,7 +19,7 @@ var A = Activity.extend(function WorkPhotosActivity() {
     this.viewModel = new ViewModel(this.app);
     
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201964193-showcase-your-work-with-photos'
+        backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
 
     // Event handlers for photo list management
@@ -113,6 +113,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201964193-showcase-your-work-with-photos';
 
     this.jobTitleID = ko.observable(0);
     this.list = ko.observableArray([]);

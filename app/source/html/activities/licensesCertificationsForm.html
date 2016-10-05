@@ -17,8 +17,6 @@
                     <div class="SmartNavContent container-fluid">
                         <h2 class="SectionTitle">
                             <span data-bind="text: item() && item().licenseCertification().name() || 'New license/certification'"></span>
-                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967966-adding-professional-licenses-and-certifications" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                            </span>
                         </h2>
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                         <form class="LightForm PaddedBox-xs" style="background-color: white;" role="form" data-bind="submit: save, visible: item">

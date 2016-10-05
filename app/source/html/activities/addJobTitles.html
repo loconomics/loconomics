@@ -23,33 +23,18 @@
                 <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Clients will find you by searching by job title in our marketplace. Search for your job title(s) below. Keep in mind that even though you're obviously talented in an amazing number of ways, clients will find you by typing, say, “photographer” rather than “product photographer.”</p>
                 <h2 class="SectionTitle">
                     <span>Add one or more job titles</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201211055-adding-job-profiles" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <div class="isolated inset">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <span class="fa ion ion-ios-search"></span><span class="sr-only">Search for your profession</span>
-                        </span>
-                        <input id="addJobTitles-search" type="text" class="form-control" placeholder="search for your profession" data-bind="textInput: searchText">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-secondary" data-bind="event: { click: add }">Add</button>
-                            </span>
-                    </div><!-- /input-group -->
-                    <div class="TagsListAutocomplete" data-bind="visible: searchText() && autocompleteSuggestions().length">
-                        <ul data-bind="foreach: autocompleteSuggestions" class="list-unstyled">
-                            <li>
-                                <button type="button" class="btn btn-link btn-block" data-bind="text: label, click: $parent.addItem"></button>
-                            </li>
-                        </ul>
-                    </div>
+                    <!--<app-search-job-titles params="api: search"></app-search-job-titles>-->
+                    <div data-bind="template: { name: 'search-job-titles-template', data: search() }"></div>
                 </div>
                 <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
                     <div class="ListView-item">
-                        <a href="#" class="btn btn-link btn-block ListView-item-content">
+                        <a class="btn btn-link btn-block ListView-item-content">
                             <p data-bind="text: label"></p>
                         </a>
-                        <a href="#" class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span>
+                        <a class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span>
                         </a>
                     </div>
                 </div>
@@ -58,7 +43,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: '/help/categories/200431835-resources-for-service-professionals'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

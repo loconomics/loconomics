@@ -7,9 +7,10 @@
         <div class="col-md-7 col-sm-reset">
 
             <div data-bind="visible: user.isServiceProfessional">
-                <h2 class="SectionTitle">Job titles
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                </h2>
+                <h2 class="SectionTitle">Job titles</h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
                 <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
                 <ul class="TilesList TilesList--openEnd">
                     <li>

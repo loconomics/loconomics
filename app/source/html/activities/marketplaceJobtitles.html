@@ -13,9 +13,10 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span data-bind="text: jobTitleName"></span>&nbsp;profile status
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
+                </h2>                        
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
                 <div class="switchLine">
                     <span class="switchLine-label">
                         <span> Marketplace profile:</span> <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
@@ -32,9 +33,10 @@
                 </div>
                 <h2 class="SectionTitle">
                     <span>About your&nbsp;<span data-bind="text: jobTitleName"></span>&nbsp;services</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
+                </h2>                        
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
                 <ul class="TilesList TilesList--openEnd">
                     <li><a class="InfoTile" href="/servicesOverview" data-bind="attr: { href: getJobUrlTo('servicesOverview') }">
                         <div class="Tile-icon" aria-hidden="true">
@@ -82,7 +84,7 @@
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-               <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+               <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>
