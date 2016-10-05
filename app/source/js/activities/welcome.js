@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var ko = require('knockout');
 
 var A = Activity.extend(function WelcomeActivity() {
     
@@ -26,7 +27,20 @@ var A = Activity.extend(function WelcomeActivity() {
 
 exports.init = A.init;
 
-var ko = require('knockout');
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
+A.prototype.show = function show(state) {
+    Activity.prototype.show.call(this, state);
+
+    this.updateNavBarState();
+};
 
 function ViewModel(app) {
     
