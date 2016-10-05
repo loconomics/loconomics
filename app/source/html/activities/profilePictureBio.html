@@ -1,6 +1,6 @@
 <!-- Activity profilePictureBio -->
 <div data-activity="profilePictureBio" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

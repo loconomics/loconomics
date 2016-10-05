@@ -1,16 +1,17 @@
 <!-- Scheduling activity -->
 <div data-activity="scheduling" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
             <h1 class="hidden-xs hidden-sm">Get booked</h1>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">Job profiles
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                </h2>
+                <h2 class="SectionTitle">Job titles</h2>                
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
                 <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle"></app-job-titles-list>
                 <a class="CompactLinkTile" href="/addJobTitles">
-                    <div class="Tile-content text-muted">Add a job profile</div>
+                    <div class="Tile-content text-muted">Add a job title</div>
                     <div class="Tile-icon text-muted">
                         <span class="fa ion ion-plus"></span>
                     </div>

@@ -27,8 +27,6 @@
                 <form class="container-fluid LightForm" role="form" data-bind="submit: save">
                     <h2 class="SectionTitle">
                         <span>Brief description of your services</span>
-                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967766-describing-your-services-to-clients" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                        </span>
                     </h2>
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -91,7 +89,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

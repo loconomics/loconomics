@@ -19,7 +19,15 @@
                         <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search services, e.g. Dog Walker, Tutor" >
                     </div>
                     <ul class="SearchResultsPreview" data-bind="visible: isSearchAutocompleteOpened">
-                        <li data-bind="visible: searchResults.jobTitles().length>0">
+                        <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
+                            <ul><li class="Result">
+                                <div class="Result-info">
+                                    <span class="Result-name">Searching...</span>
+                                </div>
+                                <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
+                            </li></ul>
+                        </li>
+                        <li data-bind="visible: searchResults.jobTitles().length && !isLoading()">
                             <h3>Services</h3>
                             <ul data-bind="foreach: searchResults.jobTitles">
                                 <li class="Result clearfix">
@@ -34,7 +42,7 @@
                                 </li>
                             </ul>   
                         </li>
-                        <li data-bind="visible: searchResults.serviceProfessionals().length>0">
+                        <li data-bind="visible: searchResults.serviceProfessionals().length && !isLoading()">
                             <h3>Professionals</h3>                             
                             <ul data-bind="foreach: searchResults.serviceProfessionals">
                                 <li class="Result clearfix">
@@ -50,19 +58,19 @@
                                 </li>
                             </ul>   
                         </li>
-                        <li data-bind="visible: searchResults.categories().length>0">
+                        <li data-bind="visible: searchResults.categories().length && !isLoading()">
                             <h3>Categories</h3>               
-                                <ul data-bind="foreach: searchResults.categories">
-                                    <li class="Result clearfix">
-                                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                            <div class="Result-info">
-                                                <span class="Result-name" data-bind="text: categoryName"></span>     
-                                                <span class="Result-description" data-bind="text: searchDescription"></span> 
-                                            </div> 
-                                            <button type="submit" class="btn btn-secondary btn-md btn-inline" >Go</button>
-                                        </a>
-                                    </li>
-                                </ul>   
+                            <ul data-bind="foreach: searchResults.categories">
+                                <li class="Result clearfix">
+                                    <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
+                                        <div class="Result-info">
+                                            <span class="Result-name" data-bind="text: categoryName"></span>     
+                                            <span class="Result-description" data-bind="text: searchDescription"></span> 
+                                        </div> 
+                                        <button type="submit" class="btn btn-secondary btn-md btn-inline" >Go</button>
+                                    </a>
+                                </li>
+                            </ul>   
                         </li>
                     </ul>
                 </div>

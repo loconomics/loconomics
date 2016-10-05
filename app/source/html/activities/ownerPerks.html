@@ -1,6 +1,6 @@
 <!-- Activity ownerPerks -->
 <div data-activity="ownerPerks" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -15,9 +15,7 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span>Owner perks &amp; benefits</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201973183-owner-perks-and-benefits" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
+                </h2>   
                 <ul class="TilesList TilesList--openEnd">
                     <li>
                         <a class="InfoTile" href="https://www.freelancersunion.org/network/bp/loconomics" target="_blank">
@@ -33,7 +31,7 @@
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'coopBenefits'"></app-feedback-entry>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'coopBenefits'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'coopBenefits', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

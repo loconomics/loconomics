@@ -14,11 +14,11 @@ var A = Activity.extend(function PrivacySettingsActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/relatedArticles/201967106-protecting-your-privacy'
+        backLink: '/account' , helpLink: this.viewModel.helpLinkProfessionals
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/relatedArticles/201960903-protecting-your-privacy'
+        backLink: '/account' , helpLink: this.viewModel.helpLinkClients
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
@@ -59,6 +59,12 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.user = app.model.userProfile.data;
+    this.helpLinkProfessionals = '/help/relatedArticles/201967106-protecting-your-privacy';
+    this.helpLinkClients = '/help/relatedArticles/201960903-protecting-your-privacy';
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
     
     this.user = app.model.userProfile.data;
 

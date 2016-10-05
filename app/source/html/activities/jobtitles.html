@@ -1,22 +1,19 @@
 <!-- Jobtitles activity -->
 <div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/scheduling">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Scheduler
-                        </a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
             <div class="container-fluid col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span data-bind="text: jobTitleName"></span>&nbsp;scheduling
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967086-managing-your-scheduler" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <ul class="TilesList TilesList--openEnd">
                     <li>
@@ -85,7 +82,7 @@
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'scheduling'"></app-feedback-entry>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'scheduling'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

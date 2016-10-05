@@ -61,12 +61,8 @@ public static class LcAuthHelper
 
     public static LoginResult Login(WebPage page) {
 
-        if (page.Validation.GetHtml("username") == null) {
-            page.Validation.RequireField("username", "You must specify a user name.");
-        }
-        if (page.Validation.GetHtml("password") == null) {
-	        page.Validation.RequireField("password", "You must specify a password.");
-        }
+        page.Validation.RequireField("username", "You must specify a user name.");
+	    page.Validation.RequireField("password", "You must specify a password.");
         
         if (page.Validation.IsValid()) {
             var username = Request.Form["username"];
@@ -209,16 +205,11 @@ public static class LcAuthHelper
     public static LoginResult QuickSignup(WebPage page)
     {
         page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
-        if (page.Validation.GetHtml("email") == null)
-        {
-            page.Validation.RequireField("email", "You must specify an email.");
-            // Username is an email currently, so need to be restricted
-            page.Validation.Add("email",
-                Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
-        }
-        if (page.Validation.GetHtml("password") == null) {
-	        page.Validation.RequireField("password", "You must specify a password.");
-        }
+        page.Validation.RequireField("email", "You must specify an email.");
+        // Username is an email currently, so need to be restricted
+        page.Validation.Add("email",
+            Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+        page.Validation.RequireField("password", "You must specify a password.");
         
         if (page.Validation.IsValid()) {
             var username = Request.Form["email"];

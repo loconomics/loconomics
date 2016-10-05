@@ -24,5 +24,6 @@ module.exports = {
     helpPages: 16,
     boardNomination: 17,
     dashboard: 18,
-    booking: 19
+    booking: 19,
+    welcome: 20
 };

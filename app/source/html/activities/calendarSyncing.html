@@ -1,6 +1,6 @@
 <!-- CalendarSyncing activity -->
 <div data-activity="calendarSyncing" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">  
             <div class="SubSectionNavBar col-md-7 col-sm-reset hidden-xs hidden-sm">
@@ -13,8 +13,7 @@
             <div class="LightForm col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span>Calendar Syncing</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201959953-syncing-your-existing-calendar" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <form data-bind="submit: save" class="container-fluid LightForm">
                     <p class="isolated text-muted">
@@ -44,7 +43,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'calendar'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'calendar', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

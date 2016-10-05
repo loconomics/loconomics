@@ -1,12 +1,12 @@
 <!-- Activity appointment -->
 <div data-activity="appointment" data-bind="css: { 'in-edit': editMode }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row"> 
-            <div class="SubSectionNavBar col-md-7 col-sm-reset hidden-xs hidden-sm">
+            <div class="SubSectionNavBar col-md-7 col-sm-reset hidden-xs hidden-sm"> 
                 <ul>
                     <li>
-                        <a data-bind="attr: { href: backToCalendarUrl }"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
@@ -16,8 +16,7 @@
                         <span data-bind="visible: currentID() == specialAppointmentIds.newBooking">Add a new booking</span>
                         <span data-bind="visible: currentID() == specialAppointmentIds.newEvent">Add a calendar block</span>
                         <span data-bind="visible: !isNewCard(), text: formattedCurrentDate"></span>
-                        <span class="pull-right hidden-xs hidden-sm"><a href="https://loconomics.com/#!/help/relatedArticles/201983163-making-changes-canceling-appointments" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                        </span>
+                        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                         <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
                         </span>
                     </h2>

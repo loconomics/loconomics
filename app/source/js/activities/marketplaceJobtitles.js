@@ -13,7 +13,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/202034083-managing-your-marketplace-profile'
+        backLink: '/marketplaceProfile' , helpLink: this.viewModel.helpLink
     });
 
     // On changing jobTitleID:
@@ -130,6 +130,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
@@ -181,6 +182,12 @@ function ViewModel(app) {
                 app.model.userJobProfile.deactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error disabling a Job Title', error: err });
+                });
+                // Per #1001, notify user about availability of bookMeNow button even with public marketplace profile
+                // disabled/hidden
+                app.modals.showNotification({
+                    message: 'Clients will no longer be able to find you in the marketplace. However, any "book me now" links you have posted will still be active.',
+                    buttonText: 'Got it!'
                 });
             }
         },
