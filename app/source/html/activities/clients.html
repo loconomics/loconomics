@@ -1,6 +1,6 @@
 <!-- Activity clients -->
 <div data-activity="clients" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -15,8 +15,7 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle" id="clientsActivityTitle">
                     <span data-bind="text: headerText"></span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201152639-managing-clients" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <div id="clientsContent" class="container-fluid">
                     <div id="clientsContentMeta">
@@ -78,7 +77,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'cms'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'cms', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

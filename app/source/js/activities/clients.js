@@ -16,7 +16,7 @@ var A = Activity.extend(function ClientsActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'cms' , helpLink: '/help/relatedArticles/201152639-managing-clients'
+        backLink: 'cms' , helpLink: this.viewModel.helpLink
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
@@ -134,6 +134,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201966046-adding-new-clients';
 
     this.headerText = ko.observable('');
 

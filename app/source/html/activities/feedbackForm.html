@@ -1,6 +1,6 @@
 <!-- FeedbackForm activity -->
 <div data-activity="feedbackForm" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -14,8 +14,7 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span>We'd love to hear from you</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201960863-providing-feedback-to-us" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <form class="container-fluid LightForm">
                     <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
@@ -34,7 +33,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'helpPages'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'helpPages', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div> 

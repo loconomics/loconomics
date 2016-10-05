@@ -14,7 +14,7 @@ var A = Activity.extend(function ServicesOverviewActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967766-describing-your-services-to-clients'
+        backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
     
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
@@ -119,6 +119,7 @@ A.prototype.show = function show(state) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967766-describing-your-services-to-clients';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     this.jobTitleID = ko.observable(0);

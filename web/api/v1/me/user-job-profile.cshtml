@@ -4,8 +4,6 @@
     It allows to edit the data of each one, and special actions on each like deactive/reactive.
     We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals.
 
-    TODO Complete docs
-
     EXAMPLES {
         "User Job Profile": {
             "url": "/api/v1/en-US/me/user-job-profile",
@@ -14,7 +12,8 @@
                 "jobTitleID": 106,
                 "intro": "Job title introduction",
                 "cancellationPolicyID": 1,
-                "instantBooking": true
+                "instantBooking": true,
+                "collectPaymentAtBookMeButton": true
             }
         },
         "User Job Profile (item -- Job Title)": {
@@ -23,7 +22,8 @@
             "put": {
                 "intro": "Job title introduction",
                 "cancellationPolicyID": 1,
-                "instantBooking": true
+                "instantBooking": true,
+                "collectPaymentAtBookMeButton": true
             },
             "delete": { }
         },
@@ -227,6 +227,7 @@
                         data.policyID,
                         data.intro,
                         data.instantBooking,
+                        data.collectPaymentAtBookMeButton,
                         LcRest.Locale.Current.languageID,
                         LcRest.Locale.Current.countryID
                     );
@@ -303,7 +304,8 @@
                 intro = Request["intro"] ?? null,
                 policyID = Request["cancellationPolicyID"].AsInt(LcRest.CancellationPolicy.DefaultCancellationPolicyID),
                 // False as default
-                instantBooking = Request["instantBooking"].AsBool(false)
+                instantBooking = Request["instantBooking"].AsBool(false),
+                collectPaymentAtBookMeButton = Request["collectPaymentAtBookMeButton"].AsBool(true)
             };
         }
 
@@ -335,6 +337,7 @@
                 data.policyID,
                 data.intro,
                 data.instantBooking,
+                data.collectPaymentAtBookMeButton,
                 LcRest.Locale.Current.languageID,
                 LcRest.Locale.Current.countryID
             );

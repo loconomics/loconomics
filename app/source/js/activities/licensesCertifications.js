@@ -16,7 +16,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     // Defaults settings for navBar.
     
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
+        backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
     
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
@@ -106,6 +106,9 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
+    // Reset
+    this.viewModel.jobTitleID(0);
+
     Activity.prototype.show.call(this, options);
     
     this.updateNavBarState();
@@ -122,6 +125,7 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967966-adding-credentials';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     

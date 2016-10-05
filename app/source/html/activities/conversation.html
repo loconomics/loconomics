@@ -1,6 +1,6 @@
 <!-- Conversation activity -->
 <div data-activity="conversation" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'inbox'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'inbox', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

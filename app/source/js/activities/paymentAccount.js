@@ -13,8 +13,8 @@ var A = Activity.extend(function PaymentAccountActivity() {
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-    this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/relatedArticles/201967096-accepting-and-receiving-payments'
+    this.navBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: this.viewModel.helpLink
     });
     
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
@@ -54,6 +54,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967096-accepting-and-receiving-payments';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 

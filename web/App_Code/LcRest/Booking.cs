@@ -249,13 +249,21 @@ namespace LcRest
                 return null;
             }
 
-            // Payment is required for client bookings, but avoided on bookNow bookings. That's excludes service professional bookings too
-            // TODO Per #590, a new check by job-title and bookNow preference may be required, allowing
-            // optionally enabling payment through bookNow.
+            // Payment is required for client bookings, and based on preference for bookNow bookings.
+            // That's excludes service professional bookings too from require payment (is not a client booking).
             // IMPORTANT: After bug found at #1002, paymentEnabled can be changed to false later if the pricing/services attached sum zero,
-            // so nothing need to be charged, no payment to be collected
+            // so nothing need to be charged, no payment to be collected.
             booking.paymentEnabled = false;
-            if (!isServiceProfessionalBooking && booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
+            if (booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking)
+            {
+                booking.paymentEnabled = GetCollectPaymentAtBookMeButtonPreference(jobTitleID);
+                if (booking.paymentEnabled && !IsMarketplacePaymentAccountActive(serviceProfessionalID))
+                {
+                    // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
+                    return null;
+                }
+            }
+            else if (!isServiceProfessionalBooking)
             {
                 booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
                 if (!booking.paymentEnabled)
@@ -330,6 +338,15 @@ namespace LcRest
                 return (bool)db.QueryValue(@"
                     SELECT dbo.isMarketplacePaymentAccountActive(@0)
                 ", serviceProfessionalID);
+            }
+        }
+        private static bool GetCollectPaymentAtBookMeButtonPreference(int jobTitleID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(@"
+                    SELECT collectPaymentAtBookMeButton FROM userprofilepositions WHERE PositionID = @0
+                ", jobTitleID);
             }
         }
         private static bool IsValidBookCode(int serviceProfessionalID, string bookCode)

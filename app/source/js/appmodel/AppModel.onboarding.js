@@ -85,7 +85,7 @@ exports.create = function create(appModel) {
             // It ended!!
             this.stepNumber(-1);
             appModel.userProfile.saveOnboardingStep(null);
-            this.app.shell.go('/marketplaceProfile', { completedOnboarding: api.group() });
+            this.app.shell.go('/onboardingSuccess', { completedOnboarding: api.group() });
         }
         else {
             // Get next step

@@ -27,9 +27,10 @@
                     <div id="weeklySchedule" data-bind="with: weeklySchedule" class="WeeklySchedule PaddedBox-xs-only"><!-- WEEKLY SCHEDULE -->
                         <h2 class="SectionTitle">
                             <span>Your weekly schedule</span>
-                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201964173-setting-your-weekly-schedule" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                            </span>
-                        </h2>
+                        </h2>                     
+                        <div data-bind="css: { 'is-loading': isLoading }">
+                            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                        </div>
                         <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
                             <select data-bind="value: value, disable: isLocked, valueAllowUnset: true" class="form-control select-unstyled select-unstyled--centered">
                                 <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->
@@ -149,9 +150,10 @@
                     <div id="schedulingPreferences" data-bind="with: schedulingPreferences"><!-- SCHEDULING PREFERENCES -->
                         <h2 class="SectionTitle">
                             <span>Scheduling preferences</span>
-                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201961423-setting-your-scheduling-preferences" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                            </span>
-                        </h2>
+                        </h2>                     
+                        <div data-bind="css: { 'is-loading': isLoading }">
+                            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                        </div>
                         <script type="text/html" id="schedulingPrefs-radioButton">
                             <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
                                 <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
@@ -222,7 +224,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'scheduling'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

@@ -1,19 +1,36 @@
 <!-- Activity welcome -->
-<div data-activity="welcome" class="SignupLogin">
-    <div class="LeadContent">
-        <div data-bind="visible: isServiceProfessional()">
-            <h2>Congrats, <span data-bind="text: userProfile.firstName"></span>!</h2>
-            <p>You've just become a founding member of the Loconomics Cooperative. We're helping each other manage and grow our independent businesses. First things first: set up your profile!</p>
-            <br>
-            <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Get started</button>
+<div data-activity="welcome" class="Boxes-sm animated">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
         </div>
-        <div data-bind="visible: !isServiceProfessional()">
-            <h2>Thank you, <span data-bind="text: userProfile.firstName"></span>!</h2>
-            <p>We're currently growing our network of talented and cool service professionals in the Bay Area. We will keep you in the loop as we expand.</p>
-            <p>In the meantime, share our mission! If you know an independent businessperson who'd make a great Loconomics member-owner, let them know about us.</p>
-            <br/>
-            <a class="btn btn-block btn-secondary" href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0A%0AI%20just%20wanted%20to%20share%20with%20you%20a%20new%20app%2Fsite%20for%20local%20services%20that%20could%20really%20help%20you%20with%20your%20business.%20It's%20cooperatively%20owned%20by%20the%20service%20professionals%2C%20which%20sounds%20pretty%20cool.%20%0A%0ACheck%20them%20out%20here%3A%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0A%0ACheers!" target="_blank">Refer professionals</a>
-            <a class="text-secondary btn btn-link btn-block" href="/" data-bind="click: clientOnboarding">Tour the app</a>
+    </div>
+    <div class="container">
+        <div class="row">             
+            <div class="col-md-7 col-sm-reset">
+                <div class="LeadContent">
+                    <div data-bind="visible: isServiceProfessional()">
+                        <h2>Congrats, <span data-bind="text: userProfile.firstName"></span>!</h2>
+                        <p>You've just become a founding member of the Loconomics Cooperative. We're helping each other manage and grow our independent businesses. First things first: set up your profile!</p>
+                        <br>
+                        <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Get started</button>
+                    </div>
+                    <div data-bind="visible: !isServiceProfessional()">
+                        <h2>Thank you, <span data-bind="text: userProfile.firstName"></span>!</h2>
+                        <p>We're currently growing our network of talented and cool service professionals in the Bay Area. We will keep you in the loop as we expand.</p>
+                        <p>In the meantime, share our mission! If you know an independent businessperson who'd make a great Loconomics member-owner, let them know about us.</p>
+                        <br/>
+                        <a class="btn btn-block btn-secondary" href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0A%0AI%20just%20wanted%20to%20share%20with%20you%20a%20new%20app%2Fsite%20for%20local%20services%20that%20could%20really%20help%20you%20with%20your%20business.%20It's%20cooperatively%20owned%20by%20the%20service%20professionals%2C%20which%20sounds%20pretty%20cool.%20%0A%0ACheck%20them%20out%20here%3A%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0A%0ACheers!" target="_blank">Refer professionals</a>
+                        <a class="text-secondary btn btn-link btn-block" href="/" data-bind="click: clientOnboarding">Tour the app</a>
+                    </div>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'welcome', helpLink: helpLink"></app-inline-side-menu>
+            </div>
         </div>
     </div>
 </div>
