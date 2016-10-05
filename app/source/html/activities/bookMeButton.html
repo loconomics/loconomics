@@ -13,16 +13,19 @@
                     </li>
                 </ul>
             </div>
+
             <div class="col-md-7 col-sm-reset ">
                 <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must specify pricing, locations, and any required credentials for your <span data-bind="text: jobTitleName"></span> services before adding scheduling to your website.</p>
                 <form class="container-fluid LightForm" role="form">
                     <div data-bind="visible: !bookMeButtonReady()">
                         <a class="btn btn-block btn-secondary"href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">Complete 
                             <span data-bind="text: jobTitleName"></span> profile</a>      
+
                     </div>
                     <div data-bind="visible: bookMeButtonReady()">
                         <h2 class="SectionTitle">
                             <span>Add scheduling to your website</span>
+                            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                         </h2>
                         <div class="LightForm-Section">
                             <div class="row">
@@ -61,7 +64,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'scheduling'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

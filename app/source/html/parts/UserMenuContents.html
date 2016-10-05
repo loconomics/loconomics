@@ -8,6 +8,7 @@
 <li data-bind="visible: isAnonymous, css: cssIfActive('coop-hiw')"><a href="/learnMoreProfessionals/coop-hiw">I'm a local service professional</a></li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('signup')"><a href="/signup/client">I'm a potential client</a></li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('coop-hiw')"><a href="/learnMoreProfessionals/coop-hiw">I'm both</a></li>
+<li data-bind="visible: isInOnboarding() && isServiceProfessional()" class="go-dashboard"><a href="/help/articles/214880503-take-a-tour" target="_blank"><i class="fa fa-fw ion-map" aria-hidden="true"></i> Take a tour</a></li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'dashboard' }" class="go-dashboard"><a data-bind="attr: { href: isInOnboarding() ? null : '/dashboard' }"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a></li>
 <li class="divider" data-bind="visible: !isServiceProfessional() && !isAnonymous()"></li>
 <li><h4 class="App-menus-group-header" data-bind="visible: isServiceProfessional">TOOLS</h4></li>
@@ -18,7 +19,7 @@
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'cms' }"><a data-bind="attr: { href: isInOnboarding() ? null : '/cms' }"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Client manager</a></li>
 <!--<li class="go-payments" data-bind="visible: isServiceProfessional, css: { is-disabled: isInOnboarding, active: active() === 'payments' }"><a data-bind="attr: { href: isInOnboarding() ? null : '/payments' }"><i class="fa fa-fw ion-card" aria-hidden="true"></i> Payments</a></li>-->
 <!--<li class="go-performance" data-bind="visible: isServiceProfessional, css: { is-disabled: isInOnboarding, active: active() === 'performance' }"><a data-bind="attr: { href: isInOnboarding() ? null : '/performance' }"><i class="fa fa-fw ion-ios-speedometer-outline" aria-hidden="true"></i> Performance</a></li>-->
-<li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'marketplaceProfile' }"><a data-bind="attr: { href: isInOnboarding() ? null : '/marketplaceProfile' }"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a></li>
+<li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'marketplaceProfile' }"><a data-bind="attr: { href: isInOnboarding() ? null : '/marketplaceProfile' }"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Marketplace profile</a></li>
 <li><h4 data-bind="visible: isServiceProfessional" class="App-menus-group-header">YOUR COOPERATIVE</h4></li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'account' }"><a data-bind="attr: { href: isInOnboarding() ? null : '/account' }"><i class="fa fa-fw ion-android-settings" aria-hidden="true"></i> Account</a></li>
 <li data-bind="visible: isServiceProfessional && !isInOnboarding(), css: cssIfActive('help')" class="go-help"><a href="/help/categories/200431835-resources-for-service-professionals"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a></li>

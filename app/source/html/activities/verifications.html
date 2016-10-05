@@ -15,8 +15,6 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span>Verifications</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967776-adding-verifications-to-your-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -52,7 +50,7 @@
                 </div>-->
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

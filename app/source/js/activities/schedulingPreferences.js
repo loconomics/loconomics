@@ -16,8 +16,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
     
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: '/scheduling',
-        helpLink: '/help/relatedArticles/201961423-setting-your-scheduling-preferences'
-        // '/help/relatedArticles/201964173-setting-your-weekly-schedule'
+        helpLink: this.viewModel.helpLink
     });
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
@@ -72,6 +71,7 @@ A.prototype.show = function show(state) {
 /// View Models
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201961423-setting-your-scheduling-preferences';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     

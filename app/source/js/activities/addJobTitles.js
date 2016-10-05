@@ -12,7 +12,7 @@ var A = Activity.extend(function AddJobTitlesActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: '/scheduling' , helpLink: '/help/relatedArticles/201211055-adding-job-profiles'
+        backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
 });
 
@@ -61,6 +61,8 @@ A.prototype.show = function show(options) {
 
 var ko = require('knockout');
 function ViewModel(app) {
+    
+    this.helpLink = '/help/relatedArticles/201211055-adding-job-profiles';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     
