@@ -27,9 +27,20 @@ var A = Activity.extend(function FeedbackFormActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
+    
+    this.updateNavBarState();
 
     var params = this.requestData.route.segments || [];
     var elementName = params[0] || '',
@@ -56,7 +67,6 @@ function ViewModel(app) {
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
-    this.helpLink = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
     // Get reference to know if is already a collaborator
