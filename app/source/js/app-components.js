@@ -417,6 +417,9 @@ exports.registerAll = function(app) {
     var SearchJobTitlesVM = require('./viewmodels/SearchJobTitlesVM');
     ko.components.register('app-search-job-titles', {
         template: { element: 'search-job-titles-template' },
+        // TODO Try with synchronous option to enable use of this component ( now used viewmodel and template directly)
+        //synchronous: true,
+        // TODO Implement geolocate code of learnMoreProfessionals as part of the component
         viewModel: {
             createViewModel: function(params/*, componentInfo*/) {
                 var view = new SearchJobTitlesVM(app);
