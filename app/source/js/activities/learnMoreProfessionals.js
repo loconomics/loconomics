@@ -134,7 +134,7 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     if (!this._notFirstShow) {
-        //this._registerSnapPoints();
+        this._registerSnapPoints();
         this._notFirstShow = true;
     }
     this.viewModel.search().searchTerm('');
