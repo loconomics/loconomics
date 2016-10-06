@@ -124,8 +124,7 @@ A.prototype.show = function show(state) {
 var ko = require('knockout');
 
 function ViewModel(app) {
-
-
+    this.isInOnboarding = app.model.onboarding.inProgress;
     this.articles = ko.observableArray([]);
     this.searchText = ko.observable('');
     this.isLoading = ko.observable(false);
