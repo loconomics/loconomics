@@ -14,7 +14,7 @@ var A = Activity.extend(function ClientEditionActivity() {
     
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'clients' , helpLink: '/help/relatedArticles/201966046-adding-new-clients'
+        backLink: 'clients' , helpLink: this.viewModel.helpLink
     });
     
     // If there is a change on the clientID, the URL must match
@@ -182,6 +182,7 @@ function clientDataFromSearchText(txt, client) {
 
 function ViewModel(app) {
     /*jshint maxstatements:80 */
+    this.helpLink = '/help/relatedArticles/201152639-managing-clients';
     
     this.clientID = ko.observable(0);
     

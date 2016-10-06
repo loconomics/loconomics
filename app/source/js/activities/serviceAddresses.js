@@ -15,7 +15,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling', helpLink: '/help/relatedArticles/201965996-setting-your-service-locations-areas'
+        backLink: '/scheduling', helpLink: this.viewModel.helpLink
     });
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
@@ -222,6 +222,7 @@ var UserJobProfile = require('../viewmodels/UserJobProfile'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     

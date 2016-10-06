@@ -12,11 +12,11 @@ var A = Activity.extend(function ConversationActivity() {
     this.viewModel = new ViewModel(this.app);
     
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Inbox', {
-        backLink: '/inbox' , helpLink: '/help/relatedArticles/201960743-adding-your-contact-information'
+        backLink: '/inbox' , helpLink: this.viewModel.helpLinkProfessionals
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     var clientNavBar = Activity.createSubsectionNavBar('Inbox', {
-        backLink: '/inbox' , helpLink: '/help/relatedArticles/201966996-sending-and-receiving-messages'
+        backLink: '/inbox', helpLink: this.viewModel.helpLinkClients
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
@@ -74,6 +74,11 @@ var ko = require('knockout');
 function ViewModel(app) {
     
     this.user = app.model.userProfile.data;
+    this.helpLinkProfessionals = '/help/relatedArticles/201966986-sending-and-receiving-messages';
+    this.helpLinkClients = '/help/relatedArticles/201966996-sending-and-receiving-messages';
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
 
     this.isLoading = app.model.messaging.state.isLoading;
     this.isSyncing = app.model.messaging.state.isSyncing;

@@ -18,8 +18,6 @@
                     <div class="SmartNavContent container-fluid">
                         <h2 class="SectionTitle SectionTitle-withHelpPoint">
                             <span> Your work photos</span>
-                            <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201964193-showcase-your-work-with-photos" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                            </span>
                         </h2>
                         <ul class="list-unstyled WorkPhotos"
                             data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
@@ -69,7 +67,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

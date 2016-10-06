@@ -27,12 +27,7 @@
             
                 <h2 class="SectionTitle">
                     <span>Instant booking policy</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
                 </h2>
-                <div data-bind="css: { 'is-loading': isLoading }">
-                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div data-bind="visible: jobTitleID">
                     <div class="PaddedBox-xs Box-md bg-white">
@@ -52,8 +47,6 @@
 
                     <h2 class="SectionTitle">
                         <span>Your cancellation policy</span>
-                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201966026-setting-your-cancellation-policy" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                        </span>
                     </h2>
                     <script type="text/html" id="cancellationPolicy-item-tpl">
                         <div class="radio">
@@ -87,7 +80,7 @@
                 </div>
             </form>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>
