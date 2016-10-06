@@ -10,8 +10,11 @@ A certain **PERSONA** exists ... and they have a certain **PROBLEM(S)** ... wher
 **D**etailed
 
 ## Personas - Thinks, Sees, Fees, Does
-Problem Scenario | 
+[​INSERT Name of Person ­ ‘Andrea the Accountant’ ] | 
 ------------ | 
+Screening Question:​ [INSERT­ This is a factual question or questions you’ll ask a subject to validate that they, in fact, are at representative of your persona] | 
+[INSERT PERSONA DESCRIPTION­ B​e vivid; keep it real! What kind of shoes do they wear? How would you recognize them? | 
+YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR TEXT HERE YOUR| 
 **Thinks:** The cognitive part. Often: tension between how'd they'd ideally like things to be and how they are now. _[Persona] thinks [things should be different in a certain way]. This is important because [why?]._ | 
 **Sees:** The interactions that shape their thinking - media, peers, education, training, casual observation. _[In certain situation] [person] sees [key observation of importance]. [Repeat, etc]_ | 
 **Feels:** The emotional driver. What emotions around the relevant activity? What trigger emotions? Results? _When [some event], persona feels [emotion]. It's [cause] that make them feel this way._ | 
@@ -49,8 +52,6 @@ What are the top [5] hardest things about [area of interest]? |
 What are the top [5] things you want to do better this year in [general area of interest] | 
 Why is/isn't [your specific area of interest on that list]? | 
 
-
-
 ## Problem Hypothesis
 
 Problem Scenario | Alternative(s) | Loconomics Value Proposition
@@ -75,7 +76,6 @@ There is a right process: observer and infer
 
 **Our Cast**
 - insert profile photo
-![thumb_img_0797_1024](https://cloud.githubusercontent.com/assets/1202838/19060150/606cad10-899a-11e6-995c-48e97f19971b.jpg)
 
 
 **Wake up!**
@@ -115,6 +115,3 @@ Loconomics is a (product category)
 That (statement of key benefit).
 Unlike (competing alternative)
 Loconomics (statement of primary differentiation).
-
-
-
