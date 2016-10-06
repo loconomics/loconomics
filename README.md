@@ -5,7 +5,7 @@ Root folders include documentation (/docs and /styleguide*1), sub-projects (/app
 *1: Styleguide is currently obsolete, the design is implemented in /app.
 
 ## Contents
-- [App](docs/app.md)
+- [App](docs/App.md)
 - [Database & API changes](docs/Database & API changes.md)
 - [CSS Naming Conventions](docs/CSS Naming Conventions.md)
 - [Filing Github Issues](docs/Filing Github Issues.md)
