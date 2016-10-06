@@ -60,9 +60,50 @@
         color: #767676;
         display: inline-block;
         position: relative;
-        i {
+        > * .fa {
             width: .75em;
         }
+        input[type="radio"] {
+            display: none;
+            -webkit-appearance: none;
+        }
+        input[type=radio]:checked + label {
+          .fa {
+                color: #ffb400;
+            }
+        } 
+        .star-rating-star {
+            float: right;
+            color: #767676;
+            cursor: pointer;
+        }
+    }
+    .Review-recommendation {
+        text-align: center;
+        margin: 0px auto;
+        display: block;
+        input {
+            margin-left: -9999px;
+            position: absolute;
+        }
+        input[type=radio]:checked + label {
+          .fa {
+                background-color: $brand-primary;
+                color: white;
+            }
+        } 
+        > * .fa {
+            margin: 5px;
+            color: $gray-light;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 36px;
+            border: 1px solid $gray-lighter;
+        }
+        > * .fa:hover {
+                background-color: $brand-secondary;
+                color: white;
+            }
     }
     > * .form-inline,
         .form-control{

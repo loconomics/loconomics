@@ -1,7 +1,7 @@
 <!-- Activity reviewServiceProfessional -->
 <div data-activity="reviewServiceProfessional" class="Boxes-sm animated">
     <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-    <div class="container">
+    <div class="container" id="reviewServiceProfessional-index">
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
@@ -11,77 +11,148 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <form class="container-fluid LightForm" role="form">
-                    <h2 class="SectionTitle">Review Joshua as a Cleaning Professional
-                    </h2>
-                    <p>The Loconomics community is built on trust and reviews are an integral part for both clients and service professionals to have great experiences. Please provide an honest and constructive review. <span data-bind=""> Joshua will also review working with you as a client. </span><a class="text-secondary" href="#" target="_blank">See our review guidelines</a>.</p>
-                    <div class="form-group">
-                        <label class="control-label"><span>Describe working with Joshua (required)</span></label>
-                        <textarea class="form-control" id="serviceProfessionalPublicReview" type="text" placeholder="">
-                        </textarea>
-                        <span>500 characters max</span>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="reviewServiceProfessional-recommendation">
+                        <form class="container-fluid LightForm" role="form">
+                            <h1>Review Joshua as a Cleaning Professional
+                            </h1>
+                            <p>The Loconomics community is built on trust and reviews are an integral part for both clients and service professionals to have great experiences. Please provide an honest and constructive review. <span data-bind=""> Joshua will also review working with you as a client. </span><a class="text-secondary" href="#" target="_blank">See our review guidelines</a>.</p>
+                            <h2>First, would you recommend Josh to other clients?
+                            </h2>
+                            <p>Your answer will not be posted on your profile or your service professional's profile.</p>
+                            <div class="Review-recommendation">
+                                <input id="review_recommend_0" name="review[recommend]" type="radio" value="0">
+                                <label for="review_recommend_0">
+                                    <i class="fa fa-fw fa-meh-o"></i>
+                                    <span>No</span>
+                                </label>
+                                <input id="review_recommend_1" name="review[recommend]" type="radio" value="1">
+                                <label for="review_recommend_1">
+                                    <i class="fa fa-fw fa-smile-o"></i>
+                                    <span>Yes!</span>
+                                </label>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <a href="#reviewServiceProfessional-ratings"><button type="submit" class="btn btn-primary btn-block">Next</button></a>
+                            </div> 
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label"><span>Private feedback for Joshua</span></label>
-                        <textarea class="form-control" id="serviceProfessionalPrivateFeedback" type="text" placeholder="Anything you think could help Joshua improve their services?">
-                        </textarea>
+                    <div role="tabpanel" class="tab-pane" id="reviewServiceProfessional-ratings">  
+                        <form class="container-fluid LightForm" role="form">
+                            <div class="form-group">
+                                <h2>Describe working with <span data-bind="">Joshua</span> (required)</h2>
+                                <h5 class="text-muted">Your review will be public on <span data-bind="">Joshua</span>'s profile.</h5>
+                                <textarea class="form-control" id="serviceProfessionalPublicReview" type="text" placeholder="">
+                                </textarea>
+                                <span>500 characters max</span>
+                            </div>
+                            <div class="form-group">
+                                <h2>Private feedback for <span data-bind="">Joshua</span></h2>
+                                <h5 class="text-muted">This feedback is for <span data-bind="">Joshua</span> and won't be made public.</h5>
+                                <textarea class="form-control" id="serviceProfessionalPrivateFeedback" type="text" placeholder="Anything you think could help Joshua improve their services?">
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <h2><span data-bind="">Overall experience</span></h2>
+                                <h5 class="text-muted"><span data-bind="">Overall, how was working with </span><span data-bind="">Joshua</span>?</h5>
+                                <div class="StarsRating-icons">
+                                    <input class="star-rating-input needsclick" id="review_overall_5" name="review[overall]" type="radio" value="5">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_overall_4" name="review[overall]" type="radio" value="4">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_overall_3" name="review[overall]" type="radio" value="3">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_overall_2" name="review[overall]" type="radio" value="2">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_overall_1" name="review[overall]" type="radio" value="1">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h2><span>Services</span></h2>
+                                <h5 class="text-muted"><span>How were the services provided by Joshua?</span></h5>
+                                <div class="StarsRating-icons">
+                                    <input class="star-rating-input needsclick" id="review_service_5" name="review[service]" type="radio" value="5">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_service_4" name="review[service]" type="radio" value="4">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_service_3" name="review[service]" type="radio" value="3">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_service_2" name="review[service]" type="radio" value="2">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_service_1" name="review[service]" type="radio" value="1">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h2><span data-bind="">Communication</span></h2>
+                                <h5 class="text-muted"><span data-bind="">How was communication with </span><span data-bind="">Joshua</span>?</h5>
+                                <div class="StarsRating-icons">
+                                    <input class="star-rating-input needsclick" id="review_communication_5" name="review[communication]" type="radio" value="5">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_communication_4" name="review[communication]" type="radio" value="4">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_communication_3" name="review[communication]" type="radio" value="3">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_communication_2" name="review[communication]" type="radio" value="2">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_communication_1" name="review[communication]" type="radio" value="1">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <h2><span data-bind="">Value</span></h2>
+                                <h5 class="text-muted"><span data-bind="">How was the price compared to the services received?</span></h5>
+                                <div class="StarsRating-icons">
+                                    <input class="star-rating-input needsclick" id="review_value_5" name="review[value]" type="radio" value="5">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_value_4" name="review[value]" type="radio" value="4">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_value_3" name="review[value]" type="radio" value="3">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_value_2" name="review[value]" type="radio" value="2">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="review_value_1" name="review[value]" type="radio" value="1">
+                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <a href="#reviewServiceProfessional-NPS"><button type="submit" class="btn btn-primary btn-block">Submit</button></a>
+                            </div> 
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label"><span>Overall experience</span></label><br>
-                        <label class="control-labelDescription"><span>Overall, how was working with Joshua?</span></label>
-                        <br>
-                        <div class="StarsRating-icons">
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                        </div>
+                    <div role="tabpanel" class="tab-pane" id="reviewServiceProfessional-NPS">
+                        <form class="container-fluid LightForm" role="form">
+                            <h1>Based on your interaction with Joshua, how likely are you to recommend Loconomics to a friend or colleague?</h1>
+                            <button class="btn btn-default">0</button>
+                            <button class="btn btn-default">1</button>
+                            <button class="btn btn-default">2</button>
+                            <button class="btn btn-default">3</button>
+                            <button class="btn btn-default">4</button>
+                            <button class="btn btn-default">5</button>
+                            <button class="btn btn-default">6</button>
+                            <button class="btn btn-default">7</button>
+                            <button class="btn btn-default">8</button>
+                            <button class="btn btn-default">9</button>
+                            <button class="btn btn-default">10</button>
+                            <div class="form-group">
+                                <h2>What could Loconomics do to improve the score you gave?</h2>
+                                <h5 class="text-muted">Your service professional will not see this.</h5>
+                                <textarea class="form-control" id="serviceProfessionalPublicReview" type="text" placeholder="">
+                                </textarea>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <a href="#reviewServiceProfessional-ratings"><button type="submit" class="btn btn-primary btn-block">Next</button></a>
+                            </div> 
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label"><span>Services</span></label><br>
-                        <label class="control-labelDescription"><span>How were the services provided by Joshua?</span></label>
-                        <br>
-                        <div class="StarsRating-icons">
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label"><span>Communication</span></label><br>
-                        <label class="control-labelDescription"><span>How was communication with Joshua?</span></label>
-                        <br>
-                        <div class="StarsRating-icons">
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label"><span>Value</span></label><br>
-                        <label class="control-labelDescription"><span>How was the price compared to the services received?</span></label>
-                        <br>
-                        <div class="StarsRating-icons">
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                            <i class="fa fa-fw ion-ios-star"></i>
-                        </div>
-                    </div>
-                    <div class="LightForm-submitBar">
-                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
-                    </div>       
-                </form>
+                </div>
             </div>
+<!--
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'scheduling'"></app-inline-side-menu>
             </div>
+-->
         </div>
     </div>
 </div>
