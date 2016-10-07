@@ -75,6 +75,12 @@ exports.create = function create(appModel) {
         }
         return yep;
     };
+
+    api.goCurrentStep = function() {
+        // Go current step of onboarding, and if no one, go to dashboard
+        var url = this.stepUrl() || 'dashboard';
+        this.app.shell.go(url);
+    };
     
     api.goNext = function goNext() {
         var current = this.stepNumber();

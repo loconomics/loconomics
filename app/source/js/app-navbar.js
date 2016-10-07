@@ -190,6 +190,10 @@ exports.extend = function (app) {
         });
     });
     
+    app.navBarBinding.continueOnboarding = function() {
+        app.model.onboarding.goCurrentStep();
+    };
+    
     app.shell.on(app.shell.events.itemReady, function() {
         app.navBarBinding.active(app.shell.currentRoute.name);
     });
