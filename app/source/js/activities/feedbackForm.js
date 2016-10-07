@@ -59,8 +59,9 @@ A.prototype.show = function show(options) {
 };
 
 var ko = require('knockout');
-function ViewModel(app) {
-    
+function ViewModel(app) {   
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     this.user = app.model.userProfile.data;
     this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
