@@ -7,13 +7,15 @@ var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter;
 
 //var FormCredentials = require('../viewmodels/FormCredentials');
-var newFieldObs = function() {
+var newFieldObs = function(keepError) {
     var obs = ko.observable('');
     obs.error = ko.observable('');
-    // Reset error after a change:
-    obs.subscribe(function() {
-        obs.error('');
-    });
+    if (!keepError) {
+        // Reset error after a change:
+        obs.subscribe(function() {
+            obs.error('');
+        });
+    }
     return obs;
 };
 
@@ -53,14 +55,42 @@ var facebookMe = function() {
 var pwdRequirementsLabel = 'Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.';
 var pwdRegex = /(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/;
 
+// Validating valid North America patterns, 10 to 14 digits
+var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
+var phoneValidationErrorMessage = 'The phone is not valid';
+
+/*
+var testData = [
+    '(123) 456-7890',
+    '123-456-7890',
+    '123.456.7890',
+    '1234567890',
+    '(123) 456-78901',
+    '123-456-789012',
+    '123.456.7890123',
+    '12345678901234'
+];
+
+var rValidChars = /[\d\(\)\-\.\ ]+/;
+var rValidPatterns = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
+var r = rValidPatterns;
+
+var testResults = testData.map(n => r.test(n));
+if (!testResults.reduce((ok, r) => ok ? r : false))
+    console.error('Some test failed', testResults);
+else
+    console.info('Success');
+*/
+
 function SignupVM(app) {
+    //jshint maxstatements:35
     
     EventEmitter.call(this);
     
     this.confirmationCode = ko.observable(null);
     this.firstName = newFieldObs();
     this.lastName = newFieldObs();
-    this.phone = newFieldObs();
+    this.phone = newFieldObs(true);
     this.postalCode = newFieldObs();
     this.countryID = newFieldObs();
     this.referralCode = newFieldObs();
@@ -224,6 +254,12 @@ function SignupVM(app) {
         var pwd = this.password();
         return pwdRegex.test(pwd) ? '' : pwdRequirementsLabel;
     }, this);
+    
+    this.phoneValidationError = ko.computed(function() {
+        var phone = this.phone();
+        return !phone || phoneRegex.test(phone) ? '' : phoneValidationErrorMessage;
+    }, this);
+    this.phoneValidationError.subscribe(this.phone.error);
 }
 
 SignupVM._inherits(EventEmitter);
