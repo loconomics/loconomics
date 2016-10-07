@@ -44,6 +44,7 @@ A.prototype.show = function show(options) {
 var ko = require('knockout');
 function ViewModel(app) {
     
+    this.isInOnboarding = app.model.onboarding.inProgress;
     this.message = ko.observable('');
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);

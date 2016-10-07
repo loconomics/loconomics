@@ -1,6 +1,13 @@
 <!-- FeedbackForm activity -->
 <div data-activity="feedbackForm" class="Boxes-sm animated">
-    <app-inline-user-menu></app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
