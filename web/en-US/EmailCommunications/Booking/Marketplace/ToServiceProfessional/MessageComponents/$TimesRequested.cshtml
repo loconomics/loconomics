@@ -1,0 +1,46 @@
+@* Time(s) requested by the client who made a booking request through the Book Now button on a freelancer's website.
+ *@
+@using WebMatrix.Data;
+@{
+    // All the data for this component:
+    var info = LcEmailTemplate.GetBookingInfo(PageData);
+}
+<!-- $TimesRequested -->
+<!-- COMPACT ARTICLE SECTION -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td bgcolor="#ffffff" align="center" style="border-bottom: 1px solid #d2d2d2; padding: 0 15px 40px 15px;" class="section-padding">
+            <table border="0" cellpadding="0" cellspacing="0" width="500" style="padding:0 0 20px 0;" class="responsive-table">
+                <tr>
+                    <td valign="top" style="padding: 60px 0 0 0;" class="mobile-hide"><a href="#" target="_blank"><img src="@(LcUrl.AppUrl)img/email/ion-ios-clock-outline.png" alt="alt text here" width="150" height="150" border="0" style="display: block; font-family: Arial; color: #266e9c; font-size: 14px;"></a></td>
+                    <td style="padding: 40px 0 0 0;" class="no-padding">
+                        <!-- ARTICLE -->
+                        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                            <tr>
+                                <td align="left" style="padding: 0 0 5px 25px; text-align: left; font-size: 22px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #333333;" class="padding-copy">Time(s) Requested</td>
+                            </tr>
+ 							@if (info.booking.serviceDate != null)
+                    		{
+                            <tr>
+                                 <td align="left" style="padding: 10px 0 0px 25px; text-align: left; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>Top choice:</strong><br>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</td>
+                            </tr>
+                            }
+                            @if (info.booking.alternativeDate1 != null)
+                    		{
+                            <tr>
+                                 <td align="left" style="padding: 10px 0 0px 25px; text-align: left; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>Second choice:</strong><br>@LcHelpers.DateTimeRangeToString(info.booking.alternativeDate1.startTime, info.booking.alternativeDate1.endTime)</td>
+                            </tr>
+                            }
+                            @if (info.booking.alternativeDate2 != null)
+                    		{
+                            <tr>
+                                 <td align="left" style="padding: 10px 0 0px 25px; text-align: left; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy"><strong>Third choice:</strong><br>@LcHelpers.DateTimeRangeToString(info.booking.alternativeDate2.startTime, info.booking.alternativeDate2.endTime)</td>
+                            </tr>
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

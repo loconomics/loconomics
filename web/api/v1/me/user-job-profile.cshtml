@@ -1,9 +1,8 @@
 ﻿@*
     Get the list and details of job titles attached to the logged user (a service professional).
     The collection of job titles is called the "User Job Profile".
-    It allows to edit the data of each one, and special actions on each like deactive/reactive
-
-    TODO Complete docs
+    It allows to edit the data of each one, and special actions on each like deactive/reactive.
+    We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals.
 
     EXAMPLES {
         "User Job Profile": {
@@ -13,7 +12,8 @@
                 "jobTitleID": 106,
                 "intro": "Job title introduction",
                 "cancellationPolicyID": 1,
-                "instantBooking": true
+                "instantBooking": true,
+                "collectPaymentAtBookMeButton": true
             }
         },
         "User Job Profile (item -- Job Title)": {
@@ -22,7 +22,8 @@
             "put": {
                 "intro": "Job title introduction",
                 "cancellationPolicyID": 1,
-                "instantBooking": true
+                "instantBooking": true,
+                "collectPaymentAtBookMeButton": true
             },
             "delete": { }
         },
@@ -45,6 +46,8 @@
         /// <returns></returns>
         public override dynamic Get()
         {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+
             // Item ID
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 return GetItem(UrlData[0].AsInt(0));
@@ -84,7 +87,9 @@
             throw new HttpException(404, "Job Title not found.");
         }
         
-        private dynamic PerformAction() {
+        private dynamic PerformAction()
+        {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
             
             // Two segments:
             // - jobTitleID
@@ -190,7 +195,7 @@
                     }
 
                     // Search
-                    var jobTitle = LcData.JobTitle.SearchJobTitles(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
+                    var jobTitle = LcRest.PublicJobTitle.AutocompleteSearch(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
                     if (jobTitle != null) {
                         // Use the first one
                         jobTitleID = jobTitle.value;
@@ -209,7 +214,7 @@
                 }
                 else {
                     // Double check that the job title exists
-                    jobTitleExists = LcData.JobTitle.GetJobTitle(jobTitleID) != null;
+                    jobTitleExists = LcRest.PublicJobTitle.Get(jobTitleID, LcRest.Locale.Current) != null;
                 }
                 
                 if (jobTitleID > 0 && jobTitleExists) {
@@ -222,9 +227,20 @@
                         data.policyID,
                         data.intro,
                         data.instantBooking,
+                        data.collectPaymentAtBookMeButton,
                         LcRest.Locale.Current.languageID,
                         LcRest.Locale.Current.countryID
                     );
+                    
+                    // If user is just a client, needs to become a professional
+                    var user = LcRest.UserProfile.Get(userID);
+                    if (!user.isServiceProfessional) {
+                        LcAuth.BecomeProvider(userID);
+                        // Set onboarding step as done for 'add job titles' to avoid display that screen again to the user:
+                        LcData.UserInfo.SetOnboardingStep(userID, "welcome:addJobTitles");
+                        // Send email as provider
+                        LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
+                    }
                 }
                 else {
                     throw new HttpException(404, "Job Title not found or disapproved");
@@ -286,9 +302,10 @@
             
             return new {
                 intro = Request["intro"] ?? null,
-                policyID = Request["cancellationPolicyID"].AsInt(LcData.Booking.DefaultCancellationPolicyID),
+                policyID = Request["cancellationPolicyID"].AsInt(LcRest.CancellationPolicy.DefaultCancellationPolicyID),
                 // False as default
-                instantBooking = Request["instantBooking"].AsBool(false)
+                instantBooking = Request["instantBooking"].AsBool(false),
+                collectPaymentAtBookMeButton = Request["collectPaymentAtBookMeButton"].AsBool(true)
             };
         }
 
@@ -301,6 +318,8 @@
         /// <returns></returns>
         public override dynamic Put()
         {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+            
             // Item ID
             var itemID = CheckAndGetItemID();
 
@@ -318,6 +337,7 @@
                 data.policyID,
                 data.intro,
                 data.instantBooking,
+                data.collectPaymentAtBookMeButton,
                 LcRest.Locale.Current.languageID,
                 LcRest.Locale.Current.countryID
             );
@@ -334,6 +354,8 @@
         /// <returns></returns>
         public override dynamic Delete()
         {
+            RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+            
             // Item ID
             var itemID = CheckAndGetItemID();
             
@@ -355,6 +377,7 @@
     }
 }
 @{
-    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    // We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
     new RestUserJobProfile().JsonResponse(this);
 }

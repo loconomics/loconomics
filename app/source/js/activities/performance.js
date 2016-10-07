@@ -4,7 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var A = Activity.extends(function PerformanceActivity() {
+var A = Activity.extend(function PerformanceActivity() {
 
     Activity.apply(this, arguments);
 

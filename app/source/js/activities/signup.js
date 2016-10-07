@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     SignupVM = require('../viewmodels/Signup');
 
-var A = Activity.extends(function SignupActivity() {
+var A = Activity.extend(function SignupActivity() {
     
     Activity.apply(this, arguments);
 
@@ -20,12 +20,7 @@ var A = Activity.extends(function SignupActivity() {
         target: this.viewModel,
         event: 'signedup',
         handler: function() {
-            if (this.app.goDashboard)
-                // In App
-                this.app.goDashboard();
-            else
-                // In Splash
-                this.app.shell.go('#!splashThanks/' + this.profile());
+            this.app.goDashboard();
         }.bind(this)
     });
     
@@ -35,10 +30,12 @@ var A = Activity.extends(function SignupActivity() {
         event: 'signuperror',
         handler: function(err) {
             if (err) {
+                // Focus first field with error
+                var $el = this.$activity.find('.form-group.has-error:first').find('input');
                 setTimeout(function() {
-                    // Focus first field with error
-                    this.$activity.find('.form-group.has-error:first').find('input').focus();
-                }.bind(this), 100);
+                    // Because trying synchronously will not work on some cases
+                    $el.focus();
+                }, 100);
             }
         }.bind(this)
     });
@@ -53,4 +50,10 @@ A.prototype.show = function show(options) {
     
     var p = options && options.route && options.route.segments && options.route.segments[0] || '';
     this.viewModel.profile(p);
+    var q = options && options.route && options.route.query;
+    if (q) {
+        this.viewModel.email(q.email || null);
+        this.viewModel.emailIsLocked(!!q.email);
+        this.viewModel.confirmationCode(q.confirmationCode);
+    }
 };

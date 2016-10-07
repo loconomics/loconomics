@@ -1,0 +1,296 @@
+<!-- Activity mockupHouseCleanerServiceEditor -->
+<div data-activity="mockupHouseCleanerServiceEditor" class="Boxes-sm animated">
+    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <form class="container-fluid LightForm" role="form">
+                    <h2 class="SectionTitle">
+                        <span>Add a new Cleaning Professional service</span>
+                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/#!/help/relatedArticles/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
+                        </span>
+                    </h2>                       
+                    <div class="form-inline isolated">
+                        <label>What will clients be booking?</label>
+                        <input type="text" class="form-control" placeholder="Type the name of the service, e.g. Weekly cleaning">             
+                    </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                            <label>Who can book this service?</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">
+                                         <option value="3">Anyone</option>
+                                         <option value="1">First-time clients only</option>
+                                         <option value="2">Existing clients only</option>
+                                         <option value="4">Certain clients only</option>
+                                    </select>
+                                </div>
+<!--
+                                <div class="select select-block ">
+                                    <select class="select-unstyled selectpicker">
+                                            <option value="4">Joshua Danielson</option>
+                                            <option value="5">Iago Lorenzo</option>
+                                            <option value="6">Juan Sanchez</option>
+                                    </select>
+                                </div>
+-->
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>Where can this service be booked?</label>
+                                    <div class="Select Select-block ">
+                                        <select class="select-unstyled selectpicker">
+                                            <optgroup label="My service locations">
+                                             <option value="1">My studio</option>
+                                             <option value="2">Add new service location</option>
+                                            </optgroup>
+                                            <optgroup label="My service areas">
+                                             <option value="2">5.0 miles from 94110</option>
+                                             <option value="2">Add new service area</option>
+                                            </optgroup>
+                                            <optgroup label="Remote options">
+                                             <option value="4">Phone call</option>
+                                             <option value="5">Facetime</option>
+                                             <option value="6">Google Hangout</option>
+                                             <option value="7">Skype</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>How many bedrooms?</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">
+                                         <option value="0">Studio</option>
+                                         <option value="1">1 bedroom</option>
+                                         <option value="2">2 bedrooms</option>
+                                         <option value="3">3 bedrooms</option>
+                                         <option value="4">4 bedrooms</option>
+                                         <option value="5">5 bedrooms</option>
+                                         <option value="6">5+ bedrooms</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>How many bathrooms?</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">
+                                         <option value="1">1 bathroom</option>
+                                         <option value="2">2 bathrooms</option>
+                                         <option value="3">3 bathrooms</option>
+                                         <option value="4">4 bathrooms</option>
+                                         <option value="5">5 bathrooms</option>
+                                         <option value="6">5+ bathrooms</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>How many floors?</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">
+                                         <option value="1">1 floor</option>
+                                         <option value="2">2 floors</option>
+                                         <option value="3">3 floors</option>
+                                         <option value="4">4 floors</option>
+                                         <option value="5">5 floors</option>
+                                         <option value="6">5+ floors</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>How large is the area to be cleaned?</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">          
+                                        <option value="1">Very small (500 sq ft)</option>
+                                        <option value="2">Small (501 - 1,000 sq ft)</option>
+                                        <option value="2">Average (1,001 - 2,000 sq ft)</option>
+                                        <option value="3">Large (2,001 - 3,000 sq ft)</option>
+                                        <option value="4">Very large (3,001+ sq ft)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>How clean does the client keep their space? (only you see this)</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">          
+                                        <option value="1">Very clean</option>
+                                        <option value="2">Tidy</option>
+                                        <option value="2">Average</option>
+                                        <option value="3">Messy</option>
+                                        <option value="4">Very messy</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>Any pets?</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">          
+                                        <option value="1">Dog(s)</option>
+                                        <option value="2">Cat(s)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">What services are included?</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Select suggested or add new" > 
+                                <span class="input-group-btn">
+                                <button type="button" class="btn btn-default"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span>
+                                </button>
+                                </span>
+                            </div>                        
+                            <ol class="TagsList" >
+                              <li class="TagsList-item"> <span >Appliance wipedowns</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Bathroom cleaning</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Bed making</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Cabinet cleaning</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Dish cleaning</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Dusting</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Floor waxing</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Ironing on request</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Laundry on request</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+
+                              <li class="TagsList-item"> <span >Mopping</span>
+
+                                <button type="button" class="btn btn-link" > <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>  <span class="sr-only">Remove</span>
+
+                                </button>
+                              </li>
+                            </ol>
+                    </div>
+                        <div class="form-inline isolated">
+                            <div class="form-group">
+                                <label class="control-label">What's the price for this service?</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input id="serviceProfessionalServiceEditor-price" type="number" class="form-control" min="0" step=".01" placeholder="0.00"/>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="LightForm-Section">
+                            <div class="row">
+                                <label>This price is good for:</label>
+                                <div class="Select Select-block ">
+                                    <select class="select-unstyled selectpicker">
+                                         <option value="0">First-time cleaning</option>
+                                         <option value="1">Cleaning every two weeks</option>
+                                         <option value="2">Cleaning every four weeks</option>
+                                         <option value="3">Spring cleaning</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-inline isolated">
+                            <label class="control-label">How much time will the service take?</label>
+                            <div class="row">
+                                <span class="col-xs-12 col-sm-5 form-group">
+                                    <label class="control-label sr-only">Hours</label>
+                                    <div class="input-group">
+                                        <input id="serviceProfessionalServiceEditor-durationHours" type="number" class="form-control" min="0" step="1" placeholder="1"/>
+                                        <span class="input-group-addon">hours</span>
+                                    </div>
+                                </span>
+                                <span class="col-xs-12 col-sm-offset-1 col-sm-5 form-group">
+                                    <label class="control-label sr-only">Minutes</label>
+                                    <div class="input-group">
+                                        <input id="serviceProfessionalServiceEditor-durationMinutes" type="number" class="form-control" min="0" step="15" placeholder="0"/>
+                                        <span class="input-group-addon">minutes</span>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"><span>What can clients expect with the service?</span></label>
+                            <textarea class="form-control" id="serviceProfessionalServiceEditor-description" type="number" placeholder="Describe the Pyschotherapist services you'll provide">
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"><span>Are there any time restrictions for clients booking this service?</span></label>
+                            <textarea class="form-control" id="serviceProfessionalServiceEditor-description" type="number" placeholder="e.g., Weekday mornings only">
+                            </textarea>
+                        </div>
+                    <div class="LightForm-submitBar">
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                    </div>       
+                </form>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'scheduling'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

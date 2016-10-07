@@ -1,0 +1,74 @@
+.SignupLogin {
+    // Workaround for a layout problem at webkit mobile (both iOS Safari and Chrome for Android) where
+    // the element didn't take enought height and ending showing up a weird black background under the DownloadApp element
+    position: relative;
+    z-index: 1;
+    top: 0px;
+    
+    .LeadContent {
+        margin: 0px auto 0px auto;
+        background: white;
+        padding: 32px;
+        color: $gray;
+        h2 {
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        @media $mediaMinSm {
+          max-width: 450px;
+          margin: 30px auto;
+          border: 1px solid #ccc;
+        } 
+    }
+    .btn {
+        padding: 22px 10px;
+        font-size: 16px;
+        font-weight: normal;
+    }
+    .btn-default {
+        border: 1px solid $gray;
+        color: $gray;
+        margin-top: -4px;
+        &:hover,
+        &:focus,
+        &:active {
+            color: $brand-secondary;
+            border-color: $brand-secondary;
+        }
+    }
+    .fa {
+        font-size: 34px !important;
+        padding-left: 15px;
+        margin-top: -4px;
+    }
+    .icon-right {
+        padding-left: 0px;
+        padding-right: 15px;
+        margin-top: -50px;
+    }
+    .form-control {
+        height: 64px;
+        font-size: 16px;
+        font-weight: normal;
+        color: $gray;
+        border: 1px solid $gray-light;
+    }
+    .form-control-feedback {
+        position: relative;
+    }
+    .form-group {
+        margin-right: 0px;
+        margin-left: 0px;
+        &.has-feedback {
+          .form-control {
+            padding-right: 50px;
+          }
+          label~.form-control-feedback{
+              top 0px;
+          }
+        }
+    }
+    select {
+        -webkit-appearance: none;
+    }
+}

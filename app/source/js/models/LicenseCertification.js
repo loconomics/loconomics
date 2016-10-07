@@ -10,18 +10,16 @@ function LicenseCertification(values) {
     this.model.defProperties({
         licenseCertificationID: 0,
         name: '',
-        stateProvinceID: 0,
-        countryID: 0,
-        description: null,
+        description: '',
         authority: null,
         verificationWebsiteUrl: null,
         howToGetLicensedUrl: null,
-        optionGroup: null,
         createdDate: null, // Autofilled by server
         updatedDate: null, // Autofilled by server
+        languageID: 0
     }, values);
     
-    this.model.defID(['licenseCertificationID']);
+    this.model.defID(['licenseCertificationID', 'languageID']);
 }
 
 module.exports = LicenseCertification;

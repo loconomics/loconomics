@@ -116,33 +116,57 @@ module.exports = Model;
     definition
 **/
 function prepareValueByDef(val, def) {
+    //jshint maxcomplexity:10
     if (def.isArray && 
         !Array.isArray(val)) {
-        if (typeof(val) !== 'undefined')
+        if (val)
             val = [val];
         else
             val = [];
     }
     if (def && def.Model) {
+        var getModelInstance = function(item) {
+            if (item instanceof def.Model ||
+                item === null ||
+                typeof(item) === 'undefined') {
+                // 'as is'
+                return item;
+            }
+            else {
+                // For a model instance used as initialValue, reuse it's values
+                // as initial data to keep expected behavior
+                if (def.initialValue && def.initialValue.model) {
+                    var m = new def.Model(def.initialValue.model.toPlainObject(true));
+                    m.model.updateWith(item, true);
+                    return m;
+                }
+                return new def.Model(item);
+            }
+        };
         if (Array.isArray(val)) {
-            val = val.map(function(item) {
-                if (item instanceof def.Model ||
-                    item === null ||
-                    typeof(item) === 'undefined') {
-                    // 'as is'
-                    return item;
-                }
-                else {
-                    return new def.Model(item);
-                }
-            });
+            val = val.map(getModelInstance);
         }
         else {
-            if (!(val instanceof def.Model) &&
-                val !== null &&
-                typeof(val) !== 'undefined') {
-                val = new def.Model(val);
-            }
+            val = getModelInstance(val);
+        }
+    }
+    else if (def && def.isDate) {
+        var getDate = function(v) {
+            if (v instanceof Date)
+                return v;
+            else if (typeof(v) === 'string')
+                // Must be in ISO format
+                return new Date(v);
+            else if (typeof(v) === 'number')
+                return new Date(v);
+            else
+                return null;
+        };
+        if (Array.isArray(val)) {
+            val = val.map(getDate);
+        }
+        else {
+            val = getDate(val);
         }
     }
     return val;
@@ -153,7 +177,10 @@ function createDef(givenVal, initialVal) {
     var def,
         isModel = givenVal && givenVal.model instanceof Model,
         isArray = Array.isArray(givenVal),
-        isObject = typeof(givenVal) === 'object' && !(givenVal instanceof Date);
+        //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
+        // Change attempt: isArray = givenVal && givenVal.isArray || Array.isArray(givenVal),
+        isDate = (givenVal instanceof Date),
+        isObject = typeof(givenVal) === 'object' && !isDate;
 
     if (givenVal !== null && !isModel && isObject && !isArray) {
         def = givenVal;
@@ -165,6 +192,8 @@ function createDef(givenVal, initialVal) {
         };
         if (isModel)
             def.Model = givenVal.constructor;
+        else if (isDate)
+            def.isDate = isDate;
     }
     
     initialVal = typeof(initialVal) === 'undefined' ? def.defaultValue : initialVal;
@@ -203,6 +232,8 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
 
         // Create the observable property
         modelObject[key] = Array.isArray(def.initialValue) ?
+        //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
+        // Change attempt: modelObject[key] = def.isArray ?
             ko.observableArray(def.initialValue) :
             ko.observable(def.initialValue);
 

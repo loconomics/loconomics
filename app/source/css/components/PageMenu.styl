@@ -1,0 +1,144 @@
+/**
+    PageMenu component for secondary navigation
+**/
+
+.PageMenu {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding: 0px;
+  text-align: center;
+  line-height: 19px !important;
+  background-color: $brand-primary;
+  
+  .PageMenu-list {
+    display: none;    
+    
+    a {
+      color: #FFF;
+      text-decoration: none;
+    }
+      
+    ul {
+      display: block;
+      width: 100% !important;
+      margin: 0 auto !important;
+      list-style: none;
+
+      li {
+        display: inline;
+        margin: 0px !important;
+
+        a {
+          color: #FFF;
+          display: inline-block;
+          padding: 17px 15px;
+          margin: 0px -3px 0px -3px;
+          font-size: 15px;
+        }
+
+          &:hover {
+             border-bottom: 4px solid white;
+             padding-bottom: 14px !important;
+           }
+             
+           &.active {
+             a {
+               border-bottom: 4px solid;
+               padding-bottom: 14px !important;
+               outline: none;
+             }  
+           } 
+      } 
+    }
+    
+    @media $mediaMinXs {
+      display: inherit;
+    }  
+  }
+  &.DashboardNavMenu {
+    background-color: $gray-light;
+    text-align: left;
+    clear both;
+    .PageMenu-list {
+      >ul {
+        .App-menus-group-header{
+          display: none;
+        }
+        >li {
+          >a {
+              >i {
+                display: none;
+              }
+          }
+          &.go-marketplace,
+          &.go-help,
+          &.go-logout,
+          &.go-download
+          &.divider{
+            display none;
+          }
+        }  
+      }
+    }
+  }
+  
+  .btn-group {
+    @media $mediaMinXs {
+      display: none;
+    }        
+  }
+  
+  .btn-group {
+    padding: 5px; 
+    width: 66.67%;
+  
+    .btn {
+      float: none;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .dropdown-toggle {
+      font-size: 20px;
+      color: white;
+      font-weight: normal;
+      background-color: $brand-primary;
+      border: 2px solid white;
+      margin: auto;
+    }
+    
+    .dropdown-toggle:focus,
+    .dropdown-toggle:hover {
+      border: 2px solid $brand-primary-dark; 
+      background-color: white;   
+      color: $brand-secondary-dark !important;
+    }
+
+    .dropdown-menu {
+      width: 100%;
+
+      > li {        
+        text-align: center;
+        border-bottom: 1px solid $gray-background;
+        
+        > a {
+          white-space: normal;
+          font-size: inherit;
+          padding: 10px 0px;
+        }
+      }
+      
+      > li:hover,
+        a:hover{
+          color: $brand-secondary-dark;
+          font-weight: 400;
+          background-color: white;          
+        }        
+      
+      > li:last-child {
+          border-bottom: none;
+      }
+    }
+  }
+}

@@ -15,7 +15,9 @@ module.exports = {
 	],
 	'build-js': [
 		'jshint',//'newer:jshint',
-		'browserify',
+		'browserify:styleguidelibs',
+		'browserify:libs',
+		'browserify:app',
 		'uglify',//'newer:uglify'
         'notify:browserify'
 	],
@@ -27,13 +29,17 @@ module.exports = {
         'notify:css'
 	],
     'build-images': [
-        'copyto:jqueryuiimages'
+        'copyto:images',
+        'copyto:jqueryuiimages',
+        'notify:images'
     ],
     'build-fonts': [
+        'copyto:bootstrap-fonts',
         'copyto:font-awesome-fonts',
         'copyto:ionicons-fonts'
     ],
     'build-html': [
+        'replace:html_bad_chars',
         //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
         'bliss:appDebug',
@@ -48,10 +54,19 @@ module.exports = {
         'notify:phonegap'
     ],
     
-    'build-phonegapbuild': [
+    'prepare-phonegapbuild': [
+        // Create 'DEV' version files on phonegap folder and bundle
+        'bliss:phonegapDev',
+        'bliss:cordovaConfigXmlDev',
+        'zip:phonegapDev',
+        
+        // Create 'LIVE' version files on phonegap folder (it replace previous ones) and bundle
+        'bliss:phonegap',
+        'bliss:cordovaConfigXml',
         'zip:phonegap'
-        //TODO: use REST to upload to phonegapbuild, environment credentials
     ],
+    
+    //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
 	'build-dev': [
 		'browserify',
@@ -67,25 +82,27 @@ module.exports = {
         'build-images',
         'build-fonts',
         'prepare-phonegap',
-        'build-phonegapbuild',
+        'prepare-phonegapbuild',
+        'notify:build'
+	],
+    'build-webapp-html': [
+        'bliss:webapp',
+        'htmlmin:webapp',
+        'copyto:webapp_assets',
+        'notify:html'
+    ],
+	'build-webapp': [
+        'build-js',
+        'prepare-bootstrap-variables',
+		'build-css',
+        'build-webapp-html',
+        'build-images',
+        'build-fonts',
+        'copyto:webapp_assets',
         'notify:build'
 	],
     'atwork': [
         'connect:atbuild',
         'watch'
-    ],
-    'build-splash': [
-		'jshint',//'newer:jshint',
-		'browserify:splash',
-		'uglify:splash',//'newer:uglify:splash'
-        'notify:browserify',
-        'concat:css-splash-libs',
-		'stylus:splash',
-		'cssmin:splash',//'newer:cssmin:splash'
-        'notify:css',
-        'bliss:splash',
-        'notify:html',
-        'build-fonts',
-        'notify:build'
     ]
 };

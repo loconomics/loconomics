@@ -5,7 +5,11 @@
 **/
 'use strict';
 
+var GroupRemoteModel = require('../utils/GroupRemoteModel');
+var PublicUserProfile = require('../models/PublicUserProfile');
+
 exports.create = function create(appModel) {
+    //jshint maxstatements:80
     
     var api = {};
 
@@ -22,12 +26,24 @@ exports.create = function create(appModel) {
         information to start a booking process or the user information
         widgets.
     **/
-    api.getUser = function(userID) {
-        return appModel.rest.get('users/' + (userID |0));
+    api.getUser = function(userID, options) {
+        return appModel.rest.get('users/' + (userID |0), options);
     };
     
+    // IMPORTANT: We need cache for user profiles, since are used to fetch information
+    // of users attached to thread-messages.
+    var profile = new GroupRemoteModel({
+        ttl: {
+            minutes: 10
+        },
+        Model: PublicUserProfile,
+        itemIdField: 'userID'
+    });
+    profile.addRestSupport(appModel.rest, 'users/', '/profile');
+    profile.addLocalforageSupport('userProfiles/');
     api.getProfile = function(userID) {
-        return appModel.rest.get('users/' + (userID |0) + '/profile');
+        return profile.getItem(userID);
+        //return appModel.rest.get('users/' + (userID |0) + '/profile');
     };
     
     api.getJobProfile = function(userID) {
@@ -74,6 +90,17 @@ exports.create = function create(appModel) {
 
     api.getServiceAttributes = function getServiceAttributes(userID, jobTitleID) {
         return appModel.rest.get('users/' + (userID |0) + '/service-attributes/' + (jobTitleID |0));
+    };
+    
+    /**
+        @options:Object {
+            limit:int,
+            since:Date,
+            until:Date
+        }
+    **/
+    api.getReviews = function getReviews(userID, jobTitleID, options) {
+        return appModel.rest.get('users/' + (userID |0) + '/reviews' + (jobTitleID ? '/' + (jobTitleID |0) : ''), options);
     };
 
     return api;

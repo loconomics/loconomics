@@ -104,7 +104,10 @@ public static class LcImaging
 
         Graphics grPhoto = Graphics.FromImage(bmPhoto);
         if (sizeMode == SizeMode.Contain)
-            grPhoto.Clear(Color.Black);
+        {
+            // Using a clear gray as background, the previous black was too dark
+            grPhoto.Clear(Color.FromArgb(0xF5, 0xF5, 0xF5));
+        }
 
         grPhoto.SmoothingMode = SmoothingMode.HighQuality;
         grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -117,6 +120,24 @@ public static class LcImaging
 
         grPhoto.Dispose();
         return bmPhoto;
+    }
+
+    public static void Rotate(Image imgPhoto, float angle)
+    {
+        if (angle != 0)
+        {
+            Graphics grPhoto = Graphics.FromImage(imgPhoto);
+            //move rotation point to center of image
+            grPhoto.TranslateTransform((float)imgPhoto.Width / 2, (float)imgPhoto.Height / 2);
+            // rotate
+            grPhoto.RotateTransform(angle);
+            //move image back
+            grPhoto.TranslateTransform(-(float)imgPhoto.Width / 2, -(float)imgPhoto.Height / 2);
+            // save
+            grPhoto.DrawImage(imgPhoto, new Point(0, 0));
+
+            grPhoto.Dispose();
+        }
     }
 
     public static Image Crop(

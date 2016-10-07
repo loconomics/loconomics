@@ -12,9 +12,10 @@ var ko = require('knockout'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime'),
     PricingSummaryDetail = require('../models/PricingSummaryDetail');
+var Booking = require('../models/Booking');
 
 function AppointmentCardViewModel(params) {
-    /*jshint maxstatements: 40*/
+    /*jshint maxstatements: 60*/
 
     this.sourceItem = getObservable(params.sourceItem);
     var app = this.app = ko.unwrap(params.app);
@@ -31,6 +32,8 @@ function AppointmentCardViewModel(params) {
     this.item = ko.observable(AppointmentView(this.sourceItem(), app));
     
     this.allowBookUnavailableTime = ko.observable(false);
+    
+    this.specialAppointmentIds = Appointment.specialIds;
     
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
@@ -143,6 +146,32 @@ function AppointmentCardViewModel(params) {
         this.editMode(true);
     }.bind(this);
     
+    var afterSave = function afterSave(savedApt) {
+        var version = this.editedVersion();
+        // Do not do a version push, just update with remote
+        //version.push({ evenIfObsolete: true });
+        // Update with remote data, the original appointment in the version,
+        // not the currentAppointment or in the index in the list to avoid
+        // race-conditions
+        version.original.model.updateWith(savedApt, true);
+        // Do a pull so original and version gets the exact same data
+        version.pull({ evenIfNewer: true });
+
+        // Go out edit mode
+        this.editMode(false);
+
+        // Notify
+        if (this.isBooking() && this.item().client()) {
+
+            var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
+
+            app.modals.showNotification({
+                title: 'Confirmed!',
+                message: msg
+            });
+        }
+    }.bind(this);
+    
     this.save = function save() {
         if (this.isLocked()) return;
 
@@ -152,31 +181,7 @@ function AppointmentCardViewModel(params) {
         if (version && version.areDifferent()) {
             this.isSaving(true);
             app.model.calendar.setAppointment(version.version, this.allowBookUnavailableTime())
-            .then(function(savedApt) {
-                // Do not do a version push, just update with remote
-                //version.push({ evenIfObsolete: true });
-                // Update with remote data, the original appointment in the version,
-                // not the currentAppointment or in the index in the list to avoid
-                // race-conditions
-                version.original.model.updateWith(savedApt);
-                // Do a pull so original and version gets the exact same data
-                version.pull({ evenIfNewer: true });
-
-                // Go out edit mode
-                this.editMode(false);
-                
-                // Notify
-                if (this.isBooking()) {
-                    
-                    var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
-                    
-                    app.modals.showNotification({
-                        title: 'Confirmed!',
-                        message: msg
-                    });
-                }
-                
-            }.bind(this))
+            .then(afterSave)
             .catch(function(err) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
@@ -206,16 +211,211 @@ function AppointmentCardViewModel(params) {
     }.bind(this);
     
     this.confirmCancel = function confirmCancel() {
+        var v = this.editedVersion();
+        if (v && v.areDifferent()) {
+            this.app.modals.confirm({
+                title: 'Cancel',
+                message: 'Are you sure?',
+                yes: 'Yes',
+                no: 'No'
+            })
+            .then(function() {
+                // Confirmed cancellation:
+                this.cancel();
+            }.bind(this));
+        }
+        else {
+            this.cancel();
+        }
+    }.bind(this);
+
+    // Delete Event
+    this.deleteEvent = function() {
+        // TODO
+    };
+    
+    /**
+        Special updates and related flags
+    **/
+    this.bookingID = ko.pureComputed(function() {
+        return this.item() && this.item().sourceBooking() && this.item().sourceBooking().bookingID();
+    }, this);
+
+    this.bookingCanBeCancelledByServiceProfessional = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.canBeCancelledByServiceProfessional() : false;
+    }, this);
+    
+    this.bookingCanBeCancelledByClient = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.canBeCancelledByClient() : false;
+    }, this);
+    
+    this.bookingCanBeDeclinedByServiceProfessional = ko.computed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.canBeDeclinedByServiceProfessional() : false;
+    }, this);
+    
+    this.isBookingRequest = ko.pureComputed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.isRequest() : false;
+    }, this);
+    
+    this.isServiceProfessionalBooking = ko.pureComputed(function() {
+        var b = this.item() && this.item().sourceBooking();
+        return b ? b.isServiceProfessionalBooking() : false;
+    }, this);
+    
+    // IMPORTANT Editing rule
+    this.canChangePricing = ko.pureComputed(function() {
+        if (this.isNew()) return true;
+        var b = this.item() && this.item().sourceBooking();
+        if (b) {
+            var bt = b.bookingTypeID();
+            return (
+                bt === Booking.type.serviceProfessionalBooking || (
+                    bt === Booking.type.bookNowBooking &&
+                    !b.paymentCollected
+                )
+            );
+        }
+        return false;
+    }, this);
+    
+    // For booking cancel/decline/confirm.
+    var afterSaveBooking = function(booking) {
+        var version = this.editedVersion();
+        if (version) {
+            version.original.sourceBooking(booking);
+            version.pull({ evenIfNewer: true });
+
+            // Go out edit mode
+            this.editMode(false);
+        }
+        else {
+            this.sourceItem().sourceBooking(booking);
+        }
+        
+        var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
+
+        app.modals.showNotification({
+            title: 'Done!',
+            message: msg
+        });
+    }.bind(this);
+
+    this.cancelBookingByServiceProfessional = function() {
+        if (!this.bookingCanBeCancelledByServiceProfessional()) return;
+        this.isSaving(true);
+        app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
+        .then(afterSaveBooking)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    this.cancelBookingByClient = function() {
+        if (!this.bookingCanBeCancelledByClient()) return;
+        this.isSaving(true);
+        app.model.bookings.cancelBookingByClient(this.bookingID())
+        .then(afterSaveBooking)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    this.declineBookingByServiceProfessional = function() {
+        if (!this.isBookingRequest()) return;
+        this.isSaving(true);
+        app.model.bookings.declineBookingByServiceProfessional(this.bookingID())
+        .then(afterSaveBooking)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    // dateType values allowed by REST API: 'preferred', 'alternative1', 'alternative2'
+    this.confirmBookingRequest = function(dateType) {
+        if (!this.isBookingRequest()) return;
+        this.isSaving(true);
+        app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
+        .then(afterSaveBooking)
+        .catch(function(err) {
+            // The version data keeps untouched, user may want to retry
+            // or made changes on its un-saved data.
+            // Show error
+            app.modals.showError({
+                title: 'There was an error saving the data.',
+                error: err
+            });
+            // Don't replicate error, allow always
+        })
+        .then(function() {
+            // ALWAYS:
+            this.isSaving(false);
+        }.bind(this));
+    };
+    
+    this.confirmCancelBookingByServiceProfessional = function() {
         this.app.modals.confirm({
-            title: 'Cancel',
+            title: 'Cancel booking',
             message: 'Are you sure?',
             yes: 'Yes',
             no: 'No'
         })
         .then(function() {
-            // Confirmed cancellation:
-            this.cancel();
+            // Confirmed:
+            this.cancelBookingByServiceProfessional();
         }.bind(this));
+    }.bind(this);
+    
+    /// Booking Request selectable options
+    this.selectedRequestDateType = ko.observable();
+    this.observerSelected = function(dateType) {
+        return ko.pureComputed(function() {
+            return this.selectedRequestDateType() === ko.unwrap(dateType);
+        }, this);
+    }.bind(this);
+    this.setSelectedRequestDateType = function(dateType) {
+        this.selectedRequestDateType(dateType);
+    }.bind(this);
+
+    this.performSelectedBookingRequestAnswer = function() {
+        var option = this.selectedRequestDateType();
+        if (option === 'deny')
+            return this.declineBookingByServiceProfessional();
+        else
+            return this.confirmBookingRequest(option);
     }.bind(this);
 
     /**
@@ -265,7 +465,8 @@ function AppointmentCardViewModel(params) {
         editFieldOn('datetimePicker', {
             selectedDatetime: this.item().endTime(),
             datetimeField: 'endTime',
-            headerText: 'Select the end time'
+            headerText: 'Select the end time',
+            includeEndTime: true
         });
     }.bind(this);
 
@@ -287,7 +488,7 @@ function AppointmentCardViewModel(params) {
             .map(function(pricing) {
                 return {
                     serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                    totalPrice: ko.unwrap(pricing.totalPrice)
+                    price: ko.unwrap(pricing.price)
                 };
             })
         });
@@ -303,7 +504,8 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
             selectAddress: true,
-            selectedAddressID: this.item().addressID()
+            selectedAddressID: this.item().address().addressID(),
+            clientUserID: this.item().clientUserID()
         });
     }.bind(this);
 
@@ -317,13 +519,19 @@ function AppointmentCardViewModel(params) {
 
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
-
-        editFieldOn('textEditor', {
-            request: 'textEditor',
-            field: field,
-            title: this.isNew() ? 'New booking' : 'Booking',
-            header: textFieldsHeaders[field],
+        
+        app.modals.showTextEditor({
+            title: textFieldsHeaders[field],
             text: this.item()[field]()
+        })
+        .then(function(text) {
+            this.item()[field](text);
+        }.bind(this))
+        .catch(function(err) {
+            if (err) {
+                app.modals.showError({ error: err });
+            }
+            // No error, do nothing just was dismissed
         });
     }.bind(this);
     
@@ -355,7 +563,7 @@ function AppointmentCardViewModel(params) {
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:20,maxstatements:40 */
+    /*jshint maxcomplexity:23,maxstatements:40 */
     
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
@@ -372,13 +580,12 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         // set off edit mode discarding unsaved data:
         this.cancel();
     }
+    
+    // Reset booking request option
+    this.selectedRequestDateType('');
 
     /// Manage specific single data from externally provided
     
-    // It comes back from the textEditor.
-    if (requestData.request === 'textEditor') {
-        this.item()[requestData.field](requestData.text);
-    }
     if (requestData.selectClient === true) {
         this.item().clientUserID(requestData.selectedClientID);
     }
@@ -391,7 +598,10 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
     }
     if (requestData.selectAddress === true) {
-        this.item().addressID(requestData.selectedAddressID);
+        if (requestData.address)
+            this.item().address().model.updateWith(requestData.address, true);
+        else if (requestData.selectedAddressID)
+            this.item().address().addressID(requestData.selectedAddressID);
     }
     if (requestData.selectPricing === true) {
         this.item().pricing(

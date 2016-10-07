@@ -6,28 +6,31 @@
 var Activity = require('../components/Activity');
 var is = require('is_js');
 
-var A = Activity.extends(function ClientEditionActivity() {
+var A = Activity.extend(function ClientEditionActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     
     this.accessLevel = this.app.UserType.loggedUser;
-    
-    this.navBar = Activity.createSubsectionNavBar('clients', {
-        backLink: 'clients'
+    this.navBar = Activity.createSubsectionNavBar('Clients', {
+        backLink: 'clients' , helpLink: this.viewModel.helpLink
     });
     
-    // If there is a change on the clientID, the updates must match
-    // that (if is not already that)
+    // If there is a change on the clientID, the URL must match
+    // that (if is not already that).
+    // NOTE: Except for call from another activity with returning, to avoid bug trying to do a goBack
     this.registerHandler({
         target: this.viewModel.clientID,
         handler: function (clientID) {
             if (!clientID)
                 return;
 
-            var found = /clientEditor\/(\-?\d+)/i.exec(window.location),
-                urlID = found && found[1] |0;
+            var nope = this.requestData.returnNewAsSelected === true;
+            if (nope) return;
+
+            var found = /clientEditor\/(\-?\d+)/i.exec(window.location);
+            var urlID = found && found[1] |0;
 
             // If is different URL and current ID
             if (!found ||
@@ -95,7 +98,7 @@ A.prototype.show = function show(state) {
         .then(function (clientVersion) {
             if (clientVersion) {
                 this.viewModel.clientVersion(clientVersion);
-                this.viewModel.header('Edit Client');
+                this.viewModel.header('Edit client');
             } else {
                 this.viewModel.clientVersion(null);
                 this.viewModel.header('Unknow client or was deleted');
@@ -125,7 +128,7 @@ A.prototype.show = function show(state) {
         /*this.viewModel.client.newItem(presetData);*/
         // New client
         this.viewModel.clientVersion(this.app.model.clients.newItem(presetData));
-        this.viewModel.header('Add a Client');
+        this.viewModel.header('Add a client');
         
         // Extra preset data
         if (this.requestData.newForSearchText) {
@@ -179,6 +182,7 @@ function clientDataFromSearchText(txt, client) {
 
 function ViewModel(app) {
     /*jshint maxstatements:80 */
+    this.helpLink = '/help/relatedArticles/201152639-managing-clients';
     
     this.clientID = ko.observable(0);
     

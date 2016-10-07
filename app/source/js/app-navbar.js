@@ -11,7 +11,7 @@ var ko = require('knockout'),
     NavBar = require('./viewmodels/NavBar'),
     NavAction = require('./viewmodels/NavAction');
 
-exports.extends = function (app) {
+exports.extend = function (app) {
     
     // REVIEW: still needed? Maybe the per activity navBar means
     // this is not needed. Some previous logic was already removed
@@ -20,19 +20,45 @@ exports.extends = function (app) {
     // Adjust the navbar setup depending on current user,
     // since different things are need for logged-in/out.
     function adjustUserBar() {
+        //jshint maxcomplexity:8
 
         var user = app.model.user();
 
         if (user.isAnonymous()) {
             var prev = app.navBar().leftAction();
-            if (prev !== NavAction.menuOut) {
-                app.navBar().leftAction(NavAction.menuOut);
+            if (prev !== NavAction.menuIn) {
+                app.navBar().leftAction(NavAction.menuIn);
                 app.navBar().prevLeftAction = prev;
             }
+            var prevRight = app.navBar().rightAction();
+            if (prevRight === NavAction.menuNewItem) {
+                app.navBar().rightAction(null);
+                app.navBar().prevRightAction = prevRight;
+            }
         }
-        else if (app.navBar().prevLeftAction) {
-            app.navBar().leftAction(app.navBar().prevLeftAction);
-            app.navBar().prevLeftAction = null;
+        else {
+            if (app.navBar().prevLeftAction) {
+                app.navBar().leftAction(app.navBar().prevLeftAction);
+                app.navBar().prevLeftAction = null;
+            }
+            // If we are in a 'section' activity, that is with the menuNewItem in the rightAction,
+            // we need to change it for just-client profiles:
+            if (!user.isServiceProfessional()) {
+                // Only if is menuNewItem, otherwise we do NOT restore preRightAction (thats why
+                // the nested 'if' rather than 'professional AND menuNewItem').
+                if (app.navBar().rightAction() === NavAction.menuNewItem) {
+                    // Replace default right-menu for professionals by
+                    // a client link to go marketplace
+                    app.navBar().preRightAction = app.navBar().rightAction();
+                    app.navBar().rightAction(NavAction.goMarketplace);
+                }
+            }
+            else if (app.navBar().preRightAction) {
+                // Recovering previous right action, like after change it to a just-client option
+                // and then entering with service-professional profile
+                app.navBar().rightAction(app.navBar().preRightAction);
+                app.navBar().preRightAction = null;
+            }
         }
     }
     // Commented lines, used previously but unused now, it must be enough with the update
@@ -57,6 +83,8 @@ exports.extends = function (app) {
 
     /**
         Update the nav model using the Activity defaults
+        // TODO Look a way to replace all this complex navbar logic, maybe per
+        // activity nabvars, more model helpers and global state helpers.
     **/
     app.updateAppNav = function updateAppNav(activity, state) {
 
@@ -78,11 +106,10 @@ exports.extends = function (app) {
             app.navBar(new NavBar());
         }
         
-        app.applyNavbarMustReturn(state);
-
-        // TODO Double check if needed.
-        // Latest changes, when needed
-        adjustUserBar();
+        if (!app.applyNavbarMustReturn(state)) {
+            // Changes depending on non-logged user
+            adjustUserBar();
+        }
         
         refreshNav();
         autoRefreshNav(app.navBar().leftAction());
@@ -122,10 +149,11 @@ exports.extends = function (app) {
         Update the app menu to highlight the
         given link name
     **/
-    app.updateMenu = function updateMenu(name) {
+    app.updateMenu = function updateMenu(/*name*/) {
         
         var $menu = $('.App-menus .navbar-collapse');
         
+        /* DONE WITH KNOCKOUT BINDING RIGHT NOW
         // Remove any active
         $menu
         .find('li')
@@ -135,22 +163,49 @@ exports.extends = function (app) {
         .find('.go-' + name)
         .closest('li')
         .addClass('active');
+        */
+
         // Hide menu
         $menu
         .filter(':visible')
         .collapse('hide');
     };
+
+    // Set model for the AppNav
+    app.navBarBinding = {
+        navBar: app.navBar,
+        // Both: are later filled with a call to the model once loaded and ready
+        photoUrl: ko.observable('about:blank'),
+        userName: ko.observable('Me'),
+        isServiceProfessional: ko.observable(false),
+        isClient: ko.observable(false),
+        isApp: ko.observable(!!window.cordova),
+        isInOnboarding: ko.observable(false),
+        active: ko.observable('')
+    };
+
+    app.model.on('modulesLoaded', function() {
+        ko.computed(function() {
+            app.navBarBinding.isInOnboarding(app.model.onboarding.inProgress());
+        });
+    });
     
+    app.shell.on(app.shell.events.itemReady, function() {
+        app.navBarBinding.active(app.shell.currentRoute.name);
+    });
+    
+    app.navBarBinding.isAnonymous = ko.pureComputed(function() {
+        return !this.isServiceProfessional() && !this.isClient();
+    }, app.navBarBinding);
+    
+    app.navBarBinding.cssIfActive = function(activityName) {
+        return ko.computed(function() {
+            return activityName === app.navBarBinding.active() ? 'active' : '';
+        });
+    };
+
     app.setupNavBarBinding = function setupNavBarBinding() {
-        // Set model for the AppNav
-        app.navBarBinding = {
-            navBar: app.navBar,
-            // Both: are later filled with a call to the model once loaded and ready
-            photoUrl: ko.observable('about:blank'),
-            userName: ko.observable('Me'),
-            isServiceProfessional: ko.observable(false),
-            isClient: ko.observable(false)
-        };
+        app.navBarBinding.isApp(!!window.cordova);
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
     
@@ -162,7 +217,7 @@ exports.extends = function (app) {
     app.performsNavBarBack = function performsNavBarBack(options) {
         var nav = this.navBar(),
             left = nav && nav.leftAction(),
-            $btn = $('.SmartNavBar-edge.left > a.SmartNavBar-btn');
+            $btn = $('body > .AppNav .SmartNavBar-edge.left > a.SmartNavBar-btn');
 
         // There is an action, trigger like a click so all the handlers
         // attached on spare places do their work:

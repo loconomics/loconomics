@@ -10,14 +10,15 @@ $Avatar-sizes = {
     xs: 40px,
     sm: 60px,
     md: 90px,
-    lg: 125px
+    lg: 120px
 };
-
+ 
 .Avatar
     overflow hidden 
     margin 0 auto
 
-    img  
+    img
+    canvas
         border-radius 50%
         border 2px solid White
 
@@ -25,10 +26,18 @@ $Avatar-sizes = {
     for $colorName in $brand-colors
         &.Avatar--{$colorName}
             img
+            canvas
                 border 2px solid $brand-colors[$colorName]
 
     for $sizeName in $Avatar-sizes 
         &.Avatar--{$sizeName} 
-            &, img
+            &
+            img
+            canvas
                 height: $Avatar-sizes[$sizeName]
                 width: $Avatar-sizes[$sizeName]
+    
+    &.Avatar--upperLeft
+        margin 8px 0 0 20px
+        display block
+        float left

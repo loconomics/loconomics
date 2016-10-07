@@ -4,17 +4,68 @@
 'use strict';
 
 var Activity = require('../components/Activity'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    photoTools = require('../utils/photoTools');
+require('jquery.fileupload-image');
 
-var A = Activity.extends(function LicensesCertificationsFormActivity() {
+var A = Activity.extend(function LicensesCertificationsFormActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-
-    this.navBar = Activity.createSubsectionNavBar('Certifications/Licenses');
+    
+    this.navBar = Activity.createSubsectionNavBar('Job Title', {
+        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
+    });
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
+    
+    if (!photoTools.takePhotoSupported()) {
+        // Web version to pick a photo/file
+        var $input = this.$activity.find('#licensesCertificationsForm-photoFile');//input[type=file]
+        // Constant size: is the maximum as defined in the CSS and server processing.
+        var PHOTO_WIDTH = 442;
+        var PHOTO_HEIGHT = 332;
+        $input.fileupload({
+            // Asigned per file uploaded:
+            //url: 'assigned per file uploaded',
+            //type: 'PUT',
+            //paramName: 'file',
+            dataType: 'json',
+            autoUpload: false,
+            acceptFileTypes: /(\.|\/)(png|gif|tiff|pdf|jpe?g)$/i,
+            maxFileSize: 20000000, // 20MB
+            disableImageResize: true,
+            // // Enable image resizing, except for Android and Opera,
+            // // which actually support image resizing, but fail to
+            // // send Blob objects via XHR requests:
+            // disableImageResize: /Android(?!.*Chrome)|Opera/
+            // .test(window.navigator.userAgent),
+            previewMaxWidth: PHOTO_WIDTH,
+            previewMaxHeight: PHOTO_HEIGHT,
+            previewCrop: true
+        })
+        .on('fileuploadadd', function (e, data) {
+            this.viewModel.item().localTempFileData(data);
+            if (!data.originalFiles.length ||
+                !/^image\//.test(data.originalFiles[0].type)) {
+                this.viewModel.item().localTempPhotoPreview(null);
+            }
+            this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
+        }.bind(this))
+        .on('fileuploadprocessalways', function (e, data) {
+            var file = data.files[data.index];
+            if (file.error) {
+                // TODO Show preview error?
+                this.viewModel.item().localTempPhotoPreview(null);
+                console.error('Photo Preview', file.error);
+            }
+            else if (file.preview) {
+                //this.viewModel.item().localTempFileData(data);
+                this.viewModel.item().localTempPhotoPreview(file.preview);
+            }
+        }.bind(this));
+    }
 });
 
 exports.init = A.init;
@@ -37,57 +88,22 @@ A.prototype.show = function show(state) {
 
     // Params
     var params = state && state.route && state.route.segments || [];
+    var query = state && state.route && state.route.query || {};
     
     this.viewModel.jobTitleID(params[0] |0);
-    this.viewModel.licenseCertificationID(params[1] |0);
-    
+    this.viewModel.userLicenseCertificationID(params[1] |0);
+    this.viewModel.licenseCertificationID(query.licenseCertificationID |0);
+
     this.updateNavBarState();
     
-    // TODO Remove when AppModel
     var ModelVersion = require('../utils/ModelVersion'),
         UserLicenseCertification = require('../models/UserLicenseCertification');
     
-    if (this.viewModel.isNew()) {
-        this.viewModel.version(new ModelVersion(new UserLicenseCertification()));
-    }
-    else {
-        this.viewModel.version(new ModelVersion(new UserLicenseCertification({
-            userID: 141,
-            jobTitleID: 106,
-            statusID: 2,
-            licenseCertificationID: 18,
-            licenseCertificationNumber: 21341234,
-            stateProvinceID: 1,
-            countryID: 1,
-            expirationDate: new Date(2016, 1, 20),
-            lastVerifiedDate: new Date(2015, 3, 20),
-            createdDate: new Date(),
-            updatedDate: new Date()
-        })));
-    }
-    
-    
-    // TODO IT DOES NOT WORKS THIS WAY: in the website dahsboard, the licenseID is provided
-    // to the form, because there is a short list of them available, NOT auto-generated.
-    // CHECK if put a dropdown selection or list selection here and then show the form or 
-    // put the list of possible on the listing page (at /licensesCertifications)
-    
-    if (this.viewModel.licenseCertificationID() === 0) {
-        // NEW one
-        /* TODO Uncomment when AppModel
-        this.viewModel.version(this.app.model.licensesCertifications.newItem());
-        */
-    }
-    else {
-        // LOAD
-        /* TODO Uncomment when AppModel
-        this.app.model.education.createItemVersion(this.viewModel.educationID())
-        .then(function (educationVersion) {
-            if (educationVersion) {
-                this.viewModel.version(educationVersion);
-            } else {
-                throw new Error('No data');
-            }
+    if (!this.viewModel.isNew()) {
+        this.app.model.userLicensesCertifications
+        .getItem(this.viewModel.jobTitleID(), this.viewModel.userLicenseCertificationID())
+        .then(function(data) {
+            this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
@@ -98,25 +114,65 @@ A.prototype.show = function show(state) {
                 // On close modal, go back
                 this.app.shell.goBack();
             }.bind(this));
-        }.bind(this));*/
+        }.bind(this));
+    }
+    else {
+        this.app.model.licenseCertification
+        .getItem(this.viewModel.licenseCertificationID())
+        .then(function(data) {
+            var item = new UserLicenseCertification({
+                jobTitleID: this.viewModel.jobTitleID(),
+                licenseCertificationID: this.viewModel.licenseCertificationID()
+            });
+            item.licenseCertification().model.updateWith(data);
+            this.viewModel.version(new ModelVersion(item));
+        }.bind(this))
+        .catch(function (err) {
+            this.app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            })
+            .then(function() {
+                // On close modal, go back
+                this.app.shell.goBack();
+            }.bind(this));
+        }.bind(this));
     }
 };
 
 function ViewModel(app) {
 
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
+    this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
-    // TODO Uncomment when appmodel
-    this.isLoading = ko.observable(false); // app.model.licensesCertifications.state.isLoading;
-    this.isSaving = ko.observable(false); //app.model.licensesCertifications.state.isSaving;
-    this.isSyncing = ko.observable(false); //app.model.licensesCertifications.state.isSyncing;
-    this.isDeleting = ko.observable(false); //app.model.licensesCertifications.state.isDeleting;
-    this.isLocked = ko.observable(false); /*ko.computed(function() {
-        return this.isDeleting() || app.model.licensesCertifications.state.isLocked();
-    }, this);*/
+    this.jobTitleNamePlural = ko.observable(); 
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            app.model.userLicensesCertifications.state.isLoading()
+        );
+    }, this);
+    this.isSaving = app.model.userLicensesCertifications.state.isSaving;
+    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing;
+    this.isDeleting = app.model.userLicensesCertifications.state.isDeleting;
+    this.isLocked = ko.pureComputed(function() {
+        return (
+            app.model.userLicensesCertifications.state.isLocked()
+        );
+    }, this);
+    this.isReady = ko.pureComputed(function() {
+        var it = this.item();
+        return !!(it && (it.localTempFilePath() || it.localTempFileData()));
+    }, this);
+    this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
     
+    this.submitText = ko.pureComputed(function() {
+        return (this.isLoading() || this.isSyncing()) ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
+    }, this);
+
     this.isNew = ko.pureComputed(function() {
-        return this.licenseCertificationID() === 0;
+        return !this.userLicenseCertificationID();
     }, this);
     
     this.version = ko.observable(null);
@@ -127,10 +183,6 @@ function ViewModel(app) {
         }
         return null;
     }, this);
-    
-    // Fields for the new-certification-file
-    this.stateProvinceID = ko.observable(0);
-    this.file = ko.observable('');
 
     this.unsavedChanges = ko.pureComputed(function() {
         var v = this.version();
@@ -146,12 +198,16 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        app.model.licensesCertifications.setItem(this.item().model.toPlainObject())
+        var data = this.item().model.toPlainObject(true);
+        app.model.userLicensesCertifications.setItem(data)
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
             // Push version so it appears as saved
             this.version().push({ evenIfObsolete: true });
+            // Cache of licenses info for the user and job title is dirty, clean up so is updated later
+            app.model.jobTitleLicenses.clearCache();
+            app.model.userLicensesCertifications.clearCache();
             // Go out
             app.successSave();
         }.bind(this))
@@ -168,7 +224,7 @@ function ViewModel(app) {
         // L18N
         app.modals.confirm({
             title: 'Delete',
-            message: 'Are you sure? The operation cannot be undone.',
+            message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
             no: 'Keep'
         })
@@ -178,10 +234,9 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.licensesCertifications.delItem(this.jobTitleID(), this.licenseCertificationID())
+        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
         .then(function() {
             // Go out
-            // TODO: custom message??
             app.successSave();
         }.bind(this))
         .catch(function(err) {
@@ -192,9 +247,35 @@ function ViewModel(app) {
         });
     }.bind(this);
     
-    // TODO COMPLETE; FROM A MODEL, REMOTE?
-    this.statesProvinces = ko.computed(function() {
-        // BLOB copy:
-        return [{"stateProvinceID":"23","name":"Alabama"},{"stateProvinceID":"49","name":"Alaska"},{"stateProvinceID":"52","name":"American Samoa"},{"stateProvinceID":"48","name":"Arizona"},{"stateProvinceID":"26","name":"Arkansas"},{"stateProvinceID":"60","name":"Armed Forces Americas (except Canada)"},{"stateProvinceID":"61","name":"Armed Forces Canada, Europe, Middle East, and Africa"},{"stateProvinceID":"62","name":"Armed Forces Pacific"},{"stateProvinceID":"1","name":"California"},{"stateProvinceID":"38","name":"Colorado"},{"stateProvinceID":"6","name":"Connecticut"},{"stateProvinceID":"2","name":"Delaware"},{"stateProvinceID":"51","name":"District of Columbia"},{"stateProvinceID":"57","name":"Federated States of Micronesia"},{"stateProvinceID":"28","name":"Florida"},{"stateProvinceID":"5","name":"Georgia"},{"stateProvinceID":"53","name":"Guam"},{"stateProvinceID":"50","name":"Hawaii"},{"stateProvinceID":"43","name":"Idaho"},{"stateProvinceID":"22","name":"Illinois"},{"stateProvinceID":"20","name":"Indiana"},{"stateProvinceID":"30","name":"Iowa"},{"stateProvinceID":"34","name":"Kansas"},{"stateProvinceID":"16","name":"Kentucky"},{"stateProvinceID":"19","name":"Louisiana"},{"stateProvinceID":"24","name":"Maine"},{"stateProvinceID":"58","name":"Marshall Islands"},{"stateProvinceID":"8","name":"Maryland"},{"stateProvinceID":"7","name":"Massachusetts"},{"stateProvinceID":"27","name":"Michigan"},{"stateProvinceID":"32","name":"Minnesota"},{"stateProvinceID":"21","name":"Mississippi"},{"stateProvinceID":"25","name":"Missouri"},{"stateProvinceID":"41","name":"Montana"},{"stateProvinceID":"37","name":"Nebraska"},{"stateProvinceID":"36","name":"Nevada"},{"stateProvinceID":"10","name":"New Hampshire"},{"stateProvinceID":"4","name":"New Jersey"},{"stateProvinceID":"47","name":"New Mexico"},{"stateProvinceID":"12","name":"New York"},{"stateProvinceID":"13","name":"North Carolina"},{"stateProvinceID":"39","name":"North Dakota"},{"stateProvinceID":"54","name":"Northern Mariana Islands"},{"stateProvinceID":"18","name":"Ohio"},{"stateProvinceID":"46","name":"Oklahoma"},{"stateProvinceID":"33","name":"Oregon"},{"stateProvinceID":"59","name":"Palau"},{"stateProvinceID":"3","name":"Pennsylvania"},{"stateProvinceID":"55","name":"Puerto Rico"},{"stateProvinceID":"14","name":"Rhode Island"},{"stateProvinceID":"9","name":"South Carolina"},{"stateProvinceID":"40","name":"South Dakota"},{"stateProvinceID":"17","name":"Tennessee"},{"stateProvinceID":"29","name":"Texas"},{"stateProvinceID":"56","name":"U.S. Virgin Islands"},{"stateProvinceID":"45","name":"Utah"},{"stateProvinceID":"15","name":"Vermont"},{"stateProvinceID":"11","name":"Virginia"},{"stateProvinceID":"42","name":"Washington"},{"stateProvinceID":"35","name":"West Virginia"},{"stateProvinceID":"31","name":"Wisconsin"},{"stateProvinceID":"44","name":"Wyoming"}];
-    });
+    var addNew = function(fromCamera) {
+        var settings = {
+            sourceType: fromCamera ?
+                window.Camera && window.Camera.PictureSourceType.CAMERA :
+                window.Camera && window.Camera.PictureSourceType.PHOTOLIBRARY
+        };
+        if (photoTools.takePhotoSupported()) {
+            return photoTools.cameraGetPicture(settings)
+            .then(function(imgLocalUrl) {
+                this.item().localTempFilePath(imgLocalUrl);
+                this.item().localTempPhotoPreviewUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
+            }.bind(this))
+            .catch(function(err) {
+                // A user abort gives no error or 'no image selected' on iOS 9/9.1
+                if (err && err !== 'no image selected' && err !== 'has no access to camera') {
+                    app.modals.showError({ error: err, title: 'Error selecting photo.' });
+                }
+            });
+        }
+        else {
+            app.modals.showError({ error: 'This feature is currently only available on mobile devices' });
+        }
+    }.bind(this);
+    
+    this.takePhotoForNew = function() {
+        addNew(true);
+    }.bind(this);
+    
+    this.pickPhotoForNew = function() {
+        addNew(false);
+    }.bind(this);
 }

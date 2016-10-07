@@ -11,14 +11,15 @@ var ko = require('knockout'),
     Activity = require('../components/Activity'),
     PricingType = require('../models/PricingType');
 
-var A = Activity.extends(function ServiceProfessionalServiceEditorActivity() {
+var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Services');
-    
+    this.navBar = Activity.createSubsectionNavBar('Services', {
+        helpLink: this.viewModel.helpLink
+    });
     /// Go out after save succesfully an item.
     /// Pricing is a plain object
     this.viewModel.onSave = function(pricing) {
@@ -163,6 +164,9 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
     /*jshint maxstatements: 35*/
+    this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.isLoading = ko.observable(false);
     // managed manually instead of

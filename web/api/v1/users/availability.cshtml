@@ -154,7 +154,16 @@
                 return data;
             }
             else if (UrlData[0] == "times") {
-                return LcCalendar.GetAvailability.Times(userID, startDate, endDate);
+                // Important: If the request is performed by the user that owns that userID, it
+                // means is a professional requesting it's own availability, usually in order to
+                // do a service-professional booking, then we must avoid the AdvanceTime since
+                // is a limitation only for clients
+                // By default, true for anonymous users (potential clients)
+                var useAdvanceTime = true;
+                if (WebSecurity.HasUserId) {
+                    useAdvanceTime = WebSecurity.CurrentUserId != userID;
+                }
+                return LcCalendar.GetAvailability.Times(userID, startDate, endDate, useAdvanceTime);
             }
             
             throw new HttpException(404, "User Not Found");

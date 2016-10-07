@@ -1,37 +1,90 @@
 <!-- Jobtitles activity -->
-<div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }">
-    <h2 class="SectionTitle">
-        <span data-bind="text: jobTitleName">Job Title</span>
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <ul class="TilesList">
-        <li><a class="InfoTile" href="/serviceProfessionalService" data-bind="attr: { href: getJobUrlTo('serviceProfessionalService') }">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
-            </div>                
-            <div class="Tile-content">
-                <div>Pricing and services</div>
-                <em data-bind="text: pricingCount"></em>
+<div data-activity="jobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="row">   
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                    </li>
+                </ul>
             </div>
-        </a></li>
-        <li><a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
-            </div>                
-            <div class="Tile-content">
-                <div>Service locations</div>
-                <em data-bind="text: addressesCount"></em>
+            <div class="container-fluid col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                    <span data-bind="text: jobTitleName"></span>&nbsp;scheduling
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>
+                <ul class="TilesList TilesList--openEnd">
+                    <li>
+                        <a class="InfoTile" href="/serviceProfessionalService" data-bind="attr: { href: getJobUrlTo('serviceProfessionalService') }">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
+                            </div>                
+                            <div class="Tile-content">
+                                <div>Pricing and services</div>
+                                <em data-bind="text: pricingCount"></em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
+                            </div>                
+                            <div class="Tile-content">
+                                <div>Service locations</div>
+                                <em data-bind="text: addressesCount"></em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="/marketplaceJobtitles/" data-bind="attr: {href: getJobUrlTo('marketplaceJobtitles')}">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-android-contact" aria-hidden="true"></span>
+                            </div>                
+                            <div class="Tile-content">
+                                <p>Marketplace profile</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="/bookingPolicies" data-bind="attr: {href: getJobUrlTo('bookingPolicies')}">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-close" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Booking policies</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
+                            </div>                
+                            <div class="Tile-content">
+                                <p>Add scheduling to your website</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <button type="button" class="InfoTile" data-bind="click: deleteJobTitle">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-alert-circled" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Delete your <span data-bind="text: jobTitleName"></span> profile</p>
+                            </div>
+                        </button>
+                    </li>
+                </ul>
+                <app-feedback-entry class="visible-xs visible-sm" params="section: 'scheduling'"></app-feedback-entry>
             </div>
-        </a></li>
-        <li><a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
-            </div>                
-            <div class="Tile-content">
-                <p>Add Book Now button</p>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
-        </a></li>
-    </ul>
+        </div>
+    </div>
+</div>    
 
-    <app-feedback-entry params="section: 'scheduling'"></app-feedback-entry>
-</div>

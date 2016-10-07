@@ -1,4 +1,4 @@
-﻿INSERT INTO [country]
+INSERT INTO [country]
     ([CountryID]
     ,[LanguageID]
     ,[CountryName]
@@ -8,7 +8,8 @@
     ,[CreatedDate]
     ,[UpdatedDate]
     ,[ModifiedBy]
-    ,[Active])
+    ,[Active]
+    ,[numcode])
 VALUES
     (@CountryID
     ,@LanguageID
@@ -19,4 +20,5 @@ VALUES
     ,@CreatedDate
     ,@UpdatedDate
     ,@ModifiedBy
-    ,@Active)
+    ,@Active
+    ,@numcode)

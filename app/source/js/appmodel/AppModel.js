@@ -10,7 +10,7 @@ var ko = require('knockout'),
 
 function AppModel() {
     EventEmitter.call(this);
-    this.setMaxListeners(30);
+    this.setMaxListeners(50);
 }
 
 AppModel._inherits(EventEmitter);
@@ -21,7 +21,7 @@ require('./AppModel-account').plugIn(AppModel);
 
 /**
     Load credentials from the local storage, without error if there is nothing
-    saved. If load profile data too, performing an tryLogin if no local data.
+    saved. It loads profile data too.
 **/
 AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
     return new Promise(function(resolve) { // Never rejects: , reject) {
@@ -47,39 +47,20 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 // use authorization key for each
                 // new Rest request
                 this.rest.extraHeaders = {
-                    alu: credentials.userID,
-                    alk: credentials.authKey
+                    Authorization: 'LC alu=' + credentials.userID + ',alk=' + credentials.authKey
                 };
+                // Load User Profile, from local with server fallback and server synchronization, silently
+                this.userProfile.load().then(resolve, resolveAnyway);
                 
-                // It has credentials! Has basic profile data?
-                // NOTE: the userProfile will load from local storage on this first
-                // attempt, and lazily request updated data from remote so we need
-                // to catch remote errors with events
-                this.userProfile.once('error', function(err) {
-                    this.emit('error', {
-                        message: 'Impossible to load your data. Please check your Internet connection',
-                        error: err
-                    });
-                }.bind(this));
-                
-                this.userProfile.load().then(function(profile) {
-                    if (profile) {
-                        // There is a profile cached                    
-                        // End succesfully
-                        resolve();
+                // Google Analytics
+                if (window.ga) {
+                    if (window.cordova) {
+                        window.ga.setUserId(credentials.userID);
                     }
                     else {
-                        // No profile, we need to request it to be able
-                        // to work correctly, so we
-                        // attempt a login (the tryLogin process performs
-                        // a login with the saved credentials and fetch
-                        // the profile to save it in the local copy)
-                        this.tryLogin().then(resolve, resolveAnyway);
+                        window.ga('set', 'userId', credentials.userID);
                     }
-                }.bind(this), resolveAnyway)
-                // The error event catch any error if happens, so avoid uncaught exceptions
-                // in the console by catching the promise error
-                .catch(function() { });
+                }
             }
             else {
                 // End successfully. Not loggin is not an error,
@@ -124,16 +105,6 @@ AppModel.prototype.init = function init() {
         this.config = config;
         this.rest = new Rest(config.siteUrl + '/api/v1/en-US/');
         
-        // Setup Rest authentication
-        this.rest.onAuthorizationRequired = function(retry) {
-
-            this.tryLogin()
-            .then(function() {
-                // Logged! Just retry
-                retry();
-            });
-        }.bind(this);
-        
         // With config loaded and REST ready, load all modules
         this.loadModules();
         
@@ -158,7 +129,7 @@ AppModel.prototype.loadModules = function loadModules() {
 
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
     this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
-    this.simplifiedWeeklySchedule = require('./AppModel.simplifiedWeeklySchedule').create(this);
+    this.weeklySchedule = require('./AppModel.weeklySchedule').create(this);
     this.marketplaceProfile = require('./AppModel.marketplaceProfile').create(this);
     this.homeAddress = require('./AppModel.homeAddress').create(this);
     this.privacySettings = require('./AppModel.privacySettings').create(this);
@@ -175,11 +146,23 @@ AppModel.prototype.loadModules = function loadModules() {
     this.postalCodes = require('./AppModel.postalCodes').create(this);
     this.feedback = require('./AppModel.feedback').create(this);
     this.education = require('./AppModel.education').create(this);
-    this.licensesCertifications = require('./AppModel.licensesCertifications').create(this);
     this.users = require('./AppModel.users').create(this);
     this.availability = require('./AppModel.availability').create(this);
     this.serviceAttributes = require('./AppModel.serviceAttributes').create(this);
     this.jobTitleServiceAttributes = require('./AppModel.jobTitleServiceAttributes').create(this);
+    this.userVerifications = require('./AppModel.userVerifications').create(this);
+    this.workPhotos = require('./AppModel.workPhotos').create(this);
+    this.userLicensesCertifications = require('./AppModel.userLicensesCertifications').create(this);
+    this.statesProvinces = require('./AppModel.statesProvinces').create(this);
+    this.paymentAccount = require('./AppModel.paymentAccount').create(this);
+    this.clientAppointments = require('./AppModel.clientAppointments').create(this);
+    this.jobTitleLicenses = require('./AppModel.jobTitleLicenses').create(this);
+    this.licenseCertification = require('./AppModel.licenseCertification').create(this);
+    this.clientAddresses = require('./AppModel.clientAddresses').create(this);
+    this.cancellationPolicies = require('./AppModel.cancellationPolicies').create(this);
+    this.help = require('./AppModel.help').create(this);
+    
+    this.emit('modulesLoaded');
 };
 
 /**

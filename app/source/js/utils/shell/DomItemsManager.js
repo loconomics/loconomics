@@ -10,8 +10,10 @@
 
 var $ = require('jquery');
 var escapeSelector = require('../escapeSelector');
+var getFlags = require('../userAgentFlags');
 
 function DomItemsManager(settings) {
+    //jshint maxcomplexity:10
 
     this.idAttributeName = settings.idAttributeName || 'id';
     this.allowDuplicates = !!settings.allowDuplicates || false;
@@ -24,7 +26,16 @@ function DomItemsManager(settings) {
     // enough quick to not being visually perceived the delay.
     // NOTE: on tests on Nexus 5 Android 5.1 with Chrome engine, 40ms was enought to have all the previous
     // benefits, but was too quick for iOS (even 100ms was too quick for iOS 8.3).
-    this.switchDelay = settings.switchDelay || 140;
+    var defaultDelay = 140;
+    // NOTE:UPDATE: Using WkWebView on iOS (8.x with unofficial plugin with webserver, 9.x will be with official support no-webserver)
+    // it's fastest, so trying user-agent sniffing to use the fastest delay on this engine, chrome engine or desktop (non-mobile)
+    // and left he conservative delay for other cases (old iOS/webview, old android webkit engine).
+    var flags = getFlags();
+    // if not is mobile OR is Chrome OR is WKWebview
+    if (!flags.isMobile || flags.isChrome || flags.isWkWebview)
+        defaultDelay = 40;
+    
+    this.switchDelay = settings.switchDelay || defaultDelay;
 }
 
 module.exports = DomItemsManager;
@@ -173,7 +184,9 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
                 zIndex: 2
             });
             */
-            $to.css('zIndex', 2);
+            // Logically, 2 is a valid value, because of the relativeness of zIndex
+            // But to make it work with <=IE10, 201 works, 200 not.
+            $to.css('zIndex', 201);
             
             this.enableAccess();
             

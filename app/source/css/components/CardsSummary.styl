@@ -1,0 +1,42 @@
+/**
+    CardsSummary component.
+    It's used for summaries of things like blog posts, job posts, press articles, etc.
+**/       
+.CardsSummary {
+  margin: 10px 10px;
+  padding: 0px;
+  list-style: none;
+  
+  .CardsSummary-card {
+    padding: 20px;
+    list-style: none;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: white;
+    box-shadow: 0 1.5px 0 0 rgba(0,0,0,0.1);
+    width: 100%;
+    justify-content: center;
+    
+    h2 {
+      margin-top: 5px;
+      text-align: center;
+      font-weight: 700;
+    }
+    p {
+      text-align: justify;
+    }
+    &.press {
+        h2,
+        p {
+          font-family: "Poynter";
+        }
+    }
+    &:hover,
+    &:focus {
+      background: $gray-lighter;
+      hr {
+        border-color: $gray-darker;  
+      }
+    }
+  }
+}

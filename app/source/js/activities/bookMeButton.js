@@ -4,18 +4,20 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var ko = require('knockout'),
-    $ = require('jquery');
+var ko = require('knockout');
+var $ = require('jquery');
+var clipboard = require('../utils/clipboard');
 
-var A = Activity.extends(function BookMeButtonActivity() {
+var A = Activity.extend(function BookMeButtonActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
-    
+    this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
+        backLink: 'scheduling' , helpLink: this.viewModel.helpLink
+    });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.
@@ -24,7 +26,9 @@ var A = Activity.extends(function BookMeButtonActivity() {
         event: 'click',
         selector: 'textarea',
         handler: function() {
+            // Two versions, on Safari on setSelectionRange works
             $(this).select();
+            this.setSelectionRange(0, 99999);
         }
     });
     
@@ -40,11 +44,43 @@ var A = Activity.extends(function BookMeButtonActivity() {
             });
         }.bind(this)
     });
+
+    // On changing jobTitleID:
+    // - load job title name
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            if (jobTitleID) {
+                // User Job Title
+                // Get data for the Job Title and User Profile
+                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(job) {
+                    this.viewModel.userJobTitle(job.userJobTitle);
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(job.jobTitle.singularName());
+                }.bind(this))
+                .catch(function (err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                }.bind(this));
+            }
+            else {
+                this.viewModel.jobTitleName('Job Title');
+                this.viewModel.userJobTitle(null);
+            }
+        }.bind(this)
+    });
 });
 
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
+    // reset
+    this.viewModel.jobTitleID(false);
+    
     Activity.prototype.show.call(this, state);
     
     // Keep data updated:
@@ -53,11 +89,14 @@ A.prototype.show = function show(state) {
     // Set the job title
     var jobID = state.route.segments[0] |0;
     this.viewModel.jobTitleID(jobID);
+    this.viewModel.copyText('Copy');
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
     var marketplaceProfile = app.model.marketplaceProfile;
+    this.jobTitleName = ko.observable('Job Title'); 
     
     // Actual data for the form:
     
@@ -68,8 +107,15 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     
-    // Button type, can be: 'small', 'medium', 'large', 'link'
-    this.type = ko.observable('medium');
+    this.copyText = ko.observable('Copy');
+    
+    // Button type, can be: 'icon', 'link'
+    this.type = ko.observable('icon');
+    
+    this.type.subscribe(function() {
+        // On any change, restore copy label
+        this.copyText('Copy');
+    }.bind(this));
 
     this.isLocked = marketplaceProfile.isLocked;
     
@@ -77,7 +123,7 @@ function ViewModel(app) {
     
     var buttonTemplate =
         '<!-- begin Loconomics book-me-button -->' +
-        '<a style="display:inline-block"><img alt="" style="border:none" /></a>' + 
+        '<a style="display:inline-block"><img alt="" style="border:none" width="200" height="50" /></a>' + 
         '<!-- end Loconomics book-me-button -->';
     
     var linkTemplate =
@@ -97,9 +143,9 @@ function ViewModel(app) {
             if (type === 'link')
                 tpl = linkTemplate;
 
-            var siteUrl = $('html').attr('data-site-url'),
+            var siteUrl = $('html').attr('data-site-url') || window.location.origin,
                 linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/',
-                imgUrl = siteUrl + '/img/extern/book-me-button-' + type + '.png';
+                imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
 
             var code = generateButtonCode({
                 tpl: tpl,
@@ -111,13 +157,68 @@ function ViewModel(app) {
             return code;
         }
     }, this);
+
+    // Send email is disabled on html because on Android most of the code is cut (maybe is trying to be used as html?)
+    // and iOS simply do nothing (almost on WkWebView and iOS 9.1).
+    // AND NOT SO IMPORTANT
+    this.sendByEmailURL = ko.pureComputed(function() {
+        var btn = this.buttonHtmlCode().replace(/\n+/, '');
+        return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);
+    }, this);
     
-    // TODO Copy feature; will need a native plugin
-    this.copyCode = function() { };
+    this.userJobTitle = ko.observable(null);
+    this.bookMeButtonReady = ko.pureComputed(function() {
+        var j = this.userJobTitle();
+        return j && j.bookMeButtonReady() || false;
+    }, this);
+    this.collectPaymentAtBookMeButtonString = ko.pureComputed({
+        read: function() {
+            var j = this.userJobTitle();
+            return j && j.collectPaymentAtBookMeButton() && 'true' || 'false';
+        },
+        write: function(val) {
+            var j = this.userJobTitle();
+            if (!j) return;
+            if (val === 'true') {
+                j.collectPaymentAtBookMeButton(true);
+            }
+            else {
+                j.collectPaymentAtBookMeButton(false);
+            }
+        },
+        owner: this
+    });
     
-    this.sendByEmail = function() {
-        // TODO Send by email, with window.open('mailto:&body=code');
-    };
+    this.copyCode = function() {
+        var text = this.buttonHtmlCode();
+        var errMsg = clipboard.copy(text);
+        if (errMsg) {
+            app.modals.showError({ error: errMsg });
+        }
+        else {
+            this.copyText('Copied!');
+        }
+    }.bind(this);
+    
+    this.save = function() {
+        var ujt = this.userJobTitle();
+        if (ujt) {
+            //this.isSaving(true);
+            
+            var plain = ujt.model.toPlainObject();
+            plain.collectPaymentAtBookMeButton = ujt.collectPaymentAtBookMeButton();
+
+            app.model.userJobProfile.setUserJobTitle(plain)
+            .then(function() {
+                //this.isSaving(false);
+                //app.successSave();        
+            }.bind(this))
+            .catch(function(err) {
+                //this.isSaving(false);
+                app.modals.showError({ title: 'Error saving your "collect payment" preference', error: err });
+            }.bind(this));
+        }
+    }.bind(this);
 }
 
 function generateButtonCode(options) {

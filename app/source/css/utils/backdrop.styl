@@ -26,7 +26,8 @@ backdrop() {
 
         display: block;
         opacity: 0;
-        z-index: 150;
+        // Because active activity is at 200, and navbars/menus at 300
+        z-index: 250;
         pointer-events: none;
         transition-duration: 300ms;
         transition-property: opacity;

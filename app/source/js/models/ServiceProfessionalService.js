@@ -132,14 +132,26 @@ function ServiceProfessionalService(values) {
         var price = this.price(),
             rate = this.priceRate(),
             unit = this.priceRateUnit(),
-            result = price || rate;
+            result;
         // Formatting
-        result = numeral(result).format('$0,0');
+        if (price)
+            result = numeral(price).format('$0,0.00');
+        else
+            result = numeral(rate).format('$0');
         // If is not price but rate, add unit
         if (!price && rate && unit) {
             result += '/' + unit;
         }
         return result;
+    }, this);
+    
+    this.displayedDurationAndPrice = ko.pureComputed(function() {
+        var dur = this.sessionsAndDuration();
+        var pr = this.displayedPrice();
+        if (dur && pr)
+            return dur + ', ' + pr;
+        else
+            return dur || pr;
     }, this);
 }
 

@@ -5,32 +5,49 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var ProfilePictureBioVM = require('../viewmodels/MarketplaceProfilePictureVM');
 
-var A = Activity.extends(function ProfilePictureBioActivity() {
+var A = Activity.extend(function ProfilePictureBioActivity() {
     
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: 'marketplaceProfile'
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Marketplace profile', {
+        backLink: '/marketplaceProfile' , helpLink: this.viewModel.helpLinkProfessionals
     });
-    
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Marketplace profile', {
+        backLink: '/marketplaceProfile' , helpLink: this.viewModel.helpLinkClients
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+        
     this.registerHandler({
         target: this.app.model.marketplaceProfile,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving your data.' : 'Error loading your data.';
-            this.app.modals.showError({
-                title: msg,
-                error: err && err.error || err
-            });
+            if (err.task === 'load' || err.task === 'sync') {
+                this.app.modals.showError({
+                    title: 'Error loading your data.',
+                    error: err && err.error || err
+                });
+            }
         }.bind(this)
     });
 });
 
 exports.init = A.init;
+
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
@@ -39,38 +56,23 @@ A.prototype.show = function show(state) {
     this.viewModel.discard();
     
     // Keep data updated:
-    this.app.model.marketplaceProfile.sync();
+    this.viewModel.sync();
+    
+    this.updateNavBarState();
 };
 
 function ViewModel(app) {
-
-    // Marketplace Profile
-    var marketplaceProfile = app.model.marketplaceProfile;
-    var profileVersion = marketplaceProfile.newVersion();
-    profileVersion.isObsolete.subscribe(function(itIs) {
-        if (itIs) {
-            // new version from server while editing
-            // FUTURE: warn about a new remote version asking
-            // confirmation to load them or discard and overwrite them;
-            // the same is need on save(), and on server response
-            // with a 509:Conflict status (its body must contain the
-            // server version).
-            // Right now, just overwrite current changes with
-            // remote ones:
-            profileVersion.pull({ evenIfNewer: true });
-        }
-    });
     
-    // Actual data for the form:
-    this.profile = profileVersion.version;
-    
-    // Control observables: special because must a mix
-    // of the both remote models used in this viewmodel
-    this.isLocked = marketplaceProfile.isLocked;
-    this.isLoading = marketplaceProfile.isLoading;
-    this.isSaving = marketplaceProfile.isSaving;
+    this.user = app.model.userProfile.data;
+    this.helpLinkProfessionals = '/help/relatedArticles/201960933-writing-your-profile-bio';
+    this.helpLinkClients = '/help/relatedArticles/201213895-managing-your-marketplace-profile';
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
 
-    this.submitText = ko.pureComputed(function() {
+    var t = new ProfilePictureBioVM(app);
+
+    t.submitText = ko.pureComputed(function() {
         return (
             this.isLoading() ? 
                 'loading...' : 
@@ -78,21 +80,21 @@ function ViewModel(app) {
                     'saving...' : 
                     'Save'
         );
-    }, this);
-
-    // Actions
-
-    this.discard = function discard() {
-        profileVersion.pull({ evenIfNewer: true });
-    }.bind(this);
-
-    this.save = function save() {
-        profileVersion.pushSave()
+    }, t);
+    
+    var save = t.save;
+    t.save = function() {
+        save()
         .then(function() {
             app.successSave();
-        })
-        .catch(function() {
-            // catch error, managed on event
-        });
-    }.bind(this);
+        }.bind(this))
+        .catch(function(err) {
+            app.modals.showError({
+                title: 'Error saving your data.',
+                error: err && err.error || err
+            });
+        }.bind(this));
+    };
+    
+    return t;
 }

@@ -29,8 +29,9 @@ namespace LcRest
         public static EventDates Get(int calendarEventID)
         {
             using (var db = new LcDatabase()) {
+                // IMPORTANT: DO NOT discard by Deleted flag, since we need this call just for cancelled bookings with soft-deleted dates
                 return FromDB(db.QuerySingle(@"
-                        SELECT startTime,
+                    SELECT startTime,
                             endTime
                     FROM    CalendarEvents
                     WHERE   ID = @0

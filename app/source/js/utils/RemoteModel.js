@@ -10,6 +10,12 @@
     Every instance or subclass must implement
     the fetch and pull methods that knows the specifics
     of the remotes.
+    
+    TODO Implement fix for Concurrent Requests. There are less chances
+    to that happens with the uses of this class, but still good to have.
+    Currently implemented in the others ListRemoteModel, GroupRemoteModel
+    and GroupListRemoteModel, but there is some logic here to re-order before
+    trying since seems easy to introduce a serious bug right now.
 **/
 'use strict';
 
@@ -106,7 +112,7 @@ function RemoteModel(options) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
                 // rethrow error
-                return error;
+                throw error;
             });
         }.bind(this);
 
@@ -174,12 +180,14 @@ function RemoteModel(options) {
             }
 
             // Rethrow error
-            return err;
+            throw err;
         }.bind(this));
     }.bind(this);
     
-    this.load = function load() {
-        if (this.cache.mustRevalidate()) {
+    this.load = function load(options /*{ forceRemoteUpdate:false }*/) {
+        //jshint maxcomplexity:9
+        options = options || {};
+        if (options.forceRemoteUpdate || this.cache.mustRevalidate()) {
             
             if (firstTimeLoad)
                 this.isLoading(true);
@@ -190,7 +198,8 @@ function RemoteModel(options) {
             
             // If local storage is set for this, load first
             // from local, then follow with syncing from remote
-            if (firstTimeLoad &&
+            if (!options.forceRemoteUpdate &&
+                firstTimeLoad &&
                 this.localStorageName) {
 
                 promise = localforage.getItem(this.localStorageName)
@@ -301,7 +310,7 @@ function RemoteModel(options) {
             }
             
             // Rethrow error
-            return err;
+            throw err;
         }.bind(this));
     };
     
@@ -312,10 +321,10 @@ function RemoteModel(options) {
         IMPORTANT: right now is just a request for 'load'
         that avoids promise errors from throwing.
     **/
-    this.sync = function sync() {
+    this.sync = function sync(options) {
         // Call for a load, that will be treated as 'syncing' after the
         // first load
-        this.load()
+        this.load(options)
         // Avoid errors from throwing in the console,
         // the 'error' event is there to track anyone.
         .catch(function() {});

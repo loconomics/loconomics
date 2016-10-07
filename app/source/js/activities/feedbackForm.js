@@ -6,25 +6,47 @@
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
 
-var A = Activity.extends(function FeedbackFormActivity() {
+var A = Activity.extend(function FeedbackFormActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.loggedUser;
+    this.accessLevel = null;
     
-    this.navBar = Activity.createSubsectionNavBar('Talk to us');
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: this.viewModel.helpLinkProfessionals
+    });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: this.viewModel.helpLinkClients
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
 });
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
 A.prototype.show = function show(options) {
+    //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
+    
+    this.updateNavBarState();
 
     var params = this.requestData.route.segments || [];
     var elementName = params[0] || '',
         elementID = VocElementEnum[elementName] |0;
+
+    this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
     
     if (!elementName) {
         console.log('Feedback Ideas: Accessing feedback without specify an element, using General (0)');
@@ -39,23 +61,43 @@ A.prototype.show = function show(options) {
 var ko = require('knockout');
 function ViewModel(app) {
     
+    this.user = app.model.userProfile.data;
+    this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
+    this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
-    this.wasSent = ko.observable(false);
+    // Get reference to know if is already a collaborator
+    this.isCollaborator = app.model.userProfile.data.isCollaborator;
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
+    this.emailSubject = ko.observable('');
 
-    var updateWasSent = function() {
-        this.wasSent(false);
-    }.bind(this);
-    this.message.subscribe(updateWasSent);
-    this.becomeCollaborator.subscribe(updateWasSent);
-    
     this.submitText = ko.pureComputed(function() {
-        return this.isSending() ? 'Sending..' : this.wasSent() ? 'Sent' : 'Send';
+        return this.isSending() ? 'Sending..' : 'Send';
     }, this);
     
+    this.isValid = ko.pureComputed(function() {
+        var m = this.message();
+        return m && !/^\s*$/.test(m);
+    }, this);
+
+    this.anonymousButtonUrl = ko.pureComputed(function() {
+        if (!app.model.user().isAnonymous()) return '';
+
+        var subject = encodeURIComponent('Feedback');
+        var body = encodeURIComponent(this.message());
+        var url = 'mailto:support@loconomics.com?subject=' + subject + '&body=' + body;
+        return url;
+    }, this);
+
     this.send = function send() {
+        // Check is valid, and do nothing if not
+        if (!this.isValid() || app.model.user().isAnonymous()) {
+            return;
+        }
         this.isSending(true);
         app.model.feedback.postIdea({
             message: this.message(),
@@ -63,10 +105,21 @@ function ViewModel(app) {
             vocElementID: this.vocElementID()
         })
         .then(function() {
+            // Update local profile in case marked becameCollaborator and was not already
+            if (!this.isCollaborator() && this.becomeCollaborator()) {
+                // Tag locally already
+                this.isCollaborator(true);
+                // But ask the profile to update, by request a 'save' even if
+                // will not save the flag but will get it updated from database and will cache it
+                app.model.userProfile.save();
+            }
+            // Success
+            app.successSave({
+                message: 'Sent! Thank you for your input.'
+            });
             // Reset after being sent
             this.message('');
             this.becomeCollaborator(false);
-            this.wasSent(true);
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({

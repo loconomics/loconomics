@@ -14,88 +14,6 @@ public static partial class LcData
     /// </summary>
 	public static class JobTitle
     {
-        public static dynamic GetJobTitle(int jobTitleID)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                var job = db.QuerySingle(@"
-                    SELECT
-                        PositionID As jobTitleID,
-                        PositionSingular As singularName,
-                        PositionPlural As pluralName,
-                        Aliases As aliases,
-                        PositionDescription As description,
-                        PositionSearchDescription As searchDescription,
-                        CreatedDate As createdDate,
-                        UpdatedDate As updatedDate
-                    FROM
-                        positions
-                    WHERE
-                        PositionID = @0
-                         AND LanguageID = @1
-                         AND CountryID = @2
-                         AND Active = 1
-                         AND (Approved = 1 Or Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
-                ", jobTitleID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-
-                if (job == null)
-                {
-                    return null;
-                }
-                else
-                {
-                    var pricings = db.Query(@"
-                        SELECT
-                            PricingTypeID As pricingTypeID,
-                            ClientTypeID As clientTypeID,
-                            CreatedDate As createdDate,
-                            UpdatedDate As updatedDate
-                        FROM
-                            positionpricingtype
-                        WHERE
-                            PositionID = @0
-                             AND LanguageID = @1
-                             AND CountryID = @2
-                             AND Active = 1
-                    ", jobTitleID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
-
-                    // Return an object that includes the collection of pricings
-                    return new {
-                        jobTitleID = job.jobTitleID,
-                        singularName = job.singularName,
-                        pluralName = job.pluralName,
-                        aliases = job.aliases,
-                        description = job.description,
-                        searchDescription = job.searchDescription,
-                        createdDate = job.createdDate,
-                        updatedDate = job.updatedDate,
-                        pricingTypes = pricings
-                    };
-                }
-            }
-        }
-
-        /// <summary>
-        /// Search job titles by a partial text by singular or plural name, or alias,
-        /// and the given locale.
-        /// Just returns the ID as value and singular name as label, suitable for autocomplete components.
-        /// </summary>
-        /// <param name="searchText"></param>
-        /// <param name="locale"></param>
-        /// <returns></returns>
-        public static IEnumerable<AutocompleteResult> SearchJobTitles(string searchText, LcRest.Locale locale)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                var sql = "EXEC SearchPositions @0, @1, @2";
-                return db.Query(sql, "%" + searchText + "%", locale.languageID, locale.countryID)
-                    .Select(job => new AutocompleteResult {
-                        value = job.PositionID,
-                        label = job.PositionSingular
-                    });
-            }
-        }
-
         #region User Job Title relationship
         public static dynamic GetUserJobTitles(int userID, int jobTitleID = -1)
         {
@@ -110,7 +28,9 @@ public static partial class LcData
                         u.CancellationPolicyID As cancellationPolicyID,
                         u.InstantBooking As instantBooking,
                         u.CreateDate As createdDate,
-                        u.UpdatedDate As updatedDate
+                        u.UpdatedDate As updatedDate,
+                        u.bookMeButtonReady As bookMeButtonReady,
+                        u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton
                     FROM
                         userprofilepositions as u
                          INNER JOIN
@@ -126,44 +46,6 @@ public static partial class LcData
                          AND positions.Active = 1
                          AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
                 ", userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), jobTitleID);
-            }
-        }
-
-        /// <summary>
-        /// Only fields for public display of the data. Only active job titles included,
-        /// some extra field for Public REST API simplification (job title names)
-        /// </summary>
-        /// <param name="userID"></param>
-        /// <param name="jobTitleID"></param>
-        /// <returns></returns>
-        [Obsolete("Use LcRest.PublicUserJobTitle.Get* methods for updated and typed results")]
-        public static dynamic GetPublicUserJobTitles(int userID, int languageID, int countryID, int jobTitleID = -1)
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                return db.Query(@"
-                    SELECT
-                        u.PositionID As jobTitleID,
-                        u.PositionIntro As intro,
-                        u.CancellationPolicyID As cancellationPolicyID,
-                        u.InstantBooking As instantBooking,
-                        positions.PositionSingular As jobTitleSingularName,
-                        positions.PositionPlural As jobTitlePluralName
-                    FROM
-                        userprofilepositions as u
-                         INNER JOIN
-                        positions on u.positionID = positions.positionID AND positions.languageID = @1 and positions.countryID = @2
-                    WHERE
-                        u.UserID = @0
-                         AND u.LanguageID = @1
-                         AND u.CountryID = @2
-                         AND u.Active = 1
-                         AND u.StatusID = 1 -- Only active/enabled positions
-                         AND (@3 = -1 OR @3 = u.PositionID)
-                         -- Double check for approved positions
-                         AND positions.Active = 1
-                         AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
-                ", userID, languageID, countryID, jobTitleID);
             }
         }
 
@@ -191,6 +73,7 @@ public static partial class LcData
             int cancellationPolicyID,
             string intro,
             bool instantBooking,
+            bool collectPaymentAtBookMeButton,
             int languageID,
             int countryID
             )
@@ -198,14 +81,15 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // Create position for the provider
-                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6",
+                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7",
                     userID,
                     jobTitleID,
                     languageID,
                     countryID,
                     cancellationPolicyID,
                     intro,
-                    instantBooking);
+                    instantBooking,
+                    collectPaymentAtBookMeButton);
                 if (results.Result != "Success") {
                     throw new Exception("We're sorry, there was an error creating your job title: " + results.Result);
                 }
@@ -218,6 +102,7 @@ public static partial class LcData
             int policyID,
             string intro,
             bool instantBooking,
+            bool collectPaymentAtBookMeButton,
             int languageID,
             int countryID)
         {
@@ -226,6 +111,7 @@ public static partial class LcData
                 SET     PositionIntro = @4,
                         CancellationPolicyID = @5,
                         InstantBooking = @6,
+                        collectPaymentAtBookMeButton = @7,
                         UpdatedDate = getdate()
                 WHERE   UserID = @0 AND PositionID = @1
                     AND LanguageID = @2
@@ -240,7 +126,8 @@ public static partial class LcData
                     countryID,
                     intro,
                     policyID,
-                    instantBooking
+                    instantBooking,
+                    collectPaymentAtBookMeButton
                 );
 
                 // Task done? Almost a record must be affected to be a success
@@ -374,6 +261,7 @@ public static partial class LcData
                         ELSE
                             -- Exists and valid, return that ID:
                             SELECT @PositionID
+                            RETURN
                     END
                     
                     -- Create Position with new ID

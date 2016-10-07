@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -22,7 +22,7 @@ public static partial class LcPricingModel
                 SlugName = "hourlyservice",
                 AddNewLabel = "Add hourly services",
                 ProviderDescription = "Describe to your potential clients in detail the service you provide and include what makes your services unique.",
-                PriceCalculation = PriceCalculationType.HourlyPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.HourlyPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Hourly services",
@@ -53,14 +53,15 @@ public static partial class LcPricingModel
                 SlugName = "package",
                 AddNewLabel = "Add a package",
                 ProviderDescription = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable).",
-                PriceCalculation = PriceCalculationType.FixedPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
         
                 NamePlaceHolder = "Type the name of the package (be descriptive and creative)",
-                NumberOfSessionsLabel = "Number of appointments included:",
+                //NumberOfSessionsLabel = "Number of appointments included:",
                 PriceLabel = "Price for package:",
                 PriceNote = "(this should be all-inclusive)",
-                DurationLabel = "Duration (per appointment):",
+//                DurationLabel = "Duration (per appointment):",
+                DurationLabel = "Duration:",
                 RequireDuration = true,
                 DescriptionPlaceHolder = "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)",
                 FirstTimeClientsOnlyLabel = "This package is available to first-time clients only",
@@ -90,7 +91,7 @@ public static partial class LcPricingModel
                 SlugName = "addon",
                 AddNewLabel = "Add an add-on service",
                 ProviderDescription = "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable).",
-                PriceCalculation = PriceCalculationType.FixedPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 IsAddon = true,
 
                 NamePlaceHolder = "Type the name of the add-on service (be descriptive and creative)",
@@ -125,7 +126,7 @@ public static partial class LcPricingModel
                 SlugName = "estimate",
                 AddNewLabel = "Add an estimate visit",
                 ProviderDescription = "We know you're not psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate.",
-                PriceCalculation = PriceCalculationType.FixedPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Type the name of the estimate visit, e.g. \"Work assessment visit\", \"Pricing estimate visit\"",
@@ -168,7 +169,7 @@ public static partial class LcPricingModel
                 SlugName = "consultation",
                 AddNewLabel = "Add a consultation",
                 ProviderDescription = "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services.",
-                PriceCalculation = PriceCalculationType.FixedPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Type the name of the consultation, e.g. \"Initial consultation\", \"Introductory meeting\".",
@@ -215,7 +216,7 @@ public static partial class LcPricingModel
                 SlugName = "service",
                 AddNewLabel = "Add a service",
                 ProviderDescription = "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service.",
-                PriceCalculation = PriceCalculationType.FixedPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.FixedPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Type the name of the service (be descriptive and creative)",
@@ -249,7 +250,7 @@ public static partial class LcPricingModel
                 SlugName = "lightcleaningservice",
                 AddNewLabel = "Add light cleaning services",
                 ProviderDescription = "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique.",
-                PriceCalculation = PriceCalculationType.HourlyPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.HourlyPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Light cleaning services",
@@ -283,7 +284,7 @@ public static partial class LcPricingModel
                 SlugName = "routinecleaningservice",
                 AddNewLabel = "Add routine cleaning services",
                 ProviderDescription = "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique.",
-                PriceCalculation = PriceCalculationType.HourlyPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.HourlyPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Routine cleaning services",
@@ -317,7 +318,7 @@ public static partial class LcPricingModel
                 SlugName = "deepcleaningservice",
                 AddNewLabel = "Add deep cleaning services",
                 ProviderDescription = "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique.",
-                PriceCalculation = PriceCalculationType.HourlyPrice,
+                PriceCalculation = LcEnum.PriceCalculationType.HourlyPrice,
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "Deep cleaning services",

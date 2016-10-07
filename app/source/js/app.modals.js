@@ -84,7 +84,11 @@ exports.stringifyErrorsList = function (errors) {
     }
     else {
         msg = Object.keys(errors).map(function(key) {
-            return errors[key].join('\n');
+            var m = errors[key];
+            if (m && m.join)
+                return m.join('\n');
+            else
+                return m;
         }).join('\n');
     }
     return msg;
@@ -183,6 +187,7 @@ exports.confirm = function confirm(options) {
         message:string. Informative message.
         title:string Optional. The text to show in the modal's header,
             with fallback to the Modal's default title.
+        buttonText:string Optional: The label of the unique (close) button
     }
     @returns Promise. It resolves when the modal is dismissed/closed.
     No formal rejection happens.
@@ -215,3 +220,5 @@ exports.showNotification = function showNotification(options) {
 exports.showTimePicker = require('./modals/timePicker').show;
 
 exports.showTextEditor = require('./modals/textEditor').show;
+
+exports.showAnnouncement = require('./modals/announcementModal').show;

@@ -1,16 +1,42 @@
 <!-- ContactForm activity -->
-<div class="container-fluid LightForm" data-activity="contactForm">
-
-    <h2 class="SectionTitle">Contact us for help</h2>
-    
-    <p class="isolated">
-        If you've searched the <a href="/faqs">FAQs</a> and can't find the help you need,
-        send us a note.
-    </p>
-
-    <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
-
-    <div class="LightForm-submitBar">
-        <button class="btn btn-primary btn-block" data-bind="event: { click: send }, text: submitText, disable: isSending">Send</button>
+<div data-activity="contactForm" class="Boxes-sm animated">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
     </div>
-</div>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                    </li>
+                </ul>
+            </div>
+            <h1 class="hidden-xs hidden-sm">Talk to us</h1>
+            <div class="container-fluid LightForm col-md-7">
+                <h2 class="SectionTitle">Contact us</h2>
+                <div class="form-group">
+                    <p class="isolated">
+                        If you've searched the <a href="/help" class="text-secondary">Help Center</a> and can't find the help you need, please send us a note.
+                    </p>
+                    <p data-bind="visible: emailSubject"><strong>Subject:</strong> <span data-bind="text: emailSubject"></span></p>
+                    <textarea class="form-control" data-bind="textInput: message, disable: isSending"></textarea>
+                </div>
+                <div class="LightForm-submitBar">
+                    <button class="btn btn-primary btn-block" data-bind="click: send, text: submitText, disable: isSending() || !isValid(), visible: !anonymousButtonUrl()">Send</button>
+                    <a data-bind="attr: { href: anonymousButtonUrl }, visible: anonymousButtonUrl"
+                        class="btn btn-primary btn-block" >Send</a>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'helpPages'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div> 
+</div> 
+

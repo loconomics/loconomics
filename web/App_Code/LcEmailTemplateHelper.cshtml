@@ -204,6 +204,4 @@
         E-mail: <a href="mailto:@user.Email">@LcRest.Client.GetEmailFromDb(user.Email)</a>
     </div>
 }
-@helper PrintUserProfileLink(dynamic userdata, string label = null) {/*
-    */<a target="_blank" href="@(LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(userdata.UserID))">@(label ?? LcHelpers.GetUserDisplayName(userdata))</a>/*
-*/}
+

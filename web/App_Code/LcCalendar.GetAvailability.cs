@@ -448,6 +448,49 @@ public static partial class LcCalendar
 
         #region TIMES Availability Slots Timeline [mixed Public and Private API]
 
+        private static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> OccurrencesWithAdvanceTimeSlot(
+            IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> occurences, DateTime startTime, double advanceTime)
+        {
+            var notBeforeTime = DateTime.Now.ToUniversalTime().AddHours(advanceTime);
+            if (startTime < notBeforeTime)
+            {
+                var past = new CalendarDll.CalendarUtils.AvailabilitySlot
+                {
+                    StartTime = startTime,
+                    EndTime = notBeforeTime,
+                    AvailabilityTypeID = (int)AvailabilityType.Unavailable
+                };
+                yield return past;
+            }
+            // Occurrences need to be filtered to do not include ones that happens older than the advance time / startTime,
+            // not just for performance of the timeline computation, but for consistency since it can breaks the logic there (since
+            // it expects events sorted ascending by startTime, and occurrence with older start than advanceTime slot would break it).
+            // Too, if an occurrence starts before advance but ends after, must create a new slot (cut from intersection -advanceTimeStart- to endtime).
+            foreach (var s in occurences)
+            {
+                if (s.EndTime <= notBeforeTime)
+                {
+                    // Excluded, is old
+                    continue;
+                }
+                else if (s.StartTime < notBeforeTime)
+                {
+                    // Intersection (since endTime is not older than notBeforeTime, by first 'if' check)
+                    yield return new CalendarDll.CalendarUtils.AvailabilitySlot
+                    {
+                        StartTime = notBeforeTime,
+                        EndTime = s.EndTime,
+                        AvailabilityTypeID = s.AvailabilityTypeID
+                    };
+                }
+                else
+                {
+                    // Just newer, give it 'as is'
+                    yield return s;
+                }
+            }
+        }
+
         /// <summary>
         /// Public API for the availability/times endpoint.
         /// Get the Availability of the user as a timeline: a list of consecutive date time ranges,
@@ -461,17 +504,32 @@ public static partial class LcCalendar
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> Times(int userID, DateTime startTime, DateTime endTime)
+        public static Dictionary<string, object> Times(int userID, DateTime startTime, DateTime endTime, bool useAdvanceTime)
         {
             var result = new Dictionary<string, object>();
 
+            double advanceTime = 0;
+            var prefs = LcCalendar.GetSchedulingPreferences(userID);
+            if (useAdvanceTime)
+            {
+                advanceTime = (double)prefs.advanceTime;
+            }
+
             var cu = new CalendarDll.CalendarUtils();
-            var calUser = new CalendarDll.CalendarUser(141);
-            var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(calUser.Id, startTime, endTime);
+            var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
+
+            // NOTE: To avoid to show as available past time or inside the AdvanceTime period,
+            // we need to add an unavailable slot (if needed). It too filters out and cut slots
+            // that happens or starts before of now
+            // IMPORTANT: Not only takes care of advanceTime, even when that is 0 (because is excluded or is the saved value)
+            // this method filters the beggining of the slots to set an unavailable slot for any time older than current server time,
+            // with careful for a current time that happens in between a slot range.
+            // TODO: WARNING: It does NOT filter the end time (only start time right now), so the result would include slots
+            // that end after the requested endTime most times. The App has currently a filtering for that, becoming not a problem.
+            data = OccurrencesWithAdvanceTimeSlot(data, startTime, advanceTime);
 
             // Create result
             result["times"] = GetTimelinePublicOutputFormat(GetTimeline(data));
-            var prefs = LcCalendar.GetSchedulingPreferences(userID);
             // Communicating service professional Slot size, because Apps must show times in that precision
             // (server would enforce that rule, throwing availability errors if not met)
             result["incrementsSizeInMinutes"] = prefs.incrementsSizeInMinutes;

@@ -23,6 +23,11 @@ namespace LcRest
             return languageCode.ToLower() + "-" + countryCode.ToUpper();
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Country class
+        /// </summary>
+        /// <param name="CountryID"></param>
+        /// <returns></returns>
         public static string GetCountryCodeByID(int CountryID)
         {
             switch (CountryID)
@@ -37,6 +42,11 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Country class
+        /// </summary>
+        /// <param name="CountryCode"></param>
+        /// <returns></returns>
         public static int GetCountryIDByCode(string CountryCode)
         {
             switch (CountryCode)
@@ -51,6 +61,11 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Language class
+        /// </summary>
+        /// <param name="LanguageID"></param>
+        /// <returns></returns>
         public static string GetLanguageCodeByID(int LanguageID)
         {
             switch (LanguageID)
@@ -65,6 +80,11 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// TODO Implement database look-up, throgh Language class
+        /// </summary>
+        /// <param name="LanguageCode"></param>
+        /// <returns></returns>
         public static int GetLanguageIDByCode(string LanguageCode)
         {
             switch (LanguageCode)
@@ -79,13 +99,39 @@ namespace LcRest
             }
         }
 
-        private static readonly System.Text.RegularExpressions.Regex regURLLocale =
+        /// <summary>
+        /// Detecting language in the URL.
+        /// Using a generic pattern to check just a URL segment with language format.
+        /// 
+        /// For a specific REST API URL matching, use regRestUrlLocale
+        /// </summary>
+        private static readonly System.Text.RegularExpressions.Regex regUrlLocale =
+            new System.Text.RegularExpressions.Regex(@"/([a-z]{2})-([A-Z]{2})(/|$)",
+                System.Text.RegularExpressions.RegexOptions.ECMAScript | System.Text.RegularExpressions.RegexOptions.Compiled);
+
+        public static dynamic AnalyzeUrl(string url)
+        {
+            var matches = regUrlLocale.Match(url);
+            if (matches.Success)
+            {
+                var lang = matches.Groups[1].Value;
+                var country = matches.Groups[2].Value;
+                return new
+                {
+                    language = lang,
+                    country = country
+                };
+            }
+            return null;
+        }
+
+        private static readonly System.Text.RegularExpressions.Regex regRestUrlLocale =
             new System.Text.RegularExpressions.Regex(@"/api/v([^/]+)/([a-z]{2})-([A-Z]{2})(/|$)",
                 System.Text.RegularExpressions.RegexOptions.ECMAScript | System.Text.RegularExpressions.RegexOptions.Compiled);
 
-        public static dynamic AnalyzeURL(string url)
+        public static dynamic AnalyzeRestUrl(string url)
         {
-            var matches = regURLLocale.Match(url);
+            var matches = regRestUrlLocale.Match(url);
             if (matches.Success)
             {
                 var version = matches.Groups[1].Value;
@@ -105,7 +151,7 @@ namespace LcRest
         {
             get
             {
-                var info = AnalyzeURL(HttpContext.Current.Request.RawUrl);
+                var info = AnalyzeUrl(HttpContext.Current.Request.RawUrl);
 
                 if (info != null)
                 {
