@@ -43,7 +43,6 @@
         // Account Type
         isServiceProfessional:bool Auto
         isClient:bool Auto
-        isMember:bool Auto
 
         // Account Status
         onboardingStep:string Auto. The name of the step in the onboarding process, the UI must guide user to that to complete the basic profile.
@@ -68,6 +67,12 @@
                 "canReceiveSms": false,
                 "birthMonthDay": 20,
                 "birthMonth": 4
+            }
+        },
+        "User Profile: Track changes (differential changes)": {
+            "url": "/api/v1/en-US/me/profile/tracking",
+            "put": {
+                "onboardingStep": "welcome"
             }
         }
     }

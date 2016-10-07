@@ -4,53 +4,22 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var $ = require('jquery');
-//NOTE: IT DEPENDS on this, but jquery-ui touch events support requires special load order
-// so thats being done in the entry point file
-//require('jquery-ui/autocomplete');
+var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 
-var A = Activity.extends(function AddJobTitlesActivity() {
+var A = Activity.extend(function AddJobTitlesActivity() {
     
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.serviceProfessional;
+    this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduling');
-    
-    // Setup autocomplete
-    var ac = this.$activity.find('#addJobTitles-search');
-    var vw = this.viewModel;
-    // Autocomplete positions and add to the list
-    ac.autocomplete({
-        source: function(request, response) {
-            vw.searchBy(request.term)
-            .then(function(results) {
-                response(results);
-            });
-        },
-        autoFocus: false,
-        minLength: 0,
-        select: function (event, ui) {
-            // No value, no action :(
-            if (!ui || !ui.item || !ui.item.value) return;
-
-            vw.addItem(ui.item);
-
-            return false;
-        },
-        focus: function (event, ui) {
-            if (!ui || !ui.item || !ui.item.positionSingular);
-            // We want the label in textbox, not the value
-            $(this).val(ui.item.positionSingular);
-            return false;
-        }
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
 });
 
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-
     var referrer = this.app.shell.referrerRoute;
     referrer = referrer && referrer.url || '/scheduling';
     var link = this.requestData.cancelLink || referrer;
@@ -64,28 +33,81 @@ A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
     
+    // Allow to preset an incoming value
+    var s = options.route.query.s;
+
     // Reset
-    this.viewModel.searchText('');
+    this.viewModel.searchText(s);
     this.viewModel.jobTitles.removeAll();
     
     this.updateNavBarState();
+
+    // Allow auto add the search text as new proposed job-title
+    if (options.route.query.autoAddNew === 'true') {
+        this.viewModel.addNewItem(s);
+    }
+    else if (options.route.query.id) {
+        // An ID is passed in and added with the text (if any)
+        // as a valid presset job-title ID/name (is not validated at frontend
+        // to don't delay, server will double check anyway).
+        if (s) {
+            this.viewModel.addItem({
+                value: +options.route.query.id,
+                label: s
+            });
+            this.viewModel.searchText('');
+        }
+    }
 };
 
 var ko = require('knockout');
 function ViewModel(app) {
     
-    this.isSearching = ko.observable(false);
+    this.helpLink = '/help/relatedArticles/201211055-adding-job-profiles';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
+
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
-    this.searchText = ko.observable('');
     this.jobTitles = ko.observableArray([]);
+    
+    this.addItem = function(item) {
+        var foundIndex = this.findItem(item);
+        if (foundIndex === -1) {
+            this.jobTitles.push(item);
+        }
+    };
+    this.addNewItem = function(jobTitleName) {
+        if (jobTitleName) {
+            this.addItem({
+                value: 0,
+                label: jobTitleName
+            });
+        }
+    };
+    
+    // API entry-point for search component
+    this.search = ko.observable(new SearchJobTitlesVM(app));
+    this.search().onClickJobTitle = function(jobTitle) {
+        // Add to the list, if is not already in it
+        var item = {
+            value: jobTitle.jobTitleID(),
+            label: jobTitle.singularName()
+        };
+        this.addItem(item);
+    }.bind(this);
+    this.search().onClickNoJobTitle = function(jobTitleName) {
+        this.addNewItem(jobTitleName);
+    }.bind(this);
+    this.search().customResultsButtonText('Add');
+    this.searchText = this.search().searchTerm;
     
     this.submitText = ko.pureComputed(function() {
         return (
             app.model.onboarding.inProgress() ?
                 'Save and continue' :
                 this.isSaving() ? 
-                    'saving...' : 
+                    'Saving...' : 
                     'Save'
         );
     }, this);
@@ -94,36 +116,6 @@ function ViewModel(app) {
         return !!this.jobTitles().length;
     }, this);
 
-    this.searchBy = function searchBy(text) {
-        return app.model.rest.get('job-titles/autocomplete', { search: text })
-        .catch(function (err) {
-            app.modals.showError({ error: err });
-        });
-    }.bind(this);
-    
-    this.search = function search() {
-        this.searchBy(this.searchText());
-    }.bind(this);
-    
-    this.addItem = function addItem(item) {
-        // Add to the list, if is not already in it
-        var foundIndex = this.findItem(item);
-        if (foundIndex === -1) {
-            this.jobTitles.push(item);
-        }
-    }.bind(this);
-    
-    this.add = function add() {
-        var s = this.searchText();
-        if (s) {
-            this.addItem({
-                value: 0,
-                label: s
-            });
-            this.searchText('');
-        }
-    }.bind(this);
-    
     /**
         Look for an item in the current list, returning
         its index in the list or -1 if nothing.
@@ -149,7 +141,12 @@ function ViewModel(app) {
     }.bind(this);
     
     this.save = function save() {
+        if (this.jobTitles().length === 0) return;
         this.isSaving(true);
+
+        // We need to do different stuff if user is not a proffesional when requesting this
+        var becomingProfessional = !app.model.userProfile.data.isServiceProfessional();
+        var firstJobID = this.jobTitles()[0].value;
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
             return app.model.userJobProfile.createUserJobTitle({
@@ -158,18 +155,33 @@ function ViewModel(app) {
             });
         }))
         .then(function(/*results*/) {
-            this.searchText('');
-            this.isSaving(false);
-            // Reset list
-            this.jobTitles.removeAll();
-            
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
+            var onEnd = function onEnd() {
+                this.isSaving(false);
+                // Reset UI list
+                this.searchText('');
+                this.jobTitles.removeAll();
+                if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.selectedJobTitleID(firstJobID);
+                    app.model.onboarding.goNext();
+                }
+                else {
+                    app.successSave();
+                }
+            }.bind(this);
+            if (becomingProfessional) {
+                return app.model.userProfile
+                .load({ forceRemoteUpdate: true })
+                .then(function(profile) {
+                    // Start onboarding
+                    if (app.model.onboarding) {
+                        app.model.onboarding.setStep(profile.onboardingStep());
+                    }
+                    onEnd();
+                });
             }
             else {
-                app.successSave();
+                onEnd();
             }
-            
         }.bind(this))
         .catch(function(error) {
             this.searchText('');

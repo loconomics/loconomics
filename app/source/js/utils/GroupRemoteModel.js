@@ -33,24 +33,27 @@ function GroupRemoteModel(settings) {
     };
 
     var cache = {
-        // 'indexID': { data, control:CacheControl }
+        // 'indexID': CacheControl
     };
-    var setItemCache = function(itemID, data) {
-        if (cache[itemID]) {
-            cache[itemID].data.model.updateWith(data);
-            cache[itemID].control.touch();
+    var getCacheItem = function(id) {
+        var c = cache[id];
+        if (!c) {
+            c = cache[id] = new CacheControl({
+                ttl: settings.ttl
+            });
         }
-        else {
-            cache[itemID] = {
-                data: new settings.Model(data),
-                control: new CacheControl({
-                    ttl: settings.ttl
-                })
-            };
-        }
-        return cache[itemID];
+        return c;
     };
-
+    var setCacheItem = function(id, rawData) {
+        var c = getCacheItem(id);
+        if (c.data)
+            c.data.model.updateWith(rawData, true);
+        else
+            c.data = new settings.Model(rawData);
+        
+        c.touch();
+        return c;
+    };
     this.clearCache = function() {
         cache = {};
     };
@@ -74,20 +77,25 @@ function GroupRemoteModel(settings) {
     var api = this;
 
     api.getItem = function getItem(itemID, forceRemoteLoad) {
-        var cacheEntry = cache[itemID];
+        //jshint maxcomplexity:9
+        var cacheEntry = getCacheItem(itemID);
 
-        if (forceRemoteLoad || !cacheEntry || cacheEntry.control.mustRevalidate()) {
+        // Concurrent requests: First, check if there is a running/pending request already for this
+        if (cacheEntry.request) {
+            return cacheEntry.request;
+        }
+        else if (forceRemoteLoad || cacheEntry.mustRevalidate()) {
             // No cache data, is first load, try from local
-            if (!cacheEntry || !cacheEntry.data) {
+            if (!cacheEntry.data) {
                 api.state.isLoading(true);
                 // From local
-                return this.fetchItemFromLocal(itemID)
+                cacheEntry.request = this.fetchItemFromLocal(itemID)
                 .then(function(data) {
                     // launch remote for sync
                     api.state.isSyncing(true);
                     var remotePromise = this.fetchItemFromRemote(itemID)
                     .then(function(serverData) {
-                        var cached = setItemCache(itemID, serverData);
+                        var cached = setCacheItem(itemID, serverData);
                         this.pushItemToLocal(itemID, serverData);
                         api.state.isSyncing(false);
                         return cached.data;
@@ -96,34 +104,39 @@ function GroupRemoteModel(settings) {
                     return data ? data : remotePromise;
                 }.bind(this))
                 .then(function(data) {
-                    var cached = setItemCache(itemID, data);
+                    var cached = setCacheItem(itemID, data);
                     api.state.isLoading(false);
+                    cacheEntry.request = null;
                     return cached.data;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cacheEntry.request = null;
                     // rethrow error
-                    return err;
+                    throw err;
                 });
+                return cacheEntry.request;
             } else {
                 api.state.isSyncing(true);
                 // From remote
-                return this.fetchItemFromRemote(itemID)
+                cacheEntry.request = this.fetchItemFromRemote(itemID)
                 .then(function(data) {
-                    var cached = setItemCache(itemID, data);
+                    var cached = setCacheItem(itemID, data);
                     this.pushItemToLocal(itemID, data);
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
-
+                    cacheEntry.request = null;
                     return cached.data;
                 }.bind(this))
                 .catch(function(err) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
+                    cacheEntry.request = null;
                     // rethrow error
-                    return err;
+                    throw err;
                 });
+                return cacheEntry.request;
             }
         }
         else {
@@ -157,7 +170,7 @@ function GroupRemoteModel(settings) {
             if (serverData) {
                 var itemID = serverData[settings.itemIdField];
                 // Save in cache
-                cached = setItemCache(serverData[settings.itemIdField], serverData);
+                cached = setCacheItem(serverData[settings.itemIdField], serverData);
                 // Save in local storage
                 // In local need to be saved all the grouped data, not just
                 // the item; since we have the cache list updated, use that
@@ -171,7 +184,7 @@ function GroupRemoteModel(settings) {
         .catch(function(err) {
             api.state.isSaving(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -194,7 +207,7 @@ function GroupRemoteModel(settings) {
         .catch(function(err) {
             api.state.isDeleting(false);
             // Rethrow error
-            return err;
+            throw err;
         });
     };
     
@@ -330,10 +343,10 @@ GroupRemoteModel.prototype.addLocalforageSupport = function addLocalforageSuppor
     };
 };
 
-GroupRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, baseUrl) {
-
+GroupRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, baseUrl, suffixUrl) {
+    suffixUrl = suffixUrl || '';
     this.fetchItemFromRemote = function fetchFromRemote(itemID) {
-        return restClient.get(baseUrl + itemID);
+        return restClient.get(baseUrl + itemID + suffixUrl);
     };
     this.pushItemToRemote = function pushToRemote(itemID, data) {
 
@@ -341,10 +354,10 @@ GroupRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, 
 
         var url = baseUrl + (
             itemID ? '/' + itemID : ''
-        );
+        ) + suffixUrl;
         return restClient[method](url, data);
     };
     this.removeItemFromRemote = function removeItemFromRemote(itemID) {
-        return restClient.delete(baseUrl + itemID);
+        return restClient.delete(baseUrl + itemID + suffixUrl);
     };
 };

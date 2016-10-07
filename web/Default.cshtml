@@ -1,12 +1,12 @@
 ﻿@{
-    if (LcHelpers.InLive)
-    {
-        @RenderPage("_specialRoutes/_Splash.cshtml");
+    if (LcHelpers.IsVeryOldBrowser()) {
+        @RenderPage(LcUrl.RenderAppPath + "en-US/HelpCenter/UpgradeBrowser.cshtml");
         return;
     }
-    else {
-        Layout = LcUrl.RenderLangPath + "_SiteLayout.cshtml";
-        Page.Title = "Loconomics";
+    var s = System.IO.File.ReadAllText(Server.MapPath("~/_specialRoutes/app.html"));
+    // Replace the BASE URL
+    if (LcUrl.AppPath.Length > 1) {
+        s = s.Replace(@"<base href=/ >", String.Format("<base href=\"{0}\">", LcUrl.AppPath));
     }
+    @(new HtmlString(s))
 }
-<h1>Loconomics</h1>

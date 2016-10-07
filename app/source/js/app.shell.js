@@ -3,7 +3,15 @@
 **/
 'use strict';
 
-var baseUrl = window.location.pathname;
+var baseUrl = ''; // NEVER: window.location.pathname will broke inside Cordova
+var hashBang = true;
+if (!window.cordova) {
+    var t = /^http.?:\/\/[^\/]+(\/[^#]*)/.exec(window.document.baseURI);
+    if (t && t[1]) {
+        baseUrl = t[1];
+        hashBang = false;
+    }
+}
 
 //var History = require('./app-shell-history').create(baseUrl);
 var History = require('./utils/shell/hashbangHistory');
@@ -25,9 +33,11 @@ var shell = new Shell({
     // If is not in the site root, the base URL is required:
     baseUrl: baseUrl,
     
-    forceHashbang: true,
+    forceHashbang: hashBang,
 
-    indexName: 'index',
+    indexName: 'home',
+    
+    forbiddenAccessName: 'login',
 
     linkEvent: 'click',
 

@@ -8,7 +8,7 @@
             <span data-bind="text: group"></span>
         </div>
 
-        <ul class="TilesList Box-sm" data-bind="foreach: { data: services, as: 'service' }">
+        <ul class="TilesList TilesList--openEnd Box-sm" data-bind="foreach: { data: services, as: 'service' }">
             <li><a href="#" class="ItemTile" data-bind="click: $parents[1].tapService, css: { active: service.isSelected }" role="button">
                 <div class="Tile-marker"><p data-bind="text: service.displayedPrice"></p></div>
                 <div class="Tile-content">

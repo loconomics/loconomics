@@ -1,11 +1,12 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Allows users to send feedback to Loconomics.
 
     Options:
     
     - POST
         message:string
-        becomeACollaborator:bool (Only allowed on request to 'IDEAS')
+        becomeCollaborator:bool (Only allowed on request to 'IDEAS')
         vocElementID:int
         userDevice:string A JSON object encoded as string with a userAgent property from the webview/browser and
             additional optional fields like 'device' and 'model' from something like PhoneGap Device Plugin.
@@ -26,7 +27,7 @@
             "post": {
                 "message": "I have an idea!",
                 "vocElementID": 1,
-                "becomeACollaborator": true,
+                "becomeCollaborator": true,
                 "userDevice": "{ \"userAgent\": \"Mozilla/5.0 Some Browser\" }"
             }
         }
@@ -55,7 +56,7 @@
                     vocExperienceCategoryID = vocExperienceCategoryID,
                     userID = WebSecurity.CurrentUserId,
                     message = Request["message"],
-                    becomeACollaborator = vocExperienceCategoryID == 1 ? Request["becomeACollaborator"].AsBool() : false,
+                    becomeCollaborator = vocExperienceCategoryID == 1 ? Request["becomeCollaborator"].AsBool() : false,
                     vocElementID = Request["vocElementID"].AsInt(),
                     userDevice = Request["userDevice"]
                 };
@@ -63,16 +64,22 @@
  	            LcRest.Feedback.PostFeedback(feedback);
 
                 // On support request, send an email
+                var email = "support@loconomics.zendesk.com";
+                var subject = "Feedback";
                 if (vocExperienceCategoryID == 2) {
-                    LcMessaging.SendMail("help@loconomics.com", "Message to /feedback/support API", feedback.message, WebSecurity.CurrentUserName);
+                    subject = "Support Request";
                 }
                 else if (vocExperienceCategoryID == 1) {
-                    // On ideas request, send an email
-                    LcMessaging.SendMail("voc@loconomics.com", "Message to /feedback/ideas API", feedback.message, WebSecurity.CurrentUserName);
+                    subject = "Feedback";
+                }
+                if (!LcMessaging.SendMail(email, subject, feedback.message, WebSecurity.CurrentUserName))
+                {
+                    // Failed e-mail, save copy in errors log
+                    LcLogger.LogAspnetError(new Exception(subject + "::" + feedback.message));
                 }
 
                 // User becomes an owner by its own request
-                if (feedback.becomeACollaborator) {
+                if (feedback.becomeCollaborator) {
                     LcData.UserInfo.BecomeCollaborator(feedback.userID);
                 }
 

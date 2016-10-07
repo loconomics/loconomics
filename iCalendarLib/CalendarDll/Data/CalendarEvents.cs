@@ -49,6 +49,7 @@ namespace CalendarDll.Data
         public Nullable<int> DayofWeek { get; set; }
         public string Description { get; set; }
         public int EventType { get; set; }
+        public DateTime? Deleted { get; set; }
     
         public virtual CalendarAvailabilityType CalendarAvailabilityType { get; set; }
         public virtual ICollection<CalendarEventComments> CalendarEventComments { get; set; }

@@ -1,27 +1,22 @@
 /**
-    Submodel that is used on the SimplifiedWeeklySchedule
-    defining a single week day availability range.
-    A full day must have values from:0 to:1440, never
-    both as zero because thats considered as not available,
-    so is better to use the isAllDay property.
+    Submodel that is used on the WeeklySchedule
+    extending an observable array of 'week day availability TimeRanges'.
 **/
 'use strict';
 
-var Model = require('./Model'),
-    moment = require('moment'),
-    ko = require('knockout');
+var ko = require('knockout');
 
-function WeekDaySchedule(values) {
+var TimeRange = require('./TimeRange');
 
-    Model(this);
+/**
+    Extends an observable array of TimeRange (know as a WeekDaySchedule)
+    with methods to check and manipulate the day schedule.
+**/
+function WeekDaySchedule(obsArray) {
 
-    // NOTE: from-to properies as numbers
-    // for the minute of the day, from 0 (00:00) to 1439 (23:59)
-    this.model.defProperties({
-        from: 0,
-        to: 0
-    }, values);
-    
+    if (!obsArray)
+        obsArray = ko.observableArray([]);
+
     /**
         It allows to know if this week day is 
         enabled for weekly schedule, just it
@@ -36,114 +31,75 @@ function WeekDaySchedule(values) {
         the observable is rate limited with an inmediate value,
         son only one notification is received.
     **/
-    this.isEnabled = ko.computed({
+    obsArray.isEnabled = ko.computed({
         read: function() {
-            return (
-                typeof(this.from()) === 'number' &&
-                typeof(this.to()) === 'number' &&
-                this.from() < this.to()
-            );
+            var r = obsArray() && obsArray()[0];
+            return (r && r.fromMinute() < r.toMinute() || false);
+        },
+        write: function(val) {
+            obsArray.removeAll();
+            if (val === true) {
+                // Default range 9a - 5p
+                obsArray.push(new TimeRange({
+                    start: '09:00:00',
+                    end: '17:00:00'
+                }));
+            }
+        }
+    }).extend({ rateLimit: 0 });
+
+    // 'Is all day' special value is recognized as a unique
+    // range for the date, from 00:00:00 (minute 0) to 24:00:00 (minute 1440).
+    obsArray.isAllDay = ko.computed({
+        read: function() {
+            var r = obsArray() && obsArray()[0];
+            if (r) {
+                return  (
+                    r.start() === '00:00:00' &&
+                    r.end() === '24:00:00'
+                );
+            }
+            return false;
         },
         write: function(val) {
             if (val === true) {
-                // Default range 9a - 5p
-                this.fromHour(9);
-                this.toHour(17);
+                obsArray.removeAll();
+                obsArray.push(new TimeRange({
+                    start: '00:00:00',
+                    end: '24:00:00'
+                }));
             }
-            else {
-                this.toHour(0);
-                this.from(0);
-            }
-        },
-        owner: this
+        }
     }).extend({ rateLimit: 0 });
     
-    this.isAllDay = ko.computed({
-        read: function() {
-            return  (
-                this.from() === 0 &&
-                this.to() === 1440
-            );
-        },
-        write: function(/*val*/) {
-            this.from(0);
-            this.to(1440);
-        },
-        owner: this
-    }).extend({ rateLimit: 0 });
+    obsArray.addTimeRange = function() {
+        var arr = obsArray();
+        var last = arr[arr.length - 1];
+        var lastTime = last && last.end() || '00:00:00';
+        var tr = new TimeRange({
+            start: lastTime
+        });
+        var nextHour = tr.fromMinute() + 60;
+        if (nextHour >= 1439) nextHour = 1410;
+        tr.fromMinute(nextHour);
+        nextHour += 60;
+        if (nextHour > 1439) nextHour = 1439;
+        tr.toMinute(nextHour);
+        obsArray.push(tr);
+    };
     
-    // Additional interfaces to get/set the from/to times
-    // by using a different data unit or format.
+    obsArray.canAddMore = ko.computed(function() {
+        var arr = obsArray();
+        var last = arr[arr.length - 1];
+        var lastMinute = last && last.toMinute();
+        return lastMinute < 1439;
+    });
+
+    obsArray.removeTimeRange = function(timeRange) {
+        obsArray.remove(timeRange);
+    };
     
-    // Integer, rounded-up, number of hours
-    this.fromHour = ko.computed({
-        read: function() {
-            return Math.floor(this.from() / 60);
-        },
-        write: function(hours) {
-            this.from((hours * 60) |0);
-        },
-        owner: this
-    });
-    this.toHour = ko.computed({
-        read: function() {
-            return Math.ceil(this.to() / 60);
-        },
-        write: function(hours) {
-            this.to((hours * 60) |0);
-        },
-        owner: this
-    });
-    
-    // String, time format ('hh:mm')
-    this.fromTime = ko.computed({
-        read: function() {
-            return minutesToTimeString(this.from() |0);
-        },
-        write: function(time) {
-            this.from(timeStringToMinutes(time));
-        },
-        owner: this
-    });
-    this.toTime = ko.computed({
-        read: function() {
-            return minutesToTimeString(this.to() |0);
-        },
-        write: function(time) {
-            this.to(timeStringToMinutes(time));
-        },
-        owner: this
-    });
+    return obsArray;
 }
 
 module.exports = WeekDaySchedule;
-
-//// UTILS,
-// TODO Organize or externalize. some copied form appmodel..
-/**
-    internal utility function 'to string with two digits almost'
-**/
-function twoDigits(n) {
-    return Math.floor(n / 10) + '' + n % 10;
-}
-
-/**
-    Convert a number of minutes
-    in a string like: 00:00:00 (hours:minutes:seconds)
-**/
-function minutesToTimeString(minutes) {
-    var d = moment.duration(minutes, 'minutes'),
-        h = d.hours(),
-        m = d.minutes(),
-        s = d.seconds();
-    
-    return (
-        twoDigits(h) + ':' +
-        twoDigits(m) + ':' +
-        twoDigits(s)
-    );
-}
-
-function timeStringToMinutes(time) {
-    return moment.duration(time).asMinutes() |0;
-}

@@ -17,9 +17,8 @@ namespace LcRest
         public string name;
         public string description;
         public int hoursRequired;
-        public decimal refundIfCancelledBefore;
-        public decimal refundIfCancelledAfter;
-        public decimal refundOfServiceFees;
+        public decimal cancellationFeeAfter;
+        public decimal cancellationFeeBefore;
         public DateTime updatedDate;
         #endregion
 
@@ -37,9 +36,8 @@ namespace LcRest
                 name = record.name,
                 description = record.description,
                 hoursRequired = record.hoursRequired,
-                refundIfCancelledBefore = (decimal)record.refundIfCancelledBefore,
-                refundIfCancelledAfter = (decimal)record.refundIfCancelledAfter,
-                refundOfServiceFees = (decimal)record.refundOfServiceFees,
+                cancellationFeeAfter = (decimal)record.cancellationFeeAfter,
+                cancellationFeeBefore = (decimal)record.cancellationFeeBefore,
                 updatedDate = record.updatedDate
             };
         }
@@ -63,9 +61,8 @@ namespace LcRest
                 cancellationPolicyName As name,
                 cancellationPolicyDescription As description,
                 hoursRequired,
-                refundIfCancelledBefore,
-                refundIfCancelledAfter,
-                refundOfLoconomicsFee As refundOfServiceFees,
+                cancellationFeeAfter,
+                cancellationFeeBefore,
                 updatedDate
             FROM CancellationPolicy
             WHERE CancellationPolicyID = @0

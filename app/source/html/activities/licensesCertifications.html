@@ -1,33 +1,158 @@
 <!-- Activity licensesCertifications -->
-<div data-activity="licensesCertifications">
-
-    <h2 class="SectionTitle" data-bind="css: { 'is-syncing': isSyncing }">
-        Certifications/Licenses
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <div data-bind="css: { 'is-loading': isLoading }">
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+<div data-activity="licensesCertifications" class="Boxes-sm animated">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
     </div>
-    
-    <div>
-        <ul class="TilesList" data-bind="foreach: list">
-            <li><button class="InfoTile" type="button" data-bind="click: $root.selectItem">
-                <div class="Tile-icon" aria-hidden="true">
-                    <span class="fa fa-certificate" aria-hidden="true"></span>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: !isInOnboarding()">
+                <ul>
+                    <li>
+                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <span data-bind="text: jobTitleName"></span> Marketplace profile
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-sm-reset">
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <h2 class="SectionTitle">
+                    <span>Your credentials</span>
+                </h2>
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div class="Tile-content">
-                    <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
-                    <em>Expiration: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L' }"></span> - <span data-bind="text: licenseCertificationNumber"></span></em>
+                <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+                <div data-bind="visible: jobTitleID">                
+                    <ul class="TilesList TilesList--openEnd" data-bind="foreach: submittedUserLicensesCertifications">
+                        <li>
+                            <button class="InfoTile" type="button" data-bind="click: $root.selectItem">
+                                <div class="Tile-icon" aria-hidden="true">
+                                    <span class="fa fa-certificate" aria-hidden="true"></span>
+                                </div>
+                                <div class="Tile-content">
+                                    <div data-bind="text: licenseCertification() && licenseCertification().name"></div>
+                                    <em><span> Status:</span> <strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong><span data-bind="visible: statusID() === 1 || statusID() === 6">  (Expiry date: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</span></em>
+                                </div>
+                            </button>
+                        </li>
+                    </ul>
+                    <div data-bind="with: jobTitleApplicableLicences()">
+                        <div data-bind="visible: country().length">
+                            <h2 class="SectionTitle">
+                                <span>Generally required credentials</span>
+                            </h2>
+                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
+                                <li data-bind="visible: licenseCertificationID() === -1">
+                                    <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
+                                        <div class="Tile-content text-muted">Add <span data-bind="text: licenseCertification() && licenseCertification().name"></span>
+                                        </div>
+                                        <div class="Tile-icon text-muted">      <span class="fa ion ion-plus"></span>
+                                        </div>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div data-bind="with: jobTitleApplicableLicences()">
+                        <div data-bind="visible: municipality().length">
+                            <h2 class="SectionTitle">Required by your municipality</h2>
+                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: municipality">
+                                <li>
+                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
+                                        <div class="Tile-content text-muted">
+                                            <span data-bind="text: licenseCertification().name"></span>
+                                            <div>
+                                                <em data-bind="text: licenseCertification().authority"></em>
+                                            </div>
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
+                                                <span class="fa ion ion-ios-checkmark-outline"></span>
+                                            </div>
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
+                                                <span class="fa ion ion-plus"></span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div data-bind="with: jobTitleApplicableLicences()">
+                        <div data-bind="visible: county().length">
+                            <h2 class="SectionTitle">Required by your county</h2>
+                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: county">
+                                <li>
+                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
+                                        <div class="Tile-content text-muted">
+                                            <span data-bind="text: licenseCertification().name"></span>
+                                            <div>
+                                                <em data-bind="text: licenseCertification().authority"></em>
+                                            </div>
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
+                                                <span class="fa ion ion-ios-checkmark-outline"></span>
+                                            </div>
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
+                                                <span class="fa ion ion-plus"></span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div data-bind="with: jobTitleApplicableLicences()">
+                        <div data-bind="visible: stateProvince().length">
+                            <h2 class="SectionTitle">Required by your state</h2>
+                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: stateProvince">
+                                <li>
+                                    <button class="CompactLinkTile-twoLines" type="button" data-bind="click: $root.addNew, disable: submitted()">
+                                        <div class="Tile-content text-muted">
+                                            <span data-bind="text: licenseCertification().name"></span>
+                                            <div>
+                                                <em data-bind="text: licenseCertification().authority"></em>
+                                            </div>
+                                            <div data-bind="visible: submitted()" class="Tile-icon text-success">      
+                                                <span class="fa ion ion-ios-checkmark-outline"></span>
+                                            </div>
+                                            <div data-bind="visible: !submitted()" class="Tile-icon text-muted">      
+                                                <span class="fa ion ion-plus"></span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div data-bind="with: jobTitleApplicableLicences()">
+                        <div data-bind="visible: country().length">
+                            <h2 class="SectionTitle">Supplemental credentials</h2>
+                            <ul class="TilesList TilesList--openEnd" data-bind="foreach: country">
+                                <li data-bind="visible: licenseCertificationID() === 0">
+                                    <button class="CompactLinkTile" type="button" data-bind="click: $root.addNew">
+                                        <div class="Tile-content text-muted">Add <span data-bind="text: licenseCertification() && licenseCertification().name"></span>
+                                        </div>
+                                        <div class="Tile-icon text-muted">      <span class="fa ion ion-plus"></span>
+                                        </div>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
+                        <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
+                    </div>
                 </div>
-            </button></li>
-        </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+               <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
+            </div>
+        </div>
     </div>
+</div>    
 
-    <div id="addressesAddNewButtons" class="TilesList" data-bind="visible: jobTitleID()">  
-        <button type="button" class="CompactLinkTile" data-bind="click: addNew">
-            <div class="Tile-content text-muted">Add a certification/license</div>
-            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-        </button>
-    </div>
-
-</div>

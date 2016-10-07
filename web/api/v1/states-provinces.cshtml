@@ -1,0 +1,39 @@
+﻿@**
+    States Provinces API.
+    
+    It performs the search for the current country by the API URL
+
+    Options:
+
+    GET /
+        Returns: {
+            stateProvinceCode:string,
+            stateProvinceName:string
+        }
+
+    EXAMPLES {
+        "States/Provinces": {
+            "url": "/api/v1/en-US/states-provinces",
+            "get": {}
+        }
+    }
+**@
+@functions{
+    public class RestStatesProvinces : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            using(var db = new LcDatabase()) {
+                return db.Query(@"
+                    SELECT StateProvinceName As name, StateProvinceCode As code
+                    FROM stateprovince
+                    WHERE CountryID = @0
+                ", LcRest.Locale.Current.countryID);
+            }
+        }
+    }
+}
+@{
+    // Public access
+    new RestStatesProvinces().JsonResponse(this);
+}

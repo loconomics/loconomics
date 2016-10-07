@@ -1,0 +1,99 @@
+/**
+    ActionSheet, similar to iOS one
+    
+    Example html:
+    <div class="ActionSheet" id="more-options-sheet" hidden="hidden">
+        <ul>
+            <li><a href="#">Option one</a></li>
+            <li><a href="#">Option two</a></li>
+            <li><a href="#">Option three</a></li>
+        </ul>
+        <ul class="ActionSheet-close">
+            <li><a href="#close">Cancel</li>
+        </ul>
+    </div>
+    
+    A backdrop can be added with:
+    <div class="ActionSheetBackdrop"></div>
+**/
+.ActionSheetBackdrop {
+    background: rgba(0,0,0,0.4);
+    transition: opacity $tranDurationQuick;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 90100;
+}
+
+.has-ActionSheet-open .ActionSheetBackdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.ActionSheet {
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    text-align: center;
+    //max-width: 600px;
+    margin: 0 auto;
+    z-index: 90900;
+    // With padding, so height increases and percentage transform works
+    padding-bottom: 20px;
+
+    > ul {
+        padding: 0;
+        margin: 0;
+        background: rgba(255,255,255,0.9);
+        border-radius: 10px;
+        overflow: hidden;
+        
+        &.ActionSheet-close {
+            background: White;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    }
+
+    > ul > li {
+        display: block;
+        
+        transition: opacity $tranDurationQuick cubic-bezier(0.65,0.05,0.36,1);
+        transform: translateY(0);
+        &[hidden] {
+            opacity: .3;
+            pointer-events: none;
+        }
+        
+        > a {
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            
+            &:hover,
+            &:active,
+            &:focus {
+                text-decoration: none;
+                background: #ddd;
+                color: inherit;
+            }
+        }
+        
+        + li {
+            border-top: 1px solid $gray-lighter;
+        }
+    }
+    
+    transition: transform $tranDurationQuick cubic-bezier(0.65,0.05,0.36,1);
+    transform: translateY(0);
+    display: block !important;
+    &[hidden] {
+        transform: translateY(100%);
+        box-shadow: 0;
+    }
+}

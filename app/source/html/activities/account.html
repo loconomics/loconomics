@@ -1,47 +1,111 @@
 <!-- Activity account -->
-<div data-activity="account">
-    <h1 class="SectionTitle has-HelpPoint">You own this place</h1>
-    
-    <ul class="TilesList">
-        <li data-bind="visible: !isServiceProfessional()"><a class="InfoTile" href="/contactInfo">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+<div data-activity="account" class="Boxes-sm animated">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <h1 data-bind="visible: isServiceProfessional" class="hidden-xs hidden-sm">You own this place</h1>
+        <h1 data-bind="visible: !isServiceProfessional()" class="hidden-xs hidden-sm">Your account</h1>
+        <div class="row">
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                    <span>Community profile</span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>  
+                <ul class="TilesList TilesList--openEnd">
+                    <li>
+                        <a class="InfoTile" href="/aboutMe">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>About me</p>
+                            </div>
+                        </a>
+                    </li>
+                    <!--DISABLED<li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/backgroundCheck">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-ios-checkmark" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Background check</div>
+                            <em>Last run: <span data-bind="text: displayedLastBackgroundCheck"></span></em>
+                        </div>
+                    </a></li>-->
+                    <!--DISABLED<li><a class="InfoTile" href="/verifications">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-ribbon-b" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Verifications <span data-bind="text: displayedVerificationsNumber"></span></div>
+                            <em data-bind="text: verificationsSecondaryText"></em>
+                        </div>
+                    </a></li>-->
+                    <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/education">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-university" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Education</div>
+                            <em>List any relevant studies</em>
+                        </div>
+                    </a></li>
+                </ul>
+                <h1 class="SectionTitle has-HelpPoint">Important information</h1>  
+                <ul class="TilesList TilesList--openEnd">
+                    <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/paymentAccount">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-social-usd" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Merchant account settings</div>
+                            <em>How you get paid</em>
+                        </div>
+                    </a></li>
+                    <li data-bind="visible: isServiceProfessional">
+                        <a class="InfoTile" href="/ownerInfo">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <div>Owner information</div>
+                                <em>About your cooperative</em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="/privacySettings">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Privacy settings</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="#!terms/terms-of-service?mustReturn=true" target="_blank">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Terms of Use</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="InfoTile" href="#!terms/privacy-policy?mustReturn=true" target="_blank">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa fa-file-text-o" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>Privacy policy</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="Tile-content">
-                <p>Contact information</p>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'general'"></app-inline-side-menu>
             </div>
-        </a></li>
-        <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/ownerInfo">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-information-outline" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Owner information</p>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="/privacySettings">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Privacy settings</p>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/TermsOfUse/" target="_blank">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa fa-file-text-o" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Terms of Use</p>
-            </div>
-        </a></li>
-        <li><a class="InfoTile" href="https://loconomics.com/en-US/About/PrivacyPolicy/" target="_blank">
-            <div class="Tile-icon" aria-hidden="true">
-                <span class="fa fa-file-text-o" aria-hidden="true"></span>
-            </div>
-            <div class="Tile-content">
-                <p>Privacy policy</p>
-            </div>
-        </a></li>
-    </ul>
+        </div>
+    </div>
 </div>

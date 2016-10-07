@@ -6,14 +6,14 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function JobtitlesActivity() {
+var A = Activity.extend(function JobtitlesActivity() {
     
     Activity.apply(this, arguments);
     
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduling', {
-        backLink: '/scheduling'
+    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
+        backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
     
     // On changing jobTitleID:
@@ -58,6 +58,24 @@ var A = Activity.extends(function JobtitlesActivity() {
                 }.bind(this));
                 
                 ////////////
+                // User Job Title
+                // Get data for the Job Title and User Profile
+                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(job) {
+                    // Fill the job title record
+                    this.viewModel.jobTitle(job.jobTitle);
+                    this.viewModel.userJobTitle(job.userJobTitle);
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading your job title.',
+                        error: err
+                    });
+                }.bind(this));
+
+                /* NOTE: job title comes in the previous userJobProfile call, so is no need to duplicate the task
+                ////////////
                 // Job Title
                 // Get data for the Job title ID
                 this.app.model.jobTitles.getJobTitle(jobTitleID)
@@ -72,11 +90,14 @@ var A = Activity.extends(function JobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
+                */
             }
             else {
                 this.viewModel.addresses([]);
                 this.viewModel.pricing([]);
-                this.viewModel.jobTitleName('Job Title');
+                this.viewModel.jobTitle(null);
+                this.viewModel.userJobTitle(null);
+                //this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -100,10 +121,16 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967086-managing-your-scheduler';
     
     this.jobTitleID = ko.observable(0);
-    this.jobTitleName = ko.observable('Job Title');
-    
+    this.jobTitle = ko.observable(null);
+    this.userJobTitle = ko.observable(null);
+    //this.jobTitleName = ko.observable('Job Title');
+    this.jobTitleName = ko.pureComputed(function() {
+        return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
+    }, this);
+
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getJobUrlTo = function(name) {
@@ -111,7 +138,7 @@ function ViewModel(app) {
         return ko.pureComputed(function() {
             return (
                 '/' + name + '/' + this.jobTitleID() + '?mustReturn=jobtitles/' + this.jobTitleID() +
-                '&returnText=' + this.jobTitleName()
+                '&returnText=' + this.jobTitleName() + ' Scheduler'
             );
         }, this);
     };
@@ -160,4 +187,25 @@ function ViewModel(app) {
 
     }, this);
     
+    /// COPIED FROM marketplaceJobtitles
+    this.deleteJobTitle = function() {
+        var jid = this.jobTitleID();
+        var jname = this.jobTitleName();
+        if (jid) {
+            app.modals.confirm({
+                title: 'Delete ' + jname + ' profile',
+                message: 'Are you really sure you want to delete your ' + jname +' profile?',
+                yes: 'Delete',
+                no: 'Keep'
+            }).then(function() {
+                app.shell.goBack();
+                return app.model.userJobProfile.deleteUserJobTitle(jid);
+            })
+            .catch(function(err) {
+                if (err) {
+                    app.modals.showError({ error: err, title: 'Error while deleting a job title' });
+                }
+            });
+        }
+    }.bind(this);
 }

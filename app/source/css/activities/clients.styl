@@ -7,9 +7,9 @@
     
     $indexWidth = 25px;
     $fullIndexWidth = 32px;
-    $indexTop = 62px;
-
-    .SectionTitle {
+    $indexTop = 100px;
+    
+    #clientsActivityTitle {
         position: absolute;
         left: 0px;
         right: 0px;
@@ -20,6 +20,8 @@
     #clientsIndex {
         overflow: hidden;
         width: $fullIndexWidth;
+        //@iagosrl this needs a calculated "height" for responsive...it gets hidden now
+        min-height: 600px;
         
         // Fixed has the problems of iOS with scrolling, and too the lack of scroll for itself
         // Scroll context must be carefully placed in a sibling elements that acts as container for
@@ -27,10 +29,14 @@
         position: absolute;
         right: 0px;
         top: $indexTop;
+        // reset container-fluid pad
+        padding-left: 0;
+        padding-right: 0;
         z-index: 20;
         overflow: auto;
         bottom: 0;
         box-sizing: border-box;
+        color: $gray-light;
         
         > .nav {
             border-bottom: none;
@@ -39,41 +45,74 @@
                 text-align: center;
                 font-weight: bold;
                 padding: 3px 6px 3px 15px;
+                width: 100%;
                 border: none;
                 border-radius: 0;
+                &:hover,
+                &:focus {
+                    background-color: transparent;
+                    color: $brand-secondary;
+                }
             }
+        }
+        @media $mediaMinSm {
+            top: 106px;
+            right: 0;
+        }
+        @media $mediaMinMd {
+            position: relative;
+            right: -270px;
+        }  
+        @media $mediaMinLg {
+            right: -325px;
         }
     }
     
     #clientsContent {
-        // Using absolute positioning rather than SmartViewContent (height:100%)
+        // Using absolute positioning rather than (height:100%)
         // because the need to left space (sometimes) for the SectionTitle on top
-        overflow: auto;        
+        overflow: auto;
         position: absolute;
-        top: 0;
-        // Using padding for left positioning to allow negative margin on the list
+        // reseting container* gaps
+        padding-left: 0;
+        padding-right: 0;
+        // reseting container* gaps
+        top: 38px;
+        // IMPORTANT: If needed, use padding for left positioning to allow negative margin on the list
         left: 0;
-        padding-left: $container-padding-left;
         right: $fullIndexWidth;
         bottom: 0;
 
+        @media $mediaMinMd {
+            top: 44px;
+        }
+        
+        
+        #clientsContentMeta {
+            padding-left: $container-padding-left;
+            
+            @media $mediaMinMd {
+                // reseting container* gap at big size
+                padding-left: 0;
+            }
+        }
+
         #clientsListView {
-            // List must start on the edge, per design
-            margin-left: (0 - $container-padding-left);
+            
+            .SimpleList-item {
+                background-color: white;
+                
+                a {
+                    &:hover,
+                    &:focus {
+                        color: $brand-secondary;
+                    }
+                }
+            }
             
             .SimpleList-divider {
                 text-transform: uppercase;
             }
-        }
-    }
-    
-    &.has-SectionTitle {
-        #clientsContent {
-            top: $SectionTitle-height;
-        }
-        
-        #clientsIndex {
-            top: $indexTop + $SectionTitle-height;
         }
     }
     

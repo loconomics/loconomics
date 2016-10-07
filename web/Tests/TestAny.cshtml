@@ -1,12 +1,18 @@
 ﻿@* Placeholder testing area
  *@
 @{
-    LcHelpers.TestArea();
+    //LcHelpers.TestArea();
     Layout = "_TestLayout.cshtml";
 
     DateTime start = DateTime.Now;
+    dynamic data;
 
-    var data = LcEmailTemplate.GetBookingInfo(); // LcRest.Booking.GetList(141, DateTime.Today.AddDays(-200), DateTime.Today);
+    try {
+        data = null;
+    }
+    catch (Exception ex) {
+        data = ex;
+    }
 }
 @ObjectInfo.Print(data)
 

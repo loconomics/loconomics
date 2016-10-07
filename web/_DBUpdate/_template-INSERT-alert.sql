@@ -19,7 +19,8 @@ INSERT INTO [alert]
    ,[PositionSpecific]
    ,[DisplayRank]
    ,[ProviderAlert]
-   ,[CustomerAlert])
+   ,[CustomerAlert]
+   ,[bookMeButtonRequired])
 VALUES
    (@AlertID
    ,@AlertTypeID
@@ -41,4 +42,5 @@ VALUES
    ,@PositionSpecific
    ,@DisplayRank
    ,@ProviderAlert
-   ,@CustomerAlert)
+   ,@CustomerAlert
+   ,@bookMeButtonRequired)

@@ -8,7 +8,7 @@ var Activity = require('../components/Activity'),
     ko = require('knockout'),
     moment = require('moment');
 
-var A = Activity.extends(function MarketplaceProfileActivity() {
+var A = Activity.extend(function MarketplaceProfileActivity() {
 
     Activity.apply(this, arguments);
 
@@ -25,8 +25,27 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    if (this.viewModel.user.isServiceProfessional())
+    /* NOTE: Commented out since we have now an OnboardingSuccess activity
+    if (this.requestData.completedOnboarding) {
+        switch (this.requestData.completedOnboarding) {
+            case 'welcome': // Schedule complete
+                this.app.modals.showNotification({
+                    title: 'Nice work!',
+                    message: 'You\'ll now be taken to your marketplace profile. ' +
+                        'Please complete the following: \n' +
+                        '1. Fill in the "About you" section \n' +
+                        '2. Add details about your services \n' +
+                        '3. Add pricing and service locations',
+                    buttonText: 'Got it'
+                });
+                break;
+        }
+    }*/
+
+    if (this.viewModel.user.isServiceProfessional()) {
         this.viewModel.sync();
+        this.app.model.marketplaceProfile.sync();
+    }
 };
 
 function ViewModel(app) {
@@ -61,6 +80,23 @@ function ViewModel(app) {
     }, jobVm);
     
     jobVm.user = app.model.userProfile.data;
+    
+    jobVm.marketplaceProfileUrl = ko.computed(function() {
+        var example = 'www.loconomics.com/YOURNAME';
+        // IMPORTANT: the ProfileUrl ever returns a value, with automatic SEO URL when no custom slug
+        // so we check if there is slug or not to show the actual URL or the example
+        var slug = app.model.marketplaceProfile.data.serviceProfessionalProfileUrlSlug();
+        var url = app.model.marketplaceProfile.data.serviceProfessionalProfileUrl();
+        return slug ? url : example;
+    }, jobVm);
+    
+    var UserJobTitle = require('../models/UserJobTitle');
+    jobVm.isPreviewReady = ko.pureComputed(function() {
+        return this.userJobProfile().reduce(function(a, b) {
+            if (b.statusID() === UserJobTitle.status.on) return true;
+            else return a;
+        }, false);
+    }, jobVm);
 
     return jobVm;
 }

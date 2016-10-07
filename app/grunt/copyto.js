@@ -1,6 +1,13 @@
 'use strict';
 
 module.exports = {
+    images: {
+        expand: true,
+        cwd: 'source/images/',
+        src: ['**/*.png', '**/*.jpg', '**/*.svg', '**/*.ico'],
+        dest: 'build/assets/images/',
+        filter: 'isFile'
+    },
     jqueryuiimages: {
         expand: true,
         cwd: 'vendor/jquery-ui/images/',
@@ -15,10 +22,18 @@ module.exports = {
         dest: 'build/',
         filter: 'isFile'
     },
+    webapp_assets: {
+        expand: true,
+        cwd: 'build/assets/',
+        src: ['js/{app,libs,styleguidelibs}.min.js', 'css/{app,libs}.min.css', 'images/**/*.*', 'fonts/**/*.*'],
+        dest: '../web/assets/',
+        filter: 'isFile'
+    },
     phonegap: {
         expand: true,
         cwd: 'build/',
-        src: ['assets/**/*.*'],
+        // NOTE: all files, minified and debug, are copied into phonegap, we include only minified css/js when ziping for phonegap-build
+        src: ['assets/js/*.js', 'assets/css/*.css', 'assets/images/**/*.*', 'assets/fonts/**/*.*'],
         dest: 'phonegap/www/',
         filter: 'isFile'
     },
@@ -27,6 +42,13 @@ module.exports = {
         dest: './phonegap/platforms/',
         cwd: './phonegap/platform-merges',
         src: '**/*.*'
+    },
+    'bootstrap-fonts': {
+        expand: true,
+        cwd: './vendor/bootstrap/fonts/',
+        src: '*.*',
+        dest: './build/assets/fonts/',
+        filter: 'isFile'
     },
     'font-awesome-fonts': {
         expand: true,

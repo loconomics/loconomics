@@ -30,16 +30,16 @@ Tile() {
     &:active,
     &:hover {
         &, * {
-            color: link-hover-color !important;
+            color: $brand-secondary-dark !important;
         }
     }
     
-    &:hover,
-    &:focus {
-        outline: 1px solid lighten($brand-secondary, 50%);
-        outline-offset: -2px;
-    }
-    
+//    &:hover,
+//    &:focus {
+//        outline: 1px solid lighten($brand-secondary, 50%);
+//        outline-offset: -2px;
+//    }
+//    
     // Class to permanent mark as active, and :active pseudo styles
     &:active,
     &.active {
@@ -123,6 +123,17 @@ Tile-addContent($linesNumber) {
                 margin: $btnMargin auto;
             }
         }
+        
+        // Support for Bootstrap labels
+        .label {
+            font-size: 1em;
+            margin: 0 .7em;
+        }
+        // Setting margin for small screens since the items margin is auto there
+                //@media $mediaMaxXs {
+        @media (max-width: 520px) {
+            margin: 0 $grid-gap;
+        }
     }
 }
 
@@ -143,6 +154,29 @@ Tile-addTagContentSupport($vgap, $left = -6px) {
                 border-left: 2px solid $color;
                 display: block;
             }
+        }
+    }
+    
+    for $color in $brand-colors {
+        addTagFor($color, $brand-colors[$color]);
+    }
+    
+    for $color in $gray-colors {
+        addTagFor('gray-' + $color, $gray-colors[$color]);
+    }
+}
+
+/** Add colored background support */
+Tile-addStyleSupport() {
+
+    addTagFor($colorName, $color) { 
+        &.Tile--{$colorName} {
+          font-style: italic;
+          border-left: 10px solid $color;
+          z-index: 3;
+          > i {
+            color: $gray-dark;      
+          }
         }
     }
     

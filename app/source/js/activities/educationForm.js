@@ -6,14 +6,15 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout');
 
-var A = Activity.extends(function EducationFormActivity() {
+var A = Activity.extend(function EducationFormActivity() {
     
     Activity.apply(this, arguments);
     
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-
-    this.navBar = Activity.createSubsectionNavBar('Education');
+    this.navBar = Activity.createSubsectionNavBar('Education', {
+        backLink: '/education' , helpLink: this.viewModel.helpLink
+    });
 });
 
 exports.init = A.init;
@@ -66,6 +67,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201960833-adding-education-to-your-profile';
 
     this.educationID = ko.observable(0);
     this.isLoading = app.model.education.state.isLoading;

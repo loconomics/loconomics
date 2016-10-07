@@ -6,7 +6,6 @@
 @import 'Tile.styl'
 
 CompactLinkTile-addIcon($vgap) {
-    
     $iconWidth = 22px;
 
     // Left space for the icon and small gap:
@@ -48,6 +47,26 @@ $CompactLinkTile-indentSize = 30px;
 
     .Tile-content {
         Tile-singleLine($vgap);
+    }
+
+    CompactLinkTile-addIcon($vgap); 
+    
+    background-color: white;
+}
+
+.CompactLinkTile-twoLines {
+
+    Tile()
+    
+    $vgap = 20px;
+    
+    Tile-addTagContentSupport($vgap)
+
+    padding-left: ($CompactLinkTile-indentSize + $Tile-hgap);
+
+    .Tile-content {
+      height: 60px;
+      padding-top: 10px;
     }
 
     CompactLinkTile-addIcon($vgap);

@@ -41,7 +41,7 @@ namespace LcRest
                     // contains information like the city and the primary
                     // job title name (if some information is missed it fallbacks
                     // to the non-SEO, ID based, URL, ever a valid address).
-                    return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicURL(this.userID);
+                    return LcUrl.SiteUrl + LcData.UserInfo.GetUserPublicSeoUrlPath(this.userID);
                 }
                 else
                 {
@@ -55,6 +55,19 @@ namespace LcRest
         /// </summary>
         public string serviceProfessionalWebsiteUrl;
         public string bookCode;
+
+        // Like in UserProfile:
+        // Automatic field right now, but is better
+        // to communicate it than to expect the App or API client
+        // to build it. It allows for future optimizations, like
+        // move to static content URLs.
+        public string photoUrl
+        {
+            get
+            {
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID + "?v=" + updatedDate.ToString("s");
+            }
+        }
 
         public DateTime createdDate;
         public DateTime updatedDate;
@@ -75,12 +88,14 @@ namespace LcRest
             };
         }
 
+        public const string CustomUrlPrefix = "-";
+
         public static string BuildServiceProfessionalCustomURL(string slug)
         {
             if (String.IsNullOrWhiteSpace(slug))
                 return "";
             else
-                return LcUrl.AppUrl + ASP.LcHelpers.StringSlugify(slug);
+                return LcUrl.AppUrl + CustomUrlPrefix + ASP.LcHelpers.StringSlugify(slug);
         }
 
         #region SQL

@@ -3,7 +3,10 @@
     managing time, preference and if must be revalidated
     or not.
     
-    Its just manages meta data, but not the data to be cached.
+    Its just manages meta data about the caching state and validation,
+    but does not manage the data to be cached; said that, has a 'data'
+    property that can be used to place the cached data, but it's maintenance
+    is under control of the external code.
 **/
 'use strict';
 
@@ -29,6 +32,15 @@ function CacheControl(options) {
     this.touch = function touch() {
         this.latest = new Date();
     };
+    
+    this.reset = function reset() {
+        this.latest = null;
+    };
+    
+    // Placeholder where external code can place the cached data
+    // so can keep management of caching all inside this object
+    // Can be prepopulated
+    this.data = options.data || null;
 }
 
 module.exports = CacheControl;

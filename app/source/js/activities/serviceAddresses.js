@@ -7,7 +7,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function ServiceAddressesActivity() {
+var A = Activity.extend(function ServiceAddressesActivity() {
 
     Activity.apply(this, arguments);
 
@@ -15,8 +15,11 @@ var A = Activity.extends(function ServiceAddressesActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling'
+        backLink: '/scheduling', helpLink: this.viewModel.helpLink
     });
+    // Make navBar available at viewModel, needed for dekstop navigation
+    this.viewModel.navBar = this.navBar;
+    
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
 
@@ -33,15 +36,19 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                     this.viewModel.jobTitle(jobTitle);
                     // Update navbar (may indicate the jobTitle name)
                     this.updateNavBarState();
+
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
                     
                     // Get addresses
                     return this.app.model.serviceAddresses.getList(jobTitleID);
                 }.bind(this))
                 .then(function(list) {
-
                     list = this.app.model.serviceAddresses.asModel(list);
                     this.viewModel.serviceAddresses.sourceAddresses(list);
-
+                    if (this.requestData.selectedAddressID) {
+                        this.viewModel.serviceAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
+                    }
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -49,15 +56,52 @@ var A = Activity.extends(function ServiceAddressesActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                /// Rewrite URL
+                // IMPORTANT: When in isSelectionMode, pushState cannot be use
+                // because it conflicts with the selection logic (on new-booking progress)
+                // TODO: discarded URL rewrite until the bug with replaceState in HashbangHistory is fixed
+                if (this.viewModel.serviceAddresses.isSelectionMode()) return;
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /serviceAddresses\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/serviceAddresses/' + jobTitleID;
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.serviceAddresses.sourceAddresses([]);
+                this.viewModel.serviceAddresses.selectedAddress(null);
                 this.viewModel.jobTitle(null);
                 this.updateNavBarState();
+                this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
     
+    // On changing clientUserID: load its addresses
+    this.registerHandler({
+        target: this.viewModel.clientUserID,
+        handler: function(clientUserID) {
+            if (clientUserID) {
+                this.app.model.clientAddresses.getList(clientUserID)
+                .then(function(list) {
+                    list = this.app.model.clientAddresses.asModel(list);
+                    this.viewModel.clientAddresses.sourceAddresses(list);
+                    if (this.requestData.selectedAddressID) {
+                        this.viewModel.clientAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
+                    }
+                }.bind(this));
+            }
+            else {
+                this.viewModel.clientAddresses.sourceAddresses([]);
+                this.viewModel.clientAddresses.selectedAddress(null);
+            }
+        }.bind(this)
+    });
+
     // Go back with the selected address when triggered in the form/view
     this.viewModel.returnSelected = function(addressID, jobTitleID) {
         // Pass the selected client in the info
@@ -66,7 +110,12 @@ var A = Activity.extends(function ServiceAddressesActivity() {
         // And go back
         this.app.shell.goBack(this.requestData);
     }.bind(this);
-    
+    this.viewModel.returnAddress = function(addressDetails) {
+        this.requestData.address = addressDetails;
+        // And go back
+        this.app.shell.goBack(this.requestData);
+    }.bind(this);
+
     this.returnRequest = function returnRequest() {
         this.app.shell.goBack(this.requestData);
     }.bind(this);
@@ -98,7 +147,7 @@ A.prototype.applyOwnNavbarRules = function() {
             this.navBar.leftAction().text(this.requestData.navTitle);
 
         var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling',
+            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
             url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling');
 
         this.navBar.leftAction().link(url);
@@ -136,24 +185,25 @@ A.prototype.show = function show(options) {
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.jobTitleID(0);
+    this.viewModel.clientUserID(0);
     this.viewModel.requestData = this.requestData;
 
     this.viewModel.serviceAddresses.isSelectionMode(options.selectAddress === true);
-    this.viewModel.clientID(options.clientID || null);
+    this.viewModel.clientUserID(options.clientUserID || null);
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
     
     // Check if it comes from an addressEditor that
-    // received the flag 'returnNewAsSelected' and an
-    // addressID: we were in selection mode->creating address->must
+    // received the flag 'returnNewAsSelected': we were in selection mode->creating address->must
     // return the just created address to the previous page
-    if (options.returnNewAsSelected === true &&
-        options.addressID) {
-        
+    if (options.returnNewAsSelected === true) {
         setTimeout(function() {
             delete options.returnNewAsSelected;
-            this.viewModel.returnSelected(options.addressID, jobTitleID);
+            if (options.address)
+                this.viewModel.returnAddress(options.address);
+            else if (options.addressID)
+                this.viewModel.returnSelected(options.addressID, jobTitleID);
         }.bind(this), 1);
         // quick return
         return;
@@ -172,6 +222,9 @@ var UserJobProfile = require('../viewmodels/UserJobProfile'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     
     this.serviceAddresses = new ServiceAddresses();
 
@@ -179,10 +232,15 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
-    // Optionally, some times a clientID can be passed in order to create
+
+    // Optionally, some times a clientUserID can be passed in order to create
     // a location for that client where perform a work.
-    this.clientID = ko.observable(null);
-    
+    this.clientUserID = ko.observable(null);
+    this.clientAddresses = new ServiceAddresses();
+    // The list of client addresses is used only in selection mode
+    this.clientAddresses.isSelectionMode(true);
+
+    this.jobTitleName = ko.observable('Job Title'); 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
     this.jobTitles.selectJobTitle = function(jobTitle) {
@@ -194,16 +252,19 @@ function ViewModel(app) {
 
     this.isSyncing = app.model.serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
-        var add = app.model.serviceAddresses.state.isLoading(),
-            jobs = this.jobTitles.isLoading();
-        return add || jobs;
+        var add = app.model.serviceAddresses.state.isLoading();
+        var jobs = this.jobTitles.isLoading();
+        var cli = app.model.clientAddresses.state.isLoading();
+        return add || jobs || cli;
     }, this);
     
     this.goNext = function() {
         if (app.model.onboarding.inProgress()) {
+            // Ensure we keep the same jobTitleID in next steps as here:
+            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
             app.model.onboarding.goNext();
         }
-    };
+    }.bind(this);
 
     // Replace default selectAddress
     this.serviceAddresses.selectAddress = function(selectedAddress, event) {
@@ -227,6 +288,18 @@ function ViewModel(app) {
 
     }.bind(this);
     
+    this.clientAddresses.selectAddress = function(selectedAddress, event) {
+        if (this.clientAddresses.isSelectionMode() === true) {
+            // Run method injected by the activity to return a
+            // selected address:
+            this.returnAddress(selectedAddress.model.toPlainObject());
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+    }.bind(this);
+
     this.addServiceLocation = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceLocation';
         var request = $.extend({}, this.requestData, {
@@ -244,7 +317,7 @@ function ViewModel(app) {
     }.bind(this);
     
     this.addClientLocation = function() {
-        var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientID();
+        var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientUserID();
         var request = $.extend({}, this.requestData, {
             returnNewAsSelected: this.serviceAddresses.isSelectionMode()
         });

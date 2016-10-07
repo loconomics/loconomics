@@ -1,0 +1,25 @@
+﻿@*
+    Getting logged user Upcoming Appointments Information (bookins as client):
+    - Next booking
+    - Stats about upcoming ones and pending of confirmation/scheduling
+
+    EXAMPLES {
+        "Upcoming Appointments (bookings where user is the client)": {
+            "url": "/api/v1/en-US/me/upcoming-appointments",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestUpcommingAppointments : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            return LcRest.UpcomingAppointmentsInfo.GetList(WebSecurity.CurrentUserId);
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestUpcommingAppointments().JsonResponse(this);
+}

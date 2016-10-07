@@ -4,14 +4,17 @@
 
     void Application_Start(object sender, EventArgs e) 
     {
-        // Código que se ejecuta al iniciarse la aplicación
-
+        // Mail password set from special setting that is set at the server settings to avoid
+        // write it at files (Azure does not make available to set the system.net-smtp settings from dashboard,
+        // but we can put it as appsetting):
+        if (String.IsNullOrEmpty(System.Web.Helpers.WebMail.Password))
+        {
+            System.Web.Helpers.WebMail.Password = ConfigurationManager.AppSettings["smtpPassword"];
+        }
     }
     
     void Application_End(object sender, EventArgs e) 
     {
-        //  Código que se ejecuta cuando se cierra la aplicación
-
     }
 
     void Application_Error(object sender, EventArgs e) 
@@ -81,28 +84,6 @@
 
     void Session_Start(object sender, EventArgs e) 
     {
-        // We check if user browser sent an auth cookie (lcAuth), if is a non persistent cookie
-        // (have not expired date), we force logout; this is how non persistent sessions die
-        // when server-session timeout dies, sharing this configurable time 
-        // (web.config/system.web/sessionState/timeout)
-        // NOTE: Response.Write lines are debug code.
-        var c = Request.Cookies[FormsAuthentication.FormsCookieName]; //["lcAuth"];
-        if (c != null)
-        {
-            var t = FormsAuthentication.Decrypt(c.Value);
-            if (!t.IsPersistent)
-            {
-                // Non persistent
-                //Response.Write("session cookie!");
-                WebMatrix.WebData.WebSecurity.Logout();
-            }
-            /*else
-            {
-                // persistent
-                Response.Write("persistent cookie until: " + t.Expiration.ToString());
-            }*/
-        }
-        
     }
 
     void Session_End(object sender, EventArgs e) 

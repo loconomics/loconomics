@@ -8,7 +8,7 @@ var $ = require('jquery'),
     Activity = require('../components/Activity'),
     textSearch = require('../utils/textSearch');
 
-var A = Activity.extends(function ClientsActivity() {
+var A = Activity.extend(function ClientsActivity() {
     
     Activity.apply(this, arguments);
 
@@ -16,7 +16,7 @@ var A = Activity.extends(function ClientsActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'cms'
+        backLink: 'cms' , helpLink: this.viewModel.helpLink
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
@@ -60,7 +60,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     
     var itIs = this.viewModel.isSelectionMode();
     
-    this.viewModel.headerText(itIs ? 'Select a client' : '');
+    this.viewModel.headerText(itIs ? 'Select a client' : 'My clients');
 
     if (this.requestData.title) {
         // Replace title by title if required
@@ -134,6 +134,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201966046-adding-new-clients';
 
     this.headerText = ko.observable('');
 
@@ -149,7 +150,7 @@ function ViewModel(app) {
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');
     
-    // Utility to get a filtered list of clients based on clients
+    // Utility to get a filtered list of clients based on search and deleted property
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
         // Search the client by:
@@ -158,6 +159,7 @@ function ViewModel(app) {
         // - (else) phone
         return this.clients().filter(function(client) {
             if (!client) return false;
+            if (client.deleted()) return false;
             var found = textSearch(s, client.fullName());
             if (found) return true;
             found = textSearch(s, client.email());

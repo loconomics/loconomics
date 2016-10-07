@@ -53,9 +53,9 @@
                 return new {
                     date = DateTimeFromISO("2015-03-22T23:02:00Z").Value.ToString(),
                     current = LcRest.Locale.Current,
-                    urlLocaleTest1 = LcRest.Locale.AnalyzeURL("/api/v1/en-US"),
-                    urlLocaleTest2 = LcRest.Locale.AnalyzeURL("/api/v2.3.4/es-ES"),
-                    urlLocaleTest3 = LcRest.Locale.AnalyzeURL("/source/api/v2/es-US/")
+                    urlLocaleTest1 = LcRest.Locale.AnalyzeUrl("/api/v1/en-US"),
+                    urlLocaleTest2 = LcRest.Locale.AnalyzeUrl("/api/v2.3.4/es-ES"),
+                    urlLocaleTest3 = LcRest.Locale.AnalyzeUrl("/source/api/v2/es-US/")
                 };
             }
         }

@@ -875,7 +875,7 @@ namespace CalendarDll
             
                 var listEventsFromDB =
                     db.CalendarEvents.
-                        Where(c => c.UserId == user.Id).ToList();
+                        Where(c => c.UserId == user.Id && c.Deleted == null).ToList();
 
                 var iCalEvents = new List<iEvent>();
 
@@ -938,7 +938,7 @@ namespace CalendarDll
                 var listEventsFromDB =
                     db.CalendarEvents.
                         // We filter by user and
-                        Where(c => c.UserId == user.Id &&
+                        Where(c => c.UserId == user.Id && c.Deleted == null &&
                             // By type NOT being free-hours (2) or imported (4). Commented on issue #228 2013-05-13
                             !(new int[]{2, 4}).Contains(c.EventType)).ToList();
 
@@ -999,7 +999,7 @@ namespace CalendarDll
                 // OR, if they are Recurrence, any Date Range
                 var listEventsFromDB =
                     db.CalendarEvents.Where(
-                        c => c.UserId == user.Id &&
+                        c => c.UserId == user.Id && c.Deleted == null &&
                         (
                             // IagoSRL: Date Ranges query updated from being
                             // 'only events that are completely included' (next commented code from CASS):
@@ -1209,11 +1209,12 @@ namespace CalendarDll
                           ,[TimeBlock]
                           ,[DayofWeek]
                           ,[Description]
+                          ,[Deleted]
                       FROM [CalendarEvents]
                     WHERE userId = {2} AND (
                         (StartTime < {0} AND EndTime >= {1})
                         OR EXISTS (SELECT id from CalendarReccurrence AS R where R.EventID = CalendarEvents.Id)
-                    )
+                    ) AND Deleted is null
                 ", endEvaluationDate, startEvaluationDate, user.Id);
 
                 foreach (var currEventFromDB in listEventsFromDB)
@@ -2216,10 +2217,37 @@ namespace CalendarDll
         /// </summary>
         /// <param name="anEvent"></param>
         public void UpdateEventDatesToSystemTimeZone(IEvent anEvent) {
-            // IEvent.Start is an alias for DTStart.
-            anEvent.Start = UpdateDateToSystemTimeZone(anEvent.Start);
-            // IEvent.End is an alias for DTEnd.
-            anEvent.End = UpdateDateToSystemTimeZone(anEvent.End);
+            // IMPORTANT:IagoSRL@2015-12-10: Assigning new values is being problematic, since there are some
+            // underlying calculations that overwrite the assigned values.
+            // Discovered while in issue #851, where any value assigned to End/DTEnd gets discarded and
+            // a new one, that has the original value and UTC mark, is put in place, resulting in no-change and
+            // the bug commented on that issue.
+            // After testing, it seems only affects to property End/DTEnd, but applying to both Start and End to ensure no more side-effects,
+            // with exceptions: check for null values and use assignement to force some internal calculations but still do a manual calculation with Duration
+            // (covering lot of cases; paranoid?)
+            // EXAMPLE TO BE CLEAR, doing next is BUGGY
+            // anEvent.End = UpdateDateToSystemTimeZone(anEvent.End);
+            // GETS FIXED USING NEXT
+            // anEvent.End.CopyFrom(UpdateDateToSystemTimeZone(anEvent.End));
+
+            var start = UpdateDateToSystemTimeZone(anEvent.Start);
+            var end = UpdateDateToSystemTimeZone(anEvent.End);
+            if (start != null && end != null)
+            {
+                anEvent.Start.CopyFrom(start);
+                anEvent.End.CopyFrom(end);
+            }
+            else if (start != null) // end is null
+            {
+                anEvent.Start = start;
+                anEvent.End = start.Add(anEvent.Duration);
+            }
+            else // start is null (unique possibility here)
+            {
+                anEvent.End = end;
+                anEvent.Start = end.Subtract(anEvent.Duration);
+            }
+
             anEvent.DTStamp = UpdateDateToSystemTimeZone(anEvent.DTStamp);
             anEvent.Created = UpdateDateToSystemTimeZone(anEvent.Created);
             anEvent.LastModified = UpdateDateToSystemTimeZone(anEvent.LastModified);

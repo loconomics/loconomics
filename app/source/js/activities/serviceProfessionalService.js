@@ -6,11 +6,11 @@
 'use strict';
 
 var ko = require('knockout'),
-    _ = require('lodash'),
+    groupBy = require('lodash/groupBy'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 
-var A = Activity.extends(function ServiceProfessionalServiceActivity() {
+var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
     Activity.apply(this, arguments);
 
@@ -18,10 +18,12 @@ var A = Activity.extends(function ServiceProfessionalServiceActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling'
+        backLink: '/scheduling', helpLink: this.viewModel.helpLink
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
+    // Make navBar available at viewModel, needed for dekstop navigation
+    this.viewModel.navBar = this.navBar;
     
     // On changing jobTitleID:
     // - load pricing
@@ -82,6 +84,21 @@ var A = Activity.extends(function ServiceProfessionalServiceActivity() {
                         error: err
                     });
                 }.bind(this));
+                
+                /// Rewrite URL
+                // IMPORTANT: When in isSelectionMode, pushState cannot be use
+                // because it conflicts with the selection logic (on new-booking progress)
+                // TODO: discarded URL rewrite until the bug with replaceState in HashbangHistory is fixed
+                if (this.viewModel.isSelectionMode()) return;
+                // If the URL didn't included the jobTitleID, or is different,
+                // we put it to avoid reload/resume problems
+                var found = /serviceProfessionalService\/(\d+)/i.exec(window.location);
+                var urlID = found && found[1] |0;
+                if (urlID !== jobTitleID) {
+                    var url = '/serviceProfessionalService/' + jobTitleID;
+                    if (this.viewModel.isAdditionMode()) url += '/new';
+                    this.app.shell.replaceState(null, null, url);
+                }
             }
             else {
                 this.viewModel.list([]);
@@ -130,7 +147,7 @@ A.prototype.applyOwnNavbarRules = function() {
             this.navBar.leftAction().text(this.requestData.navTitle);
 
         var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduling',
+            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
             url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling');
 
         this.navBar.leftAction().link(url);
@@ -190,7 +207,7 @@ A.prototype.show = function show(options) {
     }
     else {
         // Set this page as cancelLink for editor links in the view
-        this.viewModel.cancelLink('/serviceProfessionalService/' + this.viewModel.jobTitleID());
+        this.viewModel.cancelLink('/serviceProfessionalService/' + jobTitleID);
     }
 
     this.viewModel.isAdditionMode(isAdditionMode);
@@ -207,6 +224,9 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.headerText = ko.observable('Services');
     
@@ -218,16 +238,7 @@ function ViewModel(app) {
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceProfessionalService');
     this.jobTitles.selectJobTitle = function(jobTitle) {
-        
         this.jobTitleID(jobTitle.jobTitleID());
-        var url = 'serviceProfessionalService/' + jobTitle.jobTitleID();
-        if (this.isAdditionMode())
-            url += '/new';
-        // pushState cannot be used because it conflicts with the 
-        // selection logic (on new-booking progress)
-        // TODO: commented until the bug with replaceState in HashbangHistory is fixed
-        //app.shell.replaceState(null, null, url);
-        
         return false;
     }.bind(this);
 
@@ -264,7 +275,7 @@ function ViewModel(app) {
         var groups = [],
             groupsList = [];
         if (!this.isAdditionMode()) {
-            groups = _.groupBy(list, function(pricingItem) {
+            groups = groupBy(list, function(pricingItem) {
                 return pricingItem.pricingTypeID();
             });
 
@@ -357,6 +368,8 @@ function ViewModel(app) {
     this.endSelection = function(data, event) {
         
         if (app.model.onboarding.inProgress()) {
+            // Ensure we keep the same jobTitleID in next steps as here:
+            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
             app.model.onboarding.goNext();
         }
         else {
@@ -364,10 +377,7 @@ function ViewModel(app) {
             // selected address:
             this.returnSelected(
                 this.selectedServices().map(function(pricing) {
-                    return {
-                        serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                        totalPrice: ko.unwrap(pricing.price)
-                    };
+                    return pricing.model.toPlainObject(true);
                 }),
                 this.jobTitleID()
             );
@@ -418,10 +428,7 @@ function ViewModel(app) {
         if (this.isSelectionMode()) {
             request.selectedServices = this.selectedServices()
             .map(function(pricing) {
-                return {
-                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                    totalPrice: ko.unwrap(pricing.totalPrice)
-                };
+                return pricing.model.toPlainObject(true);
             });
         }
 

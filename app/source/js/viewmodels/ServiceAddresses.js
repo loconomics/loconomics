@@ -10,9 +10,16 @@ function ServiceAddressesViewModel() {
     // Especial mode when instead of pick and edit we are just selecting
     // (when editing an appointment)
     this.isSelectionMode = ko.observable(false);
-
     this.sourceAddresses = ko.observableArray([]);
-    this.addresses = ko.computed(function() {
+    this.selectedAddress = ko.observable(null);
+    
+    this.reset = function() {
+        this.isSelectionMode(false);
+        this.sourceAddresses([]);
+        this.selectedAddress(null);
+    };
+    
+    this.addresses = ko.pureComputed(function() {
         var list = this.sourceAddresses();
         if (this.isSelectionMode()) {
             // Filter by service addresses (excluding service area)
@@ -23,7 +30,20 @@ function ServiceAddressesViewModel() {
         return list;
     }, this);
     
-    this.selectedAddress = ko.observable(null);
+    this.hasAddresses = ko.pureComputed(function() {
+        var adds = this.addresses();
+        return (adds && adds.length > 0);
+    }, this);
+    
+    // Useful list of only service-area addresses for
+    // uses in some selection modes, like in booking
+    this.serviceAreas = ko.pureComputed(function() {
+        var list = this.sourceAddresses();
+        // Filter by service area
+        return list.filter(function(add) {
+            return add.isServiceArea();
+        });
+    }, this);
 
     this.selectAddress = function(selectedAddress, event) {
         this.selectedAddress(selectedAddress);
@@ -38,6 +58,18 @@ function ServiceAddressesViewModel() {
                 iid = item && ko.unwrap(item.addressID);
             return sid === iid;
         }, this);
+    }.bind(this);
+
+    this.presetSelectedAddressID = function(addressID) {
+        if (!this.isSelectionMode()) return;
+        this.selectedAddress(null);
+        this.addresses().some(function(add) {
+            if (add.addressID() === addressID) {
+                this.selectedAddress(add);
+                // End loop early:
+                return true;
+            }
+        }.bind(this));
     }.bind(this);
 }
 

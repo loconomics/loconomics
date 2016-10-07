@@ -24,7 +24,8 @@ function Client(values) {
         
         createdDate: null,
         updatedDate: null,
-        editable: false
+        editable: false,
+        deleted: false
     }, values);
 
     this.fullName = ko.pureComputed(function() {

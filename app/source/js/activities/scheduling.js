@@ -6,13 +6,13 @@
 var Activity = require('../components/Activity'),
     UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 
-var A = Activity.extends(function SchedulingActivity() {
+var A = Activity.extend(function SchedulingActivity() {
     
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new UserJobProfileViewModel(this.app);
-    this.navBar = Activity.createSectionNavBar('Scheduling');
+    this.navBar = Activity.createSectionNavBar('Scheduler');
 });
 
 exports.init = A.init;

@@ -2,7 +2,7 @@
 @{
     LcMessaging.SecureTemplate();
     
-    Layout = LcUrl.RenderLangPath + "_EmailLayout.cshtml";
+    Layout = "_EmailLayout.cshtml";
     Page.Title = "Loconomics.com - Reference";
     
     var thisUserID = (Request["ProviderUserID"] ?? Request["UserID"]).AsInt();

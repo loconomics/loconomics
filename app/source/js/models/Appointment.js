@@ -7,6 +7,7 @@ var ko = require('knockout'),
     PricingSummaryDetail = require('./PricingSummaryDetail'),
     CalendarEvent = require('./CalendarEvent'),
     Booking = require('./Booking');
+var Address = require('./Address');
 
 function Appointment(values) {
     
@@ -35,7 +36,7 @@ function Appointment(values) {
             Model: PricingSummaryDetail,
             isArray: true
         },
-        addressID: null,
+        address: new Address(),
         preNotesToClient: null,
         postNotesToClient: null,
         preNotesToSelf: null,
@@ -93,11 +94,21 @@ function Appointment(values) {
     }, this);
     
     this.stateHeader = ko.pureComputed(function() {
+        //jshint maxcomplexity:10
         
         var text = '';
         if (this.id() > 0 && this.sourceEvent()) {
             if (!this.sourceBooking()) {
                 text = 'Calendar block';
+            }
+            else if (this.sourceBooking().bookingStatusID() === Booking.status.request) {
+                text = 'Accept/Decline booking request';
+            }
+            else if (this.sourceBooking().bookingStatusID() === Booking.status.denied) {
+                text = 'Denied';
+            }
+            else if (this.sourceBooking().bookingStatusID() === Booking.status.cancelled) {
+                text = 'Cancelled';
             }
             else if (this.itStarted()) {
                 if (this.itEnded()) {
@@ -142,12 +153,28 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     Creates an appointment instance from a Booking and a CalendarEvent model instances
 **/
 Appointment.fromBooking = function fromBooking(booking, event) {
+    // Optional Event: can be generated with the booking info,
+    // but only if includes serviceDate info and for the main fields (some less important ones will not have value)
+    if (!event) {
+        event = new CalendarEvent({
+            calendarEventID: booking.serviceDateID(),
+            startTime: booking.serviceDate().startTime(),
+            endTime: booking.serviceDate().endTime(),
+            readOnly: true
+        });
+    }
     // Include event in apt
     var apt = Appointment.fromCalendarEvent(event);
     
     // Include booking in apt
     apt.clientUserID(booking.clientUserID());
-    apt.addressID(booking.serviceAddressID());
+    apt.address().addressID(booking.serviceAddressID());
+    if (booking.serviceAddress()) {
+        apt.address().model.updateWith(booking.serviceAddress(), true);
+    }
+    else {
+        apt.address(null);
+    }
     apt.jobTitleID(booking.jobTitleID());
     apt.pricing(booking.pricingSummary() && booking.pricingSummary().details());
     apt.preNotesToClient(booking.preNotesToClient());
@@ -162,9 +189,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
 
     var prices = booking.pricingSummary();
     if (prices) {
-        // TODO Setting service professional price, for clients must be
-        // just totalPrice()
-        apt.price(prices.totalPrice() - prices.pFeePrice());
+        apt.price(prices.totalPrice());
     }
 
     apt.sourceBooking(booking);
@@ -181,7 +206,9 @@ Appointment.listFromCalendarEventsBookings = function listFromCalendarEventsBook
     return events.map(function(event) {
         var booking = null;
         bookings.some(function(searchBooking) {
-            var found = searchBooking.serviceDateID() === event.calendarEventID();
+            var found = searchBooking.serviceDateID() === event.calendarEventID() ||
+                searchBooking.alternativeDate1ID() === event.calendarEventID() ||
+                searchBooking.alternativeDate2ID() === event.calendarEventID();
             if (found) {
                 booking = searchBooking;
                 return true;

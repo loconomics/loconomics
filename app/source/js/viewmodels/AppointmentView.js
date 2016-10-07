@@ -23,20 +23,23 @@ module.exports = function AppointmentView(appointment, app) {
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-    appointment.address = ko.computed(function() {
-        var aid = this.addressID(),
+    ko.computed(function() {
+        var add = this.address();
+        var aid = add && add.addressID(),
             jid = this.jobTitleID();
         if (aid && jid) {
-            return app.model.serviceAddresses.getObservableItem(jid, aid, true)();
+            app.model.serviceAddresses.getItem(jid, aid).then(function(serverAddress) {
+                if (serverAddress.addressID === aid)
+                    add.model.updateWith(serverAddress, true);
+            });
         }
-        return null;
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     appointment.addressSummary = ko.computed(function() {
         var eventData = this.sourceEvent();
         var add = this.address();
-        return add && add.singleLine() || eventData && eventData.location() || '';
+        return add && add.singleLineDetailed() || eventData && eventData.location() || '';
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
@@ -81,9 +84,18 @@ module.exports = function AppointmentView(appointment, app) {
     
     ko.computed(function() {
         var pricing = appointment.pricing();
-        this.price(pricing.reduce(function(prev, cur) {
-            return prev + cur.price();
-        }, 0));
+        if (pricing.length === 0) {
+            this.price(0);
+        }
+        else {
+            // double check the pricing object is right (sometimes comes wrong), by checking
+            // the first value has a price value.
+            var p = pricing[0].price();
+            if (p === null || typeof(p) === 'undefined') return;
+            this.price(pricing.reduce(function(prev, cur) {
+                return prev + cur.price();
+            }, 0));
+        }
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 

@@ -50,7 +50,8 @@
     }
     
     .TilesList {
-        > li > .InfoTile {
+        > li > .InfoTile,
+        > li > .ItemTile {
             // Reduce hgap so keeps the same gap with the window edges,
             // compensate the card padding
             padding-right: 6px;
@@ -65,5 +66,13 @@
             border-radius: 0;
             font-weight: bold;
         }
+    }
+}
+.btn-default {
+    &.btn-editCard {
+      position: absolute;
+      top: 2px;
+      right: 15px;
+      padding: 4px 12px;
     }
 }

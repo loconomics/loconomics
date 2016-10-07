@@ -8,31 +8,10 @@
 'use strict';
 
 var localforage = require('localforage');
+var getUrlQuery = require('../utils/getUrlQuery');
+var $ = require('jquery');
 
 exports.plugIn = function (AppModel) {
-    /**
-        Try to perform an automatic login if there is a local
-        copy of credentials to use on that,
-        calling the login method that save the updated
-        data and profile.
-    **/
-    AppModel.prototype.tryLogin = function tryLogin() {
-        // Get saved credentials
-        return localforage.getItem('credentials')
-        .then(function(credentials) {
-            // If we have ones, try to log-in
-            if (credentials) {
-                // Attempt login with that
-                return this.login(
-                    credentials.username,
-                    credentials.password
-                );
-            } else {
-                throw new Error('No saved credentials');
-            }
-        }.bind(this));
-    };
-
     /**
         Performs a login attempt with the API by using
         the provided credentials.
@@ -62,7 +41,7 @@ exports.plugIn = function (AppModel) {
             accessToken: accessToken,
             returnProfile: true
         }).then(function(logged) {
-            return performLocalLogin(this, logged.email, null);
+            return performLocalLogin(this, logged.profile.email, null)(logged);
         }.bind(this));
     };
 
@@ -99,19 +78,64 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.signup = function signup(data) {
 
         // Reset the extra headers to attempt the signup
-        this.rest.extraHeadres = null;
+        this.rest.extraHeaders = null;
         
         data.returnProfile = true;
+        
+        // Prepare 'utm' information passed into the query
+        var query = getUrlQuery();
+        var utm = {
+            // Default source
+            utm_source: window.cordova ? 'app' : 'web'
+        };
+        // Get only 'utm_' prefixed names, prepare object
+        query.forEach(function(name) {
+            if (/^utm_/.test(name)) {
+                utm[name] = query[name];
+            }
+        });
 
         // The result is the same as in a login, and
         // we do the same as there to get the user logged
         // on the app on sign-up success.
-        return this.rest.post('signup?utm_source=app', data)
+        return this.rest.post('signup?' + $.param(utm), data)
         .then(performLocalLogin(this, data.email, data.password));
+    };
+    
+    /**
+        Request an email with token to reset the password for a given user
+        @param data:Object {
+            username:string
+            email:string Alias to username value
+        }
+        @result Promise<Object {
+            message:string Server-side message about the result
+        }>
+        The e-mail will contain the URL 'login/reset-password/?token='
+        and the token value in the parameter.
+    **/
+    AppModel.prototype.resetPassword = function resetPassword(data) {
+        var username = data.username || data.email;
+        return this.rest.post('auth/reset-password', { username: username });
+    };
+
+    /**
+        Confirm to reset a password providing a new password and valid token
+        @param data:Object {
+            token:string Value provided in an URL from the resetting e-mail
+            password:string New password
+            confirm:string Repeated password for confirmation
+        }
+        @result Promise<Object {
+            message:string Server-side message about the result
+        }>
+    **/
+    AppModel.prototype.confirmResetPassword = function confirmResetPassword(data) {
+        return this.rest.post('auth/reset-password/confirm', data);
     };
 };
 
-function performLocalLogin(thisAppModel, username, password) {
+function performLocalLogin(thisAppModel, username/*, password*/) {
 
     return function(logged) {
         
@@ -122,15 +146,13 @@ function performLocalLogin(thisAppModel, username, password) {
             // use authorization key for each
             // new Rest request
             thisAppModel.rest.extraHeaders = {
-                alu: logged.userID,
-                alk: logged.authKey
+                Authorization: 'LC alu=' + logged.userID + ',alk=' + logged.authKey
             };
 
             // async local save, don't wait
             localforage.setItem('credentials', {
                 userID: logged.userID,
                 username: username,
-                password: password,
                 authKey: logged.authKey
             });
             // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
@@ -138,6 +160,16 @@ function performLocalLogin(thisAppModel, username, password) {
 
             // Set user data
             thisAppModel.user().model.updateWith(logged.profile);
+            
+            // Google Analytics
+            if (window.ga) {
+                if (window.cordova) {
+                    window.ga.setUserId(logged.userID);
+                }
+                else {
+                    window.ga('set', 'userId', logged.userID);
+                }
+            }
 
             return logged;
         });

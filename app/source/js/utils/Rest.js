@@ -98,12 +98,12 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
                 .catch(function(){
                     // There is error on retry, just return the
                     // original call error
-                    return err;
+                    throw err;
                 });
             }
         }
         // by default, continue propagating the error
-        return err;
+        throw err;
     });
     
     promiseXhr.xhr = xhr;

@@ -1,0 +1,22 @@
+INSERT INTO [addresstype]
+   ([AddressTypeID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[AddressType]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[UniquePerUser]
+   ,[Selectable])
+VALUES
+   (@AddressTypeID
+   ,@LanguageID
+   ,@CountryID
+   ,@AddressType
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@UniquePerUser
+   ,@Selectable)
