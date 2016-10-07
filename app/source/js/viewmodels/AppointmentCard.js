@@ -33,6 +33,8 @@ function AppointmentCardViewModel(params) {
     
     this.allowBookUnavailableTime = ko.observable(false);
     
+    this.specialAppointmentIds = Appointment.specialIds;
+    
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
         return it && it.id() || 0;
@@ -502,7 +504,8 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
             selectAddress: true,
-            selectedAddressID: this.item().addressID()
+            selectedAddressID: this.item().address().addressID(),
+            clientUserID: this.item().clientUserID()
         });
     }.bind(this);
 
@@ -516,13 +519,19 @@ function AppointmentCardViewModel(params) {
 
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
-
-        editFieldOn('textEditor', {
-            request: 'textEditor',
-            field: field,
-            title: this.isNew() ? 'New booking' : 'Booking',
-            header: textFieldsHeaders[field],
+        
+        app.modals.showTextEditor({
+            title: textFieldsHeaders[field],
             text: this.item()[field]()
+        })
+        .then(function(text) {
+            this.item()[field](text);
+        }.bind(this))
+        .catch(function(err) {
+            if (err) {
+                app.modals.showError({ error: err });
+            }
+            // No error, do nothing just was dismissed
         });
     }.bind(this);
     
@@ -554,7 +563,7 @@ function AppointmentCardViewModel(params) {
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:20,maxstatements:40 */
+    /*jshint maxcomplexity:23,maxstatements:40 */
     
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
@@ -577,10 +586,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
 
     /// Manage specific single data from externally provided
     
-    // It comes back from the textEditor.
-    if (requestData.request === 'textEditor') {
-        this.item()[requestData.field](requestData.text);
-    }
     if (requestData.selectClient === true) {
         this.item().clientUserID(requestData.selectedClientID);
     }
@@ -593,7 +598,10 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
     }
     if (requestData.selectAddress === true) {
-        this.item().addressID(requestData.selectedAddressID);
+        if (requestData.address)
+            this.item().address().model.updateWith(requestData.address, true);
+        else if (requestData.selectedAddressID)
+            this.item().address().addressID(requestData.selectedAddressID);
     }
     if (requestData.selectPricing === true) {
         this.item().pricing(

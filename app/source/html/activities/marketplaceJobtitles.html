@@ -1,26 +1,27 @@
 <!-- marketplaceJobtitles activity -->
 <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row"> 
+        <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> <span data-bind="text: returnText"></span></a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span data-bind="text: jobTitleName"></span>&nbsp;profile status
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
+                </h2>                        
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
                 <div class="switchLine">
                     <span class="switchLine-label">
                         <span> Marketplace profile:</span> <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
                     </span>
-                    <div class="switchLine-switch">
+                    <div class="switchLine-switch" data-bind="visible: isToggleReady">
                         <label>
                             <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
                         </label>
@@ -32,9 +33,10 @@
                 </div>
                 <h2 class="SectionTitle">
                     <span>About your&nbsp;<span data-bind="text: jobTitleName"></span>&nbsp;services</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152759-managing-your-marketplace-profile" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
+                </h2>                        
+                <div data-bind="css: { 'is-loading': isLoading }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                </div>
                 <ul class="TilesList TilesList--openEnd">
                     <li><a class="InfoTile" href="/servicesOverview" data-bind="attr: { href: getJobUrlTo('servicesOverview') }">
                         <div class="Tile-icon" aria-hidden="true">
@@ -44,12 +46,20 @@
                             <p>Overview of your <span data-bind="text: jobTitleName"></span> services</p>
                         </div>
                     </a></li>
+                    <li><a class="InfoTile" href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-android-calendar" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <p>Scheduler (services, pricing &amp; locations)</p>
+                        </div>
+                    </a></li>
                     <li><a class="InfoTile" href="/licensesCertifications" data-bind="attr: { href: getJobUrlTo('licensesCertifications') }">
                         <div class="Tile-icon" aria-hidden="true">
                             <span class="fa fa-certificate" aria-hidden="true"></span>
                         </div>
                         <div class="Tile-content">
-                            <div><span data-bind="text: jobTitleName"></span> licenses/certifications</div>
+                            <div><span data-bind="text: jobTitleName"></span> credentials</div>
                             <em data-bind="text: licensesCertificationsSummary"></em>
                         </div>
                     </a></li>
@@ -70,15 +80,11 @@
                             <p>Delete your <span data-bind="text: jobTitleName"></span> profile</p>
                         </div>
                     </button></li>
-                    <li><a class="CompactLinkTile" href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                        <div class="Tile-content text-muted">Edit scheduler settings (services, pricing &amp; locations)</div>
-                        <div class="Tile-icon text-muted"><span class="fa ion ion-ios-arrow-right"></span></div>
-                    </a></li>
                 </ul>
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-               <app-inline-side-menu></app-inline-side-menu>
+               <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

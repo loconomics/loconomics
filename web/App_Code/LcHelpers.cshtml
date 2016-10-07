@@ -433,7 +433,7 @@
         // Compatibility modes on IE11 uses white space on Trident string like: Trident / 4.0  rather than Trident/4.0
         var iePattern = @"(?:\b(?:MS)?IE\s)(\d+)";
         var tridentPattern = @"(?:\bTrident\s?\/\s?)(\d+)";
-        var m = Regex.Match(Request.UserAgent, iePattern);
+        var m = Regex.Match(Request.UserAgent ?? "", iePattern);
         var ieVersion = 0;
         if (m.Success)
         {
@@ -798,10 +798,7 @@
     }
     public static void RedirectToLogin()
     {
-        if (Request.IsAjaxRequest())
-            ReturnJsonResult(2, LcUrl.LangPath + "Account/$Login/?ajax=1&Redirect=" + Uri.EscapeDataString(LcUrl.GetTheGoodURL(Request.UrlReferrer.PathAndQuery)));
-        else
-            Response.Redirect(LcUrl.LangPath + "Account/Login/?Redirect=" + Uri.EscapeDataString(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
+        Response.Redirect(LcUrl.LangPath + "auth/login/?Redirect=" + Uri.EscapeDataString(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
     }
 
     /*========= STRINGS ==============*/

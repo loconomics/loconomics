@@ -18,7 +18,7 @@ namespace LcRest
         public int countryID;
         public string countryname;
         public int languageID;
-        public int submitted;
+        public bool submitted;
         public string optionGroup;
         #endregion
 
@@ -63,14 +63,14 @@ namespace LcRest
             DECLARE @languageID AS int
             SET @languageID = @2
              
-            SELECT
+            SELECT distinct
                 JL.positionID as jobTitleID
                 ,JL.licenseCertificationID
                 ,JL.required
                 ,JL.countryID
                 ,C.countryname
                 ,@languageID as languageID
-                ,CASE WHEN UL.LicenseCertificationID = JL.LicenseCertificationID then 1 else 0 END as submitted
+                ,CASE WHEN UL.LicenseCertificationID = JL.LicenseCertificationID then CAST(1 as bit) else CAST(0 as bit) END as submitted
                 ,JL.optionGroup
             FROM
                 jobTitleLicense JL

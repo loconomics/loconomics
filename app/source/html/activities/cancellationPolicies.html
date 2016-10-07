@@ -1,0 +1,31 @@
+<!-- CancellationPolicies -->
+<div data-activity="cancellationPolicies">
+    <!-- internal menu -->
+    <div class="PageMenu" id="cancellationPolicies-index"> 
+        <!-- Single button -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" data-bind="foreach: policies">
+                <li><a class="dropdown-item" href="#" data-bind="text: name, attr: { href: '#cancellationPolicies-' + cancellationPolicyID() }"></a></li>
+            </ul>
+        </div>
+        <div class="PageMenu-list">
+            <ul data-bind="foreach: policies">
+                <li><a href="#" data-bind="text: name, attr: { href: '#cancellationPolicies-' + cancellationPolicyID() }"></a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Tab panes -->
+    <div class="limited-size-sm">
+        <div class="tab-content" data-bind="foreach: policies">
+            <div role="tabpanel" class="tab-pane" data-bind="attr: { id: 'cancellationPolicies-' + cancellationPolicyID() }">
+                <h2 class="SectionTitle">Cancellation Policy</h2>
+                <div class="PaddedBox-xs" data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: $data } }"></div>
+            </div>
+        </div>
+        <h2 class="SectionTitle">General policy</h2>
+        <div class="PaddedBox-xs" data-bind="template: { name: 'generalCancellationPolicy-template' }"></div>
+    </div>
+</div>

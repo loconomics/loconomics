@@ -1,6 +1,6 @@
 <!-- myAppointments activity -->
 <div data-activity="myAppointments" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
             <h1 class="hidden-xs hidden-sm">Treat yourself</h1>
@@ -67,7 +67,7 @@
                 </div>
             </div>  
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-               <app-inline-side-menu></app-inline-side-menu>
+               <app-inline-side-menu params="vocElement: 'booking'"></app-inline-side-menu>
             </div>
         </div>
     </div>

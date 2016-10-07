@@ -61,10 +61,12 @@ function BaseClientBookingCardVM(app) {
 
     ///
     /// URLs (constants, don't need reset)
-    this.urlTos = ko.observable('https://loconomics.com/en-US/About/TermsOfUse/');
-    this.urlPp = ko.observable('https://loconomics.com/en-US/About/PrivacyPolicy/');
-    this.urlBcp = ko.observable('https://loconomics.com/en-US/About/BackgroundCheckPolicy/');
-    this.urlCp = ko.observable('https://loconomics.com/en-US/About/CancellationPolicy/');    
+    var siteUrl = (app.model.config.siteUrl || 'https://loconomics.com') + '/';
+    this.urlTos = ko.observable(siteUrl + '#!terms/terms-of-service?mustReturn=true');
+    this.urlPp = ko.observable(siteUrl + '#!terms/privacy-policy?mustReturn=true');
+    this.urlBcp = ko.observable(siteUrl + '#!terms/background-check-policy?mustReturn=true');
+    // this.urlCp defined as computed later (depends upon other observables)
+
     ///
     // List of possible error messages registered by name
     this.errorMessages = {
@@ -122,7 +124,7 @@ function BaseClientBookingCardVM(app) {
         // Not allowed in request state (only cancellation is allowed there), so just only on 'confirmed' ones
         // (other states are not valid too).
         // Allowed only for instant-booking
-        if (!this.originalBooking()) return false;
+        if (!this.originalBooking() || !this.booking()) return false;
         return !this.booking().bookingID() || this.booking().instantBooking() && this.booking().isConfirmed();
     }, this);
     /**
@@ -275,6 +277,13 @@ function BaseClientBookingCardVM(app) {
         }.bind(this));
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
+    this.urlCp = ko.pureComputed(function() {
+        var info = this.serviceProfessionalInfo();
+        info = info && info.selectedJobTitle();
+        var id = info && info.cancellationPolicyID() || '';
+        return siteUrl + '#!cancellationPolicies/' + id + '?mustReturn=true';
+    }, this);
+    
     ///
     /// Date time picker(s)
     /* It returns true if user can only choose one time, that is
@@ -403,6 +412,7 @@ function BaseClientBookingCardVM(app) {
     /// Special steps preparation processes
     /// Run some logic every time an step is accessed
     ko.computed(function() {
+        if (!this.booking()) return;
         switch (this.progress.currentStep()) {
             case 'selectTime':
                 this.prepareDatePicker('serviceDate');
@@ -419,14 +429,14 @@ function BaseClientBookingCardVM(app) {
         // Starting list, with fixed first steps:
         var list = ['services'];
         
-        if (this.originalBooking()) {
+        if (this.originalBooking() && this.booking()) {
 
             if (!this.isPhoneServiceOnly())
                 list.push('selectLocation');
 
             list.push(this.singleTimeOption() ? 'selectTime' : 'selectTimes');
 
-            if (this.booking().paymentEnabled())
+            if (this.booking().paymentEnabled() && this.booking().pricingSummary().totalPrice() > 0)
                 list.push('payment');
         }
         // The final fixed steps

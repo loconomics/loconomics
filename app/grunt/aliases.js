@@ -39,6 +39,7 @@ module.exports = {
         'copyto:ionicons-fonts'
     ],
     'build-html': [
+        'replace:html_bad_chars',
         //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
         'bliss:appDebug',
@@ -103,20 +104,5 @@ module.exports = {
     'atwork': [
         'connect:atbuild',
         'watch'
-    ],
-    'build-splash': [
-		'jshint',//'newer:jshint',
-		'browserify:splash',
-		'uglify:splash',//'newer:uglify:splash'
-        'notify:browserify',
-        'concat:css-splash-libs',
-		'stylus:splash',
-		'cssmin:splash',//'newer:cssmin:splash'
-        'notify:css',
-        'bliss:splash',
-        'notify:html',
-        'build-fonts',
-        'copyto:images',
-        'notify:build'
     ]
 };

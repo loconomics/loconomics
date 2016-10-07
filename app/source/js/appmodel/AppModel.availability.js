@@ -69,6 +69,7 @@ exports.create = function create(appModel) {
                 control: new CacheControl({ ttl: { minutes: 1 } }),
                 getFreeTimeSlots: function(duration, slotSizeMinutes, includeEndTime) {
                     var size = slotSizeMinutes || this.incrementsSizeInMinutes;
+                    duration = duration || size;
                     return createTimeSlots.forList(this.times, size, duration, true, includeEndTime);
                 }
             };

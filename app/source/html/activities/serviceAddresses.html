@@ -1,23 +1,26 @@
 <!-- Activity locations -->
 <div data-activity="serviceAddresses" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
-                    <li>
-                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind="text: jobTitleName"></span> Scheduler
-                        </a>
-                    </li>
+                    <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Add service areas or locations for your <span data-bind="text: jobTitleName"></span> services</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
                 <h2 class="SectionTitle">
                     <span data-bind="visible: headerText, text: headerText"></span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -26,7 +29,7 @@
                 <div id="addressesListView">
                     <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
                 </div>
-                <ul id="addressesAddNewButtons" class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">  
+                <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
                     <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
                         <div class="Tile-content text-muted">Add a service location</div>
                         <div class="Tile-icon text-muted">
@@ -39,19 +42,25 @@
                             <span class="fa ion ion-plus"></span>
                         </div>
                     </button>
-                    <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientID()">
+                </div>
+                <div data-bind="visible: clientAddresses.isSelectionMode() && clientAddresses.hasAddresses()">
+                    <h2 class="SectionTitle">Select a client location</h2>
+                    <div data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                </div>
+                <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
+                    <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientUserID()">
                         <div class="Tile-content text-muted">Add a client location</div>
                         <div class="Tile-icon text-muted">
                             <span class="fa ion ion-plus"></span>
                         </div>
                     </button>
-                </ul>
+                </div>
                 <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

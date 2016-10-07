@@ -4,8 +4,9 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var ko = require('knockout'),
-    $ = require('jquery');
+var ko = require('knockout');
+var $ = require('jquery');
+var clipboard = require('../utils/clipboard');
 
 var A = Activity.extend(function BookMeButtonActivity() {
     
@@ -15,7 +16,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
-        backLink: 'scheduling' , helpLink: '/help/sections/201959943-add-scheduling-to-your-website'
+        backLink: 'scheduling' , helpLink: this.viewModel.helpLink
     });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
@@ -50,11 +51,14 @@ var A = Activity.extend(function BookMeButtonActivity() {
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
             if (jobTitleID) {
-                // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
+                // User Job Title
+                // Get data for the Job Title and User Profile
+                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(job) {
+                    this.viewModel.userJobTitle(job.userJobTitle);
                     // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
+                    this.viewModel.jobTitleName(job.jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -65,45 +69,18 @@ var A = Activity.extend(function BookMeButtonActivity() {
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
+                this.viewModel.userJobTitle(null);
             }
         }.bind(this)
     });
-    
-    
-    var $code = this.$activity.find('textarea');
-    this.viewModel.copyCode = function() {
-        var errMsg;
-        try {
-            // If Cordova Plugin available, use that
-            if (window.cordova && window.cordova.plugins && window.cordova.plugins.clipboard) {
-                window.cordova.plugins.clipboard.copy(this.viewModel.buttonHtmlCode());
-            }
-            else {
-                // Web standard version: will not work on old Firefox and current Safari (as of 2015-11-26)
-                // using setSelectionRange rather than select since seems more compatible (with Safari, but copy does not works
-                // there so...maybe for the future I hope :-)
-                $code
-                .select()
-                .get(0).setSelectionRange(0, 99999);
-                if (!document.execCommand('copy')) {
-                    errMsg = 'Impossible to copy text.';
-                }
-            }
-        } catch(err) {
-            errMsg = 'Impossible to copy text.';
-        }
-        if (errMsg) {
-            this.app.modals.showError({ error: errMsg });
-        }
-        else {
-            this.viewModel.copyText('Copied!');
-        }
-    }.bind(this);
 });
 
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
+    // reset
+    this.viewModel.jobTitleID(false);
+    
     Activity.prototype.show.call(this, state);
     
     // Keep data updated:
@@ -116,6 +93,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
     var marketplaceProfile = app.model.marketplaceProfile;
     this.jobTitleName = ko.observable('Job Title'); 
@@ -165,7 +143,7 @@ function ViewModel(app) {
             if (type === 'link')
                 tpl = linkTemplate;
 
-            var siteUrl = $('html').attr('data-site-url'),
+            var siteUrl = $('html').attr('data-site-url') || window.location.origin,
                 linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/',
                 imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
 
@@ -187,6 +165,60 @@ function ViewModel(app) {
         var btn = this.buttonHtmlCode().replace(/\n+/, '');
         return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);
     }, this);
+    
+    this.userJobTitle = ko.observable(null);
+    this.bookMeButtonReady = ko.pureComputed(function() {
+        var j = this.userJobTitle();
+        return j && j.bookMeButtonReady() || false;
+    }, this);
+    this.collectPaymentAtBookMeButtonString = ko.pureComputed({
+        read: function() {
+            var j = this.userJobTitle();
+            return j && j.collectPaymentAtBookMeButton() && 'true' || 'false';
+        },
+        write: function(val) {
+            var j = this.userJobTitle();
+            if (!j) return;
+            if (val === 'true') {
+                j.collectPaymentAtBookMeButton(true);
+            }
+            else {
+                j.collectPaymentAtBookMeButton(false);
+            }
+        },
+        owner: this
+    });
+    
+    this.copyCode = function() {
+        var text = this.buttonHtmlCode();
+        var errMsg = clipboard.copy(text);
+        if (errMsg) {
+            app.modals.showError({ error: errMsg });
+        }
+        else {
+            this.copyText('Copied!');
+        }
+    }.bind(this);
+    
+    this.save = function() {
+        var ujt = this.userJobTitle();
+        if (ujt) {
+            //this.isSaving(true);
+            
+            var plain = ujt.model.toPlainObject();
+            plain.collectPaymentAtBookMeButton = ujt.collectPaymentAtBookMeButton();
+
+            app.model.userJobProfile.setUserJobTitle(plain)
+            .then(function() {
+                //this.isSaving(false);
+                //app.successSave();        
+            }.bind(this))
+            .catch(function(err) {
+                //this.isSaving(false);
+                app.modals.showError({ title: 'Error saving your "collect payment" preference', error: err });
+            }.bind(this));
+        }
+    }.bind(this);
 }
 
 function generateButtonCode(options) {

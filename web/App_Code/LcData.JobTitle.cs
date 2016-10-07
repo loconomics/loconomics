@@ -28,7 +28,9 @@ public static partial class LcData
                         u.CancellationPolicyID As cancellationPolicyID,
                         u.InstantBooking As instantBooking,
                         u.CreateDate As createdDate,
-                        u.UpdatedDate As updatedDate
+                        u.UpdatedDate As updatedDate,
+                        u.bookMeButtonReady As bookMeButtonReady,
+                        u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton
                     FROM
                         userprofilepositions as u
                          INNER JOIN
@@ -71,6 +73,7 @@ public static partial class LcData
             int cancellationPolicyID,
             string intro,
             bool instantBooking,
+            bool collectPaymentAtBookMeButton,
             int languageID,
             int countryID
             )
@@ -78,14 +81,15 @@ public static partial class LcData
             using (var db = Database.Open("sqlloco"))
             {
                 // Create position for the provider
-                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6",
+                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7",
                     userID,
                     jobTitleID,
                     languageID,
                     countryID,
                     cancellationPolicyID,
                     intro,
-                    instantBooking);
+                    instantBooking,
+                    collectPaymentAtBookMeButton);
                 if (results.Result != "Success") {
                     throw new Exception("We're sorry, there was an error creating your job title: " + results.Result);
                 }
@@ -98,6 +102,7 @@ public static partial class LcData
             int policyID,
             string intro,
             bool instantBooking,
+            bool collectPaymentAtBookMeButton,
             int languageID,
             int countryID)
         {
@@ -106,6 +111,7 @@ public static partial class LcData
                 SET     PositionIntro = @4,
                         CancellationPolicyID = @5,
                         InstantBooking = @6,
+                        collectPaymentAtBookMeButton = @7,
                         UpdatedDate = getdate()
                 WHERE   UserID = @0 AND PositionID = @1
                     AND LanguageID = @2
@@ -120,7 +126,8 @@ public static partial class LcData
                     countryID,
                     intro,
                     policyID,
-                    instantBooking
+                    instantBooking,
+                    collectPaymentAtBookMeButton
                 );
 
                 // Task done? Almost a record must be affected to be a success

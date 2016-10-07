@@ -61,12 +61,8 @@ public static class LcAuthHelper
 
     public static LoginResult Login(WebPage page) {
 
-        if (page.Validation.GetHtml("username") == null) {
-            page.Validation.RequireField("username", "You must specify a user name.");
-        }
-        if (page.Validation.GetHtml("password") == null) {
-	        page.Validation.RequireField("password", "You must specify a password.");
-        }
+        page.Validation.RequireField("username", "You must specify a user name.");
+	    page.Validation.RequireField("password", "You must specify a password.");
         
         if (page.Validation.IsValid()) {
             var username = Request.Form["username"];
@@ -84,10 +80,6 @@ public static class LcAuthHelper
 
     public static LoginResult Login(string username, string password, bool rememberMe = false, bool returnProfile = false, bool allowUnconfirmed = false)
     {
-        // AVOID FRUSTRATION IN BETA PERIOD REMOVING THE LOCK CHECK
-        // TODO: RE-ENABLE AFTER BETA
-        //checkAccountIsLocked(username);
-
         // DISABLED CONFIRMATION CHECK FOR BETA PERIOD, BECAUSE WE HAVE NOT THE EMAIL CONFIRMATION READY
         // AFTER THE WHOLE SITE AND MESSAGING CHANGE.
         // TODO: RE-ENABLE AFTER BETA
@@ -165,19 +157,6 @@ public static class LcAuthHelper
         
         return redirect;
     }
-    
-    public static void checkAccountIsLocked(string username) {
-        
-        if (WebSecurity.UserExists(username) && 
-            WebSecurity.GetPasswordFailuresSinceLastSuccess(username) > 4 && 
-            WebSecurity.GetLastPasswordFailureDate(username).AddSeconds(60) > DateTime.UtcNow) {
-
-            //throw new HttpException(303, LcUrl.LangPath + "Account/AccountLockedOut/");
-            /// http 409:Conflict
-            throw new HttpException(409, "Your account has been locked due to too many unsuccessful login attempts.\n " +
-                "Please try logging in again after 60 minutes.");
-        }
-    }
 
     public static void checkAccountIsConfirmed(string username) {
         
@@ -223,18 +202,14 @@ public static class LcAuthHelper
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    public static LoginResult QuickSignup(WebPage page) {
-
-        if (page.Validation.GetHtml("email") == null)
-        {
-            page.Validation.RequireField("email", "You must specify an email.");
-            // Username is an email currently, so need to be restricted
-            page.Validation.Add("email",
-                Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
-        }
-        if (page.Validation.GetHtml("password") == null) {
-	        page.Validation.RequireField("password", "You must specify a password.");
-        }
+    public static LoginResult QuickSignup(WebPage page)
+    {
+        page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
+        page.Validation.RequireField("email", "You must specify an email.");
+        // Username is an email currently, so need to be restricted
+        page.Validation.Add("email",
+            Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+        page.Validation.RequireField("password", "You must specify a password.");
         
         if (page.Validation.IsValid()) {
             var username = Request.Form["email"];
@@ -289,7 +264,6 @@ public static class LcAuthHelper
     /// <returns></returns>
     public static LoginResult DetailedSignup(WebPage page)
     {
-
         page.Validation.RequireField("email", "You must specify an email.");
         // Username is an email currently, so need to be restricted
         page.Validation.Add("email",
@@ -310,11 +284,13 @@ public static class LcAuthHelper
         if (isServiceProfessional)
         {
             page.Validation.RequireField("phone", "You must specify your mobile phone number.");
-            page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
+            // Disabled after removal from UI at commit#fd68f69fbdd04a777135cfae092b9c16c4e2d182
+            //page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
         }
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
             page.Validation.RequireField("password", "You must specify a password.");
+            page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
         }
 
         if (useFacebookConnect)
@@ -443,7 +419,7 @@ public static class LcAuthHelper
                             LcAuth.ConfirmAccount(confirmationCode);
                             // set the password provided by the user. Trick: we need to generate a reset token in order to set the password.
                             var token = WebSecurity.GeneratePasswordResetToken(email);
-                            WebSecurity.ResetPassword(token, password);
+                            LcAuth.ResetPassword(token, password);
                             // Left continue with profile data update..
                         }
                         else

@@ -30,6 +30,11 @@ exports.extend = function (app) {
                 app.navBar().leftAction(NavAction.menuIn);
                 app.navBar().prevLeftAction = prev;
             }
+            var prevRight = app.navBar().rightAction();
+            if (prevRight === NavAction.menuNewItem) {
+                app.navBar().rightAction(null);
+                app.navBar().prevRightAction = prevRight;
+            }
         }
         else {
             if (app.navBar().prevLeftAction) {
@@ -144,10 +149,11 @@ exports.extend = function (app) {
         Update the app menu to highlight the
         given link name
     **/
-    app.updateMenu = function updateMenu(name) {
+    app.updateMenu = function updateMenu(/*name*/) {
         
         var $menu = $('.App-menus .navbar-collapse');
         
+        /* DONE WITH KNOCKOUT BINDING RIGHT NOW
         // Remove any active
         $menu
         .find('li')
@@ -157,6 +163,8 @@ exports.extend = function (app) {
         .find('.go-' + name)
         .closest('li')
         .addClass('active');
+        */
+
         // Hide menu
         $menu
         .filter(':visible')
@@ -171,12 +179,30 @@ exports.extend = function (app) {
         userName: ko.observable('Me'),
         isServiceProfessional: ko.observable(false),
         isClient: ko.observable(false),
-        isApp: ko.observable(!!window.cordova)
+        isApp: ko.observable(!!window.cordova),
+        isInOnboarding: ko.observable(false),
+        active: ko.observable('')
     };
+
+    app.model.on('modulesLoaded', function() {
+        ko.computed(function() {
+            app.navBarBinding.isInOnboarding(app.model.onboarding.inProgress());
+        });
+    });
+    
+    app.shell.on(app.shell.events.itemReady, function() {
+        app.navBarBinding.active(app.shell.currentRoute.name);
+    });
     
     app.navBarBinding.isAnonymous = ko.pureComputed(function() {
         return !this.isServiceProfessional() && !this.isClient();
     }, app.navBarBinding);
+    
+    app.navBarBinding.cssIfActive = function(activityName) {
+        return ko.computed(function() {
+            return activityName === app.navBarBinding.active() ? 'active' : '';
+        });
+    };
 
     app.setupNavBarBinding = function setupNavBarBinding() {
         app.navBarBinding.isApp(!!window.cordova);
@@ -191,7 +217,7 @@ exports.extend = function (app) {
     app.performsNavBarBack = function performsNavBarBack(options) {
         var nav = this.navBar(),
             left = nav && nav.leftAction(),
-            $btn = $('.SmartNavBar-edge.left > a.SmartNavBar-btn');
+            $btn = $('body > .AppNav .SmartNavBar-edge.left > a.SmartNavBar-btn');
 
         // There is an action, trigger like a click so all the handlers
         // attached on spare places do their work:

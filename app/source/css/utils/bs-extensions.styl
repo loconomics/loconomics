@@ -106,11 +106,23 @@ a {
 }
 .btn-link {
     &:hover,
-    &:focus {
+    &:focus,
+    &:active{
         text-decoration: none;
         outline: none;
     }
 }
+
+.btn-link.text-secondary {
+    color: $brand-secondary;
+    background-color: transparent;
+    &:hover,
+    &:focus,
+    &:active{
+        color: $brand-secondary-dark;
+    }
+}
+
 // Only bottom border to look flatty
 .form-control,
 .input-group-addon,
@@ -204,20 +216,23 @@ ResetSectionTitleMargin() {
         margin-right: 0;
     }
 }
-.container {
+.container,
+.container-fluid {
     @media $mediaMaxXs {
         &.nogaps-xs {
             padding: 0;
             ResetSectionTitleMargin();
         }
     }
-    @media $mediaMaxSm {
+    $mediaOnly = $mediaMinSm + ' and ' + $mediaMaxSm;
+    @media $mediaOnly {
         &.nogaps-sm {
             padding: 0;
             ResetSectionTitleMargin();
         }
     }
-    @media $mediaMaxMd {
+    $mediaOnly = $mediaMinMd + ' and ' + $mediaMaxMd;
+    @media $mediaOnly {
         &.nogaps-md {
             padding: 0;
             ResetSectionTitleMargin();
@@ -320,5 +335,26 @@ ResetSectionTitleMargin() {
       margin-bottom: 0px;
       padding-left: 20px;
     }
+}
+
+// Fixing usability issue at Bootstrap: the close button at modals must have a bigger touchable area
+.modal .modal-header .close {
+    margin-top: -10px;
+    margin-right: -12px;
+    padding: 8px 12px;
+}
+// TODO: make this cross browser, not just webkit specific (and standard/future-proof if possible)
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.bg-white {
+    background-color: white;
+}
+.icon-secure {
+    font-size: 29px !important;
+    top: 27px;
 }
 

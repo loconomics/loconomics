@@ -13,13 +13,14 @@ var A = Activity.extend(function OwnerInfoActivity() {
     this.viewModel = new ViewModel();
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.navBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: '/help/sections/201096629-ownership-in-loconomics'
+        backLink: '/account' , helpLink: this.viewModel.helpLink
     });
 });
 
 exports.init = A.init;
 
 function ViewModel() {
+    this.helpLink = '/help/relatedArticles/201096629-ownership-in-loconomics';
     this.ownerStatus = ko.observable('pending');
     this.ownerStatusName = ko.observable('Pending');
     this.ownerStatusOK = ko.pureComputed(function() {

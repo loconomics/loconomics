@@ -1,9 +1,16 @@
 <!-- SchedulingPreferences activity -->
 <div data-activity="schedulingPreferences" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
-    <div class="container"> 
-        <div class="row"> 
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">  
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/scheduling/">
@@ -13,83 +20,211 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Scheduling preferences</span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201961423-setting-your-scheduling-preferences" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
-                </h2>
-                <script type="text/html" id="schedulingPrefs-radioButton">
-                    <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
-                        <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                        <span data-bind="text: labelText"></span>
-                    </label>
-                </script>
-                <form data-bind="submit: save" class="container-fluid LightForm">
-                    <div class="center-block row isolated" style="text-align: center">
-                        <p>Show my availability in increments of:</p>
-                        <div class="btn-group ut-noRadioCheck">
-                            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText: '15 min' } } --><!-- /ko -->
-                            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:  '30 min' } } --><!-- /ko -->
-                            <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText: '1 hour' } } --><!-- /ko -->
+                <app-onboarding-progress-bar></app-onboarding-progress-bar>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set up your schedule</div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">What are your hours? We'd like clients to know when they can expect to schedule your appointments. You can add multiple blocks per day.</p>
+                <form data-bind="submit: save" class="LightForm">
+                    <div id="weeklySchedule" data-bind="with: weeklySchedule" class="WeeklySchedule PaddedBox-xs-only"><!-- WEEKLY SCHEDULE -->
+                        <h2 class="SectionTitle">
+                            <span>Your weekly schedule</span>
+                        </h2>                     
+                        <div data-bind="css: { 'is-loading': isLoading }">
+                            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                         </div>
-                        <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
-                    </div>
+                        <script type="text/html" id="weeklySchedule-timeSelectorHourMinutesTpl">
+                            <select data-bind="value: value, disable: isLocked, valueAllowUnset: true" class="form-control select-unstyled select-unstyled--centered">
+                                <!-- ko if: midnightAtBeginning --><option value="0">12:00am</option><!-- /ko -->
+                                <option value="30">12:30am</option>
+                                <option value="60">1:00am</option>
+                                <option value="90">1:30am</option>
+                                <option value="120">2:00am</option>
+                                <option value="150">2:30am</option>
+                                <option value="180">3:00am</option>
+                                <option value="210">3:30am</option>
+                                <option value="240">4:00am</option>
+                                <option value="270">4:30am</option>
+                                <option value="300">5:00am</option>
+                                <option value="330">5:30am</option>
+                                <option value="360">6:00am</option>
+                                <option value="390">6:30am</option>
+                                <option value="420">7:00am</option>
+                                <option value="450">7:30am</option>
+                                <option value="480">8:00am</option>
+                                <option value="510">8:30am</option>
+                                <option value="540">9:00am</option>
+                                <option value="570">9:30am</option>
+                                <option value="600">10:00am</option>
+                                <option value="630">10:30am</option>
+                                <option value="660">11:00am</option>
+                                <option value="690">11:30am</option>
+                                <option value="720">12:00pm</option>
+                                <option value="750">12:30pm</option>
+                                <option value="780">1:00pm</option>
+                                <option value="810">1:30pm</option>
+                                <option value="840">2:00pm</option>
+                                <option value="870">2:30pm</option>
+                                <option value="900">3:00pm</option>
+                                <option value="930">3:30pm</option>
+                                <option value="960">4:00pm</option>
+                                <option value="990">4:30pm</option>
+                                <option value="1020">5:00pm</option>
+                                <option value="1050">5:30pm</option>
+                                <option value="1080">6:00pm</option>
+                                <option value="1110">6:30pm</option>
+                                <option value="1140">7:00pm</option>
+                                <option value="1170">7:30pm</option>
+                                <option value="1200">8:00pm</option>
+                                <option value="1230">8:30pm</option>
+                                <option value="1260">9:00pm</option>
+                                <option value="1290">9:30pm</option>
+                                <option value="1320">10:00pm</option>
+                                <option value="1350">10:30pm</option>
+                                <option value="1380">11:00pm</option>
+                                <option value="1410">11:30pm</option>
+                                <!-- ko if: midnightAtEnd --><option value="1439">12:00am</option><!-- /ko -->
+                            </select>
+                        </script>
+                        <script type="text/html" id="weeklySchedule-timeRangeTpl">
+                            <div class="WeeklySchedule-weekDay-timeRange"><button type="button" class="btn btn-default" data-bind="click: $parent.day.removeTimeRange">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span><span class="sr-only">Remove time</span>
+                                </button><!-- ko template: { 
+                                        name: 'weeklySchedule-timeSelectorHourMinutesTpl',
+                                        data: {
+                                            value: fromMinute,
+                                            isLocked: $parent.isLocked,
+                                            midnightAtBeginning: true,
+                                            midnightAtEnd: false
+                                        }
+                                } --><!-- /ko --> <span>to</span> <!-- ko template: { 
+                                        name: 'weeklySchedule-timeSelectorHourMinutesTpl',
+                                        data: {
+                                            value: toMinute,
+                                            isLocked: $parent.isLocked,
+                                            midnightAtBeginning: false,
+                                            midnightAtEnd: true
+                                        }
+                                } -->
+                            <!-- /ko --></div>
+                        </script>
+                        <script type="text/html" id="weeklySchedule-weekDayTpl">
+                            <div class="WeeklySchedule-weekDay">
+                                <div>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"
+                                               data-bind="switch: { disabled: isLocked, state: day.isEnabled }"
+                                       /><span data-bind="text: label"></span>
+                                    </label>
+                                </div>
+                                <div class="WeeklySchedule-weekDay-timeSelectors"
+                                     data-bind="visible: day.isEnabled">
+                                    <!-- ko template: { name: 'weeklySchedule-timeRangeTpl', foreach: day() } --><!-- /ko -->
+                                    <button type="button" class="btn btn-default" data-bind="click: day.addTimeRange, visible: day.canAddMore">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="sr-only">Add times</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </script>
 
-                    <div class="row">
-                        <div class="form-group col-sm-6 row">
-                            <label for="schedulingPrefs-advanceTime"
-                                   class="col-xs-7">
-                                Time clients can book you in advance:
+                        <div class="WeeklySchedule-allTime">
+                            <label>
+                                <span>All days/times</span> 
+                                <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
                             </label>
-                            <div class="col-xs-5">
-                                <select id="schedulingPrefs-advanceTime"
-                                        data-bind="value: prefs.advanceTime, disable: isLocked"
-                                        class="form-control">
-                                    <option value="0">Anytime</option>
-                                    <option value="0.5">30 minutes</option>
-                                    <option value="1">1 hour</option>
-                                    <option value="2">2 hours</option>
-                                    <option value="3">3 hours</option>
-                                    <option value="4">4 hours</option>
-                                    <option value="12">12 hours</option>
-                                    <option value="24">1 day</option>
-                                    <option value="48">2 days</option>
-                                    <option value="168">1 week</option>
-                                </select>
+                        </div>
+                        <div class="WeeklySchedule-days" data-bind="visible: !schedule.isAllTime()">
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Mondays', isLocked: isLocked } } --><!-- /ko -->
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.tuesday, label: 'Tuesdays', isLocked: isLocked } } --><!-- /ko -->
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.wednesday, label: 'Wednesdays', isLocked: isLocked } } --><!-- /ko -->
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.thursday, label: 'Thursdays', isLocked: isLocked } } --><!-- /ko -->
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.friday, label: 'Fridays', isLocked: isLocked } } --><!-- /ko -->
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.saturday, label: 'Saturdays', isLocked: isLocked } } --><!-- /ko -->
+                            <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday, label: 'Sundays', isLocked: isLocked } } --><!-- /ko -->
+
+                            <div class="form-group">
+                                <label class="control-label">Time Zone:</label>
+                                <span class="form-control-static" data-bind="text: schedule.timeZoneDisplayName"></span>
                             </div>
                         </div>
-
-                        <div class="form-group col-sm-5 col-sm-offset-1 row">
-                            <label for="schedulingPrefs-betweenTime"
-                                   class="col-xs-7">
-                                Preparation time needed between clients:
+                    </div>
+                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Need some time between clients? Don't want last-minute bookings? No biggie. Set your preferences below for the schedule you want.</p>
+                    <div id="schedulingPreferences" data-bind="with: schedulingPreferences"><!-- SCHEDULING PREFERENCES -->
+                        <h2 class="SectionTitle">
+                            <span>Scheduling preferences</span>
+                        </h2>                     
+                        <div data-bind="css: { 'is-loading': isLoading }">
+                            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                        </div>
+                        <script type="text/html" id="schedulingPrefs-radioButton">
+                            <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
+                                <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
+                                <span data-bind="text: labelText"></span>
                             </label>
-                            <div class="col-xs-5">
-                                <select id="schedulingPrefs-betweenTime"
-                                        data-bind="value: prefs.betweenTime, disable: isLocked"
-                                        class="form-control">
-                                    <option value="0">None</option>
-                                    <option value="0.08">5 min</option>
-                                    <option value="0.16">10 min</option>
-                                    <option value="0.25">15 min</option>
-                                    <option value="0.5">30 min</option>
-                                    <option value="0.75">45 min</option>
-                                    <option value="1">1 hour</option>
-                                    <option value="2">2 hours</option>
-                                    <option value="3">3 hours</option>
-                                    <option value="4">4 hours</option>
-                                </select>
+                        </script>
+                        <div class="center-block isolated" style="text-align: center">
+                            <p>Show my availability in increments of:</p>
+                            <div class="btn-group ut-noRadioCheck">
+                                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText: '15 min' } } --><!-- /ko -->
+                                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:  '30 min' } } --><!-- /ko -->
+                                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText: '1 hour' } } --><!-- /ko -->
+                            </div>
+                            <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
+                        </div>
+
+                        <div class="container-fluid">
+                            <div class="form-group row">
+                                <label for="schedulingPrefs-advanceTime"
+                                       class="col-sm-7">
+                                    Time clients can book you in advance:
+                                </label>
+                                <div class="col-sm-5">
+                                    <select id="schedulingPrefs-advanceTime"
+                                            data-bind="value: prefs.advanceTime, disable: isLocked"
+                                            class="form-control">
+                                        <option value="0">Anytime</option>
+                                        <option value="0.5">30 minutes</option>
+                                        <option value="1">1 hour</option>
+                                        <option value="2">2 hours</option>
+                                        <option value="3">3 hours</option>
+                                        <option value="4">4 hours</option>
+                                        <option value="12">12 hours</option>
+                                        <option value="24">1 day</option>
+                                        <option value="48">2 days</option>
+                                        <option value="168">1 week</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="schedulingPrefs-betweenTime"
+                                       class="col-sm-7">
+                                    Preparation time needed between clients:
+                                </label>
+                                <div class="col-sm-5">
+                                    <select id="schedulingPrefs-betweenTime"
+                                            data-bind="value: prefs.betweenTime, disable: isLocked"
+                                            class="form-control">
+                                        <option value="0">None</option>
+                                        <option value="0.08">5 min</option>
+                                        <option value="0.16">10 min</option>
+                                        <option value="0.25">15 min</option>
+                                        <option value="0.5">30 min</option>
+                                        <option value="0.75">45 min</option>
+                                        <option value="1">1 hour</option>
+                                        <option value="2">2 hours</option>
+                                        <option value="3">3 hours</option>
+                                        <option value="4">4 hours</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="LightForm-submitBar">
-                            <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
+                    <div class="LightForm-submitBar PaddedBox-xs-only">
+                        <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
                     </div>
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

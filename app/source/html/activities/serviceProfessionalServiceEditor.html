@@ -1,15 +1,19 @@
 <!-- Activity serviceProfessionalServiceEditor -->
 <div data-activity="serviceProfessionalServiceEditor"class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
-        <div class="row">
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <div class="row">  
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind=""></span> Job title scheduler
-                        </a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
@@ -17,8 +21,6 @@
                 <form class="container-fluid LightForm" role="form" data-bind="submit: save">
                     <h2 class="SectionTitle">
                         <span data-bind="text: header"></span>
-                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201967166-listing-and-pricing-your-services" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                        </span>
                     </h2>
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
@@ -121,7 +123,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

@@ -1,13 +1,19 @@
-<ul data-bind="visible: isServiceProfessional() && !isAnonymous()" class="nav navbar-nav">
+<ul data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" class="nav navbar-nav">
     @render('parts/AddNewMenuContents.html')
 </ul>
+<ul class="nav navbar-nav" data-bind="visible: items().length">
+    <li><h4 class="App-menus-group-header">FAQS</h4></li>
+    <!-- ko foreach:items -->
+    <li>
+        <a data-bind="attr: { href: '#!' + link }, text: label" target="_blank"></a>
+    </li>
+    <!-- /ko -->
+</ul>
 <ul class="nav navbar-nav">
-    <h4 class="App-menus-group-header">WE'RE HERE TO HELP</h4>
+    <li><h4 class="App-menus-group-header">WE'RE HERE TO HELP</h4></li>
     <li data-bind="visible: isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200431835-resources-for-service-professionals">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: !isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200474305-resources-for-clients">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: isAnonymous()"><a href="/help">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
-    <li data-bind="visible: !isAnonymous()"><a href="/feedbackForm/dashboard">Feedback &amp; ideas <i class="fa fa-fw ion-ios-lightbulb-outline" aria-hidden="true"></i></a></li>
-    <li data-bind="visible: isAnonymous()"><a href="mailto:support@@loconomics.com?subject=Feedback" target="_blank">Feedback &amp; ideas <i class="fa fa-fw ion-ios-lightbulb-outline" aria-hidden="true"></i></a></li>
-    <li data-bind="visible: !isAnonymous()"><a href="/contactForm/general">Contact us <i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i></a></li>
-    <li data-bind="visible: isAnonymous()"><a href="mailto:support@@loconomics.com" target="_blank">Contact us <i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i></a></li>
+    <li><a href="/feedbackForm/general" data-bind="attr: { href: feedbackLink }">Feedback &amp; ideas <i class="fa fa-fw ion-ios-lightbulb-outline" aria-hidden="true"></i></a></li>
+    <li><a href="/contactForm/general" data-bind="attr: { href: contactLink }">Contact us <i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i></a></li>
 </ul>

@@ -853,7 +853,7 @@ public class LcMessaging
     #region Type:Admin Account
     public static void SendWelcomeProvider(int userID, string userEmail)
     {
-        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
+        SendMail(userEmail, "[Action Required] Welcome to Loconomics!",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToServiceProfessional/Welcome/",
             new Dictionary<string,object> {
                 { "userID", userID }
@@ -861,18 +861,19 @@ public class LcMessaging
     }
     public static void SendWelcomeCustomer(int userID, string userEmail)
     {
-        SendMail(userEmail, "[Action Required] Welcome to a new kind of marketplace",
+        SendMail(userEmail, "[Action Required] Welcome to Loconomics!",
             ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/Welcome/",
             new Dictionary<string, object> {
                 { "userID", userID }
         }), "Loconomics Cooperative <automated@loconomics.com>");
     }
-    public static void SendResetPassword(int userID, string userEmail)
+    public static void SendResetPassword(int userID, string userEmail, string token)
     {
         SendMail(userEmail, "Forget being forgetful",
-            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToClient/ResetPassword/",
+            ApplyTemplate(LcUrl.LangPath + "EmailCommunications/Admin/ToUser/ResetPassword/",
             new Dictionary<string, object> {
-                { "UserID", userID }
+                { "UserID", userID },
+                { "passwordResetToken", token }
         }));
     }
     #endregion
@@ -918,6 +919,16 @@ public class LcMessaging
     #endregion
 
     #region Type:Admin/Internal Notifications to Loconomics Stuff/Support
+    public static void NotifyLockedAccount(string lockedEmail, int lockedUserID, DateTime whenHappened)
+    {
+        try
+        {
+            SendMail("hipaasecurityofficial@loconomics.com", "Account Locked Out",
+                String.Format("Attempt to log-in ended in 'Account Lock Out' message for userID:{0}, email:{1} at {2}", lockedUserID, lockedEmail, whenHappened)
+            );
+        }
+        catch { }
+    }
     public static void NotifyError(string where, string url, string exceptionPageContent)
     {
         try
@@ -1023,7 +1034,10 @@ public class LcMessaging
             if (data != null)
             foreach (var d in data)
             {
-                w.QueryString.Add(d.Key, (d.Value ?? "").ToString());
+                // IMPORTANT: Expectation about the QueryString and WebClient was that they perform the correct
+                // management of URL encoding for the given data, but it does nothing so needs to be manually done
+                // using Uri.EscapeDataString to avoid bugs (fixed a bug at #965)
+                w.QueryString.Add(d.Key, (Uri.EscapeDataString((d.Value ?? "").ToString())).ToString());
             }
             if (!w.QueryString.AllKeys.Contains<string>("RequestKey"))
                 w.QueryString["RequestKey"] = SecurityRequestKey;
@@ -1090,8 +1104,11 @@ public class LcMessaging
     internal static readonly string SecurityRequestKey = "abcd3";
     public static void SecureTemplate()
     {
-        if ((LcHelpers.InLive && !HttpContext.Current.Request.IsLocal) ||
-            HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
+        // Removed the extra check 'is live and is not local' because fails on Azure. Not sure
+        // if something in the server set-up or that the template request and the requester runs
+        // at different instances
+        // Removed: (LcHelpers.InLive && !HttpContext.Current.Request.IsLocal)
+        if (HttpContext.Current.Request["RequestKey"] != SecurityRequestKey)
             throw new HttpException(403, "Forbidden");
     }
     #endregion

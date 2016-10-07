@@ -1,15 +1,19 @@
 <!-- Activity addressEditor -->
 <div data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="container">
         <div class="row">  
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
-                            <span data-bind="text: jobTitleName"></span> Scheduler
-                        </a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
@@ -17,12 +21,11 @@
                 <form role="form" data-bind="submit: save" class="container-fluid LightForm">
                     <h2 class="SectionTitle">
                         <span data-bind="text: header"></span>
-                        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                        </span>
+                        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                     </h2>
                     <div data-bind="with: address()">
                         <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="value: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                         </div>
                         <div data-bind="visible: isServiceArea">
                             <div class="form-group">
@@ -44,7 +47,7 @@
                             </div>
                             <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
                             <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
-                            <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked" data-bind="visible: !$parent.clientUserID()"></app-unlabeled-input>
                             <div class="form-group">
                                 <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
                                 <textarea rows="2" class="form-control" placeholder="Special instructions" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
@@ -58,7 +61,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

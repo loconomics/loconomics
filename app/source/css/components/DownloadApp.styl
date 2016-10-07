@@ -1,0 +1,38 @@
+.DownloadApp {
+    h2 {
+        margin-top: 0px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    div {
+      text-align: center;
+      margin: 0 auto;
+      padding: 0 0 10px 0;
+    }
+
+    $buttonWidth = 135px;
+    $buttonHeight = 40px;
+
+    .btn-appleStore,
+    .btn-googlePlay {
+        // Hidden text, but available for screen readers
+        text-indent: -99999px;
+        margin: 20px 8px;
+        display: inline-block;
+        width: $buttonWidth;
+        height: $buttonHeight;
+        background-size: $buttonWidth $buttonHeight;
+        background-repeat: no-repeat;
+    }
+
+    .btn-appleStore {
+        background-image: 
+          linear-gradient(transparent, transparent),
+          url('../images/badge-en-app-store.svg');
+    }
+
+    .btn-googlePlay {
+        background-image: url('../images/badge-en-google-play.png');
+    }
+}

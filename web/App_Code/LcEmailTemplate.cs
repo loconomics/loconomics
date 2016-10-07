@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.WebPages;
+using WebMatrix.WebData;
 
 /// <summary>
 /// Utilities for use when building email templates.
@@ -58,7 +59,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "feedback";
+                return LcUrl.AppUrl + "help";
             }
         }
         /// <summary>
@@ -98,7 +99,7 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "feedback";
+                return LcUrl.AppUrl + "help/categories/200431835-resources-for-service-professionals";
             }
         }
         public string viewCommunicationPreferences
@@ -413,7 +414,22 @@ public static class LcEmailTemplate
         {
             get
             {
-                return LcUrl.AppUrl + "account/password-reset";
+                return LcUrl.AppUrl + "login/reset-password";
+            }
+        }
+        /// <summary>
+        /// Internal field to set the password reset token, only preset when processing a 'reset password request' email.
+        /// </summary>
+        public string passwordResetToken;
+        /// <summary>
+        /// Link back to the 'reset password' providing the user specific 'reset token',
+        /// the page will prompts user with a password field, confirmation and 'reset' button.
+        /// </summary>
+        public string viewPasswordResetWithTokenURL
+        {
+            get
+            {
+                return LcUrl.AppUrl + "login/reset-password/confirm?token=" + Uri.EscapeDataString(passwordResetToken);
             }
         }
         /// <summary>
@@ -430,7 +446,7 @@ public static class LcEmailTemplate
                 {
                     confirmationToken = LcAuth.GetConfirmationToken(userID) ?? "";
                 }
-                return LcUrl.AppUrl + "account/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
+                return LcUrl.AppUrl + "auth/confirm/?confirmationCode=" + Uri.EscapeDataString(confirmationToken);
             }
         }
         public string viewDownloadAppURL
@@ -502,7 +518,9 @@ public static class LcEmailTemplate
 
     public static AccountEmailInfo GetAccountInfo()
     {
-        return GetAccountInfo(Request["userID"].AsInt(), Request["jobTitleID"].IsInt() ? Request["jobTitleID"].AsInt() : (int?)null);
+        var acc = GetAccountInfo(Request["userID"].AsInt(), Request["jobTitleID"].IsInt() ? Request["jobTitleID"].AsInt() : (int?)null);
+        acc.passwordResetToken = Request["passwordResetToken"];
+        return acc;
     }
 
     public static AccountEmailInfo GetAccountInfo(IDictionary<object, dynamic> PageData)

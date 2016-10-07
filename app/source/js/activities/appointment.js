@@ -27,7 +27,7 @@ var A = Activity.extend(function AppointmentActivity() {
     // later used to instantiate a new NavAction that will
     // dynamically change depending on viewModel data.
     var backActionSettings = {
-        link: 'calendar/', // Preserve last slash, for later use
+        link: this.viewModel.defaultBackToCalendarUrl,
         icon: Activity.NavAction.goBack.icon(),
         isTitle: true,
         text: 'Calendar'
@@ -41,9 +41,8 @@ var A = Activity.extend(function AppointmentActivity() {
     // NavBar must update depending on editMode state (to allow cancel and goBack)
     // and appointment date (on read-only, to go back to calendar on current date)
     ko.computed(function() {
-        var editMode = this.viewModel.editMode(),
-            isNew = this.viewModel.appointmentCardView() && this.viewModel.appointmentCardView().isNew(),
-            date = this.viewModel.currentDate();
+        var editMode = this.viewModel.editMode();
+        var isNew = this.viewModel.appointmentCardView() && this.viewModel.appointmentCardView().isNew();
 
         if (editMode) {
             // Is cancel action
@@ -68,11 +67,10 @@ var A = Activity.extend(function AppointmentActivity() {
         }
         else {
             // Is go to calendar/date action
-            var defLink = backActionSettings.link,
-                defBackText = backActionSettings.text;
+            var defBackText = backActionSettings.text;
             
-            var link = date ? defLink + date.toISOString() : defLink;
-            var text = date ? moment(date).format('dddd [(]M/D[)]') : defBackText;
+            var link = this.viewModel.backToCalendarUrl();
+            var text = this.viewModel.formattedCurrentDate() || defBackText;
             
             this.navBar.leftAction().model.updateWith($.extend({}, backActionSettings, {
                 link: link,
@@ -224,6 +222,7 @@ var CalendarEvent = require('../models/CalendarEvent'),
     Booking = require('../models/Booking');
 
 function ViewModel(app) {
+    //jshint maxstatements:30
     this.app = app;
     this.currentDate = ko.observable(new Date());
     this.currentID = ko.observable(0);
@@ -237,9 +236,32 @@ function ViewModel(app) {
         return dateAvail && dateAvail.appointmentsList() || [];            
     }, this);
     
+    this.specialAppointmentIds = Appointment.specialIds;
+    this.isNewCard = ko.pureComputed(function() {
+        var id = this.currentID();
+        return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
+    }, this);
+    
+    this.formattedCurrentDate = ko.pureComputed(function() {
+        var date = this.currentDate();
+        return date ? moment(date).format('dddd [(]M/D[)]') : '';
+    }, this);
+    
+    // Preserve last slash, for later use
+    this.defaultBackToCalendarUrl = 'calendar/';
+    this.backToCalendarUrl = ko.pureComputed(function() {
+        var date = this.currentDate();
+        return date ? this.defaultBackToCalendarUrl + date.toISOString() : this.defaultBackToCalendarUrl;
+    }, this);
+
     // To access the component API we use next observable,
     // updated by the component with its view
     this.appointmentCardView = ko.observable(null);
+    
+    this.isEditButtonVisible = ko.pureComputed(function() {
+        var a = this.appointmentCardView();
+        return this.currentID() > 0 && a && !a.isLocked() && !a.editMode();
+    }, this);
 
     var loadingAppointment = new Appointment({
         id: Appointment.specialIds.loading,

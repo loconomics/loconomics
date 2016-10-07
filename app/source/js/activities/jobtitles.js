@@ -13,7 +13,7 @@ var A = Activity.extend(function JobtitlesActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: '/scheduling' , helpLink: '/help/sections/201967086-managing-your-scheduler'
+        backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
     
     // On changing jobTitleID:
@@ -58,6 +58,24 @@ var A = Activity.extend(function JobtitlesActivity() {
                 }.bind(this));
                 
                 ////////////
+                // User Job Title
+                // Get data for the Job Title and User Profile
+                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                .then(function(job) {
+                    // Fill the job title record
+                    this.viewModel.jobTitle(job.jobTitle);
+                    this.viewModel.userJobTitle(job.userJobTitle);
+                }.bind(this))
+                .catch(function(err) {
+                    this.app.modals.showError({
+                        title: 'There was an error while loading your job title.',
+                        error: err
+                    });
+                }.bind(this));
+
+                /* NOTE: job title comes in the previous userJobProfile call, so is no need to duplicate the task
+                ////////////
                 // Job Title
                 // Get data for the Job title ID
                 this.app.model.jobTitles.getJobTitle(jobTitleID)
@@ -72,11 +90,14 @@ var A = Activity.extend(function JobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
+                */
             }
             else {
                 this.viewModel.addresses([]);
                 this.viewModel.pricing([]);
-                this.viewModel.jobTitleName('Job Title');
+                this.viewModel.jobTitle(null);
+                this.viewModel.userJobTitle(null);
+                //this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -100,12 +121,16 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967086-managing-your-scheduler';
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title'); 
-    
+    //this.jobTitleName = ko.observable('Job Title');
+    this.jobTitleName = ko.pureComputed(function() {
+        return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
+    }, this);
+
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getJobUrlTo = function(name) {
@@ -116,38 +141,6 @@ function ViewModel(app) {
                 '&returnText=' + this.jobTitleName() + ' Scheduler'
             );
         }, this);
-    };
-    
-    this.cancellationPolicyLabel = ko.pureComputed(function() {
-        var pid = this.userJobTitle() && this.userJobTitle().cancellationPolicyID();
-        // TODO fetch policy ID label
-        return pid === 3 ? 'Flexible' : pid === 2 ? 'Moderate' : 'Strict';
-    }, this);
-    
-    this.instantBooking = ko.pureComputed(function() {
-        return this.userJobTitle() && this.userJobTitle().instantBooking();
-    }, this);
-    
-    this.instantBookingLabel = ko.pureComputed(function() {
-        return this.instantBooking() ? 'ON' : 'OFF';
-    }, this);
-    
-    this.toggleInstantBooking = function() {
-        var current = this.instantBooking();
-        if (this.userJobTitle()) {
-            // Change immediately, while saving in background
-            this.userJobTitle().instantBooking(!current);
-            // Push change to server
-            var plain = this.userJobTitle().model.toPlainObject();
-            plain.instantBooking = !current;
-
-            app.model.userJobProfile.setUserJobTitle(plain)
-            .catch(function(err) {
-                app.modals.showError({ title: 'Error saving Instant Booking preference', error: err });
-                // On error, original value must be restored (so can attempt to change it again)
-                this.userJobTitle().instantBooking(current);
-            }.bind(this));
-        }
     };
     
     this.addresses = ko.observable([]);

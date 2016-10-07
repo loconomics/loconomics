@@ -13,7 +13,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201152759-managing-your-marketplace-profile'
+        backLink: '/marketplaceProfile' , helpLink: this.viewModel.helpLink
     });
 
     // On changing jobTitleID:
@@ -26,7 +26,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
             if (jobTitleID) {
                 ////////////
-                // Job Title
+                // User Job Title
                 // Get data for the Job Title and User Profile
                 this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
                 //this.app.model.jobTitles.getJobTitle(jobTitleID)
@@ -34,7 +34,6 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     // Fill the job title record
                     this.viewModel.jobTitle(job.jobTitle);
                     this.viewModel.userJobTitle(job.userJobTitle);
-                    this.viewModel.userID(job.userJobTitle.userID());
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
@@ -43,6 +42,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     });
                 }.bind(this));
                 
+                /* NOTE: job title comes in the previous userJobProfile call, so is no need to duplicate the task
                 ////////////
                 // Job Title
                 // Get data for the Job title ID
@@ -57,7 +57,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         title: 'There was an error while loading the job title.',
                         error: err
                     });
-                }.bind(this));
+                }.bind(this));*/
                 
                 ////////////
                 // Work Photos
@@ -100,7 +100,9 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                 }.bind(this));
             }
             else {
-                this.viewModel.jobTitleName('Job Title');
+                this.viewModel.jobTitle(null);
+                this.viewModel.userJobTitle(null);
+                //this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
@@ -128,13 +130,19 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
-    this.userID = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title'); 
     this.returnText = ko.observable('Back'); 
+    //this.jobTitleName = ko.observable('Job Title'); 
+    this.jobTitleName = ko.pureComputed(function() {
+        return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
+    }, this);
+    this.userID = ko.pureComputed(function() {
+        return app.model.userProfile.data.userID();
+    }, this);
     
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
@@ -148,27 +156,38 @@ function ViewModel(app) {
         }, this);
     };
     
+    var UserJobTitle = require('../models/UserJobTitle');
+    this.isToggleReady = ko.pureComputed(function() {
+        var j = this.userJobTitle();
+        return j && j.statusID() !== UserJobTitle.status.incomplete;
+    }, this);
     this.isActiveStatus = ko.pureComputed({
         read: function() {
             var j = this.userJobTitle();
-            return j && j.statusID() === 1 || false;
+            return j && j.statusID() === UserJobTitle.status.on || false;
         },
         write: function(v) {
             var status = this.userJobTitle() && this.userJobTitle().statusID();
-            if (v === true && status === 3) {
-                this.userJobTitle().statusID(1);
+            if (v === true && status === UserJobTitle.status.off) {
+                this.userJobTitle().statusID(UserJobTitle.status.on);
                 // Push change to back-end
                 app.model.userJobProfile.reactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error enabling a Job Title', error: err });
                 });
             }
-            else if (v === false && status === 1) {
-                this.userJobTitle().statusID(3);
+            else if (v === false && status === UserJobTitle.status.on) {
+                this.userJobTitle().statusID(UserJobTitle.status.off);
                 // Push change to back-end
                 app.model.userJobProfile.deactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error disabling a Job Title', error: err });
+                });
+                // Per #1001, notify user about availability of bookMeNow button even with public marketplace profile
+                // disabled/hidden
+                app.modals.showNotification({
+                    message: 'Clients will no longer be able to find you in the marketplace. However, any "book me now" links you have posted will still be active.',
+                    buttonText: 'Got it!'
                 });
             }
         },
@@ -176,7 +195,16 @@ function ViewModel(app) {
     });
     
     this.statusLabel = ko.pureComputed(function() {
-        return this.isActiveStatus() ? 'ON' : 'OFF';
+        var statusID = this.userJobTitle() && this.userJobTitle().statusID();
+        switch (statusID) {
+            case UserJobTitle.status.on:
+                return 'ON';
+            case UserJobTitle.status.off:
+                return 'OFF';
+            //case UserJobTitle.status.incomplete:
+            default:
+                return 'INCOMPLETE (There are steps left to activate)';
+        }
     }, this);
 
     /// Related models information

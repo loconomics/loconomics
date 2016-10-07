@@ -8,7 +8,12 @@ module.exports = {
         // in the src paths, but the directory root name is not included in the zip as
         // expected. (In other grunt tasks is different, like copy-to)
         src: [
-            'phonegap/www/**/*.*',
+            'phonegap/www/*.*',
+            'phonegap/www/res/**/*.*',
+            'phonegap/www/assets/js/{app,libs,styleguidelibs}.min.js',
+            'phonegap/www/assets/css/{app,libs}.min.css',
+            'phonegap/www/assets/images/**/*.*',
+            'phonegap/www/assets/fonts/**/*.*',
             'phonegap/hooks/*.*',
             'phonegap/.cordova/*.*',
             // NOTE: grunt-zip is failing here, for some ugly reason, it requires

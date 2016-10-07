@@ -67,7 +67,122 @@ exports.registerAll = function(app) {
     /// inline-side-menu
     ko.components.register('app-inline-side-menu', {
         template: { element: 'inline-side-menu-template' },
-        viewModel: { instance: app.navBarBinding }
+        viewModel: function(params) { //{ instance: app.navBarBinding }
+            // create a viewModel that extends from the live instance of navBarBinding
+            var vm = this;
+            Object.keys(app.navBarBinding).forEach(function(prop) {
+                vm[prop] = app.navBarBinding[prop];
+            });
+
+            // Additional specific properties
+            vm.vocElement = getObservable(params.vocElement || 'general');
+            vm.feedbackLink = ko.pureComputed(function() {
+                return 'feedbackForm/' + this.vocElement();
+            }, vm);
+            vm.contactLink = ko.pureComputed(function() {
+                return 'contactForm/' + this.vocElement();
+            }, vm);
+            
+            // FAQs
+            vm.helpLink = getObservable(params.helpLink || '');
+            // List or objects { link: link, label: 'Index' }
+            vm.items = ko.observableArray();
+            var category2Item = function(a) {
+                return {
+                    label: a && a.name(),
+                    link: a && a.urlPath()
+                };
+            };
+            var section2Item = category2Item;
+            var article2Item = function(a) {
+                return {
+                    label: a && a.title(),
+                    link: a && a.urlPath()
+                };
+            };
+            var idFromLink = function(link) {
+                var result = /\/(\d+)/i.exec(link);
+                return result && result[1] |0;
+            };
+            var types = {
+                categories: function(link) {
+                    var id = idFromLink(link);
+                    if (id) {
+                        // By ID
+                        //return app.model.help.getCategory(id).then(category2Item);
+                        return app.model.help.getSectionsByCategory(id).then(function(d) {
+                            return d.map(section2Item);
+                        });
+                    }
+                    else {
+                        // All categories
+                        return app.model.help.getCategories().then(function(d) {
+                            return d.map(category2Item);
+                        });
+                    }
+                },
+                sections: function(link) {
+                    var id = idFromLink(link);
+                    if (id) {
+                        // By ID
+                        //return app.model.help.getSection(id).then(section2Item);
+                        return app.model.help.getArticlesBySection(id).then(function(d) {
+                            return d.map(article2Item);
+                        });
+                    }
+                    else {
+                        // All categories
+                        return app.model.help.getSections().then(function(d) {
+                            return d.map(section2Item);
+                        });
+                    }
+                },
+                articles: function(link) {
+                    var id = idFromLink(link);
+                    if (id) {
+                        // By ID
+                        return app.model.help.getArticle(id).then(article2Item);
+                    }
+                    else {
+                        // All categories
+                        return app.model.help.getArticles().then(function(d) {
+                            return d.map(article2Item);
+                        });
+                    }
+                }
+            };
+            // There is an especial view at 'help' activity for 'relatedArticles' type, but
+            // internally loads the same data as 'sections' and the provided ID is a sectionID
+            // so just make an alias to recognize the links
+            types.relatedArticles = types.sections;
+
+            ko.computed(function() {
+                var link = this.helpLink();
+                if (link) {
+                    var type;
+                    Object.keys(types).some(function(t) {
+                        if (link.indexOf(t) > -1) {
+                            type = t;
+                            return true;
+                        }
+                    });
+                    if (type) {
+                        types[type](link).then(function(list) {
+                            // Supports null/undefined, single items and lists at 'list'
+                            vm.items(list ? Array.isArray(list) ? list : [list] : []);
+                        });
+                    }
+                    else {
+                        // Not recognized link
+                        console.warn('Help Link not recognized', link);
+                        vm.items([]);
+                        return;
+                    }
+                } else {
+                    vm.items([]);
+                }
+            }, vm);
+        }
     });
     
     /// feedback-entry
@@ -282,6 +397,45 @@ exports.registerAll = function(app) {
                     //$(window).on('layoutUpdate', refresh);
                 });
                 return v;
+            }
+        }
+    });
+    
+    // Onboarding
+    var OnboardingProgressMarkVM = require('./viewmodels/OnboardingProgressMarkVM');
+    ko.components.register('app-onboarding-progress-mark', {
+        template: { element: 'onboarding-progress-mark-template' },
+        viewModel: { createViewModel: function() { return new OnboardingProgressMarkVM(app); } }
+    });
+    var OnboardingProgressBarVM = require('./viewmodels/OnboardingProgressBarVM');
+    ko.components.register('app-onboarding-progress-bar', {
+        template: { element: 'onboarding-progress-bar-template' },
+        viewModel: { createViewModel: function() { return new OnboardingProgressBarVM(app); } }
+    });
+    
+    /// search components
+    var SearchJobTitlesVM = require('./viewmodels/SearchJobTitlesVM');
+    ko.components.register('app-search-job-titles', {
+        template: { element: 'search-job-titles-template' },
+        // TODO Try with synchronous option to enable use of this component ( now used viewmodel and template directly)
+        //synchronous: true,
+        // TODO Implement geolocate code of learnMoreProfessionals as part of the component
+        viewModel: {
+            createViewModel: function(params/*, componentInfo*/) {
+                var view = new SearchJobTitlesVM(app);
+                if (params && params.api)
+                    params.api(view);
+
+                if (params)
+                    Object.keys(params).forEach(function(key) {
+                        if (ko.isObservable(view[key])) {
+                            view[key](ko.unwrap(params[key]));
+                            if (ko.isObservable(params[key]))
+                                view[key].subscribe(params[key]);
+                        }
+                    });
+                
+                return view;
             }
         }
     });

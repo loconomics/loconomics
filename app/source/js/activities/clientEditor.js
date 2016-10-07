@@ -14,19 +14,23 @@ var A = Activity.extend(function ClientEditionActivity() {
     
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'clients' , helpLink: '/help/sections/201966046-adding-new-clients'
+        backLink: 'clients' , helpLink: this.viewModel.helpLink
     });
     
-    // If there is a change on the clientID, the updates must match
-    // that (if is not already that)
+    // If there is a change on the clientID, the URL must match
+    // that (if is not already that).
+    // NOTE: Except for call from another activity with returning, to avoid bug trying to do a goBack
     this.registerHandler({
         target: this.viewModel.clientID,
         handler: function (clientID) {
             if (!clientID)
                 return;
 
-            var found = /clientEditor\/(\-?\d+)/i.exec(window.location),
-                urlID = found && found[1] |0;
+            var nope = this.requestData.returnNewAsSelected === true;
+            if (nope) return;
+
+            var found = /clientEditor\/(\-?\d+)/i.exec(window.location);
+            var urlID = found && found[1] |0;
 
             // If is different URL and current ID
             if (!found ||
@@ -178,6 +182,7 @@ function clientDataFromSearchText(txt, client) {
 
 function ViewModel(app) {
     /*jshint maxstatements:80 */
+    this.helpLink = '/help/relatedArticles/201152639-managing-clients';
     
     this.clientID = ko.observable(0);
     

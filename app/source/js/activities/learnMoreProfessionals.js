@@ -4,14 +4,11 @@
 **/
 'use strict';
 var $ = require('jquery');
-
-var 
-    SearchResults = require('../models/SearchResults'),
-    ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    SignupVM = require('../viewmodels/Signup'),
-    snapPoints = require('../utils/snapPoints');
-
+var ko = require('knockout');
+var Activity = require('../components/Activity');
+var SignupVM = require('../viewmodels/Signup');
+var snapPoints = require('../utils/snapPoints');
+var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 
@@ -45,7 +42,8 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         target: this.viewModel.signup,
         event: 'signedup',
         handler: function() {
-            this.app.goDashboard();
+            var url = '/addJobTitles' + this.viewModel.onboardingUrlParamsString();
+            this.app.shell.go(url);
         }.bind(this)
     });
 
@@ -64,8 +62,8 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
     // LOCATION AUTOCOMPLETE:
     // Load Google Maps API with Places and prepare the location autocomplete
     var $location = this.$activity.find('[name=location]');
-    var vm = this.viewModel;
     googleMapReady(function(/*UNCOMMENT FOR USE THE 'WITHOUT PLUGIN' CODE:*//*google*/) {
+        var vm = this.viewModel.search();
         var options = {
             types: ['geocode'],
             bounds: null,
@@ -105,21 +103,14 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
                 }
             }
         );*/
-    });
+    }.bind(this));
 });
 
 exports.init = A.init;
 
-var DEFAULT_LOCATION = {
-    lat: '37.788479',
-    lng: '-122.40297199999998',
-    searchDistance: 30,
-    city: 'San Francisco, CA USA'
-};
-
 A.prototype._registerSnapPoints = function() {
 
-    var $searchBox = this.$activity.find('#homeSearch'),
+    var $searchBox = this.$activity.find('[name=s]'),
         // Calculate the position where search box is completely hidden, and get 1 on the worse case -- bad value coerced to 0,
         // negative result because some lack of data (content hidden)
         searchPoint = Math.max(1, (
@@ -146,13 +137,10 @@ A.prototype.show = function show(state) {
         this._registerSnapPoints();
         this._notFirstShow = true;
     }
+    this.viewModel.search().searchTerm('');
 };
 
-
 function ViewModel(app) {
-    this.isLoading = ko.observable(false);
-    //create an observable variable to hold the search term
-    this.searchTerm = ko.observable();
     this.isServiceProfessional = ko.pureComputed(function() {
         var u = app.model.user();
         return u && u.isServiceProfessional();
@@ -164,55 +152,40 @@ function ViewModel(app) {
     //Signup
     this.signup = new SignupVM(app); 
     this.signup.profile('service-professional');
-    // Coordinates
-    this.lat = ko.observable(DEFAULT_LOCATION.lat);
-    this.lng = ko.observable(DEFAULT_LOCATION.lng);
-    this.city = ko.observable();
-    this.searchDistance = ko.observable(DEFAULT_LOCATION.searchDistance);
-    //create an object named SearchResults to hold the search results returned from the API
-    this.searchResults = new SearchResults();
-    this.loadData = function(searchTerm, lat, lng) {
-        this.isLoading(true);
-        //Call the get rest API method for api/v1/en-US/search
-        return app.model.rest.get('search', {
-            searchTerm: searchTerm, 
-            origLat: lat || DEFAULT_LOCATION.lat,
-            origLong: lng || DEFAULT_LOCATION.lng,
-            searchDistance: DEFAULT_LOCATION.searchDistance
-        })
-        .then(function(searchResults) {
-            if(searchResults){
-                //update searchResults object with all the data from the API
-                this.searchResults.model.updateWith(searchResults, true);
-            }
-            else {
-                this.searchResults.model.reset();
-            }
-            this.isLoading(false);
-        }.bind(this))
-        .catch(function(/*err*/) {
-            this.isLoading(false);
-        }.bind(this));
-    };
-    //creates a handler function for the html search button (event)
-    this.search = function() {
-        //creates a variable for the search term to check to see when a user enters more than 2 characters, we'll auto-load the data. 
-        var s = this.searchTerm();
-        if(s && s.length > 2) {
-            this.loadData(s, this.lat(), this.lng());
-        }
-        else{
-            this.searchResults.model.reset();
-        }
-    };
-    //anything that happens in the computed function after a timeout of 60 seconds, run the code
-    ko.computed(function(){
-        this.search();
-    //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
-    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 1000 } });
     
-    this.isInput = ko.pureComputed(function() {
-        var s = this.searchTerm();
-        return s && s.length > 2;
-    }, this);
+    this.onboardingUrlParamsString = ko.observable();
+    // API entry-point for search component
+    this.search = ko.observable(new SearchJobTitlesVM(app));
+    this.search().onClickJobTitle = function(jobTitle, e) {
+        // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
+        // For logged users, assist them to add the job title:
+        if (!app.model.userProfile.data.isAnonymous()) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var url = 'addJobTitles?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
+            app.shell.go(url);
+        }
+        else {
+            // After sign-up, the parameters must be provided to the onboarding
+            this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID()));
+        }
+    }.bind(this);
+    this.search().onClickNoJobTitle = function(jobTitleName, e) {
+        // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
+        // For logged users, assist them to add the job title:
+        if (!app.model.userProfile.data.isAnonymous()) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            // Go to addJobTitles
+            var url = 'addJobTitles?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
+            app.shell.go(url);
+        }
+        else {
+            // After sign-up, the parameters must be provided to the onboarding
+            this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true');
+        }
+    };
+    this.search().jobTitleHref('#learnMoreProfessionals-signup');
+    this.search().noJobTitleHref('#learnMoreProfessionals-signup');
 }

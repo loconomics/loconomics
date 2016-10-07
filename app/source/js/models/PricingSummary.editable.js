@@ -71,9 +71,18 @@ PricingSummary.editable = function(obj) {
             p = +this.firstTimeServiceFeePercentage(),
             min = +this.firstTimeServiceFeeMinimum(),
             max = +this.firstTimeServiceFeeMaximum();
-        var a = Math.round((f + ((p / 100) * t)) * 100) / 100;
-        var r = Math.min(Math.max(a, min), max);
-        this.clientServiceFeePrice(r);
+
+        // Per decission at #1005, if subtotal (professional services) is 0 (only free services chosen by client),
+        // we do NOT charge a first time fee even if the kind of booking had required that; but just for tracking information, we keep
+        // the preset fee information (firsttimeService** fields), only setting to 0 the computed value.
+        if (t === 0) {
+            this.clientServiceFeePrice(0);
+        }
+        else {
+            var a = Math.round((f + ((p / 100) * t)) * 100) / 100;
+            var r = Math.min(Math.max(a, min), max);
+            this.clientServiceFeePrice(r);
+        }
     }, pricingSummary);
 
     //this.totalPrice = ko.pureComputed(function() {

@@ -249,11 +249,21 @@ namespace LcRest
                 return null;
             }
 
-            // Payment is required for client bookings, but avoided on bookNow bookings. That's excludes service professional bookings too
-            // TODO Per #590, a new check by job-title and bookNow preference may be required, allowing
-            // optionally enabling payment through bookNow.
+            // Payment is required for client bookings, and based on preference for bookNow bookings.
+            // That's excludes service professional bookings too from require payment (is not a client booking).
+            // IMPORTANT: After bug found at #1002, paymentEnabled can be changed to false later if the pricing/services attached sum zero,
+            // so nothing need to be charged, no payment to be collected.
             booking.paymentEnabled = false;
-            if (!isServiceProfessionalBooking && booking.bookingTypeID != (int)LcEnum.BookingType.bookNowBooking)
+            if (booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking)
+            {
+                booking.paymentEnabled = GetCollectPaymentAtBookMeButtonPreference(jobTitleID);
+                if (booking.paymentEnabled && !IsMarketplacePaymentAccountActive(serviceProfessionalID))
+                {
+                    // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
+                    return null;
+                }
+            }
+            else if (!isServiceProfessionalBooking)
             {
                 booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
                 if (!booking.paymentEnabled)
@@ -328,6 +338,15 @@ namespace LcRest
                 return (bool)db.QueryValue(@"
                     SELECT dbo.isMarketplacePaymentAccountActive(@0)
                 ", serviceProfessionalID);
+            }
+        }
+        private static bool GetCollectPaymentAtBookMeButtonPreference(int jobTitleID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(@"
+                    SELECT collectPaymentAtBookMeButton FROM userprofilepositions WHERE PositionID = @0
+                ", jobTitleID);
             }
         }
         private static bool IsValidBookCode(int serviceProfessionalID, string bookCode)
@@ -847,7 +866,8 @@ namespace LcRest
                 throw new Exception("BookingTypeID must be set before calling FillUserJobTitle");
 
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
-            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking);
+            var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
+            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking);
         }
 
         /// <summary>
@@ -1063,15 +1083,31 @@ namespace LcRest
             DECLARE @d2 int
             DECLARE @d3 int
             DECLARE @ps int
+            DECLARE @cid int
+            DECLARE @pid int
 
             -- Get Service Address ID to be (maybe) removed later
             SELECT  @ServiceAddressID = ServiceAddressID,
                     @d1 = ServiceDateID ,
                     @d2 = AlternativeDate1ID,
                     @d3 = AlternativeDate2ID,
-                    @ps = PricingSummaryID
+                    @ps = PricingSummaryID,
+                    @cid = ClientUserID,
+                    @pid = ServiceProfessionalUserID
             FROM    Booking
             WHERE   BookingID = @0
+
+            IF EXISTS (SELECT * FROM ServiceProfessionalClient WHERE CreatedByBookingID = @0)
+            BEGIN
+                -- NOTE: same check than at ServiceProfessionalClient.Delete
+                -- Allow If there is no bookings (discarding Denied:4 and Expired:5)
+                IF NOT EXISTS (SELECT * FROM Booking WHERE serviceProfessionalUserID = @pid AND clientUserID = @cid AND BookingStatusID NOT IN (4, 5))
+                    DELETE FROM ServiceProfessionalClient
+                    WHERE CreatedByBookingID = @0
+                ELSE
+					-- Just remove the bookingID to avoid constraint error
+					UPDATE ServiceProfessionalClient SET CreatedByBookingID = null WHERE CreatedByBookingID = @0
+			END
 
             DELETE FROM Booking
             WHERE BookingID = @0
@@ -1448,7 +1484,6 @@ namespace LcRest
             pricingSummary.pricingSummaryRevision = pricingSummaryRevision;
 
             var jobTitleID = pricingSummary.SetDetailServices(serviceProfessionalUserID, services);
-
             pricingSummary.CalculateDetails();
             pricingSummary.CalculateFees();
 
@@ -2029,7 +2064,7 @@ namespace LcRest
         /// </summary>
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="clientUserID"></param>
-        /// <param name="serviceAddressID"></param>
+        /// <param name="serviceAddress"></param>
         /// <param name="startTime"></param>
         /// <param name="services"></param>
         /// <param name="preNotesToClient"></param>
@@ -2044,7 +2079,7 @@ namespace LcRest
             int clientUserID,
             int serviceProfessionalUserID,
             int jobTitleID,
-            int serviceAddressID,
+            Address serviceAddress,
             DateTime startTime,
             IEnumerable<int> services,
             string preNotesToClient,
@@ -2092,7 +2127,7 @@ namespace LcRest
                 db.Execute("BEGIN TRANSACTION");
 
                 // Create event
-                var serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
+                booking.serviceDateID = (int)db.QueryValue(LcCalendar.sqlInsBookingEvent,
                     serviceProfessionalUserID,
                     LcEnum.CalendarAvailabilityType.busy,
                     eventSummary, // summary
@@ -2109,10 +2144,11 @@ namespace LcRest
                 booking.pricingSummaryID = booking.pricingSummary.pricingSummaryID;
                 booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
-                // 4º: persisting booking on database
+                // 4º: Validate addressID or save the new one provided
+                ProcessAddressForServiceProfessionalBooking(serviceAddress, booking, db);
+
+                // 5º: persisting booking on database
                 booking.bookingStatusID = (int)LcEnum.BookingStatus.confirmed;
-                booking.serviceAddressID = serviceAddressID;
-                booking.serviceDateID = serviceDateID;
                 booking.preNotesToClient = preNotesToClient;
                 booking.preNotesToSelf = preNotesToSelf;
                 Booking.Set(booking, serviceProfessionalUserID, db.Db);
@@ -2153,7 +2189,7 @@ namespace LcRest
         public static bool UpdServiceProfessionalBooking(
             int bookingID,
             int serviceProfessionalUserID,
-            int serviceAddressID,
+            Address serviceAddress,
             DateTime startTime,
             IEnumerable<int> services,
             string preNotesToClient,
@@ -2165,7 +2201,7 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 // 0: previous data and checks
-                var booking = LcRest.Booking.Get(bookingID, false, false, serviceProfessionalUserID);
+                var booking = LcRest.Booking.Get(bookingID, false, true, serviceProfessionalUserID);
                 if (booking == null || booking.serviceProfessionalUserID != serviceProfessionalUserID)
                     return false;
 
@@ -2236,8 +2272,10 @@ namespace LcRest
                     booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
                 }
 
-                // 4º: persisting booking on database
-                booking.serviceAddressID = serviceAddressID;
+                // 4º: Validate addressID or save the new one provided
+                ProcessAddressForServiceProfessionalBooking(serviceAddress, booking, db);
+
+                // 5º: persisting booking on database
                 booking.preNotesToClient = preNotesToClient;
                 booking.preNotesToSelf = preNotesToSelf;
                 booking.postNotesToClient = postNotesToClient;
@@ -2261,6 +2299,62 @@ namespace LcRest
                 LcMessaging.SendBooking.For(booking.bookingID).BookingUpdatedByServiceProfessional();
 
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// Internal utility, means to use only at the 'insert/update serviceProfessional booking'.
+        /// It checks if a address needs to be created for the booking, and setting it's id in place, or use the
+        /// addressID, validating the owner user for the booking, sanitizing any value (the address can be prepopulated from
+        /// form).
+        /// Must be executed after proper booking initialization/load.
+        /// Throws ConstraintException if ownership of the addressID fails for the booking.
+        /// </summary>
+        /// <param name="serviceAddress"></param>
+        /// <param name="booking"></param>
+        /// <param name="db"></param>
+        private static void ProcessAddressForServiceProfessionalBooking(Address serviceAddress, Booking booking, LcDatabase db)
+        {
+            if (!serviceAddress.IsNewAddress())
+            {
+                // Validate the address is one from client or service professional
+                if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                {
+                    throw new ConstraintException("Selected location is not valid.");
+                }
+                else
+                {
+                    booking.serviceAddressID = serviceAddress.addressID;
+                }
+            }
+            else
+            {
+                // Save new address for the service (client or serviceProfessional address)
+                // Check the owner of the address or default to the professional userID
+                if (serviceAddress.userID == booking.clientUserID)
+                {
+                    // Save anonymous address on behalf the user for this service
+                    serviceAddress.addressName = "";
+                    serviceAddress.createdBy = booking.serviceProfessionalUserID;
+                    // Is a client service address, where perform a service but not related to
+                    // a job title but as customer
+                    serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                }
+                else
+                {
+                    // By default, it belongs to the professional:
+                    serviceAddress.userID = booking.serviceProfessionalUserID;
+                    // Enforce is the same job title than the booking
+                    serviceAddress.jobTitleID = booking.jobTitleID;
+                }
+                // This is ever a service address location, so enforce some values
+                // to prevent from invalid input
+                serviceAddress.kind = Address.AddressKind.Service;
+                serviceAddress.isServiceLocation = true;
+                serviceAddress.isServiceArea = false;
+                serviceAddress.serviceRadius = null;
+                // Save and get ID (passed in the connection to be in the same transaction)
+                booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
             }
         }
 
@@ -2520,6 +2614,11 @@ namespace LcRest
                     throw new ConstraintException("Chosen services does not belong to the Job Title");
                 if (booking.pricingSummary.details.Count() == 0)
                     throw new ConstraintException("Bookings require the selection of at least one service");
+                // If total price is zero, there is no payment needed even if requested by the 'NewFor' rules
+                if (booking.paymentEnabled && booking.pricingSummary.totalPrice == 0)
+                {
+                    booking.paymentEnabled = false;
+                }
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
@@ -2584,7 +2683,11 @@ namespace LcRest
                 booking.pricingSummaryRevision = booking.pricingSummary.pricingSummaryRevision;
 
                 // 4º: Validate addressID or save the new one provided
-                if (!serviceAddress.IsNewAddress())
+                if (booking.pricingSummary.isPhoneServiceOnly)
+                {
+                    booking.serviceAddressID = null;
+                }
+                else if (!serviceAddress.IsNewAddress())
                 {
                     // Validate the address is one from client or service professional
                     if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))

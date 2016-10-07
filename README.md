@@ -1,6 +1,6 @@
 # Loconomics
 
-Root folders include documentation (/docs and /styleguide*1) and sub-projects (/app, /web and the /iCalendarLib library).
+Root folders include documentation (/docs and /styleguide*1), sub-projects (/app, /web and the /iCalendarLib library) or other ressources and tools (/sysadmin, /vendor-fonts).
 
 *1: Styleguide is currently obsolete, the design is implemented in /app.
 

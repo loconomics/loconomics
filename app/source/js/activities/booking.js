@@ -17,7 +17,7 @@ var A = Activity.extend(function BookingActivity() {
     //this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new NewClientBookingCardVM(this.app);
     this.navBar = Activity.createSubsectionNavBar('Booking', {
-        helpLink: '/faqs/booking'
+        helpLink: '/help'
     });
     this.navBar.title('Booking');
     

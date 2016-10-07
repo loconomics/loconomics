@@ -177,6 +177,8 @@ function createDef(givenVal, initialVal) {
     var def,
         isModel = givenVal && givenVal.model instanceof Model,
         isArray = Array.isArray(givenVal),
+        //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
+        // Change attempt: isArray = givenVal && givenVal.isArray || Array.isArray(givenVal),
         isDate = (givenVal instanceof Date),
         isObject = typeof(givenVal) === 'object' && !isDate;
 
@@ -230,6 +232,8 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
 
         // Create the observable property
         modelObject[key] = Array.isArray(def.initialValue) ?
+        //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
+        // Change attempt: modelObject[key] = def.isArray ?
             ko.observableArray(def.initialValue) :
             ko.observable(def.initialValue);
 

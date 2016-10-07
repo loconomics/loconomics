@@ -12,8 +12,8 @@ var A = Activity.extend(function EducationActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201960833-adding-education-to-your-profile'
+    this.navBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: this.viewModel.helpLink
     });
 });
 
@@ -33,6 +33,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201960833-adding-education-to-your-profile';
 
     this.isLoading = app.model.education.state.isLoading;
     this.isSyncing = app.model.education.state.isSyncing;

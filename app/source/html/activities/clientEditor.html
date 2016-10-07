@@ -1,20 +1,19 @@
 <!-- ClientEdition activity -->
 <div data-activity="clientEditor" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">  
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/clients"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> My clients</a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span data-bind="text: header"></span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201966046-adding-new-clients" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <form class="container-fluid LightForm" role="form" data-bind="submit: save">
                     <div data-bind="css: { 'is-loading': isLoading }">
@@ -66,7 +65,7 @@
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'cms', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

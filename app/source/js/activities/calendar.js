@@ -91,17 +91,21 @@ var A = Activity.extend(function CalendarActivity() {
         .children().show();
     };
 
-    // Showing datepicker when pressing the title
-    this.registerHandler({
-        target: this.$dateTitle,
-        event: 'click',
-        handler: function(e) {
-            this.$datepicker.toggleClass('is-visible');
-            this.hideDatepicker();
-            e.preventDefault();
-            e.stopPropagation();
-        }.bind(this)
-    });
+    // Creating viewModel handlers to manage calendar
+    this.viewModel.openDatePicker = function(d, e) {
+        this.$datepicker.toggleClass('is-visible');
+        this.hideDatepicker();
+        e.preventDefault();
+        e.stopPropagation();
+    }.bind(this);
+    this.viewModel.nextDate = function(d, e) {
+        e.preventDefault();
+        this.$datepicker.datepicker('moveValue', 'next', 'date');
+    }.bind(this);
+    this.viewModel.prevDate = function(d, e) {
+        e.preventDefault();
+        this.$datepicker.datepicker('moveValue', 'prev', 'date');
+    }.bind(this);
 
     // Updating view date when picked another one
     this.registerHandler({

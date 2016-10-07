@@ -53,22 +53,6 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-
-    if (this.requestData.completedOnboarding) {
-        switch (this.requestData.completedOnboarding) {
-            case 'welcome': // Schedule complete
-                this.app.modals.showNotification({
-                    title: 'Nice work!',
-                    message: 'You\'ll now be taken to your dashboard.' +
-                        'Please try the following: ' +
-                        '1. Activate your marketplace profile ' +
-                        '2. Add a fake client using +' +
-                        '3. Add a fake booking using +',
-                    buttonText: 'Got it'
-                });
-                break;
-        }
-    }
     
     // Update data
     if (this.app.model.user().isServiceProfessional()) {

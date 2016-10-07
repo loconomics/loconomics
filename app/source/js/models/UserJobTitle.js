@@ -17,6 +17,8 @@ function UserJobTitle(values) {
         statusID: 0,
         cancellationPolicyID: 0,
         instantBooking: false,
+        bookMeButtonReady: false,
+        collectPaymentAtBookMeButton: false,
         createdDate: null,
         updatedDate: null
     }, values);

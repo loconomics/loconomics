@@ -42,6 +42,22 @@ function Address(values) {
         
         return list.filter(function(v) { return !!v; }).join(', ');
     }, this);
+
+    this.singleLineDetailed = ko.pureComputed(function() {
+        //jshint maxcomplexity:12
+        var r = this.addressLine1() || '';
+        if (r) r += ' ';
+        r += this.addressLine2() || '';
+        if (r) r += ' - ';
+        r += this.city() || '';
+        if (r) r += ' ';
+        if (this.stateProvinceCode()) {
+            r += '(' + this.stateProvinceCode() + ') ';
+        }
+        r += this.postalCode() || '';
+        r += (this.specialInstructions() ? ' (' + this.specialInstructions() + ')' : '');
+        return r;
+    }, this);
     
     this.addressLine = ko.computed(function() {
         var list = [

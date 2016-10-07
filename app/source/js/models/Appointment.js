@@ -7,6 +7,7 @@ var ko = require('knockout'),
     PricingSummaryDetail = require('./PricingSummaryDetail'),
     CalendarEvent = require('./CalendarEvent'),
     Booking = require('./Booking');
+var Address = require('./Address');
 
 function Appointment(values) {
     
@@ -35,7 +36,7 @@ function Appointment(values) {
             Model: PricingSummaryDetail,
             isArray: true
         },
-        addressID: null,
+        address: new Address(),
         preNotesToClient: null,
         postNotesToClient: null,
         preNotesToSelf: null,
@@ -167,7 +168,13 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     
     // Include booking in apt
     apt.clientUserID(booking.clientUserID());
-    apt.addressID(booking.serviceAddressID());
+    apt.address().addressID(booking.serviceAddressID());
+    if (booking.serviceAddress()) {
+        apt.address().model.updateWith(booking.serviceAddress(), true);
+    }
+    else {
+        apt.address(null);
+    }
     apt.jobTitleID(booking.jobTitleID());
     apt.pricing(booking.pricingSummary() && booking.pricingSummary().details());
     apt.preNotesToClient(booking.preNotesToClient());

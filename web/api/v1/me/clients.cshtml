@@ -174,7 +174,8 @@
         
         private LcRest.Client SetClient(int serviceProfessionalUserID, int clientUserID = 0) {
             // Validation
-            if (!IsValidClient()) {
+            var exists = clientUserID == 0 ? null : LcRest.Client.GetServiceProfessionalClient(serviceProfessionalUserID, clientUserID);
+            if (exists != null && exists.editable && !IsValidClient()) {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 

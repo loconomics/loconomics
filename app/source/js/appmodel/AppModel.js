@@ -10,7 +10,7 @@ var ko = require('knockout'),
 
 function AppModel() {
     EventEmitter.call(this);
-    this.setMaxListeners(30);
+    this.setMaxListeners(50);
 }
 
 AppModel._inherits(EventEmitter);
@@ -51,6 +51,16 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 };
                 // Load User Profile, from local with server fallback and server synchronization, silently
                 this.userProfile.load().then(resolve, resolveAnyway);
+                
+                // Google Analytics
+                if (window.ga) {
+                    if (window.cordova) {
+                        window.ga.setUserId(credentials.userID);
+                    }
+                    else {
+                        window.ga('set', 'userId', credentials.userID);
+                    }
+                }
             }
             else {
                 // End successfully. Not loggin is not an error,
@@ -148,6 +158,11 @@ AppModel.prototype.loadModules = function loadModules() {
     this.clientAppointments = require('./AppModel.clientAppointments').create(this);
     this.jobTitleLicenses = require('./AppModel.jobTitleLicenses').create(this);
     this.licenseCertification = require('./AppModel.licenseCertification').create(this);
+    this.clientAddresses = require('./AppModel.clientAddresses').create(this);
+    this.cancellationPolicies = require('./AppModel.cancellationPolicies').create(this);
+    this.help = require('./AppModel.help').create(this);
+    
+    this.emit('modulesLoaded');
 };
 
 /**

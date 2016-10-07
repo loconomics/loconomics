@@ -23,20 +23,23 @@ module.exports = function AppointmentView(appointment, app) {
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
-    appointment.address = ko.computed(function() {
-        var aid = this.addressID(),
+    ko.computed(function() {
+        var add = this.address();
+        var aid = add && add.addressID(),
             jid = this.jobTitleID();
         if (aid && jid) {
-            return app.model.serviceAddresses.getObservableItem(jid, aid, true)();
+            app.model.serviceAddresses.getItem(jid, aid).then(function(serverAddress) {
+                if (serverAddress.addressID === aid)
+                    add.model.updateWith(serverAddress, true);
+            });
         }
-        return null;
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     appointment.addressSummary = ko.computed(function() {
         var eventData = this.sourceEvent();
         var add = this.address();
-        return add && add.singleLine() || eventData && eventData.location() || '';
+        return add && add.singleLineDetailed() || eventData && eventData.location() || '';
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     

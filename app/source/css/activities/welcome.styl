@@ -2,55 +2,34 @@
     welcome
 **/
 [data-activity=welcome] {
+    .LeadContent {
+        margin: 0px auto 30px auto;
+        background: white;
+        padding: 32px;
+        color: $gray;
+        h2 {
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        @media $mediaMinSm {
+          max-width: 450px;
+          margin: 30px auto;
+          border: 1px solid #ccc;
+        } 
+    }
+    .btn {
+        padding: 22px 10px;
+        font-size: 16px;
+        font-weight: normal;
+    }
     a:not(.btn) {
         color: White;
-        text-decoration: underline;
+        text-decoration: none;
     }
     
     .splashIndex-top {
         background: $brand-primary;
     }
     
-    .LeadContent {
-        
-        h1,
-        p,
-        .btn {
-            color: White;
-        }
-    }
-    
-    .btn {
-        font-size: 16px;
-        border-radius: 2px;
-        border-bottom-color: $brand-danger;
-    }
 
-    // Common styles on Splash specific pages
-    .Splash-message {
-        background: #00989a;
-        margin: 0 auto;
-        padding: 20px 60px 30px;
-        text-align: center;
-        font-size: 1.2em;
-        color: white;
-        
-        h2 {
-            font-size: 1.6em;
-        }
-
-        p {
-            text-align: justify;
-            max-width: 360px;
-            margin: 0 auto 16px;
-        }
-
-        .btn {
-            margin: 10px auto;
-        }
-        
-        @media $mediaMaxXs {
-            padding: 20px;
-        }
-    }
 }

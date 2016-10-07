@@ -1,40 +1,43 @@
 <!-- Activity clients -->
 <div data-activity="clients" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
+<!--
                     <li>
-                        <a href="/cms"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Client manager</a>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
                     </li>
+-->
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
+                <h2 class="SectionTitle" id="clientsActivityTitle">
                     <span data-bind="text: headerText"></span>
-                    <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201152639-managing-clients" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-                    </span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 </h2>
                 <div id="clientsContent" class="container-fluid">
-                    <div class="isolated">
-                        <div class="input-group">
-                            <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
-                                <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-                                <span class="fa ion ion-ios-search"></span>
-                                <span class="sr-only">Search</span>
-                            </span>
-                            <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText">
-                            <span class="input-group-btn">
-                                <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
-                            </span>
-                        </div><!-- /input-group -->
-                    </div>
-                    <div data-bind="css: { 'is-loading': isLoading }">
-                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                    </div>
-                    <div class="isolated" data-bind="visible: clients().length === 0 && !isLoading()">
-                        You have no clients yet. Search for clients that may already be on Loconomics or add clients of your own.
+                    <div id="clientsContentMeta">
+                        <div class="isolated">
+                            <div class="input-group">
+                                <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
+                                    <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
+                                    <span class="fa ion ion-ios-search"></span>
+                                    <span class="sr-only">Search</span>
+                                </span>
+                                <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText">
+                                <span class="input-group-btn">
+                                    <a href="#" class="btn btn-secondary" data-bind="event: { click: addNew }">Add</a>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div>
+                        <div data-bind="css: { 'is-loading': isLoading }">
+                            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                        </div>
+                        <div class="isolated" data-bind="visible: !searchText() && filteredClients().length === 0 && !isLoading()">
+                            You have no clients yet. Search for clients that may already be on Loconomics or add clients of your own.
+                        </div>
                     </div>
                     <div id="clientsListView">
                         <div class="SimpleList" data-bind="foreach: groupedClients">
@@ -74,7 +77,7 @@
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu></app-inline-side-menu>
+                <app-inline-side-menu params="vocElement: 'cms', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

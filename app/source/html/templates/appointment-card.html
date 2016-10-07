@@ -1,13 +1,7 @@
 <!-- Component Template appointment-card -->
 <script type="text/html" id="appointment-card-template">
-    <h2 class="SectionTitle">
-        <span data-bind="visible: currentID() == -4">Add a new booking</span>
-        <span data-bind="visible: currentID() == -3">Add a calendar block</span>
-        <span class="pull-right hidden-xs hidden-sm"><a class="hidden-xs hidden-sm" href="https://loconomics.com/en-US/help/sections/201965996-setting-your-service-locations-areas" target="_blank">Help <i class="fa fa-fw ion-ios-help-outline"></i></a>
-        </span>
-    </h2>
     <div class="Card AppointmentCard" data-bind="css: { 'in-edit': editMode, 'is-locked': isLocked, 'is-readonly': item().readOnly }">
-        <div class="Card-title ItemTile" data-bind="visible: currentID() == -2">
+        <div class="Card-title ItemTile" data-bind="visible: currentID() == specialAppointmentIds.free">
             <i class="Tile-marker Tile-marker--fullIcon fa ion ion-ios-clock-outline" aria-hidden="true"></i>
             <div class="Tile-content">
                 <h4>You're free</h4>
@@ -22,23 +16,23 @@
                 <span class="icon fa ion ion-load-c"></span>
             </div>
         </div>
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: newAppointmentVisible()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: newAppointmentVisible()">
             <li>
-                <a class="LinkTile" href="#appointment/-4"
-                   data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-4' }">
+                <a class="LinkTile"
+                   data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newBooking }">
                     <div class="Tile-content"><p>Add a new booking</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
                 </a>
             </li>
             <li>
-                <a class="LinkTile" href="#appointment/-3"
-                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/-3' }">
+                <a class="LinkTile"
+                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newEvent }">
                     <div class="Tile-content"><p>Add a new calendar block</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
                 </a>
             </li>
             <li data-bind="visible: editScheduleVisible">
-                <a class="LinkTile" href="#!/weeklySchedule?mustReturn=1">
+                <a class="LinkTile" href="#!/schedulingPreferences?mustReturn=1">
                     <div class="Tile-content"><p>Adjust availability</p></div>
                     <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-settings"></span></div>
                 </a>
@@ -46,39 +40,35 @@
         </ul>
 
         <div class="Card-title" data-bind="visible: currentID() > 0, css: headerClass">
-            <button type="button" class="LinkTile" data-bind="click: !isBookingRequest() && currentID() > 0 && !editMode() && edit, disable: item().readOnly">
+            <div class="LinkTile LinkTile-CardHeader">
                 <div class="Tile-content">
                     <div><small data-bind="text: editMode() ? 'Tap any section to edit' : item().stateHeader()"></small></div>
                     <div><strong data-bind="text: item().summary()"></strong></div>
                 </div>
-                <div class="Tile-icon" data-bind="visible: !isBookingRequest()">
-                    <i class="fa ion ion-edit" aria-hidden="true"></i>
-                </div>
-            </button>
+            </div>
         </div>
         
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: isEvent()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: isEvent()">
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && pickDateTime">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <i class="fa ion ion-ios-clock-outline"></i>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && pickDateTime">
+                    <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().startTime()"><strong>Start date/time: </strong><br><span data-bind="text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span></div>
-                        <p data-bind="visible: editMode() && !item().startTime()" class="text-mute">Select start date/time</p>
+                        <strong data-bind="visible: item().startTime()">Start date/time: </strong>
+                        <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></div>
+                        <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select start date/time</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && pickEndDateTime">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-clock-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && pickEndDateTime">
+                    <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
-                        <div data-bind="visible: item().endTime()"><strong>End date/time: </strong><br><span data-bind="text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span> 
-                        </div>
-                        <p data-bind="visible: editMode() && !item().endTime()" class="text-mute">Select end date/time</p>
+                        <strong data-bind="visible: item().endTime()">End date/time: </strong>
+                        <div data-bind="visible: item().endTime(), text: item().endTime(), format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></div>
+                        <p data-bind="visible: editMode() && !item().endTime()" class="text-muted">Select end date/time</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <!--<li>
@@ -91,51 +81,47 @@
                 </span>
             </li>-->
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'summary')">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-compose-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && editTextField.bind(this, 'summary')">
+                    <i class="Tile-marker fa ion ion-ios-compose-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().summary(), text: item().summary"></p>
                         <p data-bind="visible: !item().summary()" class="text-mute">What? (vacation, dentist, etc.)</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && pickLocation">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-location-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && pickLocation">
+                    <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().addressSummary(), text: item().addressSummary"></p>
                         <p data-bind="visible: editMode() && !item().addressSummary()" class="text-mute">Select/Add location</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'description')">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-compose-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && editTextField.bind(this, 'description')">
+                    <i class="Tile-marker fa ion ion-ios-compose-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().description, text: item().description"></p>
                         <p data-bind="visible: !item().description()" class="text-mute">Description/Notes</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
         </ul>
         
-        <ul class="TilesList TilesList--opendEnd" data-bind="visible: isBooking()">
+        <ul class="TilesList TilesList--openEnd" data-bind="visible: isBooking()">
             <li data-bind="visible: !isBookingRequest()">
-                <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-clock-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: !isBookingRequest() && editMode() && pickDateTime">
+                    <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'dddd, MMM Do' }"></div>
                         <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
                         <p data-bind="visible: editMode() && !item().startTime()" class="text-muted">Select date/time</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: !isBookingRequest() && editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li data-bind="visible: isBookingRequest()">
@@ -149,90 +135,82 @@
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && isNew() && pickClient">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-android-contact"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && isNew() && pickClient">
+                    <i class="Tile-marker fa ion ion-android-contact" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().client() && item().client().fullName(), text: item().client() && item().client().fullName()"></p>
                         <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().client()" class="text-muted">Select/Add client</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode() && isNew()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && pickService">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-pricetags-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: canChangePricing() && editMode() && pickService">
+                    <i class="Tile-marker fa ion ion-ios-pricetags-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().servicesSummary(), text: item().servicesSummary()"></p>
                         <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().servicesSummary()" class="text-muted">Select/Add service(s)</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: canChangePricing() && editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: canChangePricing() && editMode() && changePrice">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-social-usd"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: canChangePricing() && editMode() && changePrice">
+                    <i class="Tile-marker fa ion ion-social-usd" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="text: item().price, format: { type: 'number', format: '$0,0.00' }"></p>
                     </div>
+                    <!-- TODO Edition Not implemented<div class="Tile-icon" data-bind="visible: canChangePricing() && editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>-->
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: !isBookingRequest() && editMode() && pickLocation">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-ios-location-outline"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: !isBookingRequest() && editMode() && pickLocation">
+                    <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().addressSummary, text: item().addressSummary"></p>
                         <p data-bind="visible: isServiceProfessionalBooking() && editMode() && !item().addressSummary()" class="text-muted">Select/Add location</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: !isBookingRequest() && editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToClient')">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-compose"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToClient')">
+                    <i class="Tile-marker fa ion ion-compose" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().preNotesToClient(), text: item().preNotesToClient"></p>
                         <p data-bind="visible: !item().preNotesToClient()" class="text-muted">Notes to client</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li>
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToSelf')">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-compose"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && editTextField.bind(this, 'preNotesToSelf')">
+                    <i class="Tile-marker fa ion ion-compose" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().preNotesToSelf, text: item().preNotesToSelf"></p>
                         <p data-bind="visible: !item().preNotesToSelf()" class="text-muted">Notes to self</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToClient')">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-compose"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToClient')">
+                    <i class="Tile-marker fa ion ion-compose" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().postNotesToClient(), text: item().postNotesToClient"></p>
                         <p data-bind="visible: !item().postNotesToClient()" class="text-muted">Post app't notes to client</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
             <li data-bind="visible: !isBookingRequest() && !isNew() && item().itStarted()">
-                <button type="button" class="InfoTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToSelf')">
-                    <div class="Tile-icon" aria-hidden="true">
-                        <span class="fa ion ion-compose"></span>
-                    </div>
+                <button type="button" class="ItemTile" data-bind="click: editMode() && editTextField.bind(this, 'postNotesToSelf')">
+                    <i class="Tile-marker fa ion ion-compose" aria-hidden="true"></i>
                     <div class="Tile-content">
                         <p data-bind="visible: item().postNotesToSelf, text: item().postNotesToSelf"></p>
                         <p data-bind="visible: !item().postNotesToSelf()" class="text-muted">Booking summary (seen only by you)</p>
                     </div>
+                    <div class="Tile-icon" data-bind="visible: editMode()"><span class="fa ion ion-edit" aria-hidden="true"></span></div>
                 </button>
             </li>
         </ul>
@@ -240,12 +218,12 @@
         <div class="AppointmentCard-actions" data-bind="visible: !isBookingRequest() && editMode()">
             <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: save }, text: submitText, disable: isLocked">Save changes</button>
             <!--<button type="button" class="btn btn-danger btn-block" data-bind="event: { click: remove }, disable: isLocked">Cancel booking</button>-->
-            <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: isEvent() && currentID() > 0, click: deleteEvent, disable: isLocked">Delete</button>
             <button type="button" class="btn btn-danger btn-block" data-bind="visible: bookingCanBeCancelledByServiceProfessional(), click: confirmCancelBookingByServiceProfessional, disable: isLocked">Cancel the booking</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="visible: currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
         </div>
 
-        <ul class="TilesList TilesList--opendEnd" data-bind="if: isBookingRequest()">
+        <ul class="TilesList TilesList--openEnd" data-bind="if: isBookingRequest()">
             <li class="LineTile LineTile--title">
                 Confirm a time or decline request
             </li>
@@ -259,7 +237,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('preferred'), 'ion-ios-circle-outline': !observerSelected('preferred')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
             <li data-bind="if: item().sourceBooking().alternativeDate1()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative1'), css: { active: observerSelected('alternative1') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                 <div class="Tile-content">
@@ -270,7 +248,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('alternative1'), 'ion-ios-circle-outline': !observerSelected('alternative1')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
             <li data-bind="if: item().sourceBooking().alternativeDate2()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative2'), css: { active: observerSelected('alternative2') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
                 <div class="Tile-content">
@@ -281,7 +259,7 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('alternative2'), 'ion-ios-circle-outline': !observerSelected('alternative2')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
             <li><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'deny'), css: { active: observerSelected('deny') }">
                 <i class="Tile-marker fa fa-ban" aria-hidden="true"></i>
                 <div class="Tile-content">
@@ -291,10 +269,11 @@
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
                           data-bind="css: { 'ion-ios-circle-filled': observerSelected('deny'), 'ion-ios-circle-outline': !observerSelected('deny')() }"></span>
                 </div>
-            </a></li>
+            </button></li>
         </ul>
         <div class="AppointmentCard-actions" data-bind="visible: isBookingRequest()">
             <button type="button" class="btn btn-danger btn-block" data-bind="click: performSelectedBookingRequestAnswer, disable: isLocked">Confirm</button>
+            <button type="button" class="btn btn-default btn-block" data-bind="visible: editMode() && currentID() > 0, click: confirmCancel, disable: isLocked">Don't save changes</button>
         </div>
     </div>
 </script>

@@ -15,7 +15,7 @@ var A = Activity.extend(function CalendarSyncingActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling' , helpLink: '/help/sections/201959953-syncing-your-existing-calendar'
+        backLink: 'scheduling' , helpLink: this.viewModel.helpLink
     });
     
     // Adding auto-select behavior to the export URL
@@ -52,6 +52,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201959953-syncing-your-existing-calendar';
 
     var calendarSyncing = app.model.calendarSyncing;
 

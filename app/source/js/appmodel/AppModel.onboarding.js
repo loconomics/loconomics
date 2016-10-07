@@ -60,10 +60,18 @@ exports.create = function create(appModel) {
 //                api.goPrevious();
 //                return false;
 //            });
+            
+            // On 2016-09-16 #760, changed decission from use a 'log out' action and progress
+            // info as title to new design:
             // to use the Log-out action
-            navBar.leftAction(NavAction.goLogout);
-
-            navBar.title(this.progressText());            
+            //#575
+//            navBar.leftAction(NavAction.goLogout);
+//            navBar.title(this.progressText());
+            
+            
+            //#760: Menu on left and fixed message on title
+            navBar.leftAction(NavAction.menuIn);
+            navBar.title('Get Started');
         }
         return yep;
     };
@@ -77,7 +85,7 @@ exports.create = function create(appModel) {
             // It ended!!
             this.stepNumber(-1);
             appModel.userProfile.saveOnboardingStep(null);
-            this.app.shell.go('/', { completedOnboarding: api.group() });
+            this.app.shell.go('/onboardingSuccess', { completedOnboarding: api.group() });
         }
         else {
             // Get next step
@@ -102,6 +110,34 @@ exports.create = function create(appModel) {
 
         appModel.userProfile.saveOnboardingStep(this.stepReference());
         this.app.shell.go(this.stepUrl());
+    };
+    
+    /**
+        Check if onboarding is enabled on the user profile
+        and redirects to the current step, or do nothing.
+        IMPORTANT: Exception: if the page is loading coming from itself,
+        like from a target=_blank link, does not redirect to
+        avoid to break the proposal of the link (like a help or FAQ link
+        on onboarding)
+    **/
+    api.goIfEnabled = function() {
+        var step = api.app.model.user().onboardingStep();
+        var r = window.document.referrer;
+        // We check that there is a referrer (so comes from a link) and it shares the origin
+        // (be aware that referrer includes origin+pathname, we just look for same origin).
+        var fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
+        if (!fromItSelf &&
+            step && 
+            api.setStep(step)) {
+            // Go to the step URL if we are NOT already there, by checking name to
+            // not overwrite additional details, like a jobTitleID at the URL
+            if (api.app.shell.currentRoute.name !== api.stepName()) {
+                var url = api.stepUrl();
+                api.app.shell.go(url);
+            }
+            return true;
+        }
+        return false;
     };
     
     return api;

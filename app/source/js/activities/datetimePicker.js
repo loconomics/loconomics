@@ -16,6 +16,8 @@ var A = Activity.extend(function DatetimePickerActivity() {
     this.viewModel = new ViewModel();    
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('');
+    // Make navBar available at viewModel, needed for dekstop navigation
+    this.viewModel.navBar = this.navBar;
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
 
@@ -76,7 +78,7 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
     
     // Parameters: pass a required duration
-    this.viewModel.component().requiredDurationMinutes(this.requestData.requiredDuration |0);
+    this.viewModel.component().requiredDurationMinutes(this.requestData.requiredDuration |0 || 15);
     this.viewModel.component().includeEndTime(!!this.requestData.includeEndTime);
 
     // Preselect userID and a date, or current date

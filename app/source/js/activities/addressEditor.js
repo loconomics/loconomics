@@ -14,9 +14,10 @@
     for model.serviceAdddresses for example.
 **/
 'use strict';
-var ko = require('knockout'),
-    Address = require('../models/Address'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Address = require('../models/Address');
+var Activity = require('../components/Activity');
+var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -25,57 +26,14 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Locations', {
-        backLink: '/scheduling' , helpLink: '/help/sections/201965996-setting-your-service-locations-areas'
+        backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
     
-    // Remote postal code look-up
-    // NOTE: copied the code inside the postalCode computed handler in contactInfo.js with slight changes
-    var app = this.app,
-        viewModel = this.viewModel;
-    this.registerHandler({
-        target: this.viewModel.address,
-        handler: function(address) {
-            if (address &&
-               !address.postalCode._hasLookup) {
-                address.postalCode._hasLookup = true;
-                
-                // On change to a valid code, do remote look-up
-                ko.computed(function() {
-                    var postalCode = this.postalCode();
-                    
-                    if (postalCode && !/^\s*$/.test(postalCode)) {
-                        app.model.postalCodes.getItem(postalCode)
-                        .then(function(info) {
-                            if (info) {
-                                address.city(info.city);
-                                address.stateProvinceCode(info.stateProvinceCode);
-                                address.stateProvinceName(info.stateProvinceName);
-                                viewModel.errorMessages.postalCode('');
-                            }
-                        })
-                        .catch(function(err) {
-                            address.city('');
-                            address.stateProvinceCode('');
-                            address.stateProvinceName('');
-                            // Expected errors, a single message, set
-                            // on the observable
-                            var msg = typeof(err) === 'string' ? err : null;
-                            if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                                viewModel.errorMessages.postalCode(msg || err.responseJSON.errorMessage);
-                            }
-                            else {
-                                // Log to console for debugging purposes, on regular use an error on the
-                                // postal code is not critical and can be transparent; if there are 
-                                // connectivity or authentification errors will throw on saving the address
-                                console.error('Server error validating Zip Code', err);
-                            }
-                        });
-                    }
-                }, address)
-                // Avoid excessive requests by setting a timeout since the latest change
-                .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
-            }
-        }
+    // On change to a valid code, do remote look-up
+    createPostalCodeAutolookup({
+        appModel: this.app.model,
+        address: this.viewModel.address,
+        postalCodeError: this.viewModel.errorMessages.postalCode
     });
 
     // On changing jobTitleID:
@@ -108,7 +66,13 @@ var A = Activity.extend(function AddressEditorActivity() {
         if (this.requestData.returnNewAsSelected === true) {
             // Go to previous activity that required
             // to select an address
-            this.requestData.addressID = addressID;
+            // It's a new non-saved address
+            if (this.viewModel.clientUserID()) {
+                this.requestData.address = this.viewModel.address().model.toPlainObject(true);
+            }
+            else {
+                this.requestData.addressID = addressID;
+            }
             this.app.shell.goBack(this.requestData);
         }
         else {
@@ -128,7 +92,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10    
+    //jshint maxcomplexity:12
     Activity.prototype.show.call(this, options);
     
     // Reset
@@ -144,10 +108,13 @@ A.prototype.show = function show(options) {
         // Only used on service address creation, instead an ID we get
         // a string for 'serviceArea' or 'serviceLocation')
         serviceType = params[2] || '';
+    // Special type: clientLocation
+    var clientUserID = serviceType === 'clientLocation' ? params[3] : null;
     
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.addressID(addressID);
-    
+    this.viewModel.clientUserID(clientUserID);
+
     this.updateNavBarState();
 
     if (addressID) {
@@ -186,6 +153,14 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a service location');
                 break;
+            case 'clientLocation':
+                // A service professional is adding a location to perform a service that belongs
+                // to the client of the booking, on behalf of.
+                this.viewModel.address().userID(clientUserID);
+                this.viewModel.address().isServiceArea(false);
+                this.viewModel.address().isServiceLocation(true);
+                this.viewModel.header('Add a client location');
+                break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
@@ -196,6 +171,10 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+    
+    this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.header = ko.observable('Edit location');
     
@@ -207,8 +186,9 @@ function ViewModel(app) {
     
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
+    this.clientUserID = ko.observable(0);
     this.jobTitleName = ko.observable('Job Title'); 
-    
+
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {
         var v = this.addressVersion();
@@ -259,23 +239,34 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
+        if (this.clientUserID()) {
+            // We want to return the in-memory data for the address rather
+            // than save it.
+            // NOTE: This feature 'clientLocation' is used by the serviceProfessional booking
+            // process to use a 'new client location' as address rather than a new serviceProfessiona address
+            // Just call the onSave, it knows what to do
+            this.onSave();
+        }
+        else {
+            // Normal use: save the user (serviceProfessional) address and provide the generated
+            // addressID to the onSave method.
+            app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
+            .then(function(serverData) {
+                // Update version with server data.
+                this.address().model.updateWith(serverData);
+                // Push version so it appears as saved
+                this.addressVersion().push({ evenIfObsolete: true });
 
-        app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
-        .then(function(serverData) {
-            // Update version with server data.
-            this.address().model.updateWith(serverData);
-            // Push version so it appears as saved
-            this.addressVersion().push({ evenIfObsolete: true });
-            
-            // Special save, function provided by the activity on set-up
-            this.onSave(serverData.addressID);
-        }.bind(this))
-        .catch(function(err) {
-            app.modals.showError({
-                title: 'There was an error while saving.',
-                error: err
+                // Special save, function provided by the activity on set-up
+                this.onSave(serverData.addressID);
+            }.bind(this))
+            .catch(function(err) {
+                app.modals.showError({
+                    title: 'There was an error while saving.',
+                    error: err
+                });
             });
-        });
+        }
 
     }.bind(this);
     

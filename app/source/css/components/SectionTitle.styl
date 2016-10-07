@@ -34,24 +34,42 @@ $gray = lighten(#000, 33.5%);
       text-transform: none;
     }
     
+    // Modifier to use the title as a button. Requires to use a children
+    // element with the Bootstrap button class '.btn'.
     &.SectionTitle--withBtn {
         padding: 0;
-        > .btn {
+        > .btn-link {
             padding: $SectionTitle-topGap $container-padding-left $SectionTitle-bottomGap $container-padding-right;
             width: 100%;
-            display: block;
+            display: inline-block;
             color: $gray;
             border: none;
             line-height: $SectionTitle-fontSize;
             @media $mediaMinMd {
+              width: 50%;
               margin-top: 0px;
               background: $gray-lighter;
               border: none;
               font-size: 20px;
-              height: 42px;
+              height: 38px;
               text-transform: none;
             }
         }
+        > .btn-default {
+            @media $mediaMinMd {
+              margin-top: 0px;
+              border: none;
+            }
+        }
+    }
+
+    // Modifier for articles titles
+    &.SectionTitle--article {
+        text-align: center;
+        background: none;
+        border: none;
+        margin-bottom: 20px;
+        font-weight: bold;
     }
 }
 /* Inside a container, remove the margin gap */
@@ -73,3 +91,12 @@ $gray = lighten(#000, 33.5%);
         }
     }
 }
+
+/* Inside a PaddingBox or Box, remove the margins */
+[class^=PaddedBox],
+[class^=Box] {
+    > .SectionTitle {
+        margin: 0;
+    }
+}
+

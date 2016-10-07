@@ -12,20 +12,41 @@ var A = Activity.extend(function FeedbackFormActivity() {
     
     this.viewModel = new ViewModel(this.app);
     
-    this.accessLevel = this.app.UserType.loggedUser;
-    this.navBar = Activity.createSubsectionNavBar('Back', {
-        helpLink: '/help/sections/201960863-providing-feedback-to-us'
+    this.accessLevel = null;
+    
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: this.viewModel.helpLinkProfessionals
     });
+    this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    var clientNavBar = Activity.createSubsectionNavBar('Back', {
+        helpLink: this.viewModel.helpLinkClients
+    });
+    this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
+    this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
 });
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        this.navBar.model.updateWith(nav, true);
+    }
+};
+
 A.prototype.show = function show(options) {
+    //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
+    
+    this.updateNavBarState();
 
     var params = this.requestData.route.segments || [];
     var elementName = params[0] || '',
         elementID = VocElementEnum[elementName] |0;
+
+    this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
     
     if (!elementName) {
         console.log('Feedback Ideas: Accessing feedback without specify an element, using General (0)');
@@ -40,12 +61,19 @@ A.prototype.show = function show(options) {
 var ko = require('knockout');
 function ViewModel(app) {
     
+    this.user = app.model.userProfile.data;
+    this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
+    this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
+    this.helpLink = ko.pureComputed(function() {
+        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+    }, this);
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
     // Get reference to know if is already a collaborator
     this.isCollaborator = app.model.userProfile.data.isCollaborator;
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
+    this.emailSubject = ko.observable('');
 
     this.submitText = ko.pureComputed(function() {
         return this.isSending() ? 'Sending..' : 'Send';
@@ -56,9 +84,18 @@ function ViewModel(app) {
         return m && !/^\s*$/.test(m);
     }, this);
 
+    this.anonymousButtonUrl = ko.pureComputed(function() {
+        if (!app.model.user().isAnonymous()) return '';
+
+        var subject = encodeURIComponent('Feedback');
+        var body = encodeURIComponent(this.message());
+        var url = 'mailto:support@loconomics.com?subject=' + subject + '&body=' + body;
+        return url;
+    }, this);
+
     this.send = function send() {
         // Check is valid, and do nothing if not
-        if (!this.isValid()) {
+        if (!this.isValid() || app.model.user().isAnonymous()) {
             return;
         }
         this.isSending(true);

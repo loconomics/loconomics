@@ -2,12 +2,8 @@
 @*
     Route a booking from external link to the given provider-position
     reserved code.
-
-    TODO Needs to be updated to the actual Release-7 URL
 *@
 @{
-    LcHelpers.SecurePage();
-
     var bookcode = Context.GetRouteValue("bookcode");
     using (var db = Database.Open("sqlloco")){
         // Check the BookCode, gets the associated UserID
@@ -28,7 +24,7 @@
                 // Check that the position exists for the user and is public
                 if (LcData.UserInfo.GetUserPositionStatus(userid, posID) == 1){
                     // Redirects to the booking page for that provider and position
-                    Response.Redirect("#!booking/" + userid + "/" + posID);
+                    Response.Redirect("/#!booking/" + userid + "/" + posID + "?bookCode=" + Uri.EscapeDataString(bookcode));
                 }
             } else {
                 // Redirect to the providers public profile

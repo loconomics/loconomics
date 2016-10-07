@@ -6,6 +6,7 @@ require('jquery-mobile');
 require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
+ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
 var bootknock = require('./utils/bootknockBindingHelpers');
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
@@ -179,7 +180,7 @@ app.successSave = function successSave(settings) {
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:50,maxcomplexity:16 */
+    /*jshint maxstatements:70,maxcomplexity:16 */
     
     attachFastClick(document.body);
     
@@ -255,6 +256,8 @@ var appInit = function appInit() {
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
     require('./utils/bootstrapSwitchBinding').plugIn(ko);
+    require('./utils/pressEnterBindingHandler').plugIn(ko);
+    require('./utils/fileUploaderBindingHandler').plugIn(ko);
     
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -263,6 +266,8 @@ var appInit = function appInit() {
         // on input focus, else a bug will happen specially on iOS where input
         // fields gets hidden by the on screen keyboard.
         window.cordova.plugins.Keyboard.disableScroll(false);
+        // Fix bug on iOS 9.x with plugin version 2.2.0
+        window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
     }
     
     // Easy links to shell actions, like goBack, in html elements
@@ -424,20 +429,50 @@ var appInit = function appInit() {
             error: err
         });
     };
-    
-    if (window.instabug) {
-        window.instabug.init({
-            iosToken: '515d9e90bd68a18182a05e2a68689897',
-            androidToken: '9856054e92e7ae7a8326f1666703d51d'
-        });
-    }
-    
+
     require('./utils/toggleActionSheet').on();
     
-    // Change website index activity
-    var indexAct = $('html').data('index');
-    if (indexAct) {
-        app.shell.indexName = indexAct;
+    // Supporting sub-domain/channels, set the site-url same like baseUrl
+    // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
+    if (app.shell.baseUrl) {
+        $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
+    }
+    
+    // Set-up Google Analytics
+    if (window.ga) {
+        var gaTrackerId = 'UA-72265353-4';
+        var appId = $('html').data('app-id');
+        var appName = $('html').data('app-name');
+        var appVersion = $('html').data('app-version');
+        // We want to track exactly the different platforms where
+        // we run: web, android, ios (from cordova device property)
+        // and we use the version field for that
+        appVersion = (window.device && window.device.platform || 'web') + '-' + appVersion;
+
+        if (window.cordova) {
+            window.ga.startTrackerWithId(gaTrackerId);
+            window.ga.setAppVersion(appVersion);
+            // app Id and Names seems to be automatic at native
+            window.ga.trackView('index');
+        }
+        else {
+            window.ga('create', gaTrackerId, 'auto');
+            window.ga('set', 'appVersion', appVersion);
+            window.ga('set', 'appName', appName);
+            window.ga('set', 'appId', appId);
+            window.ga('send', 'screenview', { screenName: 'index' });
+        }
+        app.shell.on(app.shell.events.itemReady, function($act, state) {
+            var view = state.route.name;
+            //var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
+            //url = url.replace(/^#!/, '');
+            if (window.cordova) {
+                window.ga.trackView(view);
+            }
+            else {
+                window.ga('send', 'screenview', { screenName: view });
+            }
+        });
     }
 
     app.model.init()
@@ -446,9 +481,13 @@ var appInit = function appInit() {
         
         // TODO: Display a login popup/activity if a request require credentials and no log-in still??
         /*app.model.rest.onAuthorizationRequired = function(retry) {
+        // Go to login activity if a request require credentials:
+        /*app.model.rest.onAuthorizationRequired = function(retry) {
             // Show login with a promise to know the result, retry if successfully.
             // Note: no error must be returned, the caller of the original process
             // must have it's own control.
+            //var url = '#!login?redirectUrl=' + encodeURIComponent();
+            //app.shell.go(url);
             xyz.showLogin().then(retry);
         };*/
         
@@ -460,22 +499,25 @@ var appInit = function appInit() {
             app.navBarBinding.isServiceProfessional(u.isServiceProfessional());
             app.navBarBinding.isClient(u.isClient());
         });
-        // Connect photoUrl in navbar
+        // Connect photoUrl in navbar: there are two sources, keep with more recent
         ko.computed(function() {
-            var n = app.model.marketplaceProfile.data.photoUrl();
-            app.navBarBinding.photoUrl(n || 'about:blank');
+            var p = app.model.userProfile.data.photoUrl();
+            if (p) {
+                app.navBarBinding.photoUrl(p);
+            }
+        });
+        ko.computed(function() {
+            var p = app.model.marketplaceProfile.data.photoUrl();
+            if (p) {
+                app.navBarBinding.photoUrl(p);
+            }
         });
         
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
 
-        // Check onboarding step to redirect there on app start
-        var step = app.model.user().onboardingStep();
-        if (step && 
-            app.model.onboarding.setStep(step)) {
-            var url = app.model.onboarding.stepUrl();
-            app.shell.go(url);
-        }
+        // Check onboarding
+        app.model.onboarding.goIfEnabled();
 
         // Mark the page as ready
         $('html').addClass('is-ready');

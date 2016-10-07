@@ -4,14 +4,17 @@
 
     void Application_Start(object sender, EventArgs e) 
     {
-        // Código que se ejecuta al iniciarse la aplicación
-
+        // Mail password set from special setting that is set at the server settings to avoid
+        // write it at files (Azure does not make available to set the system.net-smtp settings from dashboard,
+        // but we can put it as appsetting):
+        if (String.IsNullOrEmpty(System.Web.Helpers.WebMail.Password))
+        {
+            System.Web.Helpers.WebMail.Password = ConfigurationManager.AppSettings["smtpPassword"];
+        }
     }
     
     void Application_End(object sender, EventArgs e) 
     {
-        //  Código que se ejecuta cuando se cierra la aplicación
-
     }
 
     void Application_Error(object sender, EventArgs e) 

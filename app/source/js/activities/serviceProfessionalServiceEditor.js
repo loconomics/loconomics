@@ -18,7 +18,7 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Services', {
-        helpLink: '/help/sections/201967166-listing-and-pricing-your-services'
+        helpLink: this.viewModel.helpLink
     });
     /// Go out after save succesfully an item.
     /// Pricing is a plain object
@@ -164,6 +164,9 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
     /*jshint maxstatements: 35*/
+    this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.isLoading = ko.observable(false);
     // managed manually instead of

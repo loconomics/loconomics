@@ -20,12 +20,7 @@ var A = Activity.extend(function SignupActivity() {
         target: this.viewModel,
         event: 'signedup',
         handler: function() {
-            if (this.app.goDashboard)
-                // In App
-                this.app.goDashboard();
-            else
-                // In Splash
-                this.app.shell.go('#!splashThanks/' + this.viewModel.profile());
+            this.app.goDashboard();
         }.bind(this)
     });
     

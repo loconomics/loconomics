@@ -75,7 +75,7 @@ public static partial class LcData
         /// </summary>
         /// <param name="photo"></param>
         /// <param name="virtualPath"></param>
-        public static void SaveEditableProfilePicture(int userID, Stream photo)
+        public static void SaveEditableProfilePicture(int userID, Stream photo, float angle)
         {
             // Check folder or create
             string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
@@ -90,10 +90,12 @@ public static partial class LcData
             {
 
                 // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode);
+                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
+                LcImaging.Rotate(img, angle);
 
                 // Save:
                 img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Dispose();
             }
 
             photo.Dispose();
@@ -143,6 +145,8 @@ public static partial class LcData
                     modImg.Save(folder + avatarNamePrefix + sizeName + "-gray@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
                 // NOTE Creation of images with more sizes (for small user widgets on reviews/bookings/etc) or filters go here
+
+                cropImg.Dispose();
             }
         }
 

@@ -12,12 +12,6 @@ module.exports = function(grunt) {
     var facebookAppID = '180579422039773',
         facebookLang = 'en-US';
     
-    var splashIncludedFiles = [
-        'activities/splashIndex.html',
-        'activities/splashThanks.html',
-        'activities/signup.html',
-        'activities/terms.html'
-    ];
     var moment = require('moment');
     var version = moment().format('YYYYMMDDHHmm');
 
@@ -33,7 +27,10 @@ module.exports = function(grunt) {
                 cordovajs: false,
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
-                facebookLang: facebookLang
+                facebookLang: facebookLang,
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.appId %>',
+                appName: '<%= package.appName %>'
             }
           }
         },
@@ -45,10 +42,14 @@ module.exports = function(grunt) {
             context: {
                 debug: false,
                 includedFiles: includedFiles,
+                cordovajs: false,
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
                 cssVersion: version,
-                jsVersion: version
+                jsVersion: version,
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.appId %>',
+                appName: '<%= package.appName %>'
             }
           }
         },
@@ -63,22 +64,11 @@ module.exports = function(grunt) {
                 cordovajs: false,
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
-                facebookLang: facebookLang
+                facebookLang: facebookLang,
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.devAppId %>',
+                appName: '<%= package.devAppName %>'
                 //siteUrl: 'http://localhost/source'
-            }
-          }
-        },
-        splash: {
-          files: {
-            'build/splash.html': ['source/html/splash.js.html']
-          },
-          options: {
-            context: {
-                debug: false,
-                includedFiles: splashIncludedFiles,
-                siteUrl: '',
-                facebookAppID: facebookAppID,
-                facebookLang: facebookLang
             }
           }
         },
@@ -93,7 +83,10 @@ module.exports = function(grunt) {
                 cordovajs: true,
                 siteUrl: 'https://testing.loconomics.com',
                 facebookAppID: facebookAppID,
-                facebookLang: facebookLang
+                facebookLang: facebookLang,
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.appId %>',
+                appName: '<%= package.appName %>'
             }
           }
         },
@@ -108,7 +101,10 @@ module.exports = function(grunt) {
                 cordovajs: true,
                 siteUrl: 'http://dev.loconomics.com',
                 facebookAppID: facebookAppID,
-                facebookLang: facebookLang
+                facebookLang: facebookLang,
+                appVersion: '<%= package.version %>',
+                appId: '<%= package.devAppId %>',
+                appName: '<%= package.devAppName %>'
             }
           }
         },
@@ -138,7 +134,10 @@ module.exports = function(grunt) {
                       email: 'support@loconomics.com',
                       url: 'https://loconomics.com',
                       text: '<%= package.author %>'
-                    }
+                    },
+                    facebookAppID: facebookAppID,
+                    facebookLang: facebookLang,
+                    facebookAppName: '<%= package.appName %>'
                 }
             }
         },
@@ -156,7 +155,10 @@ module.exports = function(grunt) {
                       email: 'support@loconomics.com',
                       url: 'https://loconomics.com',
                       text: '<%= package.author %>'
-                    }
+                    },
+                    facebookAppID: facebookAppID,
+                    facebookLang: facebookLang,
+                    facebookAppName: '<%= package.appName %>'
                 }
             }
         }

@@ -61,6 +61,13 @@ namespace LcRest
         public decimal paymentProcessingFeeFixed;
         public decimal firstTimeServiceFeeMaximum;
         public decimal firstTimeServiceFeeMinimum;
+
+        /// <summary>
+        /// True if no details or all details/services are for phone service only.
+        /// This means that at a booking, no address will be required.
+        /// NOTE: Maybe better, for further future options, a 'isRemoteServicesOnly'?
+        /// </summary>
+        public bool isPhoneServiceOnly = true;
         #endregion
 
         #region Links
@@ -278,11 +285,13 @@ namespace LcRest
             var details = new List<PricingSummaryDetail>();
             var jobTitleID = 0;
 
+            isPhoneServiceOnly = true;
             foreach (var service in ServiceProfessionalService.GetListByIds(serviceProfessionalUserID, services))
             {
                 if (jobTitleID == 0)
                     jobTitleID = service.jobTitleID;
-
+                if (!service.isPhone)
+                    isPhoneServiceOnly = false;
                 details.Add(PricingSummaryDetail.FromServiceProfessionalService(service));
             }
 
@@ -351,8 +360,18 @@ namespace LcRest
             // otherwise clientServiceFeePrice will remain without value to mark it as not possible to calculate.
             if (subtotalPrice.HasValue)
             {
-                var amount = Math.Round(firstTimeServiceFeeFixed + ((firstTimeServiceFeePercentage / 100) * subtotalPrice.Value), 2);
-                clientServiceFeePrice = Math.Min(Math.Max(amount, firstTimeServiceFeeMinimum), firstTimeServiceFeeMaximum);
+                // Per decission at #1005, if subtotal (professional services) is 0 (only free services chosen by client),
+                // we do NOT charge a first time fee even if the kind of booking had required that; but just for tracking information, we keep
+                // the preset fee information (firsttimeService** fields), only setting to 0 the computed value.
+                if (subtotalPrice.Value == 0)
+                {
+                    clientServiceFeePrice = 0;
+                }
+                else
+                {
+                    var amount = Math.Round(firstTimeServiceFeeFixed + ((firstTimeServiceFeePercentage / 100) * subtotalPrice.Value), 2);
+                    clientServiceFeePrice = Math.Min(Math.Max(amount, firstTimeServiceFeeMinimum), firstTimeServiceFeeMaximum);
+                }
             }
             else
             {
@@ -369,10 +388,19 @@ namespace LcRest
             // Can only calculate with a notnull totalPrice and feePrice, otherwise serviceFeeAmount is null to state the impossibility of the calculation
             if (totalPrice.HasValue && clientServiceFeePrice.HasValue)
             {
-                // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
-                // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
-                // or present more precision to the service professional (who will show how much received on their bank account).
-                serviceFeeAmount = Math.Round(paymentProcessingFeeFixed + ((paymentProcessingFeePercentage/100) * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
+                // IMPORTANT: If the total price is strictly just zero, there is nothing to charge so there is no 
+                // possibility to charge a serviceFeeAmount: there is no payment but we have a fee of zero too
+                if (totalPrice.Value == 0)
+                {
+                    serviceFeeAmount = 0;
+                }
+                else
+                {
+                    // NOTE: We are rounding to 2 decimals because is the usual, but because who decides and performs this calculation
+                    // is the payment processing service (Braintree at this moment), its in their hands. Maybe they round with ceiling
+                    // or present more precision to the service professional (who will show how much received on their bank account).
+                    serviceFeeAmount = Math.Round(paymentProcessingFeeFixed + ((paymentProcessingFeePercentage / 100) * (totalPrice.Value - clientServiceFeePrice.Value)) + clientServiceFeePrice.Value, 2);
+                }
             }
             else
             {

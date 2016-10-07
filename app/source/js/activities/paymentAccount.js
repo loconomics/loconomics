@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 var A = Activity.extend(function PaymentAccountActivity() {
     
@@ -12,9 +13,11 @@ var A = Activity.extend(function PaymentAccountActivity() {
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-    this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/marketplaceProfile' , helpLink: '/help/sections/201967096-accepting-and-receiving-payments'
+    this.navBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account' , helpLink: this.viewModel.helpLink
     });
+    
+    this.defaultNavBar = this.navBar.model.toPlainObject(true);
     
     this.registerHandler({
         target: this.app.model.paymentAccount,
@@ -31,8 +34,18 @@ var A = Activity.extend(function PaymentAccountActivity() {
 
 exports.init = A.init;
 
+A.prototype.updateNavBarState = function updateNavBarState() {
+    
+    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+        // Reset
+        this.navBar.model.updateWith(this.defaultNavBar, true);
+    }
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
+    
+    this.updateNavBarState();
 
     // Discard any previous unsaved edit
     this.viewModel.discard();
@@ -41,6 +54,9 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201967096-accepting-and-receiving-payments';
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
 
     var paymentAccount = app.model.paymentAccount;
     this.errorMessages = paymentAccount.errorMessages;
@@ -68,23 +84,31 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
-                    'Save'
+            app.model.onboarding.inProgress() ?
+                'Save and continue' :
+                this.isLoading() ? 
+                    'loading...' : 
+                    this.isSaving() ? 
+                        'saving...' : 
+                        'Save'
         );
     }, paymentAccount);
 
     this.discard = function discard() {
         dataVersion.pull({ evenIfNewer: true });
         this.formVisible(!dataVersion.version.status());
+        this.userSelectedAccount(null);
     }.bind(this);
 
     this.save = function save() {
         dataVersion.pushSave()
         .then(function() {
-            app.successSave();
+            // Move forward:
+            if (app.model.onboarding.inProgress()) {
+                app.model.onboarding.goNext();
+            } else {
+                app.successSave();
+            }
         })
         .catch(function() {
             // catch error, managed on event
@@ -96,43 +120,37 @@ function ViewModel(app) {
     };
     
     // On change to a valid code, do remote look-up
-    var postalError = this.errorMessages.postalCode;
-    ko.computed(function() {
-        if (!paymentAccount.isLoading()) {
-            var postalCode = this.postalCode();
-            if (postalCode && !/^\s*$/.test(postalCode)) {
-                app.model.postalCodes.getItem(postalCode)
-                .then(function(info) {
-                    if (info) {
-                        this.city(info.city);
-                        this.stateProvinceCode(info.stateProvinceCode);
-                        postalError('');
-                    }
-                }.bind(this))
-                .catch(function(err) {
-                    this.city('');
-                    this.stateProvinceCode('');
-                    // Expected errors, a single message, set
-                    // on the observable
-                    var msg = typeof(err) === 'string' ? err : null;
-                    if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                        postalError(msg || err.responseJSON.errorMessage);
-                    }
-                    else {
-                        // Log to console for debugging purposes, on regular use an error on the
-                        // postal code is not critical and can be transparent; if there are 
-                        // connectivity or authentification errors will throw on saving the address
-                        console.error('Server error validating Postal Code', err);
-                    }
-                }.bind(this));
-            }
-        }
-    }, this.paymentAccount)
-    // Avoid excessive requests by setting a timeout since the latest change
-    .extend({ rateLimit: { timeout: 60, method: 'notifyWhenChangesStop' } });
+    createPostalCodeAutolookup({
+        appModel: app.model,
+        address: this.paymentAccount,
+        postalCodeError: this.errorMessages.postalCode
+    });
     
     this.formVisible = ko.observable(false);
     this.showForm = function() {
         this.formVisible(true);
     };
+
+    // Null by default, since it represents an immediate selection from the user for current session.
+    this.userSelectedAccount = ko.observable(null);
+    this.isVenmoAccount = ko.pureComputed(function() {
+        // Quick return: on user selection
+        if (this.userSelectedAccount()) {
+            return this.userSelectedAccount() === 'venmo';
+        }
+        // On new record, no status, show as 'is bank', so 'false' here:
+        if (!this.paymentAccount.status()) return false;
+        // If there is no bank data, is Venmo
+        return !(this.paymentAccount.accountNumber() && this.paymentAccount.routingNumber());
+    }, this);
+    this.isBankAccount = ko.pureComputed(function() {
+        return !this.isVenmoAccount();
+    }, this);
+
+    this.chooseVenmoAccount = function() {
+        this.userSelectedAccount('venmo');
+    }.bind(this);
+    this.chooseBankAccount = function() {
+        this.userSelectedAccount('bank');
+    }.bind(this);
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,6 +23,17 @@ public static class LcAuth
             return db.QuerySingle("EXEC CheckUserEmail @0", email) != null;
         }
     }
+    /// <summary>
+    /// For HIPAA compliance (#974) and strong security, passwords must be checked against next regex. It requires:
+    /// - Almost 8 characters
+    /// - Non-alphabetic characters: ~!@#$%^*&;?.+_
+    /// - Base 10 digits (0 through 9)
+    /// - English uppercase characters (A through Z)
+    /// - English lowercase characters (a through z)
+    /// </summary>
+    public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
+    public static string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.";
+    public static string AccountLockedErrorMessage = @"Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password";
     public class RegisteredUser
     {
         public string Email;
@@ -33,6 +44,10 @@ public static class LcAuth
     /// <summary>
     /// Register an user and returns relevant registration information about the new account,
     /// or raise and exception on error of type System.Web.Security.MembershipCreateUserException.
+    /// IMPORTANT: For code that doesn't uses this but the CreateAccount directly,
+    /// is required to validate the password against ValidPasswordRegex. 
+    /// It's recommended to use form validation with that regex before even call this to avoid extra computation, checks,
+    /// but this will check the regex too.
     /// </summary>
     /// <param name="email"></param>
     /// <param name="firstname"></param>
@@ -51,7 +66,14 @@ public static class LcAuth
         string aboutMe = null,
         string phone = null,
         string signupDevice = null
-    ) {
+    )
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+
         using (var db = Database.Open("sqlloco"))
         {
             // IMPORTANT: The whole process must be complete or rollback, but since
@@ -101,6 +123,11 @@ public static class LcAuth
                 {
                     BecomeProvider(userid, db);
                 }
+                else
+                {
+                    // Per #978, clients have an onboarding starting with 'welcome' too
+                    db.Execute(@"UPDATE Users SET OnboardingStep = 'welcome' WHERE UserID = @0", userid);
+                }
 
                 // Partial email confirmation to allow user login but still show up email-confirmation-alert. Details:
                 // IMPORTANT: 2012-07-17, issue #57; We decided use the email-confirmation-code only as a dashboard alert (id:15) instead of blocking the user
@@ -147,6 +174,27 @@ public static class LcAuth
             }
         }
     }
+
+    public static bool ResetPassword(string token, string password)
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+        return WebSecurity.ResetPassword(token, password);
+    }
+
+    public static bool ChangePassword(string email, string currentPassword, string newPassword)
+    {
+        // Check password validity.
+        if (!System.Text.RegularExpressions.Regex.IsMatch(newPassword, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        {
+            throw new ConstraintException(InvalidPasswordErrorMessage);
+        }
+        return WebSecurity.ChangePassword(email, currentPassword, newPassword);
+    }
+
     public static void BecomeProvider(int userID, Database db = null)
     {
         var ownDb = db == null;
@@ -211,7 +259,7 @@ public static class LcAuth
         int? userId = GetFacebookUserID(facebookID);
         if (userId.HasValue)
         {
-            var userData = LcData.UserInfo.GetUserRow(userId.Value);
+            var userData = LcRest.UserProfile.Get(userId.Value);
             // Check is valid (only edge cases will not be a valid record,
             // as incomplete manual deletion of user accounts that didn't remove
             // the Facebook connection).
@@ -219,8 +267,8 @@ public static class LcAuth
             {
                 return new RegisteredUser
                 {
-                    Email = userData.Email,
-                    IsProvider = userData.IsProvider,
+                    Email = userData.email,
+                    IsProvider = userData.isServiceProfessional,
                     UserID = userId.Value
                 };
             }
@@ -232,63 +280,108 @@ public static class LcAuth
         }
     }
 
+    /// <summary>
+    /// Returns true if account is locked.
+    /// It uses the general rules: As requested at #974, for HIPAA compliance:
+    /// - Lock account after 5 unsuccesfully attempts (in code is 4, because seems to add 1 extra attempt to the count)
+    /// - Lock it for 5 minutes
+    /// </summary>
+    /// <returns></returns>
+    private static bool IsAccountLockedOut(string email)
+    {
+        return WebSecurity.IsAccountLockedOut(email, 4, 5 * 60);
+    }
+
     public static bool Login(string email, string password, bool persistCookie = false)
     {
+        if (IsAccountLockedOut(email))
+            throw new ConstraintException(AccountLockedErrorMessage);
         // Navigate back to the homepage and exit
-        var result = WebSecurity.Login(email, password, persistCookie);
+        var logged = WebSecurity.Login(email, password, persistCookie);
 
-        LcData.UserInfo.RegisterLastLoginTime(0, email);
+        if (logged)
+        {
+            LcData.UserInfo.RegisterLastLoginTime(0, email);
 
-        // mark the user as logged in via a normal account,
-        // as opposed to via an OAuth or OpenID provider.
-        System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+            // mark the user as logged in via a normal account,
+            // as opposed to via an OAuth or OpenID provider.
+            System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+        }
+        else
+        {
+            // Per issue #982, HIPAA rules:
+            // Check if, by failling this login attempt, the user gets it's account locked-out
+            if (IsAccountLockedOut(email))
+            {
+                // then, notify us
+                LcMessaging.NotifyLockedAccount(email, WebSecurity.GetUserId(email), DateTime.Now);
+                // Rather than communicate a 'invalid user password' let the user know that now it's user
+                // is locked out due to many unsuccessful attempts (preventing from try again something that, by sure, will be locked,
+                // and avoiding misperception of 6 allowed attempts).
+                throw new ConstraintException(AccountLockedErrorMessage);
+            }
+        }
 
-        return result;
+        return logged;
     }
     /// <summary>
     /// Check a user autologinkey to performs the automatic login if
     /// match.
     /// If success, the request continue being processing but with a
     /// new session and new authentication cookie being sent in the response.
+    /// If no user, no key matches, just continue without auth session, the code after this
+    /// must check if authentication is effective (with WebSecurity.IsAuthenticated, for example);
+    /// even on fail, it ends current session (anyway, at the beggining).
     /// </summary>
     /// <param name="userid"></param>
     /// <param name="autologinkey"></param>
     public static void Autologin(string userid, string autologinkey)
     {
-        try
-        {
-            using (var db = Database.Open("sqlloco"))
-            {
-                var p = db.QueryValue(@"
-                    SELECT  Password
-                    FROM    webpages_Membership
-                    WHERE   UserId=@0
-                ", userid);
-                // TODO For performance and security, save a processed autologinkey in database
-                // and check against that rather than do this tasks every time; auto compute on
-                // any password change.
-                // Check if autologinkey and password (encrypted and then converted for url) match
-                if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
-                {
-                    // Autologin Success
-                    // Get user email by userid
-                    var userEmail = db.QueryValue(@"
-                        SELECT  email
-                        FROM    userprofile
-                        WHERE   userid = @0
-                    ", userid);
-                    // Clear current session to avoid conflicts:
-                    if (HttpContext.Current.Session != null)
-                        HttpContext.Current.Session.Clear();
-                    
-                    // New authentication cookie: Logged!
-                    System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+        // Clear current session to avoid conflicts:
+        if (HttpContext.Current.Session != null)
+            HttpContext.Current.Session.Clear();
 
-                    LcData.UserInfo.RegisterLastLoginTime(userid.AsInt(), userEmail);
-                }
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get user email by userid
+            var userEmail = db.QueryValue(@"
+                SELECT  email
+                FROM    userprofile
+                WHERE   userid = @0
+            ", userid);
+
+            // Invalid ID? Out
+            if (String.IsNullOrEmpty(userEmail))
+                return;
+
+            if (IsAccountLockedOut(userEmail))
+                throw new ConstraintException(AccountLockedErrorMessage);
+
+            var p = db.QueryValue(@"
+                SELECT  Password
+                FROM    webpages_Membership
+                WHERE   UserId=@0
+            ", userid);
+
+            // No password saved? out! (avoid exception with encryptor later)
+            if (String.IsNullOrEmpty(p))
+                return;
+
+            // If auto
+
+            // TODO For performance and security, save a processed autologinkey in database
+            // and check against that rather than do this tasks every time; auto compute on
+            // any password change.
+            // Check if autologinkey and password (encrypted and then converted for url) match
+            if (autologinkey == LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(p)))
+            {
+                // Autologin Success                     
+                // New authentication cookie: Logged!
+                System.Web.Security.FormsAuthentication.SetAuthCookie(userEmail, false);
+
+                LcData.UserInfo.RegisterLastLoginTime(userid.AsInt(), userEmail);
             }
         }
-        catch (Exception ex) { HttpContext.Current.Response.Write(ex.Message); }
     }
     /// <summary>
     /// Get the key that enable the user to autologged from url, to

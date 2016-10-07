@@ -88,12 +88,14 @@ function NewClientBookingCardVM(app) {
     ///
     /// Save and Restore State
     this.saveState = function saveState() {
+        //jshint maxcomplexity:9
         // IMPORTANT: Not all booking and view observables data is saved, since
         // lot of that are managed by the initial booking setup, state
         // info, and other data needs a verification, like the list of selected
         // services, cannot be copied into the booking 'as is' since needs to
         // be checked against the list of available services (could have changed,
         // most times because of first-time only services).
+        if (!this.booking()) return Promise.resolve();
         
         // Base and identification data:
         var s = {
@@ -232,7 +234,10 @@ function NewClientBookingCardVM(app) {
     
     
     this.confirmBtnText = ko.pureComputed(function() {
-        return this.isAnonymous() ? 'Sign up and confirm' : 'Confirm';
+        return (
+            this.isSaving() ? 'Confirming...' :
+            this.isAnonymous() ? 'Sign up and confirm' : 'Confirm'
+        );
     }, this);
     
     // Displayed text when there is a payment card

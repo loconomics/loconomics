@@ -142,7 +142,25 @@ A.prototype.show = function show(state) {
     if (!this._notFirstShow) {
         this._registerSnapPoints();
         this._notFirstShow = true;
+        
+        // Check if pop-up was displayed already to don't bother users
+        // And of course we must not attempt that ones that are already users :-)
+        var showIt = !localStorage.sanFranciscoLaunchPopup && this.app.model.userProfile.data.isAnonymous();
+        if (showIt) {
+            this.app.modals.showAnnouncement({
+                message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
+                primaryButtonText: 'I\'m a service professional',
+                primaryButtonLink: '#!/learnMoreProfessionals',
+                secondaryButtonText: 'I\'m a potential client',
+                secondaryButtonLink: '#!/'
+            })
+            .then(function() {
+                // Once closed (from clicking everywhere, close button or clicking main buttons)
+                localStorage.sanFranciscoLaunchPopup = true;
+            });
+        }
     }
+    this.viewModel.searchTerm('');
 };
 
 
@@ -157,16 +175,18 @@ function ViewModel(appModel) {
     this.searchDistance = ko.observable(DEFAULT_LOCATION.searchDistance);
     //create an object named SearchResults to hold the search results returned from the API
     this.searchResults = new SearchResults();
+    var latestRequest = null;
     this.loadData = function(searchTerm, lat, lng) {
+        if (latestRequest) latestRequest.xhr.abort();
         this.isLoading(true);
         //Call the get rest API method for api/v1/en-US/search
-        return appModel.rest.get('search', {
+        latestRequest = appModel.rest.get('search', {
             searchTerm: searchTerm, 
             origLat: lat || DEFAULT_LOCATION.lat,
             origLong: lng || DEFAULT_LOCATION.lng,
             searchDistance: DEFAULT_LOCATION.searchDistance
-        })
-        .then(function(searchResults) {
+        });
+        return latestRequest.then(function(searchResults) {
             if(searchResults){
                 //update searchResults object with all the data from the API
                 this.searchResults.model.updateWith(searchResults, true);
@@ -195,7 +215,7 @@ function ViewModel(appModel) {
     ko.computed(function(){
         this.search();
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
-    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 1000 } });
+    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
     
     this.isSearchAutocompleteOpened = ko.pureComputed(function() {
         return (
