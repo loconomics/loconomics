@@ -118,17 +118,17 @@ exports.create = function create(appModel) {
         IMPORTANT: Exception: if the page is loading coming from itself,
         like from a target=_blank link, does not redirect to
         avoid to break the proposal of the link (like a help or FAQ link
-        on onboarding)
+        on onboarding), BUT we need to set the onboarding step so the state is correct.
     **/
     api.goIfEnabled = function() {
         var step = api.app.model.user().onboardingStep();
-        var r = window.document.referrer;
-        // We check that there is a referrer (so comes from a link) and it shares the origin
-        // (be aware that referrer includes origin+pathname, we just look for same origin).
-        var fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
-        if (!fromItSelf &&
-            step && 
-            api.setStep(step)) {
+        if (step && api.setStep(step)) {
+            var r = window.document.referrer;
+            // We check that there is a referrer (so comes from a link) and it shares the origin
+            // (be aware that referrer includes origin+pathname, we just look for same origin).
+            var fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
+            if (fromItSelf) return true;
+            
             // Go to the step URL if we are NOT already there, by checking name to
             // not overwrite additional details, like a jobTitleID at the URL
             if (api.app.shell.currentRoute.name !== api.stepName()) {
