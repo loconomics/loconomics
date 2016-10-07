@@ -181,12 +181,14 @@ exports.extend = function (app) {
         isClient: ko.observable(false),
         isApp: ko.observable(!!window.cordova),
         isInOnboarding: ko.observable(false),
+        isAtCurrentOnboardingStep: ko.observable(false),
         active: ko.observable('')
     };
 
     app.model.on('modulesLoaded', function() {
         ko.computed(function() {
             app.navBarBinding.isInOnboarding(app.model.onboarding.inProgress());
+            app.navBarBinding.isAtCurrentOnboardingStep(app.model.onboarding.isAtCurrentStep());
         });
     });
     

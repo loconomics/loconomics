@@ -3,19 +3,26 @@
 **/
 'use strict';
 
-var OnboardingProgress = require('../viewmodels/OnboardingProgress'),
-    NavAction = require('../viewmodels/NavAction');
+var OnboardingProgress = require('../viewmodels/OnboardingProgress');
+var NavAction = require('../viewmodels/NavAction');
+var ko = require('knockout');
 
 exports.create = function create(appModel) {
     
     // Onboarding management and state, initially empty so no progress
     var api = new OnboardingProgress();
     
+    api.currentActivity = ko.observable('');
+    
     // Requires initialization to receive and app instance
     api.init = function init(app) {
         api.app = app;
+        api.currentActivity(app.shell.currentRoute.name);
+        app.shell.on(app.shell.events.itemReady, function() {
+            api.currentActivity(app.shell.currentRoute.name);
+        });
     };
-    
+
     // Extended with new methods
 
     // Set the correct onboarding progress and step given a step reference
@@ -118,6 +125,10 @@ exports.create = function create(appModel) {
         this.app.shell.go(this.stepUrl());
     };
     
+    api.isAtCurrentStep = ko.computed(function() {
+        return api.currentActivity() === api.stepName();
+    });
+    
     /**
         Check if onboarding is enabled on the user profile
         and redirects to the current step, or do nothing.
@@ -137,7 +148,7 @@ exports.create = function create(appModel) {
             
             // Go to the step URL if we are NOT already there, by checking name to
             // not overwrite additional details, like a jobTitleID at the URL
-            if (api.app.shell.currentRoute.name !== api.stepName()) {
+            if (!api.isAtCurrentStep()) {
                 var url = api.stepUrl();
                 api.app.shell.go(url);
             }
