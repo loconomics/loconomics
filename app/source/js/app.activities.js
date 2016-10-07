@@ -49,7 +49,6 @@ module.exports = {
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'marketplaceProfile': require('./activities/marketplaceProfile'),
     'marketplaceJobtitles': require('./activities/marketplaceJobtitles'),
-    'profilePictureBio': require('./activities/profilePictureBio'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
