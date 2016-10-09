@@ -3,6 +3,7 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "@(id)"
         version   = "@(version)"
+        versionCode = "@(versionCode)"
         >
 
     <name>@(name)</name>
@@ -33,7 +34,7 @@
     <preference name="phonegap-version" value="cli-5.2.0" />
     <platform name="android">
         <preference name="phonegap-version" value="5.1.1" />
-    </platform>    
+    </platform>
 
     <!-- all: default means both landscape and portrait are enabled -->
     <preference name="orientation" value="default" />
