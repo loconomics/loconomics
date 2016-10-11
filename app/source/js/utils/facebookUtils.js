@@ -58,7 +58,7 @@ exports.ready = function facebookReady(readyCallback) {
             completeVerification: function () { return !!window.FB; },
             complete: function () {
                 // Initialize (Facebook registers itself as global 'FB')
-                window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false });
+                window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false, version: 'v2.8' });
 
                 // Is ready
                 apiStatus.ready = true;
