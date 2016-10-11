@@ -7,7 +7,7 @@ var Activity = require('../components/Activity');
 
 var $ = require('jquery');
 
-var A = Activity.extend(function reviewServiceProfessionalActivity() {
+var A = Activity.extend(function UserReviewActivity() {
 
     Activity.apply(this, arguments);
 
