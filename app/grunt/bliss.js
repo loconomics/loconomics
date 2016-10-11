@@ -14,6 +14,11 @@ module.exports = function(grunt) {
     
     var moment = require('moment');
     var version = moment().format('YYYYMMDDHHmm');
+    var pkg = grunt.file.readJSON('package.json');
+    var appVersion = pkg.version;
+    // Version number as single number, 2 digits per position
+    // Example: 1.1.0 -> 10100, 2.34.5 -> 23405
+    var versionCode = appVersion.split('.').reverse().reduce(function(t, x, i) { return t + (x|0) * Math.pow(10, i * 2); }, 0);
 
     return {
         app: {
@@ -128,6 +133,7 @@ module.exports = function(grunt) {
                 context: {
                     id: '<%= package.appId %>',
                     version: '<%= package.version %>',
+                    versionCode: versionCode,
                     name: '<%= package.appName %>',
                     description: '<%= package.appDescription %>',
                     author: {
@@ -149,6 +155,7 @@ module.exports = function(grunt) {
                 context: {
                     id: '<%= package.devAppId %>',
                     version: '<%= package.version %>',
+                    versionCode: versionCode,
                     name: '<%= package.devAppName %>',
                     description: '<%= package.appDescription %>',
                     author: {
