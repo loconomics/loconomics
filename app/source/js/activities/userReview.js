@@ -38,11 +38,18 @@ function ViewModel(app) {
     this.clientFirstName = ko.observable('Tim');
     this.serviceProfessionalFirstName = ko.observable('Joshua');
     this.serviceProfessionalJobTitle = ko.observable('Cleaning Professional');
-    this.isServiceProfessionalX = ko.observable(true);
-    this.isClientX = ko.observable(false);
-    this.isBookingEligibleToBeReviewed = ko.observable('1');
-    this.isClientAlreadyReviewed = ko.observable('0');
-    this.isServiceProfessionalAlreadyReviewed = ko.observable('0');
-    this.isClientEligibleToBeReviewed = ko.observable('1');
-    this.isServiceProfessionalEligibleToBeReviewed = ko.observable('1');
+    this.isServiceProfessional = ko.observable(false);
+    this.isClient = ko.observable(true);
+    this.isBookingEligibleToBeReviewed = ko.observable(true);
+    this.isClientAlreadyReviewed = ko.observable(false);
+    this.isServiceProfessionalAlreadyReviewed = ko.observable(false);
+    this.isClientEligibleToBeReviewed = ko.observable(true);
+    this.isServiceProfessionalEligibleToBeReviewed = ko.observable(true);
+    this.answer1 = ko.observable(null);
+    this.publicReview = ko.observable('');
+    this.privateReview = ko.observable('');
+    this.rating1 = ko.observable(null);
+    this.rating2 = ko.observable(null);
+    this.rating3 = ko.observable(null);
+    this.rating4 = ko.observable(null);
 }

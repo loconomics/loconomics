@@ -1,12 +1,11 @@
 <!-- Activity userReview -->
 <div data-activity="userReview" class="Boxes-sm animated">
-    <app-inline-user-menu>@render('parts/UserMenuContents.html')</app-inline-user-menu>
     <div class="container" id="userReview-index">
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <div class="tab-content">
+                <div class="tab-content" data-bind="visible: isClient()">
                     <div role="tabpanel" class="tab-pane active" id="userReview-recommendation">
-                        <form class="container-fluid LightForm" role="form" data-bind="visible: isClientX()">
+                        <form class="container-fluid LightForm" role="form">
                             <h1>Review <span data-bind="text: serviceProfessionalFirstName"></span> as a <span data-bind="text: serviceProfessionalJobTitle"></span>
                             </h1>
                             <p>The Loconomics community is built on trust and reviews are an integral part for both clients and service professionals to have great experiences. Please provide an honest and constructive review. <span data-bind="text: serviceProfessionalFirstName"></span> will also review working with you as a client.<a class="text-secondary" href="#" target="_blank"> See our review guidelines</a>.</p>
@@ -14,36 +13,13 @@
                             </h2>
                             <p>Your answer will not be posted on your profile or <span data-bind="text: serviceProfessionalFirstName"></span>'s profile.</p>
                             <div class="Review-recommendation">
-                                <input id="answer1" name="review[recommend]" type="radio" value="0">
-                                <label for="answer1">
+                                <input id="recommended_no" name="answer1" type="radio" data-bind="">
+                                <label for="recommended_no">
                                     <i class="fa fa-fw fa-meh-o"></i>
                                     <span>No</span>
                                 </label>
-                                <input id="answer1" name="review[recommend]" type="radio" value="1">
-                                <label for="review_recommend_1">
-                                    <i class="fa fa-fw fa-smile-o"></i>
-                                    <span>Yes!</span>
-                                </label>
-                            </div>
-                            <div class="LightForm-submitBar">
-                                <a href="#userReview-ratings"><button type="submit" class="btn btn-primary btn-block">Next</button></a>
-                            </div> 
-                        </form>
-                        <form class="container-fluid LightForm" role="form" data-bind="visible: isServiceProfessionalX()">
-                            <h1>Review <span data-bind="text: clientFirstName"></span> as a Client
-                            </h1>
-                            <p>The Loconomics community is built on trust and reviews are an integral part for both clients and service professionals to have great experiences. Please provide an honest and constructive review. <span data-bind="text: serviceProfessionalFirstName"></span> will also review working with you as a client.<a class="text-secondary" href="#" target="_blank"> See our review guidelines</a>.</p>
-                            <h2>First, would you recommend <span data-bind="text: serviceProfessionalFirstName"></span> to other clients?
-                            </h2>
-                            <p>Your answer will not be posted on your profile or <span data-bind="text: serviceProfessionalFirstName"></span>'s profile.</p>
-                            <div class="Review-recommendation">
-                                <input id="answer1" name="review[recommend]" type="radio" value="0">
-                                <label for="answer1">
-                                    <i class="fa fa-fw fa-meh-o"></i>
-                                    <span>No</span>
-                                </label>
-                                <input id="answer1" name="review[recommend]" type="radio" value="1">
-                                <label for="review_recommend_1">
+                                <input id="recommended_yes" name="answer1" type="radio" data-bind="">
+                                <label for="recommended_yes">
                                     <i class="fa fa-fw fa-smile-o"></i>
                                     <span>Yes!</span>
                                 </label>
@@ -58,78 +34,167 @@
                             <div class="form-group">
                                 <h2>Describe working with <span data-bind="text: serviceProfessionalFirstName"></span> (required)</h2>
                                 <h5 class="text-muted">Your review will be public on <span data-bind="text: serviceProfessionalFirstName"></span>'s profile.</h5>
-                                <textarea class="form-control" id="userReviewPublicReview" type="text" placeholder="">
+                                <textarea class="form-control" id="publicReview" name="publicReview" type="text" placeholder="" data-bind="">
                                 </textarea>
                                 <span>500 characters max</span>
                             </div>
                             <div class="form-group">
                                 <h2>Private feedback for <span data-bind="text: serviceProfessionalFirstName"></span></h2>
                                 <h5 class="text-muted">This feedback is for <span data-bind="text: serviceProfessionalFirstName"></span> and won't be made public.</h5>
-                                <textarea class="form-control" id="userReviewPrivateFeedback" type="text" placeholder="Anything you think could help Joshua improve their services?">
+                                <textarea class="form-control" id="privateReview" name="privateReview" type="text" placeholder="" data-bind="">
                                 </textarea>
                             </div>
                             <div class="form-group">
                                 <h2><span data-bind="">Overall experience</span></h2>
                                 <h5 class="text-muted">Overall, how was working with <span data-bind="text: serviceProfessionalFirstName"></span>?</h5>
                                 <div class="StarsRating-icons">
-                                    <input class="star-rating-input needsclick" id="review_overall_5" name="review[overall]" type="radio" value="5">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_overall_4" name="review[overall]" type="radio" value="4">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_overall_3" name="review[overall]" type="radio" value="3">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_overall_2" name="review[overall]" type="radio" value="2">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_overall_1" name="review[overall]" type="radio" value="1">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_overall_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star1" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star2" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star3" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star4" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star5" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star6"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <h2><span>Services</span></h2>
                                 <h5 class="text-muted"><span>How were the <span data-bind="text: serviceProfessionalJobTitle"></span> services provided by <span data-bind="text: serviceProfessionalFirstName"></span>?</span></h5>
                                 <div class="StarsRating-icons">
-                                    <input class="star-rating-input needsclick" id="review_service_5" name="review[service]" type="radio" value="5">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_service_4" name="review[service]" type="radio" value="4">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_service_3" name="review[service]" type="radio" value="3">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_service_2" name="review[service]" type="radio" value="2">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_service_1" name="review[service]" type="radio" value="1">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_service_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating2_star1" name="rating2" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating2_star1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating2_star2" name="rating2" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating2_star2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating2_star3" name="rating2" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating2_star3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating2_star4" name="rating2" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating2_star4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating2_star5" name="rating2" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating2_star6"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <h2><span data-bind="">Communication</span></h2>
                                 <h5 class="text-muted">How was communication with <span data-bind="text: serviceProfessionalFirstName"></span>?</h5>
                                 <div class="StarsRating-icons">
-                                    <input class="star-rating-input needsclick" id="review_communication_5" name="review[communication]" type="radio" value="5">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_communication_4" name="review[communication]" type="radio" value="4">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_communication_3" name="review[communication]" type="radio" value="3">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_communication_2" name="review[communication]" type="radio" value="2">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_communication_1" name="review[communication]" type="radio" value="1">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_communication_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating3_star1" name="rating3" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating3_star1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating3_star2" name="rating3" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating3_star2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating3_star3" name="rating3" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating3_star3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating3_star4" name="rating3" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating3_star4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating3_star5" name="rating3" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating3_star6"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <h2><span data-bind="">Value</span></h2>
                                 <h5 class="text-muted">How was the price compared to the value of the <span data-bind="text: serviceProfessionalJobTitle"></span> services received?</h5>
                                 <div class="StarsRating-icons">
-                                    <input class="star-rating-input needsclick" id="review_value_5" name="review[value]" type="radio" value="5">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_5"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_value_4" name="review[value]" type="radio" value="4">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_value_3" name="review[value]" type="radio" value="3">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_value_2" name="review[value]" type="radio" value="2">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
-                                    <input class="star-rating-input needsclick" id="review_value_1" name="review[value]" type="radio" value="1">
-                                    <label class="star-rating-star js-star-rating needsclick" for="review_value_1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating4_star1" name="rating4" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating4_star1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating4_star2" name="rating4" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating4_star2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating4_star3" name="rating4" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating4_star3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating4_star4" name="rating4" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating4_star4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating4_star5" name="rating4" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating4_star6"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                </div>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <a href="#userReview-NPS"><button type="submit" class="btn btn-primary btn-block">Submit</button></a>
+                            </div> 
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="userReview-NPS">
+                        <form class="container-fluid LightForm" role="form">
+                            <h1>Based on your interaction with <span data-bind="text: serviceProfessionalFirstName"></span>, how likely are you to recommend Loconomics to a friend or colleague?</h1>
+                            <button class="btn btn-default">0</button>
+                            <button class="btn btn-default">1</button>
+                            <button class="btn btn-default">2</button>
+                            <button class="btn btn-default">3</button>
+                            <button class="btn btn-default">4</button>
+                            <button class="btn btn-default">5</button>
+                            <button class="btn btn-default">6</button>
+                            <button class="btn btn-default">7</button>
+                            <button class="btn btn-default">8</button>
+                            <button class="btn btn-default">9</button>
+                            <button class="btn btn-default">10</button>
+                            <div class="form-group">
+                                <h2>What could Loconomics do to improve the score you gave?</h2>
+                                <h5 class="text-muted"><span data-bind="serviceProfessionalFirstName"></span> will not see this.</h5>
+                                <textarea class="form-control" id="userReviewNPS" type="text" placeholder="">
+                                </textarea>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <a href="#userReview-ratings"><button type="submit" class="btn btn-primary btn-block">Next</button></a>
+                            </div> 
+                        </form>
+                    </div>
+                </div>  
+                
+                <div class="tab-content" data-bind="visible: isServiceProfessional()">
+                    <div role="tabpanel" class="tab-pane active" id="userReview-recommendation">
+                        <form class="container-fluid LightForm" role="form">
+                            <h1>Review <span data-bind="text: clientFirstName"></span> as a client
+                            </h1>
+                            <p>The Loconomics community is built on trust and reviews are an integral part for both clients and service professionals to have great experiences. Please provide an honest and constructive review. <span data-bind="text: serviceProfessionalFirstName"></span> will also review working with you as a client.<a class="text-secondary" href="#" target="_blank"> See our review guidelines</a>.</p>
+                            <h2>First, would you recommend <span data-bind="text: clientFirstName"></span> to other Loconomics service professionals?
+                            </h2>
+                            <p>Your answer will not be posted on your profile or <span data-bind="text: clientFirstName"></span>'s profile.</p>
+                            <div class="Review-recommendation">
+                                <input id="recommended_no" name="answer1" type="radio" data-bind="">
+                                <label for="recommended_no">
+                                    <i class="fa fa-fw fa-meh-o"></i>
+                                    <span>No</span>
+                                </label>
+                                <input id="recommended_yes" name="answer1" type="radio" data-bind="">
+                                <label for="recommended_yes">
+                                    <i class="fa fa-fw fa-smile-o"></i>
+                                    <span>Yes!</span>
+                                </label>
+                            </div>
+                            <div class="LightForm-submitBar">
+                                <a href="#userReview-ratings"><button type="submit" class="btn btn-primary btn-block">Next</button></a>
+                            </div> 
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="userReview-ratings">  
+                        <form class="container-fluid LightForm" role="form">
+                            <div class="form-group">
+                                <h2>Describe working with <span data-bind="text: clientFirstName"></span> (required)</h2>
+                                <h5 class="text-muted">Your review will be public on <span data-bind="text: clientFirstName"></span>'s profile.</h5>
+                                <textarea class="form-control" id="publicReview" name="publicReview" type="text" placeholder="" data-bind="">
+                                </textarea>
+                                <span>500 characters max</span>
+                            </div>
+                            <div class="form-group">
+                                <h2>Private feedback for <span data-bind="text: clientFirstName"></span></h2>
+                                <h5 class="text-muted">This feedback is for <span data-bind="text: clientFirstName"></span> and won't be made public.</h5>
+                                <textarea class="form-control" id="privateReview" name="privateReview" type="text" placeholder="" data-bind="">
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <h2><span data-bind="">Overall experience</span></h2>
+                                <h5 class="text-muted">Overall, how was working with <span data-bind="text: serviceProfessionalFirstName"></span>?</h5>
+                                <div class="StarsRating-icons">
+                                    <input class="star-rating-input needsclick" id="rating1_star1" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star1"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star2" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star2"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star3" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star3"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star4" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star4"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
+                                    <input class="star-rating-input needsclick" id="rating1_star5" name="rating1" type="radio"  data-bind="">
+                                    <label class="star-rating-star js-star-rating needsclick" for="rating1_star6"><i class="fa fa-fw ion-ios-star needsclick"></i>&nbsp;</label>
                                 </div>
                             </div>
                             <div class="LightForm-submitBar">
