@@ -27,10 +27,10 @@ var facebookLogin = function() {
             window.facebookConnectPlugin.login(['email'], s, e);
         });
     }
-    else {        
+    else {
         // email,user_about_me
         return fb.login({ scope: 'email' });
-    }  
+    }
 };
 var facebookMe = function() {
     if (window.facebookConnectPlugin) {
@@ -54,9 +54,9 @@ var pwdRequirementsLabel = 'Your password must be at least 8 characters long, ha
 var pwdRegex = /(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/;
 
 function SignupVM(app) {
-    
+
     EventEmitter.call(this);
-    
+
     this.confirmationCode = ko.observable(null);
     this.firstName = newFieldObs();
     this.lastName = newFieldObs();
@@ -65,27 +65,31 @@ function SignupVM(app) {
     this.countryID = newFieldObs();
     this.referralCode = newFieldObs();
     this.device = newFieldObs();
-    
+
     this.facebookUserID = ko.observable();
     this.facebookAccessToken = ko.observable();
 
-    //var credentials = new FormCredentials();    
+    //var credentials = new FormCredentials();
     //this.email = credentials.username;
     //this.password = credentials.password;
     this.email = newFieldObs();
     this.password = newFieldObs();
 
+    this.checkPassword = function() {
+      console.log("asdasd");
+    };
+
     this.signupError = ko.observable('');
-    
+
     this.isSigningUp = ko.observable(false);
-    
+
     this.profile = ko.observable(''); // client, service-professional
-    
+
     this.emailIsLocked = ko.observable(false);
-    
+
     // A static utility (currently only used to conditionally show/hide DownloadApp links)
     this.inApp = ko.observable(!!window.cordova);
-    
+
     this.reset = function() {
         this.confirmationCode(null);
         this.firstName('');
@@ -104,7 +108,7 @@ function SignupVM(app) {
         this.profile('');
         this.emailIsLocked(false);
     };
-    
+
     this.submitText = ko.pureComputed(function() {
         return (
             this.isSigningUp() ? 'Signing up...' :
@@ -112,7 +116,7 @@ function SignupVM(app) {
             'Sign up'
         );
     }, this);
-    
+
     this.performSignup = function performSignup() {
 
         this.isSigningUp(true);
@@ -139,7 +143,7 @@ function SignupVM(app) {
 
         return app.model.signup(plainData)
         .then(function(signupData) {
-            
+
             this.isSigningUp(false);
 
             // Start onboarding
@@ -148,9 +152,9 @@ function SignupVM(app) {
 
             // Remove form data
             this.reset();
-            
+
             this.emit('signedup', signupData);
-            
+
             return signupData;
 
         }.bind(this))
@@ -179,12 +183,12 @@ function SignupVM(app) {
             }
 
             this.isSigningUp(false);
-            
+
             throw err;
         }.bind(this));
-        
+
     }.bind(this);
-    
+
     // For buttons
     this.clickSignup = function() {
         this.performSignup()
@@ -197,9 +201,10 @@ function SignupVM(app) {
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
+        console.log(this.profile() === 'service-professional');
         return this.profile() === 'service-professional';
     }, this);
-    
+
     this.facebook = function() {
         var vm = this;
 
@@ -219,7 +224,7 @@ function SignupVM(app) {
             });
         });
     };
-    
+
     this.passwordRequirements = ko.pureComputed(function() {
         var pwd = this.password();
         return pwdRegex.test(pwd) ? '' : pwdRequirementsLabel;

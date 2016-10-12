@@ -138,7 +138,7 @@
     // Whether trailing whitespace rules apply.
     "trailing": false,
     // Specify indentation.
-    //RECOMENDED: 
+    //RECOMENDED:
     //"indent": 4,
     // Whether strict whitespace rules apply.
     "white": false,
@@ -152,7 +152,7 @@
     // Maximum block nesting depth.
     "maxdepth": 3,
     // Maximum number of statements per function.
-    "maxstatements": 25,
+    "maxstatements": 35,
     // Maximum cyclomatic complexity.
     "maxcomplexity": 6
 }
