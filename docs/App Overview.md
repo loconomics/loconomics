@@ -1,31 +1,15 @@
-## App
-It's a web app that targets mobile (using Phonegap) and the front-end for the web.
+### App Overview
+Loconomics is a hybrid application built with HTML, CSS and JavaScript with a single codebase. It uses [Phonegap](http://phonegap.com/) to export the app to iOS and Android.
 
 It uses:
-- Web platform: html, css, js
-- Preprocessors: Stylus (CSS), Browserify (js), Bliss (html)
+- Preprocessors: 
+  - CSS: [Stylus](http://stylus-lang.com)
+  - JS: [Browserify](http://browserify.org/)
+  - HTML: [Bliss] (html)
 - Main libraries: jQuery-2, Bootstrap-3, Knockoutjs-3.3, polyfills for ES5 and ES6-Promise, momentjs.
 - Nodejs to assist front-end development, using Grunt as tasks runner.
 - Tutorial for knockout: http://knockoutjs.com
 
-### Prepare dev environment
-- Request API access from @iagoSRL or @dani0198
-- Clone the git repository, master branch.
-- Install NodeJS (minimum version 0.10, not tested with the newest ones like 4.1 but must work): https://nodejs.org/ (it has packages/installers for Windows, Mac and Linux)
-- From the command line, use the NodeJS Package Manager (npm) to globally install
-  - [Grunt](http://gruntjs.com/), type:
-
-    > npm install -g grunt-cli
-  - [Phonegap](http://phonegap.com/), type:
-
-    > npm install -g phonegap
-  
-  Linux and Mac may require root/elevated rights in order to install globally.
-- From the command line at the project directory type
-
-  > npm install
-
-  It will install all the modules listed on the package.json file, needed to build the app source code.
 
 ### Organization (main folders)
 **- /app: all the code for the app**
