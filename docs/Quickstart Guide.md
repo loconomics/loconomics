@@ -1,4 +1,4 @@
-### Prepare dev environment
+# Quick Start Guide
 
 ## Download or clone the master branch of the Loconomics Github repository
 - [Download](https://github.com/dani0198/Loconomics/archive/master.zip)
@@ -26,3 +26,36 @@ npm install
 ```
 It will install all the modules listed on the package.json file, needed to build the app source code.
 
+## Build the app
+
+Ensure you're in the project's /app folder and run:
+```
+grunt build
+```
+
+## Start your local host
+
+Ensure you're in the project's /app folder and run:
+```
+grunt atwork
+```
+
+## Open the app
+
+Open your browser (Chrome preferred) and open:
+```
+http://localhost:8811/appDebug.html
+```
+
+## Point your local storage to a database
+
+At the Web console with the page opened (can be the local development server created by 'grunt atwork', or a website Webapp like dev.loconomics.com), use next to setup a different REST Service URL.
+
+For our live database:
+```
+localStorage["LoconomicsApp/config"] = '{"siteUrl":"https://loconomics.com"}';
+```
+To restore it and have the App/Webapp use the default URL:
+```
+delete localStorage["LoconomicsApp/config"]
+```
