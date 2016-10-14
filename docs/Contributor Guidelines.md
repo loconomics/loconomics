@@ -32,6 +32,9 @@ Try to include:
 
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
 #### Severity Level Label
+![bug](https://cloud.githubusercontent.com/assets/1202838/19402991/2f2ddefe-9219-11e6-86ac-5a05a520e5e0.png)
+
+##### Definitions:
 - Bug: S1 (The issue is blocking an impending release.)
 - Bug: S2 (The issue causes data loss, crashes or hangs salt processes, makes the system unresponsive, etc.)
 - Bug: S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
