@@ -123,7 +123,7 @@ As a Pet Care Professional I'd like to be able attract and manage clients and th
 
 Child Story | Test Cases | Investable | GitHub Issue | Complete
 ------------ | ------------- | ------------- | ------------- | -------------
-A) I want to manage my schedule easily. | A1) I want a calendar to ensure all my gigs work together timewise (there's a window) and location. Logistics.  |  | [#1076](/issues/1706) | 
+A) I want to manage my schedule easily. | A1) I want a calendar to ensure all my gigs work together timewise (there's a window) and location. Logistics.  |  | [#1076]() | 
  | A2) I'd like to be able to book up to X dogs at a time  |  |  | 
  | A3) I'd like help mapping my pickups and dropoffs  |  |  | 
  | A4) I'd like clients be able to change/cancel/update any of their scheduled appointments  |  |  | 
