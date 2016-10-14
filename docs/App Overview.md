@@ -124,9 +124,10 @@ Replace the following via FTP in Azure from your local machine:
 - web/assets (all folder contents)
 
 ## Testing Links
+Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com)
 
 ### API
-http://dev.loconomics.com/tests/testrest (request access from @iagoSRL or @dani0198)
+http://dev.loconomics.com/tests/testrest ()
 
 ### Email Communications
 http://dev.loconomics.com/tests/testmessaging (request access from @iagoSRL or @dani0198)
