@@ -5,6 +5,9 @@
 We use Github to track all development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
 
 ### Bugs
+Before reporting a bug:
+* Please have a look in [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74) and the current release folder to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
+
 The first thing we do with a bug report is confirm we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
 
 Try to include:
@@ -16,16 +19,13 @@ Try to include:
 * UserIDs, BookingIDs, JobTitleIDs involved.
 * The /activityName from the URL.
 
-Before reporting an issue:
-* Please have a brief look to see if the issue is already listed. If so please add any extra, clarifying information you can to the existing issue.
-
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
-Severity Level Label
+#### Severity Level Label
 - Bug: S1 (The issue is blocking an impending release.)
 - Bug: S2 (The issue causes data loss, crashes or hangs salt processes, makes the system unresponsive, etc.)
 - Bug: S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
 - Bug: S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
-Feature Area Label
+#### Feature Area Label
 - F: Account
 - F: Admin Tools
 - F: Calendar
@@ -40,60 +40,27 @@ Feature Area Label
 - F: Reviews
 - F: Scheduler
 - F: Voice of Customer Program
+#### Milestone
+Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
 
-
-### Filing issues
-- Select which milestone to attach it to:
-  - **Information Repository** Meeting Notes, People to connect with, Journalists to contact, Knowledge Base, etc.
-  - **Sandbox** All development issues not yet included in an upcoming release. Follow format outlined in milestone.
-  - **Marketing** All outstanding marketing items not yet included in specific marketing milestones.
-  - **Release X.XX** Issues to be completed and closed for a specific app release. Only @dani0198 or @iagosrl should add or remove issues from these.
-- Label appropriately the issue:
-  - **Sandbox** 
-    - Include: 
-    - **Gray label** (Category): 
-      - Bug 
-      - Content
-      - C: New Feature 
-      - Enhancement (to an existing feature)
-      - Usability (front end changes to make feature more usable)
-      - Optimization (of an existing feature)
-    - **Blue label** (feature area)
-    - **P label** (priority:
-      - P1 (The issue will be seen by all users.)
-      - P2 (The issue will be seen by most users.)
-      - P3 (The issue will be seen by about half of users.)
-      - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
-    - **R label** (readiness):
-      - R1 (The issue is ready to be put into a release with all supporting documentation completed. 
-        - **NEW ISSUE CREATED WITH CLEAN FORMAT & OLD ISSUE CLOSED & REFERENCED**)
-      - R2 (The issue has been deemed necessary by users and business team. Supporting documentation is being completed.)
-      - R3 (The issue is a well formed idea able to be articulated to users. Should be shared so that they may vote on it.)
-      - R4 (The issue is just an idea with no or little supporting documentation.)
-    - **S label** (severity-ONLY FOR BUGS):
-      - S1 (The issue is blocking an impending release.)
-      - S2 (The issue causes data loss, crashes or hangs salt processes, makes the system unresponsive, etc.)
-      - S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
-      - S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
-
- Bug: S1
- Edit  Delete 5 open issues Bug: S2
- Edit  Delete 2 open issues Bug: S3
- Edit  Delete 1 open issue Bug: S4
- Edit  Delete 3 open issues C: Content
- Edit  Delete 1 open issue C: Documentation
- Edit  Delete 52 open issues C: Enhancement
- Edit  Delete 1 open issue C: HIPAA
- Edit  Delete 16 open issues C: Marketing
- Edit  Delete 4 open issues C: New Benefit
- Edit  Delete 45 open issues C: New Feature
- Edit  Delete 21 open issues C: Optimization
- Edit  Delete 10 open issues C: Payment Processing
- Edit  Delete 24 open issues C: Usability
- Edit  Delete 1 open issue C: User Story
- Edit  Delete 3 open issues Database Changes
- Edit  Delete 0 open issues Discarded
- Edit  Delete 0 open issues Duplicate
+### Filing development issues
+[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with four labels:
+#### Priority Level Label
+- P1 (The issue will be seen by all users.)
+- P2 (The issue will be seen by most users.)
+- P3 (The issue will be seen by about half of users.)
+- P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
+#### Category Label
+- C: Content
+- C: Enhancement (to an existing feature)
+- C: HIPAA
+- C: New Benefit (Feature Label is Cooperative)
+- C: New Feature (no Feature Label in this case)
+- C: Optimization (of an existing feature)
+- C: Payment Processing
+- C: Usability (front end changes to make feature more usable, includes design)
+#### Feature Label
+Matches the area of the app
 - F: Account
 - F: Admin Tools
 - F: Calendar
@@ -108,7 +75,50 @@ Feature Area Label
 - F: Reviews
 - F: Scheduler
 - F: Voice of Customer Program
+#### Readiness Label
+- R1 (The issue is ready to be put into a release with all supporting documentation completed. 
+- R2 (Awaiting Architecture Sprint)
+- R3 (Awaiting Design Sprint)
+- R4 (User Story)
+#### Milestone
+@dani0198 will place into Product Roadmap. R1 issues will be place into Releases based on developer feedback.
 
+### Filing marketing issues
+[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
+#### Category Label
+- C: Marketing
+#### Marketing Label
+- M: Insights - Analytics
+- M: Reach - Collateral
+- M: Reach - Events
+- M: Reach - Lead Generation
+- M: Reach - Mktg Communications
+- M: Reach - Outreach
+- M: Reach - Partner
+- M: Reach - PR
+- M: Reach - SEO
+- M: Relationship - Content
+- M: Relationship - Engagement
+- M: Relationship - Social Media
+#### Milestone
+@dani0198 will place into Marketing Roadmap and issues will be place into Releases based on Staff discussion.
+
+### Filing Information 
+We store information related to the project but not development or marketing issues as issues in an [Information Repository](https://github.com/dani0198/Loconomics/milestone/34) for future reference.
+[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
+#### Category Label
+- C: Information Repository
+#### Information Repository Label
+- I: Journalist
+- I: Knowledge Base
+- I: Meeting Notes
+- I: Partnership Opportunity
+- I: Person to Connect With
+- I: Person We've Met
+- I: Potential Tools
+- I: Programmer
+#### Milestone
+Place into the Information Repository Milestone
 
 ## CSS Naming Conventions
 
