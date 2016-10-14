@@ -3,16 +3,16 @@
 ## Epic Story
 As a [persona], I want to [do something] so that I can [derive a benefit]
 
-Child Story | Test Cases
------------- | -------------
-A) Child Story 1 | A1) Test Case 1
- | A2) Test Case 2
-B) Child Story 2 | B1) Test Case 2
- | B2) Test Case 2 
-C) Child Story 3 | C1) Test Case 1
- | C2) Test Case 2
-D) Child Story 4 | D1) Test Case 1
- | D2) Test Case 2
+Child Story | Test Cases | Investable | GitHub Issue | Complete
+------------ | ------------- | ------------- | ------------- | -------------
+A) Child Story 1 | A1) Test Case 1 |  |  | 
+ | A2) Test Case 2 |  |  | 
+B) Child Story 2 | B1) Test Case 2 |  |  | 
+ | B2) Test Case 2 |  |  |  
+C) Child Story 3 | C1) Test Case 1 |  |  | 
+ | C2) Test Case 2 |  |  | 
+D) Child Story 4 | D1) Test Case 1 |  |  | 
+ | D2) Test Case 2 |  |  | 
 
 Trigger | Action | Reward
 ------------ | ------------- | -------------
