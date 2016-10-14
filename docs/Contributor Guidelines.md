@@ -41,20 +41,7 @@ Try to include:
 - Bug: S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
 
 #### Feature Area Label
-- F: Account
-- F: Admin Tools
-- F: Calendar
-- F: Client manager
-- F: Cooperative
-- F: General Site
-- F: Marketplace Profile
-- F: Marketplace
-- F: Messenger
-- F: Onboarding
-- F: Performance
-- F: Reviews
-- F: Scheduler
-- F: Voice of Customer Program
+![feature](https://cloud.githubusercontent.com/assets/1202838/19402990/2f27ec6a-9219-11e6-9a1e-2bb962c00c6a.png)
 
 #### Milestone
 Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
@@ -63,43 +50,22 @@ Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with four labels:
 
 #### Priority Level Label
+![p labels](https://cloud.githubusercontent.com/assets/1202838/19402985/2f10bc02-9219-11e6-8b7b-e09ffd633c0a.png)
+##### Definitions:
 - P1 (The issue will be seen by all users.)
 - P2 (The issue will be seen by most users.)
 - P3 (The issue will be seen by about half of users.)
 - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
 
 #### Category Label
-- C: Content
-- C: Enhancement (to an existing feature)
-- C: HIPAA
-- C: New Benefit (Feature Label is Cooperative)
-- C: New Feature (no Feature Label in this case)
-- C: Optimization (of an existing feature)
-- C: Payment Processing
-- C: Usability (front end changes to make feature more usable, includes design)
+![category](https://cloud.githubusercontent.com/assets/1202838/19402989/2f15dcc8-9219-11e6-8d95-bc98e6863269.png)
 
 #### Feature Label
-Matches the area of the app
-- F: Account
-- F: Admin Tools
-- F: Calendar
-- F: Client manager
-- F: Cooperative
-- F: General Site
-- F: Marketplace Profile
-- F: Marketplace
-- F: Messenger
-- F: Onboarding
-- F: Performance
-- F: Reviews
-- F: Scheduler
-- F: Voice of Customer Program
+Matching the area of the app
+![feature](https://cloud.githubusercontent.com/assets/1202838/19402990/2f27ec6a-9219-11e6-9a1e-2bb962c00c6a.png)
 
 #### Readiness Label
-- R1: Ready for Development Sprint 
-- R2: Ready for Architecture Sprint
-- R3: Ready for Design Sprint
-- R4: User Story
+![r labels](https://cloud.githubusercontent.com/assets/1202838/19402983/2ee1929c-9219-11e6-8860-cba1e935c955.png)
 
 #### Milestone
 @dani0198 will place into Product Roadmap. R1 issues will be place into Releases based on developer feedback.
@@ -108,21 +74,10 @@ Matches the area of the app
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
 
 #### Category Label
-- C: Marketing
+![marketing label](https://cloud.githubusercontent.com/assets/1202838/19402986/2f12a206-9219-11e6-91ed-e3bba17a1e59.png)
 
 #### Marketing Label
-- M: Insights - Analytics
-- M: Reach - Collateral
-- M: Reach - Events
-- M: Reach - Lead Generation
-- M: Reach - Mktg Communications
-- M: Reach - Outreach
-- M: Reach - Partner
-- M: Reach - PR
-- M: Reach - SEO
-- M: Relationship - Content
-- M: Relationship - Engagement
-- M: Relationship - Social Media
+![marketing](https://cloud.githubusercontent.com/assets/1202838/19402984/2f0919fc-9219-11e6-959d-c800044cec3e.png)
 
 #### Milestone
 @dani0198 will place into Marketing Roadmap and issues will be place into Releases based on Staff discussion.
@@ -132,17 +87,10 @@ We store information related to the project but not development or marketing iss
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
 
 #### Category Label
-- C: Information Repository
+![ir label](https://cloud.githubusercontent.com/assets/1202838/19402987/2f136e34-9219-11e6-8bc6-7aa786799856.png)
 
 #### Information Repository Label
-- I: Journalist
-- I: Knowledge Base
-- I: Meeting Notes
-- I: Partnership Opportunity
-- I: Person to Connect With
-- I: Person We've Met
-- I: Potential Tools
-- I: Programmer
+![information](https://cloud.githubusercontent.com/assets/1202838/19402988/2f14ec46-9219-11e6-811a-0434cbc146f0.png)
 
 #### Milestone
 Place into the [Information Repository](https://github.com/dani0198/Loconomics/milestone/34) 
