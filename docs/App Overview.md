@@ -13,12 +13,19 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 ## Main libraries
 [jQuery-2](https://jquery.com)
+
 [Bootstrap-3](http://getbootstrap.com)
+
 [Knockoutjs-3.3](http://knockoutjs.com)
+
 [Polyfills](https://www.npmjs.com/package/js-polyfills) for ES5 and ES6-Promise
+
 [Momentjs](http://momentjs.com/)
+
 [Nodejs](https://nodejs.org/en/) to assist in front-end development
+
 [Grunt](http://gruntjs.com/) as a tasks runner.
+
 - Tutorial for knockout: http://knockoutjs.com
 
 
