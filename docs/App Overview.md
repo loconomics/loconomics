@@ -1,14 +1,14 @@
-### App Overview
+# App Overview
 Loconomics is a hybrid application built with HTML, CSS and JavaScript with a single codebase. It uses [Phonegap](http://phonegap.com/) to export the app to iOS and Android.
 
 ## Preprocessors
-# CSS 
+### CSS 
 [Stylus](http://stylus-lang.com)
 
-# JS 
+### JS 
 [Browserify](http://browserify.org/)
 
-# HTML 
+### HTML 
 [Bliss](html)
 
 ## Main libraries
