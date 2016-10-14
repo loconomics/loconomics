@@ -1,18 +1,29 @@
 ### App Overview
 Loconomics is a hybrid application built with HTML, CSS and JavaScript with a single codebase. It uses [Phonegap](http://phonegap.com/) to export the app to iOS and Android.
 
-It uses:
-- Preprocessors: 
-  - CSS: [Stylus](http://stylus-lang.com)
-  - JS: [Browserify](http://browserify.org/)
-  - HTML: [Bliss] (html)
-- Main libraries: jQuery-2, Bootstrap-3, Knockoutjs-3.3, polyfills for ES5 and ES6-Promise, momentjs.
-- Nodejs to assist front-end development, using Grunt as tasks runner.
+## Preprocessors
+# CSS 
+[Stylus](http://stylus-lang.com)
+
+# JS 
+[Browserify](http://browserify.org/)
+
+# HTML 
+[Bliss](html)
+
+## Main libraries
+[jQuery-2](https://jquery.com)
+[Bootstrap-3](http://getbootstrap.com)
+[Knockoutjs-3.3](http://knockoutjs.com)
+[Polyfills](https://www.npmjs.com/package/js-polyfills) for ES5 and ES6-Promise
+[Momentjs](http://momentjs.com/)
+[Nodejs](https://nodejs.org/en/) to assist in front-end development
+[Grunt](http://gruntjs.com/) as a tasks runner.
 - Tutorial for knockout: http://knockoutjs.com
 
 
-### Organization (main folders)
-**- /app: all the code for the app**
+## File Organization
+### /app (all app code)
   - /source: source code of the app and templates of configuration files
     - /html/activities: HTML source code. Each file needs to have a matching /js/activities file and optionally /css/activities.   
     - /css/activities: CSS code for matching HTML files. Each file needs to be included in app/source/css/app.styl.   
@@ -29,7 +40,7 @@ It uses:
   - /package.js: NodeJS package definition file, keeps modules dependencies (npm) and some set-up variables.
   - /Gruntfile.js: file required by the Grunt task runner on the project root folder; more code is organized in the /grunt folder to don't have a fat Gruntfile.js file.
   
-**- /web: all server-side and API files**
+### /web (all server-side and API files)
 - /_DBUpdate: MS SQL files of any changes to the database to ensure the dev, test and live databases get updated accordingly.
   - /api/v1: CSHTML files that communicate with the server and retrieve API data
     - /me: Information about a user requesting information about themselves, mostly private  
@@ -44,28 +55,7 @@ It uses:
       - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
       - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
 
-### Building the source code
-**All next commands must be executed in a command line/terminal at the project directory**
 
-Run next command:
-> grunt build
-
-It will recreate the content of the /build and /phonegap folders.
-
-To test the webapp in the browser, a lightweight built-in http server is being used (*connect*), to start it, run next command and keep the task alive:
-> grunt connect:atbuild
-
-But *it's better* to run next special task, that performs the previous one and other things:
-> grunt atwork
-
-- runs the *connect* server at http://localhost:8811/
-- runs the *watch* task that will listen for changes on source files to automatically rebuild the needed files
-(specific builds are performed, like build-js, build-css, depending on the modified files;
-when they finish, the browser can be refreshed to try latest changes).
-- by modifying the package.json file (to update the version number, for example :-), the *watch* task will
-run the *grunt build* task, rebuilding everything; when it finishs, the /build/latest.zip file is ready to be sent
-to PhoneGap Build, and the phonegap folder is ready to perform local PhoneGap builds.
-- when the build ends, a notification is sent to the system (more info at https://github.com/dylang/grunt-notify).
 
 **PhoneGap Build** cloud service is used to create the intallation packages for iOS and Android.
 

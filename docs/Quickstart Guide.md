@@ -26,19 +26,35 @@ npm install
 ```
 It will install all the modules listed on the package.json file, needed to build the app source code.
 
-## Build the app
+## Build the app source code
 
 Ensure you're in the project's /app folder and run:
 ```
 grunt build
 ```
+It will recreate the content of the /build and /phonegap folders.
 
 ## Start your local host
 
-Ensure you're in the project's /app folder and run:
+**Ensure you're in the project's /app folder **
+
+There are two options for this, with the second one preferred:
+
+First option:
+```
+grunt connect:atbuild
+```
+Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
+
+Second option (preferred):
 ```
 grunt atwork
 ```
+This will:
+- run the connect server at http://localhost:8811/
+- run the watch task that will listen for changes on source files to automatically rebuild the needed files (specific builds are performed, like build-js, build-css, depending on the modified files; when they finish, the browser can be refreshed to try latest changes).
+- by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything; when it finishs, the /build/latest.zip file is ready to be sent to PhoneGap Build, and the phonegap folder is ready to perform local PhoneGap builds.
+- when the build ends, a notification is sent to the system. [More info on this](https://github.com/dylang/grunt-notify)
 
 ## Open the app
 
