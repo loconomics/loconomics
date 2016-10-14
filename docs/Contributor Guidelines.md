@@ -25,6 +25,7 @@ Try to include:
 - Bug: S2 (The issue causes data loss, crashes or hangs salt processes, makes the system unresponsive, etc.)
 - Bug: S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
 - Bug: S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
+
 #### Feature Area Label
 - F: Account
 - F: Admin Tools
@@ -40,16 +41,19 @@ Try to include:
 - F: Reviews
 - F: Scheduler
 - F: Voice of Customer Program
+
 #### Milestone
 Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
 
 ### Filing development issues
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with four labels:
+
 #### Priority Level Label
 - P1 (The issue will be seen by all users.)
 - P2 (The issue will be seen by most users.)
 - P3 (The issue will be seen by about half of users.)
 - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
+
 #### Category Label
 - C: Content
 - C: Enhancement (to an existing feature)
@@ -59,6 +63,7 @@ Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
 - C: Optimization (of an existing feature)
 - C: Payment Processing
 - C: Usability (front end changes to make feature more usable, includes design)
+
 #### Feature Label
 Matches the area of the app
 - F: Account
@@ -75,18 +80,22 @@ Matches the area of the app
 - F: Reviews
 - F: Scheduler
 - F: Voice of Customer Program
+
 #### Readiness Label
 - R1 (The issue is ready to be put into a release with all supporting documentation completed. 
 - R2 (Awaiting Architecture Sprint)
 - R3 (Awaiting Design Sprint)
 - R4 (User Story)
+
 #### Milestone
 @dani0198 will place into Product Roadmap. R1 issues will be place into Releases based on developer feedback.
 
 ### Filing marketing issues
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
+
 #### Category Label
 - C: Marketing
+
 #### Marketing Label
 - M: Insights - Analytics
 - M: Reach - Collateral
@@ -100,14 +109,17 @@ Matches the area of the app
 - M: Relationship - Content
 - M: Relationship - Engagement
 - M: Relationship - Social Media
+
 #### Milestone
 @dani0198 will place into Marketing Roadmap and issues will be place into Releases based on Staff discussion.
 
 ### Filing Information 
 We store information related to the project but not development or marketing issues as issues in an [Information Repository](https://github.com/dani0198/Loconomics/milestone/34) for future reference.
 [File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
+
 #### Category Label
 - C: Information Repository
+
 #### Information Repository Label
 - I: Journalist
 - I: Knowledge Base
@@ -117,6 +129,7 @@ We store information related to the project but not development or marketing iss
 - I: Person We've Met
 - I: Potential Tools
 - I: Programmer
+
 #### Milestone
 Place into the Information Repository Milestone
 
