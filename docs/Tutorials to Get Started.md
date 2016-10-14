@@ -1,3 +1,28 @@
+# Tutorials to get started
+
+## Adding new pages to the app
+### Step 1
+Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?
+- If no, send a request to @iagoSRL or @dani0198 explaining what's needed
+- If yes, process to Step 2. 
+
+### Step 2
+Create new files for front-end code:
+- Find, copy and rename an example .html file from app/source/html/activities.
+- Optional: Find, copy and rename an example .css file from app/source/css/activities & add file name to app/source/css/app.styl.
+- Find, copy and rename an example .js file from app/source/js/activities & add file name to app/source/js/app.activities.js.
+
+### Step 3
+Edit your new html, css, js /activity files:
+- Change data-activity name to new name. Review and revise .js file to reference the appopriate /models and /appmodel files and functions. 
+- Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want referencing the css file of the same name. 
+- Change references the appopriate js functions in html.
+
+### Step 4
+Test new page:
+- http://localhost:8811/app.html#!/newActivity
+- Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
+
 ## Database & API changes
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact @dani0198 or @iagosrl. 
 
@@ -5,7 +30,8 @@ Access is limited to those who can sign a Business Associate Agreement per our H
 
 You should keep a copy of the dev database that runs on your local machine. Any changes to the dev database can be requested by placing a .sql file in web/_DBUpdate in your branch and @iagoSRL will review, approve, and upload changes when merging your branch into master.
 
-**Step 1: Is the data you need already in the database?**
+### Step 1
+Is the data you need already in the database?
 - If yes, proceed to Step 2. If not, continue.
 - Review database to ensure there aren't duplicates or other ways to get the data you need
 - Test fully any changes with latest app code ensuring any changes are accounted for
@@ -66,7 +92,8 @@ You should keep a copy of the dev database that runs on your local machine. Any 
     - VOCExperienceCategory
     - VOCFlag
 
-**Step 2: Add new data to the REST API**
+### Step 2
+Add new data to the REST API:
 - Create sample SQL with sample query parameters. 
 - Find, copy and rename an example .cs file from web/App_Code/LcRest using the name of the DB table if possible
 - Revise code to match the sample SQL. 
@@ -79,7 +106,7 @@ You should keep a copy of the dev database that runs on your local machine. Any 
   - /user: Information about a user requesting information about another user, mostly public  
 - Find, copy and rename an example .cshtml file from the chosen folder.
 - Define functions for the API in this file.
-- TEST API call (IAGO PLEASE FILL IN INSTRUCTIONS)
+- TEST API call: http://dev.loconomics.com/tests/testrest
 - Find, copy and rename an example .js file from app/source/js/models or model.js if there isn't a good example.
 - Revise or write code that defines the javascript objects you'll need.
 - Determine if you'll need an appmodel file (includes actions for that model). If so: 

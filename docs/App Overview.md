@@ -16,7 +16,7 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 [Bootstrap-3](http://getbootstrap.com)
 
-[Knockoutjs-3.3](http://knockoutjs.com)
+[Knockoutjs-3.3](http://knockoutjs.com): JavaScript implementation of the Model-View-ViewModel pattern with templates
 
 [Polyfills](https://www.npmjs.com/package/js-polyfills) for ES5 and ES6-Promise
 
@@ -25,8 +25,6 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 [Nodejs](https://nodejs.org/en/) to assist in front-end development
 
 [Grunt](http://gruntjs.com/) as a tasks runner.
-
-- Tutorial for knockout: http://knockoutjs.com
 
 
 ## File Organization
@@ -62,50 +60,14 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
       - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
       - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
 
+## Database & API 
+We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Live database is limited those who can sign a Business Associate Agreement per our HIPAA Policy.
 
 
-**PhoneGap Build** cloud service is used to create the intallation packages for iOS and Android.
 
-To perform that task in your own computer, you need the SDKs of each platform:
-- Apple XCode installed to create the iOS app; run the command:
 
-  > phonegap build ios
-  
-- Android SDKs installed to create the Android app; run the command:
 
-  > phonegap build android
-  
-Remember that the Phonegap plugins must be installed previously in order to be included in the local build.
-It's done by placing you in the /app/phonegap directory from the command line/terminal and running something like:
 
-> phonegap plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git
 
-The file /app/source/cordova-config.js.xml has a list of all the plugins in use (look at the *gap:plugin* elements),
-this config is used by the PhoneGap Build service to automatically install them. The version in use is there too, but not
-git URL, the package name can be used to locate it at [npm](https://www.npmjs.com/) and found the project git URL there.
 
-### Important links to bookmark
-**Test API:** http://dev.loconomics.com/tests/testrest (request access from @iagoSRL or @dani0198)
 
-**Test Email Communications:** http://dev.loconomics.com/tests/testmessaging (request access from @iagoSRL or @dani0198)
-
-**Test Any Page (for testing db changes):** http://dev.loconomics.com/tests/TestAny 
-
-### Adding new pages to the app
-**Step 1: Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?**
-- If no, send a request to @iagoSRL or @dani0198 explaining what's needed
-- If yes, process to Step 2. 
-
-**Step 2: create new files for front-end code**
-- Find, copy and rename an example .html file from app/source/html/activities.
-- Optional: Find, copy and rename an example .css file from app/source/css/activities & add file name to app/source/css/app.styl.
-- Find, copy and rename an example .js file from app/source/js/activities & add file name to app/source/js/app.activities.js.
-
-**Step 3: Edit your new html, css, js /activity files**
-- Change data-activity name to new name. Review and revise .js file to reference the appopriate /models and /appmodel files and functions. 
-- Change data-activity name to new name. Review and revise .html & .css files to have front end appearance you want referencing the css file of the same name. 
-- Change references the appopriate js functions in html.
-
-**Step 4: Test new page:**
-- http://localhost:8811/app.html#!/newActivity
-- Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
