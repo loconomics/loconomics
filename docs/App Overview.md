@@ -84,9 +84,11 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
       - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
       - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
 
-## Database & API 
+## Database  
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Live database is limited those who can sign a Business Associate Agreement per our HIPAA Policy.
 
+## API
+Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com)
 
 ## Deploying the App
 
@@ -124,7 +126,7 @@ Replace the following via FTP in Azure from your local machine:
 - web/assets (all folder contents)
 
 ## Testing Links
-Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com)
+Requires API access.
 
 ### API
 http://dev.loconomics.com/tests/testrest ()
