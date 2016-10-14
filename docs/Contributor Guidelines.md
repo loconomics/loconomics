@@ -1,5 +1,8 @@
 # Contributor Guidelines
 
+## Communications
+We prefer to keep all communications in each related Github issue and converse with each other using our @username so that conversations are well documented and stay within the project even if it requires a new issue for it. 
+
 ## CSS Naming Conventions
 
 We use Bootstrap as CSS framework and it has it's own naming rules, for anything related to Boostrap (like adding changes, modifiers on top of Bootstrap classes) or files under /utils folder, we follow the simple Boostrap naming.
