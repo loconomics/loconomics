@@ -1,5 +1,13 @@
 # Contributor Guidelines
 
+## CSS Naming Conventions
+
+We use Bootstrap as CSS framework and it has it's own naming rules, for anything related to Boostrap (like adding changes, modifiers on top of Bootstrap classes) or files under /utils folder, we follow the simple Boostrap naming.
+
+But for *components* styles, the classes at /components folder that start with uppercase letter, we use [SUIT naming convention](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md)
+
+**Disclaimer**: this rules were not strictly followed in the past or there is code created before we set this rules, then current source code needs some clean-up/refator. New code must follow the rules.
+
 ## Use of Github
 
 We use Github to track all development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
@@ -131,12 +139,6 @@ We store information related to the project but not development or marketing iss
 - I: Programmer
 
 #### Milestone
-Place into the Information Repository Milestone
+Place into the [Information Repository](https://github.com/dani0198/Loconomics/milestone/34) 
 
-## CSS Naming Conventions
 
-We use Bootstrap as CSS framework and it has it's own naming rules, for anything related to Boostrap (like adding changes, modifiers on top of Bootstrap classes) or files under /utils folder, we follow the simple Boostrap naming.
-
-But for *components* styles, the classes at /components folder that start with uppercase letter, we use [SUIT naming convention](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md)
-
-**Disclaimer**: this rules were not strictly followed in the past or there is code created before we set this rules, then current source code needs some clean-up/refator. New code must follow the rules.

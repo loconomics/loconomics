@@ -44,7 +44,19 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
   - /vendor: third party modules that are not at npm, or needed some custom build, or forked third party modules.
   - /package.js: NodeJS package definition file, keeps modules dependencies (npm) and some set-up variables.
   - /Gruntfile.js: file required by the Grunt task runner on the project root folder; more code is organized in the /grunt folder to don't have a fat Gruntfile.js file.
-  
+
+### /docs (all documentation)
+- /agile-templates: templates for creating personas and user stories
+- /Personas: personas for core users of the app with attached user stories
+
+### /iCalendarLib
+
+### /styleguide (currently obsolete, all design implemented in /app)
+
+### /sysadmin
+
+### /vendor-fonts
+
 ### /web (all server-side and API files)
 - /_DBUpdate: MS SQL files of any changes to the database to ensure the dev, test and live databases get updated accordingly.
   - /api/v1: CSHTML files that communicate with the server and retrieve API data
