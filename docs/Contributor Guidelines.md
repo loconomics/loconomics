@@ -11,6 +11,18 @@ But for *components* styles, the classes at /components folder that start with u
 
 **Disclaimer**: this rules were not strictly followed in the past or there is code created before we set this rules, then current source code needs some clean-up/refator. New code must follow the rules.
 
+## Changes to the database
+
+Any proposed changes to the database should be made by placing a .sql file in the web/_DBUpdate folder of your branch with the file named with these three attributes:
+- issue123 (the branch name) +
+- A1 (order of the changes made to the database. Start a new letter if unrelated.) +
+- short title (something describing the changes)
+
+### Example
+```
+issue1076 - A1 - new customertransactiontype table.sql
+```
+
 ## Use of Github
 
 We use Github to track all development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
