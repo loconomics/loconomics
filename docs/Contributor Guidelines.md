@@ -93,10 +93,10 @@ Matches the area of the app
 - F: Voice of Customer Program
 
 #### Readiness Label
-- R1 (The issue is ready to be put into a release with all supporting documentation completed. 
-- R2 (Awaiting Architecture Sprint)
-- R3 (Awaiting Design Sprint)
-- R4 (User Story)
+- R1: Ready for Development Sprint 
+- R2: Ready for Architecture Sprint
+- R3: Ready for Design Sprint
+- R4: User Story
 
 #### Milestone
 @dani0198 will place into Product Roadmap. R1 issues will be place into Releases based on developer feedback.
