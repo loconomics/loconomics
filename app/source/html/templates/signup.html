@@ -32,9 +32,9 @@
             </div>
             <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
                 <label for="firstName">First Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: '' } }"></div>
+                <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: {'icon ion-android-done': isFirstNameValid} } }, event: { keyup: checkFirstName }, css: {'is-valid': isFirstNameValid}"></div>
                 <label for="lastName">Last Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: '' } }"></div>
+                <div data-bind="template: { name: 'signup-field', data: { keyup: checkFirstName, field: lastName, label: 'Last name', icon: {'icon ion-android-done': isLastNameValid} } }, event: { keyup: checkLastName }, css: {'is-valid': isFirstNameValid}"></div>
                 <label for="countryID">Country</label>
                 <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
                     <select data-bind="value: countryID" class="form-control select-unstyled">

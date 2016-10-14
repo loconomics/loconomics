@@ -59,7 +59,9 @@ function SignupVM(app) {
 
     this.confirmationCode = ko.observable(null);
     this.firstName = newFieldObs();
+    this.isFirstNameValid = ko.observable(false);
     this.lastName = newFieldObs();
+    this.isLastNameValid = ko.observable(false);
     this.phone = newFieldObs();
     this.postalCode = newFieldObs();
     this.countryID = newFieldObs();
@@ -75,8 +77,18 @@ function SignupVM(app) {
     this.email = newFieldObs();
     this.password = newFieldObs();
 
+    this.checkFirstName = function() {
+      // \p{L} the Unicode Characterset not supported by JS
+      var firstNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+      this.isFirstNameValid(firstNameRegex.test(this.firstName()));
+    };
+
+    this.checkLastName = function() {
+      var lastNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+      this.isLastNameValid(lastNameRegex.test(this.lastName()));
+    };
+
     this.checkPassword = function() {
-      console.log("asdasd");
     };
 
     this.signupError = ko.observable('');
