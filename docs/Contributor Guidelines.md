@@ -58,7 +58,7 @@ Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
 - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
 
 #### Category Label
-![category](https://cloud.githubusercontent.com/assets/1202838/19402989/2f15dcc8-9219-11e6-8d95-bc98e6863269.png)
+![category](https://cloud.githubusercontent.com/assets/1202838/19403206/6c988d38-921a-11e6-8b45-3944c0d4b909.png)
 
 #### Feature Label (matching the area of the app)
 ![feature](https://cloud.githubusercontent.com/assets/1202838/19402990/2f27ec6a-9219-11e6-9a1e-2bb962c00c6a.png)
