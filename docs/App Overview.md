@@ -11,6 +11,18 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 ### HTML 
 [Bliss](html)
 
+## Preferred Dev Tools
+### Text Editor
+[Brackets](http://brackets.io/)
+
+### Browser
+[Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+
+[Chrome Developer Tools](https://developer.chrome.com/devtools)
+
+### Database Query & Administration
+[Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris.
+
 ## Main libraries
 [jQuery-2](https://jquery.com)
 
@@ -76,6 +88,51 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Live database is limited those who can sign a Business Associate Agreement per our HIPAA Policy.
 
 
+## Deploying the App
+
+[Phonegap Build](https://build.phonegap.com/) is used to create the intallation packages for iOS and Android in the cloud. To perform that task in your own computer, you need the SDKs of each platform.
+
+Note that the Phonegap plugins must be installed before building in order to be included in the local build. You can do this from the /app/phonegap directory and typing into the command line:
+```
+phonegap plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git
+```
+The file /app/source/cordova-config.js.xml has a list of all the plugins in use (look at the *gap:plugin* elements), this config is used by the PhoneGap Build service to automatically install them. The version in use is there too, but not the git URL. To find the git URL for a package, search by the package name at [npm](https://www.npmjs.com/).
+
+### iOS 
+[Download and install Apple XCode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) and run the command:
+```
+phonegap build ios
+```  
+
+### Android
+[Download and install Android Studio](https://developer.android.com/studio/index.html) and run the command:
+```
+phonegap build android
+```
+
+### Web
+In terminal enter command:
+```
+grunt build-webapp
+```
+or for html only:
+```
+grunt build-webapp-html 
+```
+Replace the following via FTP in Azure from your local machine:
+- web/_specialRoutes/app.html (single file)
+- web/assets (all folder contents)
+
+## Testing Links
+
+### API
+http://dev.loconomics.com/tests/testrest (request access from @iagoSRL or @dani0198)
+
+### Email Communications
+http://dev.loconomics.com/tests/testmessaging (request access from @iagoSRL or @dani0198)
+
+### Pages (for testing db changes)
+http://dev.loconomics.com/tests/TestAny 
 
 
 
