@@ -117,13 +117,4 @@ Unlike (competing alternative)
 Loconomics (statement of primary differentiation).
 
 
-### Is this an invest-able story?
-_Source: Bill Wake on XP123_
-- [ ] **Independent:** Could this be implemented on a stand-alone basis or does it presuppose other content?
-- [ ] **Negotiable:** Stories are _not_ spec's. This is an input for you to arrive at an optimal implementation with the developer, not a functional 'requirement'
-- [ ] **Valuable:** What problem scenario does this address? How have you validated your value proposition for it?
-- [ ] **Estimable:** How hard is this vs. the team's experience? Is it discrete enough?
-- [ ] **Small:** A big part of what makes agile (and lean) work is the use of small batches with measurable results. Make sure your stories are broken down to workable sizes.
-- [ ] **Testable:** How will you know if it's working in a way where you can validate its value?
-
 

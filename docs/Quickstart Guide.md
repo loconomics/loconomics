@@ -19,10 +19,6 @@ Note: Linux and Mac may require root/elevated rights in order to install globall
 ```
 npm install -g phonegap
 ```
-## Install Browserify globally (from the command line)
-```
-npm install grunt-browserify --save-dev
-```
 ## Install modules (from the command line in the project directory)
 ```
 npm install

@@ -1,6 +1,6 @@
 # User Stories
 
-## Epic Story 
+## Epic Story 1
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to display reviews from my clients so I can attract new clients.
 
 Persona | Child Story | Test Cases | Investable | GitHub Issue | Complete
@@ -32,7 +32,7 @@ Trigger | Action | Reward
 _How does the problem scenario initiate?_ | _How is the alternative executed?_ | _How is the persona gratified?_
 Sara wants clients to find her trustworthy | Sara asks clients to refer her or to write Yelp reviews | Sara receives new clients, business and income
 
-## Epic Story
+## Epic Story 2
 As [Perry the Pet Care Professional](https://github.com/dani0198/Loconomics/docs/Personas/Perry%20the%20Pet%20Care%20Professional.md) I'd like to be able attract and manage clients and their pets effortlessly so I can focus on the actual pet care.
 
 Persona | Child Story | Test Cases | Investable | GitHub Issue | Complete
@@ -67,7 +67,7 @@ _How does the problem scenario initiate?_ | _How is the alternative executed?_ |
 Daryl wants to find clients | Daryl posts on craigslist and gets referrals from current clients | Daryl fills their schedule with clients
 Daryl wants to manage the dogs walked | Daryl writes down everything on pen and paper | Daryl is able to keep track of everything
  
-## Epic Story
+## Epic Story 3
 As [Harry the Hairstylist](https://github.com/dani0198/Loconomics/docs/Personas/Harry%20the%20Hairstylist.md), I'd like to be able to work on multiple clients at once so I can maximize my calendar availability.
 
 Persona | Child Story | Test Cases | Investable | GitHub Issue | Complete
@@ -82,7 +82,7 @@ _How does the problem scenario initiate?_ | _How is the alternative executed?_ |
 Harry gets a booking for a cut and color | Harry has to make a note to allow another client to book during the gap time | Harry maximizes his schedule and income
  
 
-## Epic Story 
+## Epic Story 4
 As [Claudia the Cleaning Professional](https://github.com/dani0198/Loconomics/docs/Personas/Claudia%20the%20Cleaning%20Professional.md) & [Perry the Pet Care Professional](https://github.com/dani0198/Loconomics/docs/Personas/Perry%20the%20Pet%20Care%20Professional.md), I'd like to be able to work in teams so my team members and I can work more efficiently.
 
 Persona | Child Story | Test Cases | Investable | GitHub Issue | Complete
