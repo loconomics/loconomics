@@ -116,46 +116,6 @@ That (statement of key benefit).
 Unlike (competing alternative)
 Loconomics (statement of primary differentiation).
 
-# User Stories
-
-## Epic Story - Perry the Pet  Care Professional
-As a Pet Care Professional I'd like to be able attract and manage clients and their pets effortlessly so I can focus on the actual pet care.
-
-Child Story | Test Cases | Investable | GitHub Issue | Complete
------------- | ------------- | ------------- | ------------- | -------------
-A) I want to manage my schedule easily. | A1) I want a calendar to ensure all my gigs work together timewise (there's a window) and location. Logistics.  |  | [1076](https://github.com/dani0198/Loconomics/issues/609) | 
- | A2) I'd like to be able to book up to X dogs at a time  |  |  | 
- | A3) I'd like help mapping my pickups and dropoffs  |  |  | 
- | A4) I'd like clients be able to change/cancel/update any of their scheduled appointments  |  |  | 
- | A5) I'd like to offer private walks  |  |  | 
- | A6) I'd like new clients to be able to schedule a meet and greet only during certain hours (when offering dog sitting, my calendar appears open all evening/night)  |  |  | 
- | A7) I'd like potential clients to be able to schedule a "Meet and Greet" easily...facetime for long-distance behavior consulting  |  |  |  
- | A8) I want potential clients to know my specialities and what my services entail  |  |  | 
- | A9) I'd like to be able to allow instant booking for repeat clients  |  |  | 
-B) I'd like control over my pricing. | B1) I'd like to enforce a cancellation policy without having to hassle the client (more lax cancellation policy)  |  |  | 
- | B2) I'd like to offer dog and cat sitting  |  |  | 
- | B3) I'd like to offer private walks  |  |  | 
- | B4) I'd like to offer pack walks  |  |  | 
- | B5) I'd like to have clients pay me when services begin without having to hassle them  |  |  | 
- | B6) I'd like potential clients to be able to see a price list but not be able to book them without a meet and greet first  |  |  | 
-C) I'd like my communication with clients to be effective and streamlined. | C1) I'd like to meet new clients once and then have them be able to book on their own appointments into an approved pack.  |  |  | 
- | C2) I'd like clients to be able to communicate with me before they schedule their meet and greet (a messenger feature)  |  |  | 
- | C3) I'd like to know important information about each dog when the client schedules their meet and greet, e.g. age, breed, size, temperament, special needs, medications, allergies, vet contact, gotcha date, birthdate, emergency contact, where the food and poop bags are.  client quirks, How does the client treat their animal? insurance policy, team coverage  |  |  | 
- | C4) I'd like to make notes about a dog and client that they don't see, e.g. client quirks, how the client treats their dog  |  |  | 
- | C5) I'd like to be able to help clients meet "team" goals, e.g. suggested training exercise reminders
- | C6) I'd like to recommend ethical products to clients  |  |  | 
- | C7) I'd like to update clients with pictures (in messenger) and messages if something happens with their pet  |  |  | 
- | C8) I'd like to update my business facebook page with photos and updates for the pack  |  |  | 
- | C9) I'd like to obtain a spare key in the "Meet and greet"  |  |  | 
-D) I want to find the right new clients. | D1) I'd like to make it easy for current clients to refer their friends and family  |  |  | 
- | D2) I'd like to know what services they are inquiring about before meeting them  |  |  | 
- | D3) I'd like potential clients to know in what areas I work  |  |  | 
-
-Trigger | Action | Reward
------------- | ------------- | -------------
-_How does the problem scenario initiate?_ | _How is the alternative executed?_ | _How is the persona gratified?_
-Daryl wants to find clients | Daryl posts on craigslist and gets referrals from current clients | Daryl fills their schedule with clients
-Daryl wants to manage the dogs walked | Daryl writes down everything on pen and paper | Daryl is able to keep track of everything
 
 ### Is this an invest-able story?
 _Source: Bill Wake on XP123_
