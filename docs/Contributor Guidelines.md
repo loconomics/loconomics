@@ -25,7 +25,22 @@ issue1076 - A1 - new customertransactiontype table.sql
 
 ## Use of Github
 
-We use Github to track all development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
+We use Github to track all user stories, development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
+
+### Adding user stories
+We have a repository of user stories for [Service Professionals](/User Stories/User Stories - Service Professionals.md), [Clients](/User Stories/User Stories - Clients.md), and [Cooperatives](/User Stories/User Stories - Cooperatives.md).
+
+#### Step 1: Ensure user story is not already recorded
+Review the repositories to see if a user story is already there for the feedback. If it is, add +1 to the counter in the Users Reported column.
+
+#### Step 2: Determine if the story already fits into the repository 
+Usually, the feedback can be translated into a Test Case for an existing Child Story or as a Child Story to an existing Epic Story.
+
+#### Step 3: Create user story
+Feedback from users should be translated using the [User Story Template](/Agile Templates/User Story.md) to make it actionable into one of three types of stories:
+##### Test Case (most common)
+##### Child Story (most common)
+##### Epic Story (most common)
 
 ### Bugs
 Before reporting a bug:
