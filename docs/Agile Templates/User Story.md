@@ -1,18 +1,28 @@
 # Template for User Stories
 
-## Epic Story
+## Epic Story XX
 As a [persona], I want to [do something] so that I can [derive a benefit]
 
-Child Story | Test Cases | Investable | GitHub Issue | Complete
------------- | ------------- | ------------- | ------------- | -------------
-A) Child Story 1 | A1) Test Case 1 |  |  | 
- | A2) Test Case 2 |  |  | 
-B) Child Story 2 | B1) Test Case 2 |  |  | 
- | B2) Test Case 2 |  |  |  
-C) Child Story 3 | C1) Test Case 1 |  |  | 
- | C2) Test Case 2 |  |  | 
-D) Child Story 4 | D1) Test Case 1 |  |  | 
- | D2) Test Case 2 |  |  | 
+Epic Story XX: Child Story A | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to [do something] so that I can [derive a benefit]| - | - 
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Test Case 1| - | -   
+A2) Test Case 1| - | -   
+
+Epic Story XX: Child Story B | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to [do something] so that I can [derive a benefit]| - | - 
+**Test Cases** | **GitHub Issue** | **Complete** 
+B1) Test Case 1| - | -   
+B2) Test Case 1| - | -   
+
+Epic Story XX: Child Story C | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to [do something] so that I can [derive a benefit]| - | - 
+**Test Cases** | **GitHub Issue** | **Complete** 
+C1) Test Case 1| - | -   
+C2) Test Case 1| - | -   
 
 Trigger | Action | Reward
 ------------ | ------------- | -------------
