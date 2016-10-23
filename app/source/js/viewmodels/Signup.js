@@ -63,7 +63,9 @@ function SignupVM(app) {
     this.lastName = newFieldObs();
     this.isLastNameValid = ko.observable(false);
     this.phone = newFieldObs();
+    this.isPhoneValid = ko.observable(false);
     this.postalCode = newFieldObs();
+    this.isPostalCodeValid = ko.observable(false);
     this.countryID = newFieldObs();
     this.referralCode = newFieldObs();
     this.device = newFieldObs();
@@ -75,7 +77,9 @@ function SignupVM(app) {
     //this.email = credentials.username;
     //this.password = credentials.password;
     this.email = newFieldObs();
+    this.isEmailValid = ko.observable(false);
     this.password = newFieldObs();
+    this.isPasswordValid = ko.observable(false);
 
     this.checkFirstName = function() {
       // \p{L} the Unicode Characterset not supported by JS
@@ -88,7 +92,25 @@ function SignupVM(app) {
       this.isLastNameValid(lastNameRegex.test(this.lastName()));
     };
 
+    this.checkPostalCode = function() {
+      var postalCodeRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+      this.isPostalCodeValid(postalCodeRegex.test(this.postalCode()));
+    };
+
+    this.checkPhone = function() {
+      var phoneRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+      this.isPhoneValid(phoneRegex.test(this.phone()));
+    };
+
+    this.checkEmail = function() {
+      console.log('checkEmail');
+      var emailRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+      this.isEmailValid(emailRegex.test(this.email()));
+    };
+
     this.checkPassword = function() {
+      var passwordRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+      this.isPasswordValid(passwordRegex.test(this.password()));
     };
 
     this.signupError = ko.observable('');
