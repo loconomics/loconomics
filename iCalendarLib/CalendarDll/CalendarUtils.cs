@@ -425,6 +425,33 @@ namespace CalendarDll
 
         #endregion
 
+        #region DateTime - Offsets - Timezone
+        private Dictionary<string, NodaTime.DateTimeZone> cachedTimeZones = new Dictionary<string, NodaTime.DateTimeZone>();
+        private NodaTime.DateTimeZone GetTimeZone(string tzid)
+        {
+            NodaTime.DateTimeZone timezone = NodaTime.DateTimeZone.Utc;
+            if (cachedTimeZones.ContainsKey(tzid))
+            {
+                timezone = cachedTimeZones[tzid];
+            }
+            else
+            {
+                timezone = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(tzid) ?? timezone;
+                cachedTimeZones.Add(tzid, timezone);
+            }
+            return timezone;
+        }
+
+        private CalDateTime CalDateTimeFromOffsetAndTimeZone(DateTimeOffset dto, string tzid)
+        {
+            var timezone = GetTimeZone(tzid);
+
+            var zdt = new NodaTime.ZonedDateTime(NodaTime.Instant.FromDateTimeOffset(dto), timezone);
+
+            return new CalDateTime(zdt.LocalDateTime.ToDateTimeUnspecified(), tzid);
+        }
+        #endregion
+
         #region Create Event (iCal Format, having the Loconomics DB Record)
 
         /// <summary>
@@ -447,9 +474,9 @@ namespace CalendarDll
                 tzid = "UTC";
             }
 
-            var eventStart = new CalDateTime(hasTz ? eventFromDB.StartTime.DateTime : eventFromDB.StartTime.UtcDateTime, tzid);
-            var eventEnd = new CalDateTime(hasTz ? eventFromDB.EndTime.DateTime : eventFromDB.EndTime.UtcDateTime, tzid);
-            var eventRecurrenceId = eventFromDB.RecurrenceId.HasValue ? new CalDateTime(hasTz ? eventFromDB.RecurrenceId.Value.DateTime : eventFromDB.RecurrenceId.Value.UtcDateTime, tzid) : null;
+            var eventStart = CalDateTimeFromOffsetAndTimeZone(eventFromDB.StartTime, tzid);
+            var eventEnd = CalDateTimeFromOffsetAndTimeZone(eventFromDB.EndTime, tzid);
+            var eventRecurrenceId = eventFromDB.RecurrenceId.HasValue ? CalDateTimeFromOffsetAndTimeZone(eventFromDB.RecurrenceId.Value, tzid) : null;
             // DTStamp, per Calendar standard, "MUST be in UTC"
             // It represents the creation of the VEVENT record.
             var eventStamp = new CalDateTime(eventFromDB.StampTime ?? DateTime.UtcNow, "UTC");
@@ -1103,9 +1130,9 @@ namespace CalendarDll
                 tzid = "UTC";
             }
 
-            var eventStart = new CalDateTime(hasTz ? eventFromDB.StartTime.DateTime : eventFromDB.StartTime.UtcDateTime, tzid);
-            var eventEnd = new CalDateTime(hasTz ? eventFromDB.EndTime.DateTime : eventFromDB.EndTime.UtcDateTime, tzid);
-            var eventRecurrenceId = eventFromDB.RecurrenceId.HasValue ? new CalDateTime(hasTz ? eventFromDB.RecurrenceId.Value.DateTime : eventFromDB.RecurrenceId.Value.UtcDateTime, tzid) : null;
+            var eventStart = CalDateTimeFromOffsetAndTimeZone(eventFromDB.StartTime, tzid);
+            var eventEnd = CalDateTimeFromOffsetAndTimeZone(eventFromDB.EndTime, tzid);
+            var eventRecurrenceId = eventFromDB.RecurrenceId.HasValue ? CalDateTimeFromOffsetAndTimeZone(eventFromDB.RecurrenceId.Value, tzid) : null;
             // DTStamp, per Calendar standard, "MUST be in UTC"
             // It represents the creation of the VEVENT record.
             var eventStamp = new CalDateTime(eventFromDB.StampTime ?? DateTime.UtcNow, "UTC");
@@ -1126,11 +1153,11 @@ namespace CalendarDll
                 Class = eventFromDB.Class,
                 Organizer = eventFromDB.Organizer != null ? new Organizer(eventFromDB.Organizer) : null,
                 Transparency = (TransparencyType)(eventFromDB.Transparency ? 1 : 0),
-                Created = new CalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now), tzid),
+                Created = new CalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now)),
                 DtEnd = eventEnd,
                 DtStamp = eventStamp,
                 DtStart = eventStart,
-                LastModified = new CalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now), tzid),
+                LastModified = new CalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now)),
                 Sequence = eventFromDB.Sequence ?? 0,
                 RecurrenceId = eventRecurrenceId,
                 GeographicLocation = eventFromDB.Geo != null ? new GeographicLocation(eventFromDB.Geo) : null/*"+-####;+-####"*/,
