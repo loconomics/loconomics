@@ -1,0 +1,31 @@
+﻿@* Release-7.7 - A-1 Set local CalendarEvents times-offsets-timezone.cshtml
+ *@
+@{
+    //LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+
+    using (var db = new LcDatabase()) {
+        var data = db.Query("SELECT id, startTime, endTime, recurrenceId FROM CalendarEvents");
+        // To update the data AFTER being upgraded from a datetime column type to a datetimeoffset(0),
+        // we read the data (that just get added a zero offset automatically --no conversions done by the server)
+        // and since that data (that looks like UTC because of the auto offset) were actually times in the server
+        // timezone (PST), we read the DateTime value, we use that value to create a new DateTimeOffset without setting
+        // the offset, so will be empty, and we convert that into local, so offset will get added acorded to 
+        // machinage time zone and DST rules. Then we use that to update the value on the server
+        // and will get the correct offset.
+        // The process is safe against running this twice (or more) hover the same data, while no actual incoming data
+        // in other time zones is added to database (just protects from problems on the upgrade process, but cannot be used
+        // later to don't replace valid data).
+        foreach (var r in data)
+        {
+            var s = new DateTimeOffset((r.startTime as DateTimeOffset?).Value.DateTime).ToLocalTime();
+            var e = new DateTimeOffset((r.endTime as DateTimeOffset?).Value.DateTime).ToLocalTime();
+            var raw_rid = (r.recurrenceId as DateTimeOffset?);
+            var rid = raw_rid.HasValue ? new DateTimeOffset(raw_rid.Value.DateTime).ToLocalTime() : (DateTimeOffset?)null;
+            db.Query("UPDATE CalendarEvents SET startTime=@0, endTime=@1, recurrenceId=@3, timezone='America/Los_Angeles' WHERE Id=@2", s, e, r.id, rid);
+        }
+    }
+}
+PROCESS DURATION: @((DateTime.Now - start).ToString())
