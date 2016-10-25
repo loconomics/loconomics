@@ -196,6 +196,8 @@ I'd like to offer a discount for booking some services together as a bundle.| - 
 **Test Cases** | **GitHub Issue** | **Complete** 
 D1) Make sure to allow service professionals to combine two or more existing services with a special price and duration.| - | -   
 D2) Make sure to link to information for each item in the bundle with an option for a bundle description.| - | -   
+D3) Make sure pricing bundles include setup, process, and finish times and override individual pricing times. | - | -  
+D4) Make sure pricing are prominent to the client and when two separate services that are in a bundle are booked, warn the client to book the bundle instead. | - | - 
 
 ## Epic Story 8
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like my payment processing system to be flexible and seamless so I don't have to worry about being paid.
@@ -286,8 +288,7 @@ the Hairstylist](https://github.com/dani0198/Loconomics/docs/Personas/Harry%20th
 **Test Cases** | **GitHub Issue** | **Complete** 
 A1) Make sure to include **Initial Duration (Setup)**, **Gap (Processing)**, and **Finish Duration** to services for certain job titles. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -   
 A2) Make sure the service professional's calendar is available for one more booking during process times. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -     
-A3) Make sure pricing bundles include setup, process, and finish times and override individual pricing times. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -  
-A4) Make sure pricing are prominent to the client and when two separate services that are in a bundle are booked, warn the client to book the bundle instead. | - | - 
+
 
 Epic Story 10: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
