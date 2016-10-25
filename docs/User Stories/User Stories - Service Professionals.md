@@ -281,12 +281,13 @@ As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/P
 
 Epic Story 10: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want to cut one client's hair while another client's color is setting so I can make use of my time.| [Harry the Hairstylist](https://github.com/dani0198/Loconomics/docs/Personas/Harry%20the%20Hairstylist.md) | - 
+I want to cut one client's hair while another client's color is setting so I can make use of my time.| [
+the Hairstylist](https://github.com/dani0198/Loconomics/docs/Personas/Harry%20the%20Hairstylist.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure to include **Initial Duration (Setup)**, **Gap (Processing)**, and **Finish Duration** to services for certain job titles. | - | -   
-A2) Make sure the service professional's calendar is available for one more booking during process times. | - | -     
-A3) Make sure pricing bundles include setup, process, and finish times and override individual pricing times. | - | -  
-A4) Make sure pricingare prominent to the client and when two separate services that are in a bundle are booked, warn the client to book the bundle instead. | - | - 
+A1) Make sure to include **Initial Duration (Setup)**, **Gap (Processing)**, and **Finish Duration** to services for certain job titles. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -   
+A2) Make sure the service professional's calendar is available for one more booking during process times. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -     
+A3) Make sure pricing bundles include setup, process, and finish times and override individual pricing times. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -  
+A4) Make sure pricing are prominent to the client and when two separate services that are in a bundle are booked, warn the client to book the bundle instead. | - | - 
 
 Epic Story 10: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
