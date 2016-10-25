@@ -1,5 +1,10 @@
 ﻿using CalendarDll.Data;
-using DDay.iCal;
+using Ical.Net;
+using Ical.Net.DataTypes;
+using Ical.Net.Interfaces.DataTypes;
+using Ical.Net.Serialization;
+using Ical.Net.Serialization.iCalendar.Serializers;
+using Ical.Net.Interfaces.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +29,7 @@ namespace CalendarDll
         public TimeSpan BetweenTime { set; get; }
         public TimeSpan AdvanceTime { set; get; }
         public users UserInfo { set; get; }
-        public TimeZoneInfo DefaultTimeZone { set; get; }
+        public string DefaultTimeZone { set; get; }
         public CalendarUser(int id)
         {
             var db = new loconomicsEntities();
@@ -42,7 +47,7 @@ namespace CalendarDll
 
     public class DataContainer
     {
-        public IList<Occurrence> Ocurrences { set; get; }
+        public HashSet<Occurrence> Ocurrences { set; get; }
         public TimeSpan TimeBlock { get; set; }
         public DateTime DT { get; set; }
         public TimeSpan AddBusyTime { get; set; }
@@ -63,7 +68,7 @@ namespace CalendarDll
 
         public iEvent eventSource { set; get; }
         public ProviderAvailabilityResult result { get; set; }
-        public IList<Occurrence> ocurrences { get; set; }
+        public HashSet<Occurrence> ocurrences { get; set; }
         private Occurrence ocurrence { set; get; }
         public ProviderAvailability(DataContainer obj)
         {

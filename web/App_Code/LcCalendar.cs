@@ -1543,6 +1543,7 @@ public static partial class LcCalendar
                 StartTime = dt;
             }
 
+            // TODO TZ actual timezone needed, not offset
             // Auto TimeZone to server local
             if (String.IsNullOrEmpty(TimeZone))
             {

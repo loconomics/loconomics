@@ -2120,6 +2120,7 @@ namespace LcRest
                     throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
+                // TODO TZ actual timezone needed, not offset
                 var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
                 string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(customer));
 

@@ -8,7 +8,19 @@
     dynamic data;
 
     try {
-        data = null;
+        
+        using (var db = new LcDatabase()) {
+            data = db.Query("SELECT id, startTime, endTime, utcStartTime, utcEndTime FROM CalendarEvents");
+            foreach(var r in data) {
+                var s = new DateTimeOffset((r.startTime as DateTime?).Value).ToLocalTime();
+                var e = new DateTimeOffset((r.endTime as DateTime?).Value).ToLocalTime();
+                    //(r.endTime as DateTime?).Value.ToUniversalTime();
+                db.Query("UPDATE CalendarEvents SET utcStartTime=@0, utcEndTime=@1, timezone='America/Los_Angeles' WHERE Id=@2", s, e, r.id);
+            }
+
+            data = null;
+        }
+        
     }
     catch (Exception ex) {
         data = ex;
