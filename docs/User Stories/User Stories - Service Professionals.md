@@ -12,22 +12,22 @@ A2) Make sure tasks lists can be added for job titles that require them.| - | -
 
 Epic Story 1: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want a client's special pricing to be private to just them and me so other clients don't see the special pricing.| - | - 
+I want a client's special pricing to be private to just them and me so other clients don't see the special pricing.| [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md) | Yes 
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure there are display rules for who can view special pricing.| - | -
+B1) Make sure there are display rules for who can view special pricing.| [738](https://github.com/dani0198/Loconomics/issues/738) | -
 
 Epic Story 1: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want to reuse some pricing for other clients.| - | - 
+I want to reuse some pricing for other clients.| [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md) | Yes 
 **Test Cases** | **GitHub Issue** | **Complete** 
-C1) Make sure service professionals can include more than one client for a special pricing| - | -   
+C1) Make sure service professionals can include more than one client for a special pricing| [738](https://github.com/dani0198/Loconomics/issues/738) | -   
 
 Epic Story 1: Child Story D | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want to some special pricing to be booked only once, e.g. first-time cleaning so I can spend more time getting the house ready for routine services.| [Claudia the Cleaning Professional](https://github.com/dani0198/Loconomics/docs/Personas/Claudia%20the%20Cleaning%20Professional.md) | - 
+I want to some special pricing to be booked only once, e.g. first-time cleaning so I can spend more time getting the house ready for routine services.| [Claudia the Cleaning Professional](https://github.com/dani0198/Loconomics/docs/Personas/Claudia%20the%20Cleaning%20Professional.md) | Yes 
 **Test Cases** | **GitHub Issue** | **Complete** 
-D1) Make sure there is an option to specify if a service can be booked again.| - | -   
-D2) Make sure the display rules take this into account.| - | -   
+D1) Make sure there is an option to specify if a service can be booked again.| [738](https://github.com/dani0198/Loconomics/issues/738) | -   
+D2) Make sure the display rules take this into account.| [738](https://github.com/dani0198/Loconomics/issues/738) | -   
 
 Epic Story 1: Child Story E | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -71,21 +71,12 @@ C8) Make sure pet form includes: age, breed, size, temperament, special needs, m
 
 Epic Story 2: Child Story D | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I to offer services and consutlations remotely so I can attract clients from all over.| - | -  
-**Test Cases** | **GitHub Issue** | **Complete** 
-D1) Make sure to have a default service address for Facetime | - | -  
-D2) Make sure to have a default service address for Google hangouts | - | -  
-D3) Make sure to have a default service address for Skype | - | -  
-D4) Make sure to have a default service address for Phone | - | -  
-
-Epic Story 2: Child Story E | Target Persona(s) | Investable 
------------- | ------------- | ------------- 
 I'd like potential clients to be able to see a price list but not be able to book them without a consultation first so they know if they can afford me.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
 E1) Make sure to have an option for "Show potential clients this pricing" (they won't be able to book it) | - | -  
 E2) Make sure clients can view the pricing but not book it. | - | -  
 
-Epic Story 2: Child Story F | Target Persona(s) | Investable 
+Epic Story 2: Child Story E | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I'd like to obtain a spare key in the "Meet and greet" so I don't have to go back to get it.| [Perry the Pet Care Professional](https://github.com/dani0198/Loconomics/docs/Personas/Perry%20the%20Pet%20Care%20Professional.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
@@ -506,8 +497,8 @@ Epic Story 13: Child Story L | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I'd like the review system to only periodically send notifications for reviews so my clients don't get annoyed.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-K1) Make sure to only send notifications for clients to review service professionals if they haven't in six months. | 974](https://github.com/dani0198/Loconomics/issues/974) | -   
-K2) Make sure to still allow the client to review any bookings from booking confirmation card, though. | 974](https://github.com/dani0198/Loconomics/issues/974)  | -   
+K1) Make sure to only send notifications for clients to review service professionals if they haven't in six months. | [974](https://github.com/dani0198/Loconomics/issues/974) | -   
+K2) Make sure to still allow the client to review any bookings from booking confirmation card, though. | [974](https://github.com/dani0198/Loconomics/issues/974)  | -   
 
 ## Epic Story 14
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I want to review working with clients so other service professionals can trust them.
@@ -758,6 +749,22 @@ I'd like to update my business facebook page with photos and updates for the pac
 **Test Cases** | **GitHub Issue** | **Complete** 
 A1) Make sure....| - | -  
 
+## Epic Story 25
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to offer specific pricing at multiple locations and remotely so I can .
+
+Epic Story 2: Child Story D | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I to offer services and consultations remotely so I can attract clients from all over.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+D1) Make sure to have a default service address for Facetime | - | -  
+D2) Make sure to have a default service address for Google hangouts | - | -  
+D3) Make sure to have a default service address for Skype | - | -  
+D4) Make sure to have a default service address for Phone | - | -  
+
+
+
+
+
 ## Epic Story 24
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to be able to send clients invoices so they can pay me.
 
@@ -767,11 +774,12 @@ I'd like to send invoices for past services and request client payment so I get 
 **Test Cases** | **GitHub Issue** | **Complete** 
 A1) Make sure....| - | -  
 
-## Epic Story 25
+## Epic Story 26
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like loconomics to help create and host my website so I can save on these costs.
 
-## Epic Story 26
+## Epic Story 27
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to make it easy for clients to refer me to their friends so I can attract new clients.
+
 
 
 
