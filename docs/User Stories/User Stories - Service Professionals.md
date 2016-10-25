@@ -87,9 +87,13 @@ As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/P
 
 Epic Story 3: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want clients who have purchased multi-session services to see and book their remaining sessions so I don't have to keep track of them.| [Felicity the Fitness Professional](https://github.com/dani0198/Loconomics/docs/Personas/Felicity%20the%20Fitness%20Professional.md) | - 
+I want clients who have purchased multi-session services to see and book their remaining sessions so I don't have to keep track of them.| [Felicity the Fitness Professional](https://github.com/dani0198/Loconomics/docs/Personas/Felicity%20the%20Fitness%20Professional.md) | Yes 
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure the client can see and book their remaining sessions. | - | -  
+A1) Make sure the client can see the remaining sessions they purchased. | [737](https://github.com/dani0198/Loconomics/issues/737) | -  
+A2) Make sure the service professional can see the remaining sessions a client has purchased. | [737](https://github.com/dani0198/Loconomics/issues/737) | - 
+A3) Make sure the client book each of the remaining sessions. | [737](https://github.com/dani0198/Loconomics/issues/737) | - 
+A4) Make sure the service professional can book for the client the remaining sessions. | [737](https://github.com/dani0198/Loconomics/issues/737) | - 
+A5) Make sure there is no payment is requested since it's already paid for. | [737](https://github.com/dani0198/Loconomics/issues/737) | - 
 
 Epic Story 3: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
