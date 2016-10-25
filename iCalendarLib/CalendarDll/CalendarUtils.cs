@@ -1887,7 +1887,7 @@ namespace CalendarDll
         /// <param name="user"></param>
         /// <returns></returns>
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
-        public bool ImportCalendar(CalendarCollection calendar,  CalendarUser user)
+        public bool ImportCalendar(IICalendarCollection calendar,  CalendarUser user)
         {
             //try
             {

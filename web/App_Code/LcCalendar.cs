@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using CalendarDll;
-using DDay.iCal;
-using DDay.Collections;
 using CalendarDll.Data;
 using WebMatrix.Data;
 using System.IO;
+using Ical;
+using Ical.Net;
 
 /// <summary>
 /// Calendaring Tasks, wrapper for some CalendarDll features.
@@ -378,7 +378,7 @@ public static partial class LcCalendar
         newevent.CalendarReccurrence.Add(new CalendarReccurrence
         {
             // Frequency Type Weekly:5
-            Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+            Frequency = (int)FrequencyType.Weekly,
             // Every 1 week (week determined by previous Frequency)
             Interval = 1,
             // We need save as reference, the first day of week for this rrule:
@@ -601,7 +601,7 @@ public static partial class LcCalendar
             newevent.CalendarReccurrence.Add(new CalendarReccurrence
             {
                 // Frequency Type Weekly:5
-                Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+                Frequency = (int)FrequencyType.Weekly,
                 // Every 1 week (week determined by previous Frequency)
                 Interval = 1,
                 // We need save as reference, the first day of week for this rrule:
@@ -1100,10 +1100,11 @@ public static partial class LcCalendar
             // iCalendar is needed to calculate each event occurrences
             var calUtils = new CalendarUtils();
 
+            // TODO TZ
             // TODO Support for real, user attached or event attached, Time Zones (the fields
             // exists, but has not valid values: user.TimeZone and event.TimeZone)
             //var tzid = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").Id;
-            var tzid = "Pacific Standard Time";
+            var tzid = "America/Los_Angeles";
 
             foreach(var ev in query.ToList())
             {
@@ -1115,12 +1116,12 @@ public static partial class LcCalendar
                 if (eventID == 0 || thereAreDates)
                 {
                     // Getting an iEvent only for recurrent events, for occurrences calculations
-                    iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev, tzid) : null;
+                    iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev) : null;
                     if (iev != null)
                     {
                         // An iEvent needs to be attached to an iCalendar in order
                         // to work when getting the occurrences.
-                        var iCal = calUtils.GetICalendarLibraryInstance();
+                        var iCal = calUtils.GetCalendarLibraryInstance();
                         iCal.Events.Add(iev);
 
                         // Getting occurrences datetime ranges
@@ -1154,7 +1155,6 @@ public static partial class LcCalendar
                     // Providing UTC ever as result (for JSON output)
                     StartTime = ev.StartTime.ToUniversalTime(),
                     EndTime = ev.EndTime.ToUniversalTime(),
-                    Kind = ev.StartTime.Kind,
                     IsAllDay = ev.IsAllDay,
                     //StampTime = ev.StampTime,
                     // The source timezone, if any, the dates will be on UTC.
@@ -1660,7 +1660,7 @@ public static partial class LcCalendar
             LastBulkImport.SetTime("BulkImport:: Import " + UserID.ToString() + ":: Downloading+parsing ical");
 #endif
 
-        var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
+        var iCaltoImport = IcalExtensions.LoadFromUri(new Uri(CalendarURL));
         if (iCaltoImport == null)
             throw new Exception("The URL doesn't contains icalendar information, is the correct URL? " + CalendarURL);
 
@@ -1696,7 +1696,7 @@ public static partial class LcCalendar
     }
     public static void Import(int UserID, Stream CalendarStream)
     {
-        var iCaltoImport = iCalendar.LoadFromStream(CalendarStream);
+        var iCaltoImport = Ical.Net.Calendar.LoadFromStream(CalendarStream);
 
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.FutureMonthsLimitForImportingFreeBusy = FutureMonthsLimitForImportingFreeBusy;
@@ -1788,8 +1788,7 @@ public static partial class LcCalendar
             //var tznumber = userinfo.TimeZone;
             // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
             // one used today (on iCalendar, the CreateEvent discards the event.TimeZone too):
-            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-            calUser.DefaultTimeZone = tz;
+            calUser.DefaultTimeZone = "America/Los_Angeles";
         }
         return libCalendarUtils.PrepareExportDataForUser(calUser);
     }
