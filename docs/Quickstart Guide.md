@@ -61,8 +61,9 @@ Open your browser (Chrome preferred) and open:
 ```
 http://localhost:8811/appDebug.html
 ```
+If you see a directory, select appDebug.html to open the app.
 
-One for thing: the appDebug.html available at localhost:8811 contains non-minimized and source mapped files, better for debugging. I use this all the time when developing, the other just to test something in case there are doubts that some minimizing option could break something (not normally). But with the project getting bigger, it starts to be a huge load for browsers and debuggers, I have in mind the need to split project files loaded on demand (good for debugging and for webapp load times).
+The appDebug.html available at localhost:8811 contains non-minimized and source mapped files, better for debugging. I use this all the time when developing, the other just to test something in case there are doubts that some minimizing option could break something (not normally). But with the project getting bigger, it starts to be a huge load for browsers and debuggers, I have in mind the need to split project files loaded on demand (good for debugging and for webapp load times).
 
 
 ## Point your local storage to a database
