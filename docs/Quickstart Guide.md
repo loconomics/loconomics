@@ -15,10 +15,6 @@ npm install -g grunt-cli
 ```
 Note: Linux and Mac may require root/elevated rights in order to install globally.
 
-## Install Phonegap globally (from the command line)
-```
-npm install -g phonegap
-```
 ## Install modules (from the command line in the project directory)
 ```
 npm install
