@@ -611,6 +611,12 @@ I'd like to automatically track mileage so I can deduct it on my taxes.| - | -
 **Test Cases** | **GitHub Issue** | **Complete** 
 F1) Make sure the number of miles is calculated for each booking. | - | -   
 
+Epic Story 17: Child Story F | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to import my Loconomics data into Freshbooks/Quickbooks.| - | - 
+**Test Cases** | **GitHub Issue** | **Complete** 
+F1) Make sure to add API integration for popular accounting programs. | - | -   
+
 ## Epic Story 18
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like all communications with a client in one place so I can stay organized and refer back to them.
 
