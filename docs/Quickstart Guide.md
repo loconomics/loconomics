@@ -73,9 +73,9 @@ At start-up, the app looks for a siteUrl in the config key at localStorage. Sinc
 
 ### Step 2: Replace the data-site-url:
 
-For our dev database:
+For our dev database (ignore security warnings):
 ```
-localStorage["LoconomicsApp/config"] = '{"siteUrl":"https://dev.loconomics.com"}';
+localStorage["LoconomicsApp/config"] = '{"siteUrl":"http://dev.loconomics.com"}';
 ```
 For your local database:
 
