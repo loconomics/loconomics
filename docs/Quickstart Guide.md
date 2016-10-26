@@ -84,17 +84,3 @@ To restore it and have the App/Webapp use the default URL:
 delete localStorage["LoconomicsApp/config"]
 ```
 
-## FTP setup
-FTP/deployment username:
-```
-Loconomics\loconomi
-```
-FTP hostname:
-```
-ftp://waws-prod-sn1-041.ftp.azurewebsites.windows.net
-```
-Password:
-```
-ask @dani0198 or @iagoSRL
-```
-
