@@ -87,43 +87,8 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 ## Database  
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Live database is limited those who can sign a Business Associate Agreement per our HIPAA Policy.
 
-## API
+## API Access
 Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com)
-
-## Deploying the App
-
-[Phonegap Build](https://build.phonegap.com/) is used to create the intallation packages for iOS and Android in the cloud. To perform that task in your own computer, you need the SDKs of each platform.
-
-Note that the Phonegap plugins must be installed before building in order to be included in the local build. You can do this from the /app/phonegap directory and typing into the command line:
-```
-phonegap plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git
-```
-The file /app/source/cordova-config.js.xml has a list of all the plugins in use (look at the *gap:plugin* elements), this config is used by the PhoneGap Build service to automatically install them. The version in use is there too, but not the git URL. To find the git URL for a package, search by the package name at [npm](https://www.npmjs.com/).
-
-### iOS 
-[Download and install Apple XCode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) and run the command:
-```
-phonegap build ios
-```  
-
-### Android
-[Download and install Android Studio](https://developer.android.com/studio/index.html) and run the command:
-```
-phonegap build android
-```
-
-### Web
-In terminal enter command:
-```
-grunt build-webapp
-```
-or for html only:
-```
-grunt build-webapp-html 
-```
-Replace the following via FTP in Azure from your local machine:
-- web/_specialRoutes/app.html (single file)
-- web/assets (all folder contents)
 
 ## Testing Links
 Requires API access.
@@ -132,13 +97,16 @@ Requires API access.
 http://dev.loconomics.com/tests/testrest ()
 
 ### Email Communications
-http://dev.loconomics.com/tests/testmessaging (request access from @iagoSRL or @dani0198)
+http://dev.loconomics.com/tests/testmessaging (request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com))
 
 ### Pages (for testing db changes)
 http://dev.loconomics.com/tests/TestAny 
 
+## Deploying the App
+Only [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) currently have permission to [Deploying the App](Deploying the App.md). If you feel you need this for testing reasons, please contact them for permission. 
 
-
+## FTP Access
+You should only need [FTP Access](FTP Access.md) if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. If you feel you need this for testing reasons, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com). 
 
 
 
