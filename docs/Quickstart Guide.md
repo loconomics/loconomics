@@ -69,9 +69,11 @@ The **appDebug.html** available at localhost:8811 contains non-minimized and sou
 
 At start-up, the app looks for a siteUrl in the config key at localStorage. Since there isn't one set for your localhost, it needs to be set using the html attribute data-site-url. To setup a different REST Service URL:
 
-### Step 1: Open the Web console with the page opened (can be the local development server created by 'grunt atwork', or our Webapp dev.loconomics.com)
+### Step 1: 
+Open the Web console with the page opened (can be the local development server created by 'grunt atwork', or our Webapp dev.loconomics.com)
 
-### Step 2: Replace the data-site-url:
+### Step 2: 
+Replace the data-site-url:
 
 For our dev database (ignore security warnings):
 ```
