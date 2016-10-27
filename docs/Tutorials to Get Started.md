@@ -24,9 +24,9 @@ Test new page:
 - Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
 
 ## Database & API changes
-We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact @dani0198 or @iagosrl. 
+We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com). 
 
-Access is limited to those who can sign a Business Associate Agreement per our HIPAA Policy.
+Access to the Live database is limited to those who can sign a Business Associate Agreement per our HIPAA Policy.
 
 You should keep a copy of the dev database that runs on your local machine. Any changes to the dev database can be requested by placing a .sql file in web/_DBUpdate in your branch and @iagoSRL will review, approve, and upload changes when merging your branch into master.
 
