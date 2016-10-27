@@ -11,7 +11,7 @@ But for *components* styles, the classes at /components folder that start with u
 
 **Disclaimer**: this rules were not strictly followed in the past or there is code created before we set this rules, then current source code needs some clean-up/refator. New code must follow the rules.
 
-We use a preprocessor, [Stylus](http://stylus-lang.com/); it's similar so SASS. We prefer the syntax more similar to CSS (use of semi-colons, brackets) while taking advantage of the futures it provides (mixims, nesting, etc.).
+We use a preprocessor, [Stylus](http://stylus-lang.com/); it's similar so SASS. We prefer the syntax more similar to CSS (use of semi-colons, brackets, etc.) while taking advantage of the features it provides (mixims, nesting, etc.).
 
 ## JS
 
@@ -29,7 +29,7 @@ We use HTML5.
 Since we use the [KnockoutJS](http://knockoutjs.com/) library, there are a lot of 'data-bind' attributes, with javascript syntax in the value; this is used to connect elements with data generated from javascript files, while the javascript inside the 'data-bind' attribute must be kept at minimum as needed (avoid large or complex expressions, if can be just a variable assignement the better).
 We use 'custom-elements' syntax sometimes at the HTML, for components created with KnockoutJS.
 
-We use a preprocessor, [Bliss](https://github.com/cstivers78/bliss) at the minimum; it uses Asp.net Razor-like syntax, adapted for javascript. Generally, we use it only at the files wrapping all the html (examples: app.html, webapp.html).
+We use a preprocessor, [Bliss](https://github.com/cstivers78/bliss) at the minimum; it uses Asp.net Razor-like syntax, adapted for javascript. Generally, we use it only at the files wrapping all the html (examples: app.js.html, web.js.html).
 
 ## Changes to the database
 
