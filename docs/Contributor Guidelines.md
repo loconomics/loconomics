@@ -53,7 +53,7 @@ We use Github to track all user stories, development issues, marketing tasks, pr
 ### Branch use and pull requests
 
 #### Master
-Only [@iagosrl](mailto:iagosrl@gmail.com) should committ to the master branch. 
+Only [@iagosrl](mailto:iagosrl@gmail.com) should commit to the master branch. 
 
 #### New branches
 If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
