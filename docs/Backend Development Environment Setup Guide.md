@@ -24,7 +24,7 @@ Set the app at an AppPool that uses ASP.NET 4.0.
 In case of doubt on how to do that, follow the detailed instructions below.
 
 ### Windows 7 users
-- First install [url-rewrite](I needed to install https://www.iis.net/downloads/microsoft/url-rewrite).
+- First install [url-rewrite](https://www.iis.net/downloads/microsoft/url-rewrite).
 - Open the IIS management tools
 - Go to your machine on the left menu and click "Places"
 - Right click "Default Web Site" and "Add application"
