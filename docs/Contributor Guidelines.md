@@ -1,7 +1,10 @@
 # Contributor Guidelines
 
 ## Communications
-We prefer to keep all communications in each related Github issue and converse with each other using our @username so that conversations are well documented and stay within the project even if it requires a new issue for it. 
+We prefer to keep all communications in each related Github issue and converse with each other using our @username so that conversations are well documented and stay within the project even if it requires a new issue for it.
+
+## General coding style
+All source files use 4 spaces indentation, UTF8 file enconding.
 
 ## CSS Naming Conventions
 
