@@ -48,7 +48,7 @@ grunt atwork
 This will:
 - run the connect server at http://localhost:8811/
 - run the watch task that will listen for changes on source files to automatically rebuild the needed files (specific builds are performed, like build-js, build-css, depending on the modified files; when they finish, the browser can be refreshed to try latest changes).
-  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at #1123.
+  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#1123](https://github.com/dani0198/Loconomics/issues/1123).
 - by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything; when it finishs, the /build/latest.zip file is ready to be sent to PhoneGap Build, and the phonegap folder is ready to perform local PhoneGap builds.
 - when the build ends, a notification is sent to the system. [More info on this](https://github.com/dylang/grunt-notify)
 
