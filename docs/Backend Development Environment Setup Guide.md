@@ -2,9 +2,9 @@
 In short, our backend is an ASP.NET WebPages2 website with MS-SQL Server database.
 
 ## Minimum software requirements
-[Microsoft .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=17851)
-[Visual Studio 2010](https://msdn.microsoft.com/en-us/library/dd831853) or above
-[MS SQL Express 2008 R2](https://www.microsoft.com/en-us/sql-server/sql-server-editions-express) or above
+- [Microsoft .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=17851)
+- [Visual Studio 2010](https://msdn.microsoft.com/en-us/library/dd831853) or above
+- [MS SQL Express 2008 R2](https://www.microsoft.com/en-us/sql-server/sql-server-editions-express) or above
 
 ## Recommended operating system(s)
 Microsoft Windows 7 SP1, Windows 10.
