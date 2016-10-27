@@ -1,27 +1,23 @@
 # FTP setup
-## Live
-FTP/deployment username:
+You should only need access to the FTP if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine.
+
+## FTP/deployment username:
 ```
 Loconomics\loconomi
 ```
-FTP hostname:
+## FTP hostname:
 ```
 ftp://waws-prod-sn1-041.ftp.azurewebsites.windows.net
 ```
-Password:
+## Password:
+Ask [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com).
+
+## Dev Site Path:
 ```
-ask @dani0198 or @iagoSRL
+/site/wwwroot/dev
 ```
-## Dev
-FTP/deployment username:
+## Live Site Path:
 ```
-Loconomics\loconomi
+/site/wwwroot/live
 ```
-FTP hostname:
-```
-ftp://waws-prod-sn1-041.ftp.azurewebsites.windows.net
-```
-Password:
-```
-ask @dani0198 or @iagoSRL
-```
+
