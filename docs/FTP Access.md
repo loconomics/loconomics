@@ -1,4 +1,4 @@
-# FTP setup
+# FTP Access
 You should only need access to the FTP if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine.
 
 ## FTP/deployment username:
