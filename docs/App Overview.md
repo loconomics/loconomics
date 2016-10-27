@@ -103,7 +103,7 @@ http://dev.loconomics.com/tests/testmessaging (request access from [@iagosrl](ma
 http://dev.loconomics.com/tests/TestAny 
 
 ## Deploying the App
-Only [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) currently have permission to [Deploying the App](Deploying the App.md). If you feel you need this for testing reasons, please contact them for permission. 
+Only [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) currently have permission for [Deploying the App](Deploying the App.md). If you feel you need this for testing reasons, please contact them for permission. 
 
 ## FTP Access
 You should only need [FTP Access](FTP Access.md) if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. If you feel you need this for testing reasons, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com). 
