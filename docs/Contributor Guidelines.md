@@ -53,17 +53,20 @@ We use Github to track all user stories, development issues, marketing tasks, pr
 ### Adding user stories
 We have a repository of user stories for [Service Professionals](/User Stories/User Stories - Service Professionals.md), [Clients](/User Stories/User Stories - Clients.md), and [Cooperatives](/User Stories/User Stories - Cooperatives.md).
 
-#### Step 1: Ensure user story is not already recorded
-Review the repositories to see if a user story is already there for the feedback. If it is, add +1 to the counter in the Users Reported column.
+#### Step 1: Review current user stories
+Review the repositories to see if the feedback is already recorded by reviewing the existing Epic Stories and corresponding Child Stories.
 
 #### Step 2: Determine if the story already fits into the repository 
 Usually, the feedback can be translated into a Test Case for an existing Child Story or as a Child Story to an existing Epic Story.
 
-#### Step 3: Create user story
+#### Step 3: Add missing feedback
 Feedback from users should be translated using the [User Story Template](/Agile Templates/User Story.md) to make it actionable into one of three types of stories:
-##### Test Case (most common)
+##### Test Case
+If recording a Test Case for an exisitng Child Story, copy the last Test Case, change the letter/number combination by adding 1 to the number, and overwrite with the new Test Case.
 ##### Child Story (most common)
-##### Epic Story (most common)
+Find the Epic Story the Child Story fits into, and copy the last Child Story, change the letter to the next letter in the alphabet, and overwrite with the new Child Story, any specific Persona(s) for the Child Story, and overwrite Test Cases with the new one(s).
+##### Epic Story
+Go to the bottom of the appropriate repository and copy the last Epic Story, change the number by adding 1, and overwrite with the new Epic Story, Child Stories, and Test Cases. 
 
 ### Bugs
 Before reporting a bug:
@@ -80,7 +83,7 @@ Try to include:
 * UserIDs, BookingIDs, JobTitleIDs involved.
 * The /activityName from the URL.
 
-[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
+[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels and include the severity in the title, e.g. Bug S1: Short description of bug:
 #### Severity Level Label
 ![bug](https://cloud.githubusercontent.com/assets/1202838/19402991/2f2ddefe-9219-11e6-86ac-5a05a520e5e0.png)
 
