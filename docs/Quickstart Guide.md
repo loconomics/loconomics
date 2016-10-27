@@ -7,7 +7,8 @@
 
 ## Install Node.js
 
-You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) (macOS, Windows, Linux) and install on your local machine.
+You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) or newer (macOS, Windows, Linux) and install on your local machine.
+*Note: if a problem is detected when using a newer version of Node, please post errors in [a new issue](https://github.com/dani0198/Loconomics/issues/new), we want to support newest versions.*
 
 ## Install Grunt globally (from the command line)
 ```
