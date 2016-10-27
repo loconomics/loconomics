@@ -3,7 +3,7 @@
 ## Adding new pages to the app
 ### Step 1
 Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?
-- If no, send a request to @iagoSRL or @dani0198 explaining what's needed
+- If no, send a request to [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) explaining what's needed
 - If yes, process to Step 2. 
 
 ### Step 2
@@ -42,55 +42,6 @@ Is the data you need already in the database?
   - Be sure to include any table contraints (PK, FK, etc.) in the .sql files
   - If changes affect any *user* tables, it's a very complex process and needs a manually written and well tested SQL script as there can be rare cases that a prior release needs it, mostly when changing how some existing data is stored.
   - Updates to *system* tables: include a _template-INSERT-tableName.sql file in _DBUpdate for any new *system* tables that include content to ensure it gets updated regularly on the live database. Updates to existing *system* tables (contain mostly content), are done automatically using a TestDBSync page.
-  - Current *system* tables:
-    - accountstatus
-    - addresstype
-    - alert
-    - alerttype
-    - backgroundcheck
-    - bookingStatus
-    - BookingType
-    - CalendarAvailabilityType
-    - CalendarEventType
-    - CalendarRecurrenceFrequencyTypes
-    - cancellationpolicy
-    - country
-    - county
-    - ExperienceLevel
-    - Gender
-    - institution
-    - jobTitleLicense
-    - language
-    - languagelevel
-    - licensecertification
-    - messagethreadstatus
-    - messagetype
-    - OwnerStatus
-    - positionbackgroundcheck
-    - positionpricingtype
-    - positionratings
-    - positions ---???
-    - postalcode
-    - PricingGroups
-    - pricingtype
-    - PricingVariableDefinition
-    - ReferralSource
-    - serviceattribute ---???
-    - serviceattributecategory
-    - ServiceAttributeExperienceLevel
-    - ServiceAttributeLanguageLevel
-    - servicecategory
-    - servicecategoryposition
-    - servicecategorypositionattribute ---???
-    - servicesubcategory
-    - stateprovince
-    - transporttype
-    - verification
-    - verificationcategory
-    - verificationstatus
-    - VOCElement
-    - VOCExperienceCategory
-    - VOCFlag
 
 ### Step 2
 Add new data to the REST API:
