@@ -50,6 +50,17 @@ issue1076 - A1 - new customertransactiontype table.sql
 
 We use Github to track all user stories, development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
 
+### Branch use and pull requests
+
+#### Master
+Only [@iagosrl](mailto:iagosrl@gmail.com) should committ to the master branch. 
+
+#### New branches
+If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
+
+#### Pull requests
+If you want to make general updates by doing a pull request, we'd prefer you create a Github issue and create a new branch.
+
 ### Adding user stories
 We have a repository of user stories for [Service Professionals](/User Stories/User Stories - Service Professionals.md), [Clients](/User Stories/User Stories - Clients.md), and [Cooperatives](/User Stories/User Stories - Cooperatives.md).
 
