@@ -94,7 +94,7 @@ Create a user account on http://dev.loconomics.com and request access from [@iag
 Requires API access.
 
 ### API
-http://dev.loconomics.com/tests/testrest ()
+http://dev.loconomics.com/tests/testrest
 
 ### Email Communications
 http://dev.loconomics.com/tests/testmessaging (request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com))
