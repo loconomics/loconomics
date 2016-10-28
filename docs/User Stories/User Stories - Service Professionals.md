@@ -770,51 +770,89 @@ I'd like to update my business facebook page with photos and updates for the pac
 **Test Cases** | **GitHub Issue** | **Complete** 
 A1) Make sure....| - | -  
 
-## Epic Story 25
-As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to offer specific pricing at multiple locations and remotely so I can .
-
-Epic Story 2: Child Story D | Target Persona(s) | Investable 
------------- | ------------- | ------------- 
-I to offer services and consultations remotely so I can attract clients from all over.| - | -  
-**Test Cases** | **GitHub Issue** | **Complete** 
-D1) Make sure to have a default service address for Facetime | - | -  
-D2) Make sure to have a default service address for Google hangouts | - | -  
-D3) Make sure to have a default service address for Skype | - | -  
-D4) Make sure to have a default service address for Phone | - | -  
-
 ## Epic Story 24
-As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to be able to send clients invoices so they can pay me.
+As [Evelyn the Event Professional](https://github.com/dani0198/Loconomics/docs/Personas/Evelyn%20the%20Event%20Professional.md), I'd like to ensure the entire process working with a client and their event is clear so the event goes well and I get paid.
 
 Epic Story 24: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I'd like to send invoices for past services and request client payment so I get paid.| - | - 
+I want to send an estimate for my services so a client can decide to book them.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure....| - | -  
+A1) Make sure the service professional can list services and products with estimated prices. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
+A2) Make sure the service professional can update the final price before payment is processed. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
+A3) Make sure the client approves the final price before processed. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
 
-## Epic Story 26
-As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like loconomics to help create and host my website so I can save on these costs.
-
-## Epic Story 27
-As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to make it easy for clients to refer me to their friends so I can attract new clients.
-
-## Epic Story 28
-As [Evelyn the Event Professional](https://github.com/dani0198/Loconomics/docs/Personas/Evelyn%20the%20Event%20Professional.md), I'd like to ensure the entire process working with a client and their event is clear so the event goes well and I get paid.
-
-Epic Story 28: Child Story A | Target Persona(s) | Investable 
+Epic Story 24: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want to request a deposit for services so I can be sure the client is serious about the services.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure the service professional can put a set deposit amount in a pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
-A2) Make sure the service professional can update the final price before payment is processed. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
-A3) Make sure the client approves the final price before processed. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
+B1) Make sure the service professional can put a set deposit amount in a pricing. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
+B2) Make sure the final price subtracts any deposit paid. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
 
-Epic Story 28: Child Story B | Target Persona(s) | Investable 
+Epic Story 24: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want a basic client contract I can amend so I'm legally protected if there are any misunderstandings with the client.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure the contract has clearly stated all services and products that are to be provided with finite and estimated pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | - 
-B2) Make sure the contract states that some items are estimates and could change. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
-B3) Make sure the contract states the process for updated pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
+C1) Make sure the contract has clearly stated all services and products that are to be provided with finite and estimated pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | - 
+C2) Make sure the contract states that some items are estimates and could change. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
+C3) Make sure the contract states the process for updated pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
 
+Epic Story 24: Child Story D | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to send an invoice after the event/services are completed and request client payment so I get paid.| - | - 
+**Test Cases** | **GitHub Issue** | **Complete** 
+D1) Make sure there is the ability to update any services/products for a final amount due.| [1126](https://github.com/dani0198/Loconomics/issues/1126) | -  
+D2) Make sure to give the client a link to pay.| [1126](https://github.com/dani0198/Loconomics/issues/1126) | -  
+D3) Make sure to remind the client of the outstanding invoice until it's paid.| [1126](https://github.com/dani0198/Loconomics/issues/1126) | -  
 
+## Epic Story 25
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to offer specific pricing at multiple locations and remotely so I can .
+
+Epic Story 25: Child Story A | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd to offer services and consultations remotely so I can attract clients from all over.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure to have a default service address for Facetime | - | -  
+A2) Make sure to have a default service address for Google hangouts | - | -  
+A3) Make sure to have a default service address for Skype | - | -  
+A4) Make sure to have a default service address for Phone | - | -  
+
+## Epic Story 26
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to attract new clients through my relationships with existing clients so I can build a greater client base cost effectively.
+
+Epic Story 26: Child Story A | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like marketing targeted to friends of my clients to entice those friends to book me.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure to utilize facebook social features for targeted ads. | - | -  
+A2) Make sure to include these connections in database marketing emails. | - | -  
+
+Epic Story 26: Child Story B | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like clients to be able to "favorite" me on their profile so their friends can see who them recommend.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure a client's profile has the capability to list their favorite professionals. | - | -  
+A2) Make sure HIPAA-protected positions are excluded (or review legal if offered). | - | -  
+A3) Make sure privacy settings allowed this to be visible only to the client if wanted. | - | -  
+A4) Make sure there is an opportunity to share via social media these favorites. | - | -  
+
+## Epic Story 27
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to send my clients to service professionals I trust so I can help them with their other needs.
+
+Epic Story 27: Child Story A | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like marketing targeted to friends of my clients to entice those friends to book my trusted professionals.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure to utilize facebook social features for targeted ads. | - | -  
+A2) Make sure to include these recommendations in database marketing emails. | - | -  
+
+Epic Story 27: Child Story B | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to be able to "favorite" other service professionals on my profile so my clients can see who I recommend.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure a service professional's profile has the capability to list their favorite professionals. | - | -  
+A2) Make sure HIPAA-protected positions are excluded (or review legal if offered). | - | -  
+A3) Make sure there is an opportunity to share via social media these favorites. | - | -  
+
+## Epic Story 28
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like loconomics to help create and host my website so I can save on these costs.
 
