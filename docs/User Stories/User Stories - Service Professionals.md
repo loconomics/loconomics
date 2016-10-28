@@ -7,8 +7,8 @@ Epic Story 1: Child Story A | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I want to create pricing with duration and specific tasks tailored for a client.| [Claudia the Cleaning Professional](https://github.com/dani0198/Loconomics/docs/Personas/Claudia%20the%20Cleaning%20Professional.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure service professionals can create pricing for one or more specific clients | - | - 
-A2) Make sure tasks lists can be added for job titles that require them.| - | - 
+A1) Make sure service professionals can create pricing for one or more specific clients | [1008](https://github.com/dani0198/Loconomics/issues/1008) | - 
+A2) Make sure tasks lists can be added for job titles that require them.| [1008](https://github.com/dani0198/Loconomics/issues/1008) | - 
 
 Epic Story 1: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -33,13 +33,14 @@ Epic Story 1: Child Story E | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I'd like to approve clients into one or more dog packs that they can book into.| [Perry the Pet Care Professional](https://github.com/dani0198/Loconomics/docs/Personas/Perry%20the%20Pet%20Care%20Professional.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-E1) Make sure approved clients can select the approved dog pack.| - | -   
+E1) Make sure approved clients can select the approved dog pack.| [609](https://github.com/dani0198/Loconomics/issues/609) | -  
+E2) Make sure there's a pricing for clients to book into that pack and it be mapped to the pack. | [609](https://github.com/dani0198/Loconomics/issues/609) | -   
 
 Epic Story 1: Child Story F | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I'd like my sliding scale clients to be able to book only during certain hours so I leave my peak hours available to full-price clients.| [Sam the Pyschotherapist](https://github.com/dani0198/Loconomics/docs/Personas/Sam%20the%20Psychotherapist.md) | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-F1) Make sure there is an option to include an availability rule for the service, e.g. Tuesdays and Thursdays from 9am-12pm| - | -   
+F1) Make sure there is an option to include an availability rule for the service, e.g. Tuesdays and Thursdays from 9am-12pm| [567](https://github.com/dani0198/Loconomics/issues/567) | -   
 
 ## Epic Story 2
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to meet and understand the needs of potential clients so I can know we'd be a good fit for working together.
@@ -54,20 +55,20 @@ Epic Story 2: Child Story B | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I only want to do service consultations during certain hours so it doesn't interfere with my regular client schedule.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure to have an option for selecting available times for the consultation, e.g. 9am-12pm M-F | - | -  
+B1) Make sure to have an option for selecting available times for the consultation, e.g. 9am-12pm M-F | [567](https://github.com/dani0198/Loconomics/issues/567)| -  
 
 Epic Story 2: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want to know detailed information about a client's pet/child/parent/home so I can reference it if I need to.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-C1) Make sure there is a custom client intake form by job title. | - | -   
-C2) Make sure client inputted fields are only editable by the client. | - | -   
-C3) Make sure to include private fields for service professionals only.| - | -   
-C4) Make sure only service professionals that clients have booked services with can see the form.| - | -  
-C5) Make sure to include an option for a client to remove form view access for a service professional.| - | -  
-C6) Make sure form is HIPAA compliant for required HIPAA job titles.| - | -  
-C7) Make sure the service professional can add custom questions.| - | -  
-C8) Make sure pet form includes: age, breed, size, temperament, special needs, medications, allergies, vet contact, gotcha date, birthdate, emergency contact, where the food and poop bags are.| - | -  
+C1) Make sure there is a custom client intake form by job title. | [800](https://github.com/dani0198/Loconomics/issues/800)  | -   
+C2) Make sure client inputted fields are only editable by the client. | [800](https://github.com/dani0198/Loconomics/issues/800) | -   
+C3) Make sure to include private fields for service professionals only.| [800](https://github.com/dani0198/Loconomics/issues/800) | -   
+C4) Make sure only service professionals that clients have booked services with can see the form.| [800](https://github.com/dani0198/Loconomics/issues/800) | -  
+C5) Make sure to include an option for a client to remove form view access for a service professional.| [800](https://github.com/dani0198/Loconomics/issues/800) | -  
+C6) Make sure form is HIPAA compliant for required HIPAA job titles.| [800](https://github.com/dani0198/Loconomics/issues/800) | -  
+C7) Make sure the service professional can add custom questions.| [800](https://github.com/dani0198/Loconomics/issues/800) | -  
+C8) Make sure pet form includes: age, breed, size, temperament, special needs, medications, allergies, vet contact, gotcha date, birthdate, emergency contact, where the food and poop bags are.| [800](https://github.com/dani0198/Loconomics/issues/800) | -  
 
 Epic Story 2: Child Story D | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -99,8 +100,9 @@ Epic Story 3: Child Story B | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I want clients be able set up a recurring booking for my services so I can attract and maintain repeat clients.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure the standard recurring options exist for clients to book services. | - | -   
-B2) Make sure there can be more than one time a day selected so it doesn't have to be two bookings, e.g. two dog walks per day. | - | -  
+B1) Make sure the standard recurring options exist for clients to book services. | [627](https://github.com/dani0198/Loconomics/issues/627) | -   
+B2) Make sure there can be more than one time a day selected so it doesn't have to be two bookings, e.g. two dog walks per day. | [627](https://github.com/dani0198/Loconomics/issues/627) | -   
+B3) Make sure only certain pricing types are able to be booked for recurring.e.g, not consultations. | [627](https://github.com/dani0198/Loconomics/issues/627) | -  
 
 ## Epic Story 4
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like clients to be able to change or cancel their bookings online so I can free up time.
@@ -150,12 +152,12 @@ As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/P
 
 Epic Story 6: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want to send a list of services I'll provide a client with an estimated price so they can book them if they want to.| [Claudia the Cleaning Professional](https://github.com/dani0198/Loconomics/docs/Personas/Claudia%20the%20Cleaning%20Professional.md) | - 
+I want to send a list of services I'll provide a client with an estimated price so they can book them if they want to.| [Claudia the Cleaning Professional](https://github.com/dani0198/Loconomics/docs/Personas/Claudia%20the%20Cleaning%20Professional.md), [Evelyn the Event Professional](https://github.com/dani0198/Loconomics/docs/Personas/Evelyn%20the%20Event%20Professional.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure the service professional can select "Send as estimate" when creating client-specific pricing. | - | -   
-A2) Make sure to send the client the estimate with an option to "Schedule services". | - | -   
-A3) Make sure the service professional can update the price during/after services. | - | -   
-B3) Make sure the client approves the final price before processed. | - | -  
+A1) Make sure the service professional can select "Send as estimate" when creating client-specific pricing. | [669](https://github.com/dani0198/Loconomics/issues/669)  | -   
+A2) Make sure to send the client the estimate with an option to "Schedule services". | [669](https://github.com/dani0198/Loconomics/issues/669)  | -   
+A3) Make sure the service professional can update the price during/after services. | [669](https://github.com/dani0198/Loconomics/issues/669)  | -   
+A4) Make sure the client approves the final price before processed. | [669](https://github.com/dani0198/Loconomics/issues/669)  | -  
 
 ## Epic Story 7
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to offer new and existing clients promotions so I can increase my income in lower demand periods.
@@ -164,32 +166,32 @@ Epic Story 7: Child Story A | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I'd like to limit the dates and availability of some pricing so I can offer promotions once in a while.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure to include an option for "This is a promotion" with ability to select valid periods with standard recurring options. | - | - 
-A2) Make sure to only display during valid periods. | - | - 
-A3) Make sure to clearly state a pricing is a promotion with validity dates. | - | - 
+A1) Make sure to include an option for "This is a promotion" with ability to select valid periods with standard recurring options. |  [667](https://github.com/dani0198/Loconomics/issues/667) | - 
+A2) Make sure to only display during valid periods. | [667](https://github.com/dani0198/Loconomics/issues/667)  | - 
+A3) Make sure to clearly state a pricing is a promotion with validity dates. | [667](https://github.com/dani0198/Loconomics/issues/667) | - 
 
 Epic Story 7: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I'd like to set a limit of how many clients can redeem a promotion.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure to include a field "Maximum redeemed".| - | - 
-B2) Make sure hide the promotion after the maximum is reached.| - | - 
+B1) Make sure to include a field "Maximum redeemed".| [667](https://github.com/dani0198/Loconomics/issues/667) | - 
+B2) Make sure hide the promotion after the maximum is reached.| [667](https://github.com/dani0198/Loconomics/issues/667) | - 
 
 Epic Story 7: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I'd like to limit the number of promotions a single client can purchase.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-C1) Make sure to include a field "Clients can only purchase X".| - | -  
-C2) Make sure to not allow a client to purchase more than X.| - | -  
+C1) Make sure to include a field "Clients can only purchase X".| [667](https://github.com/dani0198/Loconomics/issues/667) | -  
+C2) Make sure to not allow a client to purchase more than X.| [667](https://github.com/dani0198/Loconomics/issues/667) | -  
 
 Epic Story 7: Child Story D | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I'd like to offer a discount for booking some services together as a bundle.| - | -  
+I'd like to offer a discount for booking some services and/or products together as a bundle.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-D1) Make sure to allow service professionals to combine two or more existing services with a special price and duration.| - | -   
-D2) Make sure to link to information for each item in the bundle with an option for a bundle description.| - | -   
-D3) Make sure pricing bundles include setup, process, and finish times and override individual pricing times. | - | -  
-D4) Make sure pricing are prominent to the client and when two separate services that are in a bundle are booked, warn the client to book the bundle instead. | - | - 
+D1) Make sure to allow service professionals to combine two or more existing services/products with a special price and duration.| [1130](https://github.com/dani0198/Loconomics/issues/1130) | -   
+D2) Make sure to link to information for each item in the bundle with an option for a bundle description.| [1130](https://github.com/dani0198/Loconomics/issues/1130) | -   
+D3) Make sure pricing bundles include setup, process, and finish times and override individual pricing times. | [1130](https://github.com/dani0198/Loconomics/issues/1130) | -  
+D4) Make sure pricing are prominent to the client and when two separate services that are in a bundle are booked, warn the client to book the bundle instead. | [1130](https://github.com/dani0198/Loconomics/issues/1130) | - 
 
 ## Epic Story 8
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like my payment processing system to be flexible and seamless so I don't have to worry about being paid.
@@ -284,34 +286,33 @@ I want to cut one client's hair while another client's color is setting so I can
 A1) Make sure to include **Initial Duration (Setup)**, **Gap (Processing)**, and **Finish Duration** to services for certain job titles. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -   
 A2) Make sure the service professional's calendar is available for one more booking during process times. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -     
 
-
 Epic Story 10: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want to be able to walk multiple dogs at a time in an area so I can make extra money.| [Perry the Pet Care Professional](https://github.com/dani0198/Loconomics/docs/Personas/Perry%20the%20Pet%20Care%20Professional.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure to check if client is in specified service area's time restrictions before they can book.| - | -   
+B1) Make sure to check if client is in specified service area's time restrictions before they can book.|  [567](https://github.com/dani0198/Loconomics/issues/567) | -   
 
 Epic Story 10: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want to be able to offer classes at a certain time(s) each week so I can teach many students.| [Felicity the Fitness Professional](https://github.com/dani0198/Loconomics/docs/Personas/Felicity%20the%20Fitness%20Professional.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-C1) Make sure there is an option to add a class with a recurring rule.| - | -   
-C2) Make sure there is a pricing for clients to book into the class.| - | -   
+C1) Make sure there is an option to add a class with a recurring rule.| [609](https://github.com/dani0198/Loconomics/issues/609) | -   
+C2) Make sure there is a pricing for clients to book into the class.| [609](https://github.com/dani0198/Loconomics/issues/609) | -   
 
 Epic Story 10: Child Story D | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want to limit the number of students in my classes so it fits the space.| [Felicity the Fitness Professional](https://github.com/dani0198/Loconomics/docs/Personas/Felicity%20the%20Fitness%20Professional.md) | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-D1) Make sure there's an option for "Maximum students" in the pricing. | - | -   
-D2) Make sure each class that is full is marked as "Full" and not bookable. | - | -   
+D1) Make sure there's an option for "Maximum students" in the pricing. | [609](https://github.com/dani0198/Loconomics/issues/609) | -   
+D2) Make sure each class that is full is marked as "Full" and not bookable. | [609](https://github.com/dani0198/Loconomics/issues/609) | -   
 
 Epic Story 10: Child Story E | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want a minimum number of students in my classes so it's worth my time.| [Felicity the Fitness Professional](https://github.com/dani0198/Loconomics/docs/Personas/Felicity%20the%20Fitness%20Professional.md) | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-D1) Make sure there's an option for "Minimum students" in the pricing. | - | -   
-D2) Make sure there's an option of how far in advance to "cancel" the class (minimum 12 hours?). | - | - 
-D3) Make sure bookings for that class are cancelled and clients notified. | - | -  
+D1) Make sure there's an option for "Minimum students" in the pricing. | [609](https://github.com/dani0198/Loconomics/issues/609) | -   
+D2) Make sure there's an option of how far in advance to "cancel" the class (minimum 12 hours?). | [609](https://github.com/dani0198/Loconomics/issues/609) | - 
+D3) Make sure bookings for that class are cancelled and clients notified. | [609](https://github.com/dani0198/Loconomics/issues/609) | -  
 
 Epic Story 10: Child Story F | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -325,8 +326,8 @@ Epic Story 10: Child Story G | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I'd like to be able to book up to X dogs at a time so I can maximize my time.| [Perry the Pet Care Professional](https://github.com/dani0198/Loconomics/docs/Personas/Perry%20the%20Pet%20Care%20Professional.md) | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-G1) Make sure there's an option for "Maximum dogs" at a time. | - | -   
-G2) Make sure there's an option for "Request me anytime" for a service. | - | -   
+G1) Make sure there's an option for "Maximum dogs" at a time. | [609](https://github.com/dani0198/Loconomics/issues/609)  | -   
+G2) Make sure there's an option for "Request me anytime" for a service. | [609](https://github.com/dani0198/Loconomics/issues/609)  | -   
 
 Epic Story 10: Child Story H | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -775,18 +776,10 @@ As [Evelyn the Event Professional](https://github.com/dani0198/Loconomics/docs/P
 
 Epic Story 24: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want to send an estimate for my services so a client can decide to book them.| - | -  
-**Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure the service professional can list services and products with estimated prices. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
-A2) Make sure the service professional can update the final price before payment is processed. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
-A3) Make sure the client approves the final price before processed. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
-
-Epic Story 24: Child Story B | Target Persona(s) | Investable 
------------- | ------------- | ------------- 
 I want to request a deposit for services so I can be sure the client is serious about the services.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure the service professional can put a set deposit amount in a pricing. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
-B2) Make sure the final price subtracts any deposit paid. | [669](https://github.com/dani0198/Loconomics/issues/669) | -  
+A1) Make sure the service professional can put a set deposit amount in a pricing. | [801](https://github.com/dani0198/Loconomics/issues/801) | -  
+A2) Make sure the final price subtracts any deposit paid. | [801](https://github.com/dani0198/Loconomics/issues/801) | -  
 
 Epic Story 24: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -849,10 +842,20 @@ Epic Story 27: Child Story B | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I'd like to be able to "favorite" other service professionals on my profile so my clients can see who I recommend.| - | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-A1) Make sure a service professional's profile has the capability to list their favorite professionals. | - | -  
-A2) Make sure HIPAA-protected positions are excluded (or review legal if offered). | - | -  
-A3) Make sure there is an opportunity to share via social media these favorites. | - | -  
+B1) Make sure a service professional's profile has the capability to list their favorite professionals. | - | -  
+B2) Make sure HIPAA-protected positions are excluded (or review legal if offered). | - | -  
+B3) Make sure there is an opportunity to share via social media these favorites. | - | -  
 
 ## Epic Story 28
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like pricing forms to be tailored to my profession so I know I'm doing them right.
+
+Epic Story 28: Child Story A | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like the different types of services my profession provides dipslayed so I can add them easily.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure the pricing types needed for the profession are available and named so that they make sense for the job title. | [1131](https://github.com/dani0198/Loconomics/issues/1131) | -  
+A2) Make sure placeholders are tailored to the job title. | [1131](https://github.com/dani0198/Loconomics/issues/1131) | -  
+
+## Epic Story 29
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like loconomics to help create and host my website so I can save on these costs.
 
