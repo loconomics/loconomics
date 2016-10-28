@@ -157,14 +157,6 @@ A2) Make sure to send the client the estimate with an option to "Schedule servic
 A3) Make sure the service professional can update the price during/after services. | - | -   
 B3) Make sure the client approves the final price before processed. | - | -  
 
-Epic Story 6: Child Story B | Target Persona(s) | Investable 
------------- | ------------- | ------------- 
-I want to request a deposit for services so I can be sure the client is serious about the services.| - | -  
-**Test Cases** | **GitHub Issue** | **Complete** 
-B1) Make sure the service professional can put a set deposit amount in a pricing. | - | -  
-B2) Make sure the service professional can update the final price before payment is processed. | - | -  
-B3) Make sure the client approves the final price before processed. | - | -  
-
 ## Epic Story 7
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to offer new and existing clients promotions so I can increase my income in lower demand periods.
 
@@ -241,8 +233,12 @@ Epic Story 8: Child Story F | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I want clients to be able to add gratuity so I don't miss out on this income.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
-F1) Make sure to offer option for gratuity for certain job titles during booking.| - | -  
-F2) Make sure to allow clients to adjust gratuity before payment is processed.| - | -  
+F1) Make sure to offer option for gratuity for certain job titles during booking.| [659](https://github.com/dani0198/Loconomics/issues/659) | -  
+F2) Make sure to allow clients to adjust gratuity before payment is processed.| [659](https://github.com/dani0198/Loconomics/issues/659)  | -  
+F3) Make sure gratuity can only be given/edited by the client ONLY.| [659](https://github.com/dani0198/Loconomics/issues/659)  | -  
+F4) Make sure there is a tooltip for clients stating "gratuity is not shown to SERVICEPROFESSIONAL until one hour after the service is performed and can be updated by only you until then."| [659](https://github.com/dani0198/Loconomics/issues/659)  | -  
+F6) Make sure we think about collecting/reminding for bookings without payment collected.| [659](https://github.com/dani0198/Loconomics/issues/659)  | -  
+
 
 Epic Story 8: Child Story G | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -283,8 +279,7 @@ As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/P
 
 Epic Story 10: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
-I want to cut one client's hair while another client's color is setting so I can make use of my time.| [
-the Hairstylist](https://github.com/dani0198/Loconomics/docs/Personas/Harry%20the%20Hairstylist.md) | - 
+I want to cut one client's hair while another client's color is setting so I can make use of my time.| [Harry the Hairstylist](https://github.com/dani0198/Loconomics/docs/Personas/Harry%20the%20Hairstylist.md) | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
 A1) Make sure to include **Initial Duration (Setup)**, **Gap (Processing)**, and **Finish Duration** to services for certain job titles. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -   
 A2) Make sure the service professional's calendar is available for one more booking during process times. | [1064](https://github.com/dani0198/Loconomics/issues/1064) | -     
@@ -322,9 +317,9 @@ Epic Story 10: Child Story F | Target Persona(s) | Investable
 ------------ | ------------- | ------------- 
 I want to offer six-week boot camps or workshops at certain hours so I can attract a core group of students.| [Felicity the Fitness Professional](https://github.com/dani0198/Loconomics/docs/Personas/Felicity%20the%20Fitness%20Professional.md) | -  
 **Test Cases** | **GitHub Issue** | **Complete** 
-F1) Make sure there's an option for recurring with start and end dates. | - | -   
-F2) Make sure there's an option for a "Book by" date. | - | -   
-F3) Make sure to hide boot camps that the "book by" date has passed. | - | -   
+F1) Make sure there's an option for recurring with start and end dates. | [1083](https://github.com/dani0198/Loconomics/issues/1083) | -   
+F2) Make sure there's an option for a "Book by" date. | [1083](https://github.com/dani0198/Loconomics/issues/1083) | -   
+F3) Make sure to hide boot camps that the "book by" date has passed. | [1083](https://github.com/dani0198/Loconomics/issues/1083) | -   
 
 Epic Story 10: Child Story G | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -618,7 +613,7 @@ I'd like to import my Loconomics data into Freshbooks/Quickbooks.| - | -
 F1) Make sure to add API integration for popular accounting programs. | - | -   
 
 ## Epic Story 18
-As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like all communications with a client in one place so I can stay organized and refer back to them.
+As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to communicate with clients easily about services so I can stay organized and connected with clients.
 
 Epic Story 18: Child Story A | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
@@ -643,6 +638,20 @@ Epic Story 18: Child Story D | Target Persona(s) | Investable
 I want to be notified by text/email/push about messages so I don't miss any.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
 D1) Make sure messenger is in notification preferences.| - | -   
+
+Epic Story 18: Child Story E | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to know clients when I'm running behind so they don't have to wait.| - | Yes 
+**Test Cases** | **GitHub Issue** | **Complete** 
+E1) Make sure there is a way to send all clients for a day's schedule a special message.| [783](https://github.com/dani0198/Loconomics/issues/783) | -   
+
+Epic Story 18: Child Story F | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to let clients know when I'm sick so they can reschedule their appointments.| - | - 
+**Test Cases** | **GitHub Issue** | **Complete** 
+F1) Make sure there is a way to cancel all clients for a time period.| - | -   
+F2) Make sure there is a way to request clients rebook.| - | -    
+F3) Make sure there is a way to ask the service professional to open up additional time in their schedule to accommodate.| - | - 
 
 ## Epic Story 19
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to work in teams with one or more other professionals so we can offer better services.
@@ -773,10 +782,6 @@ D2) Make sure to have a default service address for Google hangouts | - | -
 D3) Make sure to have a default service address for Skype | - | -  
 D4) Make sure to have a default service address for Phone | - | -  
 
-
-
-
-
 ## Epic Story 24
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to be able to send clients invoices so they can pay me.
 
@@ -792,9 +797,24 @@ As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/P
 ## Epic Story 27
 As [Sara the Service Professional](https://github.com/dani0198/Loconomics/docs/Personas/Sara%20the%20Service%20Professional.md), I'd like to make it easy for clients to refer me to their friends so I can attract new clients.
 
+## Epic Story 28
+As [Evelyn the Event Professional](https://github.com/dani0198/Loconomics/docs/Personas/Evelyn%20the%20Event%20Professional.md), I'd like to ensure the entire process working with a client and their event is clear so the event goes well and I get paid.
 
+Epic Story 28: Child Story A | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I want to request a deposit for services so I can be sure the client is serious about the services.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+A1) Make sure the service professional can put a set deposit amount in a pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
+A2) Make sure the service professional can update the final price before payment is processed. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
+A3) Make sure the client approves the final price before processed. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
 
-
+Epic Story 28: Child Story B | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I want a basic client contract I can amend so I'm legally protected if there are any misunderstandings with the client.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+B1) Make sure the contract has clearly stated all services and products that are to be provided with finite and estimated pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | - 
+B2) Make sure the contract states that some items are estimates and could change. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
+B3) Make sure the contract states the process for updated pricing. | [670](https://github.com/dani0198/Loconomics/issues/670) | -  
 
 
 
