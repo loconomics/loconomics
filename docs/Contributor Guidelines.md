@@ -59,7 +59,7 @@ Only [@iagosrl](mailto:iagosrl@gmail.com) should commit to the master branch.
 If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
 
 #### Pull requests
-If you want to make general updates by doing a pull request, we'd prefer you create a Github issue and create a new branch.
+We prefer you create a Github issue for a specific topic/task to discuss about, with it's own issueXX branch where to commit, but if you want to make general updates or suggests a change by doing a pull request we are open to it.
 
 ### Adding user stories
 We have a repository of user stories for [Service Professionals](/User Stories/User Stories - Service Professionals.md), [Clients](/User Stories/User Stories - Clients.md), and [Cooperatives](/User Stories/User Stories - Cooperatives.md).
