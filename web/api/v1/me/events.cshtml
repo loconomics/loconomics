@@ -136,8 +136,8 @@
                 typesIDs.AddRange(new int[]{1, 3, 4, 5, 6});
             }
 
-            var start = DateTimeFromISO(Request.QueryString["start"]);
-            var end = DateTimeFromISO(Request.QueryString["end"]);
+            var start = DateTimeOffsetFromISO(Request.QueryString["start"]);
+            var end = DateTimeOffsetFromISO(Request.QueryString["end"]);
 
             // Data
             return LcCalendar.GetSimplifiedEvents(userId, typesIDs.ToArray<int>(), start, end);
@@ -152,8 +152,8 @@
             {
                 // Optionally, a dates range can be included to generate the ocurrences
                 // of a reccurrent event for that time frame:
-                var start = DateTimeFromISO(Request.QueryString["start"]);
-                var end = DateTimeFromISO(Request.QueryString["end"]);
+                var start = DateTimeOffsetFromISO(Request.QueryString["start"]);
+                var end = DateTimeOffsetFromISO(Request.QueryString["end"]);
                 
                 var item = (IEnumerable<dynamic>)LcCalendar.GetSimplifiedEvents(userID, null, start, end, eventID);
                 if (item != null && item.Count() > 0)

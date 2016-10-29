@@ -1053,13 +1053,13 @@ public static partial class LcCalendar
     /// <param name="end"></param>
     /// <param name="eventID"></param>
     /// <returns></returns>
-    public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
+    public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTimeOffset? start = null, DateTimeOffset? end = null, int eventID = 0)
     {
         types = types == null ? new int[] { } : types;
         var thereAreDates = start.HasValue || end.HasValue;
 
         if (!start.HasValue)
-            start = DateTime.Today;
+            start = DateTimeOffset.Now;
         if (!end.HasValue)
             end = start.Value.AddDays(7);
 
@@ -1125,7 +1125,7 @@ public static partial class LcCalendar
                         iCal.Events.Add(iev);
 
                         // Getting occurrences datetime ranges
-                        occurrences = iev.GetOccurrences(start.Value, end.Value).Select(oc => new
+                        occurrences = iev.GetOccurrences(start.Value.LocalDateTime, end.Value.LocalDateTime).Select(oc => new
                         {
                             // Ugly conversion because of a bad internal conversion of iCalendar, treating the
                             // original value as UTC when is local time-zone based:

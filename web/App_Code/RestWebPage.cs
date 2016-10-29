@@ -292,5 +292,12 @@ public class RestWebPage
             (TimeSpan?)ts :
             null;
     }
+    public static DateTimeOffset? DateTimeOffsetFromISO(string datetime)
+    {
+        DateTimeOffset dt;
+        return (DateTimeOffset.TryParse(datetime, out dt)) ?
+            (DateTimeOffset?)dt.ToLocalTime() :
+            null;
+    }
     #endregion
 }
