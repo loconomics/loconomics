@@ -162,7 +162,7 @@ exports.create = function create(appModel) {
         updated so all previous instances get the updated data too.
     **/
     api.getDateAvailability = function getDateAvailability(date) {
-        
+        console.error('DateAvailability does NOT support Time Zone conversions');
         var cached = cache.getSingle(date);
 
         if (cached) {

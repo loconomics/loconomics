@@ -6,7 +6,7 @@
     list and summaries auto calculate to show the proper listing.
 **/
 'use strict';
-
+console.error('DateAvailability does NOT support Time Zone conversions');
 var Model = require('../models/Model');
 var Appointment = require('../models/Appointment'),
     WeekDaySchedule = require('../models/WeekDaySchedule'),

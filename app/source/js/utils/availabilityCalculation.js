@@ -8,7 +8,7 @@
     WeeklySchedule.WeekDaySchedule.
 **/
 'use strict';
-
+console.error('DateAvailability does NOT support Time Zone conversions');
 var Appointment = require('../models/Appointment'),
     moment = require('moment');
 
