@@ -33,7 +33,7 @@
     // Development
 
     // Whether debugger statements should be allowed.
-    "debug": false,
+    "debug": true,
     // Whether logging globals should be predefined (console, alert, etc.).
     "devel": false,
 

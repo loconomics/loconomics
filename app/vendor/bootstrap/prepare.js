@@ -34,7 +34,7 @@ exports.build = function() {
 
 function convert(content) {
     
-    var less = require('less2stylus/node_modules/less'),
+    var less = require('less'),
         less2stylus = require('less2stylus');
     
     var filename, parser, str;
