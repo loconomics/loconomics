@@ -25,6 +25,8 @@ We use [jshint](http://jshint.com/) to validate and enforce some good practices,
 We split source files in modules, following the [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) syntax.
 We use a preprocessor, [Browserify](http://browserify.org/), to bundled the modules in a few files.
 
+**Hint**: the *[debugger;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)* javascript statement can be used for easier debugging, but remember to remove before commit your changes.
+
 ## HTML
 
 We use HTML5.
