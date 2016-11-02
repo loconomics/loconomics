@@ -5,14 +5,19 @@
 **/
 'use strict';
 
-var http = require('http');
+// Change depending on TLS: http or https
+var request = require('http');
 
-http.get({
-    host: 'loconomics.azurewebsites.net',
-    path: '/testing/ScheduledTask'
+var req = request.get({
+    host: 'testing.loconomics.com',
+    path: '/ScheduledTask'
 }, function(response) {
     // no need to do something with result.
     //var body = ''
     //response.on('data',function(d){ body += d })
-    //response.on('end', function(){..})
+    response.on('end', function(){
+        console.log('Request End');
+    });
 });
+
+req.end();
