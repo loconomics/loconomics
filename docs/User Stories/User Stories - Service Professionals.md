@@ -781,6 +781,12 @@ I want to request a deposit for services so I can be sure the client is serious 
 A1) Make sure the service professional can put a set deposit amount in a pricing. | [801](https://github.com/dani0198/Loconomics/issues/801) | -  
 A2) Make sure the final price subtracts any deposit paid. | [801](https://github.com/dani0198/Loconomics/issues/801) | -  
 
+Epic Story 24: Child Story B | Target Persona(s) | Investable 
+------------ | ------------- | ------------- 
+I'd like to be able to purchase insurance for each event so I meet the venue or client's insurance requirements.| - | -  
+**Test Cases** | **GitHub Issue** | **Complete** 
+B1) Make sure to offer event insurance as an add-on. | - | -  
+
 Epic Story 24: Child Story C | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
 I want a basic client contract I can amend so I'm legally protected if there are any misunderstandings with the client.| - | -  
