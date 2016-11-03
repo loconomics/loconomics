@@ -575,6 +575,7 @@ Epic Story 17: Child Story A | Target Persona(s) | Investable
 I want to be able to add expenses to a booking so it's easier to keep track of them.| - | - 
 **Test Cases** | **GitHub Issue** | **Complete** 
 A1) Make sure there's an "Expense" section to each booking.| - | -   
+A2) Make sure there's an ability to add a percentage markup to the expense.| - | -   
 
 Epic Story 17: Child Story B | Target Persona(s) | Investable 
 ------------ | ------------- | ------------- 
