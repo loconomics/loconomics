@@ -1048,16 +1048,21 @@ public class LcMessaging
             }
             catch (WebException exception)
             {
-                string responseText;
-                using (var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
+                string responseText = "";
+                try
                 {
-                    responseText = reader.ReadToEnd();
+                    using (var reader = new System.IO.StreamReader(exception.Response.GetResponseStream()))
+                    {
+                        responseText = reader.ReadToEnd();
+                    }
                 }
+                catch { }
                 string qs = GetWebClientQueryString(w);
                 using (var logger = new LcLogger("SendMail"))
                 {
                     logger.Log("Email ApplyTemplate URL:{0}", completeURL + qs);
                     logger.LogEx("Email ApplyTemplate exception (previous logged URL)", exception);
+                    logger.LogData("Template web response: {0}", responseText);
                     logger.Save();
                 }
                 if (LcHelpers.InDev)
