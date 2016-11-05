@@ -71,18 +71,18 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 ### /web (all server-side and API files)
 - /_DBUpdate: MS SQL files of any changes to the database to ensure the dev, test and live databases get updated accordingly.
-  - /api/v1: CSHTML files that communicate with the server and retrieve API data
-    - /me: Information about a user requesting information about themselves, mostly private  
-    - /user: Information about a user requesting information about another user, mostly public  
-  - /App_Code/LcPricing: C# files that implements...
-  - /App_Code/LcRest: C# files that implements the schemes for specific objects in the REST API, and static methods/queries/updates for database operations
-  - /en-US/EmailCommunications: CSTHML files for all e-mail communcations sent to users
-    - /Admin: Communications to users their account (welcome, password resets, etc.) 
-      - /Internal: Communications sent to employees about important user actions (background check/license verification requests)
-    - /Booking: Communications to users about bookings
-      - /BookNow: All communications for BookNow bookings (from a service professional's website)
-      - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
-      - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
+- /api/v1: CSHTML files that communicate with the server and retrieve API data
+  - /me: Information about a user requesting information about themselves, mostly private  
+  - /user: Information about a user requesting information about another user, mostly public  
+- /App_Code/LcPricing: C# files for specific pricing stuff, like pricing types set-up. *Currently some classes are deprecated or need rework*.
+- /App_Code/LcRest: C# files that implements the schemes for specific objects in the REST API, and static methods/queries/updates for database operations
+- /en-US/EmailCommunications: CSTHML files for all e-mail communcations sent to users
+  - /Admin: Communications to users their account (welcome, password resets, etc.) 
+    - /Internal: Communications sent to employees about important user actions (background check/license verification requests)
+  - /Booking: Communications to users about bookings
+    - /BookNow: All communications for BookNow bookings (from a service professional's website)
+    - /Marketplace: All communications for Marketplace bookings (from the Loconomic's website/app)
+    - /ServiceProfessionalBooking: All communications for bookings made by the service professional 
 
 ## Database  
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Live database is limited those who can sign a Business Associate Agreement per our HIPAA Policy.
