@@ -102,7 +102,7 @@ function SignupVM(app) {
     };
 
     this.checkPhone = function() {
-        var phoneRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+        var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
         this.isPhoneValid(phoneRegex.test(this.phone()));
     };
 
