@@ -55,7 +55,7 @@
                 <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, event: { keyup: checkLastName }, css: {'is-valid': isLastNameValid}"></div>
                 <label for="countryID">Country</label>
                 <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
-                    <select disabled="disabled" data-bind="value: countryID" class="form-control select-unstyled">
+                    <select data-bind="value: countryID" class="form-control select-unstyled">
                          <option value="1" selected="selected">United States</option>
                          <option value="2">Spain</option>
                          <option value="3">Afghanistan</option>
@@ -296,6 +296,8 @@
                          <option value="238">Zambia</option>
                          <option value="239">Zimbabwe</option>
                     </select>
+                    <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                    <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
 
                 </div>
                 <div class="row">
@@ -316,7 +318,7 @@
 
                     <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
                         <label for="signupAccountPassword">Password</label>
-                        <div type="password" id="signupAccountPassword" placeholder="Min-lenght: 8" data-bind="template: { name: 'signup-field', data: { field: password, label: 'Minimum lenght: 8', type: 'password', icon: {'icon ion-android-done': isPasswordValid} } }, event: { keyup: checkPassword}, css: {'is-valid': isPasswordValid}">
+                        <div type="password" id="signupAccountPassword" placeholder="Min-lenght: 8" data-bind="template: { name: 'signup-field', data: { field: password, label: 'Password', type: 'password', icon: {'icon ion-android-done': isPasswordValid} } }, event: { keyup: checkPassword}, css: { 'is-valid': isPasswordValid }, popover: { content: password.error() || passwordRequirements(), trigger: 'focus', container: 'body', placement: 'top' }">
 
                         </div>
 

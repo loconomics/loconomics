@@ -117,8 +117,7 @@ function SignupVM(app) {
     };
 
     this.checkPassword = function() {
-        var passwordRegex = /^.{8,}$/;
-        this.isPasswordValid(passwordRegex.test(this.password()));
+        this.isPasswordValid(pwdRegex.test(this.password()));
     };
 
     this.signupError = ko.observable('');
