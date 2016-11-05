@@ -3,9 +3,27 @@
     <div class="SignupLogin">
         <div class="LeadContent" data-bind="visible: !profile()">
             <ul class="TilesList TilesList--openEnd">
-                <li><a class="LinkTile" href="/signup/service-professional"><div class="Tile-content"><p>I'm a local service professional</p></div></a></li>
-                <li><a class="LinkTile" href="/signup/client"><div class="Tile-content"><p>I'm a potential client</p></div></a></li>
-                <li><a class="LinkTile" href="/signup/service-professional"><div class="Tile-content"><p>I'm both</p></div></a></li>
+                <li>
+                    <a class="LinkTile" href="/signup/service-professional">
+                        <div class="Tile-content">
+                            <p>I'm a local service professional</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a class="LinkTile" href="/signup/client">
+                        <div class="Tile-content">
+                            <p>I'm a potential client</p>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a class="LinkTile" href="/signup/service-professional">
+                        <div class="Tile-content">
+                            <p>I'm both</p>
+                        </div>
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="LeadContent" data-bind="visible: profile">
@@ -17,8 +35,8 @@
             <h2 data-bind="visible: forServiceProfessional">Start your free 30-day trial</h2>
             <div>
                 <div data-bind="visible: !facebookUserID()">
-                  <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
-<!--                  <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
+                    <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
+                    <!--                  <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
                 </div>
                 <p class="isolated text-center" data-bind="visible: !facebookUserID()">
                     <svg height="5" width="45%">
@@ -34,11 +52,11 @@
                 <label for="firstName">First Name</label>
                 <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', type: 'text', icon: {'icon ion-android-done': isFirstNameValid} } }, event: { keyup: checkFirstName }, css: {'is-valid': isFirstNameValid}"></div>
                 <label for="lastName">Last Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, event: { keyup: checkLastName }, css: {'is-valid': isFirstNameValid}"></div>
+                <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, event: { keyup: checkLastName }, css: {'is-valid': isLastNameValid}"></div>
                 <label for="countryID">Country</label>
-                <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
-                    <select data-bind="value: countryID" class="form-control select-unstyled">
-                         <option value="1">United States</option>
+                <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
+                    <select disabled="disabled" data-bind="value: countryID" class="form-control select-unstyled">
+                         <option value="1" selected="selected">United States</option>
                          <option value="2">Spain</option>
                          <option value="3">Afghanistan</option>
                          <option value="4">Albania</option>
@@ -285,40 +303,40 @@
                     <label class="col-xs-7" for="referralCode">Referral Code</label>
                 </div>
                 <div class="row">
-                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Postal code', type: 'text', icon: {'icon ion-android-done': isPostalCodeValid} } }, event: { keyup: checkPostalCode }, css: {'is-valid': isFirstNameValid}"></div>
-                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', type: 'text', icon: '' } }"></div>
+                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Postal code', type: 'text', icon: { 'icon ion-android-done': isPostalCodeValid } } }, event: { keyup: checkPostalCode }, css: { 'is-valid': isPostalCodeValid }"></div>
+                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', type: 'text', icon: { 'icon ion-android-done': isReferralCodeValid } } } , event: { keyup: checkReferralCode }, css: { 'is-valid': isReferralCodeValid }"></div>
                 </div>
                 <label for="phone" data-bind="visible: forServiceProfessional">Mobile Phone</label>
-                <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Mobile phone', type: 'tel', icon: {'icon ion-android-done': isPhoneValid} } }, event: { keyup: checkPhone }, css: {'is-valid': isFirstNameValid}, visible: forServiceProfessional"></div>
+                <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Mobile phone', type: 'tel', icon: {'icon ion-android-done': isPhoneValid} } }, event: { keyup: checkPhone }, css: {'is-valid': isPhoneValid }, visible: forServiceProfessional"></div>
 
-              <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-                <label for="signupAccountEmail">E-mail address</label>
-                <div type="email" id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { field: email, label: 'E-mail address', type: 'email', icon: {'icon ion-android-done': isEmailValid} } }, event: { keyup: checkEmail }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
-              </div>
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
+                    <label for="signupAccountEmail">E-mail address</label>
+                    <div type="email" id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { field: email, label: 'E-mail address', type: 'email', icon: {'icon ion-android-done': isEmailValid } } }, event: { keyup: checkEmail }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
+                    </div>
 
-              <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
-                <label for="signupAccountPassword">Password</label>
-                <div type="password" id="signupAccountPassword" placeholder="Password" data-bind="template: { name: 'signup-field', data: { field: password, label: 'Password', type: 'password', icon: {'icon ion-android-done': isPasswordValid} } }, event: { keyup: checkPassword}, css: {'is-valid': isFirstNameValid}">
+                    <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
+                        <label for="signupAccountPassword">Password</label>
+                        <div type="password" id="signupAccountPassword" placeholder="Min-lenght: 8" data-bind="template: { name: 'signup-field', data: { field: password, label: 'Minimum lenght: 8', type: 'password', icon: {'icon ion-android-done': isPasswordValid} } }, event: { keyup: checkPassword}, css: {'is-valid': isPasswordValid}">
 
-              </div>
+                        </div>
 
-              <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
+                        <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
                 <span data-bind="visible: facebookUserID">&nbsp;&nbsp;</span>
                 <span data-bind="text: submitText"></span>
               </button>
             </form>
 
             <p class="isolated">
-              By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
+                By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
                 <a href="#!terms/privacy-policy?mustReturn=true" class="text-secondary">Privacy Policy</a>
             </p>
-        </div>
-        <div class="DownloadApp" data-bind="visible: !inApp()">
-            <h2>Download our app:</h2>
-            <div>
-                <a class="btn-appleStore" target="_blank" href="https://geo.itunes.apple.com/us/app/loconomics/id1055765783?mt=8">Download on the App Store</a></li>
-                <a class="btn-googlePlay" target="_blank" href="http://play.google.com/store/apps/details?id=com.loconomics.app&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1">Android App on Google Play</a>
             </div>
-        </div>
-    </div>
+            <div class="DownloadApp" data-bind="visible: !inApp()">
+                <h2>Download our app:</h2>
+                <div>
+                    <a class="btn-appleStore" target="_blank" href="https://geo.itunes.apple.com/us/app/loconomics/id1055765783?mt=8">Download on the App Store</a></li>
+                    <a class="btn-googlePlay" target="_blank" href="http://play.google.com/store/apps/details?id=com.loconomics.app&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1">Android App on Google Play</a>
+                </div>
+            </div>
+            </div>
 </script>

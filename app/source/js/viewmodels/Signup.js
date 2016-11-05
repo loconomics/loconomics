@@ -4,7 +4,8 @@
 **/
 'use strict';
 var ko = require('knockout'),
-    EventEmitter = require('events').EventEmitter;
+    EventEmitter = require('events')
+    .EventEmitter;
 
 //var FormCredentials = require('../viewmodels/FormCredentials');
 var newFieldObs = function() {
@@ -26,10 +27,11 @@ var facebookLogin = function() {
         return new Promise(function(s, e) {
             window.facebookConnectPlugin.login(['email'], s, e);
         });
-    }
-    else {
+    } else {
         // email,user_about_me
-        return fb.login({ scope: 'email' });
+        return fb.login({
+            scope: 'email'
+        });
     }
 };
 var facebookMe = function() {
@@ -37,10 +39,11 @@ var facebookMe = function() {
         return new Promise(function(s, e) {
             window.facebookConnectPlugin.api('/me?fields=email,first_name,last_name', ['email'], s, e);
         });
-    }
-    else if (window.FB) {
+    } else if (window.FB) {
         return new Promise(function(s, e) {
-            window.FB.api('/me', { fields: 'email,first_name,last_name' }, function(r) {
+            window.FB.api('/me', {
+                fields: 'email,first_name,last_name'
+            }, function(r) {
                 if (!r || r.error)
                     e(r && r.error);
                 else
@@ -68,6 +71,7 @@ function SignupVM(app) {
     this.isPostalCodeValid = ko.observable(false);
     this.countryID = newFieldObs();
     this.referralCode = newFieldObs();
+    this.isReferralCodeValid = ko.observable(false);
     this.device = newFieldObs();
 
     this.facebookUserID = ko.observable();
@@ -82,35 +86,39 @@ function SignupVM(app) {
     this.isPasswordValid = ko.observable(false);
 
     this.checkFirstName = function() {
-      // \p{L} the Unicode Characterset not supported by JS
-      var firstNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-      this.isFirstNameValid(firstNameRegex.test(this.firstName()));
+        // \p{L} the Unicode Characterset not supported by JS
+        var firstNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+        this.isFirstNameValid(firstNameRegex.test(this.firstName()));
     };
 
     this.checkLastName = function() {
-      var lastNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-      this.isLastNameValid(lastNameRegex.test(this.lastName()));
+        var lastNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+        this.isLastNameValid(lastNameRegex.test(this.lastName()));
     };
 
     this.checkPostalCode = function() {
-      var postalCodeRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-      this.isPostalCodeValid(postalCodeRegex.test(this.postalCode()));
+        var postalCodeRegex = /^\d{5}([\-]?\d{4})?$/;
+        this.isPostalCodeValid(postalCodeRegex.test(this.postalCode()));
     };
 
     this.checkPhone = function() {
-      var phoneRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-      this.isPhoneValid(phoneRegex.test(this.phone()));
+        var phoneRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+        this.isPhoneValid(phoneRegex.test(this.phone()));
     };
 
     this.checkEmail = function() {
-      console.log('checkEmail');
-      var emailRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-      this.isEmailValid(emailRegex.test(this.email()));
+        var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        this.isEmailValid(emailRegex.test(this.email()));
+    };
+
+    this.checkReferralCode = function() {
+        var referralCodeRegex = /^.{3,}$/;
+        this.isReferralCodeValid(referralCodeRegex.test(this.referralCode()));
     };
 
     this.checkPassword = function() {
-      var passwordRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-      this.isPasswordValid(passwordRegex.test(this.password()));
+        var passwordRegex = /^.{8,}$/;
+        this.isPasswordValid(passwordRegex.test(this.password()));
     };
 
     this.signupError = ko.observable('');
@@ -176,62 +184,62 @@ function SignupVM(app) {
         };
 
         return app.model.signup(plainData)
-        .then(function(signupData) {
+            .then(function(signupData) {
 
-            this.isSigningUp(false);
+                this.isSigningUp(false);
 
-            // Start onboarding
-            if (app.model.onboarding)
-                app.model.onboarding.setStep(signupData.onboardingStep);
+                // Start onboarding
+                if (app.model.onboarding)
+                    app.model.onboarding.setStep(signupData.onboardingStep);
 
-            // Remove form data
-            this.reset();
+                // Remove form data
+                this.reset();
 
-            this.emit('signedup', signupData);
+                this.emit('signedup', signupData);
 
-            return signupData;
+                return signupData;
 
-        }.bind(this))
-        .catch(function(err) {
+            }.bind(this))
+            .catch(function(err) {
 
-            err = err && err.responseJSON;
+                err = err && err.responseJSON;
 
-            var msg = err && err.errorMessage;
-            if (msg) {
-                // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
-                app.modals.showError({
-                    title: 'There was an error signing-up',
-                    error: msg
-                });
-            }
-            // Process validation errors, tagging fields or general error
-            if (err && err.errorSource === 'validation' && err.errors) {
-                Object.keys(err.errors).forEach(function(fieldKey) {
-                    if (this[fieldKey] && this[fieldKey].error) {
-                        this[fieldKey].error(err.errors[fieldKey]);
-                    }
-                }.bind(this));
-            }
-            else {
-                this.signupError(msg || err && err.statusText || 'Invalid username or password');
-            }
+                var msg = err && err.errorMessage;
+                if (msg) {
+                    // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
+                    app.modals.showError({
+                        title: 'There was an error signing-up',
+                        error: msg
+                    });
+                }
+                // Process validation errors, tagging fields or general error
+                if (err && err.errorSource === 'validation' && err.errors) {
+                    Object.keys(err.errors)
+                        .forEach(function(fieldKey) {
+                            if (this[fieldKey] && this[fieldKey].error) {
+                                this[fieldKey].error(err.errors[fieldKey]);
+                            }
+                        }.bind(this));
+                } else {
+                    this.signupError(msg || err && err.statusText || 'Invalid username or password');
+                }
 
-            this.isSigningUp(false);
+                this.isSigningUp(false);
 
-            throw err;
-        }.bind(this));
+                throw err;
+            }.bind(this));
 
     }.bind(this);
 
     // For buttons
     this.clickSignup = function() {
         this.performSignup()
-        .catch(function(err) {
-            // Use event to catch up the error, since the promise catch it
-            // since this will be triggered by a button and never will have chance
-            // to detect the promise, showing up unknow errors in console
-            this.emit('signuperror', err);
-        }.bind(this));
+            .catch(function(err) {
+                // Use event to catch up the error, since the promise catch it
+                // since this will be triggered by a button and never will have chance
+                // to detect the promise, showing up unknow errors in console
+                this.emit('signuperror', err);
+            }.bind(this));
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
@@ -243,20 +251,22 @@ function SignupVM(app) {
         var vm = this;
 
         // email,user_about_me
-        facebookLogin().then(function (result) {
-            var auth = result.authResponse;
-            // Set FacebookId to link accounts:
-            vm.facebookUserID(auth.userID);
-            vm.facebookAccessToken(auth.accessToken);
-            // Request more user data
-            facebookMe().then(function (user) {
-                //Fill Data
-                vm.email(user.email);
-                vm.firstName(user.first_name);
-                vm.lastName(user.last_name);
-                //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
+        facebookLogin()
+            .then(function(result) {
+                var auth = result.authResponse;
+                // Set FacebookId to link accounts:
+                vm.facebookUserID(auth.userID);
+                vm.facebookAccessToken(auth.accessToken);
+                // Request more user data
+                facebookMe()
+                    .then(function(user) {
+                        //Fill Data
+                        vm.email(user.email);
+                        vm.firstName(user.first_name);
+                        vm.lastName(user.last_name);
+                        //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
+                    });
             });
-        });
     };
 
     this.passwordRequirements = ko.pureComputed(function() {

@@ -1,7 +1,6 @@
-
 <script type="text/html" id="signup-field">
-  <div class="form-group" data-bind="css: { 'has-error': field.error }">
-    <input class="form-control has-feedback" data-bind="value: field, valueUpdate:'afterkeydown', attr: { placeholder: label, 'aria-label': label, type: type }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-    <i class="fa form-control-feedback text-muted pull-right icon-right" aria-hidden="true" data-bind="css: icon"></i>
-  </div>
+    <div class="form-group" data-bind="css: { 'has-error': field.error }">
+        <input class="form-control has-feedback" data-bind="value: field, valueUpdate:'afterkeydown', attr: { placeholder: label, 'aria-label': label, type: type }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
+        <i class="fa form-control-feedback text-muted pull-right icon-right" aria-hidden="true" data-bind="css: icon"></i>
+    </div>
 </script>

@@ -4,7 +4,7 @@
     position: relative;
     z-index: 1;
     top: 0px;
-    
+
     .LeadContent {
         margin: 0px auto 0px auto;
         background: white;
@@ -18,7 +18,7 @@
           max-width: 450px;
           margin: 30px auto;
           border: 1px solid #ccc;
-        } 
+        }
     }
     .btn {
         padding: 22px 10px;
@@ -51,7 +51,13 @@
         font-size: 16px;
         font-weight: normal;
         color: $gray;
-        border: 1px solid $gray-light;
+        border-bottom: 1px solid $gray-light;
+
+        &:disabled {
+          background-color: white;
+          font-style: italic;
+          color: $gray;
+        }
     }
     .form-control-feedback {
         position: relative;
