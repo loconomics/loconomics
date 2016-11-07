@@ -3,7 +3,7 @@
 ## Adding new pages to the app
 ### Step 1
 Is there an existing endpoint/call/method already in the REST API for the data you need (another page using it)?
-- If no, send a request to [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) explaining what's needed
+- If no, send a request to [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) explaining what's needed
 - If yes, process to Step 2. 
 
 ### Step 2
@@ -24,7 +24,7 @@ Test new page:
 - Test any data you're using by placing console.log(data) in the .js file and reviewing using the browser's developer console
 
 ## Database & API changes
-We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com). 
+We run a SQL Server 2008 R2 database hosted on Microsoft Azure. If you feel you need a copy of the dev database for development on your local machine, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com). 
 
 Access to the Live database is limited to those who can sign a Business Associate Agreement per our HIPAA Policy.
 

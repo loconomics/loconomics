@@ -88,7 +88,7 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Live database is limited those who can sign a Business Associate Agreement per our HIPAA Policy.
 
 ## API Access
-Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com)
+Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
 
 ## Testing Links
 Requires API access.
@@ -97,16 +97,16 @@ Requires API access.
 http://dev.loconomics.com/tests/testrest
 
 ### Email Communications
-http://dev.loconomics.com/tests/testmessaging (request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com))
+http://dev.loconomics.com/tests/testmessaging (request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com))
 
 ### Pages (for testing db changes)
 http://dev.loconomics.com/tests/TestAny 
 
 ## Deploying the App
-Only [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) currently have permission for [Deploying the App](Deploying the App.md). If you feel you need this for testing reasons, please contact them for permission. 
+Only [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) currently have permission for [Deploying the App](Deploying the App.md). If you feel you need this for testing reasons, please contact them for permission. 
 
 ## FTP Access
-You should only need [FTP Access](FTP Access.md) if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. If you feel you need this for testing reasons, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com). 
+You should only need [FTP Access](FTP Access.md) if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. If you feel you need this for testing reasons, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com). 
 
 
 

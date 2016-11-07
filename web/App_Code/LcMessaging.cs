@@ -548,7 +548,7 @@ public class LcMessaging
             }
             public override void ServicePerformed()
             {
-                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/dani0198/Loconomics/issues/844#issuecomment-169066719)
+                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/joshdanielson/Loconomics/issues/844#issuecomment-169066719)
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
             }
@@ -677,7 +677,7 @@ public class LcMessaging
             }
             public override void ServicePerformed()
             {
-                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/dani0198/Loconomics/issues/844#issuecomment-169066719)
+                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/joshdanielson/Loconomics/issues/844#issuecomment-169066719)
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
             }
@@ -796,7 +796,7 @@ public class LcMessaging
             }
             public override void ServicePerformed()
             {
-                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/dani0198/Loconomics/issues/844#issuecomment-169066719)
+                // Service Performed is registered in the Inbox Thread but no e-mail is sent (decission to not send email at https://github.com/joshdanielson/Loconomics/issues/844#issuecomment-169066719)
                 subject = "Service performed and pricing estimate 100% accurate";
                 CreateBookingMessage(info, (int)MessageType.ServicePerformed, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
             }

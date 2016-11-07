@@ -1,4 +1,4 @@
-﻿@using WebMatrix.WebData;
+@using WebMatrix.WebData;
 @*
     Get, Update, Upload and Delete the logged user work photos.
 
@@ -134,7 +134,7 @@
                 var errMsg = String.Join("; ", ModelState.Values.First().Errors);
 
                 // We don't want the ugly default asp.net message for file-size-exceeded
-                // As of #454 (https://github.com/dani0198/Loconomics/issues/454#issuecomment-37782181)
+                // As of #454 (https://github.com/joshdanielson/Loconomics/issues/454#issuecomment-37782181)
                 if (errMsg.Contains("Maximum request length exceeded"))
                 {
                     //LcHelpers.DebugLogger.Log("PUT profile-picture:notvalid:max request length exceeded");

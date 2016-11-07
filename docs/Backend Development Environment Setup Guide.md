@@ -10,7 +10,7 @@ Our backend is an ASP.NET WebPages2 website with MS-SQL Server database.
 Microsoft Windows 7 SP1, Windows 10.
 
 ## Setting up a database
-Discuss with [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) if you should connect to the dev database or create a local copy.
+Discuss with [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) if you should connect to the dev database or create a local copy.
 
 If creating a local database:
 - use MS SQL Express 2008 R2 or above

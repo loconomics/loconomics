@@ -12,7 +12,7 @@ Loconomics\loconomi
 ftp://waws-prod-sn1-041.ftp.azurewebsites.windows.net
 ```
 ## Password:
-Ask [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com).
+Ask [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
 
 ## Dev Site Path:
 ```

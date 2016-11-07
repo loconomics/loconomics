@@ -1,14 +1,14 @@
 # Quick Start Guide
 
 ## Download or clone the master branch of the Loconomics Github repository
-- [Download](https://github.com/dani0198/Loconomics/archive/master.zip)
-- Cloning link: https://github.com/dani0198/Loconomics.git
+- [Download](https://github.com/joshdanielson/Loconomics/archive/master.zip)
+- Cloning link: https://github.com/joshdanielson/Loconomics.git
 - [Help with cloning](https://help.github.com/articles/cloning-a-repository/)
 
 ## Install Node.js
 
 You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) or newer (macOS, Windows, Linux) and install on your local machine.
-*Note: if a problem is detected when using a newer version of Node, please post errors in [a new issue](https://github.com/dani0198/Loconomics/issues/new), we want to support newest versions.*
+*Note: if a problem is detected when using a newer version of Node, please post errors in [a new issue](https://github.com/joshdanielson/Loconomics/issues/new), we want to support newest versions.*
 
 ## Install Grunt globally (from the command line)
 ```
@@ -49,7 +49,7 @@ grunt atwork
 This will:
 - run the connect server at http://localhost:8811/
 - run the watch task that will listen for changes on source files to automatically rebuild the needed files (specific builds are performed, like build-js, build-css, depending on the modified files; when they finish, the browser can be refreshed to try latest changes).
-  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#1123](https://github.com/dani0198/Loconomics/issues/1123).
+  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#1123](https://github.com/joshdanielson/Loconomics/issues/1123).
 - by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything; when it finishs, the /build/latest.zip file is ready to be sent to PhoneGap Build, and the phonegap folder is ready to perform local PhoneGap builds.
 - when the build ends, a notification is sent to the system. [More info on this](https://github.com/dylang/grunt-notify)
 

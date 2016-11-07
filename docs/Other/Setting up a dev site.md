@@ -2,7 +2,7 @@
 
 ## Setting up a new database
 - Create a backup of current dev database
-- Create a database using the dev backup named devYOURNAME (either on your local machine or ask @dani0198 or @iagosrl for one on the server)
+- Create a database using the dev backup named devYOURNAME (either on your local machine or ask @joshdanielson or @iagosrl for one on the server)
 
 ## Setting up the app code
 - Copy the dev folder to your local machine to make these changes:
