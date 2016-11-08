@@ -21,7 +21,7 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 [Chrome Developer Tools](https://developer.chrome.com/devtools)
 
 ### Database Query & Administration
-[Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris.
+[Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris
 
 ## Main libraries
 [jQuery-2](https://jquery.com)
@@ -36,7 +36,7 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 [Nodejs](https://nodejs.org/en/) to assist in front-end development
 
-[Grunt](http://gruntjs.com/) as a tasks runner.
+[Grunt](http://gruntjs.com/) as a task runner
 
 
 ## File Organization
@@ -91,13 +91,13 @@ We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Access to the Li
 Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
 
 ## Testing Links
-Requires API access.
+Requires API access. Request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
 
 ### API
 http://dev.loconomics.com/tests/testrest
 
 ### Email Communications
-http://dev.loconomics.com/tests/testmessaging (request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com))
+http://dev.loconomics.com/tests/testmessaging 
 
 ### Pages (for testing db changes)
 http://dev.loconomics.com/tests/TestAny 
