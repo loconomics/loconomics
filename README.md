@@ -4,15 +4,15 @@ Loconomics is an app for booking local services that's cooperatively owned by th
 
 ### Contributing
 
-If you're reading this, we've asked for you to contribute in some way to Loconomics, please read our [Contributor Guidelines](docs/Contributor Guidelines.md).
+If you'd like to contribute in some way to Loconomics, please read our [Contributor Guidelines](docs/Contributor Guidelines.md) and [send us a request](mailto:joshua.danielson@loconomics.com) to chat – we'd love to hear from you.
 
-To get an overview of the app and how to deploy, see [App Overview](docs/App Overview.md).
+To get an overview of the app, see [App Overview](docs/App Overview.md).
 
-To setup up a Loconomics development environment using our API, see the [Quickstart Guide](docs/Quickstart Guide.md).
+To setup up a Loconomics app development environment using our API, see the [App Quick Start Guide](docs/App Quick Start Guide.md).
 
 To setup a backend development environment, see [Backend Development Environment Setup Guide](docs/Backend Development Environment Setup Guide.md).
 
-Once you're set up, check out the [Tutorials to Get Started](docs/Tutorials to Get Started.md).
+Once you're set up, check out the [App Framework](docs/App Framework.md).
 
 ### Contact
 
