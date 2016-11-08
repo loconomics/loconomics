@@ -84,7 +84,7 @@ localStorage["LoconomicsApp/config"] = '{"siteUrl":"http://localhost/loconomics"
 ```
 delete localStorage["LoconomicsApp/config"]
 ```
-### API Access & Testing
+## API Access & Testing
 Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
 http://dev.loconomics.com/tests/testrest
 
