@@ -1,4 +1,4 @@
-# Quick Start Guide
+# App Quick Start Guide
 
 ## Download or clone the master branch of the Loconomics Github repository
 - [Download](https://github.com/joshdanielson/Loconomics/archive/master.zip)
@@ -64,7 +64,6 @@ If you see a directory, select appDebug.html to open the app.
 The **appDebug.html** available at localhost:8811 contains non-minimized and source mapped files, better for debugging. It's the preferred one for development, while we have an app.html that contains minimized files without source maps that is what we use in production, just in case there are doubts about minimizing options that could break something (not normally) we have this to test and verify.
 *Note:* All JS, CSS and HTML is being bundled on single files right now, with the project getting bigger it starts to be a huge load for browsers and debuggers, we have in mind the need to split project files and load them on demand (good for debugging and for webapp load times).
 
-
 ## Point your local storage to a database
 
 At start-up, the app looks for a siteUrl in the config key at localStorage. Since there isn't one set for your localhost, it needs to be set using the html attribute data-site-url. 
@@ -85,4 +84,9 @@ localStorage["LoconomicsApp/config"] = '{"siteUrl":"http://localhost/loconomics"
 ```
 delete localStorage["LoconomicsApp/config"]
 ```
+### API Access & Testing
+Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
+http://dev.loconomics.com/tests/testrest
+
+
 
