@@ -4,7 +4,7 @@
     position: relative;
     z-index: 1;
     top: 0px;
-    
+
     .LeadContent {
         margin: 0px auto 0px auto;
         background: white;
@@ -15,10 +15,10 @@
             margin-bottom: 15px;
         }
         @media $mediaMinSm {
-          max-width: 450px;
-          margin: 30px auto;
-          border: 1px solid #ccc;
-        } 
+            max-width: 450px;
+            margin: 30px auto;
+            border: 1px solid #ccc;
+        }
     }
     .btn {
         padding: 22px 10px;
@@ -44,14 +44,20 @@
     .icon-right {
         padding-left: 0px;
         padding-right: 15px;
-        margin-top: -50px;
+        margin-top: -28px;
     }
     .form-control {
         height: 64px;
         font-size: 16px;
         font-weight: normal;
         color: $gray;
-        border: 1px solid $gray-light;
+        border-bottom: 1px solid $gray-light;
+
+        &:disabled {
+            background-color: white;
+            font-style: italic;
+            color: $gray;
+        }
     }
     .form-control-feedback {
         position: relative;
@@ -60,15 +66,26 @@
         margin-right: 0px;
         margin-left: 0px;
         &.has-feedback {
-          .form-control {
-            padding-right: 50px;
-          }
-          label~.form-control-feedback{
-              top 0px;
-          }
+            .form-control {
+                padding-right: 50px;
+            }
+            label~.form-control-feedback{
+                top 0px;
+            }
         }
     }
     select {
         -webkit-appearance: none;
+    }
+    
+    .is-valid {
+        input {
+            border-bottom: 1px solid $brand-success !important;
+            transition-duration: .7s;
+        }
+
+        .icon-right {
+            color: $brand-success;
+        }
     }
 }
