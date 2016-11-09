@@ -95,6 +95,28 @@ function SignupVM(app) {
         return postalCodeRegex.test(this.postalCode());
     }, this);
 
+/*
+// Phone validation: valid North America patterns, 10 to 14 digits
+var testData = [
+    '(123) 456-7890',
+    '123-456-7890',
+    '123.456.7890',
+    '1234567890',
+    '(123) 456-78901',
+    '123-456-789012',
+    '123.456.7890123',
+    '12345678901234'
+];
+var rValidChars = /[\d\(\)\-\.\ ]+/;
+var rValidPatterns = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
+var r = rValidPatterns;
+var testResults = testData.map(n => r.test(n));
+if (!testResults.reduce((ok, r) => ok ? r : false))
+    console.error('Some test failed', testResults);
+else
+    console.info('Success');
+*/
+    
     this.isPhoneValid = ko.pureComputed(function() {
         var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
         return phoneRegex.test(this.phone());
