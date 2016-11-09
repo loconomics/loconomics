@@ -15,9 +15,9 @@
             margin-bottom: 15px;
         }
         @media $mediaMinSm {
-          max-width: 450px;
-          margin: 30px auto;
-          border: 1px solid #ccc;
+            max-width: 450px;
+            margin: 30px auto;
+            border: 1px solid #ccc;
         }
     }
     .btn {
@@ -54,9 +54,9 @@
         border-bottom: 1px solid $gray-light;
 
         &:disabled {
-          background-color: white;
-          font-style: italic;
-          color: $gray;
+            background-color: white;
+            font-style: italic;
+            color: $gray;
         }
     }
     .form-control-feedback {
@@ -66,15 +66,26 @@
         margin-right: 0px;
         margin-left: 0px;
         &.has-feedback {
-          .form-control {
-            padding-right: 50px;
-          }
-          label~.form-control-feedback{
-              top 0px;
-          }
+            .form-control {
+                padding-right: 50px;
+            }
+            label~.form-control-feedback{
+                top 0px;
+            }
         }
     }
     select {
         -webkit-appearance: none;
+    }
+    
+    .is-valid {
+        input {
+            border-bottom: 1px solid $brand-success !important;
+            transition-duration: .7s;
+        }
+
+        .icon-right {
+            color: $brand-success;
+        }
     }
 }

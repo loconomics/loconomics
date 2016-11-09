@@ -1,65 +1,52 @@
 [data-activity=signup] {
-  background: white;
-  @media $mediaMinSm {
-    background: #f5f5f5;
-  }
-  .fa {
-    padding-left: 15px;
-    margin-top: -4px;
-    font-size: 18px !important;
-    &.ion-social-facebook {
-      font-size: 29px !important;
+    background: white;
+    @media $mediaMinSm {
+        background: #f5f5f5;
     }
-  }
+    .fa {
+        padding-left: 15px;
+        margin-top: -4px;
+        font-size: 18px !important;
+        &.ion-social-facebook {
+            font-size: 29px !important;
+        }
+    }
 
-  .icon-right {
-      padding-left: 0px;
-      padding-right: 15px;
-      margin-top: -28px;
-  }
-  .form-control {
-      height: 40px;
-      font-size: 13px;
-      font-weight: normal;
-      color: $gray;
-      border: none;
-      border-bottom: 1px solid $gray-light;
-      transition-duration: .4s;
-
-      &::-webkit-input-placeholder {
-        position: relative;
+    .icon-right {
+        padding-left: 0px;
+        padding-right: 15px;
+        margin-top: -28px;
+    }
+    .form-control {
+        height: 40px;
+        font-size: 13px;
+        font-weight: normal;
+        color: $gray;
+        border: none;
+        border-bottom: 1px solid $gray-light;
         transition-duration: .4s;
-      }
-      &:-moz-placeholder {
-        position: relative;
-        transition-duration: .4s;
-      }
-      &::-moz-placeholder {
-        position: relative;
-        transition-duration: .4s;
-      }
-      &:-ms-input-placeholder {
-        position: relative;
-        transition-duration: .4s;
-      }
 
-      &:focus {
-        box-shadow: none;
-        border-bottom: 1px solid $brand-primary;
-        box-shadow: 0px 1px 0px $brand-primary;
-        transition-duration: .3s;
-
-
-    }}
-}
-
-.is-valid {
-  input {
-  border-bottom: 1px solid $brand-success !important;
-  transition-duration: .7s;
-  }
-
-  .icon-right {
-    color: $brand-success;
-  }
+        &::-webkit-input-placeholder {
+            position: relative;
+            transition-duration: .4s;
+        }
+        &:-moz-placeholder {
+            position: relative;
+            transition-duration: .4s;
+        }
+        &::-moz-placeholder {
+            position: relative;
+            transition-duration: .4s;
+        }
+        &:-ms-input-placeholder {
+            position: relative;
+            transition-duration: .4s;
+        }
+        &:focus {
+            box-shadow: none;
+            border-bottom: 1px solid $brand-primary;
+            box-shadow: 0px 1px 0px $brand-primary;
+            transition-duration: .3s;
+        }
+    }
 }
