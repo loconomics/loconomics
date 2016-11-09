@@ -63,16 +63,11 @@ function SignupVM(app) {
 
     this.confirmationCode = ko.observable(null);
     this.firstName = newFieldObs();
-    this.isFirstNameValid = ko.observable(false);
     this.lastName = newFieldObs();
-    this.isLastNameValid = ko.observable(false);
     this.phone = newFieldObs();
-    this.isPhoneValid = ko.observable(false);
     this.postalCode = newFieldObs();
-    this.isPostalCodeValid = ko.observable(false);
     this.countryID = newFieldObs();
     this.referralCode = newFieldObs();
-    this.isReferralCodeValid = ko.observable(false);
     this.device = newFieldObs();
 
     this.facebookUserID = ko.observable();
@@ -82,9 +77,7 @@ function SignupVM(app) {
     //this.email = credentials.username;
     //this.password = credentials.password;
     this.email = newFieldObs();
-    this.isEmailValid = ko.observable(false);
     this.password = newFieldObs();
-    this.isPasswordValid = ko.observable(false);
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
@@ -92,34 +85,34 @@ function SignupVM(app) {
         return firstNameRegex.test(this.firstName());
     }, this);
 
-    this.checkLastName = function() {
+    this.isLastNameValid = ko.pureComputed(function() {
         var lastNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-        this.isLastNameValid(lastNameRegex.test(this.lastName()));
-    };
+        return lastNameRegex.test(this.lastName());
+    }, this);
 
-    this.checkPostalCode = function() {
+    this.isPostalCodeValid = ko.pureComputed(function() {
         var postalCodeRegex = /^\d{5}([\-]?\d{4})?$/;
-        this.isPostalCodeValid(postalCodeRegex.test(this.postalCode()));
-    };
+        return postalCodeRegex.test(this.postalCode());
+    }, this);
 
-    this.checkPhone = function() {
+    this.isPhoneValid = ko.pureComputed(function() {
         var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
-        this.isPhoneValid(phoneRegex.test(this.phone()));
-    };
+        return phoneRegex.test(this.phone());
+    }, this);
 
-    this.checkEmail = function() {
+    this.isEmailValid = ko.pureComputed(function() {
         var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        this.isEmailValid(emailRegex.test(this.email()));
-    };
+        return emailRegex.test(this.email());
+    }, this);
 
-    this.checkReferralCode = function() {
+    this.isReferralCodeValid = ko.pureComputed(function() {
         var referralCodeRegex = /^.{3,}$/;
-        this.isReferralCodeValid(referralCodeRegex.test(this.referralCode()));
-    };
+        return referralCodeRegex.test(this.referralCode());
+    }, this);
 
-    this.checkPassword = function() {
-        this.isPasswordValid(pwdRegex.test(this.password()));
-    };
+    this.isPasswordValid = ko.pureComputed(function() {
+        return pwdRegex.test(this.password());
+    }, this);
 
     this.signupError = ko.observable('');
 
