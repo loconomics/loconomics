@@ -81,12 +81,12 @@ function SignupVM(app) {
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
-        var firstNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+        var firstNameRegex = /^(\S{2,}\s*)+$/;
         return firstNameRegex.test(this.firstName());
     }, this);
 
     this.isLastNameValid = ko.pureComputed(function() {
-        var lastNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
+        var lastNameRegex = /^(\S{2,}\s*)+$/;
         return lastNameRegex.test(this.lastName());
     }, this);
 
