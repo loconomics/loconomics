@@ -57,6 +57,7 @@ var pwdRequirementsLabel = 'Your password must be at least 8 characters long, ha
 var pwdRegex = /(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/;
 
 function SignupVM(app) {
+    //jshint maxstatements:55
 
     EventEmitter.call(this);
 
