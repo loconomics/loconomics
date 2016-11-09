@@ -18,7 +18,9 @@
 
     // Facebook connection options to the Developer App Version 'Loconomics', SiteUrl: http://loconomics.com/
     // Facebook App Link: https://developers.facebook.com/apps/180579422039773
-    Facebook.Initialize("180579422039773", "fab30a2288ce64be2b3b1e0f1113fb25", "sqlloco");
+    var facebookAppId = ConfigurationManager.AppSettings["facebookAppId"];
+    var facebookAppSecret = ConfigurationManager.AppSettings["facebookAppSecret"];
+    Facebook.Initialize(facebookAppId, facebookAppSecret, "sqlloco");
 
     /* Routing rules
     */
