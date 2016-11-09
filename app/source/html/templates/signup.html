@@ -50,7 +50,7 @@
             </div>
             <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
                 <label for="firstName">First Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', type: 'text', icon: {'icon ion-android-done': isFirstNameValid} } }, event: { keyup: checkFirstName }, css: {'is-valid': isFirstNameValid}"></div>
+                <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', type: 'text', icon: {'icon ion-android-done': isFirstNameValid} } }, css: {'is-valid': isFirstNameValid}"></div>
                 <label for="lastName">Last Name</label>
                 <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, event: { keyup: checkLastName }, css: {'is-valid': isLastNameValid}"></div>
                 <label for="countryID">Country</label>

@@ -86,11 +86,11 @@ function SignupVM(app) {
     this.password = newFieldObs();
     this.isPasswordValid = ko.observable(false);
 
-    this.checkFirstName = function() {
+    this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
         var firstNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
-        this.isFirstNameValid(firstNameRegex.test(this.firstName()));
-    };
+        return firstNameRegex.test(this.firstName());
+    }, this);
 
     this.checkLastName = function() {
         var lastNameRegex = /^([A-Za-zÄÖÜäöü]+\s*)+$/;
