@@ -26,22 +26,11 @@
         border-bottom: 1px solid $gray-light;
         transition-duration: .4s;
 
-        &::-webkit-input-placeholder {
+        input-placeholder() {
             position: relative;
             transition-duration: .4s;
         }
-        &:-moz-placeholder {
-            position: relative;
-            transition-duration: .4s;
-        }
-        &::-moz-placeholder {
-            position: relative;
-            transition-duration: .4s;
-        }
-        &:-ms-input-placeholder {
-            position: relative;
-            transition-duration: .4s;
-        }
+
         &:focus {
             box-shadow: none;
             border-bottom: 1px solid $brand-primary;
