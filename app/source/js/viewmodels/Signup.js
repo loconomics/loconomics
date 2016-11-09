@@ -243,7 +243,6 @@ function SignupVM(app) {
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
-        console.log(this.profile() === 'service-professional');
         return this.profile() === 'service-professional';
     }, this);
 
