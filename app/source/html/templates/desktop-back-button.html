@@ -1,9 +1,0 @@
-<!-- Template desktop-back-button, it's the visual button that behaves like the mobile SmartNavBar.leftAction but with desktop markup and style.
-    IMPORTANT: It's expected to receive as data the activity.navBar.leftAction()
--->
-<script type="text/html" id="desktop-back-button-template">
-    <a href="#" data-bind="visible: !isMenu(), attr: { href: getHref(), 'data-target': getModalTarget(), 'data-toggle': isModal() ? 'modal' : '', 'data-shell': getShellCommand() }, click: runHandler">
-        <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
-        <span data-bind="text: text()"></span>
-    </a>
-</script>
