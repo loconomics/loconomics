@@ -1,0 +1,181 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get and set the current user education list.
+
+    Options:
+    
+    - GET: get the education list
+
+    - GET /@educationID: get the education item
+
+    - POST: register a new education item.
+
+    - PUT /@educationID: Updates an education item
+    
+    - DELETE /@educationID: Deletes an education item
+
+    - @Result list or item of type LcRest.Education
+
+    EXAMPLES {
+        "Education (list and create)": {
+            "url": "/api/v1/en-US/me/education",
+            "get": { },
+            "post": {
+                "institutionName": "MIT",
+                "degreeCertificate": "Engineer",
+                "fieldOfStudy": "Computering",
+                "fromYearAttended": "2002",
+                "toYearAttended": "2005"
+            }
+        },
+        "Education item": {
+            "url": "/api/v1/en-US/me/education/123",
+            "get": { },
+            "put": {
+                "institutionName": "MIT",
+                "degreeCertificate": "Engineer",
+                "fieldOfStudy": "Computering",
+                "fromYearAttended": "2002",
+                "toYearAttended": "2005"
+            },
+            "delete": { }
+        }
+    }
+*@
+@functions{
+    public class RestEducation : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 0) {
+                var userID = WebSecurity.CurrentUserId;
+                return LcRest.Education.GetList(userID);
+            }
+            else if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                var item = LcRest.Education.Get(userID, itemID);
+                if (item!= null) {
+                    return item;
+                }
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0) {
+                var userID = WebSecurity.CurrentUserId;
+                // Create
+                return SetItem(userID);
+            }
+
+            // method not allowed
+            return base.Post();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                
+                if (itemID == 0) {
+                    // Not allowed
+                    return base.Put();
+                }
+
+                // Update by ID
+                return SetItem(userID, itemID);
+            }
+
+            // method not allowed
+            return base.Put();
+        }
+
+        public override dynamic Delete()
+        {
+            if (UrlData.Count == 1 &&
+                UrlData[0].IsInt()) {
+
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                
+                // Get a copy before deletion to send later
+                var item = LcRest.Education.Get(userID, itemID);
+
+                if (item == null) {
+                    throw new HttpException(404, "Not Found");
+                }
+
+                // Delete
+                LcRest.Education.Delete(userID, itemID);
+
+                return item;
+            }
+            
+            // method not allowed
+            return base.Delete();
+        }
+        
+        private bool IsValid() {
+
+            Validation.RequireField("institutionName", LcRessources.RequiredField("School"));
+            Validation.Add("fromYearAttended", Validator.Range(1900, 2900, "Start year is invalid, please re-enter"));
+            Validation.Add("toYearAttended", Validator.Range(1900, 2900, "End year is invalid, please re-enter"));
+           
+            return Validation.IsValid() && ModelState.IsValid;
+        }
+
+        private LcRest.Education SetItem(int userID, int itemID = 0)
+        {
+            // Validation
+            if (!IsValid()) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            var item = GetItemFromForm();
+            item.userID = userID;
+            item.educationID = itemID;
+
+            try {
+                item.educationID = LcRest.Education.Set(item);
+
+                // If returned ID is zero rather than the provided one
+                // is because the requested ID was not found.
+                // (for cases of new, when passed ID is zero, the returned is the 
+                // new generated ID, so is not zero if created successfully).
+                if (item.educationID == 0)
+                {
+                    throw new HttpException(404, "Not Found");
+                }
+                
+                // Returns the updated client data
+                return LcRest.Education.Get(userID, item.educationID);
+            }
+            catch (ValidationException ex) {
+                ModelState.AddError(ex.ParamName, ex.Message);
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+        }
+        
+        private LcRest.Education GetItemFromForm()
+        {
+            return new LcRest.Education {
+                institutionName = Request.Form["institutionName"],
+                degreeCertificate = Request.Form["degreeCertificate"],
+                fieldOfStudy = Request.Form["fieldOfStudy"],
+                fromYearAttended = Request.Form["fromYearAttended"].IsInt() ? (int?)Request.Form["fromYearAttended"].AsInt() : null,
+                toYearAttended = Request.Form["toYearAttended"].IsInt() ? (int?)Request.Form["toYearAttended"].AsInt() : null
+            };
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestEducation().JsonResponse(this);
+}

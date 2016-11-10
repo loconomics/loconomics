@@ -1,0 +1,13 @@
+﻿@* Testing template utils, related
+ *@
+@{
+    //LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+
+    dynamic data = LcEmailTemplate.GetBookingInfo(680);
+}
+@ObjectInfo.Print(data)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())

@@ -1,0 +1,20 @@
+INSERT INTO [positionpricingtype]
+   ([PositionID]
+   ,[PricingTypeID]
+   ,[ClientTypeID]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   (@PositionID
+   ,@PricingTypeID
+   ,@ClientTypeID
+   ,@LanguageID
+   ,@CountryID
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active)

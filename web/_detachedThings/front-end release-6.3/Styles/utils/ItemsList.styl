@@ -1,0 +1,89 @@
+/**
+  ItemsList.
+
+  This class from previous dashboard lets show summaries of items in a list
+  replacing the use of tables.
+
+  Main class: ItemsList
+  Contains classes: items-groups-list, items-count, item-summary, item-action
+**/
+
+.ItemsList {
+    /** INCOMPLETE REFACTORING **/
+
+    /* items-list */
+    > li {
+        border: 1px solid #6c6c6c;
+        background: white;
+        padding: 10px;
+        color: #6c6c6c;
+        margin: 10px 0;
+    }
+    > li > .mini-user-info,
+    > li > .item-summary,
+    > li > .actions {
+        display: inline-block !important;
+        vertical-align: top;
+    }
+    > li > .item-summary {
+        width: 390px;
+        margin: 0 10px;
+    }
+    > li > .actions {
+        text-align: center !important;
+        width: 96px;
+    }
+    > li > .actions > .item-extra-info {
+        line-height: 1.1em;
+        margin: 6px 0 0;
+    }
+
+    .actions .item-action.info-action {
+        background: $colorYellow !important;
+    }
+    .actions .item-action.info-action:hover {
+        box-shadow: 0 0 5px 2px $colorYellow;
+    }
+    
+    .actions .item-action.success-action {
+        background: $colorGreen !important;
+    }
+    .actions .item-action.success-action:hover {
+        box-shadow: 0 0 5px 2px $colorGreen;
+    }
+    
+    .actions .item-action.failure-action {
+        background: $colorRed !important;
+    }
+    .actions .item-action.failure-action:hover {
+        box-shadow: 0 0 5px 2px $colorRed;
+    }
+
+
+    /* items-groups-list */
+    .items-groups-list > li > h3 {
+        font-size: 1.1em;
+        color: #6c6c6c;
+    }
+    .items-groups-list > li > h3 > .items-count {
+        color: $colorOrange;
+    }
+    
+    /* Class item-summary */
+    .item-summary > li {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .item-summary > li.long-details {
+        white-space: normal;
+        height: 40px;
+    }
+    .item-summary > li > h5 {
+        color: $colorOrange;
+        display: inline;
+        font-size: 1em;
+        line-height: 1em;
+        margin: 0;
+    }
+}

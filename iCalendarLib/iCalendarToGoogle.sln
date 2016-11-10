@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCalendarToGoogle", "iCalendarToGoogle\iCalendarToGoogle.csproj", "{FEA0B522-7D86-4AC6-808A-1206FD911302}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Assemblies", "External Assemblies", "{C49A627D-1068-43CC-8EA7-CD3F3C658428}"
+	ProjectSection(SolutionItems) = preProject
+		External Assemblies\antlr.runtime.dll = External Assemblies\antlr.runtime.dll
+		External Assemblies\DDay.Collections.dll = External Assemblies\DDay.Collections.dll
+		External Assemblies\DDay.iCal.dll = External Assemblies\DDay.iCal.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalendarDll", "CalendarDll\CalendarDll.csproj", "{06A6C567-A4A8-4954-AFA3-6F44E7830191}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{D3381DFF-7471-4F92-9D85-D66A4CEB32CE}"
+	ProjectSection(SolutionItems) = preProject
+		DataBase Resources\loconomics.mdf = DataBase Resources\loconomics.mdf
+		DataBase Resources\loconomics_log.ldf = DataBase Resources\loconomics_log.ldf
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplicationTestCSharp", "WindowsFormsApplicationTestCSharp\WindowsFormsApplicationTestCSharp.csproj", "{4FFD4AEB-5931-42F0-BD71-4181CB134267}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEA0B522-7D86-4AC6-808A-1206FD911302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA0B522-7D86-4AC6-808A-1206FD911302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA0B522-7D86-4AC6-808A-1206FD911302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA0B522-7D86-4AC6-808A-1206FD911302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A6C567-A4A8-4954-AFA3-6F44E7830191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A6C567-A4A8-4954-AFA3-6F44E7830191}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A6C567-A4A8-4954-AFA3-6F44E7830191}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A6C567-A4A8-4954-AFA3-6F44E7830191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FFD4AEB-5931-42F0-BD71-4181CB134267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FFD4AEB-5931-42F0-BD71-4181CB134267}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FFD4AEB-5931-42F0-BD71-4181CB134267}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FFD4AEB-5931-42F0-BD71-4181CB134267}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

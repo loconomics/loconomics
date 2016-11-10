@@ -1,0 +1,38 @@
+/**
+    LeadTile: a big, page leading, tile with important information
+    highlighted on top the rest.
+    
+    Used for the Upcoming Booking on dashboard, but made reusable.
+**/
+
+@import 'Tile.styl'
+
+.LeadTile {
+    
+    Tile();
+
+    text-align: left;
+
+    .Tile-title {
+        font-size: 2.6em;
+        color: $brand-primary;
+        line-height: 1em;
+        margin: .6em 0;
+    }
+    
+    .Tile-subtitle {
+        font-weight: bold;
+        font-size: 1.2em;
+        color: $body-copy-color;
+        line-height: 1em;
+        margin: .5em 0;
+    }
+    
+    .Tile-content {
+        margin-bottom: 1em;
+
+        em {
+            color: $gray-light;
+        }
+    }
+}

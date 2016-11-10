@@ -1,0 +1,23 @@
+﻿@*
+    Getting logged user Verifications, attached with the Verification info.
+
+    EXAMPLES {
+        "User Verifications": {
+            "url": "/api/v1/en-US/me/verifications",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestMyVerifications : RestWebPage
+    {
+        public override dynamic Get()
+        {
+ 	         return LcRest.UserVerification.GetList(WebSecurity.CurrentUserId);
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestMyVerifications().JsonResponse(this);
+}

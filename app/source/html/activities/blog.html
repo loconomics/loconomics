@@ -1,0 +1,62 @@
+<!-- About -->
+<div data-activity="blog" class="Boxes-sm animated">
+  <!-- Tab panes -->
+    <div class="container"> 
+        <div class="row"> 
+            <div class="col-md-12 col-sm-reset">
+                <h1>Loconomics Blog</h1>  
+                <div data-bind="visible: viewType() == 'blogView'">
+                    <p style="text-align: center;">We try and cover topics that will help you be better at whatever you do. Have expertise you'd like to share as a guest blogger? <a href="/contactForm?subject=I'd%20like%20to%20be%20a%20guest%20blogger!" target="_blank" class="text-secondary">Send us a note!</a></p>
+                    <div class="isolated inset">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="fa ion ion-ios-search"></span>
+                                <span class="sr-only">Search</span>
+                            </span>
+                            <input type="text" class="form-control text-muted" placeholder="search blog" data-bind="value: searchText, valueUpdate: 'afterkeydown'">
+                        </div>
+                    </div>
+                    <div data-bind="css: { 'is-loading': isLoading }">
+                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                    </div>
+                    <div data-bind="visible: filteredPostsBySearch().length > 0">
+                        <ul class="CardsSummary" data-bind="foreach: filteredPostsBySearch">
+                            <li class="CardsSummary-card" >
+                                <a href="/blog/" data-bind="attr: { href: urlPath() }">
+                                <h2 data-bind="text: title"></h2>
+                                <hr>
+                                <p data-bind="text: author"></p>
+                                <p data-bind="html: excerpt"></p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-bind="visible: nothingFound() && !isLoading()" class="isolated inset text-center">
+                        <div>Nothing found. Would you like us to cover a topic? Send us a note!</div>
+                        <hr>
+                        <a href="/contactForm?subject=Idea%20for%20a%20blog%20topic!" target="_blank" class="btn btn-secondary btn-link">Contact us</a>
+                    </div>
+                </div>
+                <div class="Content" data-bind="visible: viewType() == 'postView', with: fullPostData()">
+                    <div class="SubSectionNavBar hidden-xs hidden-sm">
+                        <ul>
+                            <li>
+                                <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                            </li>
+                        </ul>
+                    </div> 
+                    <h2 class="SectionTitle SectionTitle--article" data-bind="text: title"></h2>
+                    <strong><span data-bind="text: date, format: { type: 'datetime', format: 'dddd, MMM Do h:mm a' }"></span></strong>
+                    <br>
+                    <br>
+                    <span data-bind="html: content"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>@render('parts/WebsiteFooter.html')</div>
+</div>
+
+
+
+

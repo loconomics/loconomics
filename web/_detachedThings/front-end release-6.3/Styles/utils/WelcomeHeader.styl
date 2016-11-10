@@ -1,0 +1,40 @@
+/**
+  WelcomeHeader: showed optionally on Layout replacing menus.
+  Used initially for dashboard onboarding.
+**/
+@import "nib"
+@import "ColorsPalette"
+
+.WelcomeHeader {
+    
+    position: absolute;
+    right: 0px;
+    left: 0px;
+    background: White;
+    /* Saving the margin the container 'header' has to fill all
+        the top area
+    */
+    margin-top: -17px;
+    border-bottom: 1px solid $colorTeal;
+    
+    .wrap {
+        padding: 17px 0 12px 225px;
+        box-sizing: border-box;
+    }
+    
+    h1 {
+        font-family: Hand Of Sean;
+        font-size: 2.2em;
+        color: $colorTeal;
+        display: inline-block;
+        margin: 0px 0 0 1.5em;
+        line-height: 78px;
+    }
+    
+    span {
+        font-size: 1.5em;
+        color: $colorTeal;
+        margin-left: 1em;
+    }
+
+}

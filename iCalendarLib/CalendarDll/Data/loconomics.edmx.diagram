@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d5d34a42e73b4a17ad7ab6fe2cd31e84" Name="Diagram1" ZoomLevel="88">
+        <EntityTypeShape EntityType="loconomicsModel.address" Width="1.5" PointX="1.375" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.addresstype" Width="1.5" PointX="3.375" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarAvailabilityType" Width="2" PointX="0.5" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventComments" Width="2" PointX="0.5" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventExceptionsPeriod" Width="2.5" PointX="0.5" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventExceptionsPeriodsList" Width="2.625" PointX="0.5" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventRecurrencesPeriod" Width="2.375" PointX="8.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventRecurrencesPeriodList" Width="2.625" PointX="5.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventsAttendees" Width="2" PointX="5.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventsContacts" Width="2" PointX="5.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarProviderAttributes" Width="1.5" PointX="13.5" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarReccurrence" Width="2.125" PointX="3.625" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarReccurrenceFrequency" Width="2.25" PointX="6.625" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.country" Width="1.5" PointX="5.375" PointY="17.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.county" Width="1.5" PointX="7.375" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.language" Width="1.5" PointX="8.375" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.postalcode" Width="1.5" PointX="10.375" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.serviceaddress" Width="1.5" PointX="13.375" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.stateprovince" Width="1.5" PointX="10.375" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.sysdiagrams" Width="1.5" PointX="2.5" PointY="20.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.transporttype" Width="1.5" PointX="12.375" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="loconomicsModel.users" Width="1.5" PointX="11" PointY="2.625" IsExpanded="true" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" ManuallyRouted="false" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" ManuallyRouted="false" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarProviderAttributes_users" ManuallyRouted="false" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarFrecuency_CalendarReccursive" ManuallyRouted="false" />
+        <AssociationConnector Association="loconomicsModel.FK__servicead__UserI__457442E6" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEvents" Width="1.5" PointX="3.625" PointY="1" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" />
+        <AssociationConnector Association="loconomicsModel.FK_Comments_CalendarEvents" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventExceptions_CalendarEvents" ></AssociationConnector>
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventRecurrencesPeriodList_CalendarEvents" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_users" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventsAttendees_CalendarEvents" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEventsContacts_CalendarEvents" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarReccursive_CalendarEvents" />
+        <EntityTypeShape EntityType="loconomicsModel.CalendarEventType" Width="1.75" PointX="8.375" PointY="6.25" />
+        <AssociationConnector Association="loconomicsModel.FK_CalendarEvents_CalendarEventType" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,122 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    var bookingID = Request["BookingID"].AsInt(604);
+    var instanceName = Request["instance"] ?? "auto";
+    var result = "";
+    Exception error = null;
+    if (IsPost) {
+        try {
+            var method = Request["Method"];
+            var instance = LcMessaging.SendBooking.For(bookingID);
+            switch (instanceName) {
+                case "auto":
+                default:
+                    // Left initial value
+                    instanceName = "auto";
+                    break;
+                case "BookNow":
+                    instance = LcMessaging.SendBooking.BookNow.For(bookingID);
+                    break;
+                case "Marketplace":
+                    instance = LcMessaging.SendBooking.Marketplace.For(bookingID);
+                    break;
+                case "ServiceProfessionalBooking":
+                    instance = LcMessaging.SendBooking.ServiceProfessionalBooking.For(bookingID);
+                    break;
+            }
+            result = "OK";
+            switch (method)
+            {
+                case "BookingCancelledByClient":
+                    instance.BookingCancelledByClient();
+                    break;
+                case "BookingCancelledByServiceProfessional":
+                    instance.BookingCancelledByServiceProfessional();
+                    break;
+                case "BookingReminder":
+                    instance.BookingReminder();
+                    break;
+                case "BookingRequestConfirmed":
+                    instance.BookingRequestConfirmed();
+                    break;
+                case "BookingRequestDeclined":
+                    instance.BookingRequestDeclined();
+                    break;
+                case "BookingRequestExpired":
+                    instance.BookingRequestExpired();
+                    break;
+                case "BookingRequest":
+                    instance.BookingRequest();
+                    break;
+                case "BookingUpdatedByClient":
+                    instance.BookingUpdatedByClient();
+                    break;
+                case "BookingUpdatedByServiceProfessional":
+                    instance.BookingUpdatedByServiceProfessional();
+                    break;
+                case "InstantBookingConfirmed":
+                    instance.InstantBookingConfirmed();
+                    break;
+                case "RequestToReviewReminder":
+                    instance.RequestToReviewReminder();
+                    break;
+                case "ServicePerformed":
+                    instance.ServicePerformed();
+                    break;
+                case "BookingCompleted":
+                    instance.BookingCompleted();
+                    break;
+                default:
+                    result = "NOTHING";
+                    break;
+            }
+        }
+        catch (Exception ex) {
+            error = ex;
+            result = "ERROR";
+        }
+    }
+
+    // Booking Template Names for new EmailCommunications
+    var methods = new string[] {
+        "BookingCancelledByClient",
+        "BookingCancelledByServiceProfessional",
+        "BookingReminder",
+        "BookingRequestConfirmed",
+        "BookingRequestDeclined",
+        "BookingRequestExpired",
+        "BookingRequest",
+        "BookingUpdatedByClient",
+        "BookingUpdatedByServiceProfessional",
+        "InstantBookingConfirmed",
+        "RequestToReviewReminder",
+        "ServicePerformed",
+        "BookingCompleted"
+    };
+}
+<h1>Testing calls to LcMessaging.</h1>
+<h3>SendBooking API</h3>
+<p>Each of this methods touches the messaging tables at database (registering a new message for the booking thread --and new thread if not exists still) and sends e-mails
+to users involved in the given bookingID. <strong>DOES NOT</strong> changes the booking data, no status change. Be aware too that the result of some call may be an error if the booking does
+not contains all the expected data for the template, as can be correct for some cases; because of the same, data displayed at generated e-mails may not be as much as expected.</p>
+<form action="" method="post">
+    @if (!String.IsNullOrEmpty(result))
+    { <h4><strong style="color: red">@result</strong></h4> }
+    @if (error != null)
+    { <strong><pre>@error</pre></strong> }
+    <label>Use BookingID: <input type="text" name="BookingID" placeholder="BookingID" value="@bookingID" /></label>
+    <ul>
+        <li><label><input type="radio" name="instance" value="auto" @LcHelpers.IsChecked("auto", instanceName) /> AUTO select Booking Type</label></li>
+        <li><label><input type="radio" name="instance" value="BookNow" @LcHelpers.IsChecked("BookNow", instanceName) /> BookNow</label></li>
+        <li><label><input type="radio" name="instance" value="Marketplace" @LcHelpers.IsChecked("Marketplace", instanceName) /> Marketplace</label></li>
+        <li><label><input type="radio" name="instance" value="ServiceProfessionalBooking" @LcHelpers.IsChecked("ServiceProfessionalBooking", instanceName) /> ServiceProfessionalBooking</label></li>
+    </ul>
+    <ul>
+    @foreach (var m in methods)
+    {
+        <li><button type="submit" name="method" value="@m">@m</button></li>
+    }
+    </ul>
+</form>

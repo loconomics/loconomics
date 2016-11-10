@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Loconomics</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="../build/assets/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Styles build following the Styleguide -->
+        <link href="../build/assets/css/styleguide.css" rel="stylesheet">   
+        <link href="../build/assets/css/app.css" rel="stylesheet">   
+        
+        <style>       
+            body {
+                background-color: #aaa;
+            }
+            .context {
+                position: relative;
+                margin: 10px 0;
+                height: 45px;
+            }
+            
+            .menus {
+                background: White;
+            }
+        </style>
+        
+        <script src="../build/assets/js/styleguidelibs.js"></script>
+        <script src="../build/assets/js/libs.js"></script>
+        <script src="../build/assets/js/app.js"></script>
+        <script>
+
+        </script>
+
+  </head>
+  <body class="AppNav"> 
+
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left SmartNavBar-edge SmartNavBar-btn">
+                <div>About</div>
+            </button>
+            <h1>All Contacts</h1>
+        </header>
+      </div>
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left SmartNavBar-edge SmartNavBar-btn">
+                <div><span class="fa ion ion-ios-arrow-left"></span></div>
+            </button>
+            <h1>All Contacts</h1>
+            <button class="right SmartNavBar-edge SmartNavBar-btn">
+                <div><span>help</span></div>
+            </button>
+        </header>
+      </div>
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left SmartNavBar-edge SmartNavBar-btn">
+                <span class="fa ion ion-ios-arrow-left"></span><span><h1>All Contacts</h1></span>
+            </button>
+            <h1></h1>
+        </header>
+      </div>
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left SmartNavBar-edge SmartNavBar-btn">
+                <span class="fa ion ion-ios-arrow-left"></span><h1>All Contacts</h1>
+            </button>
+            <h1></h1>
+        </header>
+      </div>
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left SmartNavBar-edge btn btn-link SmartNavBar-btn">
+                <span class="fa ion ion-plus"></span>
+            </button>
+            <h1></h1>
+            <button class="right SmartNavBar-edge btn btn-link btn-primary SmartNavBar-btn">
+                <span class="fa ion ion-ios-arrow-right"></span>
+            </button>
+        </header>
+      </div>
+      <div class="context">
+        <header class="SmartNavBar">
+            <button class="left SmartNavBar-edge btn btn-link SmartNavBar-btn">
+                <span class="fa ion ion-plus"></span>
+            </button>
+            <h1></h1>
+            <button type="button" class="SmartNavBar-edge navbar-toggle collapsed right SmartNavBar-btn" data-toggle="collapse" data-target="#menuIn" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+        </header>
+      </div>
+      
+    <div class="menus">
+        <div id="menuIn" class="navbar-collapse collapse">
+          <ul class="nav">
+            <li class="dropdown"><span>Tools</span>
+                <ul class="nav">
+                    <li class="go-dashboard"><a href="/dashboard">Dashboard</a></li>
+                    <li class="go-calendar"><a href="/calendar">Calendar</a></li>
+                    <li class="go-inbox"><a href="/inbox">Inbox</a></li>
+                    <li class="go-clients"><a href="/clients">Clients</a></li>
+                    <li class="go-payments"><a href="/payments">Payments</a></li>
+                    <li class="go-services"><a href="/services">Services</a></li>
+                    <li class="go-account"><a href="/account">Account</a></li>
+                    <li class="go-logout"><a href="/logout">Logout</a></li>
+                </ul>
+              </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+ 
+    <div class="container-fluid" data-activity="index">
+        <h3>A</h3>
+        <p>Some Content</p>
+    </div>
+    <div class="container-fluid" data-activity="dashboard">
+        <h3>A</h3>
+        <p>Some Content</p>
+    </div>
+  </body>
+</html>

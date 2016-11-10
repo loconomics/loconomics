@@ -1,0 +1,58 @@
+﻿@*
+    Testing sending email using LcMessaging API, to try find
+    the problem with duplicated sents, issue #176
+*@
+
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    float delay = Request["delayMinutes"].AsFloat(0);
+    var to = Request["to"] ?? "iagosrl@gmail.com";
+    var subject = "LC Test Email: ";
+    var q = Request["q"].AsInt(0);
+    var series = Request["series"] ?? "A";
+    var body = Request["body"] ?? "Testing Sending Email";
+
+    for (var i = 1; i <= q; i++) {
+        var stime = " ::T::" + DateTime.Now.ToLongTimeString();
+        if (delay > 0) {
+            LcMessaging.SendMailDelayed(TimeSpan.FromMinutes((double)delay),
+                to, subject + series + i.ToString() + stime, body);
+        } else {
+            LcMessaging.SendMail(
+                to, subject + series + i.ToString() + stime, body);
+        }
+    }
+}
+
+    <h1>Testing sending emails</h1>
+    @if (q > 0)
+    {
+        <p>
+            @if (delay > 0)
+            {
+                <strong>Emails was scheduled to be sent</strong>
+            }
+            else
+            {
+                <strong>Emails was sent</strong>
+            }
+        </p>
+    }
+    <form method="get">
+        <fieldset>
+            <legend>Send a batch of emails: </legend>
+            <ul>
+                <li><label>Quantity of messages in the batch: <input type="text" name="q" value="@q" /></label></li>
+                <li><label>To: <input type="text" name="to" value="@to" /></label></li>
+                <li><label>Subject: "@subject <em>series</em> <em>message number in batch</em> ::T::<em>server time</em>"</label></li>
+                <li><label>Series: <input type="text" name="series" value="@series" /></label></li>
+                <li><label>Delay in minutes: <input type="text" name="delayMinutes" value="@delay" /></label></li>
+                <li><label>Message body: <textarea style="resize: both" rows="5" cols="80" name="body">@body</textarea></label></li>
+                <li class="actions">
+                    <input type="submit" class="main-action action" value="Send" />
+                </li>
+            </ul>
+        </fieldset>
+    </form>

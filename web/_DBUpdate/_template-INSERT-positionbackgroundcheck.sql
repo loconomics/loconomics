@@ -1,0 +1,20 @@
+INSERT INTO [positionbackgroundcheck]
+   ([PositionID]
+   ,[BackgroundCheckID]
+   ,[StateProvinceID]
+   ,[CountryID]
+   ,[Required]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   (@PositionID
+   ,@BackgroundCheckID
+   ,@StateProvinceID
+   ,@CountryID
+   ,@Required
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active)

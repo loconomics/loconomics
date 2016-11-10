@@ -1,0 +1,114 @@
+/**
+  Component  'CSS Arrow': adds an arrow using the :after and :before pseudoelements in the
+  element you apply this mixin.
+
+  $width and $borderWidth must be in the same unit, pixels recommended.
+  Be aware that the elements gets a position:relative to make the effect to work,
+  this can be replaced after call the mixin by a value that creates a positioning context
+  (like relative, absolute, fixed).
+  
+  For borderWidth, even numbers are usually better.
+  
+  The parameter $left allows a number/unit and the words 'auto' and 'center' (without comiles)
+  Passing value 'center', leave $right as auto (the default value)
+**/
+
+up-arrow($width, $borderWidth, $borderColor, $backColor, $left=0, $right=auto, $zindex=1)
+  position: relative;
+
+  &:after
+    border-bottom: $width solid transparent;
+    border-left: $width solid transparent;
+    border-right: $width solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    z-index: $zindex;
+
+    border-bottom-color: $backColor;
+    top: - $width;
+    
+    if ($left != null && $left == 'center')
+      left: 50%;
+      margin-left: (0 - $width);
+    else if ($left != null && $left != 'auto')
+      left: $left + $borderWidth;
+    else
+      left: auto;
+      
+    if ($right != null && $right != 'auto')
+      right: $right + $borderWidth;
+    else
+        right: auto;
+
+  &:before
+    border-bottom: ($width + $borderWidth) solid transparent;
+    border-left: ($width + $borderWidth) solid transparent;
+    border-right: ($width + $borderWidth) solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    z-index: $zindex;
+
+    border-bottom-color: $borderColor;
+
+    if ($left != null && $left == 'center')
+      left: 50%;
+      margin-left: (0 - $width - $borderWidth);
+    else if ($left != null && $left != 'auto')
+      left: $left;
+    else
+      left: auto;
+    
+    right: $right;
+    top: - $width - $borderWidth;
+    
+down-arrow($width, $borderWidth, $borderColor, $backColor, $left=0, $right=auto, $zindex=1)
+  position: relative;
+
+  &:after
+    border-top: $width solid transparent;
+    border-left: $width solid transparent;
+    border-right: $width solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    z-index: $zindex;
+
+    border-top-color: $backColor;
+    bottom: - $width;
+    
+    if ($left != null && $left == 'center')
+      left: 50%;
+      margin-left: (0 - $width);
+    else if ($left != null && $left != 'auto')
+      left: $left + $borderWidth;
+    else
+      left: auto;
+      
+    if ($right != null && $right != 'auto')
+      right: $right + $borderWidth;
+    else
+        right: auto;
+
+  &:before
+    border-top: ($width + $borderWidth) solid transparent;
+    border-left: ($width + $borderWidth) solid transparent;
+    border-right: ($width + $borderWidth) solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    z-index: $zindex;
+
+    border-top-color: $borderColor;
+    
+    if ($left != null && $left == 'center')
+      left: 50%;
+      margin-left: (0 - $width - $borderWidth);
+    else if ($left != null && $left != 'auto')
+      left: $left;
+    else
+      left: auto;
+
+    right: $right;
+    bottom: - $width - $borderWidth;

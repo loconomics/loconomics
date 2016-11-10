@@ -1,0 +1,96 @@
+﻿@*
+    Read Events 'as is' in the iCalendar back-end, will possibilities to retrieve
+    all the related data that forms a complete event or a selected subset, plus
+    basic events filtering.
+
+    TODO: Editing capabilites not implemented, waiting for when may be need it.
+
+    NOTE: This is a full API for all the back-end data, a bit complex and excessive
+        but full complaining with iCalendar standard.
+        It exists a simplified API to manage events for the reduced data commonly used
+        and some convenience options, more suitable for the UI; see /REST/events.
+
+    Options:
+    GET
+        - types[]:array[int] Optional. List of CalendarEventTypeIDs to filter the events returned.
+            Possible values are the IDs from records on the table [CalendarEventType].
+        - start:datetime Optional. Start date of the range of events included partial or completely
+        - end:datetime Optional. End date of the range of events included partial or completely.
+        - includes[]:array[string] Optional. Names of related Entities to include.
+            Possible values are: 
+            - CalendarAvailabilityType, 
+            - CalendarEventType, 
+            - CalendarRecurrence,
+            - CalendarRecurrenceFrequency (it goes inside CalendarRecurrence)
+            - CalendarEventExceptionsPeriodsList
+            - CalendarEventExceptionsPeriod (it goes inside CalendarEventExceptionsPeriodsList)
+            - CalendarEventRecurrencesPeriodsList
+            - CalendarEventRecurrencesPeriod (it goes inside CalendarEventRecurrencesPeriodsList)
+            - CalendarEventsAttendees
+            - CalendarEventsContacts,
+            - CalendarEventComments
+
+    GET /@id
+        - @id:int the Event Id to retrieve; must be owned by the current user or 'not found' is returned
+        - includes[]:array[string] Optional. Same as in GET.
+*@
+@functions{
+    public class RestEvents : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+            
+            var includes = Request.QueryString.GetValues("includes[]") ?? new string[]{};
+            
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0), userId, includes);
+            }
+
+            // More parameters
+            var types = Request.QueryString.GetValues("types[]");
+            var typesIDs = new List<int>();
+            if (types != null) {
+                foreach(var type in types) {
+                    typesIDs.Add(type.AsInt(0));
+                }
+            } else {
+                // By default, show events for the common displayed types
+                // (it avoids the internal type 'work hours')
+                typesIDs.AddRange(new int[]{1, 3, 4, 5, 6});
+            }
+
+            var start = DateTimeFromISO(Request.QueryString["start"]);
+            var end = DateTimeFromISO(Request.QueryString["end"]);
+
+            // Data
+            var list = LcCalendar.GetUserEvents(userId, typesIDs.ToArray<int>(), start, end, includes);
+
+            return list;
+        }
+        
+        public dynamic GetItem(int eventID, int userID, string[] includes)
+        {
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            if (eventID > 0)
+            {
+                var item = (IEnumerable<dynamic>)LcCalendar.GetUserEvents(userID, null, null, null, includes, eventID);
+                if (item != null && item.Count() > 0)
+                {
+                    return item.First();
+                }
+            }
+
+            throw new HttpException(404, "Event not found.");
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestEvents().JsonResponse(this);
+}

@@ -1,0 +1,48 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetchs user public profile information.
+    Basic info as name (firstName, lastName,..), publicBio,
+    contact data (email, phone), isFreelancer flag.
+    When service professional, other fields are included as businessName, websiteUrl (is contact data),
+    profileUrlSlug.
+    (Other data may be included in the future)
+
+    The contact data is included only if the user requesting the data (logged user)
+    has a formal relationship with the requested user
+    (NOTE: internally, there is an active link in the ProviderCustomer table).
+
+    TODO Split info between basic profile and marketplace-profile, like at the /me API?
+
+    Options:
+    
+    - GET /
+        
+    EXAMPLES {
+        "User Public Profile (basic data and contact)": {
+            "url": "/api/v1/en-US/users/141/profile",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestUserProfile : RestWebPage
+    {
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            if (userID <= 0)
+            {
+                throw new HttpException(404, "User Not Found");
+            }
+            
+            var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
+            if (profile == null)
+                throw new HttpException(404, "User Not Found");
+
+            return profile;
+        }
+    }
+}
+@{
+    new RestUserProfile().JsonResponse(this);
+}

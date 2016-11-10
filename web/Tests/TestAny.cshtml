@@ -1,0 +1,19 @@
+﻿@* Placeholder testing area
+ *@
+@{
+    //LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+    dynamic data;
+
+    try {
+        data = null;
+    }
+    catch (Exception ex) {
+        data = ex;
+    }
+}
+@ObjectInfo.Print(data)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())

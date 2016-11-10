@@ -1,0 +1,20 @@
+INSERT INTO [transporttype]
+           ([TransportTypeID]
+           ,[LanguageID]
+           ,[CountryID]
+           ,[TransportTypeName]
+           ,[TransportTypeDescription]
+           ,[CreatedDate]
+           ,[UpdatedDate]
+           ,[ModifiedBy]
+           ,[Active])
+     VALUES
+           (@TransportTypeID
+           ,@LanguageID
+           ,@CountryID
+           ,@TransportTypeName
+           ,@TransportTypeDescription
+           ,@CreatedDate
+           ,@UpdatedDate
+           ,@ModifiedBy
+           ,@Active)

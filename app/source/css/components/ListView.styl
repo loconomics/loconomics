@@ -1,0 +1,306 @@
+/**
+    ListView component
+**/
+
+/*REQUIRE: vars 
+    $container-padding-left
+    $container-padding-right
+*/
+
+/* Component vars */
+$heightLimit = 33px;
+$markerIconSize = 24px;
+$markerWidth = 28px;
+$actionWidth = 40px;
+$iconSize = 14px;
+/* Used the same gap as buttons, equals
+    to the implicit gap in $actionWidth
+    and heights,
+    H for Horizontal and V for Vertical */
+$contentHGap = 12px;
+$contentVGap = 6px;
+    
+.ListView {
+    /** Base styles and elements */
+    width: 100%;
+    box-sizing: border-box;
+    
+    .ListView-item {
+        position: relative;
+        max-width: 100%;
+        border-bottom: 1px solid $gray-background;
+        
+        .ListView-item-marker,
+        .ListView-item-content,
+        .ListView-item-action {
+            white-space: normal;
+            word-wrap: break-word;
+            display: inline-block;
+            vertical-align: middle;
+            max-height: $heightLimit;
+            overflow: hidden;
+        }
+        
+        .ListView-item-marker {
+            width: $markerWidth;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            text-align: center;
+            padding: 0;
+
+            /* If a Bootstrap/FontAwesome/Ionicon glypicon is used, adjust to the best size */
+            .glyphicon, .fa, .ion {
+                font-size: $markerIconSize;
+                line-height: $heightLimit;
+            }
+            
+            /* For one-line content with ellipsis, use a 'div' */
+            div {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            /* Multiline content support -effective with modifiers like twolines- */
+            p {
+                /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
+                   its problematic- we set the width explicitely (100% does not work) */
+                width: $markerWidth;
+            }
+        }
+        
+        .ListView-item-content {
+            text-align: left;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding-left: $markerWidth + $contentHGap;
+            padding-right: $actionWidth;
+            padding-top: $contentVGap;
+            padding-bottom: $contentVGap;
+            
+            * {
+                overflow: hidden;
+                text-align: left;
+                white-space: normal;
+                word-wrap: break-word;
+                max-height: $heightLimit;
+            }
+            
+            /* For one-line content with ellipsis, use a 'div' */
+            div {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            .ListView-item-icon {
+                display: inline-block;
+                width: $iconSize;
+                height: $iconSize;
+            }
+        }
+        
+        .ListView-item-action {
+            width: $actionWidth;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            right: 0px;
+            padding: $contentVGap $contentHGap;
+            
+            .glyphicon, .fa, .ion {
+                font-size: 1.3em;
+            }
+        }
+        
+        /* Any row in the listview is expected to be a button/link, so color is reset */
+        .btn, .btn-link {
+            color: $gray-dark;
+        }
+    }
+    
+    .ListView-divider {
+        // Like SectionTitle right now:
+        font-size: 17px;
+        padding: 7px 14px;
+        margin: 0;
+        text-align: center;
+        font-weight: normal;
+        background: $gray-background;
+        border: none;
+        color: $gray-dark;
+        
+        /* more styles later for parent: .container */
+    }
+
+}
+
+/* Inside a container */
+.container .ListView .ListView-divider,
+.container-fluid .ListView .ListView-divider {
+    margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
+}
+
+/** Modifier 'twolines'
+**/
+.ListView--twolines {
+    $heightLimit = 52px;
+    /* heightLimit without container paddings */
+    $internalHeight = 40px;
+    
+    .ListView-item {
+    
+        .ListView-item-marker,
+        .ListView-item-content,
+        .ListView-item-action {
+            max-height: $heightLimit;
+            height: $heightLimit;
+        }
+    
+        .ListView-item-marker {
+            /* If a Bootstrap glypicon is used, adjust to the best size */
+            .glyphicon, .fa, .ion {
+                font-size: $markerIconSize;
+                line-height: $internalHeight;
+            }
+            
+            padding: $contentVGap 0;
+        }
+    
+        /* Multiline content vertically centered must
+           be wrapped in a paragraph inside the content */
+        .ListView-item-marker,
+        .ListView-item-content {
+            p {
+                vertical-align: middle;
+                display: table-cell;
+                height: $internalHeight;
+            }
+        }
+        
+        .ListView-item-action {
+            $action-button-padding = 12px; /* from Bootstrap btn-link styles 2x6padding */
+            line-height: ($heightLimit - $action-button-padding);
+        }
+    }
+}
+
+/** Modifier 'largemarker'
+**/
+$markerWidthLarge = 64px;
+.ListView--largemarker {
+
+    .ListView-item {
+        .ListView-item-marker {
+            width: $markerWidthLarge;
+            
+            p {
+                /* Since a table-cell doesn't fill completely the width -needs a table parent for that, but
+                   its problematic- we set the width explicitely (100% does not work) */
+                width: $markerWidthLarge;
+            }
+        }
+
+        .ListView-item-content {
+            padding-left: $markerWidthLarge + $contentHGap;
+        }
+    }
+}
+
+/** Modifier 'textualmarker'
+    for only text used on markers
+**/
+.ListView--textualmarker {
+    .ListView-item {
+        .ListView-item-marker {
+            text-align: right;
+            padding: $contentVGap 0;
+        }
+    }
+}
+
+/** Modifier 'colortags'
+**/
+.ListView--colortags {
+    .ListView-item {
+        &:before,
+        .ListView-item-tagged:before {
+            content: '';
+            display: block;
+            border-right: 2px solid $gray-light;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        &:before {
+            left: $markerWidth + round($contentHGap / 2);
+        }
+
+        /* Color modifiers: ListView-item--tag-primary, ListView-item--tag-success,... */
+        $colors = 'primary' 'success' 'info' 'warning' 'danger'
+        for $color in $colors {
+            &.ListView-item--tag-{$color} {
+                &:before,
+                .ListView-item-tagged:before {
+                    border-right-color: $brand-colors[$color];
+                }
+
+                /* Labels affect to the action icon too */
+                .ListView-item-action {
+                    color: $brand-colors[$color];
+                }
+            }
+        }
+    }
+
+    /** Support for large markers **/
+    &.ListView--largemarker {
+        .ListView-item:before {
+            left: $markerWidthLarge + round($contentHGap / 2);
+        }
+    }
+}
+
+/** Modifier 'largeaction'
+**/
+$actionWidthLarge = 60px;
+.ListView--largeaction {
+    .ListView-item {
+        .ListView-item-action {
+            width: $actionWidthLarge;
+        }
+
+        .ListView-item-content {
+            padding-right: $actionWidthLarge;
+        }
+    }
+}
+
+/** Modifier 'flexible' of ListView-item-action.
+    The classes hierarchy is required to preserve correct selector weight
+**/
+.ListView {
+    .ListView-item {
+        .ListView-item-action--flexible {
+            width: auto;
+            min-width: $actionWidth;
+            background-color: #FFF;
+            overflow: visible;
+            
+            /* Gradient ellipsis over the item-content: */
+            &:before {
+                content: '';
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                right: 100%;
+                width: 2em;
+                background-image: linear-gradient(to left, White, rgba(255, 255, 255, 0));
+            }
+        }
+    }
+}

@@ -1,0 +1,1096 @@
+﻿@{/**
+  * Set of common, general helpers
+  * used around all the site
+  */
+}
+@using WebMatrix.WebData;
+@using WebMatrix.Data;
+@using System.Security.Cryptography;
+@using System.Web.WebPages.Scope;
+@using System.Text.RegularExpressions;
+
+@functions{
+    public static void NotFoundOnInvalidLocaleURL()
+    {
+        if (LcRest.Locale.Current == null)
+        {
+            Server.TransferRequest("~/Errors/Error404.cshtml");
+        }
+    }
+
+    /*=========================
+     * Request/File Sizes
+     */
+    
+    /// <summary>
+    /// Retrieve from asp.net configuration the maximum allowed request size in KB,
+    /// or 0 otherwise (impossible to get size limit)
+    /// </summary>
+    /// <returns></returns>
+    public static int GetMaxRequestSize() {
+        int maxRequestLength = 0;
+        System.Web.Configuration.HttpRuntimeSection section =
+        System.Configuration.ConfigurationManager.GetSection("system.web/httpRuntime") as System.Web.Configuration.HttpRuntimeSection;
+        if (section != null)
+            maxRequestLength = section.MaxRequestLength;
+
+        return maxRequestLength;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="size">Size in bytes</param>
+    /// <returns></returns>
+    public static string PrettyFileSize(long size) {
+        long result = size;
+        string unit = "bytes";
+
+        if (size >= 1073741824)
+        {
+            result = size / 1073741824;
+            unit = "GB";
+        }
+        else if (size >= 1048576)
+        {
+            result = size / 1048576;
+            unit = "MB";
+        }
+        else
+        {
+            result = size / 1024;
+            unit = "KB";                        
+        }
+
+        return result.ToString("0.00") + " " + unit;
+    }
+
+    /*=========================
+     * Debugging
+     */
+    public static LcLogger _debugLogger;
+    /// <summary>
+    /// It allows log things to a debug file.
+    /// Only works if debugging is enabled in web.config, and its
+    /// saved and closed on global.asax.
+    /// </summary>
+    public static LcLogger DebugLogger {
+        get {
+            if (_debugLogger == null) {
+                _debugLogger = new LcLogger("debug");
+            }
+            return _debugLogger;
+        }
+    }
+    public static void CloseDebugLogger() {
+        if (Context.IsDebuggingEnabled && _debugLogger != null)
+        {
+            _debugLogger.Save();
+            _debugLogger.Dispose();
+            _debugLogger = null;
+        }
+    }
+    /*=========================
+     * Generic data management
+     */
+    public static string[] GetValuesFromCSVLine(string line){
+        return line.Split(',');
+    }
+    public static dynamic RenderPageReturns{
+        get {
+            return ScopeStorage.GlobalScope["_lcRenderPageReturns"];
+        }
+        set {
+            ScopeStorage.GlobalScope["_lcRenderPageReturns"] = value;
+        }
+    }
+    public static decimal GetMoneyNumber(string number){
+        if (String.IsNullOrEmpty(number)) {
+            return 0;
+        } else {
+            decimal m = 0;
+            number = number.Replace("$", "").Replace("€", "");
+            decimal.TryParse(number, out m);
+            return m;
+        }
+    }
+    public static decimal? CreateDecimal(string decimalString) {
+        decimal aux;
+        if (decimal.TryParse(decimalString, out aux))
+            return aux;
+        else
+            return null;
+    }
+
+    /*==============
+     * Dates - Times
+     */
+    public static int GetWeekOfTheYear(DateTime date) {
+        System.Globalization.CultureInfo cult_info = System.Globalization.CultureInfo.CurrentUICulture;
+        System.Globalization.Calendar cal = cult_info.Calendar;
+        return cal.GetWeekOfYear(date, cult_info.DateTimeFormat.CalendarWeekRule, cult_info.DateTimeFormat.FirstDayOfWeek);
+    }
+    public static DateTime GetFirstWeekDay(DateTime date) {
+        return date.AddDays(0 - (int)date.DayOfWeek);
+    }
+    public static DateTime GetLastWeekDay(DateTime date) {
+        return date.AddDays(6 - (int)date.DayOfWeek);
+    }
+    public static DateTime? CreateDateTime(string date, string time) {
+        DateTime aux;
+        if (DateTime.TryParse(date + " " + time, out aux))
+            return aux;
+        else
+            return null;
+    }
+    public static DateTime? CreateDateTime(string datetime) {
+        DateTime aux;
+        if (DateTime.TryParse(datetime, out aux))
+            return aux;
+        else
+            return null;
+    }
+    public static string DateTimeRangeToString(DateTime start, DateTime end){
+        return String.Format("{0:dddd, MMM d} from {1:t} to {2:t}", 
+            start
+            ,start
+            ,end
+        );
+    }
+    public static string GetShortestDateTimeRangeString(DateTime? start, DateTime? end,
+        string dateFormat = "dddd, MMM d",
+        string timeFormat = @"hh\:mm",
+        string dateTimeSeparator = " ",
+        string datesSeparator = " to ") {
+
+        var f = "";
+        if (start.HasValue) {
+            f += "{0:" + dateFormat + "}";
+            
+            if (start.Value.TimeOfDay != TimeSpan.Zero) {
+                f += dateTimeSeparator + "{1:" + timeFormat + "}";
+            }
+
+            if (end.HasValue && start != end) {
+                f += datesSeparator;
+                bool withEndDate = false;
+                if (start.Value.Date != end.Value.Date) {
+                    f += "{2:" + dateFormat + "}";
+                    withEndDate = true;
+                }
+                
+                if (end.Value.TimeOfDay != TimeSpan.Zero &&
+                    start.Value.TimeOfDay != TimeSpan.Zero) {
+                    if (withEndDate) {
+                        f += dateTimeSeparator;
+                    }
+                    f += "{3:" + timeFormat + "}";
+                }
+            }
+        }
+        return String.Format(f,
+            start.Value.Date,
+            start.Value.TimeOfDay,
+            end.Value.Date,
+            end.Value.TimeOfDay
+        );
+    }
+    /// <summary>
+    /// Get a TimeSpan for the given hours,
+    /// rounding the result to Minutes unit
+    /// (thats, Seconds and below will be ever 0)
+    /// </summary>
+    /// <param name="hours"></param>
+    /// <returns></returns>
+    public static TimeSpan RoundHoursToMinutes(double hours){
+        return RoundTimeToMinutes(TimeSpan.FromHours(hours));
+    }
+    /// <summary>
+    /// Get a TimeSpan for the given time,
+    /// rounding the result to Minutes unit
+    /// (thats, Seconds and below will be ever 0)
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public static TimeSpan RoundTimeToMinutes(TimeSpan time){
+        return time.Add(
+            TimeSpan.FromMinutes(Math.Round(time.Seconds / 60.0))
+            .Subtract(TimeSpan.FromSeconds(time.Seconds))
+        );
+    }
+    public enum RoundingType : short
+    {
+        /// <summary>
+        /// Also know as 'ceiling', it rounds ever to the same integer
+        /// without decimals (or any other unit to be rounded)
+        /// </summary>
+        Down = -1,
+        /// <summary>
+        /// Most common round, to the nearest approximated number.
+        /// For example: for a number 3.5 gets 4.0 and for 3.4 gets 3.0
+        /// </summary>
+        Nearest = 0,
+        /// <summary>
+        /// Also know as 'floor', it rounds to the next bigger integer
+        /// except if the number has no decimals, then left the same number
+        /// (the units 'integer, decimals' can change when apply)
+        /// </summary>
+        Up = 1
+    }
+    /// <summary>
+    /// It rounds a time to the nearest quarter-hour fragment.
+    /// This means that the time returned it has ever one of the next
+    /// values for minutes: 00, 15, 30, 45.
+    /// Lower units (seconds..) become 0.
+    /// The type of rounding (down, nearest, up) can be changed with the
+    /// second parameter, defaults to 'nearest'.
+    /// </summary>
+    /// <param name="time">Time to get rounded. Not modified, the new rounded time is returned</param>
+    /// <param name="roundTo">The type of rounding: down, nearest, up</param>
+    /// <returns>The new time rounded</returns>
+    public static TimeSpan RoundTimeToQuarterHour(TimeSpan time, RoundingType roundTo = RoundingType.Nearest){
+        var restFromQuarter = time.TotalHours % .25;
+        double hours = time.TotalHours;
+        if (restFromQuarter > 0.0) {
+            switch(roundTo){
+                case RoundingType.Down:
+                    hours -= restFromQuarter;
+                    break;
+                case RoundingType.Nearest:
+                    var limit = .25 / 2;
+                    if (restFromQuarter >= limit) {
+                        hours += (.25 - restFromQuarter);
+                    } else {
+                        hours -= restFromQuarter;
+                    }
+                    break;
+                case RoundingType.Up:
+                    hours += (.25 - restFromQuarter);
+                    break;
+            }
+        }
+        return TimeSpan.FromHours(hours);
+    }
+    /// <summary>
+    /// Get the nth number of the week-day represented by @date
+    /// respect to the month.
+    /// </summary>
+    /// <param name="date"></param>
+    /// <param name="inverse">Set as true to get the nth starting by the
+    /// end of the month</param>
+    /// <returns></returns>
+    public static int NthWeekDayInMonth(DateTime date, bool inverse = false){
+        int nth = 0;
+        var aux = date;
+        while(aux.Month == date.Month){
+            nth++;
+            aux = aux.AddDays(inverse ? 7 : -7);
+        }
+        return nth;
+    }
+    public static string TimeToSmartLongString(TimeSpan duration, string defaultValue = null){
+        if (duration == TimeSpan.Zero) {
+            return defaultValue;
+        }
+        var result = "";
+        if (duration > TimeSpan.Zero) {
+            var s = new List<string>();
+            if (duration.Days > 1) {
+                s.Add(String.Format("{0} days", duration.Days));
+            } else if (duration.Days == 1) {
+                s.Add("1 day");
+            }
+            if (duration.Hours > 1) {
+                s.Add(String.Format("{0} hours", duration.Hours));
+            } else if (duration.Hours == 1) {
+                s.Add("1 hour");
+            }
+            if (duration.Minutes > 1) {
+                s.Add(String.Format("{0} minutes", duration.Minutes));
+            } else if (duration.Minutes == 1) {
+                s.Add("1 minute");
+            }
+            if (duration.Seconds > 1) {
+                s.Add(String.Format("{0} seconds", duration.Seconds));
+            } else if (duration.Seconds == 1) {
+                s.Add("1 second");
+            }
+            if (duration.Milliseconds > 1) {
+                s.Add(String.Format("{0} milliseconds", duration.Milliseconds));
+            } else if (duration.Milliseconds == 1) {
+                s.Add("1 millisecond");
+            }
+            result = JoinNotEmptyStrings(", ", s);
+        } else {
+            // Negatives!!
+            result = "-" + TimeToSmartLongString(TimeSpan.Zero - duration);
+        }
+        return result;
+    }
+    
+    /*===========
+     * Application/development channels
+     */
+    public static string Channel{
+        get{
+            return (System.Configuration.ConfigurationManager.AppSettings["Channel"] ?? "dev").ToLower();
+        }
+    }
+    /// <summary>
+    /// This returns True when the site is in live channel or
+    /// in staging channel (that is an emulation of live) and must be
+    /// checked when something must be done different on live (also when emulating
+    /// live on staging).
+    /// If something requires be done only on live channel, not in staging (be carefully),
+    /// check Channel == "live".
+    /// </summary>
+    public static bool InLive {
+        get {
+            return (Channel == "live" || Channel == "staging");
+        }
+    }
+    public static bool InDev {
+        get {
+            return (Channel == "dev" || Channel == "localdev");
+        }
+    }
+    
+    /*
+     * Page helpers
+     * */
+    /// <summary>
+    /// General IsPost-IsValid-ReturnOrRedirect for new dashboard,
+    /// supporting OnBoarding (redirecto to next step, with @page being
+    /// current) and normal (returning JSON, setting button to 'save').
+    /// Must be executed on the 
+    /// </summary>
+    /// <param name="page">Current page name (single page url segment)</param>
+    public static bool CheckDashboardSuccessPost(string page, bool alternativeSuccess = false)
+    {       
+        var userId = WebMatrix.WebData.WebSecurity.CurrentUserId;
+        using (var db = Database.Open("sqlloco"))
+        {
+            var onboardingStep = N.DW(db.QueryValue("SELECT OnboardingStep FROM users WHERE userid = @0", userId)) ?? "";
+            var inOnboarding = !String.IsNullOrEmpty(onboardingStep);
+
+            // On Post check validation status, returning a Json response or html
+            if (IsPost && ModelState.IsValid)
+            {
+                if (inOnboarding)
+                {
+                    // Go next step
+                    var stepsPages = LcData.OnboardingSteps.Keys.ToList();
+                    var iNextStep = stepsPages.IndexOf(page) + 1;
+                    var nextStep = "";
+                    if (iNextStep < stepsPages.Count) {
+                        nextStep = stepsPages[iNextStep];
+                    }
+
+                    db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                        userId,
+                        nextStep == "" ? null : nextStep
+                    );
+                    
+                    var url = LcUrl.LangPath + "dashboard/" + nextStep;
+                    if (Request.IsAjaxRequest()) {
+                        ReturnJsonResult(1, url);
+                    } else {
+                        Response.Redirect(url);
+                    }
+                }
+                else
+                {
+                    if (alternativeSuccess) {
+                        return true;
+                    } else {
+                        if (Request.IsAjaxRequest()) {
+                            ReturnJsonResult(5, LcRessources.ShortDataSaved);
+                        }
+                    }
+                }
+            }
+            else if (IsPost)
+            {
+                // Save current as the OnboardingStep if in onboarding, no matters if there was
+                // error, just to track current status
+                if (inOnboarding)
+                {
+                    db.Execute("UPDATE users SET OnboardingStep = @1 WHERE userid = @0",
+                        userId,
+                        page
+                    );
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static int GetIeVersion() {
+        // Sniff old IE browsers based on its engine (Trident) and version: so if it's Trident engine but is not the latest
+        // version 7.0, then is IE 10 or lower; Trident/7.0 is IE11, and it's fine. Compatibility mode uses a lower Trident version,
+        // same for other browsers based on the same engine, and IE-replacement Edge does not report Trident so will not exist greater
+        // versions than 7.0:
+        // Compatibility modes on IE11 uses white space on Trident string like: Trident / 4.0  rather than Trident/4.0
+        var iePattern = @"(?:\b(?:MS)?IE\s)(\d+)";
+        var tridentPattern = @"(?:\bTrident\s?\/\s?)(\d+)";
+        // Carefull with userAgent, some agents may not provide a value and throw exception
+        var userAgent = Request.UserAgent ?? "";
+        var m = Regex.Match(userAgent, iePattern);
+        var ieVersion = 0;
+        if (m.Success)
+        {
+            ieVersion = m.Groups[1].Value.AsInt();
+        }
+        else
+        {
+            m = Regex.Match(userAgent, tridentPattern);
+            if (m.Success)
+            {
+                // Not really ie version, needs be mapped out
+                ieVersion = m.Groups[1].Value.AsInt();
+                // mapping trident to ie version like
+                // 4.0->MSIE 8 | 5.0->MSIE 9 | 6.0->MSIE 10 | 7.0->rv:11
+                ieVersion += 4;
+            }
+        }
+        return ieVersion;
+    }
+    
+    public static bool IsOldBrowser() {
+        var ieVersion = GetIeVersion();
+        return ieVersion > 0 && ieVersion < 11;
+    }
+
+    public static bool IsVeryOldBrowser()
+    {
+        var ieVersion = GetIeVersion();
+        return ieVersion > 0 && ieVersion < 9;
+    }
+}
+
+@helper OldBrowserNotice() {
+    <style type="text/css">
+        body,html,iframe{overflow: hidden; overflow:hidden !important;}
+    </style>
+    <iframe width="100%" height="100%" border="0" style="border:none;position:absolute;top:0;left:0;right:0;bottom:0;z-index:9999;filter: alpha(opacity=90);" src="@(LcUrl.LangUrl)HelpCenter/UpgradeBrowser/"></iframe>
+}
+
+@*===============
+ * Form Helpers
+ *@
+@helper CountryOptions(string selectedCountryID = null)
+    {
+        var sql = @"
+        SELECT CountryID, CountryName, CountryCode
+        FROM    Country
+        WHERE   LanguageID=@0
+        ORDER BY CountryName
+    ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var country in db.Query(sql, LcData.GetCurrentLanguageID()))
+            {
+            <option value="@country.CountryID" @IsSelected(selectedCountryID, country.CountryID)>@country.CountryName</option>
+            }
+        }
+}
+@helper CountyOptions(string selectedCountyID = null)
+    {
+        var sql = @"
+        SELECT CountyID, CountyName, FIPSCode, StateProvinceID
+        FROM    County
+        ORDER BY CountyName
+    ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var county in db.Query(sql))
+            {
+            <option value="@county.CountyID" @IsSelected(selectedCountyID, county.CountyID)>@county.CountyName</option>
+            }
+        }
+}
+@helper StateProvinceOptions(int selectedStateID)
+    {
+    @StateProvinceOptions(selectedStateID.ToString())
+}
+@helper StateProvinceOptions(string selectedStateID)
+    {
+        var sql = @"
+        SELECT StateProvinceID, StateProvinceName, StateProvinceCode
+        FROM    StateProvince
+        WHERE   CountryID=@0
+        ORDER BY StateProvinceName
+    ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
+            {
+            <option data-stateprovince-code="@state.StateProvinceCode" value="@state.StateProvinceID" @IsSelected(selectedStateID, state.StateProvinceID)>@state.StateProvinceName</option>
+            }
+        }
+}
+@helper StateProvinceCodeOptions(string selectedStateCode)
+    {
+        var sql = @"
+        SELECT StateProvinceName, StateProvinceCode
+        FROM    StateProvince
+        WHERE   CountryID=@0
+        ORDER BY StateProvinceName
+    ";
+        using (var db = Database.Open("sqlloco"))
+        {
+            foreach (var state in db.Query(sql, LcData.GetCurrentCountryID()))
+            {
+            <option value="@state.StateProvinceCode" @IsSelected(selectedStateCode, state.StateProvinceCode)>@state.StateProvinceName</option>
+            }
+        }
+}
+@helper MonthOptions(string selectedMonth)
+    {
+        for (var i = 1; i < 13; i++)
+        {
+        <option @IsSelected(selectedMonth, i) value="@i">@(new DateTime(2000, i, 1).ToString("MMM"))</option>
+        }
+}
+@helper CardYearOptions(string selectedYear)
+    {
+        var year = DateTime.Today.Year;
+        var limitYear = year + 10;
+        for (; year < limitYear; year++)
+        {
+        <option @IsSelected(selectedYear, year) value="@(year)">@(year)</option>
+        }
+}
+@helper IsChecked(object valueA, object valueB)
+    {
+        if (LcUtils.AreEquivalents(valueA, valueB))
+        {
+        @Html.Raw("checked='checked'")
+        }
+}
+@helper IsSelected(object valueA, object valueB)
+    {
+        if (LcUtils.AreEquivalents(valueA, valueB))
+        {
+        @Html.Raw("selected='selected'")
+        }
+}
+@helper CssCurrent(string a, string b, string className = "current")
+    {
+        if (LcUtils.AreEquivalents(a, b))
+        {
+        @(className)
+        }
+}
+@functions{
+    static public string GetRedirectURLFromReferrer(string filter = "")
+    {
+        return Request["RedirectURL"] ??
+                (Request.UrlReferrer != null && Request.UrlReferrer.PathAndQuery.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) > 0 ?
+                Request.UrlReferrer.PathAndQuery : "");
+    }
+}
+@*=================
+ * JavaScript
+ *@
+@helper SetupStarRatingPlugin()
+    {
+    <script type="text/javascript">
+        if (!jqueryStarRatingPluginLoaded) var jqueryStarRatingPluginLoaded = false;
+        if (!jqueryStarRatingPluginLoaded) {
+            jqueryStarRatingPluginLoaded = true;
+            LC.load({ 
+                scripts: [
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.MetaData.js",
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.pack.js",
+                    LcUrl.AppPath + "Scripts/star-rating/jquery.rating.css"
+                ]
+            });
+        } else {
+            if ($ && $().rating)
+                // Re-apply plugin (to new added elements without the plugin loaded):
+                $('input[type=radio].star').rating();
+        }
+    </script>
+}
+@helper GetValidationScripts()
+    {
+    <script type="text/javascript">
+        @GetValidationScriptCode()
+    </script>
+}
+@helper GetValidationScriptCode()
+    {
+    <text>
+    if (window['LC'] && LC['setupValidation'])
+        LC.setupValidation();
+    else
+        $(document).on('lcLibReady', function () { LC.setupValidation() });
+    </text>
+}
+@functions{
+    /*==== Page-controller Utilities ====*/
+    /// <summary>
+    /// Show the profile activation popup with 'ok' and 'next-step' buttons and progress information when need
+    /// (throught a JSON Code:6 result)
+    /// and returns true, if not returns false and other result type must be implemented.
+    /// Popup show specific buttons to go next-step (next alert) or continue in the same page,
+    /// with messages for alerts remaining or profile activated, all as detailed in #186
+    /// </summary>
+    /// <param name="beforePositionStatuses"></param>
+    /// <returns></returns>
+    public static bool UseProfileActivationPopup(
+        Dictionary<int, dynamic> beforePositionStatuses,
+        int userID,
+        string formSavedMessage = "Great work!",
+        string okButtonLabel = "OK")
+    {
+        var upa = LcData.UserInfo.CheckUserPositionActivation(userID, beforePositionStatuses);
+        // There is no positions information, maybe a customer?
+        if (upa == null)
+        {
+            return false;
+        }
+
+        var activationMessage = JoinNotEmptyStrings("<br/>", upa.Messages);
+
+        if (upa.Status != LcData.UserInfo.UserPositionActivation.Statuses.Complete)
+        {
+            var nextStepLabel = "";
+            switch (upa.Status)
+            {
+                case LcData.UserInfo.UserPositionActivation.Statuses.Enhance:
+                    nextStepLabel = "Enhance your profile";
+                    break;
+                case LcData.UserInfo.UserPositionActivation.Statuses.InProgress:
+                    nextStepLabel = "Next step";
+                    break;
+            }
+
+            ReturnJsonResult(6, new
+            {
+                SuccessMessage = formSavedMessage,
+                AdditionalMessage = activationMessage,
+                OkLabel = okButtonLabel,
+                GoLabel = nextStepLabel,
+                GoURL = upa.NextAlert == null ? "" : LcData.CreateAlertURL(upa.NextAlert)
+            });
+
+            return true;
+        }
+
+        return false;
+    }
+    /*========= JSON =============*/
+    public static void ReturnJson(object jsondata, bool endResponse = true)
+    {
+        Response.ContentType = "application/json";
+        // JSON.NET Works Better: good datetime formatting as ISO-8601 and some bugfixes details.
+        Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(jsondata));
+        //Json.Write(jsondata, Response.Output);
+        if (endResponse)
+            Response.End();
+        else
+            Response.Flush();
+    }
+    public static void ReturnJsonError(int code, string errorMessage, bool endResponse = true)
+    {
+        if (code >= 0)
+            ReturnJsonResult(code, errorMessage, endResponse);
+        else
+            ReturnJsonResult(code, new Dictionary<string, string>() { { "ErrorMessage", errorMessage } }, endResponse);
+    }
+    public static void ReturnJsonResult(int code, object result, bool endResponse = true)
+    {
+        ReturnJson(new Dictionary<string, object>(){
+            { "Code", code }, { "Result", result } 
+        }, endResponse);
+    }
+
+    /*========= SECURITY ==========*/
+    /* Ensure that only register users enter here, redirecting to login page when appropiated.
+     * If request is an ajax request, a json object will be return in the response with code=2
+     * that means un-authenticated and a Result string with the ajax login url.
+    */
+    public static void SecurePage()
+    {
+        if (!WebSecurity.IsAuthenticated)
+            RedirectToLogin();
+    }
+    public static void ProviderPage()
+    {
+        SecurePage();
+        if (LcData.UserInfo.GetUserRow().IsProvider == false)
+        {
+            Forbidden(LcData.UserInfo.UserType.Provider);
+        }
+    }
+    public static void AdminPage()
+    {
+        SecurePage();
+        if (LcData.UserInfo.GetUserRow().IsAdmin == false && !(Session["OnBehalfOf_LoggedUserID"] is int))
+        {
+            Forbidden(LcData.UserInfo.UserType.Admin);
+        }
+    }
+    public static void TestArea()
+    {
+        if (!Request.IsLocal)
+        {
+            AdminPage();
+        }
+    }
+    public static string OnBehalfOf()
+    {
+        if (WebSecurity.IsAuthenticated)
+        {
+            // Only for Admin users, for any page executing this (SiteLayout is fine, will redirect)
+            if (LcData.UserInfo.GetUserRow().IsAdmin == true
+                && Request["OnBehalfOf"].IsInt())
+            {
+                // Remember users data:
+                int oboID = Request["OnBehalfOf"].AsInt();
+                var loggedID = WebSecurity.CurrentUserId;
+                var loggedName = WebSecurity.CurrentUserName;
+                var oboUser = LcData.UserInfo.GetUserRow(oboID);
+
+                // Enter the site as another user, but remember the original to warning about
+                Session.Clear();
+
+                // New session:
+                Session["OnBehalfOf_LoggedUserID"] = loggedID;
+                Session["OnBehalfOf_LoggedUserName"] = loggedName;
+
+                // New authentication cookie:
+                System.Web.Security.FormsAuthentication.SetAuthCookie(oboUser.Email, false);
+
+                // Return to the original URL, setting the new cooking
+                Response.Redirect(LcUrl.GetTheGoodURL(Request.Url.OriginalString).Replace("OnBehalfOf", "_"));
+            }
+            else if (Session["OnBehalfOf_LoggedUserID"] is int)
+            {
+                return String.Format("Logged as {0}:{1} On Behalf Of {2}:{3}",
+                    Session["OnBehalfOf_LoggedUserID"],
+                    Session["OnBehalfOf_LoggedUserName"],
+                    WebSecurity.CurrentUserId,
+                    WebSecurity.CurrentUserName);
+            }
+        }
+        return null;
+    }
+    /// <summary>
+    /// Shows to the user the PageNotFound:404 page instead of the current one requested.
+    /// Page is prevented from being processed.
+    /// </summary>
+    public static void PageNotFound()
+    {
+        Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error404/");
+        // throw new HttpException(404, "Not Found");
+    }
+    /// <summary>
+    /// Shows to the user the Forbidden:403 page instead of the current one requested.
+    /// Page is prevented from being processed.
+    /// </summary>
+    /// <param name="requestedUserType">Lets know what user type was requested by this
+    /// page and not satisfied by the current user to show a more detailed error.</param>
+    public static void Forbidden(LcData.UserInfo.UserType requestedUserType)
+    {
+        Server.TransferRequest(LcUrl.RenderAppPath + "Errors/Error403/?requires=" + requestedUserType.ToString());
+        // throw new HttpException(403, "Forbidden");
+    }
+    public static void RedirectToLogin()
+    {
+        Response.Redirect(LcUrl.LangPath + "auth/login/?Redirect=" + Uri.EscapeDataString(LcUrl.GetTheGoodURL(Request.Url.PathAndQuery)));
+    }
+
+    /*========= STRINGS ==============*/
+    public static string GetInitialLetter(string text)
+    {
+        if (!String.IsNullOrEmpty(text))
+        {
+            // Is not empty, have almost 1 char:
+            return text.Substring(0, 1).ToUpper();
+        }
+        else
+        {
+            return "";
+        }
+    }
+    public static string JoinNotEmptyStrings(string delimiter, params string[] strs)
+    {
+        return JoinNotEmptyStrings(delimiter, (IEnumerable<string>)strs);
+    }
+    public static string JoinNotEmptyStrings(string delimiter, IEnumerable<string> strs)
+    {
+        List<string> newstrs = new List<string>();
+        foreach (var str in strs)
+            if (!String.IsNullOrWhiteSpace(str))
+                newstrs.Add(str);
+        return String.Join(delimiter, newstrs);
+    }
+    public static string NameValueToString(System.Collections.Specialized.NameValueCollection collection)
+    {
+        var str = "";
+        if (collection.AllKeys != null)
+            foreach (var n in collection.AllKeys)
+            {
+                var v = collection.GetValues(n);
+                var sv = "";
+                if (v == null)
+                    sv = "NULL";
+                else
+                    try
+                    {
+                        sv = (v.Length > 1 ? Json.Encode(v) : collection[n]);
+                    }
+                    catch
+                    {
+                        sv = "{{ Can not be read }}";
+                    }
+                str += String.Format("{0}={1}\n", n, sv);
+            }
+        return str;
+    }
+    public static bool ReadBoolFrom(params object[] values)
+    {
+        foreach (object val in values)
+        {
+            if (val != null)
+            {
+                if (val is bool)
+                {
+                    return (bool)val;
+                }
+                else if (val is string && ((string)val).IsBool())
+                {
+                    return ((string)val).AsBool();
+                }
+            }
+        }
+        return false;
+    }
+    public static string GetLastStringChars(string str, int number)
+    {
+        if (str != null && str.Length > number)
+        {
+            return str.Substring(str.Length - number, number);
+        }
+        return str;
+    }
+    /// <summary>
+    /// Will transform "some $ugly ###url wit[]h spaces" into "some-ugly-url-with-spaces"
+    /// </summary>
+    public static string StringSlugify(string phrase, int maxLength = 50)
+    {
+        if (String.IsNullOrEmpty(phrase)) return "";
+
+        string str = phrase.ToLower();
+        // special chars to Ascii equivalent:
+        str = ReplaceSpecialCharsWithAsciiEquivalent(str, true, false);
+        // invalid chars, make into spaces
+        str = Regex.Replace(str, @"[^a-z0-9\s-]", "");
+        // convert multiple spaces/hyphens into one space
+        str = Regex.Replace(str, @"[\s-]+", " ").Trim();
+        // cut and trim it
+        str = str.Substring(0, str.Length <= maxLength ? str.Length : maxLength).Trim();
+        // hyphens
+        str = Regex.Replace(str, @"\s", "-");
+
+        return str;
+    }
+
+    public static string ReplaceSpecialCharsWithAsciiEquivalent(string s, bool changeLowercases = true, bool changeUppercases = true)
+    {
+        string r = s ?? "";
+
+        if (changeLowercases)
+        {
+            r = Regex.Replace(r, "[àáâãäåæ]", "a");
+            r = Regex.Replace(r, "[èéêë]", "e");
+            r = Regex.Replace(r, "[ìíîï]", "i");
+            r = Regex.Replace(r, "[òóôõöø]", "o");
+            r = Regex.Replace(r, "[ùúûü]", "u");
+            r = Regex.Replace(r, "[ý]", "y");
+            r = Regex.Replace(r, "[ðþß]", "b");
+            r = Regex.Replace(r, "[ç]", "c");
+            r = Regex.Replace(r, "[ñ]", "n");
+        }
+        if (changeUppercases)
+        {
+            r = Regex.Replace(r, "[ÀÁÂÃÄÅÆ]", "A");
+            r = Regex.Replace(r, "[ÈÉÊË]", "E");
+            r = Regex.Replace(r, "[ÌÍÎÏ]", "I");
+            r = Regex.Replace(r, "[ÒÓÔÕÖØ]", "O");
+            r = Regex.Replace(r, "[ÙÚÛÜ]", "U");
+            r = Regex.Replace(r, "[Ý]", "Y");
+            r = Regex.Replace(r, "[ÐÞß]", "B");
+            r = Regex.Replace(r, "[Ç]", "C");
+            r = Regex.Replace(r, "[Ñ]", "N");
+        }
+
+        return r;
+    }
+
+    public static string StripHtmlTags(string html)
+    {
+        return Regex.Replace(html, @"<[^>]*>", String.Empty);
+    }
+
+    /*
+     * Convert given string into a string with only the characters
+     * valid for Braintree, replacing all invalid chars to underscore (_)
+     * and tilded characters to non tilded equivalent
+     */
+    public static string ConvertToBraintreeToken(string str)
+    {
+        string r = str ?? "_";
+
+        r = ReplaceSpecialCharsWithAsciiEquivalent(r);
+
+        Regex all_non_valid = new Regex("[^a-zA-Z0-9-_]", RegexOptions.Compiled);
+        r = all_non_valid.Replace(r, "_");
+
+        return r;
+    }
+    /*
+     * Return the Display or abbreviated name of the user, 
+     * as "Name InitialLastName.", example: "John S." for
+     * user FirstName=John LastName=Smith
+     * The row object must contains the properties FirstName and LastName to work
+     */
+    public static string GetUserDisplayName(dynamic row)
+    {
+        if (row == null) { return ""; }
+        return (row.FirstName ?? "") + "\xA0" + GetInitialLetter(row.LastName) + ".";
+    }
+    public static string GetUserDisplayName(dynamic row, string fieldPrefix)
+    {
+        if (row == null) { return ""; }
+        return (row[fieldPrefix + "FirstName"] ?? "") + "\xA0" + GetInitialLetter(row[fieldPrefix + "LastName"]) + ".";
+    }
+    public static string GetUserDisplayNameHtml(dynamic row, string fieldPrefix)
+    {
+        if (row == null) { return ""; }
+        return "<span class='first-name'>" + (row[fieldPrefix + "FirstName"] ?? "") + "</span>"
+            + "&nbsp;"
+            + "<span class='last-name-initial'>" + GetInitialLetter(row[fieldPrefix + "LastName"]) + "." + "</span>";
+    }
+}
+@helper PrintTextAsHtml(string text)
+    {
+        if (text != null)
+        {
+        @Html.Raw(text.Replace("\n", "<br/>"))
+        }
+}
+
+@* Address utilities *@
+@helper PrintAddress(LcData.Address address, bool editable)
+    {
+    <div class="address">
+        @if (!String.IsNullOrEmpty(address.Name))
+        {
+        <span class="address-name">@address.Name</span>
+        }
+        <span class="address-location">@address.AddressLine1 @address.AddressLine2</span>
+        <span class="address-city">@address.City</span>
+        <span class="address-state">@address.StateProvinceCode</span>
+        <span class="address-zipcode">@address.PostalCode</span>
+        @if (editable)
+        {
+        <div class="tools">
+            <a href="#" class="edit">Edit</a>
+            <a href="#" class="map">Map</a>
+            <a href="#" class="remove">Remove</a>
+        </div>
+        }
+    </div>
+}
+@helper PrintAddressInLink(LcData.Address address)
+    {
+    <div class="address">
+        @PrintGoogleLink(GetLocationForGoogleMaps(address), GetOneLineAddress(address))
+        @(String.IsNullOrWhiteSpace(address.SpecialInstructions)
+            ? ""
+            : "(" + address.SpecialInstructions + ")")
+    </div>
+}
+@functions {
+    public static string GetLocationForGoogleMaps(dynamic data)
+    {
+        return JoinNotEmptyStrings(", ", data.AddressLine1, data.City, data.StateProvinceCode, "United States");
+    }
+    public static string GetOneLineAddress(LcData.Address address, bool withSpecialInstructions = false)
+    {
+        return JoinNotEmptyStrings(", ",
+            address.AddressLine1,
+            address.AddressLine2,
+            address.City,
+            address.StateProvinceCode,
+            address.Country
+        )
+        +
+        (!withSpecialInstructions || String.IsNullOrWhiteSpace(address.SpecialInstructions)
+                ? ""
+                : "(" + address.SpecialInstructions + ")"
+        );
+    }
+}
+@helper PrintGoogleMap(string location)
+    {
+    <iframe class="google-map" width="120" height="120" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/?q=@(location);z=16&amp;output=embed"></iframe>
+}
+@helper PrintGoogleLink(string location, string label = "view map and directions")
+    {
+    <a class="google-map" href="http://maps.google.com/?q=@(location);z=16" target="_blank">@label</a>
+}
+
+@* Prints the HTML with the tagged contact information for the user at data.
+    TODO: International Phone Prefix.
+ *@
+@helper PrintContactInfo(dynamic data, string dataPrefix = "", bool withAddress = false)
+    {
+    <div class="user-contact-data">
+        <div class="user-full-name"><span class="value">@data[dataPrefix + "FirstName"] @data[dataPrefix + "MiddleIn"] @data[dataPrefix + "LastName"]</span></div>
+        @if (withAddress && data[dataPrefix + "StateProvinceCode"] != null)
+        {
+            <div class="user-address">Address: <span class="value">@data[dataPrefix + "AddressLine1"] @data[dataPrefix + "AddressLine2"]</span></div>
+            <div class="user-location">@JoinNotEmptyStrings(", ", data[dataPrefix + "City"], data[dataPrefix + "StateProvinceCode"], data[dataPrefix + "PostalCode"])</div>
+        }
+        @{
+            var mobile = data[dataPrefix + "MobilePhone"];
+            var alternate = data[dataPrefix + "AlternatePhone"];
+            if (!String.IsNullOrEmpty(mobile) || !String.IsNullOrEmpty(alternate))
+            {
+                <div class="user-phones">Phone:
+                    @if (!String.IsNullOrEmpty(mobile))
+                    {
+                        <span class="user-mobile-phone"><span class="value">+1 @mobile</span> (mobile)</span>
+                    }
+                    @if (!String.IsNullOrEmpty(mobile) && !String.IsNullOrEmpty(alternate))
+                    {
+                        <span class="user-or-phone">or</span>   
+                    }
+                    @if (!String.IsNullOrEmpty(alternate))
+                    {
+                        <span class="user-alternate-phone"><span class="value">+1 @alternate</span> (other)</span>
+                    }
+                </div>
+            }
+        }
+        @{
+            var email = data[dataPrefix + "Email"];
+            if (!String.IsNullOrEmpty(LcRest.Client.GetEmailFromDb(email)))
+            {
+                <div class="user-email">E-mail: <span class="value"><a href="mailto:@email">@LcRest.Client.GetEmailFromDb(email)</a></span></div>
+            }
+        }
+        @{
+            var website = data[dataPrefix + "ProviderWebsiteURL"];
+            if (!String.IsNullOrEmpty(website))
+            {
+                <div class="user-website">Website: <span class="value"><a href="@website" target="_blank">@website</a></span></div>
+            }
+        }
+    </div>
+}

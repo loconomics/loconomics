@@ -1,0 +1,62 @@
+/** Promote
+**/
+@import "../utils/BasicForm"
+
+.DashboardPayments {
+    .DashboardPaymentAccount {
+        fieldset {
+            input,
+            select {
+                width: 70% !important;
+                box-sizing: border-box;
+            }
+        }
+        /* TOS: terms-of-service */
+        .DashboardPaymentAccount-tos {
+            label input {
+                width: auto !important;
+                vertical-align: middle;
+            }
+        }
+        
+        .DashboardPaymentAccount-bank {
+            
+            &.is-venmoAccount {
+                display: none;
+            }
+            
+            label {
+                font-weight: bold;
+                display: block;
+            }
+        }
+        
+        .DashboardPaymentAccount-changeMethod {
+            &.is-venmoAccount {
+                .DashboardSection-page-section-introduction--bankAccount {
+                    display: none;
+                }
+            }
+            &.is-bankAccount {
+                .DashboardSection-page-section-introduction--venmoAccount {
+                    display: none;
+                }
+            }
+        }
+    }
+    
+    .DashboardPaymentFees {
+        display: table-row;
+
+        img {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        p {
+            padding: 0 1.5em;
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+}

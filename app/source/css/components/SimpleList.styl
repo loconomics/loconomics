@@ -1,0 +1,57 @@
+/**
+    SimpleList component
+**/
+/* Component vars */
+$heightLimit = 33px;
+/* Used the same gap
+    as containers for horizontal (to get aligned with them)
+    as buttons for vertical (easy to press, equals
+    to the implicit gap in $actionWidth
+    and heights).
+    H for Horizontal and V for Vertical */
+$contentHGap = $container-padding-left;
+$contentVGap = 6px;
+
+.SimpleList {
+    /** Base styles and elements */
+    width: 100%;
+    box-sizing: border-box;
+
+    .SimpleList-item {
+        position: relative;
+        max-width: 100%;
+        border-bottom: 1px solid $gray-background;
+        
+        > * {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: break-word;
+            display: inline-block;
+            vertical-align: middle;
+            max-height: $heightLimit;
+            overflow: hidden;
+            text-align: left;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: $contentVGap $contentHGap;
+        }
+        
+        /* Any row in the listview is expected to be a button/link, so color is reset */
+        .btn,
+        .btn-link {
+            color: $gray-dark;
+        }
+    }
+    
+    .SimpleList-divider {
+        text-align: left;
+        padding: ($contentVGap / 2) $contentHGap;
+        background-color: $gray-background;
+    }
+}
+
+/* Inside a container */
+.container .ListView .ListView-divider,
+.container-fluid .ListView .ListView-divider {
+    margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
+}

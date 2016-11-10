@@ -1,0 +1,30 @@
+INSERT INTO [verification]
+   ([VerificationID]
+   ,[VerificationType]
+   ,[VerificationDescription]
+   ,[VerificationProcess]
+   ,[Icon]
+   ,[LanguageID]
+   ,[CountryID]
+   ,[CreatedDate]
+   ,[ModifiedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[VerificationCategoryID]
+   ,[RankPosition]
+   ,[SummaryGroup])
+VALUES
+   (@VerificationID
+   ,@VerificationType
+   ,@VerificationDescription
+   ,@VerificationProcess
+   ,@Icon
+   ,@LanguageID
+   ,@CountryID
+   ,@CreatedDate
+   ,@ModifiedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@VerificationCategoryID
+   ,@RankPosition
+   ,@SummaryGroup)

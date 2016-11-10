@@ -1,0 +1,31 @@
+/**
+    WhiteForm style.
+    
+    To receive custom styles, form elements must have a 'form-control' class (like Bootstrap).
+**/
+.WhiteForm {
+    .form-control {
+        background: White;
+    }
+
+    .input-group-addon {
+        background: White;
+    }
+    
+    .form-group {
+        border: 1px solid $gray-lighter;
+        border-radius: 2px;
+        
+        .input-group-addon,
+        .form-control {
+            border-width: 0;
+        }
+        
+        &[class*='has-'] {
+            .input-group-addon,
+            .form-control {
+                border-width: 1px;
+            }
+        }
+    }
+}

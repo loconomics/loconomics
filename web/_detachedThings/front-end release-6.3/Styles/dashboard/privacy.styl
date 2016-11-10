@@ -1,0 +1,41 @@
+/** Promote
+**/
+@import "../utils/BasicForm"
+
+.DashboardPrivacy {
+    .DashboardPrivacySettings {
+
+        .DashboardPrivacySettings-personalData {
+            ul > li {
+                list-style: disc inside none;
+            }
+            
+            .note {
+                color: $colorRed;
+                margin-left: 10px;
+
+                a,
+                a:link,
+                a:visited {
+                    color: $colorRed;
+                }
+            }
+        }
+
+        .DashboardPrivacySettings-myAccount {
+            a,
+            a:link,
+            a:visited {
+                color: $colorRed;
+                margin-left: 10px;
+            }
+        }
+        
+        #preferences-privacy-policy h1,
+        #account-terms h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+    }
+}

@@ -1,0 +1,7 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+}
+<div>
+    Autologin URL Params: @LcAuth.GetAutologinUrlParams(WebSecurity.CurrentUserId)
+</div>

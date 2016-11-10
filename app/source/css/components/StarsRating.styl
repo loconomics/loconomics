@@ -1,0 +1,58 @@
+/**
+    StarsRating component
+**/
+.StarsRating {
+    display: inline-block;
+    
+    .StarsRating-icons {
+        white-space: nowrap;
+        display: inline-block;
+        
+        i {
+            font-size: 22px;
+            line-height: 24px;
+            vertical-align: baseline;
+            color: #ffb400;
+        }
+    }
+    .StarsRating-total {
+        vertical-align: bottom;
+        line-height: 22px;
+        font-size: 15px;
+        color: $gray-dark;
+    }
+    
+    &.StarsRating--sm {
+        .StarsRating-icons {
+            i {
+                font-size: 17px;
+                line-height: 17px;
+            }
+        }
+        .StarsRating-total {
+            font-size: 14px;
+            line-height: 14px;
+            font-weight: bold;
+            vertical-align: baseline;
+        }
+    }
+    
+    &.StarsRating--xs {
+        .StarsRating-icons {
+            i {
+                font-size: 14px;
+                line-height: 14px;
+            }
+        }
+        .StarsRating-total {
+            font-size: 12px;
+            line-height: 12px;
+            font-weight: bold;
+            vertical-align: baseline;
+        }
+    }
+}
+// custom element
+app-stars-rating {
+    display: inline-block;
+}

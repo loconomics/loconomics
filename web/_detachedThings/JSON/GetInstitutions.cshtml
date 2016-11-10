@@ -1,0 +1,52 @@
+﻿@*
+    This page is called to populate a JSON object with the list of available institutions 
+    suitable for general use with our JSON common structure or
+    for use with the autocomplete jquery-ui feature using the URL segment 'autocomplete'
+
+    INPUT:
+        s (search string to filter the set of results)
+*@
+@using WebMatrix.Data;
+@{
+    bool forAutocomplete = UrlData.Count > 0 && UrlData[0].ToLower() == "autocomplete";
+
+    string error = "";
+
+    try{
+        // Input data
+        var term = Request["s"] ?? Request["term"] ?? "";
+
+        // Process data
+        IEnumerable<dynamic> data = null;
+        using(var db = Database.Open("sqlloco")) {
+            var sql = @"
+                SELECT  InstitutionID, InstitutionName
+                FROM    Institution
+                WHERE   InstitutionName like '%' + @0 + '%'
+            ";
+            data = db.Query(sql, term);
+        }
+
+        // Output data:
+        // Result format is different to feed the Autocomplete jQueryUI feature:
+        if (forAutocomplete) {
+            LcHelpers.ReturnJson(
+                data.Select(p => new {
+                    label = p.InstitutionName,
+                }).TopElements(50)
+            );
+        } else {
+            LcHelpers.ReturnJsonResult(0, new {
+                Institutions = data
+            });
+        }
+
+        // ENDED, all ok
+        
+    } catch(Exception ex){
+        error = ex.Message;
+    }
+
+    // Output error
+    LcHelpers.ReturnJsonError(-1, error);
+}

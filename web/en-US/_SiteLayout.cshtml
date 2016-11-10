@@ -1,0 +1,77 @@
+﻿@using WebMatrix.Data;
+@using WebMatrix.WebData;
+@{
+    Response.ContentEncoding = System.Text.Encoding.UTF8;
+    var u = LcData.UserInfo.GetUserRow();
+    var abbrLangCode = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    // Updated assets version, to avoid problems with cache of css & js assets
+    LcAssets.AssetsVersion = "20141216";
+
+    // Sniff old IE browsers based on its engine (Trident) and version: so if it's Trident engine but is not the latest
+    // version 7.0, then is IE 10 or lower; Trident/7.0 is IE11, and it's fine. Compatibility mode uses a lower Trident version,
+    // same for other browsers based on the same engine, and IE-replacement Edge does not report Trident so will not exist greater
+    // versions than 7.0:
+    var isIE = Request.UserAgent != null ? Request.UserAgent.Contains("Trident/") && !Request.UserAgent.Contains("Trident/7.0") : false;
+    
+    /*// Main assets that allow minification
+    var styleCss = "Styles/common";
+    var loadScripts = new List<string>();
+    // Enabled only on dev
+    if (LcHelpers.InDev) {
+        loadScripts.Add("libs.js");
+        loadScripts.Add("app.js");
+        styleCss += ".css";
+    } else {
+        loadScripts.Add("common.min.js");
+        styleCss += ".min.css";
+    }*/
+
+    //var onBehalfOf = LcHelpers.OnBehalfOf();
+}
+<!doctype html>
+    <html class="no-js" lang="@abbrLangCode" data-culture="@culture" data-base-url="@LcUrl.AppPath" data-fb-appid="@Facebook.AppId">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Loconomics - @Page.Title</title>
+        <meta name="description" content="Find service providers to do the job right. At your service!"/>
+        <meta name="author" content="Loconomics Inc."/>
+        <meta name="viewport" content="width=device-width"/>
+        
+        <link rel="shortcut icon" href="@Href(LcUrl.AppPath + "favicon.ico")" type="image/x-icon" />
+
+        @* Our styles *@
+        @*LcAssets.PrintStyleTag(LcUrl.AppPath + styleCss)
+        @LcAssets.GetStylesTags()
+        @foreach (var js in loadScripts)
+        {
+            @LcAssets.PrintScriptTag(LcUrl.AppPath + "Scripts/" + js)
+        }*@
+        @* GetScriptsTags at the end of the document to delay load *@
+    </head>
+    <body data-facebook-appid="@Facebook.AppId" data-facebook-language="@Facebook.Language">
+        @if (LcHelpers.IsOldBrowser())
+        {
+            @LcHelpers.OldBrowserNotice()
+        }
+        else
+        {
+            @RenderBody()
+
+            <div class="scripts">           
+                @* Javascript linked from asp.net *@
+                @LcAssets.GetScriptsTags()
+                @if (PageData["InlineScript"] != null)
+                {
+                    <script type="text/javascript">@Html.Raw(PageData["InlineScript"])</script>
+                }
+            </div>
+            if (LcHelpers.InLive)
+            {
+                @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$GoogleAnalytics.cshtml")
+                @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$OlarkIntegration.cshtml")
+                @RenderPage(LcUrl.RenderLangPath + "HelpCenter/$ZendeskIntegration.cshtml")
+            }
+        }
+    </body>
+</html>

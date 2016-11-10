@@ -1,0 +1,65 @@
+/**
+  ItemBox mixin-component styles.
+  It is a visual style not component, for things like the items
+  in a list (a crudl-list, pricing packages, etc.).
+
+  It is originally based on 'w-ProviderPackage'
+**/
+@import "nib"
+@import "ColorsPalette"
+
+$whatColor = #61bdbe
+$anotherGray = #6c6c6c
+
+.ItemBox {
+    color: $colorGray;
+    background: none repeat scroll 0 0 white;
+    border: 3px solid $whatColor;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
+    position: relative;
+    text-align: left;
+    
+    p {
+        margin: 0;
+    }
+
+    .ItemBox-name {
+        margin: 0 0 8px;
+        font-size: 1.5em !important;
+        color: $colorTeal !important;
+        max-width: 500px;
+    }
+    
+    .ItemBox-sectionTitle {
+        display: block;
+        color: $anotherGray;
+        font-size: 1em;
+        margin: 5px 0px;
+    }
+    
+    .ItemBox-important {
+        color: $colorTeal;
+        font-size: 1.3em;
+    }
+    
+    .ItemBox-subitemsList {
+        overflow: hidden;
+
+        > li {
+            width: 200px;
+            text-overflow: ellipsis;
+            float: left;
+            list-style: none;
+            background: url('../img/theme/bullet.png') no-repeat left center;
+            padding-left: 14px;
+        }
+    }
+    
+    .ItemBox-actions {
+        position: absolute;
+        right: 15px !important;
+        top: 15px !important;
+    }
+}

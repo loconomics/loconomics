@@ -1,0 +1,80 @@
+﻿@using WebMatrix.WebData;
+@*
+    Fetch public service professional service addresses per job title.
+
+    TODO Force constraints for active address, active service professional profile when fetching this data,
+    right now the same service professional API is being used and is not completely secure for public access.
+
+    TODO Double check if an API to access a specific addressID is needed
+
+    TODO Privacy double check, discuss and ensure a subsset of public fields, fields available to related users (registered clients)
+    and owner only fields (that must not be available here since it has its own API).
+
+    Options:
+    
+    - GET /{jobTitleID}
+        List all active service addresses for that active job title
+
+    ALL @returns address {
+        addressID:int Auto
+        jobTitleID:int
+        userID:int
+        addressName:string Auto-per-case Editable-per-case
+        addressLine1:string Editable
+        addressLine2:string Editable
+        postalCode:string Editable Note:internally is stored as postalCodeID, performing a lookup, but transparent to the API
+        city:string Auto Note:is assigned and stored with an automatic internal lookup per postalCodeID
+        stateProvinceCode:string Computed Note:internally is stored as stateProvinceID, performing a lookup with the postalCodeID,
+                                    but this field shows the country official CODE that represents the entity (its a short string, usually 2 uppercase letters)
+        stateProvinceName:string Computed Note:internally is stored as stateProvinceID, performing a lookup with the postalCodeID,
+                                    but this field shows the country official NAME that represents the entity in the local language
+        countryCode:string Computed Note:internally is stored as countryID, based on API-call/user-country and is used along with Postal Code for lookups.
+                                    It shows the international code for the country (ISO 3 letters, uppercase).
+        latitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
+        longitude:float Editable Note:if not specified, can be calculated server-side using Geolocation where possible.
+        specialInstructions:string Editable
+        isServiceLocation:bool Editable Flag marking the address as a location where services are performed.
+        isServiceArea:bool Editable Flag marking the address as the reference point for an area where the service professional travels to perform services.
+        serviceRadius:decimal Editable Only required if isServiceArea has value 1:true. Sets the approximate distance of the service area (in miles for USA).
+        createdDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
+                                    [address] table (the first record to be created). 
+        updatedDate:datetime Auto Note: since internally there are two records internally with this field duplicated, the public value is get from the
+                                    one with the newest/greater value.
+        kind:string Computed Note: possible set of server-set values is: home, billing, service. It matches every API path, and all addresses returned
+                                from each path will have the same value for Kind matching that API path. Is just an informative field and cannot be 
+                                specified by the user.
+    }
+        
+    EXAMPLES {
+        "Public Service Addresses per job title": {
+            "url": "/api/v1/en-US/users/141/service-addresses/106",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestPublicServiceAddresses : RestWebPage
+    {
+        /// <summary>
+        /// Retrieve the full list of service professional service addresses by jobTitleID
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Get()
+        {
+            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+
+            // Item ID
+            if (UrlData.Count == 1 && UrlData[0].IsInt()) {
+                return LcRest.Address.GetServiceAddresses(userID, UrlData[0].AsInt(0));
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");
+            }
+
+            throw new HttpException(404, "Not Found");
+        }
+    }
+}
+@{
+    new RestPublicServiceAddresses().JsonResponse(this);
+}

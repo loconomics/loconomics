@@ -1,0 +1,163 @@
+﻿/*= w-ProviderPackage */
+.w-ProviderPackage {
+    color: #333333;
+
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61bdbe;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
+    position: relative;
+    text-align: left;
+}
+.w-ProviderPackage-name {
+    margin: 0 !important;
+    font-size: 1.5em !important;
+    color: #00989A !important;
+    max-width: 500px;
+}
+.w-ProviderPackage-sectionTitle {
+    display: block !important;
+    color: rgb(59, 59, 59);
+    font-size: 1em;
+    margin: 5px 0px;
+}
+.w-ProviderPackage-serviceSummary {
+    color: #00989A;
+    font-size: 1.3em;
+}
+.w-ProviderPackage-serviceAttributes {
+    overflow: hidden;
+}
+.w-ProviderPackage-serviceAttributes > li {
+    width: 200px !important;
+    text-overflow: ellipsis;
+    float: left;
+    list-style: none !important;
+    background: url('../img/theme/bullet.png') no-repeat left center;
+    padding-left: 14px;
+}
+
+/*= w-ProviderPackage inside w-BookingDetails */
+.w-BookingDetails .w-ProviderPackage {
+    border-radius: 0;
+    border: 1px solid #333333;
+    background: #F4F4F4;
+}
+.w-BookingDetails .w-ProviderPackage-name {
+    color: #6c6c6c !important;
+}
+.w-BookingDetails .w-ProviderPackage-serviceSummary {
+    color: #6c6c6c !important;
+}
+
+/*** OLD THINGS FROM pricing.css FOR .provider-package ***/
+.provider-package {
+    background: none repeat scroll 0 0 white;
+    border: 3px solid #61bdbe;
+    border-radius: 15px 15px 15px 15px;
+    padding: 15px;
+    margin: 0 0 10px 0;
+    position: relative;
+    text-align: left;
+}
+.blockUI .provider-package {
+    margin: 0;
+}
+.profile .pricing h3 {
+    margin: 10px 0;
+}
+.provider-package {
+    color: #747474;
+}
+.provider-package h4 {
+    margin: 0 !important;
+    font-size: 1.5em !important;
+    color: #00989A !important;
+    max-width: 500px;
+}
+.provider-package h5 {
+    color: #6C6C6C;
+    font-size: 1.1em;
+    margin: 8px 0 0;
+    display: block !important;
+}
+.provider-package.view h5 {
+    color: rgb(59, 59, 59);
+    font-size: 1em;
+    margin: 5px 0px;
+}
+.provider-package.view a.button.book-action {
+    font-size: 0.6em;
+}
+.provider-package.view .actions.book,
+.profile .actions.book {
+    margin: 0px auto 10px;
+    text-align: center !important;
+}
+.profile .book-action.main-action,
+.provider-package.view .book-action.main-action {
+    padding: .3em .5em;
+    font-weight: bold;
+}
+.view-panel .provider-package-services li.empty,
+.pricing-type-packages-list .service-attributes-list li.empty {
+    font-style: italic;
+    list-style: none outside none !important;
+    margin: 0 0 0 10px;
+    width: auto !important;
+}
+.view-panel .provider-package-services,
+.pricing-type-packages-list .service-attributes-list {
+    overflow: hidden;
+}
+.view-panel .provider-package-services li,
+.pricing-type-packages-list .service-attributes-list li {
+    width: 200px !important;
+    text-overflow: ellipsis;
+    float: left;
+}
+.view-panel .provider-package {
+    position: relative;
+}
+.view-panel .provider-package .provider-package-service-summary,
+.pricing-type-packages-list .provider-package .provider-package-service-summary {
+    color: #00989A;
+    font-size: 1.3em;
+}
+.profile .view-panel .provider-package .provider-package-service-summary {
+    position: static;
+}
+.view-panel .provider-package .provider-package-service-summary .provider-package-price,
+.crudl-viewer .provider-package .provider-package-service-summary .provider-package-price,
+.pricing-type-packages-list .provider-package .provider-package-service-summary .provider-package-price {
+    float: right;
+}
+.provider-package.view .provider-package-service-summary .provider-package-price {
+    right: 10px;
+    top: 10px;
+    position: absolute;
+}
+.booking-quick-view .provider-package.view .provider-package-price a {
+    color: Black;
+    text-decoration: none;
+    font-size: .8em;
+    font-weight: bold;
+}
+
+.view-panel .provider-package .addon-price,
+.view-panel .provider-package .addon-price-note {
+    color: Black;
+    font-size: 0.65em;
+    font-weight: bold;
+    line-height: 1em;
+    text-align: right;
+}
+.view-panel .provider-package .book {
+    font-size: 1.2em;
+}
+.dashboard-provider-pricing h2.section-title {
+    font-size: 1em;
+    border-bottom: 1px solid #B0B0B0;
+    padding: 0 .5em .2em .5em;
+}

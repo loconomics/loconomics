@@ -1,0 +1,31 @@
+﻿@*
+    Retrieving the Availability Types for calendar events.
+
+    Options:
+
+    - GET
+
+    - @Result {
+        "AvailabilityTypeID":int,
+        "DisplayName":string
+    }
+
+    EXAMPLES {
+        "Availability types": {
+            "url": "/api/v1/en-US/availability-types",
+            "get": {}
+        }
+    }
+*@
+@functions{
+    public class RestAvailabilityTypes : RestWebPage
+    {
+        public override dynamic Get()
+        {
+ 	         return LcCalendar.GetAvailabiliyTypes();
+        }
+    }
+}
+@{   
+    new RestAvailabilityTypes().JsonResponse(this);
+}

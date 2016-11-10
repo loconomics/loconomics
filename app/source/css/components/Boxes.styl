@@ -1,0 +1,74 @@
+/**
+    Boxes, Box, PaddedBox styles: is a layout style with gray background
+    for the container Boxes and lighter for every Box so they
+    visually pop-up in the design.
+
+    Works in sizes following Bootstrap conventions and breakpoints,
+    and each class can be used individually, without enforce hierarchy.
+**/
+
+Boxes() {
+    background: $gray-background;
+}
+
+Box() {
+    background: White;
+    // Make any internal margin to become a padding.
+    overflow: hidden;
+
+    outline: 1px solid $gray-lighter;
+    position: relative;
+    z-index: 1;
+}
+
+PaddedBox() {
+    padding: $grid-gap;
+}
+
+.Boxes-xs {
+    Boxes()
+}
+.Box-xs {
+    Box()
+}
+.PaddedBox-xs {
+    PaddedBox()
+}
+
+createBoxesSize($media, $name, $mediaMax) {
+    @media $media {
+        .Boxes-{$name} {
+            Boxes()
+        }
+        .Box-{$name} {
+            Box()
+        }
+        .PaddedBox-{$name} {
+            PaddedBox()
+        }
+    }
+}
+
+createBoxesOnlySize($media, $name, $mediaMax) {
+    $mediaOnly = $media + ' and ' + $mediaMax
+    
+    @media $mediaOnly {
+        .Boxes-{$name}-only {
+            Boxes()
+        }
+        .Box-{$name}-only {
+            Box()
+        }
+        .PaddedBox-{$name}-only {
+            PaddedBox()
+        }
+    }
+}
+
+createBoxesSize($mediaMinSm, 'sm', $mediaMaxSm);
+createBoxesSize($mediaMinMd, 'md', $mediaMaxMd);
+createBoxesSize($mediaMinLg, 'lg', $mediaMaxLg);
+createBoxesOnlySize('screen',    'xs', $mediaMaxXs); // or any smaller rather than $mediaMinXs
+createBoxesOnlySize($mediaMinSm, 'sm', $mediaMaxSm);
+createBoxesOnlySize($mediaMinMd, 'md', $mediaMaxMd);
+createBoxesOnlySize($mediaMinLg, 'lg', 'screen'); // or any larger rather than $mediaMaxLg);

@@ -1,0 +1,114 @@
+﻿@*
+    Test the new LC.load javascript function to load scripts asynchronously with some extra verifications of load/execution and
+    configurable delays. Internally, it uses Modernizr/yepnopejs loader.
+
+    ZeroTest is a simple load without the extra options
+    FirstTest is load with verification, ressource take a bit delay
+    SecondTest is a load with verification that failed 5 times before success, with a more weight load and initial delay
+    ThirdTest is a double load that happens at same time to try that there are no conflicts in how data from one call to another, with different delays
+*@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+}
+<div id="testLcLoader"></div>
+<script type="text/javascript">
+    !function (window, document, undefined) {
+        var d = $('#testLcLoader');
+
+        // ZeroTest
+        LC.load({
+            scripts: [LcUrl.LangPath + 'Tests/DelayedTest/?ms=0&type=js'],
+            complete: function () {
+                // on complete:
+                console.log('Zero Test delayed ms: ' + window.DelayedTest);
+                d.append('Zero Test delayed ms: ' + window.DelayedTest + ' ' + Date() + '<br/>');
+            }
+        });
+
+        // FirstTest
+        LC.load({
+            scripts: [LcUrl.LangPath + 'Tests/DelayedTest/?ms=400&type=js'],
+            complete: function () {
+                // on complete:
+                console.log('First Test delayed ms: ' + window.DelayedTest);
+                d.append('First Test delayed ms: ' + window.DelayedTest + ' ' + Date() + '<br/>');
+            },
+            completeVerification: function () {
+                // verify complete
+                return window['DelayedTest'] !== undefined;
+            }
+        });
+
+        // SecondTest
+        var attempts = 0;
+        LC.load({
+            scripts: [LcUrl.LangPath + 'Tests/DelayedTest/?ms=2000&type=js'],
+            complete: function () {
+                // on complete:
+                console.log('Second Test delayed ms: ' + window.DelayedTest);
+                d.append('Second Test delayed ms: ' + window.DelayedTest + ' ' + Date() + '<br/>');
+            },
+            completeVerification: function () {
+                // Hack, force failed verification
+                if (attempts < 5) {
+                    console.log('Second Test failed verification');
+                    d.append('Second Test failed verification ' + Date() + '<br/>');
+                    attempts++;
+                    return false;
+                }
+                // verify complete
+                return window['DelayedTest'] !== undefined;
+            },
+            loadDelay: 2000,
+            trialsInterval: 1000
+        });
+
+        // ThirdTest
+        var attempts3 = 0;
+        LC.load({
+            scripts: [LcUrl.LangPath + 'Tests/DelayedTest/?ms=1000&type=js'],
+            complete: function () {
+                // on complete:
+                console.log('ThirdTest A delayed ms: ' + window.DelayedTest);
+                d.append('ThirdTest A delayed ms: ' + window.DelayedTest + ' ' + Date() + '<br/>');
+            },
+            completeVerification: function () {
+                // Hack, force failed verification
+                if (attempts3 < 5) {
+                    console.log('ThirdTest A failed verification');
+                    d.append('ThirdTest A failed verification ' + Date() + '<br/>');
+                    attempts3++;
+                    return false;
+                }
+                // verify complete
+                return window['DelayedTest'] !== undefined;
+            },
+            loadDelay: 10000,
+            trialsInterval: 1000
+        });
+        LC.load({
+            scripts: [LcUrl.LangPath + 'Tests/DelayedTest/?ms=2000&type=js'],
+            complete: function () {
+                // on complete:
+                console.log('ThirdTest B delayed ms: ' + window.DelayedTest);
+                d.append('ThirdTest B delayed ms: ' + window.DelayedTest + ' ' + Date() + '<br/>');
+
+                d.append('ENDED');
+            },
+            completeVerification: function () {
+                // Hack, force failed verification
+                if (attempts3 < 5) {
+                    console.log('ThirdTest B failed verification');
+                    d.append('ThirdTest B failed verification ' + Date() + '<br/>');
+                    attempts3++;
+                    return false;
+                }
+                // verify complete
+                return window['DelayedTest'] !== undefined;
+            },
+            loadDelay: 13000,
+            trialsInterval: 4000
+        });
+    } (window, document);
+</script>

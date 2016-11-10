@@ -1,0 +1,11 @@
+﻿@* It just performs a task that raise an exception to see how the site manage the situation.
+   Information in the log file must be added and the custom error page must be showed.
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    //throw new Exception("An Error");
+    int a = 0, b = 2;
+    var c = b / a;
+}

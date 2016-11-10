@@ -1,0 +1,28 @@
+INSERT INTO [PricingVariableValue]
+   ([PricingVariableID]
+   ,[ProviderPackageID]
+   ,[UserID]
+   ,[PricingEstimateID]
+   ,[PricingEstimateRevision]
+   ,[Value]
+   ,[ProviderNumberIncluded]
+   ,[ProviderMinNumberAllowed]
+   ,[ProviderMaxNumberAllowed]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active])
+VALUES
+   (@PricingVariableID
+   ,@ProviderPackageID
+   ,@UserID
+   ,@PricingEstimateID
+   ,@PricingEstimateRevision
+   ,@Value
+   ,@ProviderNumberIncluded
+   ,@ProviderMinNumberAllowed
+   ,@ProviderMaxNumberAllowed
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active)

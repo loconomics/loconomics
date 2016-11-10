@@ -1,0 +1,13 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    var a = Request["a"];
+    if (a == null) {
+        return;
+    }
+}
+
+<div>
+    Hello World! @a
+</div>

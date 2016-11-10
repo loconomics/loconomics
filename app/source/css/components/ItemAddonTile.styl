@@ -1,0 +1,99 @@
+/**
+    ItemTile: a two lines tile with a marker, text and an icon.
+**/
+@import 'Tile.styl'
+@import 'ItemTile.styl'
+
+ItemAddonTile-addAddon($internalHeight, $vgap) {
+
+    $addonWidth = 54px;
+
+    // Left space for the marker and small gap:
+    padding-right: ($addonWidth + 8px + $Tile-hgap);
+    
+    .Tile-addon {
+        text-align: right;
+        
+        position: absolute;
+        right: $Tile-hgap;
+        top: $vgap;
+        bottom: $vgap;
+        width: $addonWidth;
+        overflow: hidden;
+        height: $internalHeight;
+        
+        > div,
+        > em {
+            Tile-singleLine();
+        }
+        // Paragraphs and icons
+        > p,
+        > .icon,
+        > i,
+        > .glyphicon,
+        > .fa {
+            width: $addonWidth;
+            display: table-cell;
+            height: $internalHeight;
+            vertical-align: middle;
+            word-break: break-all;
+        }
+    }
+}
+
+.ItemAddonTile {
+
+    Tile()
+    
+    // 2 lines:
+    $internalHeight = line-height-computed * 2;
+    $vgap = 18px;
+    $heightLimit = $internalHeight + ($vgap * 2);
+    $markerWidth = 70px;
+    $markerGap = 11px;
+    
+    Tile-addTagContentSupport($vgap)
+
+    padding: $vgap $Tile-hgap;
+
+    // Style
+    height: $heightLimit;
+    overflow: hidden;
+
+    ItemTile-addMarker($internalHeight);
+    ItemAddonTile-addAddon($internalHeight, $vgap);
+
+    $internalHeight = line-height-computed * 2;
+
+    .Tile-content {
+        white-space: normal;
+        word-wrap: break-word;
+        margin: 0;
+        height: $internalHeight;
+        overflow: hidden;
+
+        Tile-addP(line-height-computed * 2)
+        Tile-addDiv()
+        Tile-addEm()
+    }
+    
+    // A three lines tile, with p content using 2 lines
+    &.ItemAddonTile--largerContent {
+        $height3lines = line-height-computed * 3;
+        $halfLine = floor(line-height-computed / 2);
+        
+        height: $height3lines + ($vgap * 2);
+        
+        .Tile-content,
+        .Tile-marker,
+        .Tile-addon {
+            height: $height3lines;
+        }
+        
+        .Tile-marker,
+        .Tile-addon {
+            padding-top: $halfLine;
+            padding-bottom: $halfLine;
+        }
+    }
+}

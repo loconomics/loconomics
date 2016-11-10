@@ -1,0 +1,49 @@
+﻿@* It serves as a dev&test page for the integration of the 
+    Braintree Marketplace API (#408).
+ *@
+@using WebMatrix.Data;
+@using Braintree;
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    bool? merchantCreated = null;
+    
+    if (IsPost) {
+        if (Request.Form.AllKeys.Contains<string>("create_submerchant_form")) {
+            // Create SubMerchant (provider account at Braintree Marketplace)
+            var providerID = Request["providerID"].AsInt();
+            
+            var result = LcPayment.CreateProviderPaymentAccount(providerID);
+            
+            if (result != null && result.IsSuccess()) {
+                merchantCreated = true;
+            } else {
+                merchantCreated = false;
+                ModelState.AddFormError(result.Message);
+                foreach(var err in result.Errors.All()){
+                    ModelState.AddFormError(err.Message);
+                }
+            }
+        }
+    }
+}
+
+<div class="btmarket">
+
+    <form method="post">
+        <fieldset>
+            <legend>Create SubMerchant: provider account at Braintree Marketplace</legend>
+            <label>Provider UserID: <input type="text" name="providerID" value="@Request["providerID"]" /></label>
+            <div class="actions">
+                <input type="submit" class="main-action action" value="Create" name="create_submerchant_form" />
+            </div>
+            @Html.ValidationSummary()
+            @if (merchantCreated.HasValue)
+            {
+                <div class="message info">@(merchantCreated.Value ? "Created successfully" : "Error on creating account")</div>
+            }
+        </fieldset>
+    </form>
+
+</div>

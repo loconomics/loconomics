@@ -1,0 +1,47 @@
+<!-- FeedbackForm activity -->
+<div data-activity="feedbackForm" class="Boxes-sm animated">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="/">Get started</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">  
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                    </li>
+                </ul>
+            </div>
+            <h1 class="hidden-xs hidden-sm">Send us feedback or ideas</h1>
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                    <span>We'd love to hear from you</span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>
+                <form class="container-fluid LightForm">
+                    <textarea class="isolated form-control" data-bind="textInput: message, disable: isSending"></textarea>
+                    <div class="checkbox" data-bind="visible: !isCollaborator() && !anonymousButtonUrl()">
+                        <label>
+                        <input type="checkbox" data-bind="checked: becomeCollaborator, disable: isSending" />
+                        I'd like to become a collaborator and help develop new tools 
+                        and features! We'll follow up with details.
+                        </label>
+                    </div>
+                    <div class="LightForm-submitBar">
+                        <button class="btn btn-primary btn-block" data-bind="click: send, text: submitText, disable: isSending() || !isValid(), visible: !anonymousButtonUrl()">Send</button>
+                        <a data-bind="attr: { href: anonymousButtonUrl }, visible: anonymousButtonUrl"
+                            class="btn btn-primary btn-block" >Send</a>
+                    </div>
+                </form>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'helpPages', helpLink: helpLink"></app-inline-side-menu>
+            </div>
+        </div>
+    </div> 
+</div> 

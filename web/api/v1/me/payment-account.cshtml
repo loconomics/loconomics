@@ -1,0 +1,112 @@
+﻿@*
+    Reading and updating the logged user Payment Account.
+
+    Options:
+
+    - GET: no params
+
+    - PUT:
+        firstName:string
+        lastName:string
+        routingNumber:string
+        accountNumber:string
+        ssn:string
+        phone:string
+        postalCode:string
+        streetAddress:string
+        birthDate:string
+        agree:bool Must be true to accept the changes
+
+    - @Result LcRest.PaymentAccount
+
+    EXAMPLES {
+        "Payment Account (get and update)": {
+            "url": "/api/v1/en-US/me/payment-account",
+            "get": { },
+            "put": {
+                "firstName": "John",
+                "lastName": "Smith",
+                "routingNumber": "1234",
+                "accountNumber": "54321",
+                "ssn": "342323423",
+                "phone": "013242345",
+                "postalCode": "90001",
+                "streetAddress": "There 2th",
+                "birthDate": "1985-04-20T00:00Z",
+                "agree": true
+            }
+        }
+    }
+*@
+@functions{
+    public class RestPaymentAccount : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcRest.PaymentAccount.Get(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            var userId = WebSecurity.CurrentUserId;
+
+            // Validation
+            Validation.RequireField("firstName", LcRessources.RequiredField("First name"));
+            Validation.RequireField("lastName", LcRessources.RequiredField("Last name"));
+            Validation.RequireField("streetAddress", LcRessources.RequiredField("Street address"));
+            Validation.RequireField("postalCode", LcRessources.RequiredField("Postal Code"));
+
+            var birthDate = Request["birthDate"].IsDateTime() ? (DateTime?)Request["birthdate"].AsDateTime() : null;
+            if (!birthDate.HasValue)
+            {
+                ModelState.AddError("birhtDate", LcRessources.RequiredField("Date of Birth"));
+            }
+
+            if (!Request["agree"].AsBool())
+            {
+                ModelState.AddError("agree", "You must agree the terms of service");
+            }
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            // Parameters
+            var data = new LcRest.PaymentAccount {
+                userID = userId,
+                firstName = Request["firstName"],
+                lastName = Request["lastName"],
+                routingNumber = Request["routingNumber"],
+                accountNumber = Request["accountNumber"],
+                birthDate = birthDate,
+                phone = Request["phone"],
+                postalCode = Request["postalCode"],
+                countryCode = LcRest.Locale.Current.countryCode,
+                ssn = Request["ssn"],
+                streetAddress = Request["streetAddress"]
+            };
+
+            LcRest.PaymentAccount.Set(data);
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestPaymentAccount().JsonResponse(this);
+}

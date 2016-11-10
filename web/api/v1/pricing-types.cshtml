@@ -1,0 +1,146 @@
+﻿@*
+    Retrieving Pricing Types information
+
+    TODO Complete docs
+
+    Options:
+
+    - GET
+    
+    - GET /@id
+
+    - @Result {
+        **
+    }
+
+    EXAMPLE {
+        "Service Types": {
+            "url": "/api/v1/en-US/pricing-types",
+            "get": { }
+        },
+        "Service Types (item)": {
+            "url": "/api/v1/en-US/pricing-types/3",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestPricingTypes : RestWebPage
+    {
+        private dynamic ConvertPricingType(LcPricingModel.PackageBaseConfig pricing) {
+            return new {
+                pricingTypeID = pricing.PricingTypeID,
+                singularName = pricing.SingularName,
+                pluralName = pricing.PluralName,
+                slugName = pricing.SlugName,
+                addNewLabel = pricing.AddNewLabel,
+                serviceProfessionalDescription = pricing.ProviderDescription,
+                // PriceCalculationType enumeration value:
+                priceCalculation = pricing.PriceCalculation,
+                isAddon = pricing.IsAddon,
+        
+                // Form Texts
+                namePlaceHolder = pricing.NamePlaceHolder,
+                suggestedName = pricing.SuggestedName,
+                fixedName = pricing.FixedName,
+                durationLabel = pricing.DurationLabel,
+                priceLabel = pricing.PriceLabel,
+                priceNote = pricing.PriceNote,
+                firstTimeClientsOnlyLabel = pricing.FirstTimeClientsOnlyLabel,
+                descriptionPlaceHolder = pricing.DescriptionPlaceHolder,
+                priceRateQuantityLabel = pricing.PriceRateQuantityLabel,
+                priceRateUnitLabel = pricing.PriceRateUnitLabel,
+                noPriceRateLabel = pricing.NoPriceRateLabel,
+                numberOfSessionsLabel = pricing.NumberOfSessionsLabel,
+                inPersonPhoneLabel = pricing.InPersonPhoneLabel,
+
+                // Action And Validation Texts
+                successOnDelete = pricing.SuccessOnDelete,
+                errorOnDelete = pricing.ErrorOnDelete,
+                successOnSave = pricing.SuccessOnSave,
+                errorOnSave = pricing.ErrorOnSave,
+                priceRateIsRequiredValidationError = pricing.PriceRateIsRequiredValidationError,
+                priceRateUnitIsRequiredValidationError = pricing.PriceRateUnitIsRequiredValidationError,
+
+                // Help Texts
+                learnMoreLabel = pricing.LearnMoreLabel,
+                learnMoreText = pricing.LearnMoreText,
+                priceRateLearnMoreLabel = pricing.PriceRateLearnMoreLabel,
+                priceRateLearnMoreText = pricing.PriceRateLearnMoreText,
+                noPriceRateLearnMoreLabel = pricing.NoPriceRateLearnMoreLabel,
+                noPriceRateLearnMoreText = pricing.NoPriceRateLearnMoreText,
+
+                // Additional configuration
+                requireDuration = pricing.RequireDuration,
+                includeServiceAttributes = pricing.IncludeServiceAttributes,
+                includeSpecialPromotion = pricing.IncludeSpecialPromotion,
+
+                // List Texts
+                /// SummaryFormat is the default format for summaries (required),
+                /// other formats are good for better detail, but depends
+                /// on other options configured per type.
+                /// Wildcards:
+                /// {0}: duration
+                /// {1}: sessions
+                /// {2}: inperson/phone
+                summaryFormat = pricing.SummaryFormat,
+                summaryFormatMultipleSessions = pricing.SummaryFormatMultipleSessions,
+                summaryFormatNoDuration = pricing.SummaryFormatNoDuration,
+                summaryFormatMultipleSessionsNoDuration = pricing.SummaryFormatMultipleSessionsNoDuration,
+                withoutServiceAttributesClientMessage = pricing.WithoutServiceAttributesCustomerMessage,
+                withoutServiceAttributesServiceProfessionalMessage = pricing.WithoutServiceAttributesProviderMessage,
+                firstTimeClientsOnlyListText = pricing.FirstTimeClientsOnlyListText,
+                priceRateQuantityListLabel = pricing.PriceRateQuantityListLabel,
+                priceRateUnitListLabel = pricing.PriceRateUnitListLabel,
+                noPriceRateListMessage = pricing.NoPriceRateListMessage,
+
+                // Booking/PricingEstimate Texts
+                /// NameAndSummaryFormat is the default format for summaries with package name (required),
+                /// other formats are good for better detail, but depends
+                /// on other options configured per type.
+                /// Wildcards:
+                /// {0}: package name
+                /// {1}: duration
+                /// {2}: sessions
+                /// {3}: inperson/phone
+                nameAndSummaryFormat = pricing.NameAndSummaryFormat,
+                nameAndSummaryFormatMultipleSessions = pricing.NameAndSummaryFormatMultipleSessions,
+                nameAndSummaryFormatNoDuration = pricing.NameAndSummaryFormatNoDuration,
+                nameAndSummaryFormatMultipleSessionsNoDuration = pricing.NameAndSummaryFormatMultipleSessionsNoDuration,
+
+                // Record maintenance
+                // NOTE: this is to keep compatibility with database records if at some point goes to DB.
+                // UpdatedDate must be updated on changes. Here is for all but almost something.
+                createdDate = new DateTime(2015, 2, 26, 16, 25, 00),
+                updatedDate = new DateTime(2015, 2, 26, 16, 25, 00)
+            };
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData[0].IsInt())
+            {
+                var id = UrlData[0].AsInt(0);
+                
+                if (LcPricingModel.PackageBasePricingTypeConfigs.ContainsKey(id)) {
+                
+                    return ConvertPricingType(LcPricingModel.PackageBasePricingTypeConfigs[id]);
+                }
+                else {
+                    throw new HttpException(404, "Pricing Type not found.");
+                }
+            }
+            else if (UrlData.Count == 1) {
+                throw new HttpException(400, "Invalid format for the Pricing Type ID");
+            }
+            else
+            {
+                // Full list
+                return LcPricingModel.PackageBasePricingTypeConfigs.Values.Select(ConvertPricingType);
+            }
+        }
+    }
+}
+@{   
+    new RestPricingTypes().JsonResponse(this);
+}

@@ -1,0 +1,79 @@
+/**
+  ActionBox mixin-component styles.
+  It is a visual style not component for that actions that
+  seems more like an 'expanded link' with a short description,
+  title and add icon.
+
+  It is originally based on 'pricing-type-box'
+**/
+@import "nib"
+@import "ColorsPalette"
+
+/* General Mixim for use inside ActionBox and outside, common add-item icon applied to links */
+AddItemIconLink() {
+    background: url('../img/theme/add-new-button.png') no-repeat right center;
+    /* Image size is 28x28px */
+    line-height: 28px;
+    /* Width with 6px of left-margin */
+    padding-right: 28px + 6px;
+    display: block;
+    color: Black;
+    text-decoration: none;
+}
+
+.ActionBox {
+    border: 1px solid $colorGray;
+    padding: 20px 18px 28px 26px;
+    display: inline-block;
+    vertical-align: top;
+    width: 314px;
+    margin-right: 25px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+   
+    > a {
+        AddItemIconLink()
+
+        color: Black;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin: 0;
+        text-align: left;
+    }
+    
+    > p {
+        margin: 0;
+        /* Left the right space empty under the icon */
+        padding-right: 28px + 6px;
+        color: Black;
+        text-align: justify;
+    }
+
+    /** Themes **/
+    &.ActionBox--rounded {
+        border-color: Black;
+        border-radius: 12px;
+        padding: 8px 14px;        
+    }
+}
+
+/* Optional container for a list of actiosn
+   They are placed in two columns without margin on both sides
+*/
+.ActionsBoxList {
+    clearfix()
+    
+    .ActionBox {
+        &:nth-child(odd) {
+            float: left;
+            clear: left;
+            margin-right: 0;
+        }
+
+        &:nth-child(even) {
+            float: right;
+            clear: right;
+            margin-right: 0;
+        }
+    }
+}

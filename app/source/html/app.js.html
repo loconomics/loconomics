@@ -1,0 +1,44 @@
+@*context: {debug:bool, includedFiles:[], cordovajs:bool, siteUrl:string} *@
+<!DOCTYPE html>
+<html lang="en" class="App" data-app-version="@(appVersion)" data-site-url="@(siteUrl)" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US" data-app-id="@(appId)" data-app-name="@(appName)">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Loconomics.com App">
+        <meta name="author" content="Loconomics Coop.">
+        <link rel="icon" href="assets/images/favicon.ico" />
+        <meta
+          name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+        <meta name="format-detection" content="telephone=no" />
+
+        <title>Loconomics App</title>
+
+        @if(cordovajs) {
+        <script type="text/javascript" src="cordova.js"></script>
+        }
+
+        @if(debug) {
+        <link href="assets/css/libs.css?nocache=1" rel="stylesheet">
+        <link href="assets/css/app.css?nocache=1" rel="stylesheet">
+        <script src="assets/js/styleguidelibs.js?nocache=1"></script>
+        <script src="assets/js/libs.js?nocache=1"></script>
+        <script src="assets/js/app.js?nocache=1"></script>
+        } else {
+        <link href="assets/css/libs.min.css" rel="stylesheet">
+        <link href="assets/css/app.min.css" rel="stylesheet">
+        <script src="assets/js/styleguidelibs.min.js"></script>
+        <script src="assets/js/libs.min.js"></script>
+        <script src="assets/js/app.min.js"></script>
+        }
+    </head>
+    <body>
+        <div class="SplashScreen">Loading...</div>
+        @render('parts/AppNav.html')
+        <div class="App-activities">
+            @for(var f=0; f < includedFiles.length; f++) {
+                @render(includedFiles[f])
+            }
+        </div>
+</body>
+</html>

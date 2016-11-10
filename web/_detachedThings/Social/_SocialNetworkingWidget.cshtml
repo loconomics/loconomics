@@ -1,0 +1,90 @@
+﻿@{
+    string url = (string)PageData["URL"];
+    url = LcUrl.SiteUrl + (url ?? Request.Url.PathAndQuery);
+    string title = (string)PageData["Title"];
+    string view = (string)PageData["View"] ?? "custom-icons"; // Possible values: custom-icons, network-widgets
+    string size = PageData["Size"] ?? "32x32"; // Possible values: 32x32 (only one for now)
+    
+    string photourl = null;
+    if (Context.GetRouteValue("user").IsInt()) {
+        photourl = LcUrl.LangUrl + "Profile/Photo/" + Context.GetRouteValue("user").AsInt();
+    } else {
+        photourl = url.Replace("?UserID=", "Photo/");
+    }
+    var iaux = photourl.IndexOf('#');
+    if (iaux > -1) {
+        photourl = photourl.Substring(0, iaux);
+    }
+    iaux = photourl.IndexOf('&');
+    if (iaux > -1) {
+        photourl = photourl.Substring(0, iaux);
+    }
+    photourl += "/";
+}
+    @* network-widgets: widgets provided by the social network, 'originals', with its own scripts and images *@
+    @if (view == "network-widgets")
+    {
+    <script type="text/javascript">
+        if (!socialScriptsLoaded) var socialScriptsLoaded = false;
+        if (!socialScriptsLoaded) {
+            socialScriptsLoaded = true;
+            LC.load({
+                scripts: [
+                    'https://connect.facebook.net/en_US/all.js#xfbml=1',
+                    'https://apis.google.com/js/plusone.js',
+                    'https://platform.linkedin.com/in.js',
+                    'https://platform.twitter.com/widgets.js'
+                ]
+            });
+        } else {
+            if (typeof (FB) != 'undefined' && FB.init) {
+                FB._initialized = false;
+                FB.init({ status: true, cookie: true, xfbml: true });
+            }
+            if (typeof (IN) != 'undefined' && IN.parse)
+                IN.parse();
+            if (typeof(twttr) != 'undefined')
+                twttr.widgets.load();
+            if (typeof (gapi) != 'undefined') {
+                $(".g-plusone").each(function () {
+                    gapi.plusone.render($(this).get(0));
+                });
+            }
+        }
+    </script>
+    <ul class="social-networking network-widgets">
+        <li class="facebook">
+            @*<fb:like href="@(url)" send="true" layout="button_count" width="100" show_faces="true" font=""></fb:like>*@
+            <div class="fb-like" data-href="@url" data-send="true" data-layout="button_count" data-width="50" data-show-faces="true"></div>
+        </li><!-- facebook -->
+        <li class="linkedin">
+            <script type="IN/Share" data-url="@(url)" data-counter="right"></script>
+        </li><!-- linkedin -->
+        <li class="googleplus">
+            @*<script type="text/javascript" src="https://apis.google.com/js/plusone.js">
+                { lang: 'en' }
+            </script>
+            <g:plusone size="medium" href="@(url)"></g:plusone>*@
+            <div class="g-plusone" data-annotation="inline" data-href="@url" data-size="medium" data-width="80"></div>
+        </li><!-- google -->
+        <li class="twitter">
+            @*
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="@url" data-text="@title">Twittear</a>
+            <script>    !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } } (document, "script", "twitter-wjs");</script>
+            *@
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="@url" data-text="@title" data-count="horizontal"></a>
+            @*<iframe scrolling="no" frameborder="0" allowtransparency="true" src="//platform.twitter.com/widgets/tweet_button.html?url=@(url)&test=@(title)" class="twitter-share-button twitter-count-horizontal" style="width: 110px; height: 20px;" title="Twitter For Websites: Tweet Button"></iframe>*@
+        </li><!-- twitter -->
+    </ul>
+    }
+    @* custom-icons: our own icons with link to share in the different supported social networks. This reduce overload not using external scripts, images; it's the simplest way. *@
+    else if (view == "custom-icons")
+    {
+        <ul class="social-networking custom-icons size-@size">
+            <li class="facebook"><a target="_blank" href="http://www.facebook.com/share.php?u=@Uri.EscapeUriString(url)&t=@Uri.EscapeDataString(title)" title="Share on Facebook">Share on Facebook</a></li>
+            <li class="linkedin"><a target="_blank" href="http://www.linkedin.com/shareArticle?mini=true&url=@Uri.EscapeUriString(url)&title=@Uri.EscapeDataString(title)&source=Loconomics&summary=@Uri.EscapeDataString(title)" title="Share on LinkedIN">Share on LinkedIN</a></li>
+            <li class="googleplus"><a target="_blank" href="https://plus.google.com/share?url=@Uri.EscapeUriString(url)" title="Share on Google+">Share on Google+</a></li>
+            <li class="twitter"><a target="_blank" href="http://twitter.com/intent/tweet?text=@Uri.EscapeDataString(title)-@Uri.EscapeUriString(url)" title="Share on Twitter+">Share on Twitter</a></li>
+            <li class="pinterest"><a target="_blank" href="http://pinterest.com/pin/create/button/?url=@Uri.EscapeUriString(url)&media=@Uri.EscapeUriString(photourl)&description=@Uri.EscapeDataString(title)">Share on Pinterest</a></li>
+        </ul>
+    }

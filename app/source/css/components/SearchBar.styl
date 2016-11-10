@@ -1,0 +1,31 @@
+/**
+    SearchBar component.
+    A simple inline form with the search box to use at navbars
+**/
+SearchBar($height)
+    border none
+    padding 0
+
+    .input-group
+        border none
+
+        .input-group-addon
+            background transparent
+            border none
+            padding-right 0
+
+        .form-control
+            box-shadow none
+            border none
+            background White
+            vertical-align top
+            height $height
+            line-height $height
+            font-size 16px
+            //width 90%
+
+            +input-placeholder()
+                color #999
+
+.SearchBar
+    SearchBar(1em)

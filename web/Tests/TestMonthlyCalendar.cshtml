@@ -1,0 +1,94 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    LcAssets.AddStyle(LcUrl.AppPath + "Styles/dashboard.css");
+    //LcAssets.AddScript(LcUrl.AppPath + "Scripts/dashboard.js");
+    
+    // NOTE: Partial code from $Dashboard/Availability/_$MonthlySchedule.cshtml, adpated for testing
+    
+    var editable = Request["editable"].AsBool();
+    var user = Request["user"] ?? Request["userid"] ?? WebSecurity.CurrentUserId.ToString();
+    
+    if (IsPost) {
+
+        if (!Request["monthly"].IsEmpty()) {
+            // Json.Decode doesn't work as expected with Arrays, getting and empty object instead, 
+            // breaking the code.
+            //workhours = Json.Decode(Request["workhours"]);
+            dynamic monthlyData = Newtonsoft.Json.JsonConvert.DeserializeObject(Request["monthly"] ?? "");
+
+            LcCalendar.SaveMonthlyCalendarJsonData(user.AsInt(), monthlyData);
+            
+            LcHelpers.ReturnJsonResult(0, "Saved");
+        } else {
+            LcHelpers.ReturnJsonResult(0, "There was not data to save, maybe an error?");
+        }
+        
+        /* Manual event creation test:
+        var ent = new CalendarDll.Data.loconomicsEntities();
+        var ev = LcCalendar.CreateFullDateEventFromMonthlyCalendar(141, new DateTime(2014, 3, 28), CalendarDll.AvailabilityTypes.UNAVAILABLE);
+        // Add it for database
+        ent.CalendarEvents.Add(ev);
+        ent.SaveChanges();
+        */
+    }
+    var dataMode = Request["dataMode"] ?? "monthly-schedule";
+}
+<script type="text/javascript">
+    $(function () {
+        // From Scripts/app/dashboard/monthlySchedule.js, some testing tweaks :-)
+        // 'presubmit' custom event don't fired here, thats was changed by standard 'submit'
+
+        var availabilityCalendar = require('LC/availabilityCalendar');
+        var monthlyList = availabilityCalendar.Monthly.enableAll({ query: { type: '@(dataMode)' } });
+
+        $.each(monthlyList, function (i, v) {
+            var monthly = this;
+
+            // Setuping the WorkHours calendar data save when the form is submitted
+            var form = monthly.$el.closest('form.ajax,fieldset.ajax');
+            var field = form.find('[name=monthly]');
+            if (field.length === 0)
+                field = $('<input type="hidden" name="monthly" />').appendTo(form);
+
+            $('body').on('submit', 'form', function () {
+                field.val(JSON.stringify(monthly.getUpdatedData()));
+            });
+        });
+    });
+</script>
+<div class="DashboardAvailability">
+<h2>Test Monthly calendar page</h2>
+<form action="?user=@(user)&editable=@(editable)" method="post" class="ajax ajax-box">
+    @Html.ValidationSummary()
+    <div>
+        <label>Data from user: <strong>@user</strong></label>
+        <label>Now in: @(editable ? "editable" : dataMode == "monthly-schedule" ? "read-only" : "availability read-only")</label>
+    </div>
+    <fieldset>
+        <legend>Test options:</legend>
+        <a href="?user=@(user)&editable=@(editable)&dataMode=@(dataMode)" class="action">Refresh</a>
+        @if (editable || dataMode == "monthly")
+        {
+            <a href="?user=@(user)&editable=false" class="action">Read-only</a>
+        }
+        @if (editable || dataMode == "monthly-schedule")
+        {
+            <a href="?user=@(user)&editable=false&dataMode=monthly" class="action">Availability read-only</a>
+        }
+        @if (editable)
+        {
+            <input type="submit" class="action main-action" value="Save" name="save" />
+        }
+        else
+        {
+            <a href="?user=@(user)&editable=true" class="action">Editable</a>
+        }
+    </fieldset>
+
+    <h3>Calendar:</h3>
+    @RenderPage(LcUrl.RenderLangPath + "Calendar/$Monthly.cshtml", new { Editable = editable, User = user })
+
+</form>
+</div>

@@ -1,0 +1,23 @@
+﻿@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+    
+    var formzip = Request["zip"];
+    var zip = 0;
+    var stateid = 0;
+    stateid = LcData.GetStateFromZipCode(formzip);
+    zip = LcData.GetPostalCodeID(formzip, stateid);
+    
+}
+
+<form action="" method="post" class="ajax ajax-box">
+    <label>Zip code
+        <input name="zip" value="@formzip" />
+    </label>
+    <label>Zip ID: @zip</label>
+    <label>State: @stateid
+    </label>
+    <label>country: @LcData.GetCurrentCountryID()</label>
+    <label>language: @LcData.GetCurrentLanguageID()</label>
+    <input type="submit" value="Enviar!" />
+</form>

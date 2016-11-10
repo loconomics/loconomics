@@ -1,0 +1,118 @@
+﻿@*
+    Reading and updating the logged user Privacy Settings.
+
+    Options:
+
+    - GET: no params
+    
+    - PUT:
+        smsBookingCommunication:bool Editable
+        phoneBookingCommunication:bool Editable
+        loconomicsCommunityCommunication:bool Editable
+        loconomicsDbmCampaigns:bool Editable
+        profileSeoPermission:bool Editable
+        loconomicsMarketingCampaigns:bool Editable
+        coBrandedPartnerPermissions:bool Editable
+
+    - @Result {
+        // ID
+        userID:int Auto
+
+        // General user preferences
+        smsBookingCommunication:bool Editable
+        phoneBookingCommunication:bool Editable
+        loconomicsCommunityCommunication:bool Editable
+        loconomicsDbmCampaigns:bool Editable
+
+        // Service Professional only preferences
+        profileSeoPermission:bool Editable
+        loconomicsMarketingCampaigns:bool Editable
+        coBrandedPartnerPermissions:bool Editable
+
+        // Control fields
+        createdDate:datetime Auto
+        updatedDate:datetime Auto
+    }
+
+    EXAMPLES {
+        "Privacy Settings (get and update)": {
+            "url": "/api/v1/en-US/me/privacy-settings",
+            "get": { },
+            "put": {
+                "smsBookingCommunication": false,
+                "phoneBookingCommunication": true,
+                "loconomicsCommunityCommunication": true,
+                "loconomicsDbmCampaigns": false,
+                "profileSeoPermission": true,
+                "loconomicsMarketingCampaigns": true,
+                "coBrandedPartnerPermissions": false
+            }
+        }
+    }
+*@
+@functions{
+    public class RestPrivacyPreferences : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcRest.PrivacySettings.Get(WebSecurity.CurrentUserId);
+        }
+        
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+ 	        return GetData();
+        }
+
+        public override dynamic Put()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+            
+            var userId = WebSecurity.CurrentUserId;
+            var profile = LcRest.UserProfile.Get(userId);
+
+            // Validation
+            Validation.RequireField("smsBookingCommunication", "Bookings by SMS preference is required");
+            Validation.RequireField("phoneBookingCommunication", "Bookings by Phone preference is required");
+            Validation.RequireField("loconomicsCommunityCommunication", "Loconomics community messages preference is required");
+            Validation.RequireField("loconomicsDbmCampaigns", "Marketing e-mails about Loconomics Service Providers preference is required");
+            // Service Professional only
+            if (profile.isServiceProfessional) {
+                Validation.RequireField("profileSeoPermission", "Include my profile in search listings preference is required");
+                Validation.RequireField("loconomicsMarketingCampaigns", "Loconomics marketing messages preference is required");
+                Validation.RequireField("coBrandedPartnerPermissions", "Co-branded promotions preference is required");
+            }
+
+            if (!Validation.IsValid()) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            // Parameters
+            var settings = new LcRest.PrivacySettings {
+                userID = userId,
+
+                smsBookingCommunication = Request["smsBookingCommunication"].AsBool(), 
+                phoneBookingCommunication = Request["phoneBookingCommunication"].AsBool(),
+                loconomicsCommunityCommunication = Request["loconomicsCommunityCommunication"].AsBool(),
+                loconomicsDbmCampaigns = Request["loconomicsDbmCampaigns"].AsBool(),
+
+                profileSeoPermission = profile.isServiceProfessional ? Request["profileSeoPermission"].AsBool() : false,
+                loconomicsMarketingCampaigns = profile.isServiceProfessional ? Request["loconomicsMarketingCampaigns"].AsBool() : false,
+                coBrandedPartnerPermissions = profile.isServiceProfessional ? Request["coBrandedPartnerPermissions"].AsBool() : false
+            };
+
+            LcRest.PrivacySettings.Set(settings);
+            
+            return GetData();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestPrivacyPreferences().JsonResponse(this);
+}

@@ -1,0 +1,83 @@
+﻿@model CalendarDll.Data.CalendarReccurrenceFrequency
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>CalendarReccurrenceFrequency</legend>
+
+    <div class="display-label">CalendarReccurrence</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CalendarReccurrence.EvaluationMode)
+    </div>
+
+    <div class="display-label">ByDay</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByDay)
+    </div>
+
+    <div class="display-label">ByHour</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByHour)
+    </div>
+
+    <div class="display-label">ByMinute</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByMinute)
+    </div>
+
+    <div class="display-label">ByMonth</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByMonth)
+    </div>
+
+    <div class="display-label">ByMonthDay</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByMonthDay)
+    </div>
+
+    <div class="display-label">BySecond</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BySecond)
+    </div>
+
+    <div class="display-label">BySetPosition</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BySetPosition)
+    </div>
+
+    <div class="display-label">ByWeekNo</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByWeekNo)
+    </div>
+
+    <div class="display-label">ByYearDay</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ByYearDay)
+    </div>
+
+    <div class="display-label">ExtraValue</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ExtraValue)
+    </div>
+
+    <div class="display-label">FrequencyDay</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FrequencyDay)
+    </div>
+
+    <div class="display-label">DayOfWeek</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DayOfWeek)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

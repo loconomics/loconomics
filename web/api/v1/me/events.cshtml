@@ -1,0 +1,311 @@
+﻿@*
+    Read and write events for logged user, simplified from the full icalendar spec,
+    with the data usually used in user interface in a more comfortable structure
+    and some extra convenience options.
+
+    NOTE: This is a convenience API, a full API for all the back-end data resides
+        under icalendar/events.
+
+    Options:
+    GET
+        - types[]:array[int] Optional. List of CalendarEventTypeIDs to filter the events returned.
+            Possible values are the IDs from records on the table [CalendarEventType].
+        - start:datetime Optional. Start date of the range of events included partial or completely
+        - end:datetime Optional. End date of the range of events included partial or completely.
+
+    GET /@id
+        - @id:int the Event Id to retrieve; must be owned by the current user or 'not found' is returned
+        - start:datetime Optional. Start date of the occurrences to included with the event, if is recurrent
+        - end:datetime Optional. End date of the occurrences to included with the event, if is recurrent
+
+    POST
+        - EventTypeID:int Required
+        - AvailabilityTypeID:int Required
+        - Summary:string Required
+        - StartTime:datetime Required
+        - EndTime:datetime Required
+        - IsAllDay:bool
+        - TimeZone:string
+        - Location:string
+        - Description:string
+        - RecurrenceRule[FrequencyTypeID]:int
+        - RecurrenceRule[Ending]:string Possible values allowed: never, date, ocurrences
+        - RecurrenceRule[Count]:int? For Ending 'ocurrences', number of ocurrences/repetitions of the recurrent event
+        - RecurrenceRule[Until]:datetime? For Ending 'date', datetime of the latest recurrent ocurrence of the event
+        - RecurrenceRule[Interval]:int Interval of repetition, 'every each X days/months/etc.',
+        - RecurrenceRule[SelectedWeekDays][]:array[int] List of week days for the recurrent rule, when the FrequencyTypeID
+            is 'weekly'. Sunday is 0, up to Saturday 6
+        - RecurrenceRule[MonthlyWeekDay]:bool Express if, for FrequencyTypeID 'monthly', the recurrent day must be the
+            day of the month (value false, by default), or the day of the week (value true).
+
+    PUT /@id
+        # Same parameters set than POST
+
+    DELETE /@id
+        No more parameters than the ID, and as usual locked to be owned by the current logged user.
+        It returns the deleted event if everything is successful.
+
+    Result scheme describing an event: the same properties described at POST por insert and update with next additional:
+        - CalendarEventID:int Server side auto-generated IDentifier
+        - UserID:int
+        - UpdatedDate:DateTime
+        - CreatedDate:DateTime
+        - ReadOnly:bool Flag notifying that any attempt of modify/delete this event will be refused.
+        - RecurrenceRule:object, in the body of POST/PUT requests subproperties of an object receive the object key as prefix
+            and between a pair of [ ]. Following expressed as the single JSON property inside the object:
+            - Incompatible:bool Server version of this event includes recurrent incompatible with this simplificated view.
+            - TooMany:bool Server version of this event includes more than one recurrent rule, here only one is showed
+                and on any update with this data the additional rules will be deleted.
+
+    Limitations for edition methods:
+    - On edition success, a "GET /@id" result is returned so the generated CalendarEventID can be read and any other
+        server side edition (UpdateDate field, for example)
+    - Events marked with ReadOnly:true will not be modified even if a request is performed, a 400 error happens.
+    - Events with a read-only EventTypeID will fail to insert/edit/delete with a 400 error.
+
+    EXAMPLES {
+        "Events and to add event": {
+            "url": "/api/v1/en-US/me/events",
+            "get": {
+                 "types": [3, 5],
+                 "start": "2014-06-01T12:00:00",
+                 "end": "2014-09-30T10:00:00Z",
+                 "api comment": "types is optional, and will return all the types except 'work hours' by default (To review if this is the most optimal). Optional start and end dates to reduce the results, accepting ISO strings."
+            },
+            "post": {
+                "EventTypeID":3,
+                "Summary":"Housekeeper services for JoshuaProvider D.",
+                "AvailabilityTypeID":3,
+                "StartTime":"2014-03-25T09:00:00",
+                "EndTime":"2014-03-25T19:00:00",
+                "IsAllDay":false,
+                "TimeZone":"-8",
+                "Location":"null",
+                "Description":"test description of a REST event"
+            }
+        },
+        "Event (single)": {
+            "url": "/api/v1/en-US/me/events/353",
+            "get": {},
+            "put": {
+                "EventTypeID":3,
+                "Summary":"Housekeeper services for JoshuaProvider D.",
+                "AvailabilityTypeID":3,
+                "StartTime":"2014-03-25T09:00:00",
+                "EndTime":"2014-03-25T19:00:00",
+                "IsAllDay":false,
+                "TimeZone":"-8",
+                "Location":"null",
+                "Description":"test description of a REST event",
+                "RecurrenceRule":{
+                    "FrequencyTypeID":502,
+                    "Interval":1,
+                    "Ending":"never",
+                    "SelectedWeekDays":[1,3,5],
+                    "MonthlyWeekDay":false
+                }
+            },
+            "delete": {}
+        }
+    }
+*@
+@functions{
+    public class RestEvents : RestWebPage
+    {
+        public override dynamic Get()
+        {           
+            // Item ID
+            if (UrlData[0].IsInt())
+            {
+                return GetItem(UrlData[0].AsInt(0));
+            }
+            
+            // Parameters
+            int userId = WebSecurity.CurrentUserId;
+
+            // More parameters
+            var types = Request.QueryString.GetValues("types[]");
+            var typesIDs = new List<int>();
+            if (types != null) {
+                foreach(var type in types) {
+                    typesIDs.Add(type.AsInt(0));
+                }
+            } else {
+                // By default, show events for the common displayed types
+                // (it avoids the internal type 'work hours')
+                typesIDs.AddRange(new int[]{1, 3, 4, 5, 6});
+            }
+
+            var start = DateTimeFromISO(Request.QueryString["start"]);
+            var end = DateTimeFromISO(Request.QueryString["end"]);
+
+            // Data
+            return LcCalendar.GetSimplifiedEvents(userId, typesIDs.ToArray<int>(), start, end);
+        }
+        
+        public dynamic GetItem(int eventID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            if (eventID > 0)
+            {
+                // Optionally, a dates range can be included to generate the ocurrences
+                // of a reccurrent event for that time frame:
+                var start = DateTimeFromISO(Request.QueryString["start"]);
+                var end = DateTimeFromISO(Request.QueryString["end"]);
+                
+                var item = (IEnumerable<dynamic>)LcCalendar.GetSimplifiedEvents(userID, null, start, end, eventID);
+                if (item != null && item.Count() > 0)
+                {
+                    return item.First();
+                }
+            }
+
+            throw new HttpException(404, "Event not found.");
+        }
+        
+        public dynamic DelItem(int eventID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            try {
+                var item = LcCalendar.DelSimplifiedEvent(userID, eventID);
+                if (item != null) {
+                    return item;
+                }
+
+                throw new HttpException(404, "Event not found.");
+            }
+            catch (ConstraintException delEx)
+            {
+                // The event cannot be deleted:
+                throw new HttpException(400, delEx.Message);
+            }
+        }
+        
+        public dynamic SetItem(int eventID)
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+            
+            Validation.RequireField("Summary", LcRessources.RequiredField("Summary"));
+            Validation.RequireField("StartTime", LcRessources.RequiredField("Start Date"));
+            Validation.RequireField("EndTime", LcRessources.RequiredField("End Date"));
+            Validation.RequireField("EventTypeID", LcRessources.RequiredField("Type"));
+            Validation.RequireField("AvailabilityTypeID", LcRessources.RequiredField("Availability"));
+            Validation.Add("StartTime", Validator.DateTime("Start date/time is not valid"));
+            Validation.Add("EndDate", Validator.DateTime("End date/time is not valid"));
+            Validation.Add("RecurrenceRule[Interval]", Validator.Integer("'Repeat every' must be a number"));
+            Validation.Add("RecurrenceRule[Count]", Validator.Integer("Number of occurrences must be a number"));
+            Validation.Add("RecurrenceRule[Until]", Validator.DateTime("Repetition End Date is not valid"));
+            
+            if (!Validation.IsValid()) {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
+            LcCalendar.SimplifiedRecurrenceRule rrule = null;
+            int repeatFrequency = Request["RecurrenceRule[FrequencyTypeID]"].AsInt(0);
+            List<int> selectedWeekDays = new List<int>();
+            if (Request.Form.AllKeys.Contains<string>("RecurrenceRule[SelectedWeekDays][]")) {
+                foreach(var w in Request.Form.GetValues("RecurrenceRule[SelectedWeekDays][]")){
+                    // Try-catch because a bad-request can send non-valid values or repeated
+                    // ones, making the list-addition fail. For normal use, that problem
+                    // never will happen, because of that a better control 
+                    // without try-catch is over-complicate the code
+                    try{
+                        selectedWeekDays.Add(w.AsInt());
+                    }catch{}
+                }
+            }
+            
+            if (repeatFrequency > 0) {
+                rrule = new LcCalendar.SimplifiedRecurrenceRule {
+                    FrequencyTypeID = repeatFrequency,
+                    Ending = Request["RecurrenceRule[Ending]"],
+                    Count = Request["RecurrenceRule[Ending]"] == "ocurrences" ? (int?)Request["RecurrenceRule[Count]"].AsInt() : null,
+                    Until = Request["RecurrenceRule[Ending]"] == "date" ? (DateTime?)Request["RecurrenceRule[Until]"].AsDateTime() : null,
+                    Interval = Request["RecurrenceRule[Interval]"].AsInt(1),
+                    SelectedWeekDays = selectedWeekDays,
+                    MonthlyWeekDay = Request["RecurrenceRule[MonthlyWeekDay]"].AsBool()
+                };
+            }
+            else {
+                rrule = null;
+            }
+
+            try
+            {
+                eventID = LcCalendar.SetSimplifiedEvent(userID, eventID,
+                    Request["EventTypeID"].AsInt(),
+                    Request["AvailabilityTypeID"].AsInt(),
+                    Request["Summary"],
+                    Request["StartTime"].AsDateTime(),
+                    Request["EndTime"].AsDateTime(),
+                    Request["IsAllDay"].AsBool(),
+                    Request["Location"],
+                    Request["Description"],
+                    Request["TimeZone"],
+                    rrule
+                );
+                
+                if (eventID < 0) {
+                    throw new HttpException(404, "Event not found.");
+                }
+            }
+            catch (ConstraintException delEx)
+            {
+                // The event cannot be inserted/updated:
+                throw new HttpException(400, delEx.Message);   
+            }
+            
+            // Return database copy
+            return GetItem(eventID);
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count > 0)
+                throw new HttpException(405, "Method not allowed.");
+
+            return SetItem(0);
+        }
+
+        public override dynamic Put()
+        {           
+            dynamic updated = null;
+            if (UrlData.Count == 1)
+                updated = SetItem(UrlData[0].AsInt(0));
+
+            if (updated == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Event not found.");
+            }
+
+            return updated;
+        }
+
+        public override dynamic Delete()
+        {
+            dynamic deleted = null;
+            if (UrlData.Count == 1)
+                deleted = DelItem(UrlData[0].AsInt(0));
+
+            if (deleted == null) {
+                if (UrlData.Count == 0)
+                    throw new HttpException(405, "Method not allowed.");
+                else
+                    throw new HttpException(404, "Event not found.");
+            }
+          
+            return deleted;
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestEvents().JsonResponse(this);
+}

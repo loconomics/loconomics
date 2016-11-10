@@ -1,0 +1,78 @@
+/**
+    WorkPhotos component for the serviceProfessional photos dahsboard
+**/
+
+.WorkPhotos {
+    max-width: 442px;
+    display: block;
+    width: auto
+    overflow: hidden;
+    // For 'sortable' reordering
+    position: relative;
+    margin: auto;
+    
+    > li {
+        position: relative;
+        margin-bottom: 15px;
+
+        .WorkPhotos-imgBtn {
+            display: block;
+            position: relative;
+
+            .WorkPhotos-img {
+                display:block;
+                width: auto;
+                height:auto;
+                max-width:100%;
+                max-height:332px;
+                margin: auto;
+                // for cases when the image
+                // does not load or another kind of problem with it:
+                // 1- We add a minimum height so takes
+                // some visual space and don't looks weird.
+                min-height: 200px;
+                // 2- and a fine line, near invisible when an image (because of its low contrast
+                // with the background) but highlights the place of the image as a placeholder.
+                outline: 1px solid #dbdbdb;
+                outline-offset: -1px;
+                text-align: center;
+                // keep background color in sync with server-side background color when processing images that need scaling
+                background: #f5f5f5;
+            }
+
+            .WorkPhotos-editionLayer {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(255, 255, 255, 0.6);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 300ms ease;
+                
+                // IMPORTANT: COMPUTED .btn class heigh
+                $btnLgHeight = 46px;
+                > .WorkPhotos-toolbar {
+                    width: 100%;
+                    height: 100%;
+                    display: block;
+                    text-align: center;
+                    // Vertically aligning, knowing the button height and for
+                    // a single row of buttons
+                    position: absolute;
+                    top: 50%;
+                    margin: (0 - $btnLgHeight / 2) auto 0;
+                }
+            }
+        }
+        
+        &.is-selected {
+            .WorkPhotos-editionLayer {
+                //display: block;
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+    }
+}

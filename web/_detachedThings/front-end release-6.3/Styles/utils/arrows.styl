@@ -1,0 +1,83 @@
+/**
+  Component  'CSS Arrow': adds an arrow using the :after and :before pseudoelements in the
+  element you apply this mixin.
+
+  $width and $borderWidth must be in the same unit, pixels recommended.
+  Be aware that the elements gets a position:relative to make the effect to work,
+  this can be replaced after call the mixin by a value that creates a positioning context
+  (like relative, absolute, fixed).
+**/
+
+up-arrow($width, $borderWidth, $borderColor, $backColor, $left=0, $right=auto)
+  position: relative;
+
+  &:after
+    border-bottom: $width solid transparent;
+    border-left: $width solid transparent;
+    border-right: $width solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: $backColor;
+    top: - $width;
+    
+    if ($left != null && $left != 'auto')
+      left: $left + $borderWidth;
+    else
+      left: auto;
+      
+    if ($right != null && $right != 'auto')
+      right: $right + $borderWidth;
+    else
+        right: auto;
+
+  &:before
+    border-bottom: ($width + $borderWidth) solid transparent;
+    border-left: ($width + $borderWidth) solid transparent;
+    border-right: ($width + $borderWidth) solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-bottom-color: $borderColor;
+    left: $left;
+    right: $right;
+    top: - $width - $borderWidth;
+    
+down-arrow($width, $borderWidth, $borderColor, $backColor, $left=0, $right=auto)
+  position: relative;
+
+  &:after
+    border-top: $width solid transparent;
+    border-left: $width solid transparent;
+    border-right: $width solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-top-color: $backColor;
+    bottom: - $width;
+    
+    if ($left != null && $left != 'auto')
+      left: $left + $borderWidth;
+    else
+      left: auto;
+      
+    if ($right != null && $right != 'auto')
+      right: $right + $borderWidth;
+    else
+        right: auto;
+
+  &:before
+    border-top: ($width + $borderWidth) solid transparent;
+    border-left: ($width + $borderWidth) solid transparent;
+    border-right: ($width + $borderWidth) solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+
+    border-top-color: $borderColor;
+    left: $left;
+    right: $right;
+    bottom: - $width - $borderWidth;

@@ -1,0 +1,24 @@
+INSERT INTO [licensecertification]
+   ([LicenseCertificationID]
+   ,[LicenseCertificationType]
+   ,[LicenseCertificationTypeDescription]
+   ,[LicenseCertificationAuthority]
+   ,[VerificationWebsiteURL]
+   ,[HowToGetLicensedURL]
+   ,[CreatedDate]
+   ,[UpdatedDate]
+   ,[ModifiedBy]
+   ,[Active]
+   ,[LanguageID])
+VALUES
+   (@LicenseCertificationID
+   ,@LicenseCertificationType
+   ,@LicenseCertificationTypeDescription
+   ,@LicenseCertificationAuthority
+   ,@VerificationWebsiteURL
+   ,@HowToGetLicensedURL
+   ,@CreatedDate
+   ,@UpdatedDate
+   ,@ModifiedBy
+   ,@Active
+   ,@LanguageID)

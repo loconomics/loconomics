@@ -1,0 +1,41 @@
+﻿@* Test .net JSON parsing and generation features
+ *@
+@{
+    LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+
+    string source1 = "{'1':'1 hour', '2':'2', '3':{'ja':'Ja','je':'Je','ji':'Ji'}, 'A':'wildcard'}".Replace("'", "\"");
+    var gen1 = Json.Decode(source1);
+    string source2 = "[1,{'doh':'Doh'},[3,'4']]".Replace("'", "\"");
+    var gen2 = Json.Decode(source2);
+}
+<h1>Testing JSON</h1>
+
+<div>
+    Source: <em>@source1</em>
+    <br />
+    Object: @ObjectInfo.Print(gen1)
+    <br />
+    Iterate: @foreach (var a in gen1)
+             {
+                 <div>Item: @a @ObjectInfo.Print(a)</div>
+             }
+    <br />
+    Value 2: @(gen1["2"])
+    <br />
+    Value A: @(gen1.A)
+    <br />
+    <br />
+    Source: <em>@source2</em>
+    <br />
+    Object: @ObjectInfo.Print(gen2)
+    <br />
+    Iterate: @foreach (var a in gen2)
+             {
+                 <div>Item: @a @ObjectInfo.Print(a)</div>
+             }
+    <br />
+    Value 0: @gen2[0]
+    <br />
+</div>

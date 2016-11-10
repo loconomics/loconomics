@@ -1,0 +1,36 @@
+﻿@*
+    Retrieving the Event Types for calendar events.
+
+    Options:
+    
+    - GET
+        - OnlySelectable:bool Choose to return all types (value 'false') or only
+            once that has a DisplayName and are selectable by the user.
+
+    - @Result {
+        "EventTypeID":int,
+        "InternalName":string,
+        "DisplayName":string
+    }
+
+    EXAMPLES {
+        "Event types": {
+            "url": "/api/v1/en-US/event-types",
+            "get": {
+                "onlySelectable": false
+            }
+        }
+    }
+*@
+@functions{
+    public class RestEventTypes : RestWebPage
+    {
+        public override dynamic Get()
+        {
+ 	         return LcCalendar.GetEventTypes(Request["OnlySelectable"].AsBool(false));
+        }
+    }
+}
+@{   
+    new RestEventTypes().JsonResponse(this);
+}
