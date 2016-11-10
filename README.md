@@ -12,7 +12,7 @@ To setup up a Loconomics app development environment using our API, see the [App
 
 To setup a backend development environment, see [Backend Development Environment Setup Guide](docs/Backend Development Environment Setup Guide.md).
 
-Once you're set up, check out the [App Framework](docs/App Framework.md).
+Once you're set up, check out the [File Organization](docs/File Organization.md) and [App Framework](docs/App Framework.md).
 
 ### Contact
 
