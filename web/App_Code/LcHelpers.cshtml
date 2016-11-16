@@ -733,11 +733,20 @@
             Forbidden(LcData.UserInfo.UserType.Admin);
         }
     }
+    public static void ContributorPage()
+    {
+        SecurePage();
+        var u = LcData.UserInfo.GetUserRow();
+        if (!(u.IsAdmin == true || u.IsContributor == true))
+        {
+            Forbidden(LcData.UserInfo.UserType.Contributor);
+        }
+    }
     public static void TestArea()
     {
         if (!Request.IsLocal)
         {
-            AdminPage();
+            ContributorPage();
         }
     }
     public static string OnBehalfOf()
