@@ -9,7 +9,12 @@
         // but we can put it as appsetting):
         if (String.IsNullOrEmpty(System.Web.Helpers.WebMail.Password))
         {
+            System.Web.Helpers.WebMail.UserName = ConfigurationManager.AppSettings["smtpUserName"];
             System.Web.Helpers.WebMail.Password = ConfigurationManager.AppSettings["smtpPassword"];
+            System.Web.Helpers.WebMail.From = ConfigurationManager.AppSettings["smtpFrom"];            
+            System.Web.Helpers.WebMail.SmtpServer = ConfigurationManager.AppSettings["smtpHost"];
+            System.Web.Helpers.WebMail.SmtpPort = (int)ConfigurationManager.AppSettings["smtpPort"].AsLong();
+            System.Web.Helpers.WebMail.EnableSsl = ConfigurationManager.AppSettings["smtpEnableSsl"] == "true";
         }
     }
     

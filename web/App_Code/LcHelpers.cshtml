@@ -433,7 +433,9 @@
         // Compatibility modes on IE11 uses white space on Trident string like: Trident / 4.0  rather than Trident/4.0
         var iePattern = @"(?:\b(?:MS)?IE\s)(\d+)";
         var tridentPattern = @"(?:\bTrident\s?\/\s?)(\d+)";
-        var m = Regex.Match(Request.UserAgent ?? "", iePattern);
+        // Carefull with userAgent, some agents may not provide a value and throw exception
+        var userAgent = Request.UserAgent ?? "";
+        var m = Regex.Match(userAgent, iePattern);
         var ieVersion = 0;
         if (m.Success)
         {
@@ -441,7 +443,7 @@
         }
         else
         {
-            m = Regex.Match(Request.UserAgent, tridentPattern);
+            m = Regex.Match(userAgent, tridentPattern);
             if (m.Success)
             {
                 // Not really ie version, needs be mapped out
@@ -731,11 +733,20 @@
             Forbidden(LcData.UserInfo.UserType.Admin);
         }
     }
+    public static void ContributorPage()
+    {
+        SecurePage();
+        var u = LcData.UserInfo.GetUserRow();
+        if (!(u.IsAdmin == true || u.IsContributor == true))
+        {
+            Forbidden(LcData.UserInfo.UserType.Contributor);
+        }
+    }
     public static void TestArea()
     {
         if (!Request.IsLocal)
         {
-            AdminPage();
+            ContributorPage();
         }
     }
     public static string OnBehalfOf()

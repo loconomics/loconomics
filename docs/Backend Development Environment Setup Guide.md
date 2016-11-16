@@ -10,7 +10,7 @@ Our backend is an ASP.NET WebPages2 website with MS-SQL Server database.
 Microsoft Windows 7 SP1, Windows 10.
 
 ## Setting up a database
-Discuss with [@iagosrl](mailto:iagosrl@gmail.com) or [@dani0198](mailto:joshua.danielson@loconomics.com) if you should connect to the dev database or create a local copy.
+Discuss with [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) if you should connect to the dev database or create a local copy.
 
 If creating a local database:
 - use MS SQL Express 2008 R2 or above
@@ -54,4 +54,17 @@ To define the REST URL there are several ways, the one commented previously for 
 
 **In summary:** At start-up, the app looks for a siteUrl in the config key at localStorage, if it doesn't find one it then reads the html attribute data-site-url, if it doesn't find one there then it uses the document base URL.
 
- 
+## Testing Links
+Requires API access. Request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
+
+### API
+http://dev.loconomics.com/tests/testrest
+
+### Email Communications
+http://dev.loconomics.com/tests/testmessaging 
+
+### Pages (for testing db changes)
+http://dev.loconomics.com/tests/TestAny 
+
+## FTP Access
+You should only need FTP access if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. If you feel you need this for testing reasons, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com). 

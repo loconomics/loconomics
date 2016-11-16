@@ -42,7 +42,8 @@ internal class ServiceProfessionalClient
         SELECT serviceProfessionalUserID, clientUserID,
             notesAboutClient,
             referralSourceID,
-            createdByBookingID
+            createdByBookingID,
+            deletedByServiceProfessional
         FROM ServiceProfessionalClient
         WHERE
             serviceProfessionalUserID = @0

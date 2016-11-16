@@ -25,6 +25,8 @@ We use [jshint](http://jshint.com/) to validate and enforce some good practices,
 We split source files in modules, following the [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) syntax.
 We use a preprocessor, [Browserify](http://browserify.org/), to bundled the modules in a few files.
 
+**Hint**: the *[debugger;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)* javascript statement can be used for easier debugging, but remember to remove before commit your changes.
+
 ## HTML
 
 We use HTML5.
@@ -48,40 +50,22 @@ issue1076 - A1 - new customertransactiontype table.sql
 
 ## Use of Github
 
-We use Github to track all user stories, development issues, marketing tasks, project management, product roadmaps, and a repository for for other related project information.
+We use Github to track all development issues, project management, product roadmaps, and documentation.
 
 ### Branch use and pull requests
 
 #### Master
-Only [@iagosrl](mailto:iagosrl@gmail.com) should commit to the master branch. 
+Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch. 
 
 #### New branches
 If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
 
 #### Pull requests
-We prefer you create a Github issue for a specific topic/task to discuss about, with it's own issueXX branch where to commit, but if you want to make general updates or suggests a change by doing a pull request we are open to it.
-
-### Adding user stories
-We have a repository of user stories for [Service Professionals](/User Stories/User Stories - Service Professionals.md), [Clients](/User Stories/User Stories - Clients.md), and [Cooperatives](/User Stories/User Stories - Cooperatives.md).
-
-#### Step 1: Review current user stories
-Review the repositories to see if the feedback is already recorded by reviewing the existing Epic Stories and corresponding Child Stories.
-
-#### Step 2: Determine if the story already fits into the repository 
-Usually, the feedback can be translated into a Test Case for an existing Child Story or as a Child Story to an existing Epic Story.
-
-#### Step 3: Add missing feedback
-Feedback from users should be translated using the [User Story Template](/Agile Templates/User Story.md) to make it actionable into one of three types of stories:
-##### Test Case
-If recording a Test Case for an exisitng Child Story, copy the last Test Case, change the letter/number combination by adding 1 to the number, and overwrite with the new Test Case.
-##### Child Story (most common)
-Find the Epic Story the Child Story fits into, and copy the last Child Story, change the letter to the next letter in the alphabet, and overwrite with the new Child Story, any specific Persona(s) for the Child Story, and overwrite Test Cases with the new one(s).
-##### Epic Story
-Go to the bottom of the appropriate repository and copy the last Epic Story, change the number by adding 1, and overwrite with the new Epic Story, Child Stories, and Test Cases. 
+We prefer you create a Github issue for a specific task to tackle with it's own branch named issueXX . However, pull requests are fine if you want to make general updates or suggest a change.
 
 ### Bugs
 Before reporting a bug:
-* Please have a look in [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74) and the current release folder to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
+* Please have a look in [Known Bugs](https://github.com/loconomics/loconomics/milestones) and the current release folder to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
 
 The first thing we do with a bug report is confirm we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
 
@@ -94,9 +78,9 @@ Try to include:
 * UserIDs, BookingIDs, JobTitleIDs involved.
 * The /activityName from the URL.
 
-[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels and include the severity in the title, e.g. Bug S1: Short description of bug:
-#### Severity Level Label
-![bug](https://cloud.githubusercontent.com/assets/1202838/19402991/2f2ddefe-9219-11e6-86ac-5a05a520e5e0.png)
+[File a new Github issue](https://github.com/loconomics/loconomics/issues/new) with two labels and include the severity in the title, e.g. Bug S1: Short description of bug:
+#### Bug Severity Level Label
+![bug](https://cloud.githubusercontent.com/assets/1202838/20122990/bed40e00-a5d0-11e6-9a41-ac583f8e7883.png)
 
 ##### Definitions:
 - Bug: S1 (The issue is blocking an impending release.)
@@ -104,17 +88,18 @@ Try to include:
 - Bug: S3 (The issue reports incorrect functionality, bad functionality, a confusing user experience, etc.)
 - Bug: S4 (The issue reports cosmetic items, formatting, spelling, colors, etc.)
 
-#### Feature Area Label
-![feature](https://cloud.githubusercontent.com/assets/1202838/19402990/2f27ec6a-9219-11e6-9a1e-2bb962c00c6a.png)
+#### Feature Set Label
+![feature set](https://cloud.githubusercontent.com/assets/1202838/20122985/beb9b0be-a5d0-11e6-92d1-200614a3a74e.png)
 
 #### Milestone
-Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
+Place into [Known Bugs](https://github.com/loconomics/loconomics/milestones)
 
 ### Filing development issues
-[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with four labels:
+[File a new Github issue](https://github.com/loconomics/loconomics/issues/new) with four labels:
 
 #### Priority Level Label
-![p labels](https://cloud.githubusercontent.com/assets/1202838/19402985/2f10bc02-9219-11e6-8b7b-e09ffd633c0a.png)
+![priority](https://cloud.githubusercontent.com/assets/1202838/20122988/bebb0522-a5d0-11e6-94b9-73c2dce28fe1.png)
+
 ##### Definitions:
 - P1 (The issue will be seen by all users.)
 - P2 (The issue will be seen by most users.)
@@ -122,40 +107,24 @@ Place into [Known Bugs](https://github.com/dani0198/Loconomics/milestone/74)
 - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
 
 #### Category Label
-![category](https://cloud.githubusercontent.com/assets/1202838/19403470/70112afe-921c-11e6-8c01-1c2019871c48.png)
+![category](https://cloud.githubusercontent.com/assets/1202838/20122991/bed5f51c-a5d0-11e6-8017-bc1f59502671.png)
 
-#### Feature Label (matching the area of the app)
-![feature](https://cloud.githubusercontent.com/assets/1202838/19402990/2f27ec6a-9219-11e6-9a1e-2bb962c00c6a.png)
+#### Feature Set Label
+![feature set](https://cloud.githubusercontent.com/assets/1202838/20122985/beb9b0be-a5d0-11e6-92d1-200614a3a74e.png)
 
 #### Readiness Label
-![r labels](https://cloud.githubusercontent.com/assets/1202838/19402983/2ee1929c-9219-11e6-8860-cba1e935c955.png)
+![readiness](https://cloud.githubusercontent.com/assets/1202838/20122984/beb95484-a5d0-11e6-940b-42633ff5648b.png)
 
 #### Milestone
-@dani0198 will place into Product Roadmap. R1 issues will be place into Releases based on developer feedback.
+@joshdanielson will place into Product Roadmap and In Design Process. R1 issues will be place into Releases based on developer feedback.
 
-### Filing marketing issues
-[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
+### Issue Progression
+As issues progress, some labels will change and others added.
 
-#### Category Label
-![marketing label](https://cloud.githubusercontent.com/assets/1202838/19402986/2f12a206-9219-11e6-91ed-e3bba17a1e59.png)
+#### Readiness
+![readiness](https://cloud.githubusercontent.com/assets/1202838/20122984/beb95484-a5d0-11e6-940b-42633ff5648b.png)
 
-#### Marketing Label
-![marketing](https://cloud.githubusercontent.com/assets/1202838/19402984/2f0919fc-9219-11e6-959d-c800044cec3e.png)
-
-#### Milestone
-@dani0198 will place into Marketing Roadmap and issues will be place into Releases based on Staff discussion.
-
-### Filing Information 
-We store information related to the project but not development or marketing issues as issues in an [Information Repository](https://github.com/dani0198/Loconomics/milestone/34) for future reference.
-[File a new Github issue](https://github.com/dani0198/Loconomics/issues/new) with two labels:
-
-#### Category Label
-![ir label](https://cloud.githubusercontent.com/assets/1202838/19402987/2f136e34-9219-11e6-8bc6-7aa786799856.png)
-
-#### Information Repository Label
-![information](https://cloud.githubusercontent.com/assets/1202838/19402988/2f14ec46-9219-11e6-811a-0434cbc146f0.png)
-
-#### Milestone
-Place into the [Information Repository](https://github.com/dani0198/Loconomics/milestone/34) 
+#### Testing
+![testing](https://cloud.githubusercontent.com/assets/1202838/20123132/d40e3574-a5d1-11e6-9d1c-40627a6d52b9.png)
 
 
