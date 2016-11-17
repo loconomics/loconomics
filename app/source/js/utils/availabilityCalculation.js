@@ -9,8 +9,8 @@
 **/
 'use strict';
 console.error('DateAvailability does NOT support Time Zone conversions');
-var Appointment = require('../models/Appointment'),
-    moment = require('moment');
+var Appointment = require('../models/Appointment');
+var moment = require('moment-timezone');
 
 exports.sortAppointments = function(a, b) {
     var as = a.startTime(),
@@ -88,14 +88,15 @@ exports.fillPreparationTimeSlots = function fillPreparationTimeSlots(date, slots
     Introduce free or unavailable slots wherever needed in the given
     array of Appointments, to fill any gap in a natural day
     (from Midnight to Midnight next date) and based on the
-    given week day schedule.
-    The hours in the schedule are assumed in the local time.
+    given busy appointmentsList and the freeScheduleSlots (this last generated
+    previously based on the user WeekDaySchedule and timezone for the date and
+    in local time, see createFreeScheduleSlots).
     A new array is returned.
     It introduce 'preparation time' slots too before of bookings when needed.
     
     date is a Date object representing the same date as used in
     the appointmentsList; it's used when no appointments exists (so
-    date cannot be extracted from first appointent) to return an empty
+    date cannot be extracted from first appointment) to return an empty
     date unavaialable/free/unavailable slots; and when filling preparation slots, to
     avoid add a slot with time that starts in a previous date
     
@@ -103,7 +104,7 @@ exports.fillPreparationTimeSlots = function fillPreparationTimeSlots(date, slots
     date (but ends inside the date) and a final appointment that may end
     on the next date (but starts inside the date).
 **/
-exports.fillDayAvailability = function fillDayAvailability(date, appointmentsList, weekDaySchedule, schedulingPreferences) {
+exports.fillDayAvailability = function fillDayAvailability(date, appointmentsList, freeScheduleSlots, schedulingPreferences) {
 
     // Shadow clone
     var slots = appointmentsList.slice(0);
@@ -127,7 +128,7 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
         filledSlots = exports.createScheduleSlots({
             start: fullStart.toDate(),
             end: fullEnd.toDate()
-        }, weekDaySchedule);
+        }, freeScheduleSlots);
     }
     else {
         // Look for time gaps in the list
@@ -151,7 +152,7 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
                 filledSlots.push.apply(filledSlots, exports.createScheduleSlots({
                     start: lastDateTime,
                     end: start
-                }, weekDaySchedule));
+                }, freeScheduleSlots));
             }
 
             filledSlots.push(slot);
@@ -175,7 +176,7 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
             filledSlots.push.apply(filledSlots, exports.createScheduleSlots({
                 start: lastDateTime,
                 end: nextMidnight
-            }, weekDaySchedule));
+            }, freeScheduleSlots));
         }
     }
 
@@ -190,10 +191,8 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
     The range must be two times inside the same date (local time), format
     range { start:Date, end:Date }
     
-    weekDaySchedule is an instance of WeekDaySchedule Model, that inherits
-    from an observableArray of TimeRange's, adding some additional methods.
-    TimeRange structure is basically { start:observable(IsoTimeString), end:observable(IsoTimeString) }
-    extended with { fromMinute:WritableComputedObservable(int), toMinute:WritableComputedObservable(int) }
+    freeScheduleSlots is an array datetime ranges, same properties as the range parameter:
+    format: [{ start:Date, end:Date }]
     
     IMPORTANT: Currently, days with multi time-ranges will generated additional, overlapping, 'unavailable' slots
     because how is calculated in a per time-range basis (createScheduleSlotsForRanges).
@@ -215,28 +214,24 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
     MAYBE: Just adding a second pass over that list generated, cutting or even remoging Unavailable slots when needed,
     can fix the results.
 **/
-exports.createScheduleSlots = function createScheduleSlots(range, weekDaySchedule) {
-    var trs = weekDaySchedule();
-    if (trs.length) {
-        var lists = weekDaySchedule().map(function(timeRange) {
-            return exports.createScheduleSlotsForRanges(range.start, range.end, timeRange.fromMinute(), timeRange.toMinute());
+exports.createScheduleSlots = function createScheduleSlots(range, freeScheduleSlots) {
+    if (freeScheduleSlots.length) {
+        var lists = freeScheduleSlots.map(function(freeRange) {
+            return exports.createScheduleSlotsForRanges(range.start, range.end, freeRange.start, freeRange.end);
         });
         var l = lists.reduce(function(l, nl) { return l.concat.apply(l, nl); }, []);
-        //if (trs.length > 1) console.log('createScheduleSlots', range, weekDaySchedule(), l);
+        if (freeScheduleSlots.length > 1) console.log('createScheduleSlots', range, freeScheduleSlots, l);
         return l;
     }
     else {
-        // when no availability on the day
-        return exports.createScheduleSlotsForRanges(range.start, range.end, 0, 0);
+        // when no availability on the day (just empty available slot, give the same date)
+        return exports.createScheduleSlotsForRanges(range.start, range.end, range.start, range.start);
     }
 };
 
-exports.createScheduleSlotsForRanges = function createScheduleSlotsForRanges(start, end, freeFromMinute, freeToMinute) {
+exports.createScheduleSlotsForRanges = function createScheduleSlotsForRanges(start, end, from, to) {
     /*jshint maxcomplexity:10*/
-    var list = [],
-        date = moment(start).startOf('day'),
-        from = moment(date).add({ minutes: freeFromMinute }).toDate(),
-        to = moment(date).add({ minutes: freeToMinute }).toDate();
+    var list = [];
 
     // It happens before the week day schedule starts
     var beforeSchedule = 
@@ -329,4 +324,20 @@ exports.createScheduleSlotsForRanges = function createScheduleSlotsForRanges(sta
     // order gets inversed because of the if-else natural order
     // so ensure goes correct
     return list.sort(exports.sortAppointments);
+};
+
+/**
+ * It generates an array of plain range objects ({ start:Date, end:Date })
+ * in the local time for the given date, based on the user weekDaySchedule
+ * and knowing the time zone for the time ranges defined in the schedule (that
+ * must be converted to local time for the specific date).
+ * Result returns slots that fills from midnight to midnight of date.
+**/
+exports.createFreeScheduleSlots = function (date, weekDaySchedule/*, scheduleTimeZone*/) {
+    return weekDaySchedule.map(function (range) {
+        return {
+            start: moment(date).add(moment.duration(range.start())).toDate(),
+            end: moment(date).add(moment.duration(range.end())).toDate(),
+        };
+    });
 };

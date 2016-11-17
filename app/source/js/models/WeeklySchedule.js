@@ -1,17 +1,5 @@
 /**
     WeeklySchedule model.
-
-    Its 'simplified' because it provides an API
-    for simple time range per week day,
-    a pair of from-to times.
-    Good for current simple UI.
-    
-    The original weekly schedule defines the schedule
-    in 15 minutes slots, so multiple time ranges can
-    exists per week day, just marking each slot
-    as available or unavailable. The AppModel
-    will fill this model instances properly making
-    any conversion from/to the source data.
  **/
 'use strict';
 
@@ -34,12 +22,12 @@ function detectLocalTimezone() {
         sumOff = summer.getTimezoneOffset(),
         found = null;
 
-    moment.tz.names().some(function(tz) {
+    moment.tz.names().some(function (tz) {
         var zone = moment.tz.zone(tz);
         if (zone.offset(winter) === winOff &&
             zone.offset(summer) === sumOff) {
-           found = zone;
-           return true;
+            found = zone;
+            return true;
         }
     });
 
@@ -87,7 +75,7 @@ function WeeklySchedule(values) {
         isAllTime: false,
         timeZone: ''
     }, values);
-    
+
     // Index access
     this.weekDays = [
         this.sunday,
@@ -98,14 +86,14 @@ function WeeklySchedule(values) {
         this.friday,
         this.saturday
     ];
-    
+
     this.weekDays.forEach(WeekDaySchedule);
-    
-    this.timeZoneDisplayName = ko.computed(function() {
+
+    this.timeZoneDisplayName = ko.computed(function () {
         var tzid = this.timeZone(),
             tz = moment.tz(tzid),
             name = tz.tz();
-        
+
         // !moment.tz.zoneExists, just check the name is enough
         if (!name) {
             var localtz = detectLocalTimezone();
@@ -114,13 +102,13 @@ function WeeklySchedule(values) {
             if (tz)
                 name = tz.tz();
             if (name)
-                setTimeout(function() {
+                setTimeout(function () {
                     this.timeZone(name);
                 }.bind(this), 1);
         }
 
         if (name)
-            return name; // + ' (' + tz.zoneAbbr() + ')';
+            return name + ' (' + tz.zoneAbbr() + ')';
         else
             return '';
     }, this);

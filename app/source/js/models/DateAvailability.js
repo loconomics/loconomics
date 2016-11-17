@@ -33,10 +33,16 @@ function DateAvailability(values) {
         },
         schedulingPreferences: {
             Model: SchedulingPreferences
-        }
+        },
+        timeZone: ''
     }, values);
     
     WeekDaySchedule(this.weekDaySchedule);
+
+    this.freeScheduleSlots = ko.pureComputed(function () {
+        return availabilityCalculation.createFreeScheduleSlots(this.date(), this.weekDaySchedule(), this.timeZone());
+    }, this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     
     /**
         :array<Appointment> List of appointments for all the times in the date.
@@ -45,19 +51,19 @@ function DateAvailability(values) {
     **/
     this.list = ko.pureComputed(function() {
         return availabilityCalculation.fillDayAvailability(
-            this.date(), this.appointmentsList(), this.weekDaySchedule, this.schedulingPreferences()
+            this.date(), this.appointmentsList(), this.freeScheduleSlots(), this.schedulingPreferences()
         );
     }, this);
 
     /**
         :int
         Number of minutes scheduled for work in a generic/empty day
-        based on the information at weekDaySchedule.
+        based on the information at freeScheduleSlots.
     **/
     this.workDayMinutes = ko.pureComputed(function() {
-        var schedule = this.weekDaySchedule();
-        return schedule.reduce(function(v, next) {
-            return v + (next.toMinute() - next.fromMinute());
+        var free = this.freeScheduleSlots();
+        return free.reduce(function(v, next) {
+            return v + moment(next.end).diff(next.start, 'minutes');
         }, 0);
     }, this);
 
