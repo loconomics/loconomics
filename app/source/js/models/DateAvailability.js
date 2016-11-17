@@ -6,11 +6,10 @@
     list and summaries auto calculate to show the proper listing.
 **/
 'use strict';
-console.error('DateAvailability does NOT support Time Zone conversions');
+
 var Model = require('../models/Model');
 var Appointment = require('../models/Appointment'),
-    WeekDaySchedule = require('../models/WeekDaySchedule'),
-    TimeRange = require('../models/TimeRange'),
+    WeeklySchedule = require('../models/WeeklySchedule'),
     SchedulingPreferences = require('../models/SchedulingPreferences'),
     moment = require('moment'),
     ko = require('knockout'),
@@ -23,9 +22,8 @@ function DateAvailability(values) {
     
     this.model.defProperties({
         date: null, // Date
-        weekDaySchedule: {
-            isArray: true,
-            Model: TimeRange
+        weeklySchedule: {
+            Model: WeeklySchedule
         },
         appointmentsList: {
             isArray: true,
@@ -33,14 +31,11 @@ function DateAvailability(values) {
         },
         schedulingPreferences: {
             Model: SchedulingPreferences
-        },
-        timeZone: ''
+        }
     }, values);
-    
-    WeekDaySchedule(this.weekDaySchedule);
 
     this.freeScheduleSlots = ko.pureComputed(function () {
-        return availabilityCalculation.createFreeScheduleSlots(this.date(), this.weekDaySchedule(), this.timeZone());
+        return availabilityCalculation.createFreeScheduleSlots(this.date(), this.weeklySchedule());
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
     

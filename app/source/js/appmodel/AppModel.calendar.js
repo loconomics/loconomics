@@ -139,16 +139,13 @@ exports.create = function create(appModel) {
         .then(function(result) {
             var apts = result[0];
             var settings = result[1];
-            var weekDaySchedule = settings.weekDays[date.getDay()]();
             var prefs = result[2];
-            var timeZone = settings.timeZone();
 
             var dateInfo = {
                 date: date,
                 appointmentsList: apts || [],
-                weekDaySchedule: weekDaySchedule,
-                schedulingPreferences: prefs,
-                timeZone: timeZone
+                weeklySchedule: settings,
+                schedulingPreferences: prefs
             };
 
             return dateInfo;
@@ -162,7 +159,6 @@ exports.create = function create(appModel) {
         updated so all previous instances get the updated data too.
     **/
     api.getDateAvailability = function getDateAvailability(date) {
-        console.error('DateAvailability does NOT support Time Zone conversions');
         var cached = cache.getSingle(date);
 
         if (cached) {

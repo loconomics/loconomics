@@ -8,7 +8,7 @@
     WeeklySchedule.WeekDaySchedule.
 **/
 'use strict';
-console.error('DateAvailability does NOT support Time Zone conversions');
+
 var Appointment = require('../models/Appointment');
 var moment = require('moment-timezone');
 
@@ -220,7 +220,6 @@ exports.createScheduleSlots = function createScheduleSlots(range, freeScheduleSl
             return exports.createScheduleSlotsForRanges(range.start, range.end, freeRange.start, freeRange.end);
         });
         var l = lists.reduce(function(l, nl) { return l.concat.apply(l, nl); }, []);
-        if (freeScheduleSlots.length > 1) console.log('createScheduleSlots', range, freeScheduleSlots, l);
         return l;
     }
     else {
@@ -333,11 +332,53 @@ exports.createScheduleSlotsForRanges = function createScheduleSlotsForRanges(sta
  * must be converted to local time for the specific date).
  * Result returns slots that fills from midnight to midnight of date.
 **/
-exports.createFreeScheduleSlots = function (date, weekDaySchedule/*, scheduleTimeZone*/) {
-    return weekDaySchedule.map(function (range) {
-        return {
-            start: moment(date).add(moment.duration(range.start())).toDate(),
-            end: moment(date).add(moment.duration(range.end())).toDate(),
-        };
+exports.createFreeScheduleSlots = function (date, weeklySchedule) {
+    var scheduleTimeZone = weeklySchedule.timeZone();
+    var localStart = moment(date).startOf('day');
+    // end of day will give a instant before midnight (like 23:59:59, 11:59pm)
+    // if for some reason is preferred to visualize as midnight of next date 
+    // just with replace .endOf('day') by .add(1, 'day') is enough.
+    var localEnd = moment(date).endOf('day');
+    var tzStart = localStart.clone().tz(scheduleTimeZone);
+    var tzEnd = localEnd.clone().tz(scheduleTimeZone);
+
+    var computeScheduleHoursAsLocal = function (weekDaySchedule, tzDateMoment) {
+        return weekDaySchedule.map(function (range) {
+            // Gets the date converted to the timezone and sets the time of the day
+            // to the defined on the range (just go to the beggining of the date and append 
+            // the time as a duration)
+            // Convert that to a local Date object.
+            return {
+                start: tzDateMoment.clone().startOf('day').add(moment.duration(range.start())).toDate(),
+                end: tzDateMoment.clone().startOf('day').add(moment.duration(range.end())).toDate()
+            };
+        });
+    };
+
+    var weekDayStart = tzStart.day();
+    var schedule = weeklySchedule.weekDays[weekDayStart]();
+    var locals = computeScheduleHoursAsLocal(schedule, tzStart);
+
+    // When local and timeZone are at different offsets, will happen that they partially
+    // match different week days at some points, because of that we compute not times
+    // at the beggining date but the date at the end too. But only if different of course.
+    var weekDayEnd = tzEnd.day();
+    if (weekDayStart !== weekDayEnd) {
+        schedule = weeklySchedule.weekDays[weekDayEnd]();
+        locals = locals.concat(computeScheduleHoursAsLocal(schedule, tzEnd));
+    }
+
+    // Because for each 'tz date' we compute the full date schedule hours and may 
+    // be different offset than the local natural date requested, we need to
+    // filter values to only include ones from the date range
+    var f = [];
+    locals.forEach(function (range) {
+        if (range.end <= localStart) return;
+        if (range.start >= localEnd) return;
+        f.push({
+            start: new Date(Math.max(localStart, range.start)),
+            end: new Date(Math.min(localEnd, range.end))
+        });
     });
+    return f;
 };
