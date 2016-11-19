@@ -1,8 +1,8 @@
 # App Quick Start Guide
 
 ## Download or clone the master branch of the Loconomics Github repository
-- [Download](https://github.com/joshdanielson/Loconomics/archive/master.zip)
-- Cloning link: https://github.com/joshdanielson/Loconomics.git
+- [Download](https://github.com/loconomics/loconomics/archive/master.zip)
+- Cloning link: https://github.com/loconomics/loconomics.git
 - [Help with cloning](https://help.github.com/articles/cloning-a-repository/)
 
 ## Install Node.js
