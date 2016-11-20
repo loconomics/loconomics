@@ -18,11 +18,16 @@ Note: Linux and Mac may require root/elevated rights in order to install globall
 ```
 sudo npm install -g grunt-cli
 ```
-## Install modules (from the command line in the project directory)
+## Install modules (from the command line in the /app folder of the project directory)
 ```
 npm install
 ```
 It will install all the modules listed on the package.json file, needed to build the app source code.
+
+Note: Linux and Mac may require root/elevated rights in order to install globally. For Mac, try:
+```
+sudo npm install
+```
 
 ## Build the app source code
 
