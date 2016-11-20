@@ -65,25 +65,23 @@ function WeeklySchedule(values) {
     this.weekDays.forEach(WeekDaySchedule);
 
     this.timeZoneDisplayName = ko.computed(function () {
-        var tzid = this.timeZone(),
-            tz = moment.tz(tzid),
-            name = tz.tz();
+        var tzid = this.timeZone();
+        var zone = moment.tz.zone(tzid);
 
-        // !moment.tz.zoneExists, just check the name is enough
-        if (!name) {
+        // !moment.tz.zoneExists, just check if the zone object exists is enough
+        if (!zone) {
             var localtz = moment.tz.guess();
-            if (localtz)
-                tz = moment.tz(localtz.name);
-            if (tz)
-                name = tz.tz();
-            if (name)
+            if (localtz) {
                 setTimeout(function () {
-                    this.timeZone(name);
+                    // avoid race conditions: is still same original value?
+                    if (tzid === this.timeZone())
+                        this.timeZone(localtz);
                 }.bind(this), 1);
+            }
         }
 
-        if (name)
-            return name + ' (' + tz.zoneAbbr() + ')';
+        if (tzid)
+            return tzid + ' (' + zone.abbr(0) + ')';
         else
             return '';
     }, this);
