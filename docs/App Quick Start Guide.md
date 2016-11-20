@@ -14,8 +14,10 @@ You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) or new
 ```
 npm install -g grunt-cli
 ```
-Note: Linux and Mac may require root/elevated rights in order to install globally.
-
+Note: Linux and Mac may require root/elevated rights in order to install globally. For Mac, try:
+```
+sudo npm install -g grunt-cli
+```
 ## Install modules (from the command line in the project directory)
 ```
 npm install
