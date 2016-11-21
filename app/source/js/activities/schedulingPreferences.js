@@ -218,10 +218,13 @@ function WeeklyScheduleVM(app) {
         return scheduleVersion.pushSave();
     };
 
-    this.timeZonesList = ko.observable(timeZoneList.getUserList());
-
-    this.autoTimeZone = ko.pureComputed(function () {
-        return 'Auto (' + timeZoneList.timeZoneToDisplayFormat(timeZoneList.getLocalTimeZone()) + ')';
+    var autoTz = timeZoneList.getLocalTimeZone();
+    var autoLabel = 'Auto (' + timeZoneList.timeZoneToDisplayFormat(autoTz) + ')';
+    var list = timeZoneList.getUserList();
+    list.unshift({
+        id: autoTz,
+        label: autoLabel
     });
+    this.timeZonesList = ko.observable(list);
 }
 
