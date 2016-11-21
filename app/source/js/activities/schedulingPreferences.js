@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
     
@@ -182,6 +182,38 @@ function SchedulingPreferencesVM(app) {
     }, this.prefs);
 }
 
+/**
+    Return a list of time zones for places with population
+    useful to display to a user to pick a value.
+    The list is made of objects with 'id' the time zone name (TZID)
+    and 'label' a string with the zone offset, name and abbreviated
+    name.
+**/
+function getTimeZonesUserList() {
+    var m = moment({year: 2000, month:0, date:1});
+    return moment.tz.names()
+    .filter(function(z) {
+        return z.indexOf('/') !== -1 && moment.tz.zone(z).population;
+    })
+    .map(function(a) {
+        var z = moment.tz.zone(a);
+        var ts = m.valueOf();
+        return {
+            id: a,
+            offset: z.offset(ts),
+            label: (m.clone().tz(a).format('Z')) + ' ' + a + ' (' + z.abbr(ts) + ')'
+        };
+    })
+    .sort(function(a, b) {
+        if (a.offset !== b.offset) {
+            return a.offset > b.offset ? -1 : 1;
+        }
+        else {
+            return a.id > b.id ? 1 : -1;
+        }
+    });
+}
+
 function WeeklyScheduleVM(app) {
 
     var weeklySchedule = app.model.weeklySchedule;
@@ -215,5 +247,7 @@ function WeeklyScheduleVM(app) {
     this.save = function save() {
         return scheduleVersion.pushSave();
     };
+
+    this.timeZonesList = ko.observable(getTimeZonesUserList());
 }
 
