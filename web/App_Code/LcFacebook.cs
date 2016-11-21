@@ -159,7 +159,7 @@ public static class LcFacebook
             var browser = new WebClient();
             // Do a server request to Facebook to get the user information
             var url = String.Format(
-                "https://graph.facebook.com/{0}?access_token={1}", //&fields=id,name,first_name,last_name,gender,about",
+                "https://graph.facebook.com/v2.8/{0}?access_token={1}", //&fields=id,name,first_name,last_name,gender,about",
                 facebookUserID,
                 userAccessToken
             ); // YOUR_USER_ACCESS_TOKEN

@@ -205,7 +205,7 @@ function SignupVM(app) {
 
         // email,user_about_me
         facebookLogin().then(function (result) {
-            var auth = result.authResponse || result.auth;
+            var auth = result.authResponse;
             // Set FacebookId to link accounts:
             vm.facebookUserID(auth.userID);
             vm.facebookAccessToken(auth.accessToken);
