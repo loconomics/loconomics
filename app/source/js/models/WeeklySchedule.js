@@ -9,6 +9,8 @@ var ko = require('knockout'),
     WeekDaySchedule = require('./WeekDaySchedule'),
     TimeRange = require('./TimeRange');
 
+var timeZoneList = require('../utils/timeZoneList');
+
 /**
     Main model defining the week schedule
     per week date, or just set all days times
@@ -64,26 +66,20 @@ function WeeklySchedule(values) {
 
     this.weekDays.forEach(WeekDaySchedule);
 
+    this.displayedTimeZoneFormatter = function(tzid) {
+        var zone = moment.tz.zone(tzid);
+        var m = moment().startOf('year');
+        if (tzid) {
+            return tzid + ' (' + zone.abbr(m.valueOf()) + ')';
+        }
+        else {
+            return '';
+        }
+    };
+
     this.timeZoneDisplayName = ko.computed(function () {
         var tzid = this.timeZone();
-        var zone = moment.tz.zone(tzid);
-
-        // !moment.tz.zoneExists, just check if the zone object exists is enough
-        if (!zone) {
-            var localtz = moment.tz.guess();
-            if (localtz) {
-                setTimeout(function () {
-                    // avoid race conditions: is still same original value?
-                    if (tzid === this.timeZone())
-                        this.timeZone(localtz);
-                }.bind(this), 1);
-            }
-        }
-
-        if (tzid)
-            return tzid + ' (' + zone.abbr(0) + ')';
-        else
-            return '';
+        return tzid ? timeZoneList.timeZoneToDisplayFormat(this.timeZone()) : '';
     }, this);
 }
 
