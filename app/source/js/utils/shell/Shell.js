@@ -112,7 +112,10 @@ module.exports = Shell;
     seems doing nothing because gets automatically redirected again to the same url).
 **/
 Shell.prototype.go = function go(url, state, useReplace) {
-
+    if (typeof(url) !== 'string') {
+        console.error('Shell.go aborted. It needs a string as URL, given:', url);
+        return;
+    }
     if (this.forceHashbang) {
         if (!/^#!/.test(url)) {
             url = '#!' + url;
@@ -373,8 +376,14 @@ Shell.prototype.run = function run() {
             linkWorking = null;
         }, linkWorkingDelay);
 
-        var $t = shell.$(this),
-            href = $t.attr('href') || $t.data('href');
+        var $t = shell.$(this);
+        var href = $t.attr('href') || $t.data('href');
+
+        // If there is no link, silently abort.
+        if (!href) {
+            e.preventDefault();
+            return;
+        }
         
         //DEBUG console.log('Shell on', linkEvent, e.type, 'href', href, 'element', $t);
 
