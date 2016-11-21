@@ -34,9 +34,9 @@ var shell = new Shell({
     baseUrl: baseUrl,
     
     forceHashbang: hashBang,
-
+    // Must be a all-users accesible URL
     indexName: 'home',
-    
+    // Must be a all-users accesible URL
     forbiddenAccessName: 'login',
 
     linkEvent: 'click',

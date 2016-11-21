@@ -251,7 +251,10 @@ Shell.prototype.replace = function replace(state) {
     // Access control
     var accessError = this.accessControl(state.route);
     if (accessError) {
-        return this.go(this.forbiddenAccessName, accessError, true);
+        // Prevent to go if already there, to don't enter and endless loop
+        if (this.currentRoute.name !== this.forbiddenAccessName) {
+            return this.go(this.forbiddenAccessName, accessError, true);
+        }
     }
 
     // Locating the container
