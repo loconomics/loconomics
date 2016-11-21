@@ -140,10 +140,11 @@
                             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.saturday, label: 'Saturdays', isLocked: isLocked } } --><!-- /ko -->
                             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.sunday, label: 'Sundays', isLocked: isLocked } } --><!-- /ko -->
 
-                            <div class="form-group">
-                                <label class="control-label">Time Zone:</label>
-                                <span class="form-control-static" data-bind="text: schedule.timeZoneDisplayName"></span>
-                                <select class="form-control" data-bind="options: timeZonesList, optionsText: 'label', optionsValue: 'id', optionsCaption: autoTimeZone"></select>
+                            <div class="form-group row">
+                                <label class="control-label col-sm-4" for="schedulingPrefs-timeZone">Time Zone:</label>
+                                <div class="col-sm-8">
+                                    <select id="schedulingPrefs-timeZone" class="form-control" data-bind="value: schedule.timeZone, options: timeZonesList, optionsText: 'label', optionsValue: 'id', optionsCaption: autoTimeZone"></select>
+                                </div>
                             </div>
                         </div>
                     </div>
