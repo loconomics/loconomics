@@ -1,0 +1,3 @@
+*.cshtml linguist-language=html
+/web/api/*.cshtml linguist-language=csharp
+*.sql linguist-language=sql
