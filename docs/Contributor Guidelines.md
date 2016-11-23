@@ -53,8 +53,9 @@ issue1076 - A1 - new customertransactiontype table.sql
 We use Github to track all development issues, project management, product roadmaps, and documentation.
 
 ### Branch use and pull requests
+Please review [Understanding the Github Flow](https://guides.github.com/introduction/flow/) as we follow its process.
 
-#### Master
+#### Master, testing, staging, live
 Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch. 
 
 #### New branches
