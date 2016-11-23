@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1008,7 +1008,7 @@ namespace CalendarDll
                         
                             // to be 'all events complete or partially inside the range: complete included or with a previous
                             // start or with a posterior end'.
-                            // This fix a bug found on #463 described on comment https://github.com/dani0198/Loconomics/issues/463#issuecomment-36936782 and nexts.
+                            // This fix a bug found on #463 described on comment https://github.com/joshdanielson/Loconomics/issues/463#issuecomment-36936782 and nexts.
                             (
                                 c.StartTime < nextDayFromEndEvaluationDay && 
                                 c.EndTime >= startEvaluationDate
@@ -1182,7 +1182,7 @@ namespace CalendarDll
                 // OR, if they are Recurrence, any Date Range (cannot be filtered out at database)
                 // Filtering is 'all events complete or partially inside the range: complete included or with a previous
                 // start or with a posterior end'.
-                // As of #463, comment https://github.com/dani0198/Loconomics/issues/463#issuecomment-36936782 and nexts.
+                // As of #463, comment https://github.com/joshdanielson/Loconomics/issues/463#issuecomment-36936782 and nexts.
                 var listEventsFromDB = db.Database.SqlQuery<CalendarEvents>(@"
                     SELECT [Id]
                           ,[UserId]

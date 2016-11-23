@@ -42,7 +42,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         target: this.viewModel.signup,
         event: 'signedup',
         handler: function() {
-            var url = '/addJobTitles' + this.viewModel.onboardingUrlParamsString();
+            var url = '/addJobTitles' + (this.viewModel.onboardingUrlParamsString() || '');
             this.app.shell.go(url);
         }.bind(this)
     });

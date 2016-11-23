@@ -40,11 +40,12 @@ public static partial class LcData
             // and its value gets reserved for use
             // grouped with the Provider (then, in binary 4 + 8 => 12)
             //OnlyMember = 8,
-            Member = 12,
+            Member = 4 | 8,
             Admin = 16,
-            LoggedUser = 30,
-            User = 31,
-            System = 32
+            Contributor = 32,
+            LoggedUser = 2 | 4 | 8 | 16 | 32,
+            User = 1 | 2 | 4 | 8 | 16 | 32,
+            System = 128
         }
         public static UserType ParseUserType(string strtype, UserType defaultTo = UserType.None)
         {
@@ -65,9 +66,9 @@ public static partial class LcData
                 case 's':
                     return UserType.System;
                 case 'p':
-                    return UserType.Provider;
+                    return UserType.ServiceProfessional;
                 case 'c':
-                    return UserType.Customer;
+                    return UserType.Client;
                 case 'u':
                     return UserType.User;
                 case 'a':
@@ -131,6 +132,7 @@ public static partial class LcData
                                 ,coalesce(IsAdmin, cast(0 as bit)) As IsAdmin
                                 ,IsCustomer
                                 ,IsProvider
+                                ,IsContributor
                                 ,AccountStatusID
 
                                 -- Only Providers:

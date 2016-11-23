@@ -194,9 +194,16 @@ public static class LcUrl
         if (HttpContext.Current.Request.IsLocal)
             return url;
         HttpContext context = HttpContext.Current;
-        var i = url.IndexOf(context.Request.ApplicationPath);
+        var appPath = context.Request.ApplicationPath ?? "";
+        // Shortcut on app running at the root of the URL, since
+        // that is a good URL already, and any further processing will cause
+        // a bug since it will strip the beggining slash and we need one for any
+        // URL returned by this method (as happened and fixed at #1137).
+        if (appPath == "/")
+            return url;
+        var i = url.IndexOf(appPath);
         if (i > -1)
-            return url.Substring(i + context.Request.ApplicationPath.Length);
+            return url.Substring(i + appPath.Length);
         return url;
     }
 }

@@ -3,6 +3,7 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "@(id)"
         version   = "@(version)"
+        versionCode = "@(versionCode)"
         >
 
     <name>@(name)</name>
@@ -33,7 +34,7 @@
     <preference name="phonegap-version" value="cli-5.2.0" />
     <platform name="android">
         <preference name="phonegap-version" value="5.1.1" />
-    </platform>    
+    </platform>
 
     <!-- all: default means both landscape and portrait are enabled -->
     <preference name="orientation" value="default" />
@@ -107,7 +108,7 @@
     <plugin name="cordova-plugin-file-transfer" spec="1.5.1" />
     <plugin name="cordova-universal-clipboard" spec="0.1.0" />
     <plugin name="cordova-plugin-google-analytics" spec="1.0.0" />
-    <plugin name="cordova-plugin-facebook4" spec="1.7.1"><!--name="phonegap-facebook-plugin" spec="0.12.0">-->
+    <plugin name="cordova-plugin-facebook4" spec="1.7.4"><!--name="phonegap-facebook-plugin" spec="0.12.0">-->
         <param name="APP_ID" value="@(facebookAppID)" />
         <param name="APP_NAME" value="@(facebookAppName)" />
     </plugin>
