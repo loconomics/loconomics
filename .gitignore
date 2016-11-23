@@ -1,3 +1,7 @@
 .brackets.json
 .vs
 .DS_Store
+.nvmrc
+node_modules/*
+**/node_modules/*
+.idea

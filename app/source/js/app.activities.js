@@ -49,7 +49,6 @@ module.exports = {
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'marketplaceProfile': require('./activities/marketplaceProfile'),
     'marketplaceJobtitles': require('./activities/marketplaceJobtitles'),
-    'profilePictureBio': require('./activities/profilePictureBio'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
@@ -76,9 +75,9 @@ module.exports = {
     'clientAppointment': require('./activities/clientAppointment'),
     'viewBooking': require('./activities/viewBooking'),
     'blog': require('./activities/blog'),
-    'instantBooking': require('./activities/instantBooking'),
     'ownerPerks': require('./activities/ownerPerks'),
     'cancellationPolicies': require('./activities/cancellationPolicies'),
+    'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
     'onboardingSuccess': require('./activities/onboardingSuccess'),
     'ownerDisclosure': require('./activities/ownerDisclosure')

@@ -26,7 +26,7 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Locations', {
-        backLink: '/scheduling' , helpLink: '/help/relatedArticles/201965996-setting-your-service-locations-areas'
+        backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
     
     // On change to a valid code, do remote look-up
@@ -171,6 +171,8 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
+    
+    this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 

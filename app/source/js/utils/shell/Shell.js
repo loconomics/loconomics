@@ -112,7 +112,10 @@ module.exports = Shell;
     seems doing nothing because gets automatically redirected again to the same url).
 **/
 Shell.prototype.go = function go(url, state, useReplace) {
-
+    if (typeof(url) !== 'string') {
+        console.error('Shell.go aborted. It needs a string as URL, given:', url);
+        return;
+    }
     if (this.forceHashbang) {
         if (!/^#!/.test(url)) {
             url = '#!' + url;
@@ -366,6 +369,7 @@ Shell.prototype.run = function run() {
         linkWorkingDelay = 80; // 340; // ms
     //DEBUG var linkEvent = this.linkEvent;
     this.$(document).on(this.linkEvent, '[href], [data-href]', function(e) {
+        //jshint maxcomplexity:8
         //DEBUG console.log('Shell on event', e.type, linkWorking);
         // If working, avoid everything:
         if (linkWorking) return false;
@@ -373,13 +377,21 @@ Shell.prototype.run = function run() {
             linkWorking = null;
         }, linkWorkingDelay);
 
-        var $t = shell.$(this),
-            href = $t.attr('href') || $t.data('href');
+        var $t = shell.$(this);
+        var href = $t.attr('href') || $t.data('href');
+
+        // If there is no link, silently abort.
+        if (!href) {
+            e.preventDefault();
+            return;
+        }
         
         //DEBUG console.log('Shell on', linkEvent, e.type, 'href', href, 'element', $t);
 
         // Do nothing if the URL contains the protocol
-        if (/^[a-z]+:/i.test(href)) {
+        // and when the link has a target value (will open in new window/tab)
+        var target = $t.attr('target');
+        if (/^[a-z]+:/i.test(href) || target) {
             return;
         }
         else if (!this.useSingleHashForRouting && /^#([^!]|$)/.test(href)) {

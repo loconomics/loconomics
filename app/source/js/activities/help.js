@@ -9,7 +9,7 @@ var A = Activity.extend(function HelpActivity() {
     
     Activity.apply(this, arguments);
     
-    this.viewModel = new ViewModel();
+    this.viewModel = new ViewModel(this.app);
     this.accessLevel = null;    
 
     this.navBar = Activity.createSubsectionNavBar('Back');
@@ -19,79 +19,21 @@ var A = Activity.extend(function HelpActivity() {
     this.currentLabels = '';
     this.loadArticles = function() {
         // don't load if faqs and sections are already loaded
-        if(this.viewModel.articles().length>0 && this.viewModel.sections().length>0){
-            return ;
+        if(this.viewModel.articles().length && this.viewModel.sections().length){
+            return;
         }
 
-        // var articleIdsRelatedTo = {'weeklySchedule':[205679005, 205282499]};
-        var url = 'https://loconomics.zendesk.com/api/v2/help_center/articles.json?label_names=' + encodeURIComponent(this.currentLabels);
-        var categoriesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/categories.json';
-        var sectionsUrl = 'https://loconomics.zendesk.com/api/v2/help_center/sections.json';
         this.viewModel.isLoading(true);
 
-        var $ = require('jquery');
-        Promise.all([$.get(url), $.get(categoriesUrl), $.get(sectionsUrl)]).then(function(res) {
-            var resArticles = res[0];
-            var resCategories = res[1];
-            var resSections = res[2];
-
-            if(resCategories){
-                this.viewModel.categories(
-                    resCategories.categories.map(function(category){
-                        var tail = category.id + '-' + slug(category.name);
-                        return new Category({
-                            id: category.id,
-                            category_id: category.category_id,
-                            name: category.name,
-                            description: category.description,
-                            tail: tail,
-                            urlPath: '/help/categories/' + tail
-                        });
-                    })
-                );
-            }
-            else {
-                this.viewModel.categories([]);
-            }
-
-            if(resSections){
-                this.viewModel.sections(
-                    resSections.sections.map(function(section){
-                        var tail = section.id + '-' + slug(section.name);
-                        return new Section({
-                            id: section.id,
-                            category_id: section.category_id,
-                            name: section.name,
-                            description: section.description,
-                            tail: tail,
-                            urlPath: '/help/sections/' + tail
-                        });
-                    })
-                );
-                // need to "call" every property in order to get value
-                // exmaple:
-                // console.log(this.viewModel.sections()[0].name()); >> "Announcements"
-            }
-            else {
-                this.viewModel.sections([]);
-            }
-
-            if (resArticles) {
-                this.viewModel.articles(resArticles.articles.map(function(art) {
-                    var tail = art.id + '-' + slug(art.title);
-                    return new Article({
-                        id: art.id,
-                        section_id : art.section_id,
-                        title: art.title,
-                        description: art.body,
-                        tail: tail,
-                        urlPath: '/help/articles/' + tail
-                    });
-                }));
-            }
-            else {
-                this.viewModel.articles([]);
-            }
+        Promise.all([
+            this.app.model.help.getArticles(),
+            this.app.model.help.getCategories(),
+            this.app.model.help.getSections()            
+        ])
+        .then(function(res) {
+            this.viewModel.articles(res[0]);
+            this.viewModel.categories(res[1]);
+            this.viewModel.sections(res[2]);
             this.viewModel.isLoading(false);
         }.bind(this))
         .catch(function(/*err*/) {
@@ -181,9 +123,8 @@ A.prototype.show = function show(state) {
 
 var ko = require('knockout');
 
-function ViewModel() {
-
-
+function ViewModel(app) {
+    this.isInOnboarding = app.model.onboarding.inProgress;
     this.articles = ko.observableArray([]);
     this.searchText = ko.observable('');
     this.isLoading = ko.observable(false);
@@ -203,30 +144,15 @@ function ViewModel() {
     this.selectedSectionId = ko.observable(0);
 
     this.fullArticleData = ko.pureComputed(function() {
-        var selectedArticleId = this.selectedArticleId();
-         var result = this.articles().filter(function(article) {
-            var articleIsSelected = article.id() === selectedArticleId;
-            return articleIsSelected;
-        });
-        return result.length ? result[0]:null;
+        return app.model.help.findByIdAt(this.selectedArticleId(), this.articles());
     }, this);
 
     this.selectedSection = ko.pureComputed(function(){
-        var selectedSectionId = this.selectedSectionId();
-         var result = this.sections().filter(function(section) {
-            var sectionIsSelected = section.id() === selectedSectionId;
-            return sectionIsSelected;
-        });
-        return result.length ? result[0]:null;
+        return app.model.help.findByIdAt(this.selectedSectionId(), this.sections());
     }, this);
 
     this.selectedCategory = ko.pureComputed(function(){
-        var selectedCategoryId = this.selectedCategoryId();
-         var result = this.categories().filter(function(category) {
-            var categoryIsSelected = category.id() === selectedCategoryId;
-            return categoryIsSelected;
-        });
-        return result.length ? result[0]:null;
+        return app.model.help.findByIdAt(this.selectedCategoryId(), this.categories());
     }, this);
 
     this.filteredSectionArticles = ko.pureComputed(function() {
@@ -275,69 +201,3 @@ function ViewModel() {
     }, this);
 }
 
-
-
-var Model = require('../models/Model');
-function Article(values) {
-
-    Model(this);
-
-    this.model.defProperties({
-        id: 0,
-        section_id: 0,
-        title: '',
-        description: '',
-        tail: '',
-        urlPath: ''
-    }, values);
-}
-
-function Section(values) {
-
-    Model(this);
-
-    this.model.defProperties({
-        id: 0,
-        category_id: 0,
-        name: '',
-        description: '',
-        tail: '',
-        urlPath: ''
-    }, values);
-}
-
-function Category(values) {
-
-    Model(this);
-
-    this.model.defProperties({
-        id: 0,
-        name: '',
-        description: '',
-        tail: '',
-        urlPath: ''
-    }, values);
-}
-
-/*
-from: http://stackoverflow.com/questions/1053902/how-to-convert-a-title-to-a-url-slug-in-jquery
-Author: Taranttini
-Author's Stack Overflow Profile: http://stackoverflow.com/users/693547/taranttini
-*/
-function slug(str) {
-  str = str.replace(/^\s+|\s+$/g, ''); // trim
-  str = str.toLowerCase();
-
-  // remove accents, swap ñ for n, etc
-  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;'";
-  var to   = "aaaaaeeeeeiiiiooooouuuunc-------";
-  for (var i=0, l=from.length ; i<l ; i++) {
-    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
-  }
-
-  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-    .replace(/\s+/g, '-') // collapse whitespace and replace by -
-    .replace(/-+/g, '-'); // collapse dashes
-
-  return str;
-}

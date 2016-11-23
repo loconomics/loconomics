@@ -16,7 +16,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
-        backLink: 'scheduling' , helpLink: '/help/relatedArticles/201959943-add-scheduling-to-your-website'
+        backLink: 'scheduling' , helpLink: this.viewModel.helpLink
     });
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
@@ -93,6 +93,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
     var marketplaceProfile = app.model.marketplaceProfile;
     this.jobTitleName = ko.observable('Job Title'); 
@@ -170,6 +171,23 @@ function ViewModel(app) {
         var j = this.userJobTitle();
         return j && j.bookMeButtonReady() || false;
     }, this);
+    this.collectPaymentAtBookMeButtonString = ko.pureComputed({
+        read: function() {
+            var j = this.userJobTitle();
+            return j && j.collectPaymentAtBookMeButton() && 'true' || 'false';
+        },
+        write: function(val) {
+            var j = this.userJobTitle();
+            if (!j) return;
+            if (val === 'true') {
+                j.collectPaymentAtBookMeButton(true);
+            }
+            else {
+                j.collectPaymentAtBookMeButton(false);
+            }
+        },
+        owner: this
+    });
     
     this.copyCode = function() {
         var text = this.buttonHtmlCode();
@@ -179,6 +197,26 @@ function ViewModel(app) {
         }
         else {
             this.copyText('Copied!');
+        }
+    }.bind(this);
+    
+    this.save = function() {
+        var ujt = this.userJobTitle();
+        if (ujt) {
+            //this.isSaving(true);
+            
+            var plain = ujt.model.toPlainObject();
+            plain.collectPaymentAtBookMeButton = ujt.collectPaymentAtBookMeButton();
+
+            app.model.userJobProfile.setUserJobTitle(plain)
+            .then(function() {
+                //this.isSaving(false);
+                //app.successSave();        
+            }.bind(this))
+            .catch(function(err) {
+                //this.isSaving(false);
+                app.modals.showError({ title: 'Error saving your "collect payment" preference', error: err });
+            }.bind(this));
         }
     }.bind(this);
 }

@@ -33,6 +33,17 @@ public static class LcAuth
     /// </summary>
     public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
     public static string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.";
+    /// <summary>
+    /// Auto generate a password: will be a random one that meets the complexity and length requirements
+    /// </summary>
+    /// <returns></returns>
+    public static string GeneratePassword()
+    {
+        // the option 'non alphanumeric characters' does not ensure that our newest (HIPPA complain)
+        // complexity requirements are met, so we add some fixed characters that will pass ValidPasswordRegex
+        return "aQ1$" + Membership.GeneratePassword(10, 5);
+    }
+
     public static string AccountLockedErrorMessage = @"Your account has been locked due to too many unsuccessful login attempts. Please try logging in again after 5 minutes or click Forget password";
     public class RegisteredUser
     {

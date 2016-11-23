@@ -9,12 +9,12 @@
 
 [data-activity=learnMoreProfessionals] {
 
-    
+
     // NO NAVBAR, disabled on the JS activity, so this can replace the default:
     top: 0 !important;
-    
+
     // NOTE: all activities are absolute positioned, so is already a positioning context
-    
+
     [role=main] {
         $arrowSize = 30px;
         $sectionTitleFontSize = 32px;
@@ -30,13 +30,13 @@
             margin: 0 auto;
             padding: 0.4em $grid-gap;
             text-align: center
-            
+
             @media $mediaMaxXs {
                 font-size: $sectionTitleFontSizeSmall;
                 line-height: $sectionTitleLineHeightSmall;
             }
         }
-            
+
         .coop-join-up {
             $boxSize = 340px;
             $boxMargin = 1.5%;
@@ -59,24 +59,24 @@
                 border-color: White;
             }
         }
-        
+
         .coop-search {
             padding-top: $LargeNavBar-height + 32px;
             background: no-repeat center / cover;
-            background-image:  
+            background-image:
               linear-gradient(
                 rgba(0, 152, 154, 0.1),
                 rgba(0, 152, 154, 0.1)
               ),
               url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
-        
+
             .coop-title {
                 color: White;
                 font-size: 44px;
                 font-weight: bold;
                 margin: 0.4em auto;
                 text-align: center
-                
+
                 @media $mediaMaxSm {
                     font-size: 38px;
                 }
@@ -122,31 +122,31 @@
             }
         }
 
-        
+
         // How It Works section
         .coop-hiw {
             text-align: center;
             color: $gray;
             background: White;
             down-arrow($arrowSize, 0, none, White, center);
-            
+
             $iconsSize = 90px;
-            
+
             ul {
                 margin-top: ($iconsSize / 2) + 18px;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
-                
+
                 > li {
                     margin-top: (0 - $iconsSize / 2);
                 }
             }
-            
+
             h3 {
                 font-weight: bold;
                 font-size: 22px;
             }
-            
+
             // icons
             i {
                 background: $brand-primary;
@@ -158,7 +158,7 @@
             }
 
         }
-        
+
         // Benefits of ownership in Loconomics
         .coop-benefits {
             $boxSize = 340px;
@@ -186,9 +186,9 @@
                     margin: $boxMargin;
                     padding: 16px;
                     vertical-align: middle;
-                    
+
                     // On small sizes 2 columns does not fits so
-                    // (using XS/mobile now -- is close enough to the actual needed size) 
+                    // (using XS/mobile now -- is close enough to the actual needed size)
                     // it automatically gets 1 column but needs to manage size so it
                     // shrinks automatically for smaller screens using current fixed size
                     // as maximum size (to don't let to appear too wide on sizes in the middle
@@ -200,12 +200,12 @@
                         max-width: $boxSize;
                         margin: $grid-gap auto;
                     }
-                    
+
                     a {
                         color: $brand-secondary;
                         font-weight: bold;
                     }
-                    
+
                     h2 {
                         font-size: 38px;
                         font-weight: bold;
@@ -213,7 +213,7 @@
                         margin: 0;
                         text-align: center;
                     }
-                    
+
                     .Icon-bookNow {
                         display: inline-block;
                         width: 100px;
@@ -221,23 +221,23 @@
                         color: $brand-secondary;
                         background-size: 100px 37px;
                         background-image: url('../images/book-now.png');
-                        background-image: 
+                        background-image:
                           linear-gradient(transparent, transparent),
                           url('../images/book-now.svg');
-                        
+
                     }
-                    
+
                     h3 {
                         font-size: 15px;
                         font-weight: bold;
                     }
                 }
-                
+
                 // Setting margin for small screens since the items margin is auto there
                 @media $mediaMaxXs {
                     margin: 0 $grid-gap;
                 }
-                
+
                 // icons
                 i {
                     color: $brand-secondary;
@@ -247,7 +247,7 @@
             }
         }
 
-        
+
         // How the Cooperative Works section
         .coop-ownership {
             text-align: center;
@@ -255,30 +255,30 @@
             background: White;
             down-arrow($arrowSize, 0, none, White, center);
             padding-top: 40px;
-            
+
             $iconsSize = 90px;
-            
+
             .coop-section-title {
               color: $gray-dark;
             }
-            
+
             ul {
                 margin-top: ($iconsSize / 2) + 18px;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
-                
+
                 @media (max-width: 520px) {
                     margin-top: 0px;
                 }
-                
+
                 > li {
                   margin-top: (0 - $iconsSize / 2);
-                
+
                   @media (max-width: 520px) {
                     margin-top: 30px;
                   }
-                  
-                
+
+
                   @media $mediaMaxXs {
                       margin-top: 0px;
                   }
@@ -287,14 +287,14 @@
             @media (max-width: 520px) {
                     margin: 0 $grid-gap;
             }
-            
-            
-            
+
+
+
             h3 {
                 font-weight: bold;
                 font-size: 22px;
             }
-            
+
             // icons
             i {
                 background: white;
@@ -308,19 +308,19 @@
             }
 
         }
-        
+
         .coop-pricing {
             $boxSize = 300px;
             $boxMargin = 1.5%;
-            
+
             background: $gray-background;
             text-align: center;
             padding-top: 40px;
-            
+
             h2 {
                 color: $gray;
             }
-            
+
             ul {
                 color: $gray;
                 text-align: center;
@@ -339,7 +339,7 @@
                     margin: $boxMargin;
                     vertical-align: middle;
                     box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
-                    
+
                     /* DISABLED, background does not looks good, and not so needed
                     // For a small size where only one card fits the space (~pixels)
                     // use an automatic width so the card does not looks with lot of
@@ -360,7 +360,7 @@
                         background-size: 100% 157px;
                     }
                     */
-                    
+
                     h3 {
                       font-size: 36px;
                       color: white;
@@ -376,19 +376,19 @@
                         font-weight: bold;
                         color: $gray-dark;
                     }
-                    
+
                     p {
                         margin: 0px 0px 30px;
                         color: $gray-dark;
                         font-size: 16px;
                     }
-                
+
                   @media $mediaMaxXs {
                     max-width: 280px;
                     margin: 15px auto;
                   }
                 }
-                
+
                 .coop-or {
                   display: block;
                   margin: 20px 30px;
@@ -397,7 +397,7 @@
                     display: inline-block;
                   }
                 }
-                
+
                 // Setting margin for small screens since the items margin is auto there
                 //@media $mediaMaxXs {
 //                @media (max-width: 520px) {
@@ -405,7 +405,7 @@
 //                }
             }
         }
-        
+
         ///////////////
         /// SPECIAL HOW-IT-WORKS OVERLAY EFFECT:
         /// Move everything up to show title and half icons out of the
@@ -419,7 +419,7 @@
         }
         .coop-hiw {
             margin-bottom: (0 - $offset);
-            
+
             .coop-section-title,
             .coop-section-listing {
                 position: relative;
@@ -429,7 +429,7 @@
             &:before {
                 bottom: ($offset - $arrowSize);
             }
-            
+
             // Just rows in extra-small size (html is set to use 3 Bootstrap columns from col-sm and up)
             @media $mediaMaxXs {
                 .coop-section-title {
@@ -437,7 +437,7 @@
                     height: ($sectionTitleLineHeightSmall * 2);
                     box-sizing: content-box;
                 }
-                
+
                 ul {
                     // Just this to keep the effect of first icon half in/out the background
                     margin-top: 0;
@@ -457,25 +457,25 @@
                 clear: both;
             }
         }
-        
+
         .coop-signup {
             padding-top: 32px;
             padding-bottom: 32px;
             background: no-repeat center / cover;
-            background-image:  
+            background-image:
               linear-gradient(
                 rgba(0, 152, 154, 0.1),
                 rgba(0, 152, 154, 0.1)
               ),
               url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
-        
+
             .coop-title {
                 color: White;
                 font-size: 44px;
                 font-weight: bold;
                 margin: 0.4em auto;
                 text-align: center
-                
+
                 @media $mediaMaxSm {
                     font-size: 38px;
                 }
@@ -493,7 +493,7 @@
             .coop-tagline {
                 padding: 0 $grid-gap;
             }
-            
+
             .btn-add-profile{
                 display: block;
                 height: 56px;
@@ -526,10 +526,10 @@
                         border-color: white;
                     }
                     .fa {
-                        font-size: 29px !important;
+                        font-size: 26px !important;
                     }
                     .icon-right {
-                        margin-top: -35px;
+                        margin-top: -33px;
                     }
                     .form-control {
                         height: 40px;
@@ -539,7 +539,7 @@
             }
         }
     }
-    
+
     #learnMoreProfessionalsVideo {
         max-width: 600px;
     }

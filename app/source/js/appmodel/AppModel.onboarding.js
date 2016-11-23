@@ -3,19 +3,26 @@
 **/
 'use strict';
 
-var OnboardingProgress = require('../viewmodels/OnboardingProgress'),
-    NavAction = require('../viewmodels/NavAction');
+var OnboardingProgress = require('../viewmodels/OnboardingProgress');
+var NavAction = require('../viewmodels/NavAction');
+var ko = require('knockout');
 
 exports.create = function create(appModel) {
     
     // Onboarding management and state, initially empty so no progress
     var api = new OnboardingProgress();
     
+    api.currentActivity = ko.observable('');
+    
     // Requires initialization to receive and app instance
     api.init = function init(app) {
         api.app = app;
+        api.currentActivity(app.shell.currentRoute.name);
+        app.shell.on(app.shell.events.itemReady, function() {
+            api.currentActivity(app.shell.currentRoute.name);
+        });
     };
-    
+
     // Extended with new methods
 
     // Set the correct onboarding progress and step given a step reference
@@ -75,6 +82,12 @@ exports.create = function create(appModel) {
         }
         return yep;
     };
+
+    api.goCurrentStep = function() {
+        // Go current step of onboarding, and if no one, go to dashboard
+        var url = this.stepUrl() || 'dashboard';
+        this.app.shell.go(url);
+    };
     
     api.goNext = function goNext() {
         var current = this.stepNumber();
@@ -112,17 +125,30 @@ exports.create = function create(appModel) {
         this.app.shell.go(this.stepUrl());
     };
     
+    api.isAtCurrentStep = ko.computed(function() {
+        return api.currentActivity() === api.stepName();
+    });
+    
     /**
         Check if onboarding is enabled on the user profile
-        and redirects to the current step, or do nothing
+        and redirects to the current step, or do nothing.
+        IMPORTANT: Exception: if the page is loading coming from itself,
+        like from a target=_blank link, does not redirect to
+        avoid to break the proposal of the link (like a help or FAQ link
+        on onboarding), BUT we need to set the onboarding step so the state is correct.
     **/
     api.goIfEnabled = function() {
         var step = api.app.model.user().onboardingStep();
-        if (step && 
-            api.setStep(step)) {
+        if (step && api.setStep(step)) {
+            var r = window.document.referrer;
+            // We check that there is a referrer (so comes from a link) and it shares the origin
+            // (be aware that referrer includes origin+pathname, we just look for same origin).
+            var fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
+            if (fromItSelf) return true;
+            
             // Go to the step URL if we are NOT already there, by checking name to
             // not overwrite additional details, like a jobTitleID at the URL
-            if (api.app.shell.currentRoute.name !== api.stepName()) {
+            if (!api.isAtCurrentStep()) {
                 var url = api.stepUrl();
                 api.app.shell.go(url);
             }

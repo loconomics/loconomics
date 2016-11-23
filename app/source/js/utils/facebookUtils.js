@@ -58,7 +58,7 @@ exports.ready = function facebookReady(readyCallback) {
             completeVerification: function () { return !!window.FB; },
             complete: function () {
                 // Initialize (Facebook registers itself as global 'FB')
-                window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false });
+                window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false, version: 'v2.8' });
 
                 // Is ready
                 apiStatus.ready = true;
@@ -90,7 +90,7 @@ exports.login = function facebookLogin(options) {
             FB.login(function (response) {
                 // status==connected if there is an authResponse
                 if (response.authResponse) {
-                    success({ auth: response.authResponse, FB: FB, response: response });
+                    success({ authResponse: response.authResponse, FB: FB, response: response });
                 }
                 else {
                     error({ response: response, FB: FB });
