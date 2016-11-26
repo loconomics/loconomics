@@ -33,7 +33,7 @@
 										else
 										{
 											<span>
-												 Cancel or reschedule by <strong>@(info.cancellationLimitDate.ToShortTimeString()) on @info.cancellationLimitDate.ToLongDateString()</strong> to avoid a @(( policy.cancellationFeeAfter).ToString("0.##%")) fee. Click <a href="@(info.viewClientBookingCard)" target="_blank" >here</a> to make changes.
+												 Cancel or reschedule by <strong>@(info.displayCancellationLimitDate()) to avoid a @(( policy.cancellationFeeAfter).ToString("0.##%")) fee. Click <a href="@(info.viewClientBookingCard)" target="_blank" >here</a> to make changes.
 											</span>
 										}
                                  </td>

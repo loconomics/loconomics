@@ -21,7 +21,7 @@
     /*=========================
      * Request/File Sizes
      */
-    
+
     /// <summary>
     /// Retrieve from asp.net configuration the maximum allowed request size in KB,
     /// or 0 otherwise (impossible to get size limit)
@@ -36,7 +36,7 @@
 
         return maxRequestLength;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -59,7 +59,7 @@
         else
         {
             result = size / 1024;
-            unit = "KB";                        
+            unit = "KB";
         }
 
         return result.ToString("0.00") + " " + unit;
@@ -150,12 +150,18 @@
         else
             return null;
     }
-    public static string DateTimeRangeToString(DateTime start, DateTime end){
-        return String.Format("{0:dddd, MMM d} from {1:t} to {2:t}", 
-            start
-            ,start
-            ,end
-        );
+    /// <summary>
+    /// It supports time zones, and times that have different offsets
+    /// </summary>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns></returns>
+    public static string DateTimeRangeToString(DateTimeOffset start, DateTimeOffset end)
+    {
+        var diffOffset = start.Offset != end.Offset;
+        var formatSameOffset = "{0:dddd, MMM d} from {1:t} to {2:t} ({3:zzz})";
+        var formatDiffOffset = "{0:dddd, MMM d} from {1:t} ({3:zzz}) to {2:t} ({4:zzz})";
+        return String.Format(diffOffset ? formatDiffOffset : formatSameOffset, start, start, end, start, end);
     }
     public static string GetShortestDateTimeRangeString(DateTime? start, DateTime? end,
         string dateFormat = "dddd, MMM d",
@@ -166,7 +172,7 @@
         var f = "";
         if (start.HasValue) {
             f += "{0:" + dateFormat + "}";
-            
+
             if (start.Value.TimeOfDay != TimeSpan.Zero) {
                 f += dateTimeSeparator + "{1:" + timeFormat + "}";
             }
@@ -178,7 +184,7 @@
                     f += "{2:" + dateFormat + "}";
                     withEndDate = true;
                 }
-                
+
                 if (end.Value.TimeOfDay != TimeSpan.Zero &&
                     start.Value.TimeOfDay != TimeSpan.Zero) {
                     if (withEndDate) {
@@ -327,7 +333,7 @@
         }
         return result;
     }
-    
+
     /*===========
      * Application/development channels
      */
@@ -354,7 +360,7 @@
             return (Channel == "dev" || Channel == "localdev");
         }
     }
-    
+
     /*
      * Page helpers
      * */
@@ -366,7 +372,7 @@
     /// </summary>
     /// <param name="page">Current page name (single page url segment)</param>
     public static bool CheckDashboardSuccessPost(string page, bool alternativeSuccess = false)
-    {       
+    {
         var userId = WebMatrix.WebData.WebSecurity.CurrentUserId;
         using (var db = Database.Open("sqlloco"))
         {
@@ -390,7 +396,7 @@
                         userId,
                         nextStep == "" ? null : nextStep
                     );
-                    
+
                     var url = LcUrl.LangPath + "dashboard/" + nextStep;
                     if (Request.IsAjaxRequest()) {
                         ReturnJsonResult(1, url);
@@ -424,7 +430,7 @@
         }
         return false;
     }
-    
+
     public static int GetIeVersion() {
         // Sniff old IE browsers based on its engine (Trident) and version: so if it's Trident engine but is not the latest
         // version 7.0, then is IE 10 or lower; Trident/7.0 is IE11, and it's fine. Compatibility mode uses a lower Trident version,
@@ -455,7 +461,7 @@
         }
         return ieVersion;
     }
-    
+
     public static bool IsOldBrowser() {
         var ieVersion = GetIeVersion();
         return ieVersion > 0 && ieVersion < 11;

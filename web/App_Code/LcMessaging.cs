@@ -298,9 +298,9 @@ public class LcMessaging
         static string GetBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
         {
             return info.userJobTitle.jobTitleSingularName + " " +
-                info.booking.serviceDate.startTime.ToLongDateString() + ", " +
-                info.booking.serviceDate.startTime.ToShortTimeString() + " to " +
-                info.booking.serviceDate.endTime.ToShortTimeString();
+                info.booking.serviceDate.startTime.ToString("D") + ", " +
+                info.booking.serviceDate.startTime.ToString("t") + " to " +
+                info.booking.serviceDate.endTime.ToString("t");
         }
         static string GetBookingThreadBody(LcEmailTemplate.BookingEmailInfo info)
         {

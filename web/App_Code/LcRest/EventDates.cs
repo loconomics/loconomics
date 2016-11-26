@@ -11,10 +11,10 @@ namespace LcRest
     /// </summary>
     public class EventDates
     {
-        public DateTime startTime;
-        public DateTime endTime;
+        public DateTimeOffset startTime;
+        public DateTimeOffset endTime;
 
-        public EventDates(DateTime start, DateTime end)
+        public EventDates(DateTimeOffset start, DateTimeOffset end)
         {
             startTime = start;
             endTime = end;

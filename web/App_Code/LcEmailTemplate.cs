@@ -10,6 +10,15 @@ using WebMatrix.WebData;
 /// </summary>
 public static class LcEmailTemplate
 {
+    #region Formatting templates
+    const string ShortTimeAndZoneFormat = "t (zzz)";
+    const string LongDateFormat = "D";
+    /// <summary>
+    /// L18N
+    /// </summary>
+    const string TimeAndZoneOnDateFormat = ShortTimeAndZoneFormat + " on " + LongDateFormat;
+    #endregion
+
     private static HttpRequest Request
     {
         get
@@ -170,12 +179,12 @@ public static class LcEmailTemplate
         /// and different rules to get money refunded depending
         /// on the policy and that date.
         /// </summary>
-        public DateTime cancellationLimitDate
+        public DateTimeOffset cancellationLimitDate
         {
             get
             {
                 // Default base date is an example with plus 7 days from now.
-                var baseDate = DateTime.Now.AddDays(7);
+                var baseDate = DateTimeOffset.Now.AddDays(7);
 
                 if (booking.serviceDate != null)
                 {
@@ -184,6 +193,11 @@ public static class LcEmailTemplate
 
                 return baseDate.AddHours(0 - cancellationPolicy.hoursRequired);
             }
+        }
+
+        public string displayCancellationLimitDate()
+        {
+            return cancellationLimitDate.ToString(TimeAndZoneOnDateFormat);
         }
 
         /// <summary>
