@@ -2,7 +2,7 @@
 
     Sender e-mail: automated@@loconomics.com
     Sender name: @(info.serviceProfessional.firstName) @(info.serviceProfessional.lastName)
-    Subject: Reminder about your appointment @LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)
+    Subject: Reminder about your appointment @LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)
     Send when: 48 hours before (info.booking.serviceDate.startTime)
     Restrictions: positions.HIPAA=1
  *@
@@ -23,7 +23,7 @@
     <tr>
         <td>
             <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Helvetica, Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
-                Hi, @(info.client.firstName), This is just a friendly reminder the services you booked are coming up on <strong>@LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>.
+                Hi, @(info.client.firstName), This is just a friendly reminder the services you booked are coming up on <strong>@LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)</strong>.
             </div>
         </td>
     </tr>
@@ -42,7 +42,7 @@
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder the services you booked are coming up on <strong>@LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewClientBookingCard)" target="_blank" >clicking here</a>.</td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">This is just a friendly reminder the services you booked are coming up on <strong>@LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate)</strong>. If you need to cancel or reschedule, please do so ASAP by <a href="@(info.viewClientBookingCard)" target="_blank" >clicking here</a>.</td>
                             </tr>
                             <tr>                               
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thank you,<br><br>@(info.serviceProfessional.firstName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)</td>

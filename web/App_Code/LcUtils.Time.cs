@@ -11,17 +11,30 @@ public static partial class LcUtils
     public static class Time
     {
         /// <summary>
-        /// It supports time zones, and times that have different offsets
+        /// It supports displaying offsets, with care when both are in same or different offset.
+        /// TODO: Originally named DateTimeRangeToString, replaced in use by ZonedTimesRangeToString, needs review for any possible use case or removal
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static string DateTimeRangeToString(DateTimeOffset start, DateTimeOffset end)
+        public static string OffsetTimesRangeToString(DateTimeOffset start, DateTimeOffset end)
         {
             var diffOffset = start.Offset != end.Offset;
             var formatSameOffset = "{0:dddd, MMM d} from {1:t} to {2:t} ({3:zzz})";
             var formatDiffOffset = "{0:dddd, MMM d} from {1:t} ({3:zzz}) to {2:t} ({4:zzz})";
             return String.Format(diffOffset ? formatDiffOffset : formatSameOffset, start, start, end, start, end);
+        }
+
+        public static string ZonedTimesRangeToString(LcRest.EventDates range)
+        {
+            // NOTE: format 'x' means: the abbreviation associated with the time zone at the given time (for example, PST or CET)
+            var isSameDate = range.startTime.UtcDateTime.Date == range.endTime.UtcDateTime.Date;
+            var formatSameDate = "{0:dddd, MMM d} from {1:t} to {2:t} ({4:x})";
+            var formatDiffDate = "{0:dddd, MMM d} from {1:t} to {2:t} {3:dddd, MMM d} ({4:x})";
+            var zone = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(range.timeZone);
+            var start = NodaTime.ZonedDateTime.FromDateTimeOffset(range.startTime).WithZone(zone);
+            var end = NodaTime.ZonedDateTime.FromDateTimeOffset(range.endTime).WithZone(zone);
+            return String.Format(isSameDate ? formatSameDate : formatDiffDate, start, start, end, end, start);
         }
 
         public static DateTimeOffset ConvertToTimeZone(DateTimeOffset time, string timeZone)

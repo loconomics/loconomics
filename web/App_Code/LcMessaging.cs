@@ -509,7 +509,7 @@ public class LcMessaging
             }
             public override void BookingReminder()
             {
-                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
@@ -601,7 +601,7 @@ public class LcMessaging
             }
             public override void BookingReminder()
             {
-                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
@@ -724,7 +724,7 @@ public class LcMessaging
             }
             public override void BookingReminder()
             {
-                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
