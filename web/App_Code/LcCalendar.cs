@@ -110,7 +110,7 @@ public static partial class LcCalendar
     {
         foreach (var e in GetUserAvailability(userID, dateStart, dateEnd, excludeAdvanceTime))
         {
-            var edt = e.DateSet + e.TimeBlock;
+            var edt = e.DT;
             if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||
                 e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.UNAVAILABLE ||
                 e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TENTATIVE) &&
