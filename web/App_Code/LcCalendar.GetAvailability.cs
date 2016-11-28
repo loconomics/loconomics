@@ -30,6 +30,16 @@ public static partial class LcCalendar
             public TimeSpan start;
             public TimeSpan end;
         }
+
+        static public string GetScheduleTimeZone(int userID)
+        {
+            foreach (var w in LcCalendar.GetProviderWorkHours(userID))
+                if (!String.IsNullOrWhiteSpace(w.TimeZone))
+                    return w.TimeZone;
+
+            return null;
+        }
+
         /// <summary>
         /// Gets the weekly schedule of a user in a structure for the public REST API.
         /// Result includes a timeZone property, a property for each weekday that includes
@@ -46,10 +56,10 @@ public static partial class LcCalendar
             // if all are 1 (127) is all time.
             var isAllTime = 0;
 
-            // Timezone shared by all (even if specified individually, is considered
+            // Timezone shared by all saved events (even if specified individually, is considered
             // to be the same on all cases)
-            // By default:
-            result["timeZone"] = "America/Los_Angeles";
+            // By default is null, in case it has no events will let the client app to auto pick one
+            result["timeZone"] = null;
 
             // To ensure all weekdays are included in the output, and preparing in advance
             // the list objects, add them now:

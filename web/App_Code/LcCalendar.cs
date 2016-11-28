@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using CalendarDll;
-using DDay.iCal;
-using DDay.Collections;
 using CalendarDll.Data;
 using WebMatrix.Data;
 using System.IO;
+using Ical;
+using Ical.Net;
 
 /// <summary>
 /// Calendaring Tasks, wrapper for some CalendarDll features.
@@ -88,7 +88,7 @@ public static partial class LcCalendar
     /// but only clients.</param>
     /// <returns></returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
+    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
     {
         var lcCalendar = new CalendarDll.CalendarUtils();
         return
@@ -106,11 +106,11 @@ public static partial class LcCalendar
     /// <param name="dateEnd">End date and time for the time range (less than dateEnd)</param>
     /// <returns>True when is available, False when not</returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
+    public static bool CheckUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
     {
         foreach (var e in GetUserAvailability(userID, dateStart, dateEnd, excludeAdvanceTime))
         {
-            var edt = e.DateSet + e.TimeBlock;
+            var edt = e.DT;
             if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||
                 e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.UNAVAILABLE ||
                 e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TENTATIVE) &&
@@ -179,7 +179,7 @@ public static partial class LcCalendar
     /// <param name="endTime"></param>
     /// <returns></returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime = null, DateTime? endTime = null, bool excludeAdvanceTime = false)
+    public static bool DoubleCheckEventAvailability(int eventID, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null, bool excludeAdvanceTime = false)
     {
         // We require an owned connection, to avoid conflict with other transactions
         using (var db = Database.Open("sqlloco"))
@@ -378,7 +378,7 @@ public static partial class LcCalendar
         newevent.CalendarReccurrence.Add(new CalendarReccurrence
         {
             // Frequency Type Weekly:5
-            Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+            Frequency = (int)FrequencyType.Weekly,
             // Every 1 week (week determined by previous Frequency)
             Interval = 1,
             // We need save as reference, the first day of week for this rrule:
@@ -601,7 +601,7 @@ public static partial class LcCalendar
             newevent.CalendarReccurrence.Add(new CalendarReccurrence
             {
                 // Frequency Type Weekly:5
-                Frequency = (int)DDay.iCal.FrequencyType.Weekly,
+                Frequency = (int)FrequencyType.Weekly,
                 // Every 1 week (week determined by previous Frequency)
                 Interval = 1,
                 // We need save as reference, the first day of week for this rrule:
@@ -870,7 +870,7 @@ public static partial class LcCalendar
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    public static dynamic GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, string[] includes = null, int eventID = 0)
+    public static dynamic GetUserEvents(int userID, int[] types = null, DateTimeOffset? start = null, DateTimeOffset? end = null, string[] includes = null, int eventID = 0)
     {
         types = types == null ? new int[]{} : types;
         includes = includes == null ? new string[]{} : includes;
@@ -1053,13 +1053,13 @@ public static partial class LcCalendar
     /// <param name="end"></param>
     /// <param name="eventID"></param>
     /// <returns></returns>
-    public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, int eventID = 0)
+    public static IEnumerable<dynamic> GetSimplifiedEvents(int userID, int[] types = null, DateTimeOffset? start = null, DateTimeOffset? end = null, int eventID = 0)
     {
         types = types == null ? new int[] { } : types;
         var thereAreDates = start.HasValue || end.HasValue;
 
         if (!start.HasValue)
-            start = DateTime.Today;
+            start = DateTimeOffset.Now;
         if (!end.HasValue)
             end = start.Value.AddDays(7);
 
@@ -1100,10 +1100,11 @@ public static partial class LcCalendar
             // iCalendar is needed to calculate each event occurrences
             var calUtils = new CalendarUtils();
 
+            // TODO TZ
             // TODO Support for real, user attached or event attached, Time Zones (the fields
             // exists, but has not valid values: user.TimeZone and event.TimeZone)
             //var tzid = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").Id;
-            var tzid = "Pacific Standard Time";
+            var tzid = "America/Los_Angeles";
 
             foreach(var ev in query.ToList())
             {
@@ -1115,16 +1116,16 @@ public static partial class LcCalendar
                 if (eventID == 0 || thereAreDates)
                 {
                     // Getting an iEvent only for recurrent events, for occurrences calculations
-                    iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev, tzid) : null;
+                    iEvent iev = ev.CalendarReccurrence.Count > 0 ? calUtils.CreateEvent(ev) : null;
                     if (iev != null)
                     {
                         // An iEvent needs to be attached to an iCalendar in order
                         // to work when getting the occurrences.
-                        var iCal = calUtils.GetICalendarLibraryInstance();
+                        var iCal = calUtils.GetCalendarLibraryInstance();
                         iCal.Events.Add(iev);
 
                         // Getting occurrences datetime ranges
-                        occurrences = iev.GetOccurrences(start.Value, end.Value).Select(oc => new
+                        occurrences = iev.GetOccurrences(start.Value.LocalDateTime, end.Value.LocalDateTime).Select(oc => new
                         {
                             // Ugly conversion because of a bad internal conversion of iCalendar, treating the
                             // original value as UTC when is local time-zone based:
@@ -1154,7 +1155,6 @@ public static partial class LcCalendar
                     // Providing UTC ever as result (for JSON output)
                     StartTime = ev.StartTime.ToUniversalTime(),
                     EndTime = ev.EndTime.ToUniversalTime(),
-                    Kind = ev.StartTime.Kind,
                     IsAllDay = ev.IsAllDay,
                     //StampTime = ev.StampTime,
                     // The source timezone, if any, the dates will be on UTC.
@@ -1543,6 +1543,7 @@ public static partial class LcCalendar
                 StartTime = dt;
             }
 
+            // TODO TZ actual timezone needed, not offset
             // Auto TimeZone to server local
             if (String.IsNullOrEmpty(TimeZone))
             {
@@ -1659,7 +1660,7 @@ public static partial class LcCalendar
             LastBulkImport.SetTime("BulkImport:: Import " + UserID.ToString() + ":: Downloading+parsing ical");
 #endif
 
-        var iCaltoImport = iCalendar.LoadFromUri(new Uri(CalendarURL));
+        var iCaltoImport = IcalExtensions.LoadFromUri(new Uri(CalendarURL));
         if (iCaltoImport == null)
             throw new Exception("The URL doesn't contains icalendar information, is the correct URL? " + CalendarURL);
 
@@ -1695,7 +1696,7 @@ public static partial class LcCalendar
     }
     public static void Import(int UserID, Stream CalendarStream)
     {
-        var iCaltoImport = iCalendar.LoadFromStream(CalendarStream);
+        var iCaltoImport = Ical.Net.Calendar.LoadFromStream(CalendarStream);
 
         CalendarUtils libCalendarUtil = new CalendarUtils();
         libCalendarUtil.FutureMonthsLimitForImportingFreeBusy = FutureMonthsLimitForImportingFreeBusy;
@@ -1787,8 +1788,7 @@ public static partial class LcCalendar
             //var tznumber = userinfo.TimeZone;
             // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
             // one used today (on iCalendar, the CreateEvent discards the event.TimeZone too):
-            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
-            calUser.DefaultTimeZone = tz;
+            calUser.DefaultTimeZone = "America/Los_Angeles";
         }
         return libCalendarUtils.PrepareExportDataForUser(calUser);
     }

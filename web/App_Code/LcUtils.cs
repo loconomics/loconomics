@@ -8,7 +8,7 @@ using System.Text;
 /// Collection of static utilities shared by
 /// all the project
 /// </summary>
-public static class LcUtils
+public static partial class LcUtils
 {
     #region Types management and conversion
     #region Types list: CTypesTable

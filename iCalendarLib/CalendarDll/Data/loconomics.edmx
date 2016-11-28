@@ -261,8 +261,8 @@
           <Property Name="UID" Type="varchar" MaxLength="150" />
           <Property Name="CalendarAvailabilityTypeID" Type="int" Nullable="false" />
           <Property Name="Transparency" Type="bit" Nullable="false" />
-          <Property Name="StartTime" Type="datetime" Nullable="false" />
-          <Property Name="EndTime" Type="datetime" Nullable="false" />
+          <Property Name="StartTime" Type="datetimeoffset" Nullable="false" />
+          <Property Name="EndTime" Type="datetimeoffset" Nullable="false" />
           <Property Name="IsAllDay" Type="bit" Nullable="false" />
           <Property Name="StampTime" Type="datetime" />
           <Property Name="TimeZone" Type="nvarchar" MaxLength="100" />
@@ -275,7 +275,7 @@
           <Property Name="Organizer" Type="nvarchar(max)" />
           <Property Name="Sequence" Type="int" />
           <Property Name="Geo" Type="nvarchar" MaxLength="100" />
-          <Property Name="RecurrenceId" Type="datetime" />
+          <Property Name="RecurrenceId" Type="datetimeoffset" />
           <Property Name="TimeBlock" Type="time" />
           <Property Name="DayofWeek" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
@@ -1291,8 +1291,8 @@
           <Property Type="String" Name="UID" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="CalendarAvailabilityTypeID" Nullable="false" />
           <Property Type="Boolean" Name="Transparency" Nullable="false" />
-          <Property Type="DateTime" Name="StartTime" Nullable="false" Precision="3" />
-          <Property Type="DateTime" Name="EndTime" Nullable="false" Precision="3" />
+          <Property Type="DateTimeOffset" Name="StartTime" Nullable="false" />
+          <Property Type="DateTimeOffset" Name="EndTime" Nullable="false" />
           <Property Type="Boolean" Name="IsAllDay" Nullable="false" />
           <Property Type="DateTime" Name="StampTime" Precision="3" />
           <Property Type="String" Name="TimeZone" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -1305,7 +1305,7 @@
           <Property Type="String" Name="Organizer" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Sequence" />
           <Property Type="String" Name="Geo" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="RecurrenceId" Precision="3" />
+          <Property Type="DateTimeOffset" Name="RecurrenceId" />
           <Property Type="Time" Name="TimeBlock" Precision="7" />
           <Property Type="Int32" Name="DayofWeek" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />

@@ -49,8 +49,8 @@
                 var jobTitleID = UrlData[0].AsInt(0);
                 var limit = Request["limit"].AsInt(20);
                 var messagesLimit = Request["messagesLimit"].AsInt(1);
-                DateTime? until = DateTimeFromISO(Request["until"]);
-                DateTime? since = DateTimeFromISO(Request["since"]);
+                var until = DateTimeOffsetFromISO(Request["until"]);
+                var since = DateTimeOffsetFromISO(Request["since"]);
 
                 var data = LcRest.PublicUserReview.GetList(userID, jobTitleID, limit, since, until);
                 if (data == null)

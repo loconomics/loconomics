@@ -30,8 +30,8 @@ namespace CalendarDll.Data
         public string UID { get; set; }
         public int CalendarAvailabilityTypeID { get; set; }
         public bool Transparency { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public System.DateTime EndTime { get; set; }
+        public System.DateTimeOffset StartTime { get; set; }
+        public System.DateTimeOffset EndTime { get; set; }
         public bool IsAllDay { get; set; }
         public Nullable<System.DateTime> StampTime { get; set; }
         public string TimeZone { get; set; }
@@ -44,7 +44,7 @@ namespace CalendarDll.Data
         public string Organizer { get; set; }
         public Nullable<int> Sequence { get; set; }
         public string Geo { get; set; }
-        public Nullable<System.DateTime> RecurrenceId { get; set; }
+        public Nullable<System.DateTimeOffset> RecurrenceId { get; set; }
         public Nullable<System.TimeSpan> TimeBlock { get; set; }
         public Nullable<int> DayofWeek { get; set; }
         public string Description { get; set; }

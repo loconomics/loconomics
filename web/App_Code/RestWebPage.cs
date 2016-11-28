@@ -235,23 +235,9 @@ public class RestWebPage
 
     #region REST utilities
     /// <summary>
-    /// Date format in ISO-8601, suitable for JSON
-    /// </summary>
-    public const string DateFormat = "yyyy'-'MM'-'dd";
-    /// <summary>
     /// Time format in ISO-8601, suitable for JSON
     /// </summary>
     public const string TimeFormat = @"hh\:mm\:ss";
-    /// <summary>
-    /// Convert a date (in DateTime) in
-    /// ISO string format, or null if not a correct value.
-    /// </summary>
-    /// <param name="date"></param>
-    /// <returns></returns>
-    public static string DateToISO(object date)
-    {
-        return (date is DateTime) ? ((DateTime)date).ToString(DateFormat) : null;
-    }
     /// <summary>
     /// Convert a time (as TimeSpan or DateTime) in
     /// ISO string format, or null if not a correct value.
@@ -264,32 +250,18 @@ public class RestWebPage
             (time is TimeSpan) ? ((TimeSpan)time).ToString(TimeFormat) :
             null;
     }
-    public static string DateTimeToISO(object datetime)
-    {
-        var d = DateToISO(datetime);
-        var t = TimeToISO(datetime);
-
-        if (d != null && t != null)
-        {
-            return d + "T" + t;
-        }
-        else
-        {
-            return d != null ? d : t != null ? t : null;
-        }
-    }
-    public static DateTime? DateTimeFromISO(string datetime)
-    {
-        DateTime dt;
-        return (DateTime.TryParse(datetime, null, System.Globalization.DateTimeStyles.RoundtripKind, out dt)) ?
-            (DateTime?)dt.ToLocalTime() :
-            null;
-    }
     public static TimeSpan? TimeSpanFromISO(string timespan)
     {
         TimeSpan ts;
         return (TimeSpan.TryParseExact(timespan, TimeFormat, null, out ts)) ?
             (TimeSpan?)ts :
+            null;
+    }
+    public static DateTimeOffset? DateTimeOffsetFromISO(string datetime)
+    {
+        DateTimeOffset dt;
+        return (DateTimeOffset.TryParse(datetime, out dt)) ?
+            (DateTimeOffset?)dt.ToLocalTime() :
             null;
     }
     #endregion

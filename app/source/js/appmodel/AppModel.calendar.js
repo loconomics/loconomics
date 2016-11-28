@@ -129,7 +129,6 @@ exports.create = function create(appModel) {
     /**
         Fetch appointments and schedule information for the date from remote
         in a convenient object to use with the DateAvailability model.
-        TODO OBSOLETE?
     **/
     var getRemoteDateAvailability = function getRemoteDateAvailability(date) {
         return Promise.all([
@@ -138,16 +137,14 @@ exports.create = function create(appModel) {
             appModel.schedulingPreferences.load()
         ])
         .then(function(result) {
-            var apts = result[0],
-                settings = result[1],
-                weekDaySchedule = settings.weekDays[date.getDay()](),
-                prefs = result[2];
+            var apts = result[0];
+            var settings = result[1];
+            var prefs = result[2];
 
             var dateInfo = {
                 date: date,
                 appointmentsList: apts || [],
-                // TODO Adapt multi time-ranges
-                weekDaySchedule: weekDaySchedule,
+                weeklySchedule: settings,
                 schedulingPreferences: prefs
             };
 
@@ -162,7 +159,6 @@ exports.create = function create(appModel) {
         updated so all previous instances get the updated data too.
     **/
     api.getDateAvailability = function getDateAvailability(date) {
-        
         var cached = cache.getSingle(date);
 
         if (cached) {

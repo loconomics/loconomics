@@ -298,9 +298,9 @@ public class LcMessaging
         static string GetBookingThreadSubject(LcEmailTemplate.BookingEmailInfo info)
         {
             return info.userJobTitle.jobTitleSingularName + " " +
-                info.booking.serviceDate.startTime.ToLongDateString() + ", " +
-                info.booking.serviceDate.startTime.ToShortTimeString() + " to " +
-                info.booking.serviceDate.endTime.ToShortTimeString();
+                info.booking.serviceDate.startTime.ToString("D") + ", " +
+                info.booking.serviceDate.startTime.ToString("t") + " to " +
+                info.booking.serviceDate.endTime.ToString("t");
         }
         static string GetBookingThreadBody(LcEmailTemplate.BookingEmailInfo info)
         {
@@ -509,7 +509,7 @@ public class LcMessaging
             }
             public override void BookingReminder()
             {
-                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
@@ -601,7 +601,7 @@ public class LcMessaging
             }
             public override void BookingReminder()
             {
-                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
@@ -724,7 +724,7 @@ public class LcMessaging
             }
             public override void BookingReminder()
             {
-                subject = String.Format("Reminder about your appointment {0}", LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime));
+                subject = String.Format("Reminder about your appointment {0}", LcUtils.Time.ZonedTimesRangeToString(info.booking.serviceDate));
                 CreateBookingMessage(info, (int)MessageType.BookingReminder, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, false);
                 sendToClient("BookingReminder");
             }
