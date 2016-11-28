@@ -147,13 +147,5 @@ public static partial class LcData
             // No results
             return null;
         }
-
-        #region SQL
-        public const string sqlGetTimeZoneByPostalCodeID = @"
-            SELECT  TimeZone
-            FROM    PostalCode
-            WHERE   PostalCodeID = @0
-        ";
-        #endregion
     }
 }

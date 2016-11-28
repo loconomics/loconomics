@@ -150,19 +150,7 @@
         else
             return null;
     }
-    /// <summary>
-    /// It supports time zones, and times that have different offsets
-    /// </summary>
-    /// <param name="start"></param>
-    /// <param name="end"></param>
-    /// <returns></returns>
-    public static string DateTimeRangeToString(DateTimeOffset start, DateTimeOffset end)
-    {
-        var diffOffset = start.Offset != end.Offset;
-        var formatSameOffset = "{0:dddd, MMM d} from {1:t} to {2:t} ({3:zzz})";
-        var formatDiffOffset = "{0:dddd, MMM d} from {1:t} ({3:zzz}) to {2:t} ({4:zzz})";
-        return String.Format(diffOffset ? formatDiffOffset : formatSameOffset, start, start, end, start, end);
-    }
+
     public static string GetShortestDateTimeRangeString(DateTime? start, DateTime? end,
         string dateFormat = "dddd, MMM d",
         string timeFormat = @"hh\:mm",

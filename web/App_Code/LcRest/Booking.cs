@@ -2120,8 +2120,9 @@ namespace LcRest
                     throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
-                // TODO TZ actual timezone needed, not offset
-                var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
+                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
+                startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
+                endTime = LcUtils.Time.ConvertToTimeZone(endTime, timeZone);
                 string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(customer));
 
                 // Transaction begins
@@ -2242,6 +2243,9 @@ namespace LcRest
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
+                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(booking.serviceProfessionalUserID);
+                startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
+                endTime = LcUtils.Time.ConvertToTimeZone(endTime, timeZone);
                 // Only if dates changed:
                 booking.FillServiceDates();
                 if (booking.serviceDate.startTime != startTime && booking.serviceDate.endTime != endTime)
@@ -2632,7 +2636,17 @@ namespace LcRest
                 }
 
                 // Event data
-                var timeZone = db.QueryValue(LcData.Address.sqlGetTimeZoneByPostalCodeID, provider.postalCodeID);
+                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
+                serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
+                serviceEndTime = LcUtils.Time.ConvertToTimeZone(serviceEndTime, timeZone);
+                if (alternative1StartTime.HasValue)
+                    alternative1StartTime = LcUtils.Time.ConvertToTimeZone(alternative1StartTime.Value, timeZone);
+                if (alternative1EndTime.HasValue)
+                    alternative1EndTime = LcUtils.Time.ConvertToTimeZone(alternative1EndTime.Value, timeZone);
+                if (alternative2StartTime.HasValue)
+                    alternative2StartTime = LcUtils.Time.ConvertToTimeZone(alternative2StartTime.Value, timeZone);
+                if (alternative2EndTime.HasValue)
+                    alternative2EndTime = LcUtils.Time.ConvertToTimeZone(alternative2EndTime.Value, timeZone);
                 string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(provider));
 
                 // Transaction begins
@@ -2881,6 +2895,9 @@ namespace LcRest
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
+                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(booking.serviceProfessionalUserID);
+                serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
+                endTime = LcUtils.Time.ConvertToTimeZone(endTime, timeZone);
                 // Only if dates changed:
                 booking.FillServiceDates();
                 if (booking.serviceDate.startTime != serviceStartTime && booking.serviceDate.endTime != endTime)

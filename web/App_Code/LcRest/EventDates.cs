@@ -13,17 +13,19 @@ namespace LcRest
     {
         public DateTimeOffset startTime;
         public DateTimeOffset endTime;
+        public string timeZone;
 
-        public EventDates(DateTimeOffset start, DateTimeOffset end)
+        public EventDates(DateTimeOffset start, DateTimeOffset end, string timeZone)
         {
             startTime = start;
             endTime = end;
+            this.timeZone = timeZone;
         }
 
         public static EventDates FromDB(dynamic record)
         {
             if (record == null) return null;
-            return new EventDates(record.startTime, record.endTime);
+            return new EventDates(record.startTime, record.endTime, record.timeZone);
         }
 
         public static EventDates Get(int calendarEventID)
@@ -32,7 +34,8 @@ namespace LcRest
                 // IMPORTANT: DO NOT discard by Deleted flag, since we need this call just for cancelled bookings with soft-deleted dates
                 return FromDB(db.QuerySingle(@"
                     SELECT startTime,
-                            endTime
+                            endTime,
+                            timeZone
                     FROM    CalendarEvents
                     WHERE   ID = @0
                 ", calendarEventID));

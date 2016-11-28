@@ -24,7 +24,7 @@
                            		<td align="left" style="padding: 10px 0 15px 25px; text-align: left; font-size: 16px; line-height: 24px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
                                     @if (info.booking.serviceDate != null)
                                     {
-                                        <span>@LcHelpers.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</span>
+                                        <span>@LcUtils.Time.DateTimeRangeToString(info.booking.serviceDate.startTime, info.booking.serviceDate.endTime)</span>
                                     }
                                     else
                                     {
