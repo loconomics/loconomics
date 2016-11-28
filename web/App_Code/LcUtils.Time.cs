@@ -29,12 +29,12 @@ public static partial class LcUtils
         {
             // NOTE: format 'x' means: the abbreviation associated with the time zone at the given time (for example, PST or CET)
             var isSameDate = range.startTime.UtcDateTime.Date == range.endTime.UtcDateTime.Date;
-            var formatSameDate = "{0:dddd, MMM d} from {1:t} to {2:t} ({4:x})";
-            var formatDiffDate = "{0:dddd, MMM d} from {1:t} to {2:t} {3:dddd, MMM d} ({4:x})";
+            var formatSameDate = "{0:dddd, MMM d} from {1:t} to {2:t} {4:(x)}";
+            var formatDiffDate = "{0:dddd, MMM d} from {1:t} to {2:t} {3:dddd, MMM d} {4:(x)}";
             var zone = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(range.timeZone);
             var start = NodaTime.ZonedDateTime.FromDateTimeOffset(range.startTime).WithZone(zone);
             var end = NodaTime.ZonedDateTime.FromDateTimeOffset(range.endTime).WithZone(zone);
-            return String.Format(isSameDate ? formatSameDate : formatDiffDate, start, start, end, end, start);
+            return String.Format(isSameDate ? formatSameDate : formatDiffDate, start, start.TimeOfDay, end.TimeOfDay, end, start);
         }
 
         public static DateTimeOffset ConvertToTimeZone(DateTimeOffset time, string timeZone)
