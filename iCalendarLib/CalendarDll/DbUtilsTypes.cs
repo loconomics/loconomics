@@ -116,7 +116,7 @@ namespace CalendarDll
                 DayOfWeek = (int)dateref.DayOfWeek
             };
 
-            if (ocurrence.Source != null)
+            if (ocurrence != null && ocurrence.Source is iEvent)
             {
                 eventSource = ocurrence.Source as iEvent;
                 result.CalendarAvailabilityTypeID = (int)eventSource.AvailabilityID;
