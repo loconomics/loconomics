@@ -151,7 +151,7 @@
 
             var servicesIds = GetFormServices();
 
-            var startTime = DateTimeFromISO(Request["startTime"]);
+            var startTime = DateTimeOffsetFromISO(Request["startTime"]);
             if (!startTime.HasValue) {
                 ModelState.AddError("startTime", "Start date/time is not valid");
             }

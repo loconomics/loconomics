@@ -131,7 +131,7 @@ namespace LcRest
         ///
         /// jobTitleID: must be 0 for customer review.
         ///
-        public static IEnumerable<PublicUserReview> GetList(int userID, int jobTitleID, int limit = 20, DateTime? since = null, DateTime? until = null)
+        public static IEnumerable<PublicUserReview> GetList(int userID, int jobTitleID, int limit = 20, DateTimeOffset? since = null, DateTimeOffset? until = null)
         {
             // Maximum limit: 100
             if (limit > 100)
@@ -164,7 +164,10 @@ namespace LcRest
 
             using (var db = new LcDatabase())
             {
-                var data = db.Query(sql, limit, userID, jobTitleID, until, since).Select(FromDB);
+                var data = db.Query(sql, limit, userID, jobTitleID,
+                    until.HasValue ? (DateTime?)until.Value.LocalDateTime : null,
+                    since.HasValue ? (DateTime?)since.Value.LocalDateTime : null)
+                    .Select(FromDB);
                 if (usingSinceOnly)
                 {
                     // Since rows were get in ascending, records need to be inverted

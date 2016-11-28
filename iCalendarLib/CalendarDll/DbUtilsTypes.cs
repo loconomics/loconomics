@@ -49,7 +49,7 @@ namespace CalendarDll
     {
         public HashSet<Occurrence> Ocurrences { set; get; }
         public TimeSpan TimeBlock { get; set; }
-        public DateTime DT { get; set; }
+        public DateTimeOffset DT { get; set; }
         public TimeSpan AddBusyTime { get; set; }
     }
 
@@ -59,7 +59,7 @@ namespace CalendarDll
         public DateTime DateSet { get; set; }
         public int DayOfWeek { get; set; }
         public TimeSpan TimeBlock { get; set; }
-        public DateTime DT { get; set; }
+        public DateTimeOffset DT { get; set; }
         public int CalendarAvailabilityTypeID { get; set; }
     }
 

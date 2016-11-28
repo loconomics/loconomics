@@ -28,8 +28,8 @@
             
             // Parameters
             int userId = WebSecurity.CurrentUserId;
-            var startTime = DateTimeFromISO(Request.QueryString["start"]) ?? DateTime.Today;
-            var endTime = DateTimeFromISO(Request.QueryString["end"]) ?? startTime.AddDays(1);
+            var startTime = DateTimeOffsetFromISO(Request.QueryString["start"]) ?? DateTime.Today;
+            var endTime = DateTimeOffsetFromISO(Request.QueryString["end"]) ?? startTime.AddDays(1);
             
             return LcRest.Booking.GetList(userId, startTime, endTime, true);
         }

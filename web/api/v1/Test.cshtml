@@ -51,7 +51,7 @@
             }
             else {
                 return new {
-                    date = DateTimeFromISO("2015-03-22T23:02:00Z").Value.ToString(),
+                    date = DateTimeOffsetFromISO("2015-03-22T23:02:00Z").Value.ToString(),
                     current = LcRest.Locale.Current,
                     urlLocaleTest1 = LcRest.Locale.AnalyzeUrl("/api/v1/en-US"),
                     urlLocaleTest2 = LcRest.Locale.AnalyzeUrl("/api/v2.3.4/es-ES"),

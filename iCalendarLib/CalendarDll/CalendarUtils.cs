@@ -63,9 +63,9 @@ namespace CalendarDll
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         public List<ProviderAvailabilityResult> GetFreeEvents(
             CalendarUser user,
-            DateTime startDate,
-            DateTime endDate,
-            DateTime currentDateTimeForAdvanceTime) // currentDateTime is to add the Advance Time to
+            DateTimeOffset startDate,
+            DateTimeOffset endDate,
+            DateTimeOffset currentDateTimeForAdvanceTime) // currentDateTime is to add the Advance Time to
         {
 
 
@@ -92,15 +92,7 @@ namespace CalendarDll
             //----------------------------------------------------------------------
 
 
-            // Takes out the Time component of the Start DateTime,
-            // So that it starts at 00:00:00            
-            
-            
-            DateTime startDateTime =
-                new DateTime( 
-                    startDate.Year, 
-                    startDate.Month, 
-                    startDate.Day);
+            DateTimeOffset startDateTime = startDate;
             
 
             // To get to the Start of the last Time Slice of the day
@@ -111,14 +103,9 @@ namespace CalendarDll
             // as this is the last iteration for all the Timeslices in the Date Range
 
             
-            DateTime endDateTime =
-                new DateTime( 
-                    endDate.Year, 
-                    endDate.Month, 
-                    endDate.Day).
+            DateTimeOffset endDateTime = endDate.
                         AddDays(1).                   // Goes to the Next Day
                         AddMinutes(-TIME_SLICE_SIZE); // Goes back by the Time Slice size
-
             
             
             //----------------------------------------------------------------------
@@ -130,7 +117,7 @@ namespace CalendarDll
             //----------------------------------------------------------------------
 
 
-            DateTime advanceTime = 
+            var advanceTime = 
                 currentDateTimeForAdvanceTime + 
                 user.AdvanceTime; 
 
@@ -139,7 +126,7 @@ namespace CalendarDll
 
 
             List<DataContainer>        ldates     = new List<DataContainer>();
-            DateTime refDate = startDateTime;
+            var refDate = startDateTime;
             TimeSpan stamp   = new TimeSpan(0, 0, 0);
 
             //----------------------------------------------------------------------
@@ -162,7 +149,7 @@ namespace CalendarDll
             // time slice, as previously happens by checking only 'less than'
             while (refDate <= endDateTime)
             {
-                DateTime newTimeSliceStart = 
+                var newTimeSliceStart = 
                     refDate.AddMinutes(
                         TIME_SLICE_SIZE);
 
@@ -227,18 +214,18 @@ namespace CalendarDll
                     // 2013/01/02 CA2S RM
                     //----------------------------------------------------------------------
 
-                    DateTime TimeSliceEndJust1MillisecondBefore = 
+                    var TimeSliceEndJust1MillisecondBefore = 
                         newTimeSliceStart.AddMilliseconds(-1);
 
                     //----------------------------------------------------------------------
                     tempDataContainer.Ocurrences =
                         iCal.GetOccurrences(
-                            refDate,
-                            TimeSliceEndJust1MillisecondBefore);
+                            new CalDateTime(refDate.UtcDateTime, "UTC"),
+                            new CalDateTime(TimeSliceEndJust1MillisecondBefore.UtcDateTime, "UTC")
+                        );
                     tempDataContainer.TimeBlock = stamp;
                     tempDataContainer.DT = refDate;
                     tempDataContainer.AddBusyTime = user.BetweenTime;
-
                 }
 
                 ldates.Add(tempDataContainer);
@@ -1199,8 +1186,8 @@ namespace CalendarDll
 
         public Calendar OptimizedGetCalendarEventsFromDBByUserDateRange(
             CalendarUser user,
-            DateTime startDate,
-            DateTime endDate)
+            DateTimeOffset startDate,
+            DateTimeOffset endDate)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -1223,8 +1210,8 @@ namespace CalendarDll
         /// <remarks>2015-09 Iago</remarks>
         public IEnumerable<iEvent> OptimizedGetEventsByUserDateRange(
             CalendarUser user,
-            DateTime startEvaluationDate,
-            DateTime endEvaluationDate)
+            DateTimeOffset startEvaluationDate,
+            DateTimeOffset endEvaluationDate)
         {
             using (var db = new CalendarDll.Data.loconomicsEntities())
             {

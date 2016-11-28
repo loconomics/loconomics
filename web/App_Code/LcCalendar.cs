@@ -88,7 +88,7 @@ public static partial class LcCalendar
     /// but only clients.</param>
     /// <returns></returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
+    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
     {
         var lcCalendar = new CalendarDll.CalendarUtils();
         return
@@ -106,7 +106,7 @@ public static partial class LcCalendar
     /// <param name="dateEnd">End date and time for the time range (less than dateEnd)</param>
     /// <returns>True when is available, False when not</returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static bool CheckUserAvailability(int userID, DateTime dateStart, DateTime dateEnd, bool excludeAdvanceTime = false)
+    public static bool CheckUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
     {
         foreach (var e in GetUserAvailability(userID, dateStart, dateEnd, excludeAdvanceTime))
         {
@@ -179,7 +179,7 @@ public static partial class LcCalendar
     /// <param name="endTime"></param>
     /// <returns></returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static bool DoubleCheckEventAvailability(int eventID, DateTime? startTime = null, DateTime? endTime = null, bool excludeAdvanceTime = false)
+    public static bool DoubleCheckEventAvailability(int eventID, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null, bool excludeAdvanceTime = false)
     {
         // We require an owned connection, to avoid conflict with other transactions
         using (var db = Database.Open("sqlloco"))
@@ -870,7 +870,7 @@ public static partial class LcCalendar
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <returns></returns>
-    public static dynamic GetUserEvents(int userID, int[] types = null, DateTime? start = null, DateTime? end = null, string[] includes = null, int eventID = 0)
+    public static dynamic GetUserEvents(int userID, int[] types = null, DateTimeOffset? start = null, DateTimeOffset? end = null, string[] includes = null, int eventID = 0)
     {
         types = types == null ? new int[]{} : types;
         includes = includes == null ? new string[]{} : includes;

@@ -241,7 +241,7 @@
             int clientUserID = WebSecurity.CurrentUserId;
             var locale = LcRest.Locale.Current;
 
-            var serviceStartTime = DateTimeFromISO(Request.Form["serviceStartTime"]);
+            var serviceStartTime = DateTimeOffsetFromISO(Request.Form["serviceStartTime"]);
             if (!serviceStartTime.HasValue)
             {
                 ModelState.AddError("startTime", "Start date and time is not valid");
@@ -312,18 +312,18 @@
             // Date/times: main and alternative1/2
             var requiredStartTimeName = "Start date and time";
             
-            DateTime? alternative1StartTime = null;
-            DateTime? alternative2StartTime = null;
+            DateTimeOffset? alternative1StartTime = null;
+            DateTimeOffset? alternative2StartTime = null;
             if (!booking.instantBooking) {
                 requiredStartTimeName = "Preferred start date and time";
                 if (!Request.Form["alternative1StartTime"].IsEmpty()) {
-                    alternative1StartTime = DateTimeFromISO(Request.Form["alternative1StartTime"]);
+                    alternative1StartTime = DateTimeOffsetFromISO(Request.Form["alternative1StartTime"]);
                     if (!alternative1StartTime.HasValue) {
                         ModelState.AddError("alternative1StartTime", "Alternative date and time 1 is not valid");
                     }
                 }
                 if (!Request.Form["alternative2StartTime"].IsEmpty()) {
-                    alternative2StartTime = DateTimeFromISO(Request.Form["alternative2StartTime"]);
+                    alternative2StartTime = DateTimeOffsetFromISO(Request.Form["alternative2StartTime"]);
                     if (!alternative2StartTime.HasValue)
                     {
                         ModelState.AddError("alternative2StartTime", "Alternative date and time 2 is not valid");
@@ -331,7 +331,7 @@
                 }
             }
 
-            var serviceStartTime = DateTimeFromISO(Request.Form["serviceStartTime"]);
+            var serviceStartTime = DateTimeOffsetFromISO(Request.Form["serviceStartTime"]);
             if (!serviceStartTime.HasValue)
             {
                 ModelState.AddError("startTime", requiredStartTimeName + " is not valid");

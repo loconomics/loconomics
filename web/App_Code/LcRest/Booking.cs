@@ -518,7 +518,7 @@ namespace LcRest
                 return b;
             }
         }
-        public static IEnumerable<Booking> GetList(int UserID, DateTime StartTime, DateTime EndTime, bool fillLinks)
+        public static IEnumerable<Booking> GetList(int UserID, DateTimeOffset StartTime, DateTimeOffset EndTime, bool fillLinks)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -2080,7 +2080,7 @@ namespace LcRest
             int serviceProfessionalUserID,
             int jobTitleID,
             Address serviceAddress,
-            DateTime startTime,
+            DateTimeOffset startTime,
             IEnumerable<int> services,
             string preNotesToClient,
             string preNotesToSelf,
@@ -2191,7 +2191,7 @@ namespace LcRest
             int bookingID,
             int serviceProfessionalUserID,
             Address serviceAddress,
-            DateTime startTime,
+            DateTimeOffset startTime,
             IEnumerable<int> services,
             string preNotesToClient,
             string preNotesToSelf,
@@ -2553,7 +2553,7 @@ namespace LcRest
         /// <param name="serviceDurationMinutes"></param>
         /// <param name="serviceProfessionalUserID"></param>
         /// <returns></returns>
-        private static DateTime CheckAvailability(DateTime startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID)
+        private static DateTimeOffset CheckAvailability(DateTimeOffset startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID)
         {
             var endTime = startTime.AddMinutes((double)(serviceDurationMinutes ?? 0));
             // Because this API is only for providers, we avoid the advance time from the checking
@@ -2582,9 +2582,9 @@ namespace LcRest
             int serviceProfessionalUserID,
             int jobTitleID,
             Address serviceAddress,
-            DateTime serviceStartTime,
-            DateTime? alternative1StartTime,
-            DateTime? alternative2StartTime,
+            DateTimeOffset serviceStartTime,
+            DateTimeOffset? alternative1StartTime,
+            DateTimeOffset? alternative2StartTime,
             IEnumerable<int> services,
             int languageID,
             int countryID,
@@ -2623,12 +2623,12 @@ namespace LcRest
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
-                DateTime? alternative1EndTime = null;
-                DateTime? alternative2EndTime = null;
+                DateTimeOffset? alternative1EndTime = null;
+                DateTimeOffset? alternative2EndTime = null;
                 if (!booking.instantBooking)
                 {
-                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTime?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
-                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTime?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
                 }
 
                 // Event data
@@ -2835,7 +2835,7 @@ namespace LcRest
             int bookingID,
             int clientUserID,
             Address serviceAddress,
-            DateTime serviceStartTime,
+            DateTimeOffset serviceStartTime,
             IEnumerable<int> services,
             string specialRequests)
         {
