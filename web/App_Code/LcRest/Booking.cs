@@ -2568,7 +2568,7 @@ namespace LcRest
             // Because this API is only for providers, we avoid the advance time from the checking
             var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, false);
             if (!isAvailable)
-                throw new ConstraintException(DisplayTimeAvailabilityError(startTime, timeZone);
+                throw new ConstraintException(DisplayTimeAvailabilityError(startTime, timeZone));
 
             return endTime;
         }
