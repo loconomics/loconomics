@@ -17,7 +17,7 @@ namespace LcRest
         {
             #region Fields
             public int quantity;
-            public DateTime? time;
+            public DateTimeOffset? time;
             #endregion
         }
 
