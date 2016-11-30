@@ -45,6 +45,14 @@ public static partial class LcUtils
             return String.Format(format, zonedTime.LocalDateTime, zonedTime);
         }
 
+        public static string ZonedTimeOnDateString(DateTimeOffset time, string timeZone)
+        {
+            var zone = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(timeZone);
+            var zonedTime = NodaTime.ZonedDateTime.FromDateTimeOffset(time).WithZone(zone);
+            var format = "{0:t} on {0:D} {1:(x)}";
+            return String.Format(format, zonedTime.ToDateTimeUnspecified(), zonedTime);
+        }
+
         public static DateTimeOffset ConvertToTimeZone(DateTimeOffset time, string timeZone)
         {
             var tz = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(timeZone);
