@@ -2548,6 +2548,11 @@ namespace LcRest
         #endregion
 
         #region Client Manipulations
+        private static string DisplayTimeAvailabilityError(DateTimeOffset time, string timeZone)
+        {
+            var format = "The time {0} is not available, it conflicts with a recent appointment!";
+            return String.Format(format, LcUtils.Time.ZonedTimeToShortString(time, timeZone));
+        }
         /// <summary>
         /// Utility for client bookings, to check service professional availability for the given input
         /// data, thow a ConstraintException if not available and returns the calculated endTime if available.
@@ -2557,13 +2562,13 @@ namespace LcRest
         /// <param name="serviceDurationMinutes"></param>
         /// <param name="serviceProfessionalUserID"></param>
         /// <returns></returns>
-        private static DateTimeOffset CheckAvailability(DateTimeOffset startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID)
+        private static DateTimeOffset CheckAvailability(DateTimeOffset startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID, string timeZone)
         {
             var endTime = startTime.AddMinutes((double)(serviceDurationMinutes ?? 0));
             // Because this API is only for providers, we avoid the advance time from the checking
             var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, false);
             if (!isAvailable)
-                throw new ConstraintException(String.Format("The time {0} is not available, it conflicts with a recent appointment!", startTime));
+                throw new ConstraintException(DisplayTimeAvailabilityError(startTime, timeZone);
 
             return endTime;
         }
@@ -2633,13 +2638,13 @@ namespace LcRest
                     alternative1StartTime = LcUtils.Time.ConvertToTimeZone(alternative1StartTime.Value, timeZone);
                 if (alternative2StartTime.HasValue)
                     alternative2StartTime = LcUtils.Time.ConvertToTimeZone(alternative2StartTime.Value, timeZone);
-                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
+                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID, timeZone);
                 DateTimeOffset? alternative1EndTime = null;
                 DateTimeOffset? alternative2EndTime = null;
                 if (!booking.instantBooking)
                 {
-                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
-                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID, timeZone) : null;
+                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID, timeZone) : null;
                 }
 
                 // Event data
@@ -2901,7 +2906,7 @@ namespace LcRest
                     // Because this API is only for providers, we avoid the advance time from the checking
                     var isAvailable = LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, serviceStartTime, endTime, false);
                     if (!isAvailable)
-                        throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
+                        throw new ConstraintException(DisplayTimeAvailabilityError(serviceStartTime, timeZone));
 
                     // Transaction begins
                     db.Execute("BEGIN TRANSACTION");
