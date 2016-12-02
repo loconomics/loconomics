@@ -2113,6 +2113,9 @@ namespace LcRest
                     throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Preparing event date-times, checking availability and creating event
+                // Convert times to professional time zone
+                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
+                startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Because this API is only for providers, we avoid the advance time from the checking
                 var isAvailable = allowBookUnavailableTime || LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, true);
@@ -2120,9 +2123,6 @@ namespace LcRest
                     throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
-                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
-                startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
-                endTime = LcUtils.Time.ConvertToTimeZone(endTime, timeZone);
                 string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(customer));
 
                 // Transaction begins
@@ -2242,10 +2242,10 @@ namespace LcRest
                     throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
-                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
+                // Convert times to professional time zone
                 var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(booking.serviceProfessionalUserID);
                 startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
-                endTime = LcUtils.Time.ConvertToTimeZone(endTime, timeZone);
+                var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Only if dates changed:
                 booking.FillServiceDates();
                 if (booking.serviceDate.startTime != startTime && booking.serviceDate.endTime != endTime)
@@ -2548,6 +2548,11 @@ namespace LcRest
         #endregion
 
         #region Client Manipulations
+        private static string DisplayTimeAvailabilityError(DateTimeOffset time, string timeZone)
+        {
+            var format = "The time {0} is not available, it conflicts with a recent appointment!";
+            return String.Format(format, LcUtils.Time.ZonedTimeToShortString(time, timeZone));
+        }
         /// <summary>
         /// Utility for client bookings, to check service professional availability for the given input
         /// data, thow a ConstraintException if not available and returns the calculated endTime if available.
@@ -2557,13 +2562,13 @@ namespace LcRest
         /// <param name="serviceDurationMinutes"></param>
         /// <param name="serviceProfessionalUserID"></param>
         /// <returns></returns>
-        private static DateTimeOffset CheckAvailability(DateTimeOffset startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID)
+        private static DateTimeOffset CheckAvailability(DateTimeOffset startTime, decimal? serviceDurationMinutes, int serviceProfessionalUserID, string timeZone)
         {
             var endTime = startTime.AddMinutes((double)(serviceDurationMinutes ?? 0));
             // Because this API is only for providers, we avoid the advance time from the checking
             var isAvailable = LcCalendar.CheckUserAvailability(serviceProfessionalUserID, startTime, endTime, false);
             if (!isAvailable)
-                throw new ConstraintException(String.Format("The time {0} is not available, it conflicts with a recent appointment!", startTime));
+                throw new ConstraintException(DisplayTimeAvailabilityError(startTime, timeZone));
 
             return endTime;
         }
@@ -2626,27 +2631,23 @@ namespace LcRest
                 }
 
                 // 2º: Preparing event date-times, checking availability and creating event
-                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID);
+                // Convert times to professional time-zone:
+                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
+                serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
+                if (alternative1StartTime.HasValue)
+                    alternative1StartTime = LcUtils.Time.ConvertToTimeZone(alternative1StartTime.Value, timeZone);
+                if (alternative2StartTime.HasValue)
+                    alternative2StartTime = LcUtils.Time.ConvertToTimeZone(alternative2StartTime.Value, timeZone);
+                var serviceEndTime = CheckAvailability(serviceStartTime, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID, timeZone);
                 DateTimeOffset? alternative1EndTime = null;
                 DateTimeOffset? alternative2EndTime = null;
                 if (!booking.instantBooking)
                 {
-                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
-                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID) : null;
+                    alternative1EndTime = alternative1StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative1StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID, timeZone) : null;
+                    alternative2EndTime = alternative2StartTime.HasValue ? (DateTimeOffset?)CheckAvailability(alternative2StartTime.Value, booking.pricingSummary.firstSessionDurationMinutes, serviceProfessionalUserID, timeZone) : null;
                 }
 
                 // Event data
-                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
-                serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
-                serviceEndTime = LcUtils.Time.ConvertToTimeZone(serviceEndTime, timeZone);
-                if (alternative1StartTime.HasValue)
-                    alternative1StartTime = LcUtils.Time.ConvertToTimeZone(alternative1StartTime.Value, timeZone);
-                if (alternative1EndTime.HasValue)
-                    alternative1EndTime = LcUtils.Time.ConvertToTimeZone(alternative1EndTime.Value, timeZone);
-                if (alternative2StartTime.HasValue)
-                    alternative2StartTime = LcUtils.Time.ConvertToTimeZone(alternative2StartTime.Value, timeZone);
-                if (alternative2EndTime.HasValue)
-                    alternative2EndTime = LcUtils.Time.ConvertToTimeZone(alternative2EndTime.Value, timeZone);
                 string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(provider));
 
                 // Transaction begins
@@ -2894,10 +2895,10 @@ namespace LcRest
                     throw new ConstraintException("Bookings require the selection of at least one service");
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
-                var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
+                // Convert times to professional time zone
                 var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(booking.serviceProfessionalUserID);
                 serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
-                endTime = LcUtils.Time.ConvertToTimeZone(endTime, timeZone);
+                var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Only if dates changed:
                 booking.FillServiceDates();
                 if (booking.serviceDate.startTime != serviceStartTime && booking.serviceDate.endTime != endTime)
@@ -2905,7 +2906,7 @@ namespace LcRest
                     // Because this API is only for providers, we avoid the advance time from the checking
                     var isAvailable = LcCalendar.DoubleCheckEventAvailability(booking.serviceDateID.Value, serviceStartTime, endTime, false);
                     if (!isAvailable)
-                        throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
+                        throw new ConstraintException(DisplayTimeAvailabilityError(serviceStartTime, timeZone));
 
                     // Transaction begins
                     db.Execute("BEGIN TRANSACTION");

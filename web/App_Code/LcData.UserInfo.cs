@@ -245,7 +245,6 @@ public static partial class LcData
                                 ,L.CountryID
                                 ,PC.PostalCode
                                 ,L.PostalCodeID
-                                ,PC.TimeZone
 
                                 -- Personal data
                                 ,PublicBio

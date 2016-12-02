@@ -10,15 +10,6 @@ using WebMatrix.WebData;
 /// </summary>
 public static class LcEmailTemplate
 {
-    #region Formatting templates
-    const string ShortTimeAndZoneFormat = "t (zzz)";
-    const string LongDateFormat = "D";
-    /// <summary>
-    /// L18N
-    /// </summary>
-    const string TimeAndZoneOnDateFormat = ShortTimeAndZoneFormat + " on " + LongDateFormat;
-    #endregion
-
     private static HttpRequest Request
     {
         get
@@ -178,6 +169,8 @@ public static class LcEmailTemplate
         /// Gets the limit date-time to allow a cancellation for current booking,
         /// and different rules to get money refunded depending
         /// on the policy and that date.
+        ///  DO NOT use this value to directly format a string at templates, use the
+        ///  displayCancellationLimitDate method that uses the common format with time zone.
         /// </summary>
         public DateTimeOffset cancellationLimitDate
         {
@@ -197,7 +190,7 @@ public static class LcEmailTemplate
 
         public string displayCancellationLimitDate()
         {
-            return cancellationLimitDate.ToString(TimeAndZoneOnDateFormat);
+            return LcUtils.Time.ZonedTimeOnDateString(cancellationLimitDate, booking.serviceDate.timeZone);
         }
 
         /// <summary>
