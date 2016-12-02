@@ -96,7 +96,7 @@ public static partial class LcCalendar
                 new CalendarDll.CalendarUser(userID),
                 dateStart,
                 dateEnd,
-                excludeAdvanceTime ? DateTime.MinValue : DateTime.Now);
+                excludeAdvanceTime ? DateTimeOffset.MinValue : DateTimeOffset.Now);
     }
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd

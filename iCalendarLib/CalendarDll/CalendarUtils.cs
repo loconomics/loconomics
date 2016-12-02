@@ -432,10 +432,16 @@ namespace CalendarDll
         private CalDateTime CalDateTimeFromOffsetAndTimeZone(DateTimeOffset dto, string tzid)
         {
             var timezone = GetTimeZone(tzid);
+            if (timezone == null) throw new Exception(String.Format("Time zone does not found ({0})", tzid));
 
-            var zdt = new NodaTime.ZonedDateTime(NodaTime.Instant.FromDateTimeOffset(dto), timezone);
-
-            return new CalDateTime(zdt.LocalDateTime.ToDateTimeUnspecified(), tzid);
+            var zdt = NodaTime.Instant
+                  .FromDateTimeOffset(dto)
+                  .InZone(timezone);
+            // Do this conversion very carefully: it's different to call the 'LocalDateTime' at the ZonedDateTime object
+            // than in a DateTimeOffset, and CalDateDime expects a DateTime in the 'system time zone / offset' to be provided
+            // with a tzid to adapt that time to; while a ZonedDateTime.LocalDateTime returns the date part 'as is' in the
+            // object time zone, not in the 'system' time zone.
+            return new CalDateTime(zdt.ToDateTimeOffset().LocalDateTime, tzid);
         }
         #endregion
 
@@ -1308,8 +1314,8 @@ namespace CalendarDll
         /// </summary>
         public class AvailabilitySlot
         {
-            public DateTime StartTime;
-            public DateTime EndTime;
+            public DateTimeOffset StartTime;
+            public DateTimeOffset EndTime;
             public int AvailabilityTypeID;
             public override bool Equals(object obj)
             {
@@ -1331,15 +1337,15 @@ namespace CalendarDll
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns></returns>
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(Calendar ical, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(Calendar ical, DateTimeOffset startTime, DateTimeOffset endTime)
         {
             foreach (var ev in ical.Events)
             {
-                foreach (var occ in ev.GetOccurrences(startTime, endTime))
+                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, endTime.UtcDateTime))
                 {
                     yield return new AvailabilitySlot {
-                        StartTime = occ.Period.StartTime.AsUtc,
-                        EndTime = occ.Period.EndTime.AsUtc,
+                        StartTime = new DateTimeOffset(occ.Period.StartTime.AsUtc, TimeSpan.Zero),
+                        EndTime = new DateTimeOffset(occ.Period.EndTime.AsUtc, TimeSpan.Zero),
                         AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
                     };
                 }
@@ -1370,7 +1376,7 @@ namespace CalendarDll
         /// <param name="startTime">Included (more than or equals)</param>
         /// <param name="endTime">Excluded (less than)</param>
         /// <returns></returns>
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInUtcAvailabilitySlotsByUser(int userID, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInUtcAvailabilitySlotsByUser(int userID, DateTimeOffset startTime, DateTimeOffset endTime)
         {
             // We need an Calendar to include events and being able to compute occurrences
             Calendar data = GetCalendarLibraryInstance();
@@ -2345,6 +2351,9 @@ namespace CalendarDll
         /// server and database data).
         /// 
         /// IagoSRL @Loconomics
+        /// 
+        /// TODO REVIEW for TimeZone/Offsets
+        /// TODO REVIEW We changed DDay by fork iCal.net, maybe that one works fine the '.Local'?
         /// </summary>
         /// <param name="datetime"></param>
         /// <returns></returns>

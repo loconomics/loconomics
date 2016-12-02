@@ -552,8 +552,8 @@ public static partial class LcCalendar
 
         public class PublicAvailableSlot
         {
-            public DateTime startTime;
-            public DateTime endTime;
+            public DateTimeOffset startTime;
+            public DateTimeOffset endTime;
             public string availability;
         }
         static private IEnumerable<PublicAvailableSlot> GetTimelinePublicOutputFormat(IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> slots)
@@ -591,11 +591,11 @@ public static partial class LcCalendar
             var pri2 = AvailabilityPriorities[date2.AvailabilityTypeID];
             return pri1 >= pri2 ? date1 : date2;
         }
-        static DateTime MinDateTime(DateTime t1, DateTime t2)
+        static DateTimeOffset MinDateTime(DateTimeOffset t1, DateTimeOffset t2)
         {
             return t1 <= t2 ? t1 : t2;
         }
-        static DateTime MaxDateTime(DateTime t1, DateTime t2)
+        static DateTimeOffset MaxDateTime(DateTimeOffset t1, DateTimeOffset t2)
         {
             return t1 >= t2 ? t1 : t2;
         }
