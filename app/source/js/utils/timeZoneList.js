@@ -97,3 +97,41 @@ exports.getUserList = function getUserList() {
     });
     return createDisplayList(list, m, ts);
 };
+
+exports.getUsZones = function getUsZones() {
+    var m = moment().startOf('year');
+    var ts = m.valueOf();
+    var list = moment.tz.names()
+    .filter(function(z) {
+        return z.indexOf('US/') === 0;
+    });
+    return createDisplayList(list, m, ts);
+};
+
+exports.getTopUsZones = function getTopUsZones() {
+    return [{
+        id: 'HST::US/Hawaii',
+        label: 'UTC-10:00 Hawaii-Aleutian Time (HST)'
+    }, {
+        id: 'AKST::US/Alaska',
+        label: 'UTC-09:00 Alaska Time (AKST)'
+    }, {
+        id: 'PST::US/Pacific',
+        label: 'UTC-08:00 Pacific Time (PST)'
+    }, {
+        id: 'MST::US/Arizona',
+        label: 'UTC-07:00 Arizona Time (MST)'
+    }, {
+        id: 'MST::US/Mountain',
+        label: 'UTC-07:00 Mountain Time (MST)'
+    }, {
+        id: 'CST::US/Central',
+        label: 'UTC-06:00 Central Time (CST)'
+    }, {
+        id: 'EST::US/East-Indiana',
+        label: 'UTC-05:00 Indiana (East) Time (EST)'
+    }, {
+        id: 'EST::US/Eastern',
+        label: 'UTC-05:00 Eastern Time (EST)'
+    }];
+}; 
