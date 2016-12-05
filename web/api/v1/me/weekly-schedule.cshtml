@@ -9,6 +9,7 @@
     - GET /
         @result {
             "timeZone": "America/Los_Angeles",
+            "selectedTimeZone": "PST::America/Los_Angeles",
             "sunday": [
                 {
                     "start": "09:00:00",
@@ -52,6 +53,7 @@
 
         @params Same structure than the output, but URLEncoded in Request.Form looks like (same data than previous GET example):
             timeZone=America/Los_Angeles
+            selectedTimeZone=PST::America/Los_Angeles
             sunday[0][start]=00:00:00
             sunday[0][end]=23:59:59
             monday[0][start]=00:00:00
@@ -75,6 +77,7 @@
             "get": {},
             "put": {
                 "timeZone": "America/Los_Angeles",
+                "selectedTimeZone": "PST::America/Los_Angeles",
                 "sunday": [
                     {
                         "start": "09:00:00",
@@ -142,6 +145,7 @@
             var userID = WebSecurity.CurrentUserId;
             var alltime = Request.Form["isAllTime"].AsBool(false);
             var timeZone = Request.Form["timeZone"];
+            var selectedTimeZone = Request.Form["selectedTimeZone"];
 
             if (alltime)
             {
@@ -196,10 +200,13 @@
                 LcCalendar.SetAllProviderWorkHours(userID, whdays);
             }
 
-            // Everything goes fine, latest details:
-            // Testing the alert
+            // Everything goes fine, latest details:          
             using (var db = Database.Open("sqlloco"))
             {
+                // Save selected time zone value
+                db.Execute("UPDATE CalendarProviderAttributes SET selectedTimeZone=@0 WHERE UserID=@1", selectedTimeZone, userID);
+                
+                // Testing the alert
                 db.Execute("EXEC TestAlertAvailability @0", userID);
             }
             // Updated data copy:

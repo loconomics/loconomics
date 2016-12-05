@@ -97,6 +97,11 @@ public static partial class LcCalendar
 
             result["isAllTime"] = isAllTime == 127;
 
+            // Read selectedTimeZone too
+            using (var db = new LcDatabase()) {
+                result["selectedTimeZone"] = (string)N.D(db.QueryValue("SELECT TOP 1 selectedTimeZone FROM CalendarProviderAttributes WHERE UserID=@0", userID)) ?? result["timeZone"];
+            }
+
             return result;
         }
 
