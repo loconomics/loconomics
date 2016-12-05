@@ -8,7 +8,9 @@
     dynamic data;
 
     try {
-        data = null;
+        var windowsZoneId = "Mountain Standard Time";
+        data = LcUtils.Time.WindowsTimeZoneToClosestIana(windowsZoneId);
+        
     }
     catch (Exception ex) {
         data = ex;
