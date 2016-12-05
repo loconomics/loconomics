@@ -132,9 +132,16 @@
 
         public override dynamic Put()
         {
+            Validation.RequireField("timeZone", LcRessources.RequiredField("Time zone"));
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
             var userID = WebSecurity.CurrentUserId;
             var alltime = Request.Form["isAllTime"].AsBool(false);
-            var timeZone = Request.Form["timeZone"] ?? LcCalendar.serverTimeZoneID;
+            var timeZone = Request.Form["timeZone"];
 
             if (alltime)
             {
