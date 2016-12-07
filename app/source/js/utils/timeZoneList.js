@@ -110,28 +110,28 @@ exports.getUsZones = function getUsZones() {
 
 exports.getTopUsZones = function getTopUsZones() {
     return [{
-        id: 'HST::US/Hawaii',
-        label: 'UTC-10:00 Hawaii-Aleutian Time (HST)'
+        id: 'US/Hawaii',
+        label: 'UTC-10:00 Hawaii Time (HST)'
     }, {
-        id: 'AKST::US/Alaska',
+        id: 'US/Alaska',
         label: 'UTC-09:00 Alaska Time (AKST)'
     }, {
-        id: 'PST::US/Pacific',
+        id: 'US/Pacific',
         label: 'UTC-08:00 Pacific Time (PST)'
     }, {
-        id: 'MST::US/Arizona',
+        id: 'US/Arizona',
         label: 'UTC-07:00 Arizona Time (MST)'
     }, {
-        id: 'MST::US/Mountain',
+        id: 'US/Mountain',
         label: 'UTC-07:00 Mountain Time (MST)'
     }, {
-        id: 'CST::US/Central',
+        id: 'US/Central',
         label: 'UTC-06:00 Central Time (CST)'
     }, {
-        id: 'EST::US/East-Indiana',
+        id: 'US/East-Indiana',
         label: 'UTC-05:00 Indiana (East) Time (EST)'
     }, {
-        id: 'EST::US/Eastern',
+        id: 'US/Eastern',
         label: 'UTC-05:00 Eastern Time (EST)'
     }];
 }; 
