@@ -146,6 +146,8 @@ function DatetimePickerVM(app, element) {
         this.selectedDatetime(null);
         this.pickedTime(null);
         this.allowBookUnavailableTime(false);
+        this.timeZone('');
+        this.isTimeZonePickerOpen(false);
     }.bind(this);
     
     this.bindDateData = function bindDateData(date) {
