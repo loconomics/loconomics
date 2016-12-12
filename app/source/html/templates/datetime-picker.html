@@ -6,7 +6,7 @@
         <div data-bind="css: { 'is-loading': isLoading }">
             <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
-        <div class="Box-sm PaddedBox-xs">
+        <div class="Box-sm PaddedBox-xs WhiteForm">
             <div class="isolated bottom-only" data-bind="visible: durationDisplay">
                 <span>You'll need</span> <span data-bind="text: durationDisplay"></span>
             </div>
@@ -22,6 +22,24 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="form-group" data-bind="visible: timeZone">
+                <a data-bind="visible: !isTimeZonePickerOpen(), click: openTimeZonePicker" class="btn btn-link">
+                    All times are <span data-bind="text: timeZone"></span> Time (change).
+                </a>
+                <select class="form-control"
+                        data-bind="value: timeZone, visible: isTimeZonePickerOpen"
+                        id="schedulingPrefs-timeZone">
+                    <option data-bind="text: autoTimeZone().label, value: autoTimeZone().id"></option>
+                    <option disabled="disabled">---</option>
+                    <!-- ko foreach: topUsTimeZones -->
+                    <option data-bind="text: label, value: id"></option>
+                    <!-- /ko -->
+                    <option disabled="disabled">---</option>
+                    <!-- ko foreach: timeZonesList -->
+                    <option data-bind="text: label, value: id"></option>
+                    <!-- /ko -->
+                </select>
             </div>
             <div data-bind="attr: { hidden: !unavailableTimeBtnEnabled() }">
                 <button type="button" class="btn btn-default btn-block" data-bind="click: showTimePicker">

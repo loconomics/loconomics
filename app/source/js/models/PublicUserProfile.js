@@ -25,6 +25,7 @@ function PublicUserProfile(values) {
         phone: null,
         isServiceProfessional: false,
         isClient: false,
+        timeZone: null,
         updatedDate: null
     }, values);
     

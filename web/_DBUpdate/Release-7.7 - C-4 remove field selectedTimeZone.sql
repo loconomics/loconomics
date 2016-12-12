@@ -1,0 +1,1 @@
+ALTER TABLE CalendarProviderAttributes DROP COLUMN selectedTimeZone

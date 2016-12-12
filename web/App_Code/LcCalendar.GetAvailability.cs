@@ -56,11 +56,6 @@ public static partial class LcCalendar
             // if all are 1 (127) is all time.
             var isAllTime = 0;
 
-            // Timezone shared by all saved events (even if specified individually, is considered
-            // to be the same on all cases)
-            // By default is null, in case it has no events will let the client app to auto pick one
-            result["timeZone"] = null;
-
             // To ensure all weekdays are included in the output, and preparing in advance
             // the list objects, add them now:
             foreach (var dow in Enum.GetNames(typeof(DayOfWeek)))
@@ -72,13 +67,6 @@ public static partial class LcCalendar
             foreach (var r in data)
             {
                 var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
-
-                // Set timeZone if any
-                // Since is a general setting, will get the last one
-                if (!String.IsNullOrEmpty(r.TimeZone))
-                {
-                    result["timeZone"] = r.TimeZone;
-                }
 
                 // Convert WorkHoursDay into a TimesRange and add it to the list for this weekday:
                 ((List<TimesRange>)result[wk]).Add(new TimesRange
@@ -97,9 +85,10 @@ public static partial class LcCalendar
 
             result["isAllTime"] = isAllTime == 127;
 
-            // Read selectedTimeZone too
+            // Read timeZone
             using (var db = new LcDatabase()) {
-                result["selectedTimeZone"] = (string)N.D(db.QueryValue("SELECT TOP 1 selectedTimeZone FROM CalendarProviderAttributes WHERE UserID=@0", userID)) ?? result["timeZone"];
+                // By default is null, in case it has no events will let the client app to auto pick one
+                result["timeZone"] = (string)N.D(db.QueryValue("SELECT TOP 1 timeZone FROM CalendarProviderAttributes WHERE UserID=@0", userID));
             }
 
             return result;

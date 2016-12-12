@@ -12,13 +12,17 @@ var ko = require('knockout'),
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
 
+var timeZoneList = require('../utils/timeZoneList');
+
 function DatetimePickerVM(app, element) {
-    
+    //jshint maxstatements: 40
+
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.userID = ko.observable();
     this.isLoading = ko.observable(false);
     this.requiredDurationMinutes = ko.observable(0);
     this.includeEndTime = ko.observable(false);
+    this.timeZone = ko.observable('');
     
     this.durationDisplay = ko.pureComputed(function() {
         var fullMinutes = this.requiredDurationMinutes();
@@ -212,6 +216,20 @@ function DatetimePickerVM(app, element) {
     // Force first refresh on datepicker to allow
     // event handlers to get notified on first time:
     $datePicker.datepicker('fill');
+
+    var autoTz = timeZoneList.getLocalTimeZone();
+    var autoLabel = 'Auto (' + timeZoneList.timeZoneToDisplayFormat(autoTz) + ')';
+    this.autoTimeZone = ko.observable({
+        id: autoTz,
+        label: autoLabel
+    });
+    this.timeZonesList = ko.observable(timeZoneList.getUserList());
+    this.topUsTimeZones = ko.observable(timeZoneList.getTopUsZones());
+
+    this.isTimeZonePickerOpen = ko.observable(false);
+    this.openTimeZonePicker = function() {
+        this.isTimeZonePickerOpen(true);
+    };
 }
 
 module.exports = DatetimePickerVM;
