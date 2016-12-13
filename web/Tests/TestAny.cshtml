@@ -6,14 +6,8 @@
 
     DateTime start = DateTime.Now;
     dynamic data;
-    var r = "";
+    
     try {
-        
-        foreach(var a in LcCalendar.BulkImport()) {
-            if (a != null) {
-                r += "<br/>" + a.Message + "::" + a.StackTrace;
-            }
-        }
         data = null;
     }
     catch (Exception ex) {
@@ -21,6 +15,5 @@
     }
 }
 @(data)
-@Html.Raw(r)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
