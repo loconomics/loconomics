@@ -567,7 +567,7 @@ public static partial class LcCalendar
         {
             { (int)LcCalendar.AvailabilityType.Busy, "busy" },
             { (int)LcCalendar.AvailabilityType.Free, "free" },
-            { (int)LcCalendar.AvailabilityType.Offline, "transparent" },
+            { (int)LcCalendar.AvailabilityType.Transparent, "transparent" },
             { (int)LcCalendar.AvailabilityType.Tentative, "tentative" },
             { (int)LcCalendar.AvailabilityType.Unavailable, "unavailable" },
         };
@@ -577,7 +577,8 @@ public static partial class LcCalendar
             { (int)LcCalendar.AvailabilityType.Busy, 40 }, // Busy stronger
             { (int)LcCalendar.AvailabilityType.Unavailable, 30 }, // Unavailable
             { (int)LcCalendar.AvailabilityType.Tentative, 20 }, // Tentative
-            { (int)LcCalendar.AvailabilityType.Free, 10 }  // Free
+            { (int)LcCalendar.AvailabilityType.Free, 10 },  // Free
+            { (int)LcCalendar.AvailabilityType.Transparent, 0 }  // Transparent
         };
         static CalendarDll.CalendarUtils.AvailabilitySlot GetPriorityAvailabilitySlot(CalendarDll.CalendarUtils.AvailabilitySlot date1, CalendarDll.CalendarUtils.AvailabilitySlot date2)
         {

@@ -6,16 +6,21 @@
 
     DateTime start = DateTime.Now;
     dynamic data;
-
+    var r = "";
     try {
-        var windowsZoneId = "Mountain Standard Time";
-        data = LcUtils.Time.WindowsTimeZoneToClosestIana(windowsZoneId);
         
+        foreach(var a in LcCalendar.BulkImport()) {
+            if (a != null) {
+                r += "<br/>" + a.Message + "::" + a.StackTrace;
+            }
+        }
+        data = null;
     }
     catch (Exception ex) {
         data = ex;
     }
 }
 @(data)
+@Html.Raw(r)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
