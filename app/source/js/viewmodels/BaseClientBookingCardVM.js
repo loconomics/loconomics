@@ -510,5 +510,10 @@ BaseClientBookingCardVM.prototype.prepareDatePicker = function(fieldToBeSelected
     picker.selectedDatetime(null);
     picker.userID(this.booking().serviceProfessionalUserID());
     picker.selectedDate(new Date());
-    picker.timeZone(this.serviceProfessionalInfo().profile().timeZone());
+    var ptz = this.serviceProfessionalInfo().profile().timeZone();
+    picker.specialTimeZones([{
+        id: ptz,
+        label: 'Service Professional time (' + ptz + ')'
+    }]);
+    picker.timeZone(ptz);
 };

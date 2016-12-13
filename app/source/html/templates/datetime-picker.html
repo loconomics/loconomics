@@ -31,6 +31,9 @@
                         data-bind="value: timeZone, visible: isTimeZonePickerOpen"
                         id="schedulingPrefs-timeZone">
                     <option data-bind="text: autoTimeZone().label, value: autoTimeZone().id"></option>
+                    <!-- ko foreach: specialTimeZones -->
+                    <option data-bind="text: label, value: id"></option>
+                    <!-- /ko -->
                     <option disabled="disabled">---</option>
                     <!-- ko foreach: topUsTimeZones -->
                     <option data-bind="text: label, value: id"></option>

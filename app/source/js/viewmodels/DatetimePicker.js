@@ -22,6 +22,9 @@ function DatetimePickerVM(app, element) {
     this.requiredDurationMinutes = ko.observable(0);
     this.includeEndTime = ko.observable(false);
     this.timeZone = ko.observable('');
+    // Let's external code to add a set of objects { id: tzID, label: tzLabel }
+    // to display at top, below the 'auto' option.
+    this.specialTimeZones = ko.observableArray([]);
     
     this.durationDisplay = ko.pureComputed(function() {
         var fullMinutes = this.requiredDurationMinutes();
@@ -177,6 +180,7 @@ function DatetimePickerVM(app, element) {
         this.pickedTime(null);
         this.allowBookUnavailableTime(false);
         this.timeZone('');
+        this.specialTimeZones.removeAll();
         this.isTimeZonePickerOpen(false);
     }.bind(this);
     
