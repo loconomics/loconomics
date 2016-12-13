@@ -513,7 +513,7 @@ BaseClientBookingCardVM.prototype.prepareDatePicker = function(fieldToBeSelected
     var ptz = this.serviceProfessionalInfo().profile().timeZone();
     picker.specialTimeZones([{
         id: ptz,
-        label: 'Service Professional time (' + ptz + ')'
+        label: 'Service Professional\'s Time Zone (' + ptz + ')'
     }]);
     picker.timeZone(ptz);
 };
