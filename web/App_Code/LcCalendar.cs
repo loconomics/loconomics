@@ -1099,12 +1099,6 @@ public static partial class LcCalendar
             // iCalendar is needed to calculate each event occurrences
             var calUtils = new CalendarUtils();
 
-            // TODO TZ
-            // TODO Support for real, user attached or event attached, Time Zones (the fields
-            // exists, but has not valid values: user.TimeZone and event.TimeZone)
-            //var tzid = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").Id;
-            var tzid = "America/Los_Angeles";
-
             foreach(var ev in query.ToList())
             {
                 IEnumerable<dynamic> occurrences = null;
