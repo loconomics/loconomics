@@ -25,9 +25,6 @@ function AppointmentCardViewModel(params) {
     
     this.isSaving = ko.observable(false);
     this.isLoading = getObservable(params.isLoading);
-    this.isLocked = ko.computed(function() {
-        return this.isSaving() || this.isLoading();
-    }, this);
     
     this.item = ko.observable(AppointmentView(this.sourceItem(), app));
     
@@ -48,18 +45,30 @@ function AppointmentCardViewModel(params) {
         return getDateWithoutTime(this.item() && this.item().startTime());
     }, this);
     
-    this.isNew = ko.computed(function() {
+    this.isNew = ko.pureComputed(function() {
         var id = this.currentID();
         return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
     }, this);
     
-    this.isBooking = ko.computed(function() {
+    this.isBooking = ko.pureComputed(function() {
         return this.item() && this.item().sourceBooking();
     }, this);
     
     /* Return true if is an event object but not a booking */
-    this.isEvent = ko.computed(function() {
+    this.isEvent = ko.pureComputed(function() {
         return this.item() && this.item().sourceEvent() && !this.item().sourceBooking();
+    }, this);
+
+    this.isReadOnlyEvent = ko.pureComputed(function() {
+        if (this.isEvent()) {
+            return this.item().sourceEvent().readOnly();
+        }
+        // Is not an event
+        return false;
+    }, this);
+
+    this.isLocked = ko.pureComputed(function() {
+        return this.isReadOnlyEvent() || this.isSaving() || this.isLoading();
     }, this);
     
     this.headerClass = ko.pureComputed(function() {
