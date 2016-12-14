@@ -260,7 +260,7 @@ function DatetimePickerVM(app, element) {
     // event handlers to get notified on first time:
     $datePicker.datepicker('fill');
 
-    var autoTz = timeZoneList.getLocalTimeZone();
+    var autoTz = timeZoneList.getUsAliasWhenPossible(timeZoneList.getLocalTimeZone());
     var autoLabel = 'Auto (' + timeZoneList.timeZoneToDisplayFormat(autoTz) + ')';
     this.autoTimeZone = ko.observable({
         id: autoTz,

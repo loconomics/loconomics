@@ -218,7 +218,7 @@ function WeeklyScheduleVM(app) {
         return scheduleVersion.pushSave();
     };
 
-    var autoTz = timeZoneList.getLocalTimeZone();
+    var autoTz = timeZoneList.getUsAliasWhenPossible(timeZoneList.getLocalTimeZone());
     var autoLabel = 'Auto (' + timeZoneList.timeZoneToDisplayFormat(autoTz) + ')';
     this.autoTimeZone = ko.observable({
         id: autoTz,
