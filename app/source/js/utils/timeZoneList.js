@@ -194,6 +194,16 @@ exports.getTopUsZones = function getTopUsZones() {
     }
     return originalTzid || tzid;
 }*/
+/* testing utility used to get Zones data from a tzdata file, used to review some data,
+added commented only for documentation purposes:
+function getZonesFromTzdbFileContent(a) {
+    var r = /^Zone\s\w+(\/[\w\-]+)*$/gm;
+    var res = {};
+    var adapt = x => x.replace(/\.$/, '').replace(/^Zone\s/, '');
+    while ((i = r.exec(a)) !== null) { res[adapt(i[0])] = ''; }
+    return res;
+}
+*/
 /*********************/
 /* usAliasesInverted */
 /* tzdata::backward  Aliases to US/ zones (AK links)
