@@ -8,11 +8,43 @@
 var moment = require('moment-timezone');
 
 /**
+ * DO NOT USE. TRIAL: was a good try but ends to only 
+ * find tzs that are linked as aliases, but not others were the 
+ * link is done at inverse order (a lot) or not directly linked to
+ * a US/* tz.
+ * Look for an alias of type US/* for a given America/*
+ * tzid, when possible, with fallback to the given
+ * tzid. This makes possible the preference to
+ * use the US/*well-know-name* IDs instead of the America/*city*
+ * ones, more popular naming for users at USA.
+ * 
+ * IMPORTANT: It uses an internal API of moment-timezone, it can
+ * change with newer versions without notice (because is not a public API).
+ */
+/*function getUsAliasWhenPossible(tzid, originalTzid) {
+    if (/^America\//i.test(tzid)) {
+        var adapted = tzid.toLowerCase().replace('/', '_');
+        var alias = moment.tz._links[adapted];
+        // If the alias is not an 'US/' like ID (internal format 'us_')
+        // try again. Exclude the bad, problematic US/Pacific-New tz too.
+        if (!/^us_/.test(alias) || /^us_pacific-new$/.test(alias))
+            return getUsAliasWhenPossible(alias, originalTzid || tzid);
+
+        var tz = moment.tz(new Date(), alias);
+        tz = tz ? tz.tz() : null;
+        // If found, return the formal name of the timezone
+        if (tz) return tz;
+    }
+    return originalTzid || tzid;
+}*/
+
+/**
  * Returns the timezone of the local device.
  * At engines with the Intl API is precise, at others
  * is guessed based on winter/summer offsets and
  * a list of time zones with population, so is approximated
  * (guess by moment-timezone)
+ * @returns {string} Time Zone ID
  */
 exports.getLocalTimeZone = function() {
     return moment.tz.guess();
@@ -21,7 +53,8 @@ exports.getLocalTimeZone = function() {
 /**
  * Internal formatter for the timeZoneToDisplayFormat function, with more redundant
  * parameters that allows some reuses for calculated values 
- * at the getUserList function, that calls this for each item (micro-optimization). 
+ * at the getUserList function, that calls this for each item (micro-optimization).
+ * @returns {string}
  */
 function displayTimeZone(tzid, zone, instantMoment, ts) {
     return 'UTC' + instantMoment.tz(tzid).format('Z') + ' ' + tzid + ' (' + zone.abbr(ts) + ')';
@@ -48,8 +81,19 @@ exports.timeZoneToDisplayFormat = function(tzid, instant) {
 };
 
 /**
+ * Info about a time zone for public display/usage
+ * @typedef {Object} PublicTimeZone
+ * @property {string} id - IANA time zone identifier
+ * @property {string} label - Display name. Includes the UTC offset, ID and common abbreviation
+ * @property {number} offset - Offset of the time zone for a reference instant in time (the beggining
+ * of current year)
+ */
+
+
+/**
  * Internal utility that maps a list of tzid strings into a displayed version,
  * and sorted properly.
+ * @returns {PublicTimeZone[]}
  */
 var createDisplayList = function(tzList, m, ts) {
     return tzList.map(function(tzid) {
@@ -74,6 +118,7 @@ var createDisplayList = function(tzList, m, ts) {
  * Returns the complete list of time zones, as a 
  * list of { id, label, offset } objects,
  * sorted and formatted for display by the label value.
+ * @returns {PublicTimeZone[]}
  */
 exports.getFullList = function() {
     var m = moment().startOf('year');
@@ -87,6 +132,7 @@ exports.getFullList = function() {
  * meaningful for users that may pick their time zone,
  * as a list of { id, label, offset } objects,
  * sorted and formatted for display by the label value.
+ * @returns {PublicTimeZone[]}
 **/
 exports.getUserList = function getUserList() {
     var m = moment().startOf('year');
@@ -98,6 +144,9 @@ exports.getUserList = function getUserList() {
     return createDisplayList(list, m, ts);
 };
 
+/**
+ * @returns {PublicTimeZone[]}
+ */
 exports.getUsZones = function getUsZones() {
     var m = moment().startOf('year');
     var ts = m.valueOf();
@@ -108,6 +157,9 @@ exports.getUsZones = function getUsZones() {
     return createDisplayList(list, m, ts);
 };
 
+/**
+ * @returns {PublicTimeZone[]}
+ */
 exports.getTopUsZones = function getTopUsZones() {
     return [{
         id: 'US/Hawaii',
