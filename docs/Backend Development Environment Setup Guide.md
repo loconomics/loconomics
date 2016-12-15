@@ -9,8 +9,13 @@ Our backend is an ASP.NET WebPages2 website with MS-SQL Server database.
 ## Recommended operating system(s)
 Microsoft Windows 7 SP1, Windows 10.
 
-## Setting up a database
+## Connecting to our dev database
 Discuss with [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) if you should connect to the dev database or create a local copy.
+
+If connecting to our dev database:
+- Email [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) with:
+  - Your Microsoft Live account email address.
+  - The IP address(es) you'll be accessing the database from.
 
 If creating a local database:
 - use MS SQL Express 2008 R2 or above
@@ -67,4 +72,22 @@ http://dev.loconomics.com/tests/testmessaging
 http://dev.loconomics.com/tests/TestAny 
 
 ## FTP Access
-You should only need FTP access if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. If you feel you need this for testing reasons, please contact [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com). 
+You should only need FTP access if you're doing backend dev work on a Mac where you need to update server files. Otherwise, all testing can be done from your local machine. 
+
+If you feel you need this for testing reasons, follow these steps:
+- Contact [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) describing the need.
+  - If you don't already have a Microsoft Live account set up, [create one](https://signup.live.com/signup?wa=wsignin1.0&rpsnv=13&ct=1481762801&rver=6.7.6643.0&wp=MBI&wreply=https%3a%2f%2fwww.microsoft.com%2fen-us%2f&id=74335&aadredir=1&contextid=3FDDD7E6F0CF61A7&bk=1481762801&uiflavor=web&uaid=340040afa2a74692918de40df6f7e66c&mkt=EN-US&lc=1033&lic=1)
+  - Email [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) with your Microsoft Live account email address.
+- After [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com) has confirmed you're added as a contributor, complete the following steps:
+  - Log in into the [Azure Portal](https://portal.azure.com) using your Microsoft Live account email address
+  - Ensure that you are in the correct directory (azureloconomics):
+  ![screen shot 2016-12-14 at 4 56 22 pm](https://cloud.githubusercontent.com/assets/1202838/21208325/3fd0c6ac-c222-11e6-91cf-3e360e4f41d6.png)
+  - Select "dev" from the resources dashboard and select "Deployment Credentials":
+  ![screen shot 2016-12-14 at 5 14 32 pm](https://cloud.githubusercontent.com/assets/1202838/21208357/70f0162a-c222-11e6-84e8-575844643253.png)
+  - Create an FTP/deployment username and password (at least one lowercase letter, one uppercase letter, a symbol, and a number)
+  - Use the connection strings listed in Overview using your FTP software, e.g., [FileZilla](https://filezilla-project.org):
+    - FTP/deployment username
+    - FTP hostname
+    - Password is the one you just created
+    ![screen shot 2016-12-14 at 5 29 17 pm](https://cloud.githubusercontent.com/assets/1202838/21208487/1d00c46e-c223-11e6-906f-4a12c7e12ec6.png)
+  
