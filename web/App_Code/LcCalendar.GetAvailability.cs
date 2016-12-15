@@ -40,6 +40,15 @@ public static partial class LcCalendar
             return null;
         }
 
+        static public string GetUserTimeZone(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                // By default is null, in case it has no events will let the client app to auto pick one
+                return (string)N.D(db.QueryValue("SELECT TOP 1 timeZone FROM CalendarProviderAttributes WHERE UserID=@0", userID));
+            }
+        }
+
         /// <summary>
         /// Gets the weekly schedule of a user in a structure for the public REST API.
         /// Result includes a timeZone property, a property for each weekday that includes
@@ -86,10 +95,7 @@ public static partial class LcCalendar
             result["isAllTime"] = isAllTime == 127;
 
             // Read timeZone
-            using (var db = new LcDatabase()) {
-                // By default is null, in case it has no events will let the client app to auto pick one
-                result["timeZone"] = (string)N.D(db.QueryValue("SELECT TOP 1 timeZone FROM CalendarProviderAttributes WHERE UserID=@0", userID));
-            }
+            result["timeZone"] = GetUserTimeZone(userID);
 
             return result;
         }
@@ -110,7 +116,7 @@ public static partial class LcCalendar
             // Timezone shared by all (even if specified individually, is considered
             // to be the same on all cases)
             // By default:
-            result["timeZone"] = "America/Los_Angeles";
+            result["timeZone"] = GetUserTimeZone(userId);
 
             foreach(var r in data) {
                 var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();

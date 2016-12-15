@@ -1776,13 +1776,7 @@ public static partial class LcCalendar
         var calUser = new CalendarUser(UserID);
         // Get User Time Zone
         var userinfo = LcData.UserInfo.GetUserRowWithContactData(UserID);
-        if (userinfo != null)
-        {
-            //var tznumber = userinfo.TimeZone;
-            // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
-            // one used today (on iCalendar, the CreateEvent discards the event.TimeZone too):
-            calUser.DefaultTimeZone = "America/Los_Angeles";
-        }
+        calUser.DefaultTimeZone = LcCalendar.GetAvailability.GetUserTimeZone(UserID);
         return libCalendarUtils.PrepareExportDataForUser(calUser);
     }
 
