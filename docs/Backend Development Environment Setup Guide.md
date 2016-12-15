@@ -89,5 +89,6 @@ If you feel you need this for testing reasons, follow these steps:
     - FTP/deployment username
     - FTP hostname
     - Password is the one you just created
+    - Directory for app is: /site/wwwroot
     ![screen shot 2016-12-14 at 5 29 17 pm](https://cloud.githubusercontent.com/assets/1202838/21208487/1d00c46e-c223-11e6-906f-4a12c7e12ec6.png)
   
