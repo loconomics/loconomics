@@ -438,10 +438,12 @@ namespace CalendarDll
                   .FromDateTimeOffset(dto)
                   .InZone(timezone);
             // Do this conversion very carefully: it's different to call the 'LocalDateTime' at the ZonedDateTime object
-            // than in a DateTimeOffset, and CalDateDime expects a DateTime in the 'system time zone / offset' to be provided
-            // with a tzid to adapt that time to; while a ZonedDateTime.LocalDateTime returns the date part 'as is' in the
-            // object time zone, not in the 'system' time zone.
-            return new CalDateTime(zdt.ToDateTimeOffset().LocalDateTime, tzid);
+            // than in a DateTimeOffset, and CalDateDime expects a DateTime as the 'time as in that offset / offset' to be provided
+            // with a tzid to manage date correctly; while a ZonedDateTime.LocalDateTime returns the date part 'as is' in the
+            // object time zone, not in the 'system' time zone, so this one is what we want; BUT the DateTime object
+            // must NOT include reference to the system time or UTC, must be of Kind.Unspecified, otherwise CalDateTime
+            // will try some conversions from system time to offset or discard the tzid when is a Kind.UTC.
+            return new CalDateTime(zdt.LocalDateTime.ToDateTimeUnspecified(), tzid);
         }
         #endregion
 
@@ -1349,6 +1351,45 @@ namespace CalendarDll
                         AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
                     };
                 }
+            }
+        }
+
+        /// <summary>
+        /// Compute the occurrences of all events, normal and recurrents, from the filled in Calendar given between the dates
+        /// as of the internal logic of the Calendar component.
+        /// Results are in the offset of the stored date time zone (but not the stored offset)
+        /// </summary>
+        /// <param name="ical"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlots(Calendar ical, DateTimeOffset startTime, DateTimeOffset endTime)
+        {
+            foreach (var ev in ical.Events)
+            {
+                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, endTime.UtcDateTime))
+                {
+                    yield return new AvailabilitySlot
+                    {
+                        StartTime = DateTimeOffsetFromCalDateTime(occ.Period.StartTime),
+                        EndTime = DateTimeOffsetFromCalDateTime(occ.Period.EndTime),
+                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
+                    };
+                }
+            }
+        }
+
+        public DateTimeOffset DateTimeOffsetFromCalDateTime(IDateTime time)
+        {
+            var utc = new DateTimeOffset(time.AsUtc, TimeSpan.Zero);
+            var zone = GetTimeZone(time.TimeZoneName);
+            if (zone == null)
+            {
+                return utc;
+            }
+            else
+            {
+                return NodaTime.ZonedDateTime.FromDateTimeOffset(utc).WithZone(zone).ToDateTimeOffset();
             }
         }
 
@@ -2329,9 +2370,12 @@ namespace CalendarDll
             // GETS FIXED USING NEXT
             // anEvent.End.CopyFrom(UpdateDateToSystemTimeZone(anEvent.End));
 
-            var start = UpdateDateToSystemTimeZone(anEvent.Start);
-            var end = UpdateDateToSystemTimeZone(anEvent.End);
-            if (start != null && end != null)
+
+            //new CalDateTime(datetime.AsUtc, "UTC");
+
+            //var start = UpdateDateToSystemTimeZone(anEvent.Start);
+            //var end = UpdateDateToSystemTimeZone(anEvent.End);
+            /*if (start != null && end != null)
             {
                 anEvent.Start.CopyFrom(start);
                 anEvent.End.CopyFrom(end);
@@ -2345,12 +2389,12 @@ namespace CalendarDll
             {
                 anEvent.End = end;
                 anEvent.Start = end.Subtract(anEvent.Duration);
-            }
+            }*/
 
             anEvent.DtStamp = UpdateDateToSystemTimeZone(anEvent.DtStamp);
             anEvent.Created = UpdateDateToSystemTimeZone(anEvent.Created);
             anEvent.LastModified = UpdateDateToSystemTimeZone(anEvent.LastModified);
-            anEvent.RecurrenceId = UpdateDateToSystemTimeZone(anEvent.RecurrenceId);
+            //anEvent.RecurrenceId = UpdateDateToSystemTimeZone(anEvent.RecurrenceId);
 
             foreach (var exDate in anEvent.ExceptionDates)
             {
@@ -2390,9 +2434,9 @@ namespace CalendarDll
         public void UpdateFreeBusyDatesToSystemTimeZone(IFreeBusy freebusy)
         {
             // IFreeBusy.Start is an alias for DTStart.
-            freebusy.Start = UpdateDateToSystemTimeZone(freebusy.Start);
+            //freebusy.Start = UpdateDateToSystemTimeZone(freebusy.Start);
             // IFreeBusy.End is an alias for DTEnd.
-            freebusy.End = UpdateDateToSystemTimeZone(freebusy.End);
+            //freebusy.End = UpdateDateToSystemTimeZone(freebusy.End);
             freebusy.DtStamp = UpdateDateToSystemTimeZone(freebusy.DtStamp);
             // Update all its entries
             foreach (var freebusyentry in freebusy.Entries)
@@ -2409,15 +2453,13 @@ namespace CalendarDll
         /// 
         /// IagoSRL @Loconomics
         /// 
-        /// TODO REVIEW for TimeZone/Offsets
-        /// TODO REVIEW We changed DDay by fork iCal.net, maybe that one works fine the '.Local'?
+        /// IMPORTANT: only needed for fields that in database are saved as DateTime
+        /// but not as DateTimeOffset
         /// </summary>
         /// <param name="datetime"></param>
         /// <returns></returns>
         public IDateTime UpdateDateToSystemTimeZone(IDateTime datetime)
         {
-            // TODO TZ Review this since we cannot insist in use local timezone for all times anymore.
-
             if (datetime == null)
                 return null;
             // We use a combination of DDay conversion and .Net conversion.

@@ -1782,6 +1782,7 @@ public static partial class LcCalendar
 
     /// <summary>
     /// Remove all imported events of the userID
+    /// 
     /// </summary>
     /// <param name="userID"></param>
     public static void RemoveImportedEventsForUser(int userID)
