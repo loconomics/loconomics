@@ -37,9 +37,13 @@
         }
     }
     .fa {
-        font-size: 34px !important;
+        font-size: 18px !important;
         padding-left: 15px;
         margin-top: -4px;
+
+        &.ion-social-facebook {
+            font-size: 29px !important;
+        }
     }
     .icon-right {
         padding-left: 0px;
@@ -47,16 +51,31 @@
         margin-top: -28px;
     }
     .form-control {
-        height: 64px;
-        font-size: 16px;
+        height: 40px;
+        font-size: 13px;
         font-weight: normal;
         color: $gray;
+        border: none;
         border-bottom: 1px solid $gray-light;
 
         &:disabled {
             background-color: white;
             font-style: italic;
             color: $gray;
+        }
+
+        transition-duration: .4s;
+
+        input-placeholder() {
+            position: relative;
+            transition-duration: .4s;
+        }
+
+        &:focus {
+            box-shadow: none;
+            border-bottom: 1px solid $brand-primary;
+            box-shadow: 0px 1px 0px $brand-primary;
+            transition-duration: .3s;
         }
     }
     .form-control-feedback {

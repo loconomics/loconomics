@@ -13,7 +13,8 @@ module.exports = function EventDates(values) {
 
     this.model.defProperties({
         startTime: null,
-        endTime: null
+        endTime: null,
+        timeZone: ''
     }, values);
     
     this.duration = ko.computed({

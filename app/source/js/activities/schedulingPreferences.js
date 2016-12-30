@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
     
@@ -182,6 +182,8 @@ function SchedulingPreferencesVM(app) {
     }, this.prefs);
 }
 
+var timeZoneList = require('../utils/timeZoneList');
+
 function WeeklyScheduleVM(app) {
 
     var weeklySchedule = app.model.weeklySchedule;
@@ -215,5 +217,14 @@ function WeeklyScheduleVM(app) {
     this.save = function save() {
         return scheduleVersion.pushSave();
     };
+
+    var autoTz = timeZoneList.getLocalTimeZone();
+    var autoLabel = 'Auto (' + timeZoneList.timeZoneToDisplayFormat(autoTz) + ')';
+    var list = timeZoneList.getUserList();
+    list.unshift({
+        id: autoTz,
+        label: autoLabel
+    });
+    this.timeZonesList = ko.observable(list);
 }
 

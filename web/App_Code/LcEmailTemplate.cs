@@ -169,13 +169,15 @@ public static class LcEmailTemplate
         /// Gets the limit date-time to allow a cancellation for current booking,
         /// and different rules to get money refunded depending
         /// on the policy and that date.
+        ///  DO NOT use this value to directly format a string at templates, use the
+        ///  displayCancellationLimitDate method that uses the common format with time zone.
         /// </summary>
-        public DateTime cancellationLimitDate
+        public DateTimeOffset cancellationLimitDate
         {
             get
             {
                 // Default base date is an example with plus 7 days from now.
-                var baseDate = DateTime.Now.AddDays(7);
+                var baseDate = DateTimeOffset.Now.AddDays(7);
 
                 if (booking.serviceDate != null)
                 {
@@ -184,6 +186,11 @@ public static class LcEmailTemplate
 
                 return baseDate.AddHours(0 - cancellationPolicy.hoursRequired);
             }
+        }
+
+        public string displayCancellationLimitDate()
+        {
+            return LcUtils.Time.ZonedTimeOnDateString(cancellationLimitDate, booking.serviceDate.timeZone);
         }
 
         /// <summary>

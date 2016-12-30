@@ -57,18 +57,25 @@
     <DocumentationFile>bin\Release\CalendarDll.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="antlr.runtime">
-      <HintPath>..\External Assemblies\antlr.runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="DDay.Collections">
-      <HintPath>..\External Assemblies\DDay.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="DDay.iCal">
-      <HintPath>..\External Assemblies\DDay.iCal.dll</HintPath>
+    <Reference Include="antlr.runtime, Version=2.7.6.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ical.Net.2.2.19\lib\net40\antlr.runtime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External Assemblies\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ical.Net, Version=2.1.0.26439, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ical.Net.2.2.19\lib\net40\Ical.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ical.Net.Collections, Version=2.1.0.26438, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ical.Net.2.2.19\lib\net40\Ical.Net.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NodaTime, Version=1.3.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ical.Net.2.2.19\lib\net40\NodaTime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -213,6 +220,7 @@
       <DependentUpon>loconomics.edmx</DependentUpon>
       <LastGenOutput>loconomics.cs</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

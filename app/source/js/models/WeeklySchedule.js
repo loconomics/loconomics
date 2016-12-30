@@ -1,17 +1,5 @@
 /**
     WeeklySchedule model.
-
-    Its 'simplified' because it provides an API
-    for simple time range per week day,
-    a pair of from-to times.
-    Good for current simple UI.
-    
-    The original weekly schedule defines the schedule
-    in 15 minutes slots, so multiple time ranges can
-    exists per week day, just marking each slot
-    as available or unavailable. The AppModel
-    will fill this model instances properly making
-    any conversion from/to the source data.
  **/
 'use strict';
 
@@ -21,30 +9,7 @@ var ko = require('knockout'),
     WeekDaySchedule = require('./WeekDaySchedule'),
     TimeRange = require('./TimeRange');
 
-/**
-    It attemps to locate local/system timezone,
-    getting the first IANA tzid that matches 
-    local setup.
-**/
-function detectLocalTimezone() {
-    var year = new Date().getFullYear(),
-        winter = new Date(year, 1, 1),
-        winOff = winter.getTimezoneOffset(),
-        summer = new Date(year, 6, 1),
-        sumOff = summer.getTimezoneOffset(),
-        found = null;
-
-    moment.tz.names().some(function(tz) {
-        var zone = moment.tz.zone(tz);
-        if (zone.offset(winter) === winOff &&
-            zone.offset(summer) === sumOff) {
-           found = zone;
-           return true;
-        }
-    });
-
-    return found;
-}
+var timeZoneList = require('../utils/timeZoneList');
 
 /**
     Main model defining the week schedule
@@ -87,7 +52,7 @@ function WeeklySchedule(values) {
         isAllTime: false,
         timeZone: ''
     }, values);
-    
+
     // Index access
     this.weekDays = [
         this.sunday,
@@ -98,31 +63,23 @@ function WeeklySchedule(values) {
         this.friday,
         this.saturday
     ];
-    
-    this.weekDays.forEach(WeekDaySchedule);
-    
-    this.timeZoneDisplayName = ko.computed(function() {
-        var tzid = this.timeZone(),
-            tz = moment.tz(tzid),
-            name = tz.tz();
-        
-        // !moment.tz.zoneExists, just check the name is enough
-        if (!name) {
-            var localtz = detectLocalTimezone();
-            if (localtz)
-                tz = moment.tz(localtz.name);
-            if (tz)
-                name = tz.tz();
-            if (name)
-                setTimeout(function() {
-                    this.timeZone(name);
-                }.bind(this), 1);
-        }
 
-        if (name)
-            return name; // + ' (' + tz.zoneAbbr() + ')';
-        else
+    this.weekDays.forEach(WeekDaySchedule);
+
+    this.displayedTimeZoneFormatter = function(tzid) {
+        var zone = moment.tz.zone(tzid);
+        var m = moment().startOf('year');
+        if (tzid) {
+            return tzid + ' (' + zone.abbr(m.valueOf()) + ')';
+        }
+        else {
             return '';
+        }
+    };
+
+    this.timeZoneDisplayName = ko.computed(function () {
+        var tzid = this.timeZone();
+        return tzid ? timeZoneList.timeZoneToDisplayFormat(this.timeZone()) : '';
     }, this);
 }
 
