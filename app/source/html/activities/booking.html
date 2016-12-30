@@ -351,8 +351,8 @@
                                 </svg>
                             </p>           
                             <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }" novalidate>
-                                <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', icon: 'ion-android-contact' } }"></div>
-                                <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', icon: 'ion-android-contact' } }"></div>
+                                <div data-bind="template: { name: 'signup-field', data: { field: firstName, label: 'First name', type: 'text', icon: 'ion-android-contact' } }"></div>
+                                <div data-bind="template: { name: 'signup-field', data: { field: lastName, label: 'Last name', type: 'text', icon: 'ion-android-contact' } }"></div>
                                 <div class="form-group has-feedback" data-bind="css: { 'has-error': device.error }">
                                     <label for="countryID">Country</label>
                                     <select data-bind="value: countryID" class="form-control select-unstyled">
@@ -599,10 +599,10 @@
                                     <i class="fa ion-ios-world-outline form-control-feedback text-muted pull-right icon-right" aria-hidden="true"></i>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Postal code', icon: 'ion-ios-home-outline' } }"></div>
-                                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', icon: 'ion-android-contacts' } }"></div>
+                                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { field: postalCode, label: 'Postal code', type: 'text', icon: 'ion-ios-home-outline' } }"></div>
+                                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { field: referralCode, label: 'Referral code', type: 'text', icon: 'ion-android-contacts' } }"></div>
                                 </div>
-                                <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Mobile phone', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
+                                <div data-bind="template: { name: 'signup-field', data: { field: phone, label: 'Mobile phone', type: 'tel', icon: 'ion-ios-telephone-outline' } }, visible: forServiceProfessional"></div>
                                 <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
                                     <label for="signupAccountEmail">Email address</label>
                                     <input type="email" class="form-control" id="signupAccountEmail" placeholder="Email address" data-bind="value: email, popover: { content: email.error() || signupError(), trigger: 'focus', container: 'body', placement: 'top' }, disable: emailIsLocked">
