@@ -1302,7 +1302,7 @@ public static partial class LcCalendar
         /// <summary>
         /// Date when repetition ends, if Ending is 'date'
         /// </summary>
-        public DateTime? Until;
+        public DateTimeOffset? Until;
         /// <summary>
         /// Number of ocurrences for the repetition,
         /// if Ending is 'ocurrences'
@@ -1498,13 +1498,13 @@ public static partial class LcCalendar
         int EventTypeID,
         int AvailabilityTypeID,
         string Summary,
-        DateTime StartTime,
-        DateTime EndTime,
+        DateTimeOffset StartTime,
+        DateTimeOffset EndTime,
         bool IsAllDay,
         bool IsRecurrent,
         int RecurrenceFrequencyID,
         int RecurrenceInterval,
-        DateTime? RecurrenceEndDate,
+        DateTimeOffset? RecurrenceEndDate,
         int? RecurrenceOccurrencesNumber,
         string Location,
         string Description,
@@ -1536,11 +1536,10 @@ public static partial class LcCalendar
                 StartTime = dt;
             }
 
-            // TODO TZ actual timezone needed, not offset
             // Auto TimeZone to server local
             if (String.IsNullOrEmpty(TimeZone))
             {
-                TimeZone = System.TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).ToString("t");
+                TimeZone = LcCalendar.serverTimeZoneID;
             }
 
             dbevent.EventType = EventTypeID;

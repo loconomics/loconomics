@@ -15,8 +15,8 @@ namespace CalendarDll.Data
     public partial class CalendarEventExceptionsPeriod
     {
         public int IdException { get; set; }
-        public System.DateTime DateStart { get; set; }
-        public Nullable<System.DateTime> DateEnd { get; set; }
+        public System.DateTimeOffset DateStart { get; set; }
+        public Nullable<System.DateTimeOffset> DateEnd { get; set; }
     
         public virtual CalendarEventExceptionsPeriodsList CalendarEventExceptionsPeriodsList { get; set; }
     }
