@@ -1,8 +1,8 @@
 # App Quick Start Guide
 
 ## Download or clone the master branch of the Loconomics Github repository
-- [Download](https://github.com/joshdanielson/Loconomics/archive/master.zip)
-- Cloning link: https://github.com/joshdanielson/Loconomics.git
+- [Download](https://github.com/loconomics/loconomics/archive/master.zip)
+- Cloning link: https://github.com/loconomics/loconomics.git
 - [Help with cloning](https://help.github.com/articles/cloning-a-repository/)
 
 ## Install Node.js
@@ -14,13 +14,20 @@ You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) or new
 ```
 npm install -g grunt-cli
 ```
-Note: Linux and Mac may require root/elevated rights in order to install globally.
-
-## Install modules (from the command line in the project directory)
+Note: Linux and Mac may require root/elevated rights in order to install globally. For Mac, try:
+```
+sudo npm install -g grunt-cli
+```
+## Install modules (from the command line in the /app folder of the project directory)
 ```
 npm install
 ```
 It will install all the modules listed on the package.json file, needed to build the app source code.
+
+Note: Linux and Mac may require root/elevated rights in order to install globally. For Mac, try:
+```
+sudo npm install
+```
 
 ## Build the app source code
 

@@ -8,7 +8,7 @@ All source files use 4 spaces indentation, UTF8 file enconding.
 
 ## CSS Naming Conventions
 
-We use Bootstrap as CSS framework and it has it's own naming rules, for anything related to Boostrap (like adding changes, modifiers on top of Bootstrap classes) or files under /utils folder, we follow the simple Boostrap naming.
+We use Bootstrap as CSS framework and it has its own naming rules, for anything related to Boostrap (like adding changes, modifiers on top of Bootstrap classes) or files under /utils folder, we follow the simple Boostrap naming.
 
 But for *components* styles, the classes at /components folder that start with uppercase letter, we use [SUIT naming convention](https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md)
 
@@ -53,8 +53,9 @@ issue1076 - A1 - new customertransactiontype table.sql
 We use Github to track all development issues, project management, product roadmaps, and documentation.
 
 ### Branch use and pull requests
+Please review [Understanding the Github Flow](https://guides.github.com/introduction/flow/) as we follow its process.
 
-#### Master
+#### Master, testing, staging, live
 Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch. 
 
 #### New branches
