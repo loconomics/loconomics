@@ -6,11 +6,11 @@
         <div data-bind="css: { 'is-loading': isLoading }">
             <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
         </div>
-        <div class="Box-sm PaddedBox-xs">
-            <div class="isolated bottom-only" data-bind="visible: durationDisplay">
+        <div class="Box-sm PaddedBox-xs WhiteForm">
+            <div data-bind="visible: durationDisplay">
                 <span>You'll need</span> <span data-bind="text: durationDisplay"></span>
             </div>
-            <div class="isolated bottom-only" data-bind="css: { isolated: unavailableTimeBtnEnabled() }">
+            <div class="isolated top-only">
                 <div class="GroupedTimeSlots" data-bind="foreach: groupedSlots">
                     <div class="GroupedTimeSlots-group">
                         <div class="GroupedTimeSlots-groupName" data-bind="text: group"></div>
@@ -23,7 +23,28 @@
                     </div>
                 </div>
             </div>
-            <div data-bind="attr: { hidden: !unavailableTimeBtnEnabled() }">
+            <div class="form-group isolated top-only" data-bind="visible: timeZone">
+                <a data-bind="visible: !isTimeZonePickerOpen(), click: openTimeZonePicker" class="btn btn-link">
+                    All times are <span data-bind="text: timeZone"></span> Time (change).
+                </a>
+                <select class="form-control"
+                        data-bind="value: timeZone, visible: isTimeZonePickerOpen"
+                        id="schedulingPrefs-timeZone">
+                    <option data-bind="text: autoTimeZone().label, value: autoTimeZone().id"></option>
+                    <!-- ko foreach: specialTimeZones -->
+                    <option data-bind="text: label, value: id"></option>
+                    <!-- /ko -->
+                    <option disabled="disabled">---</option>
+                    <!-- ko foreach: topUsTimeZones -->
+                    <option data-bind="text: label, value: id"></option>
+                    <!-- /ko -->
+                    <option disabled="disabled">---</option>
+                    <!-- ko foreach: timeZonesList -->
+                    <option data-bind="text: label, value: id"></option>
+                    <!-- /ko -->
+                </select>
+            </div>
+            <div data-bind="attr: { hidden: !unavailableTimeBtnEnabled() }, css: { isolated: unavailableTimeBtnEnabled }" class="top-only">
                 <button type="button" class="btn btn-default btn-block" data-bind="click: showTimePicker">
                     <span>Book an unavailable time</span>
                 </button>

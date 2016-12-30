@@ -26,7 +26,7 @@ namespace CalendarDll.Data
         public Nullable<int> Frequency { get; set; }
         public Nullable<int> Interval { get; set; }
         public Nullable<int> RestristionType { get; set; }
-        public Nullable<System.DateTime> Until { get; set; }
+        public Nullable<System.DateTimeOffset> Until { get; set; }
         public Nullable<int> FirstDayOfWeek { get; set; }
     
         public virtual ICollection<CalendarReccurrenceFrequency> CalendarReccurrenceFrequency { get; set; }

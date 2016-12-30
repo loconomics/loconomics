@@ -15,8 +15,8 @@ namespace CalendarDll.Data
     public partial class CalendarEventRecurrencesPeriod
     {
         public int IdRecurrence { get; set; }
-        public System.DateTime DateStart { get; set; }
-        public Nullable<System.DateTime> DateEnd { get; set; }
+        public System.DateTimeOffset DateStart { get; set; }
+        public Nullable<System.DateTimeOffset> DateEnd { get; set; }
     
         public virtual CalendarEventRecurrencesPeriodList CalendarEventRecurrencesPeriodList { get; set; }
     }

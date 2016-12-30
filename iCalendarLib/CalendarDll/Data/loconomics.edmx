@@ -224,8 +224,8 @@
             <PropertyRef Name="DateStart" />
           </Key>
           <Property Name="IdException" Type="int" Nullable="false" />
-          <Property Name="DateStart" Type="datetime" Nullable="false" />
-          <Property Name="DateEnd" Type="datetime" />
+          <Property Name="DateStart" Type="datetimeoffset" Nullable="false" />
+          <Property Name="DateEnd" Type="datetimeoffset" />
         </EntityType>
         <EntityType Name="CalendarEventExceptionsPeriodsList">
           <Key>
@@ -240,8 +240,8 @@
             <PropertyRef Name="DateStart" />
           </Key>
           <Property Name="IdRecurrence" Type="int" Nullable="false" />
-          <Property Name="DateStart" Type="datetime" Nullable="false" />
-          <Property Name="DateEnd" Type="datetime" />
+          <Property Name="DateStart" Type="datetimeoffset" Nullable="false" />
+          <Property Name="DateEnd" Type="datetimeoffset" />
         </EntityType>
         <EntityType Name="CalendarEventRecurrencesPeriodList">
           <Key>
@@ -264,12 +264,12 @@
           <Property Name="StartTime" Type="datetimeoffset" Nullable="false" />
           <Property Name="EndTime" Type="datetimeoffset" Nullable="false" />
           <Property Name="IsAllDay" Type="bit" Nullable="false" />
-          <Property Name="StampTime" Type="datetime" />
+          <Property Name="StampTime" Type="datetimeoffset" />
           <Property Name="TimeZone" Type="nvarchar" MaxLength="100" />
           <Property Name="Priority" Type="int" />
           <Property Name="Location" Type="nvarchar" MaxLength="100" />
-          <Property Name="UpdatedDate" Type="datetime" />
-          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="UpdatedDate" Type="datetimeoffset" />
+          <Property Name="CreatedDate" Type="datetimeoffset" />
           <Property Name="ModifyBy" Type="nvarchar" MaxLength="50" />
           <Property Name="Class" Type="nvarchar" MaxLength="50" />
           <Property Name="Organizer" Type="nvarchar(max)" />
@@ -279,7 +279,7 @@
           <Property Name="TimeBlock" Type="time" />
           <Property Name="DayofWeek" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
-          <Property Name="Deleted" Type="datetime" />
+          <Property Name="Deleted" Type="datetimeoffset" />
         </EntityType>
         <EntityType Name="CalendarEventsAttendees">
           <Key>
@@ -333,7 +333,7 @@
           <Property Name="Frequency" Type="int" />
           <Property Name="Interval" Type="int" />
           <Property Name="RestristionType" Type="int" />
-          <Property Name="Until" Type="datetime" />
+          <Property Name="Until" Type="datetimeoffset" />
           <Property Name="FirstDayOfWeek" Type="int" />
         </EntityType>
         <EntityType Name="CalendarReccurrenceFrequency">
@@ -948,8 +948,8 @@
             <PropertyRef Name="DateStart" />
           </Key>
           <Property Name="IdException" Type="Int32" Nullable="false" />
-          <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateEnd" Nullable="true" Precision="3" Type="DateTime" />
+          <Property Name="DateStart" Type="DateTimeOffset" Nullable="false" Precision="3" />
+          <Property Name="DateEnd" Nullable="true" Precision="3" Type="DateTimeOffset" />
           <NavigationProperty Name="CalendarEventExceptionsPeriodsList" Relationship="loconomicsModel.FK_CalendarEventExceptionsPeriods_CalendarEventExceptionsDates" FromRole="CalendarEventExceptionsPeriod" ToRole="CalendarEventExceptionsPeriodsList" />
         </EntityType>
         <EntityType Name="CalendarEventExceptionsPeriodsList">
@@ -967,8 +967,8 @@
             <PropertyRef Name="DateStart" />
           </Key>
           <Property Name="IdRecurrence" Type="Int32" Nullable="false" />
-          <Property Name="DateStart" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateEnd" Type="DateTime" Precision="3" Nullable="true" />
+          <Property Name="DateStart" Type="DateTimeOffset" Nullable="false" Precision="3" />
+          <Property Name="DateEnd" Type="DateTimeOffset" Precision="3" Nullable="true" />
           <NavigationProperty Name="CalendarEventRecurrencesPeriodList" Relationship="loconomicsModel.FK_CalendarEventRecurrencesPeriod_CalendarEventRecurrencesPeriodList" FromRole="CalendarEventRecurrencesPeriod" ToRole="CalendarEventRecurrencesPeriodList" />
         </EntityType>
         <EntityType Name="CalendarEventRecurrencesPeriodList">
@@ -1026,7 +1026,7 @@
           <Property Name="Frequency" Type="Int32" />
           <Property Name="Interval" Type="Int32" />
           <Property Name="RestristionType" Type="Int32" />
-          <Property Name="Until" Type="DateTime" Precision="3" />
+          <Property Name="Until" Type="DateTimeOffset" Precision="3" />
           <Property Name="FirstDayOfWeek" Type="Int32" />
           <NavigationProperty Name="CalendarReccurrenceFrequency" Relationship="loconomicsModel.FK_CalendarFrecuency_CalendarReccursive" FromRole="CalendarReccurrence" ToRole="CalendarReccurrenceFrequency" />
           <NavigationProperty Name="CalendarEvents" Relationship="loconomicsModel.FK_CalendarReccursive_CalendarEvents" FromRole="CalendarReccurrence" ToRole="CalendarEvents" />
@@ -1291,25 +1291,25 @@
           <Property Type="String" Name="UID" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="CalendarAvailabilityTypeID" Nullable="false" />
           <Property Type="Boolean" Name="Transparency" Nullable="false" />
-          <Property Type="DateTimeOffset" Name="StartTime" Nullable="false" />
-          <Property Type="DateTimeOffset" Name="EndTime" Nullable="false" />
+          <Property Type="DateTimeOffset" Name="StartTime" Nullable="false" Precision="3" />
+          <Property Type="DateTimeOffset" Name="EndTime" Nullable="false" Precision="3" />
           <Property Type="Boolean" Name="IsAllDay" Nullable="false" />
-          <Property Type="DateTime" Name="StampTime" Precision="3" />
+          <Property Type="DateTimeOffset" Name="StampTime" Precision="3" />
           <Property Type="String" Name="TimeZone" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Priority" />
           <Property Type="String" Name="Location" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="UpdatedDate" Precision="3" />
-          <Property Type="DateTime" Name="CreatedDate" Precision="3" />
+          <Property Type="DateTimeOffset" Name="UpdatedDate" Precision="3" />
+          <Property Type="DateTimeOffset" Name="CreatedDate" Precision="3" />
           <Property Type="String" Name="ModifyBy" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Class" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Organizer" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Sequence" />
           <Property Type="String" Name="Geo" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Type="DateTimeOffset" Name="RecurrenceId" />
+          <Property Type="DateTimeOffset" Name="RecurrenceId" Precision="3" />
           <Property Type="Time" Name="TimeBlock" Precision="7" />
           <Property Type="Int32" Name="DayofWeek" />
           <Property Type="String" Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="DateTime" Name="Deleted" Nullable="true" />
+          <Property Type="DateTimeOffset" Name="Deleted" Nullable="true" />
           <NavigationProperty Name="CalendarAvailabilityType" Relationship="loconomicsModel.FK_CalendarEvents_CalendarAvailabilityType" FromRole="CalendarEvents" ToRole="CalendarAvailabilityType" />
           <NavigationProperty Name="CalendarEventComments" Relationship="loconomicsModel.FK_Comments_CalendarEvents" FromRole="CalendarEvents" ToRole="CalendarEventComments" />
           <NavigationProperty Name="CalendarEventExceptionsPeriodsList" Relationship="loconomicsModel.FK_CalendarEventExceptions_CalendarEvents" FromRole="CalendarEvents" ToRole="CalendarEventExceptionsPeriodsList" />

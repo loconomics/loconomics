@@ -33,12 +33,12 @@ namespace CalendarDll.Data
         public System.DateTimeOffset StartTime { get; set; }
         public System.DateTimeOffset EndTime { get; set; }
         public bool IsAllDay { get; set; }
-        public Nullable<System.DateTime> StampTime { get; set; }
+        public Nullable<System.DateTimeOffset> StampTime { get; set; }
         public string TimeZone { get; set; }
         public Nullable<int> Priority { get; set; }
         public string Location { get; set; }
-        public Nullable<System.DateTime> UpdatedDate { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<System.DateTimeOffset> UpdatedDate { get; set; }
+        public Nullable<System.DateTimeOffset> CreatedDate { get; set; }
         public string ModifyBy { get; set; }
         public string Class { get; set; }
         public string Organizer { get; set; }
@@ -49,7 +49,7 @@ namespace CalendarDll.Data
         public Nullable<int> DayofWeek { get; set; }
         public string Description { get; set; }
         public int EventType { get; set; }
-        public DateTime? Deleted { get; set; }
+        public DateTimeOffset? Deleted { get; set; }
     
         public virtual CalendarAvailabilityType CalendarAvailabilityType { get; set; }
         public virtual ICollection<CalendarEventComments> CalendarEventComments { get; set; }

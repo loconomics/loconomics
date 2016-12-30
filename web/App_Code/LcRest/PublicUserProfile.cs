@@ -74,6 +74,8 @@ namespace LcRest
         public bool isServiceProfessional;
         public bool isClient;
 
+        public string timeZone;
+
         public DateTime updatedDate;
         #endregion
 
@@ -99,6 +101,8 @@ namespace LcRest
 
                 isServiceProfessional = record.isServiceProfessional,
                 isClient = record.isClient,
+
+                timeZone = record.timeZone,
 
                 updatedDate = record.updatedDate
             };
@@ -127,6 +131,8 @@ namespace LcRest
             
             ,providerProfileUrl as serviceProfessionalProfileUrlSlug
 
+            ,cpa.timeZone as timeZone
+
             ,Users.updatedDate
 
         FROM Users
@@ -138,6 +144,9 @@ namespace LcRest
                 ON
                 (   PC.ServiceProfessionalUserID = @0 AND PC.ClientUserID = @1
                  OR PC.ServiceProfessionalUserID = @1 AND PC.ClientUserID = @0 )
+                LEFT JOIN            
+            CalendarProviderAttributes as cpa
+                ON cpa.UserID = Users.UserID
         WHERE Users.UserID = @0
             -- Users must be active (no deleted and publicly active) OR to exist in relationship with the other user (active or not, but with record)
           AND (Users.Active = 1 AND Users.AccountStatusID = 1 OR PC.Active is not null)
@@ -164,12 +173,17 @@ namespace LcRest
             
             ,providerProfileUrl as serviceProfessionalProfileUrlSlug
 
+            ,cpa.timeZone as timeZone
+
             ,Users.updatedDate
 
         FROM Users
                 INNER JOIN
             UserProfile As UP
                 ON UP.UserID = Users.UserID
+                LEFT JOIN            
+            CalendarProviderAttributes as cpa
+                ON cpa.UserID = Users.UserID
         WHERE Users.UserID = @0
           AND Users.Active = 1
         ";

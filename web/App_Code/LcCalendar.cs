@@ -68,11 +68,10 @@ public static partial class LcCalendar
         Busy = 2,
         Tentative = 3,
         /// <summary>
-        /// TODO This has no sense. An offline must be a type of event, is nothing about availability.
-        /// But there is another kind of availability: 'transparent' that just means event must be discarded
+        /// This just means event must be discarded
         /// when computing availability.
         /// </summary>
-        Offline = 4
+        Transparent = 4
     }
 
     public const string serverTimeZoneID = "America/Los_Angeles";
@@ -96,7 +95,7 @@ public static partial class LcCalendar
                 new CalendarDll.CalendarUser(userID),
                 dateStart,
                 dateEnd,
-                excludeAdvanceTime ? DateTime.MinValue : DateTime.Now);
+                excludeAdvanceTime ? DateTimeOffset.MinValue : DateTimeOffset.Now);
     }
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd
@@ -1100,12 +1099,6 @@ public static partial class LcCalendar
             // iCalendar is needed to calculate each event occurrences
             var calUtils = new CalendarUtils();
 
-            // TODO TZ
-            // TODO Support for real, user attached or event attached, Time Zones (the fields
-            // exists, but has not valid values: user.TimeZone and event.TimeZone)
-            //var tzid = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time").Id;
-            var tzid = "America/Los_Angeles";
-
             foreach(var ev in query.ToList())
             {
                 IEnumerable<dynamic> occurrences = null;
@@ -1309,7 +1302,7 @@ public static partial class LcCalendar
         /// <summary>
         /// Date when repetition ends, if Ending is 'date'
         /// </summary>
-        public DateTime? Until;
+        public DateTimeOffset? Until;
         /// <summary>
         /// Number of ocurrences for the repetition,
         /// if Ending is 'ocurrences'
@@ -1505,13 +1498,13 @@ public static partial class LcCalendar
         int EventTypeID,
         int AvailabilityTypeID,
         string Summary,
-        DateTime StartTime,
-        DateTime EndTime,
+        DateTimeOffset StartTime,
+        DateTimeOffset EndTime,
         bool IsAllDay,
         bool IsRecurrent,
         int RecurrenceFrequencyID,
         int RecurrenceInterval,
-        DateTime? RecurrenceEndDate,
+        DateTimeOffset? RecurrenceEndDate,
         int? RecurrenceOccurrencesNumber,
         string Location,
         string Description,
@@ -1543,11 +1536,10 @@ public static partial class LcCalendar
                 StartTime = dt;
             }
 
-            // TODO TZ actual timezone needed, not offset
             // Auto TimeZone to server local
             if (String.IsNullOrEmpty(TimeZone))
             {
-                TimeZone = System.TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).ToString("t");
+                TimeZone = LcCalendar.serverTimeZoneID;
             }
 
             dbevent.EventType = EventTypeID;
@@ -1783,18 +1775,13 @@ public static partial class LcCalendar
         var calUser = new CalendarUser(UserID);
         // Get User Time Zone
         var userinfo = LcData.UserInfo.GetUserRowWithContactData(UserID);
-        if (userinfo != null)
-        {
-            //var tznumber = userinfo.TimeZone;
-            // TODO: for now, the value from database is discarted, an offset is not valid, we need a name, I set the only
-            // one used today (on iCalendar, the CreateEvent discards the event.TimeZone too):
-            calUser.DefaultTimeZone = "America/Los_Angeles";
-        }
+        calUser.DefaultTimeZone = LcCalendar.GetAvailability.GetUserTimeZone(UserID);
         return libCalendarUtils.PrepareExportDataForUser(calUser);
     }
 
     /// <summary>
     /// Remove all imported events of the userID
+    /// 
     /// </summary>
     /// <param name="userID"></param>
     public static void RemoveImportedEventsForUser(int userID)

@@ -1,0 +1,22 @@
+﻿@* Release-7.7 - C-1 Set user timeZone field.cshtml
+ *@
+@{
+    //LcHelpers.TestArea();
+    Layout = "~/tests/_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+
+    using (var db = new LcDatabase()) {
+        var data = db.Query(@"
+            SELECT userID, timeZone
+            FROM CalendarEvents
+            WHERE EventType = 2
+            GROUP BY UserId, EventType, TimeZone
+        ");
+        foreach (var r in data)
+        {
+            db.Query("UPDATE CalendarProviderAttributes SET timezone=@1 WHERE UserId=@0", r.userID, r.timeZone);
+        }
+    }
+}
+PROCESS DURATION: @((DateTime.Now - start).ToString())

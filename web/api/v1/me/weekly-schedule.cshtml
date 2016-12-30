@@ -132,9 +132,16 @@
 
         public override dynamic Put()
         {
+            Validation.RequireField("timeZone", LcRessources.RequiredField("Time zone"));
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            
             var userID = WebSecurity.CurrentUserId;
             var alltime = Request.Form["isAllTime"].AsBool(false);
-            var timeZone = Request.Form["timeZone"] ?? LcCalendar.serverTimeZoneID;
+            var timeZone = Request.Form["timeZone"];
 
             if (alltime)
             {
@@ -189,10 +196,13 @@
                 LcCalendar.SetAllProviderWorkHours(userID, whdays);
             }
 
-            // Everything goes fine, latest details:
-            // Testing the alert
+            // Everything goes fine, latest details:          
             using (var db = Database.Open("sqlloco"))
             {
+                // Save selected time zone value
+                db.Execute("UPDATE CalendarProviderAttributes SET timeZone=@0 WHERE UserID=@1", timeZone, userID);
+                
+                // Testing the alert
                 db.Execute("EXEC TestAlertAvailability @0", userID);
             }
             // Updated data copy:

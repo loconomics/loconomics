@@ -5,20 +5,26 @@
 
 var ko = require('knockout'),
     $ = require('jquery'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    moment = require('moment'),
-    Time = require('../utils/Time');
+    getDateWithoutTime = require('../utils/getDateWithoutTime');
+var moment = require('moment-timezone');
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
 
+var timeZoneList = require('../utils/timeZoneList');
+
 function DatetimePickerVM(app, element) {
-    
+    //jshint maxstatements: 40
+
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.userID = ko.observable();
     this.isLoading = ko.observable(false);
     this.requiredDurationMinutes = ko.observable(0);
     this.includeEndTime = ko.observable(false);
+    this.timeZone = ko.observable('');
+    // Let's external code to add a set of objects { id: tzID, label: tzLabel }
+    // to display at top, below the 'auto' option.
+    this.specialTimeZones = ko.observableArray([]);
     
     this.durationDisplay = ko.pureComputed(function() {
         var fullMinutes = this.requiredDurationMinutes();
@@ -37,12 +43,42 @@ function DatetimePickerVM(app, element) {
         return text;
     }, this);
 
+    /**
+     * Converts the given date to the given timeZone but 
+     * discarding time info, so gets a midnight time for the
+     * same numerical date (times are not meant to be equivalent).
+     * Returns a moment object able to manage timezone.
+     * Example: 2016-12-13 00:00 UTC -> 2016-12-13 00:00 PST,
+     * same date part with time as zero (even if different at source date). 
+     * No equivalent instant, since for that UTC, the PST is
+     * actually 2016-12-12 16:00.
+     * If no timeZone, returns as local date at the start of the date.
+     */
+    this.getDateAtTimeZone = function(date, timeZone) {
+        var s;
+        if (timeZone) {
+            // Get only the date part of the local-date picked 
+            // (format as 2016-01-01)
+            // and generate a moment with that and the timezone, so we 
+            // get the start of the date at the correct time zone
+            // NOTE: if we just build a moment(date) and pass
+            // the timezone with .tz(tz) we are getting the wrong
+            // date at lot of cases
+            s = moment.tz(moment(date).format('Y-MM-DD'), timeZone);
+        }
+        else {
+            s = moment(date).startOf('day');
+        }
+        return s;
+    };
+
     this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){
         
         var requiredDurationMinutes = this.requiredDurationMinutes();
         var includeEndTime = this.includeEndTime();
-        
+        var tz = this.timeZone() || timeZoneList.getLocalTimeZone();
+
         /*
           before 12:00pm (noon) = morning
           afternoon: 12:00pm until 5:00pm
@@ -50,25 +86,25 @@ function DatetimePickerVM(app, element) {
         */
         // Since slots must be for the same date,
         // to define the groups ranges use the first date
-        var datePart = this.selectedDate() || new Date();
+        var baseDate = this.getDateAtTimeZone(this.selectedDate() || new Date(), tz);
         var groups = [
             {
                 group: 'Morning',
                 slots: [],
-                starts: new Time(datePart, 0, 0),
-                ends: new Time(datePart, 12, 0)
+                starts: baseDate.clone().hour(0).minute(0).second(0),
+                ends: baseDate.clone().hour(12).minute(0).second(0)
             },
             {
                 group: 'Afternoon',
                 slots: [],
-                starts: new Time(datePart, 12, 0),
-                ends: new Time(datePart, 17, 0)
+                starts: baseDate.clone().hour(12).minute(0).second(0),
+                ends: baseDate.clone().hour(17).minute(0).second(0)
             },
             {
                 group: 'Evening',
                 slots: [],
-                starts: new Time(datePart, 17, 0),
-                ends: new Time(datePart, 24, 0)
+                starts: baseDate.clone().hour(17).minute(0).second(0),
+                ends: baseDate.clone().hour(24).minute(0).second(0)
             }
         ];
 
@@ -76,6 +112,7 @@ function DatetimePickerVM(app, element) {
         var slots = this.dateAvail() && this.dateAvail().getFreeTimeSlots(requiredDurationMinutes, undefined, includeEndTime) || [];
         // Iterate to organize by group
         slots.forEach(function(slot) {
+            slot = moment(slot).tz(tz);
             // Check every group
             groups.some(function(group) {
                 // If matches the group, push to it
@@ -142,17 +179,22 @@ function DatetimePickerVM(app, element) {
         this.selectedDatetime(null);
         this.pickedTime(null);
         this.allowBookUnavailableTime(false);
+        this.timeZone('');
+        this.specialTimeZones.removeAll();
+        this.isTimeZonePickerOpen(false);
     }.bind(this);
     
-    this.bindDateData = function bindDateData(date) {
+    this.bindDateData = function (date) {
 
         if (!date || !this.userID()) return;
         
-        date = getDateWithoutTime(date);
-        
+        var tz = this.timeZone();
+
         this.isLoading(true);
-        //return app.model.calendar.getDateAvailability(date)
-        return app.model.availability.times(this.userID(), date)
+
+        var s = this.getDateAtTimeZone(date, tz);
+        var e = s.clone().add(1, 'day');
+        return app.model.availability.times(this.userID(), s, e)
         .then(function(data) {
 
             this.dateAvail(data);
@@ -197,6 +239,11 @@ function DatetimePickerVM(app, element) {
         if (elDate !== date)
             $datePicker.datepicker('setValue', date, true);
     }.bind(this));
+
+    // Auto bind date data on selecte time zone change:
+    this.timeZone.subscribe(function() {
+        this.bindDateData(this.selectedDate());
+    }.bind(this));
     
     // On Setting the data, we need to refresh tags,
     // and on change userID. This runs too the first time
@@ -212,6 +259,20 @@ function DatetimePickerVM(app, element) {
     // Force first refresh on datepicker to allow
     // event handlers to get notified on first time:
     $datePicker.datepicker('fill');
+
+    var autoTz = timeZoneList.getUsAliasWhenPossible(timeZoneList.getLocalTimeZone());
+    var autoLabel = 'Auto (' + timeZoneList.timeZoneToDisplayFormat(autoTz) + ')';
+    this.autoTimeZone = ko.observable({
+        id: autoTz,
+        label: autoLabel
+    });
+    this.timeZonesList = ko.observable(timeZoneList.getUserList());
+    this.topUsTimeZones = ko.observable(timeZoneList.getTopUsZones());
+
+    this.isTimeZonePickerOpen = ko.observable(false);
+    this.openTimeZonePicker = function() {
+        this.isTimeZonePickerOpen(true);
+    };
 }
 
 module.exports = DatetimePickerVM;

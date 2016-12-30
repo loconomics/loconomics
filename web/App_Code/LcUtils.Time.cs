@@ -63,5 +63,27 @@ public static partial class LcUtils
                 .InZone(tz)
                 .ToDateTimeOffset();
         }
+
+        /// <summary>
+        /// Utility to get the closest equivalence to a Windows time zone ID at the
+        /// Iana/Tzdb database. Since Iana/Tzdb is more accurated (and what we use
+        /// for all purposes), there are not exact match between both databases
+        /// and usually several Iana zones exist for one Windows zone, while
+        /// the inverse is exact: ever there is only one Windows zone for one Iana zone.
+        /// 
+        /// Used internally, some times, for some trials or tests but not at production
+        /// code (is better to set manually the relations or equivalences when needed
+        /// -for example at displayed user interface to pick a time zone based on
+        ///  popular time zone names, like PST, the ones used by Windows).
+        /// </summary>
+        /// <param name="windowsZoneId"></param>
+        /// <returns></returns>
+        public static string WindowsTimeZoneToClosestIana(string windowsZoneId)
+        {
+            var _tzdbSource = NodaTime.TimeZones.TzdbDateTimeZoneSource.Default;
+            var tzi = TimeZoneInfo.FindSystemTimeZoneById(windowsZoneId);
+            var tzid = _tzdbSource.MapTimeZoneId(tzi);
+            return _tzdbSource.CanonicalIdMap[tzid];
+        }
     }
 }

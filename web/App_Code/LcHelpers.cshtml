@@ -273,7 +273,7 @@
     /// <param name="inverse">Set as true to get the nth starting by the
     /// end of the month</param>
     /// <returns></returns>
-    public static int NthWeekDayInMonth(DateTime date, bool inverse = false){
+    public static int NthWeekDayInMonth(DateTimeOffset date, bool inverse = false){
         int nth = 0;
         var aux = date;
         while(aux.Month == date.Month){

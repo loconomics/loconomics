@@ -139,30 +139,32 @@ exports.getAvailabilityTag = function(list) {
         included (startTime, endTime) comes as strings in ISO datetime
 **/
 exports.filterListBy = function filterListBy(list, start, end) {
-    var nstart = start.toISOString(),
-        nend = end.toISOString();
+    var nstart = new Date(start);
+    var nend = new Date(end);
     var result = [];
 
     list.some(function(timeRange) {
+        var ts = new Date(timeRange.startTime);
+        var te = new Date(timeRange.endTime);
         // It's after the wanted range, stop iterating
-        if (timeRange.startTime >= nend)
+        if (ts >= nend)
             return true;
         // It's inside the wanted range and not before it starts
-        if (timeRange.endTime > nstart) {
-            if (timeRange.startTime < nstart) {
+        if (te > nstart) {
+            if (ts < nstart) {
                 // Beggining needs to be cut
                 result.push({
-                    startTime: nstart,
+                    startTime: nstart.toISOString(),
                     // Be carefull with looong timeRanges, that can go from before starting to after ending:
-                    endTime: timeRange.endTime > nend ? nend : timeRange.endTime,
+                    endTime: (te > nend ? nend : te).toISOString(),
                     availability: timeRange.availability
                 });
             }
-            else if (timeRange.endTime > nend) {
+            else if (te > nend) {
                 // Ending needs to be cut
                 result.push({
-                    startTime: timeRange.startTime,
-                    endTime: nend,
+                    startTime: ts.toISOString(),
+                    endTime: nend.toISOString(),
                     availability: timeRange.availability
                 });
             }

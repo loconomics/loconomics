@@ -320,8 +320,8 @@ namespace CalendarDll
         /// <remarks>2012/11 by CA2S FA, 2012/12/20 by  CA2S RM dynamic version</remarks>
         public Calendar GetCalendarEventsFromDBByUserDateRange(
             CalendarUser user,
-            DateTime startDate, 
-            DateTime endDate)
+            DateTimeOffset startDate, 
+            DateTimeOffset endDate)
         {
             if (user == null)
                 throw new ArgumentNullException("user");
@@ -432,9 +432,17 @@ namespace CalendarDll
         private CalDateTime CalDateTimeFromOffsetAndTimeZone(DateTimeOffset dto, string tzid)
         {
             var timezone = GetTimeZone(tzid);
+            if (timezone == null) throw new Exception(String.Format("Time zone does not found ({0})", tzid));
 
-            var zdt = new NodaTime.ZonedDateTime(NodaTime.Instant.FromDateTimeOffset(dto), timezone);
-
+            var zdt = NodaTime.Instant
+                  .FromDateTimeOffset(dto)
+                  .InZone(timezone);
+            // Do this conversion very carefully: it's different to call the 'LocalDateTime' at the ZonedDateTime object
+            // than in a DateTimeOffset, and CalDateDime expects a DateTime as the 'time as in that offset / offset' to be provided
+            // with a tzid to manage date correctly; while a ZonedDateTime.LocalDateTime returns the date part 'as is' in the
+            // object time zone, not in the 'system' time zone, so this one is what we want; BUT the DateTime object
+            // must NOT include reference to the system time or UTC, must be of Kind.Unspecified, otherwise CalDateTime
+            // will try some conversions from system time to offset or discard the tzid when is a Kind.UTC.
             return new CalDateTime(zdt.LocalDateTime.ToDateTimeUnspecified(), tzid);
         }
         #endregion
@@ -464,9 +472,9 @@ namespace CalendarDll
             var eventStart = CalDateTimeFromOffsetAndTimeZone(eventFromDB.StartTime, tzid);
             var eventEnd = CalDateTimeFromOffsetAndTimeZone(eventFromDB.EndTime, tzid);
             var eventRecurrenceId = eventFromDB.RecurrenceId.HasValue ? CalDateTimeFromOffsetAndTimeZone(eventFromDB.RecurrenceId.Value, tzid) : null;
-            // DTStamp, per Calendar standard, "MUST be in UTC"
+            // DTStamp, per iCalendar standard, "MUST be in UTC"
             // It represents the creation of the VEVENT record.
-            var eventStamp = new CalDateTime(eventFromDB.StampTime ?? DateTime.UtcNow, "UTC");
+            var eventStamp = CalDateTimeFromOffsetAndTimeZone(eventFromDB.StampTime ?? DateTimeOffset.UtcNow, "UTC");
 
             iEvent iCalEvent = new iEvent
             {
@@ -484,11 +492,11 @@ namespace CalendarDll
                 Class = eventFromDB.Class,
                 Organizer = eventFromDB.Organizer != null ? new Organizer(eventFromDB.Organizer) : null,
                 Transparency = (TransparencyType)(eventFromDB.Transparency ? 1 : 0),
-                Created      = new CalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now)),
+                Created      = CalDateTimeFromOffsetAndTimeZone(eventFromDB.CreatedDate ?? DateTime.Now, "UTC"),
                 DtEnd        = eventEnd,
                 DtStamp      = eventStamp,
                 DtStart      = eventStart,
-                LastModified = new CalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now)),
+                LastModified = CalDateTimeFromOffsetAndTimeZone(eventFromDB.UpdatedDate ?? DateTime.Now, "UTC"),
                 Sequence = eventFromDB.Sequence ?? 0,
                 RecurrenceId = eventRecurrenceId,
                 GeographicLocation = eventFromDB.Geo != null    ? new GeographicLocation(eventFromDB.Geo) : null/*"+-####;+-####"*/,
@@ -1007,14 +1015,14 @@ namespace CalendarDll
         /// <remarks>2012/12 by CA2S FA</remarks>
         public IEnumerable<iEvent> GetEventsByUserDateRange(
             CalendarUser user, 
-            DateTime startEvaluationDate, 
-            DateTime endEvaluationDate)
+            DateTimeOffset startEvaluationDate, 
+            DateTimeOffset endEvaluationDate)
         {
 
             // For the Ending of the Range
             // We'll get the Next Day
             // And the comparisson will be: Less than this Next Day
-            DateTime nextDayFromEndEvaluationDay = 
+            DateTimeOffset nextDayFromEndEvaluationDay = 
                 endEvaluationDate.Date.AddDays(1);
 
 
@@ -1122,7 +1130,7 @@ namespace CalendarDll
             var eventRecurrenceId = eventFromDB.RecurrenceId.HasValue ? CalDateTimeFromOffsetAndTimeZone(eventFromDB.RecurrenceId.Value, tzid) : null;
             // DTStamp, per Calendar standard, "MUST be in UTC"
             // It represents the creation of the VEVENT record.
-            var eventStamp = new CalDateTime(eventFromDB.StampTime ?? DateTime.UtcNow, "UTC");
+            var eventStamp = CalDateTimeFromOffsetAndTimeZone(eventFromDB.StampTime ?? DateTime.UtcNow, "UTC");
 
             iEvent iCalEvent = new iEvent()
             {
@@ -1140,11 +1148,11 @@ namespace CalendarDll
                 Class = eventFromDB.Class,
                 Organizer = eventFromDB.Organizer != null ? new Organizer(eventFromDB.Organizer) : null,
                 Transparency = (TransparencyType)(eventFromDB.Transparency ? 1 : 0),
-                Created = new CalDateTime((DateTime)(eventFromDB.CreatedDate ?? DateTime.Now)),
+                Created = CalDateTimeFromOffsetAndTimeZone(eventFromDB.CreatedDate ?? DateTime.Now, "UTC"),
                 DtEnd = eventEnd,
                 DtStamp = eventStamp,
                 DtStart = eventStart,
-                LastModified = new CalDateTime((DateTime)(eventFromDB.UpdatedDate ?? DateTime.Now)),
+                LastModified = CalDateTimeFromOffsetAndTimeZone(eventFromDB.UpdatedDate ?? DateTime.Now, "UTC"),
                 Sequence = eventFromDB.Sequence ?? 0,
                 RecurrenceId = eventRecurrenceId,
                 GeographicLocation = eventFromDB.Geo != null ? new GeographicLocation(eventFromDB.Geo) : null/*"+-####;+-####"*/,
@@ -1308,8 +1316,8 @@ namespace CalendarDll
         /// </summary>
         public class AvailabilitySlot
         {
-            public DateTime StartTime;
-            public DateTime EndTime;
+            public DateTimeOffset StartTime;
+            public DateTimeOffset EndTime;
             public int AvailabilityTypeID;
             public override bool Equals(object obj)
             {
@@ -1331,18 +1339,57 @@ namespace CalendarDll
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns></returns>
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(Calendar ical, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(Calendar ical, DateTimeOffset startTime, DateTimeOffset endTime)
         {
             foreach (var ev in ical.Events)
             {
-                foreach (var occ in ev.GetOccurrences(startTime, endTime))
+                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, endTime.UtcDateTime))
                 {
                     yield return new AvailabilitySlot {
-                        StartTime = occ.Period.StartTime.AsUtc,
-                        EndTime = occ.Period.EndTime.AsUtc,
+                        StartTime = new DateTimeOffset(occ.Period.StartTime.AsUtc, TimeSpan.Zero),
+                        EndTime = new DateTimeOffset(occ.Period.EndTime.AsUtc, TimeSpan.Zero),
                         AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
                     };
                 }
+            }
+        }
+
+        /// <summary>
+        /// Compute the occurrences of all events, normal and recurrents, from the filled in Calendar given between the dates
+        /// as of the internal logic of the Calendar component.
+        /// Results are in the offset of the stored date time zone (but not the stored offset)
+        /// </summary>
+        /// <param name="ical"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlots(Calendar ical, DateTimeOffset startTime, DateTimeOffset endTime)
+        {
+            foreach (var ev in ical.Events)
+            {
+                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, endTime.UtcDateTime))
+                {
+                    yield return new AvailabilitySlot
+                    {
+                        StartTime = DateTimeOffsetFromCalDateTime(occ.Period.StartTime),
+                        EndTime = DateTimeOffsetFromCalDateTime(occ.Period.EndTime),
+                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
+                    };
+                }
+            }
+        }
+
+        public DateTimeOffset DateTimeOffsetFromCalDateTime(IDateTime time)
+        {
+            var utc = new DateTimeOffset(time.AsUtc, TimeSpan.Zero);
+            var zone = GetTimeZone(time.TimeZoneName);
+            if (zone == null)
+            {
+                return utc;
+            }
+            else
+            {
+                return NodaTime.ZonedDateTime.FromDateTimeOffset(utc).WithZone(zone).ToDateTimeOffset();
             }
         }
 
@@ -1370,7 +1417,7 @@ namespace CalendarDll
         /// <param name="startTime">Included (more than or equals)</param>
         /// <param name="endTime">Excluded (less than)</param>
         /// <returns></returns>
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInUtcAvailabilitySlotsByUser(int userID, DateTime startTime, DateTime endTime)
+        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInUtcAvailabilitySlotsByUser(int userID, DateTimeOffset startTime, DateTimeOffset endTime)
         {
             // We need an Calendar to include events and being able to compute occurrences
             Calendar data = GetCalendarLibraryInstance();
@@ -1404,6 +1451,7 @@ namespace CalendarDll
             CalendarDll.Data.CalendarEvents eventFromDB,
             string defaultTZID)
         {
+            var tzid = defaultTZID ?? "UTC";
             var exceptionDates = 
                 eventFromDB.CalendarEventExceptionsPeriodsList;
 
@@ -1422,12 +1470,12 @@ namespace CalendarDll
                     if (dates.DateEnd.HasValue)
                         period.Add(
                             new Period(
-                                new CalDateTime(dates.DateStart, defaultTZID),
-                                new CalDateTime(dates.DateEnd.Value, defaultTZID)));
+                                CalDateTimeFromOffsetAndTimeZone(dates.DateStart, tzid),
+                                CalDateTimeFromOffsetAndTimeZone(dates.DateEnd.Value, tzid)));
                     else
                         period.Add(
                             new Period(
-                                new CalDateTime(dates.DateStart, defaultTZID)));
+                                CalDateTimeFromOffsetAndTimeZone(dates.DateStart, tzid)));
                 }
                 iCalEvent.ExceptionDates.Add(period);
             }
@@ -1452,8 +1500,8 @@ namespace CalendarDll
                 {
                     periods.CalendarEventExceptionsPeriod.Add(new CalendarEventExceptionsPeriod()
                     {
-                        DateStart = dates.StartTime.Value,
-                        DateEnd = dates.EndTime != null ? (DateTime?)dates.EndTime.Value : null,
+                        DateStart = new DateTimeOffset(dates.StartTime.AsUtc, TimeSpan.Zero),
+                        DateEnd = dates.EndTime != null ? (DateTimeOffset?)new DateTimeOffset(dates.EndTime.AsUtc, TimeSpan.Zero) : null,
                     });
                 }
             }
@@ -1477,6 +1525,7 @@ namespace CalendarDll
             CalendarDll.Data.CalendarEvents eventFromDB,
             string defaultTZID)
         {
+            var tzid = defaultTZID ?? "UTC";
             var recurrenceDates = 
                 eventFromDB.CalendarEventRecurrencesPeriodList;
             
@@ -1492,11 +1541,11 @@ namespace CalendarDll
                 {
                     if (dates.DateEnd.HasValue)
                         period.Add( new Period(
-                            new CalDateTime(dates.DateStart, defaultTZID),
-                            new CalDateTime(dates.DateEnd.Value, defaultTZID)));
+                            CalDateTimeFromOffsetAndTimeZone(dates.DateStart, tzid),
+                            CalDateTimeFromOffsetAndTimeZone(dates.DateEnd.Value, tzid)));
                     else
                         period.Add( new Period(
-                            new CalDateTime(dates.DateStart, defaultTZID)));
+                            CalDateTimeFromOffsetAndTimeZone(dates.DateStart, tzid)));
                 }
 
                 iCalEvent.RecurrenceDates.Add(period);
@@ -1517,8 +1566,8 @@ namespace CalendarDll
                 foreach (var dates in prd)
                 {
                     periodsList.CalendarEventRecurrencesPeriod.Add(new CalendarEventRecurrencesPeriod{
-                        DateStart = dates.StartTime.Value,
-                        DateEnd = dates.EndTime != null ? (DateTime?)dates.EndTime.Value : null
+                        DateStart = new DateTimeOffset(dates.StartTime.AsUtc, TimeSpan.Zero),
+                        DateEnd = dates.EndTime != null ? (DateTimeOffset?)new DateTimeOffset(dates.EndTime.AsUtc, TimeSpan.Zero) : null
                     });
                 }
             }
@@ -1672,7 +1721,7 @@ namespace CalendarDll
 
                 recPattern.Frequency = (FrequencyType)rec.Frequency;
                 if (rec.Count != null) recPattern.Count = (Int32)rec.Count;
-                if (rec.Until != null) recPattern.Until = (DateTime)rec.Until;
+                if (rec.Until != null) recPattern.Until = rec.Until.Value.UtcDateTime;
                 if (rec.Interval != null) recPattern.Interval = (Int32)rec.Interval;
                 SetFrequencies(rec, recPattern);
 
@@ -1892,10 +1941,68 @@ namespace CalendarDll
         /// allowed.
         /// This allows avoid the overload of import excessive future items.
         /// In other words: don't import freebusy events from x months and greater in the future.
+        /// IMPORTANT: Zero value has special meaning, being 'no limit' (all will get imported)
         /// </summary>
         public uint FutureMonthsLimitForImportingFreeBusy = 0;
         /// <summary>
-        /// Import Calendar
+        /// Import Calendar.
+        /// 
+        /// STRATEGIES:
+        /// When importing an iCalendar there are several precautions we need to take.
+        /// 
+        /// 1: not import our exported events.
+        /// Just in case the user sofware is reading our exported calendar and merging with
+        /// user defined events, we need to prevent importing events originally generated by us
+        /// (because we have them in database with a different types, to not duplicate, because
+        /// we do not let arbitrary editions of that events -even we completely lock them depending
+        /// on booking rules-, and at the same time we lock edition of imported events, since 
+        /// do not export them).
+        /// Strategies to that:
+        /// A- check the UID of the imported event and verify it's not at our database
+        ///    Costly operation, one read attempt for each record, usually with negative results
+        /// B- check a pattern at the UID that we know is generated by us
+        ///    Quick. Still do not prevent that others use the same pattern, so we have false positives
+        ///    when filtering that events.
+        ///    -a check if starts with an asterisk (in use).
+        ///      Quick and dirty, too vague. Easy of false positives. 
+        ///      ACTUALLY IN USE. TO REPLACE
+        ///    -b check if ends with @loconomics.com suffix
+        ///      Better approach, difficult of false positives (still positive, but if other follow
+        ///      good practices must not happen).
+        ///      
+        /// TODO switch to strategy B-b.
+        /// 
+        /// 2: insert/update/remove existing imported events
+        /// After the first read, we need to maintain the already imported events, updating them if
+        /// any change or removing them if no more exists at the source.
+        /// 
+        /// Strategies:
+        /// A- Keep list of imported identifiers.
+        ///   - Detect if an imported record (using UID) exists at DB: choose insert or update
+        ///   - When finishing importing, remove from database all user (@UserID) imported events (EventType=4)
+        ///     that do not exists at the list of imported identifiers (AND NOT IN (@list))
+        ///   More memory consumption; depends on the number of events, can be a lot, to keep the list
+        ///   and for the large SQL to generate, or several calls to prevent some length limits.
+        /// B- Delete records first.
+        ///   Idea: since we don't allow editions, we can safely start by removing previous imported
+        ///   records and then insert all others
+        ///   - Delete with: (DELETE CalendarEvents WHERE @UserID AND EventType=4)
+        ///   - Insert every record from import file.
+        ///   Quick (to implement and execute), more writes to database (all the removals, even unneded ones),
+        ///   database IDs increase quickly (ID is an auto-increment; risk to reach limit depending on how
+        ///   often importing is done).
+        ///   ACTUALLY IN USE. TO REPLACE
+        /// C- Insert-update, then delete by UpdatedDate
+        ///   - Create variable with current date-time as the updatedDate timestamp.
+        ///   - Detect if an imported record (using UID) exists at DB: choose insert or update. Use the
+        ///     value of updatedDate or newer for the UpdatedDate field of each record.
+        ///   - Remove from database all the user (@UserID) imported events (EventType=4) with an
+        ///     UpdatedDate older than variable udpatedDate.
+        ///   Less memory than A, less writtings to database than B, IDs are kept for updated records.
+        ///   Needs analysis: could be slower than B because the check about if an event exists or not (to insert/update),
+        ///   but the non removal of records that then are re-created may be faster.
+        ///   
+        /// TODO switch to strategy C
         /// </summary>
         /// <param name="calendar"></param>
         /// <param name="user"></param>
@@ -2015,9 +2122,9 @@ namespace CalendarDll
 
                             //----------------------------------------------------------------------
 
-                            // TODO TZ This may not be needed, or done in a different way, to support Time Zones properly
-                            // Convert the whole event to our System Time Zone before being inserted.
-                            UpdateEventDatesToSystemTimeZone(currEvent);
+                            // TZ This may not be needed, or done in a different way, to support Time Zones properly
+                            //// Convert the whole event to our System Time Zone before being inserted.
+                            //UpdateEventDatesToSystemTimeZone(currEvent);
 
                             // Calculate the end date basing in the real End date set or the Start date
                             // plus the event Duration. For case of error (no dates) gets as default
@@ -2038,7 +2145,7 @@ namespace CalendarDll
                             // Create event
                             var eventForDB = new CalendarEvents()
                             {
-                                CreatedDate = DateTime.Now,
+                                CreatedDate = DateTimeOffset.Now,
                                 UID = currEvent.Uid,
                                 UserId = user.Id,
                                 StartTime = currEvent.Start.Date.Year != 1 ? currEvent.Start.Date.Add(currEvent.Start.Value.TimeOfDay) : DateTimeOffset.Now,
@@ -2086,9 +2193,9 @@ namespace CalendarDll
 
                         foreach (var fb in currentCalendar.FreeBusy.Where(fb => !fb.Uid.StartsWith("*")))
                         {
-                            // Convert the whole freebusy to our System Time Zone before being inserted
-                            // (it updates too all the freebusy.entries)
-                            UpdateFreeBusyDatesToSystemTimeZone(fb);
+                            //// Convert the whole freebusy to our System Time Zone before being inserted
+                            //// (it updates too all the freebusy.entries)
+                            //UpdateFreeBusyDatesToSystemTimeZone(fb);
 
                             // If the FreeBusy block contains Entries, one event must be created for each entry
                             if (fb.Entries != null && fb.Entries.Count > 0)
@@ -2123,8 +2230,8 @@ namespace CalendarDll
                                     var availID = getAvailabilityId(fbentry);
                                     var dbevent = new CalendarEvents()
                                     {
-                                        CreatedDate = DateTime.Now,
-                                        UpdatedDate = DateTime.Now,
+                                        CreatedDate = DateTimeOffset.Now,
+                                        UpdatedDate = DateTimeOffset.Now,
                                         ModifyBy = "importer",
                                         UID = fb.Uid + "_freebusyentry:" + ientry.ToString(),
                                         UserId = user.Id,
@@ -2176,8 +2283,8 @@ namespace CalendarDll
                                 var availID = AvailabilityTypes.BUSY;
                                 var dbevent = new CalendarEvents()
                                 {
-                                    CreatedDate = DateTime.Now,
-                                    UpdatedDate = DateTime.Now,
+                                    CreatedDate = DateTimeOffset.Now,
+                                    UpdatedDate = DateTimeOffset.Now,
                                     ModifyBy = "importer",
                                     UID = fb.Uid,
                                     UserId = user.Id,
@@ -2242,7 +2349,7 @@ namespace CalendarDll
             //}
 
         }
-
+        /*
         /// <summary>
         /// Modify the passed @anEvent updating its date-time fields from its
         /// original time zone to the current system time zone (we are using California
@@ -2266,9 +2373,12 @@ namespace CalendarDll
             // GETS FIXED USING NEXT
             // anEvent.End.CopyFrom(UpdateDateToSystemTimeZone(anEvent.End));
 
-            var start = UpdateDateToSystemTimeZone(anEvent.Start);
-            var end = UpdateDateToSystemTimeZone(anEvent.End);
-            if (start != null && end != null)
+
+            //new CalDateTime(datetime.AsUtc, "UTC");
+
+            //var start = UpdateDateToSystemTimeZone(anEvent.Start);
+            //var end = UpdateDateToSystemTimeZone(anEvent.End);
+            /*if (start != null && end != null)
             {
                 anEvent.Start.CopyFrom(start);
                 anEvent.End.CopyFrom(end);
@@ -2282,12 +2392,12 @@ namespace CalendarDll
             {
                 anEvent.End = end;
                 anEvent.Start = end.Subtract(anEvent.Duration);
-            }
+            }* /
 
             anEvent.DtStamp = UpdateDateToSystemTimeZone(anEvent.DtStamp);
             anEvent.Created = UpdateDateToSystemTimeZone(anEvent.Created);
             anEvent.LastModified = UpdateDateToSystemTimeZone(anEvent.LastModified);
-            anEvent.RecurrenceId = UpdateDateToSystemTimeZone(anEvent.RecurrenceId);
+            //anEvent.RecurrenceId = UpdateDateToSystemTimeZone(anEvent.RecurrenceId);
 
             foreach (var exDate in anEvent.ExceptionDates)
             {
@@ -2313,8 +2423,8 @@ namespace CalendarDll
             //{
                 // NOTHING to update
             //}
-        }
-
+        }*/
+        /*
         /// <summary>
         /// Modify the passed @freebusy updating its date-time fields from its
         /// original time zone to the current system time zone (we are using California
@@ -2327,9 +2437,9 @@ namespace CalendarDll
         public void UpdateFreeBusyDatesToSystemTimeZone(IFreeBusy freebusy)
         {
             // IFreeBusy.Start is an alias for DTStart.
-            freebusy.Start = UpdateDateToSystemTimeZone(freebusy.Start);
+            //freebusy.Start = UpdateDateToSystemTimeZone(freebusy.Start);
             // IFreeBusy.End is an alias for DTEnd.
-            freebusy.End = UpdateDateToSystemTimeZone(freebusy.End);
+            //freebusy.End = UpdateDateToSystemTimeZone(freebusy.End);
             freebusy.DtStamp = UpdateDateToSystemTimeZone(freebusy.DtStamp);
             // Update all its entries
             foreach (var freebusyentry in freebusy.Entries)
@@ -2337,21 +2447,22 @@ namespace CalendarDll
                 freebusyentry.EndTime = UpdateDateToSystemTimeZone(freebusyentry.EndTime);
                 freebusyentry.StartTime = UpdateDateToSystemTimeZone(freebusyentry.StartTime);
             }
-        }
-
+        }*/
+        /*
         /// <summary>
         /// Returns an updated datetime object converting the given one
         /// to the system time zone (we are using California TimeZone in our
         /// server and database data).
         /// 
         /// IagoSRL @Loconomics
+        /// 
+        /// IMPORTANT: only needed for fields that in database are saved as DateTime
+        /// but not as DateTimeOffset
         /// </summary>
         /// <param name="datetime"></param>
         /// <returns></returns>
         public IDateTime UpdateDateToSystemTimeZone(IDateTime datetime)
         {
-            // TODO TZ Review this since we cannot insist in use local timezone for all times anymore.
-
             if (datetime == null)
                 return null;
             // We use a combination of DDay conversion and .Net conversion.
@@ -2383,7 +2494,7 @@ namespace CalendarDll
                 datetime.Local.ToLocalTime(),
                 DateTime.Now
             ));
-            */
+            * /
 
             /* Alternative guide-lines for conversion:
             //var timeZone = datetime.Calendar.GetTimeZone(datetime.TZID);
@@ -2393,8 +2504,8 @@ namespace CalendarDll
             // --
             // Returns the updated datetime
             //return datetime;
-            */
-        }
+            * /
+        }*/
 
         #endregion
 

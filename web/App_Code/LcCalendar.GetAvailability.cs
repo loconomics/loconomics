@@ -40,6 +40,15 @@ public static partial class LcCalendar
             return null;
         }
 
+        static public string GetUserTimeZone(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                // By default is null, in case it has no events will let the client app to auto pick one
+                return (string)N.D(db.QueryValue("SELECT TOP 1 timeZone FROM CalendarProviderAttributes WHERE UserID=@0", userID));
+            }
+        }
+
         /// <summary>
         /// Gets the weekly schedule of a user in a structure for the public REST API.
         /// Result includes a timeZone property, a property for each weekday that includes
@@ -56,11 +65,6 @@ public static partial class LcCalendar
             // if all are 1 (127) is all time.
             var isAllTime = 0;
 
-            // Timezone shared by all saved events (even if specified individually, is considered
-            // to be the same on all cases)
-            // By default is null, in case it has no events will let the client app to auto pick one
-            result["timeZone"] = null;
-
             // To ensure all weekdays are included in the output, and preparing in advance
             // the list objects, add them now:
             foreach (var dow in Enum.GetNames(typeof(DayOfWeek)))
@@ -72,13 +76,6 @@ public static partial class LcCalendar
             foreach (var r in data)
             {
                 var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
-
-                // Set timeZone if any
-                // Since is a general setting, will get the last one
-                if (!String.IsNullOrEmpty(r.TimeZone))
-                {
-                    result["timeZone"] = r.TimeZone;
-                }
 
                 // Convert WorkHoursDay into a TimesRange and add it to the list for this weekday:
                 ((List<TimesRange>)result[wk]).Add(new TimesRange
@@ -96,6 +93,9 @@ public static partial class LcCalendar
             }
 
             result["isAllTime"] = isAllTime == 127;
+
+            // Read timeZone
+            result["timeZone"] = GetUserTimeZone(userID);
 
             return result;
         }
@@ -116,7 +116,7 @@ public static partial class LcCalendar
             // Timezone shared by all (even if specified individually, is considered
             // to be the same on all cases)
             // By default:
-            result["timeZone"] = "America/Los_Angeles";
+            result["timeZone"] = GetUserTimeZone(userId);
 
             foreach(var r in data) {
                 var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
@@ -552,8 +552,8 @@ public static partial class LcCalendar
 
         public class PublicAvailableSlot
         {
-            public DateTime startTime;
-            public DateTime endTime;
+            public DateTimeOffset startTime;
+            public DateTimeOffset endTime;
             public string availability;
         }
         static private IEnumerable<PublicAvailableSlot> GetTimelinePublicOutputFormat(IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> slots)
@@ -573,7 +573,7 @@ public static partial class LcCalendar
         {
             { (int)LcCalendar.AvailabilityType.Busy, "busy" },
             { (int)LcCalendar.AvailabilityType.Free, "free" },
-            { (int)LcCalendar.AvailabilityType.Offline, "transparent" },
+            { (int)LcCalendar.AvailabilityType.Transparent, "transparent" },
             { (int)LcCalendar.AvailabilityType.Tentative, "tentative" },
             { (int)LcCalendar.AvailabilityType.Unavailable, "unavailable" },
         };
@@ -583,7 +583,8 @@ public static partial class LcCalendar
             { (int)LcCalendar.AvailabilityType.Busy, 40 }, // Busy stronger
             { (int)LcCalendar.AvailabilityType.Unavailable, 30 }, // Unavailable
             { (int)LcCalendar.AvailabilityType.Tentative, 20 }, // Tentative
-            { (int)LcCalendar.AvailabilityType.Free, 10 }  // Free
+            { (int)LcCalendar.AvailabilityType.Free, 10 },  // Free
+            { (int)LcCalendar.AvailabilityType.Transparent, 0 }  // Transparent
         };
         static CalendarDll.CalendarUtils.AvailabilitySlot GetPriorityAvailabilitySlot(CalendarDll.CalendarUtils.AvailabilitySlot date1, CalendarDll.CalendarUtils.AvailabilitySlot date2)
         {
@@ -591,11 +592,11 @@ public static partial class LcCalendar
             var pri2 = AvailabilityPriorities[date2.AvailabilityTypeID];
             return pri1 >= pri2 ? date1 : date2;
         }
-        static DateTime MinDateTime(DateTime t1, DateTime t2)
+        static DateTimeOffset MinDateTime(DateTimeOffset t1, DateTimeOffset t2)
         {
             return t1 <= t2 ? t1 : t2;
         }
-        static DateTime MaxDateTime(DateTime t1, DateTime t2)
+        static DateTimeOffset MaxDateTime(DateTimeOffset t1, DateTimeOffset t2)
         {
             return t1 >= t2 ? t1 : t2;
         }
