@@ -2,9 +2,12 @@
 Our backend is an ASP.NET WebPages2 website with MS-SQL Server database.
 
 ## Minimum software requirements
-- [Microsoft .NET Framework 4](https://www.microsoft.com/en-us/download/details.aspx?id=17851)
+- [Microsoft .NET Framework 4.6.2](https://www.microsoft.com/en-us/download/details.aspx?id=48130)
+  - Version 4.6.2 of .NET Framework is an in-place update to the versions 4/4.5/4.5.1/4.5.2/4.6/4.6.1. That means that, after install the update to 4.6.2 succesfully, at some points the system will still notice that the installed version is '4.0' (like IIS under Windows 7, or the system folder); [follow this instructions to verify the installed version](https://msdn.microsoft.com/en-us/library/hh925568(v=vs.110).aspx). Note to that Windows 10 comes with version 4.6 pre-installed and it updates with system updates, being the 4.6.2 included with the Anniversary Update.
 - [Visual Studio 2010](https://msdn.microsoft.com/en-us/library/dd831853) or above
-- [MS SQL Express 2008 R2](https://www.microsoft.com/en-us/sql-server/sql-server-editions-express) or above
+  - *Recommended:* [Microsoft Visual Studio Community 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48146) (it's free and complete).
+- [MS SQL Server Express 2008 R2](https://www.microsoft.com/en-us/sql-server/sql-server-editions-express) or above
+  - At the server we use Azure DB v12, that is highly compatible with, but not identical, MS SQL Server. T-SQL is *almost fully* compatible, but some details as system tables, system procedures or rarely used server features are not, [check the official list](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-features); Azure DB keeps updating and increasing compatibility.
 
 ## Recommended operating system(s)
 Microsoft Windows 7 SP1, Windows 10.
@@ -24,7 +27,7 @@ If creating a local database:
 
 ## IIS configuration
 Register an asp.net app (name 'loconomics', for example) pointing to your project directory (subdirectory /web), that will result in the address: http://localhost/loconomics.
-Set the app at an AppPool that uses ASP.NET 4.0.
+Set the app at an AppPool that uses ASP.NET 4.0 (even on a system with 4.6.2 installed, the name may appear as '4.0' at IIS).
 
 Follow the detailed instructions below if you need further clarification.
 
