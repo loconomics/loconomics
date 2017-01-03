@@ -24,6 +24,7 @@ If creating a local database:
 - use MS SQL Express 2008 R2 or above
 - name your database loconomics (allows you to keep the default web.config settings).
 - use "Integrated Security=SSPI": just add the Windows IIS user as owner of the loconomics database (named "IISUSR", "IIS APPPOOL\DefaultAppPool" or similar).
+- to get the database contents, you will need a copy of the *dev* database, ask for an up-to-date one or temporary access in order [to perform a copy following this instructions](Backup Azure database.md).
 
 ## IIS configuration
 Register an asp.net app (name 'loconomics', for example) pointing to your project directory (subdirectory /web), that will result in the address: http://localhost/loconomics.
