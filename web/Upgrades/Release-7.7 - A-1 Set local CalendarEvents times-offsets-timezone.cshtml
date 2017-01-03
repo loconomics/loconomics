@@ -20,11 +20,21 @@
         // later to don't replace valid data).
         foreach (var r in data)
         {
-            var s = new DateTimeOffset((r.startTime as DateTimeOffset?).Value.DateTime).ToLocalTime();
-            var e = new DateTimeOffset((r.endTime as DateTimeOffset?).Value.DateTime).ToLocalTime();
-            var raw_rid = (r.recurrenceId as DateTimeOffset?);
-            var rid = raw_rid.HasValue ? new DateTimeOffset(raw_rid.Value.DateTime).ToLocalTime() : (DateTimeOffset?)null;
-            db.Query("UPDATE CalendarEvents SET startTime=@0, endTime=@1, recurrenceId=@3, timezone='America/Los_Angeles' WHERE Id=@2", s, e, r.id, rid);
+            var needsConversion = false;
+            var s = r.startTime as DateTimeOffset?;
+            if (s != null)
+            {
+                needsConversion = s.Value.Offset.Equals(TimeSpan.Zero);
+                s = new DateTimeOffset(s.Value.DateTime).ToLocalTime();
+            }
+            
+            if (needsConversion)
+            {
+                var e = new DateTimeOffset((r.endTime as DateTimeOffset?).Value.DateTime).ToLocalTime();
+                var raw_rid = (r.recurrenceId as DateTimeOffset?);
+                var rid = raw_rid.HasValue ? new DateTimeOffset(raw_rid.Value.DateTime).ToLocalTime() : (DateTimeOffset?)null;
+                db.Query("UPDATE CalendarEvents SET startTime=@0, endTime=@1, recurrenceId=@3, timezone='America/Los_Angeles' WHERE Id=@2", s.Value, e, r.id, rid);
+            }
         }
     }
 }
