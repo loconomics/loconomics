@@ -66,17 +66,22 @@ function PublicUserJobTitle(values) {
     this.model.defID(['userID', 'jobTitleID']);
     
     var findMinValue = function(services) {
-        var s = services;
+        var s = services,
+            maxValue = { price: Number.MAX_VALUE };
+
         if (s.length === 0) return null;
-        return s.reduce(function(last, serv) {
-            return (serv.priceRate() && serv.priceRate() < last.price) ? {
+
+        var minValue = s.reduce(function(last, serv) {
+            return ((serv.priceRate() !== null) && serv.priceRate() < last.price) ? {
                 price: serv.priceRate(),
                 unit: serv.priceRateUnit()
-            } : (serv.price() && serv.price() < last.price) ? {
+            } : ((serv.price() !== null) && serv.price() < last.price) ? {
                 price: serv.price(),
                 unit: null
             } : last;
-        }, { price: Number.MAX_VALUE });
+        }, maxValue);
+
+        return minValue === maxValue ? null : minValue;
     };
 
     this.minServiceValue = ko.pureComputed(function() {
