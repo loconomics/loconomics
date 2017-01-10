@@ -10,10 +10,9 @@ var ko = require('knockout'),
 var EventEmitter = require('events').EventEmitter;
 
 function ServiceProfessionalServiceViewModel(app) {
-    
+    // jshint maxstatements:100
     EventEmitter.call(this);
 
-    this.isLoading = ko.observable(false);
     this.list = ko.observableArray([]);
     this.jobTitleID = ko.observable(0);
     // 0 to load current user pricing and allow edit
@@ -29,7 +28,12 @@ function ServiceProfessionalServiceViewModel(app) {
     // Add activity requestData to keep progress/navigation on links
     this.requestData = ko.observable();
     this.cancelLink = ko.observable(null);
-    
+    // Set to true if groupedServices should include pricing types that do not have any pricing instances
+    this.loadEmptyPricingTypes = ko.observable(false);
+
+    this.isLoading = ko.observable(false);
+
+
     this.reset = function() {
         this.isLoading(false);
         this.list([]);
@@ -80,7 +84,7 @@ function ServiceProfessionalServiceViewModel(app) {
             });
         }
         
-        if (!this.isSelectionMode()) {
+        if (!this.isSelectionMode() || !this.loadEmptyPricingTypes()) {
             // Since the groupsList is built from the existent pricing items
             // if there are no records for some pricing type (or nothing when
             // just created the job title), that types/groups are not included,
@@ -177,13 +181,7 @@ function ServiceProfessionalServiceViewModel(app) {
         // Add current selection as preselection, so can be recovered later and 
         // the editor can add the new pricing to the list
         if (this.isSelectionMode()) {
-            request.selectedServices = this.selectedServices()
-            .map(function(pricing) {
-                return {
-                    serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
-                    totalPrice: ko.unwrap(pricing.totalPrice)
-                };
-            });
+            request.selectedServices = this.selectedServices().map(this.selectedServiceRequest);
         }
 
         app.shell.go(url, request);
@@ -191,7 +189,14 @@ function ServiceProfessionalServiceViewModel(app) {
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
-    
+
+    this.selectedServiceRequest = function(pricing) {
+        return {
+            serviceProfessionalServiceID: ko.unwrap(pricing.serviceProfessionalServiceID),
+            totalPrice: ko.unwrap(pricing.totalPrice)
+        };
+    };
+
     ///
     /// Load Data
     var loadDataFor = function loadDataFor(serviceProfessionalID, jobTitleID) {

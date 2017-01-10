@@ -1,14 +1,11 @@
 /**
     ServiceProfessional Service activity
-    
-    TODO: Use ServiceProfessionalService ViewModel and template
 **/
 'use strict';
 
 var ko = require('knockout'),
-    groupBy = require('lodash/groupBy'),
-    $ = require('jquery'),
-    Activity = require('../components/Activity');
+    Activity = require('../components/Activity'),
+    ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService');
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -26,7 +23,6 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.viewModel.navBar = this.navBar;
     
     // On changing jobTitleID:
-    // - load pricing
     this.registerHandler({
         target: this.viewModel.jobTitle,
         handler: function(/*jobTitle*/) {
@@ -36,55 +32,10 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     });
 
     // On changing jobTitleID:
-    // - load pricing
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
             if (jobTitleID) {
-                // Get data for the Job title ID and pricing types.
-                // They are essential data
-                Promise.all([
-                    this.app.model.jobTitles.getJobTitle(jobTitleID),
-                    this.app.model.pricingTypes.getList()
-                ])
-                .then(function(data) {
-                    var jobTitle = data[0];
-                    // Save for use in the view
-                    this.viewModel.jobTitle(jobTitle);
-                    // Get pricing
-                    return this.app.model.serviceProfessionalServices.getList(jobTitleID);
-                }.bind(this))
-                .then(function(list) {
-
-                    list = this.app.model.serviceProfessionalServices.asModel(list);
-                    
-                    // Read presets selection from requestData
-                    var preset = this.requestData.selectedServices || [],
-                        selection = this.viewModel.selectedServices;
-                    
-                    // Add the isSelected property to each item
-                    list.forEach(function(item) {
-                        var preSelected = preset.some(function(pr) {
-                            if (pr.serviceProfessionalServiceID === item.serviceProfessionalServiceID())
-                                return true;
-                        }) || false;
-                        
-                        item.isSelected = ko.observable(preSelected);
-                        
-                        if (preSelected) {
-                            selection.push(item);
-                        }
-                    });
-                    this.viewModel.list(list);
-
-                }.bind(this))
-                .catch(function (err) {
-                    this.app.modals.showError({
-                        title: 'There was an error while loading.',
-                        error: err
-                    });
-                }.bind(this));
-                
                 /// Rewrite URL
                 // IMPORTANT: When in isSelectionMode, pushState cannot be use
                 // because it conflicts with the selection logic (on new-booking progress)
@@ -100,13 +51,18 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
                     this.app.shell.replaceState(null, null, url);
                 }
             }
-            else {
-                this.viewModel.list([]);
-                this.viewModel.jobTitle(null);
-            }
         }.bind(this)
     });
-    
+
+    // On changing jobTitleID:
+    // - load pricing
+    this.registerHandler({
+        target: this.viewModel.jobTitleID,
+        handler: function(jobTitleID) {
+            this.viewModel.loadData(null, jobTitleID);
+         }.bind(this)
+     });
+
     // Go back with the selected pricing when triggered in the form/view
     this.viewModel.returnSelected = function(pricing, jobTitleID) {
         // Pass the selected client in the info
@@ -184,9 +140,9 @@ A.prototype.show = function show(options) {
     
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
-    this.viewModel.jobTitleID(0);
-    this.viewModel.selectedServices.removeAll();
-    this.viewModel.requestData = this.requestData;
+    this.viewModel.reset();
+    this.viewModel.requestData(this.requestData);
+    this.viewModel.preSelectedServices(this.requestData.selectedServices || []);
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
     
@@ -224,37 +180,24 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    // ViewModel has all of the properties of a ServiceProfessionalServiceViewModel
+    ServiceProfessionalServiceViewModel.call(this, app);
+
+    // Always load empty pricing types, regardless of view model mode
+    this.loadEmptyPricingTypes(true);
+
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
-
     this.isInOnboarding = app.model.onboarding.inProgress;
-
     this.headerText = ko.observable('Services');
-    
-    this.jobTitleID = ko.observable(0);
-    this.jobTitle = ko.observable(null);
-    this.isAdditionMode = ko.observable(false);
-    this.cancelLink = ko.observable(null);
-    
+
+    this.isLocked = this.isLoading;
+
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceProfessionalService');
     this.jobTitles.selectJobTitle = function(jobTitle) {
         this.jobTitleID(jobTitle.jobTitleID());
         return false;
     }.bind(this);
-
-    this.list = ko.observableArray([]);
-
-    this.isLoading = ko.computed(function() {
-        return (
-            app.model.serviceProfessionalServices.state.isLoading() ||
-            app.model.pricingTypes.state.isLoading() ||
-            app.model.jobTitles.state.isLoading()
-        );
-    });
-    this.isLocked = this.isLoading;
-
-    // Especial mode when instead of pick and edit we are just selecting
-    this.isSelectionMode = ko.observable(false);
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -263,96 +206,7 @@ function ViewModel(app) {
                 'Save and continue'
         );
     }, this);
-    
-    // Grouped list of pricings:
-    // Defined groups by pricing type
-    this.groupedServices = ko.computed(function(){
 
-        var list = this.list();
-        var isSelection = this.isSelectionMode();
-        var groupNamePrefix = isSelection ? 'Select ' : '';
-
-        var groups = [],
-            groupsList = [];
-        if (!this.isAdditionMode()) {
-            groups = groupBy(list, function(pricingItem) {
-                return pricingItem.pricingTypeID();
-            });
-
-            // Convert the indexed object into an array with some meta-data
-            groupsList = Object.keys(groups).map(function(key) {
-                var gr = {
-                    pricing: groups[key],
-                    // Load the pricing information
-                    type: app.model.pricingTypes.getObservableItem(key)
-                };
-                gr.group = ko.computed(function() {
-                    return groupNamePrefix + (
-                        this.type() && this.type().pluralName() ||
-                        'Services'
-                    );
-                }, gr);
-                return gr;
-            });
-        }
-        
-        // Since the groupsList is built from the existent pricing items
-        // if there are no records for some pricing type (or nothing when
-        // just created the job title), that types/groups are not included,
-        // so review and include now.
-        // NOTE: as a good side effect of this approach, pricing types with
-        // some pricing will appear first in the list (nearest to the top)
-        var pricingTypes = this.jobTitle() && this.jobTitle().pricingTypes();
-        if (pricingTypes && pricingTypes.length) {
-            pricingTypes.forEach(function (jobType) {
-                
-                var typeID = jobType.pricingTypeID();
-                // Not if already in the list
-                if (groups.hasOwnProperty(typeID))
-                    return;
-
-                var gr = {
-                    pricing: [],
-                    type: app.model.pricingTypes.getObservableItem(typeID)
-                };
-                gr.group = ko.computed(function() {
-                    return groupNamePrefix + (
-                        this.type() && this.type().pluralName() ||
-                        'Services'
-                    );
-                }, gr);
-
-                groupsList.push(gr);
-            });
-        }
-
-        return groupsList;
-
-    }, this);
-
-    this.selectedServices = ko.observableArray([]);
-    /**
-        Toggle the selection status of a pricing, adding
-        or removing it from the 'selectedServices' array.
-    **/
-    this.toggleServiceSelection = function(pricing) {
-
-        var inIndex = -1,
-            isSelected = this.selectedServices().some(function(selectedServices, index) {
-            if (selectedServices === pricing) {
-                inIndex = index;
-                return true;
-            }
-        });
-
-        pricing.isSelected(!isSelected);
-
-        if (isSelected)
-            this.selectedServices.splice(inIndex, 1);
-        else
-            this.selectedServices.push(pricing);
-    }.bind(this);
-    
     this.onboardingNextReady = ko.computed(function() {
         var isin = app.model.onboarding.inProgress(),
             hasPricing = this.list().length > 0;
@@ -387,54 +241,9 @@ function ViewModel(app) {
         event.stopImmediatePropagation();
     }.bind(this);
     
-    this.editService = function(pricing) {
-        app.shell.go('serviceProfessionalServiceEditor/' + this.jobTitleID() + '/' + pricing.serviceProfessionalServiceID());
-    }.bind(this);
-    
-    /**
-        Handler for the listview items, managing edition and selection depending on current mode
-    **/
-    this.tapService = function(pricing, event) {
-        if (this.isSelectionMode()) {
-            this.toggleServiceSelection(pricing);
-        }
-        else {
-            this.editService(pricing);
-        }
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-    }.bind(this);
-    
-    this.tapNewService = function(group, event) {
-        
-        var url = '#!serviceProfessionalServiceEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
-
-        // Passing original data, for in-progress process (as new-booking)
-        // and the selected title since the URL could not be updated properly
-        // (see the anotated comment about replaceState bug on this file)
-        var request = $.extend({}, this.requestData, {
-            selectedJobTitleID: this.jobTitleID()
-        });
-        if (!request.cancelLink) {
-            $.extend(request, {
-                cancelLink: this.cancelLink()
-            });
-        }
-        
-        // When in selection mode:
-        // Add current selection as preselection, so can be recovered later and 
-        // the editor can add the new pricing to the list
-        if (this.isSelectionMode()) {
-            request.selectedServices = this.selectedServices()
-            .map(function(pricing) {
-                return pricing.model.toPlainObject(true);
-            });
-        }
-
-        app.shell.go(url, request);
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-    }.bind(this);
+    this.selectedServiceRequest = function(pricing) {
+        return pricing.model.toPlainObject(true);
+    };
 }
+
+ViewModel._inherits(ServiceProfessionalServiceViewModel);
