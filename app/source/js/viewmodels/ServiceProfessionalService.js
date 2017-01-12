@@ -84,7 +84,7 @@ function ServiceProfessionalServiceViewModel(app) {
             });
         }
         
-        if (!this.isSelectionMode() || !this.loadEmptyPricingTypes()) {
+        if (this.loadEmptyPricingTypes()) {
             // Since the groupsList is built from the existent pricing items
             // if there are no records for some pricing type (or nothing when
             // just created the job title), that types/groups are not included,
