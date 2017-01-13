@@ -27,6 +27,7 @@ namespace LcRest
         public decimal? priceRate;
         public string priceRateUnit = "hour";
         public bool isPhone = false;
+        public int visibleToClientID = 0;
         public DateTime createdDate;
         public DateTime updatedDate;
 
@@ -58,6 +59,7 @@ namespace LcRest
                 priceRate = record.priceRate,
                 priceRateUnit = record.priceRateUnit,
                 isPhone = record.isPhone,
+                visibleToClientID = record.VisibleToClientID,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
 
@@ -88,6 +90,7 @@ namespace LcRest
                 priceRate = record.PriceRate,
                 priceRateUnit = record.PriceRateUnit,
                 isPhone = record.IsPhone,
+                visibleToClientID = record.VisibleToClientID,
                 createdDate = record.CreatedDate,
                 updatedDate = record.UpdatedDate,
 

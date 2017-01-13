@@ -775,6 +775,7 @@ public static partial class LcData
                         ,p.CreatedDate
                         ,p.UpdatedDate
                         ,p.Active
+                        ,p.VisibleToClientID
                 FROM    ProviderPackage As P
     ";
     public const string SQLGetPackageServiceAttributesByPackageID = @"
