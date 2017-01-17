@@ -11,6 +11,9 @@ namespace LcRest
     /// </summary>
     public class ServiceProfessionalService
     {
+        public const int ClientVisibilityAll = 0;         // visibleToClientID == 0 => visible to all
+        public const int ClientVisibilityMinClientID = 1; // visibleToClientID >= 1 => visible to client id
+
         #region Fields
         public int serviceProfessionalServiceID;
         public int pricingTypeID;
@@ -127,16 +130,28 @@ namespace LcRest
             }).ToList<int>());
         }
 
-        public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1)
+        private static IEnumerable<ServiceProfessionalService> BindDetailsToProviderPackage(LcData.ProviderPackagesView packages)
         {
-            var packages = LcData.GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID);
-
             return ((IEnumerable<dynamic>)packages.Packages).Select<dynamic, ServiceProfessionalService>(pak =>
             {
                 var pakID = (int)pak.ProviderPackageID;
                 var hasAtts = packages.PackagesDetailsByPackage.ContainsKey(pakID);
                 return FromDbProviderPackage(pak, hasAtts ? packages.PackagesDetailsByPackage[(int)pak.ProviderPackageID] : null);
-            }).ToList();
+            });
+        }
+
+        public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1)
+        {
+            var packages = LcData.GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID);
+
+            return BindDetailsToProviderPackage(packages).ToList();
+        }
+
+        public static IEnumerable<ServiceProfessionalService> GetListByClient(int serviceProfessionalUserID, int clientID)
+        {
+            var packages = LcData.GetPricingPackagesForClient(serviceProfessionalUserID, clientID);
+
+            return BindDetailsToProviderPackage(packages).ToList();
         }
 
         /// <summary>

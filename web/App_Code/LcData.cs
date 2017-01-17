@@ -818,6 +818,7 @@ public static partial class LcData
                          AND (@4 = -1 OR p.ProviderPackageID = @4)
                          AND (@5 = -1 OR p.PricingTypeID = @5)
                          AND (@6 = -1 OR P.IsAddOn = @6)
+                         AND (@7 = -999 OR P.VisibleToClientID = @7)
                 ORDER BY PT.DisplayRank ASC
     ";
     public const string SQLGetPackageServiceAttributesByMulti = @"
@@ -843,30 +844,35 @@ public static partial class LcData
                 ORDER BY A.Name ASC
     ";
 
-    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+    private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, int? visibleToClientID = null)
     {
-        dynamic packages, details;
-        using (var db = Database.Open("sqlloco")){
-            // Get the Provider Packages
-            packages = db.Query(SQLGetPackagesByMulti,
-                providerUserID,
-                positionID,
-                GetCurrentLanguageID(),
-                GetCurrentCountryID(),
-                packageID,
-                pricingTypeID,
-                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
-            );
-            details = db.Query(SQLGetPackageServiceAttributesByMulti,
-                providerUserID,
-                positionID,
-                GetCurrentLanguageID(),
-                GetCurrentCountryID(),
-                packageID,
-                pricingTypeID,
-                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
-            );
-        }
+        return db.Query(SQLGetPackagesByMulti,
+            providerUserID,
+            positionID,
+            GetCurrentLanguageID(),
+            GetCurrentCountryID(),
+            packageID,
+            pricingTypeID,
+            (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1),
+            (visibleToClientID.HasValue ? visibleToClientID : -999)
+        );
+    }
+
+    private static dynamic QueryPackageServiceAttributesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+    {
+        return db.Query(SQLGetPackageServiceAttributesByMulti,
+            providerUserID,
+            positionID,
+            GetCurrentLanguageID(),
+            GetCurrentCountryID(),
+            packageID,
+            pricingTypeID,
+            (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
+        );
+    }
+
+    private static ProviderPackagesView ProviderPackagesViewFromDB(dynamic packages, dynamic details)
+    {
         // Create index of packages, Key:ID, Value:Package record
         var index = new Dictionary<int, dynamic>(packages.Count);
         foreach (var pak in packages)
@@ -886,7 +892,36 @@ public static partial class LcData
             }
             detI.Add(det);
         }
+
         return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index, PackagesDetailsByPackage = detailsIndex };
+    }
+
+    public static ProviderPackagesView GetPricingPackagesForClient(int providerUserID, int clientID)
+    {
+        dynamic packages, details;
+
+        using (var db = Database.Open("sqlloco"))
+        {
+            // Get the provider packages
+            packages = QueryPackagesByMulti(db, providerUserID, visibleToClientID: clientID);
+
+            details = QueryPackageServiceAttributesByMulti(db, providerUserID);
+        }
+
+        return ProviderPackagesViewFromDB(packages, details);
+    }
+
+    public static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+    {
+        dynamic packages, details;
+        using (var db = Database.Open("sqlloco")){
+            // Get the Provider Packages
+            packages = QueryPackagesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
+
+            details = QueryPackageServiceAttributesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
+        }
+
+        return ProviderPackagesViewFromDB(packages, details);
     }
     #endregion
     #endregion

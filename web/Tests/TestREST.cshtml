@@ -539,19 +539,17 @@
             }
         },
 
-        "Freelancer Pricing - All user pricing": {
+        "Service Professional Pricing - All user pricing": {
             "url": "/api/v1/en-US/me/service-professional-services",
-            "get": {
-                "freelancerUserID": 141,
-                "api comment": "Avoid the freelancerUserID parameter to get the own pricing."
-            }
+            "get": {}
         },
-        "Freelancer Pricing - Per Job Title": {
+        "Service Professional Pricing - Client-specific pricing (all job titles)": {
+            "url": "/api/v1/en-US/me/service-professional-services/client/141",
+            "get": {}
+        },
+        "Service Professional Pricing - Per Job Title": {
             "url": "/api/v1/en-US/me/service-professional-services/106",
-            "get": {
-                "freelancerUserID": 141,
-                "api comment": "Avoid the freelancerUserID parameter to get the own pricing."
-            },
+            "get": {},
             "post": {
                 "pricingTypeID": 3,
                 "name": "Testing 2",
@@ -572,7 +570,7 @@
                 "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
             }
         },
-        "Freelancer Pricing - Job Title - Pricing item": {
+        "Service Professional Pricing - Job Title - Pricing item": {
             "url": "/api/v1/en-US/me/service-professional-services/106/73",
             "get": { },
             "put": {
