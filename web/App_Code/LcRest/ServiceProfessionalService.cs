@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebMatrix.Data;
 
 namespace LcRest
 {
@@ -109,7 +110,7 @@ namespace LcRest
         #region Fetch
         public static ServiceProfessionalService Get(int serviceProfessionalServiceID, int? serviceProfessionalUserID, int? jobTitleID = null)
         {
-            var service = FromDbProviderPackage(LcData.GetProviderPackage(serviceProfessionalServiceID));
+            var service = FromDbProviderPackage(GetProviderPackage(serviceProfessionalServiceID));
             if (service == null ||
                 serviceProfessionalUserID.HasValue && service.serviceProfessionalUserID != serviceProfessionalUserID.Value ||
                 jobTitleID.HasValue && service.jobTitleID != jobTitleID.Value)
@@ -122,7 +123,7 @@ namespace LcRest
 
         public void FillAttributes()
         {
-            IEnumerable<dynamic> attributes = LcData.GetProviderPackageServiceAttributes(serviceProfessionalServiceID);
+            IEnumerable<dynamic> attributes = GetProviderPackageServiceAttributes(serviceProfessionalServiceID);
             // Array of IDs of serviceAttributes
             serviceAttributes = (attributes == null ? null : attributes.Select(att =>
             {
@@ -130,7 +131,7 @@ namespace LcRest
             }).ToList<int>());
         }
 
-        private static IEnumerable<ServiceProfessionalService> BindDetailsToProviderPackage(LcData.ProviderPackagesView packages)
+        private static IEnumerable<ServiceProfessionalService> BindDetailsToProviderPackage(ProviderPackagesView packages)
         {
             return ((IEnumerable<dynamic>)packages.Packages).Select<dynamic, ServiceProfessionalService>(pak =>
             {
@@ -142,14 +143,14 @@ namespace LcRest
 
         public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1)
         {
-            var packages = LcData.GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID);
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID);
 
             return BindDetailsToProviderPackage(packages).ToList();
         }
 
         public static IEnumerable<ServiceProfessionalService> GetListByClient(int serviceProfessionalUserID, int clientID)
         {
-            var packages = LcData.GetPricingPackagesForClient(serviceProfessionalUserID, clientID);
+            var packages = GetPricingPackagesForClient(serviceProfessionalUserID, clientID);
 
             return BindDetailsToProviderPackage(packages).ToList();
         }
@@ -248,6 +249,207 @@ namespace LcRest
                     return FromDB(pak, null);
                 });
             }
+        }
+        #endregion
+
+        public class ProviderPackagesView
+        {
+            public dynamic Packages;
+            public dynamic PackagesDetails;
+            public Dictionary<int, dynamic> PackagesByID;
+            public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
+        }
+
+        #region Package Type (Provider Packages)
+        public static dynamic GetProviderPackage(int providerPackageID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(SQLSelectFromPackage + @"
+                WHERE   p.ProviderPackageID = @0
+            ", providerPackageID);
+            }
+        }
+
+        public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+
+        public const string SQLSelectFromPackage = @"
+                SELECT  p.ProviderPackageID
+                        ,p.PricingTypeID
+                        ,p.ProviderUserID
+                        ,p.PositionID
+                        ,p.ProviderPackageName As Name
+                        ,p.ProviderPackageDescription As Description
+                        ,p.ProviderPackagePrice As Price
+                        ,p.ProviderPackageServiceDuration As ServiceDuration
+                        ,p.FirstTimeClientsOnly
+                        ,p.NumberOfSessions
+                        ,p.PriceRate
+                        ,p.PriceRateUnit
+                        ,p.IsPhone
+                        ,p.LanguageID
+                        ,p.CountryID
+                        ,p.CreatedDate
+                        ,p.UpdatedDate
+                        ,p.Active
+                        ,p.VisibleToClientID
+                FROM    ProviderPackage As P
+        ";
+
+        private const string SQLGetPackageServiceAttributesByPackageID = @"
+                SELECT  PD.ServiceAttributeID
+                        ,A.Name
+                        ,A.ServiceAttributeDescription
+                        ,P.ProviderPackageID
+                FROM    ProviderPackageDetail As PD
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = PD.ProviderPackageID
+                         INNER JOIN
+                        ServiceAttribute As A
+                          ON A.ServiceAttributeID = PD.ServiceAttributeID
+                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                WHERE   A.LanguageID = @1
+                        AND A.CountryID = @2
+                        AND PD.ProviderPackageID = @0
+                ORDER BY A.Name ASC
+        ";
+
+        private const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
+                         INNER JOIN
+                        PricingType As PT
+                          ON P.PricingTypeID = PT.PricingTypeID
+                            AND P.LanguageID = PT.LanguageID
+                            AND P.CountryID = PT.CountryID
+                         INNER JOIN
+                        PositionPricingType AS PPT
+                          ON PPT.PositionID = P.PositionID
+                            AND PPT.PricingTypeID = PT.PricingTypeID
+                            AND PPT.LanguageID = PT.LanguageID
+                            AND PPT.CountryID = PT.CountryID
+                            AND PPT.Active = 1
+                WHERE   p.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
+                         AND 
+                        p.LanguageID = @2 AND p.CountryID = @3
+                         AND 
+                        p.Active = 1
+                         AND (@4 = -1 OR p.ProviderPackageID = @4)
+                         AND (@5 = -1 OR p.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                         AND (@7 = -999 OR P.VisibleToClientID = @7)
+                ORDER BY PT.DisplayRank ASC
+        ";
+
+        private const string SQLGetPackageServiceAttributesByMulti = @"
+                SELECT  PD.ServiceAttributeID
+                        ,A.Name
+                        ,A.ServiceAttributeDescription
+                        ,P.ProviderPackageID
+                FROM    ProviderPackageDetail As PD
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = PD.ProviderPackageID
+                         INNER JOIN
+                        ServiceAttribute As A
+                          ON A.ServiceAttributeID = PD.ServiceAttributeID
+                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                WHERE   P.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
+                         AND P.LanguageID = @2 AND P.CountryID = @3
+                         AND PD.Active = 1 AND P.Active = 1
+                         AND (@4 = -1 OR P.ProviderPackageID = @4)
+                         AND (@5 = -1 OR P.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                ORDER BY A.Name ASC
+        ";
+
+        private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, int? visibleToClientID = null)
+        {
+            return db.Query(SQLGetPackagesByMulti,
+                providerUserID,
+                positionID,
+                LcData.GetCurrentLanguageID(),
+                LcData.GetCurrentCountryID(),
+                packageID,
+                pricingTypeID,
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1),
+                (visibleToClientID.HasValue ? visibleToClientID : -999)
+            );
+        }
+
+        private static dynamic QueryPackageServiceAttributesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+        {
+            return db.Query(SQLGetPackageServiceAttributesByMulti,
+                providerUserID,
+                positionID,
+                LcData.GetCurrentLanguageID(),
+                LcData.GetCurrentCountryID(),
+                packageID,
+                pricingTypeID,
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
+            );
+        }
+
+        private static ProviderPackagesView ProviderPackagesViewFromDB(dynamic packages, dynamic details)
+        {
+            // Create index of packages, Key:ID, Value:Package record
+            var index = new Dictionary<int, dynamic>(packages.Count);
+            foreach (var pak in packages)
+            {
+                index.Add(pak.ProviderPackageID, pak);
+            }
+            // Create index of packages details per package, Key:PackageID, Value:List of details records
+            var detailsIndex = new Dictionary<int, List<dynamic>>();
+            foreach (var det in details)
+            {
+                List<dynamic> detI = null;
+                if (detailsIndex.ContainsKey(det.ProviderPackageID))
+                    detI = detailsIndex[det.ProviderPackageID];
+                else
+                {
+                    detI = new List<dynamic>();
+                    detailsIndex.Add(det.ProviderPackageID, detI);
+                }
+                detI.Add(det);
+            }
+
+            return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index, PackagesDetailsByPackage = detailsIndex };
+        }
+
+        private static ProviderPackagesView GetPricingPackagesForClient(int providerUserID, int clientID)
+        {
+            dynamic packages, details;
+
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Get the provider packages
+                packages = QueryPackagesByMulti(db, providerUserID, visibleToClientID: clientID);
+
+                details = QueryPackageServiceAttributesByMulti(db, providerUserID);
+            }
+
+            return ProviderPackagesViewFromDB(packages, details);
+        }
+
+        private static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+        {
+            dynamic packages, details;
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Get the Provider Packages
+                packages = QueryPackagesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
+
+                details = QueryPackageServiceAttributesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
+            }
+
+            return ProviderPackagesViewFromDB(packages, details);
         }
         #endregion
     }

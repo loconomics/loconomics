@@ -77,7 +77,7 @@ public static partial class LcPricingModel
         #region Static tools
         public static PackageBaseData FromPackageID(int packageID)
         {
-            var d = LcData.GetProviderPackage(packageID);
+            var d = LcRest.ServiceProfessionalService.GetProviderPackage(packageID);
             return new PackageBaseData(d);
         }
         #endregion
