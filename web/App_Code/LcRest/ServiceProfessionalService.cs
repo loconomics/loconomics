@@ -121,7 +121,7 @@ namespace LcRest
             return service;
         }
 
-        public void FillAttributes()
+        private void FillAttributes()
         {
             IEnumerable<dynamic> attributes = GetProviderPackageServiceAttributes(serviceProfessionalServiceID);
             // Array of IDs of serviceAttributes
@@ -141,17 +141,28 @@ namespace LcRest
             });
         }
 
+        /// <returns>Provider's pricings bookable by the provider</returns>
         public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1)
         {
-            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID);
+            ClientVisibility bookableByProvider = ClientVisibility.BookableByProvider();
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: bookableByProvider);
 
             return BindDetailsToProviderPackage(packages).ToList();
         }
 
+        /// <returns>Provider's pricings specific to the client across all job titles</returns>
         public static IEnumerable<ServiceProfessionalService> GetListByClient(int serviceProfessionalUserID, int clientID)
         {
             var packages = GetPricingPackagesForClient(serviceProfessionalUserID, clientID);
 
+            return BindDetailsToProviderPackage(packages).ToList();
+        }
+
+        /// <returns>Pricings the provider may book for the client for a given job title</returns>
+        public static IEnumerable<ServiceProfessionalService> GetListBookableByClient(int serviceProfessionalUserID, int jobTitleID, int clientID)
+        {
+            ClientVisibility visibilityForClient = ClientVisibility.BookableByProviderForClient(clientID);
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
             return BindDetailsToProviderPackage(packages).ToList();
         }
 
@@ -252,7 +263,7 @@ namespace LcRest
         }
         #endregion
 
-        public class ProviderPackagesView
+        private class ProviderPackagesView
         {
             public dynamic Packages;
             public dynamic PackagesDetails;
@@ -321,32 +332,6 @@ namespace LcRest
                 ORDER BY A.Name ASC
         ";
 
-        private const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
-                         INNER JOIN
-                        PricingType As PT
-                          ON P.PricingTypeID = PT.PricingTypeID
-                            AND P.LanguageID = PT.LanguageID
-                            AND P.CountryID = PT.CountryID
-                         INNER JOIN
-                        PositionPricingType AS PPT
-                          ON PPT.PositionID = P.PositionID
-                            AND PPT.PricingTypeID = PT.PricingTypeID
-                            AND PPT.LanguageID = PT.LanguageID
-                            AND PPT.CountryID = PT.CountryID
-                            AND PPT.Active = 1
-                WHERE   p.ProviderUserID = @0
-                         AND (@1 = -1 OR P.PositionID = @1)
-                         AND 
-                        p.LanguageID = @2 AND p.CountryID = @3
-                         AND 
-                        p.Active = 1
-                         AND (@4 = -1 OR p.ProviderPackageID = @4)
-                         AND (@5 = -1 OR p.PricingTypeID = @5)
-                         AND (@6 = -1 OR P.IsAddOn = @6)
-                         AND (@7 = -999 OR P.VisibleToClientID = @7)
-                ORDER BY PT.DisplayRank ASC
-        ";
-
         private const string SQLGetPackageServiceAttributesByMulti = @"
                 SELECT  PD.ServiceAttributeID
                         ,A.Name
@@ -370,17 +355,48 @@ namespace LcRest
                 ORDER BY A.Name ASC
         ";
 
-        private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, int? visibleToClientID = null)
+        private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, ClientVisibility clientVisibility = null)
         {
-            return db.Query(SQLGetPackagesByMulti,
+            // By default, return pricings that are bookable by the public
+            clientVisibility = clientVisibility ?? ClientVisibility.BookableByPublic();
+
+            const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
+                         INNER JOIN
+                        PricingType As PT
+                          ON P.PricingTypeID = PT.PricingTypeID
+                            AND P.LanguageID = PT.LanguageID
+                            AND P.CountryID = PT.CountryID
+                         INNER JOIN
+                        PositionPricingType AS PPT
+                          ON PPT.PositionID = P.PositionID
+                            AND PPT.PricingTypeID = PT.PricingTypeID
+                            AND PPT.LanguageID = PT.LanguageID
+                            AND PPT.CountryID = PT.CountryID
+                            AND PPT.Active = 1
+                WHERE   p.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
+                         AND 
+                        p.LanguageID = @2 AND p.CountryID = @3
+                         AND 
+                        p.Active = 1
+                         AND (@4 = -1 OR p.ProviderPackageID = @4)
+                         AND (@5 = -1 OR p.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                         AND P.VisibleToClientID IN ({0})
+                ORDER BY PT.DisplayRank ASC
+            ";
+
+            // Database.Query does not natively expand SQL IN clause list, so do it manually :(
+            string query = String.Format(SQLGetPackagesByMulti, String.Join(",", clientVisibility.VisibleToClientIDs()));
+
+            return db.Query(query,
                 providerUserID,
                 positionID,
                 LcData.GetCurrentLanguageID(),
                 LcData.GetCurrentCountryID(),
                 packageID,
                 pricingTypeID,
-                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1),
-                (visibleToClientID.HasValue ? visibleToClientID : -999)
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
             );
         }
 
@@ -430,7 +446,7 @@ namespace LcRest
             using (var db = Database.Open("sqlloco"))
             {
                 // Get the provider packages
-                packages = QueryPackagesByMulti(db, providerUserID, visibleToClientID: clientID);
+                packages = QueryPackagesByMulti(db, providerUserID, clientVisibility: ClientVisibility.SpecificToClient(clientID));
 
                 details = QueryPackageServiceAttributesByMulti(db, providerUserID);
             }
@@ -438,13 +454,13 @@ namespace LcRest
             return ProviderPackagesViewFromDB(packages, details);
         }
 
-        private static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+        private static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, ClientVisibility clientVisibility = null)
         {
             dynamic packages, details;
             using (var db = Database.Open("sqlloco"))
             {
                 // Get the Provider Packages
-                packages = QueryPackagesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
+                packages = QueryPackagesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon, clientVisibility);
 
                 details = QueryPackageServiceAttributesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
             }
@@ -452,5 +468,45 @@ namespace LcRest
             return ProviderPackagesViewFromDB(packages, details);
         }
         #endregion
+
+        private class ClientVisibility
+        {
+            private int[] visibleToClientIDs;
+
+            private ClientVisibility(int[] clientIDs)
+            {
+                visibleToClientIDs = clientIDs;
+            }
+
+            public static ClientVisibility SpecificToClient(int clientID)
+            {
+                return new ClientVisibility(new int[] { clientID });
+            }
+
+            public static ClientVisibility BookableByProviderForClient(int clientID)
+            {
+                return new ClientVisibility(new int[] { 0, clientID });
+            }
+
+            public static ClientVisibility BookableByClient(int clientID)
+            {
+                return BookableByProviderForClient(clientID);
+            }
+
+            public static ClientVisibility BookableByPublic()
+            {
+                return new ClientVisibility(new int[] { 0 });
+            }
+
+            public static ClientVisibility BookableByProvider()
+            {
+                return BookableByPublic();
+            }
+
+            public int[] VisibleToClientIDs()
+            {
+                return visibleToClientIDs;
+            }
+        }
     }
 }

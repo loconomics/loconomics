@@ -91,6 +91,12 @@
                 "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
             },
             "delete": {}
+        },
+        "Service Professional Pricing - Job Title and Client (client-specific and public pricings)": {
+            "url": "/api/v1/en-US/me/service-professional-services/106/client/562",
+            "get": {
+                "api comment": "The result includes all pricings for a job title that are available for the client - both client-specific pricings and public pricings"
+            }
         }
     }
 *@
@@ -130,6 +136,19 @@
                 var jobTitleID = UrlData[0].AsInt(0);
                 var itemID = UrlData[1].AsInt(0);
                 return GetItem(userID, jobTitleID, itemID);
+            }
+            else if (UrlData.Count == 3)
+            {
+                // Route: /:jobTitleID/client/:clientID -> public + items specific for the client
+                var jobTitleID = UrlData[0].AsInt(0);
+                var clientID = UrlData[2].AsInt(LcRest.ServiceProfessionalService.ClientVisibilityAll);
+
+                if (clientID >= LcRest.ServiceProfessionalService.ClientVisibilityMinClientID)
+                {
+                    return LcRest.ServiceProfessionalService.GetListBookableByClient(userID, jobTitleID, clientID);
+                }
+
+                throw new HttpException(404, "Client not found");
             }
 
             throw new HttpException(404, "Not Found");
