@@ -145,7 +145,7 @@
 
                 if (clientID >= LcRest.ServiceProfessionalService.ClientVisibilityMinClientID)
                 {
-                    return LcRest.ServiceProfessionalService.GetListBookableByClient(userID, jobTitleID, clientID);
+                    return LcRest.ServiceProfessionalService.GetListBookableForClient(userID, jobTitleID, clientID);
                 }
 
                 throw new HttpException(404, "Client not found");

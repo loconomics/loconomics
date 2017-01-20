@@ -159,12 +159,36 @@ namespace LcRest
         }
 
         /// <returns>Pricings the provider may book for the client for a given job title</returns>
-        public static IEnumerable<ServiceProfessionalService> GetListBookableByClient(int serviceProfessionalUserID, int jobTitleID, int clientID)
+        public static IEnumerable<ServiceProfessionalService> GetListBookableForClient(int serviceProfessionalUserID, int jobTitleID, int clientID)
         {
             ClientVisibility visibilityForClient = ClientVisibility.BookableByProviderForClient(clientID);
+
             var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
+
             return BindDetailsToProviderPackage(packages).ToList();
         }
+
+        /// <returns>Pricings the client may book for a given job title</returns>
+        public static IEnumerable<ServiceProfessionalService> GetListBookableByClient(int serviceProfessionalUserID, int jobTitleID, int clientID)
+        {
+            var visibilityForClient = ClientVisibility.BookableByClient(clientID);
+
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
+
+            return BindDetailsToProviderPackage(packages).ToList();
+        }
+
+        /// <returns>Pricings a non-logged-in user may see for a given job title</returns>
+        public static IEnumerable<ServiceProfessionalService> GetListBookableByPublic(int serviceProfessionalUserID, int jobTitleID)
+        {
+            var visibilityForClient = ClientVisibility.BookableByPublic();
+
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
+
+            return BindDetailsToProviderPackage(packages).ToList();
+        }
+
+
 
         /// <summary>
         /// Retrieve a list of services given a list of serviceIDs, all must match the given userID and belong to the same jobTitle.
