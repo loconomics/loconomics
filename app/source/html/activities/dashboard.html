@@ -15,7 +15,9 @@
                                 <span data-bind="text: serviceDate().endTime, format: { type: 'datetime', format: 'h:mma' }"></span>
                             </h4>
                             <a href="#map" class="btn btn-secondary" target="_blank"
-                               data-bind="attr: { href: $root.getMapUrlFor(serviceAddress()) }">Map</a>
+                               data-bind="
+                               visible: serviceAddress(),
+                               attr: { href: serviceAddress() ? $root.getMapUrlFor(serviceAddress()) : '#map' }">Map</a>
                         </li>
                     </ul>
                     <div class="Box-sm">
