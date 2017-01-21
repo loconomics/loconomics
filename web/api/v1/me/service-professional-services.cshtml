@@ -110,13 +110,15 @@
 
             if (UrlData.Count == 0)
             {
-                return LcRest.ServiceProfessionalService.GetList(userID, -1);
+                var visibility = LcRest.ServiceProfessionalService.Visibility.BookableByProvider();
+                return LcRest.ServiceProfessionalService.GetList(userID, -1, clientVisibility: visibility);
             }
             else if (UrlData.Count == 1)
             {
                 // Route: /:jobTitleID
                 var jobTitleID = UrlData[0].AsInt(0);
-                return LcRest.ServiceProfessionalService.GetList(userID, jobTitleID);
+                var visibility = LcRest.ServiceProfessionalService.Visibility.BookableByProvider();
+                return LcRest.ServiceProfessionalService.GetList(userID, jobTitleID, clientVisibility: visibility);
             }
             else if (UrlData.Count == 2 && UrlData[0].Equals("client", StringComparison.Ordinal))
             {
@@ -125,7 +127,8 @@
 
                 if (clientID >= LcRest.ServiceProfessionalService.ClientVisibilityMinClientID)
                 {
-                    return LcRest.ServiceProfessionalService.GetListByClient(userID, clientID);
+                    var visibility = LcRest.ServiceProfessionalService.Visibility.SpecificToClient(clientID);
+                    return LcRest.ServiceProfessionalService.GetList(userID, clientVisibility: visibility);
                 }
 
                 throw new HttpException(404, "Client not found");
@@ -145,7 +148,8 @@
 
                 if (clientID >= LcRest.ServiceProfessionalService.ClientVisibilityMinClientID)
                 {
-                    return LcRest.ServiceProfessionalService.GetListBookableForClient(userID, jobTitleID, clientID);
+                    var visibility = LcRest.ServiceProfessionalService.Visibility.BookableByProviderForClient(clientID);
+                    return LcRest.ServiceProfessionalService.GetList(userID, jobTitleID, clientVisibility: visibility);
                 }
 
                 throw new HttpException(404, "Client not found");

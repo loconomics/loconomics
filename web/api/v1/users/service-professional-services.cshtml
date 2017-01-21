@@ -62,15 +62,10 @@
             // Item ID
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
                 var jobTitleID = UrlData[0].AsInt(0);
+                var visibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)
+                                                             : LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
 
-                if (WebSecurity.IsAuthenticated)
-                {
-                    return LcRest.ServiceProfessionalService.GetListBookableByClient(providerID, jobTitleID, WebSecurity.CurrentUserId);
-                }
-                else
-                {
-                    return LcRest.ServiceProfessionalService.GetListBookableByPublic(providerID, jobTitleID);
-                }
+                return LcRest.ServiceProfessionalService.GetList(providerID, jobTitleID, clientVisibility: visibility);
             }
             else if (UrlData.Count == 1) {
                 throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");

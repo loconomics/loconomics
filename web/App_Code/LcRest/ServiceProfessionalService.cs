@@ -44,7 +44,7 @@ namespace LcRest
         #region Instances
         public ServiceProfessionalService() { }
 
-        public static ServiceProfessionalService FromDB(dynamic record, IEnumerable<dynamic> attributes = null)
+        private static ServiceProfessionalService FromDB(dynamic record, IEnumerable<dynamic> attributes = null)
         {
             if (record == null) return null;
 
@@ -75,7 +75,7 @@ namespace LcRest
             };
         }
 
-        public static ServiceProfessionalService FromDbProviderPackage(dynamic record, IEnumerable<dynamic> attributes = null)
+        private static ServiceProfessionalService FromDbProviderPackage(dynamic record, IEnumerable<dynamic> attributes = null)
         {
             if (record == null) return null;
 
@@ -141,54 +141,15 @@ namespace LcRest
             });
         }
 
-        /// <returns>Provider's pricings bookable by the provider</returns>
-        public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1)
+        /// <returns></returns>
+        public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, Visibility clientVisibility = null)
         {
-            ClientVisibility bookableByProvider = ClientVisibility.BookableByProvider();
-            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: bookableByProvider);
+            clientVisibility = clientVisibility ?? Visibility.BookableByPublic();
+
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, packageID, pricingTypeID, isAddon, clientVisibility);
 
             return BindDetailsToProviderPackage(packages).ToList();
         }
-
-        /// <returns>Provider's pricings specific to the client across all job titles</returns>
-        public static IEnumerable<ServiceProfessionalService> GetListByClient(int serviceProfessionalUserID, int clientID)
-        {
-            var packages = GetPricingPackagesForClient(serviceProfessionalUserID, clientID);
-
-            return BindDetailsToProviderPackage(packages).ToList();
-        }
-
-        /// <returns>Pricings the provider may book for the client for a given job title</returns>
-        public static IEnumerable<ServiceProfessionalService> GetListBookableForClient(int serviceProfessionalUserID, int jobTitleID, int clientID)
-        {
-            ClientVisibility visibilityForClient = ClientVisibility.BookableByProviderForClient(clientID);
-
-            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
-
-            return BindDetailsToProviderPackage(packages).ToList();
-        }
-
-        /// <returns>Pricings the client may book for a given job title</returns>
-        public static IEnumerable<ServiceProfessionalService> GetListBookableByClient(int serviceProfessionalUserID, int jobTitleID, int clientID)
-        {
-            var visibilityForClient = ClientVisibility.BookableByClient(clientID);
-
-            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
-
-            return BindDetailsToProviderPackage(packages).ToList();
-        }
-
-        /// <returns>Pricings a non-logged-in user may see for a given job title</returns>
-        public static IEnumerable<ServiceProfessionalService> GetListBookableByPublic(int serviceProfessionalUserID, int jobTitleID)
-        {
-            var visibilityForClient = ClientVisibility.BookableByPublic();
-
-            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, clientVisibility: visibilityForClient);
-
-            return BindDetailsToProviderPackage(packages).ToList();
-        }
-
-
 
         /// <summary>
         /// Retrieve a list of services given a list of serviceIDs, all must match the given userID and belong to the same jobTitle.
@@ -379,10 +340,10 @@ namespace LcRest
                 ORDER BY A.Name ASC
         ";
 
-        private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, ClientVisibility clientVisibility = null)
+        private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, Visibility clientVisibility = null)
         {
             // By default, return pricings that are bookable by the public
-            clientVisibility = clientVisibility ?? ClientVisibility.BookableByPublic();
+            clientVisibility = clientVisibility ?? Visibility.BookableByPublic();
 
             const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
                          INNER JOIN
@@ -463,22 +424,7 @@ namespace LcRest
             return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index, PackagesDetailsByPackage = detailsIndex };
         }
 
-        private static ProviderPackagesView GetPricingPackagesForClient(int providerUserID, int clientID)
-        {
-            dynamic packages, details;
-
-            using (var db = Database.Open("sqlloco"))
-            {
-                // Get the provider packages
-                packages = QueryPackagesByMulti(db, providerUserID, clientVisibility: ClientVisibility.SpecificToClient(clientID));
-
-                details = QueryPackageServiceAttributesByMulti(db, providerUserID);
-            }
-
-            return ProviderPackagesViewFromDB(packages, details);
-        }
-
-        private static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, ClientVisibility clientVisibility = null)
+        private static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, Visibility clientVisibility = null)
         {
             dynamic packages, details;
             using (var db = Database.Open("sqlloco"))
@@ -493,36 +439,36 @@ namespace LcRest
         }
         #endregion
 
-        private class ClientVisibility
+        public class Visibility
         {
             private int[] visibleToClientIDs;
 
-            private ClientVisibility(int[] clientIDs)
+            private Visibility(int[] clientIDs)
             {
                 visibleToClientIDs = clientIDs;
             }
 
-            public static ClientVisibility SpecificToClient(int clientID)
+            public static Visibility SpecificToClient(int clientID)
             {
-                return new ClientVisibility(new int[] { clientID });
+                return new Visibility(new int[] { clientID });
             }
 
-            public static ClientVisibility BookableByProviderForClient(int clientID)
+            public static Visibility BookableByProviderForClient(int clientID)
             {
-                return new ClientVisibility(new int[] { 0, clientID });
+                return new Visibility(new int[] { 0, clientID });
             }
 
-            public static ClientVisibility BookableByClient(int clientID)
+            public static Visibility BookableByClient(int clientID)
             {
                 return BookableByProviderForClient(clientID);
             }
 
-            public static ClientVisibility BookableByPublic()
+            public static Visibility BookableByPublic()
             {
-                return new ClientVisibility(new int[] { 0 });
+                return new Visibility(new int[] { 0 });
             }
 
-            public static ClientVisibility BookableByProvider()
+            public static Visibility BookableByProvider()
             {
                 return BookableByPublic();
             }
