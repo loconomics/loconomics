@@ -38,21 +38,36 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static PublicUserJobStats Get(int userID, int jobTitleID)
+        public static PublicUserJobStats Get(int userID, int jobTitleID, LcRest.ServiceProfessionalService.Visibility visibility)
         {
-            using (var db = new LcDatabase())
-            {
-                return FromDB(db.QuerySingle(@"
-                    DECLARE @userID AS int
-                    SET @userID = @0
-                    DECLARE @jobTitleID AS int
-                    SET @jobTitleID = @1
-                    DECLARE @LanguageID int                    
-                    SET @LanguageID = 1
-                    DECLARE @CountryID int
-                    SET @CountryID = 1
+            const string sqlVariableDeclaration = @"
+                DECLARE @userID AS int
+                SET @userID = @0
+                DECLARE @jobTitleID AS int
+                SET @jobTitleID = @1
+                DECLARE @LanguageID int
+                SET @LanguageID = 1
+                DECLARE @CountryID int
+                SET @CountryID = 1
                     
-                 ;WITH CTE AS
+                ;";
+
+            const string sqlProviderPackageForClient = @"
+                WITH ProviderPackageForClient AS
+                (
+                      SELECT *
+                      FROM ProviderPackage
+                      WHERE ProviderPackage.Active = 1
+                          AND ProviderUserID = @userID
+                          AND PositionID = @jobTitleID
+                          AND LanguageID = @LanguageID
+                          AND CountryID = @CountryID
+                          AND VisibleToClientID IN ({0}) -- placeholder for format
+                    ) -- END ProviderPackageForClient
+                ,";
+
+            const string sqlRemainder = @"
+                CTE AS
                     (
  					SELECT 
  							MSP.ProviderUserID
@@ -73,22 +88,10 @@ namespace LcRest
                             ,CountryID
                             ,min(ProviderPackagePrice) as minServicePrice
                             ,servicesCount=
-                            (SELECT count(*) 
-                            FROM ProviderPackage 
-                            WHERE ProviderPackage.Active = 1 
-                            AND ProviderUserID = @userID
-                            AND PositionID = @jobTitleID
-                            AND LanguageID = @LanguageID
-                            AND CountryID = @CountryID)
+                            (SELECT count(*) FROM ProviderPackageForClient)
                      FROM
-                            ProviderPackage
-                            WHERE 
-                            ProviderPackage.Active = 1 
-                            AND ProviderUserID = @userID
-                            AND PositionID = @jobTitleID
-                            AND LanguageID = @LanguageID
-                            AND CountryID = @CountryID
-                            AND ProviderPackage.PricingTypeID != 7
+                            ProviderPackageForClient
+                            WHERE ProviderPackageForClient.PricingTypeID != 7
 
                          GROUP BY
                             ProviderUserID, PositionID, LanguageID, CountryID) MSP
@@ -103,18 +106,10 @@ namespace LcRest
 	                            ,min(PriceRate) as minUnitRate
 	                            ,count(distinct ProviderPackageID) as UnitPackages
 	                            ,ROW_NUMBER() OVER (PARTITION BY ProviderUserID, PositionID, LanguageID, CountryID 
-	                    		ORDER BY 
-	                            count(distinct ProviderPackageID)
-	                    		 DESC) AS rn                     
-	                    	FROM
-                            ProviderPackage
-                            WHERE 
-                            ProviderPackage.Active = 1 
-                            AND ProviderUserID = @userID
-                            AND PositionID = @jobTitleID
-                            AND LanguageID = @LanguageID
-                            AND CountryID = @CountryID
-                            AND PriceRate is not null
+                                  ORDER BY count(distinct ProviderPackageID) DESC)
+                                  AS rn -- lowest RN means highest number of packages for a PriceRateUnit
+                            FROM ProviderPackageForClient
+                            WHERE PriceRate is not null
 
                          GROUP BY
                             ProviderUserID, PositionID, LanguageID, CountryID, PriceRateUnit) as MUP
@@ -136,8 +131,18 @@ namespace LcRest
                     WHEN (minServicePrice > 0 AND minUnitRate is null) THEN '$' + convert(varchar,  minServicePrice)
                     WHEN (minUnitRate > 0 AND minServicePrice <=0 ) THEN '$' + convert(varchar,  minUnitRate) + '/' + PriceRateUnit ELSE NULL END as minServiceValue
                     FROM CTE
-                    WHERE rn = 1	
-                    ", userID, jobTitleID));
+                    WHERE rn = 1 -- select the stats at the price rate unit with the most packages
+                ";
+
+            using (var db = new LcDatabase())
+            {
+                // Database.Query does not natively expand SQL IN clause list, so do it manually
+                string sqlProviderPackageForClientExpanded = String.Format(sqlProviderPackageForClient, String.Join(",", visibility.VisibleToClientIDs()));
+
+                return FromDB(db.QuerySingle(sqlVariableDeclaration 
+                                               + sqlProviderPackageForClientExpanded
+                                               + sqlRemainder, 
+                                               userID, jobTitleID));
             }
         }
         #endregion
