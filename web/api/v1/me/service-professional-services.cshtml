@@ -59,6 +59,7 @@
                 "priceRate": 14,
                 "priceRateUnit": "hour",
                 "isPhone": false,
+                "visibleToClientID": 0, // 0 for public, or clientID for client-specific pricing
                 "createdDate": "2013-08-28T21:05:59.947",
                 "updatedDate": "2013-08-28T21:08:02.113",
                 "serviceAttributes": [
@@ -88,6 +89,7 @@
                     501
                 ],
                 "noPriceRate": false,
+                "visibleToClientID": 0, // 0 for public, or clientID for client-specific pricing
                 "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
             },
             "delete": {}
@@ -123,9 +125,9 @@
             else if (UrlData.Count == 2 && UrlData[0].Equals("client", StringComparison.Ordinal))
             {
                 // Route: /client/:clientID
-                var clientID = UrlData[1].AsInt(LcRest.ServiceProfessionalService.ClientVisibilityAll);
+                var clientID = UrlData[1].AsInt(LcRest.ServiceProfessionalService.ClientVisibilityPublic);
 
-                if (clientID >= LcRest.ServiceProfessionalService.ClientVisibilityMinClientID)
+                if (LcRest.UserProfile.Exists(clientID))
                 {
                     var visibility = LcRest.ServiceProfessionalService.Visibility.SpecificToClient(clientID);
                     return LcRest.ServiceProfessionalService.GetList(userID, clientVisibility: visibility);
@@ -144,9 +146,9 @@
             {
                 // Route: /:jobTitleID/client/:clientID -> public + items specific for the client
                 var jobTitleID = UrlData[0].AsInt(0);
-                var clientID = UrlData[2].AsInt(LcRest.ServiceProfessionalService.ClientVisibilityAll);
+                var clientID = UrlData[2].AsInt(LcRest.ServiceProfessionalService.ClientVisibilityPublic);
 
-                if (clientID >= LcRest.ServiceProfessionalService.ClientVisibilityMinClientID)
+                if (LcRest.UserProfile.Exists(clientID))
                 {
                     var visibility = LcRest.ServiceProfessionalService.Visibility.BookableByProviderForClient(clientID);
                     return LcRest.ServiceProfessionalService.GetList(userID, jobTitleID, clientVisibility: visibility);
@@ -223,6 +225,12 @@
             data.PriceRate = (config.PriceRateQuantityLabel == null || Request["noPriceRate"].AsBool()) ? null : (decimal?)Request["priceRate"].AsDecimal();
             data.PriceRateUnit = ((config.PriceRateQuantityLabel == null || Request["noPriceRate"].AsBool()) ? null : Request["priceRateUnit"]) ?? data.PriceRateUnit;
             data.IsPhone = Request["isPhone"].AsBool();
+
+            // visibleToClientID is not required, default to publicly available
+            Validation.Add("visibleToClientID", Validator.Integer());
+            Validation.Add("visibleToClientID", new LcRest.ServiceProfessionalService.VisibleToClientValidator("Must be a client ID or one of the predefined constants"));
+            data.visibleToClientID = (Request["visibleToClientID"] == null) ? LcRest.ServiceProfessionalService.ClientVisibilityPublic : Request["visibleToClientID"].AsInt();
+
             var checkedAtts = Request.Form.GetValues("serviceAttributes[]");
             if (config.IncludeServiceAttributes &&
                 checkedAtts != null &&

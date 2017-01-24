@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages;
 using WebMatrix.Data;
 
 namespace LcRest
@@ -12,8 +13,8 @@ namespace LcRest
     /// </summary>
     public class ServiceProfessionalService
     {
-        public const int ClientVisibilityAll = 0;         // visibleToClientID == 0 => visible to all
-        public const int ClientVisibilityMinClientID = 1; // visibleToClientID >= 1 => visible to client id
+        public const int ClientVisibilityPublic = 0;      // visibleToClientID == 0 => visible to all
+        public const int ClientVisibilityMinimumValue = ClientVisibilityPublic;
 
         #region Fields
         public int serviceProfessionalServiceID;
@@ -439,6 +440,26 @@ namespace LcRest
         }
         #endregion
 
+        public class VisibleToClientValidator : RequestFieldValidatorBase
+        {
+            public VisibleToClientValidator(string errorMessage = null) : base(errorMessage) { }
+
+            protected override bool IsValid(HttpContextBase httpContext, string value)
+            {
+                try
+                {
+                    // value must be null, one of the constants, or an actual user id
+                    return (value == null)
+                           || (value.AsInt() == ServiceProfessionalService.ClientVisibilityPublic)
+                           || LcRest.UserProfile.Exists(value.AsInt());
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
         public class Visibility
         {
             private int[] visibleToClientIDs;
@@ -455,7 +476,7 @@ namespace LcRest
 
             public static Visibility BookableByProviderForClient(int clientID)
             {
-                return new Visibility(new int[] { 0, clientID });
+                return new Visibility(new int[] { ServiceProfessionalService.ClientVisibilityPublic, clientID });
             }
 
             public static Visibility BookableByClient(int clientID)
@@ -465,7 +486,7 @@ namespace LcRest
 
             public static Visibility BookableByPublic()
             {
-                return new Visibility(new int[] { 0 });
+                return new Visibility(new int[] { ServiceProfessionalService.ClientVisibilityPublic });
             }
 
             public static Visibility BookableByProvider()
