@@ -18,6 +18,15 @@ Next steps describe the SSIS method from the link, also know as using "Microsoft
 - For destination, choose "SQL Server Native Client 11" and choose the local server and our empty database.
 - Continue the process, choose all "dbo." objects (usually all excluding one starting by "sys." and the views, "dbo.vw*"), do not edit mappings.
 - Finish the process.
+- Next, you must migrate the stored functions from Dev to your new local loconomics database:
+  - In SSMS, Connect to Dev database
+  - In object explorer, under Dev database, click on Programmability -> Functions -> Scalar-valued Functions
+  - In the menu, click on View -> Object Explorer Details
+  - Highlight all of the functions in the details window, and right click
+  - Choose Script Function as -> CREATE To -> Clipboard
+  - Paste this query in a new loconomics database query
+  - At the top of the file, change `USE [Dev]` to `USE [loconomics]`
+  - Execute the query
 
 **Note 1:** a database created with a different collation than the source will lead to warnings about conversions between varchar columns (different size required for same data), and potentially an error in the process. The indicated collation is the default at Azure DB, but in case was manually changed check it running "SELECT DATABASEPROPERTYEX('TestDB', 'Collation')" (change TestDB by the database name).
 
