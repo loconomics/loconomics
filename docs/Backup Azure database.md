@@ -11,7 +11,7 @@ Next steps describe the SSIS method from the link, also know as using "Microsoft
 - Right-click database -> Tasks -> Import data.
 - Choose ".Net Provider for SQL Server" and set the Azure connection string to the hosted database.
 - Choose "SQL Server Native Client 11" and choose the local server and our empty database.
-- Continue the process, choose all "dbo." objects (usually all excluding one starting by "sys."), do not edit mappings.
+- Continue the process, choose all "dbo." objects (usually all excluding one starting by "sys." and the views, "dbo.vw*"), do not edit mappings.
 - Finish the process.
 
 **Note 1:** a database created with a different collation than the source will lead to warnings about conversions between varchar columns (different size required for same data), and potentially an error in the process. The indicated collation is the default at Azure DB, but in case was manually changed check it running "SELECT DATABASEPROPERTYEX('TestDB', 'Collation')" (change TestDB by the database name).
