@@ -1,7 +1,13 @@
+DROP PROCEDURE [dbo].[DeleteUser]
+GO
+
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 /* CAUTION!
  * Delete all data from an user
  * account
@@ -16,19 +22,33 @@ GO
 -- TODO: need be update with all
 -- the tables (calendar, pricing, etc.)
 -- =============================================
-ALTER PROCEDURE [dbo].[DeleteUser]
+CREATE PROCEDURE [dbo].[DeleteUser]
 	(
 	@UserId int
 	)
 AS
 	SET NOCOUNT ON
+	
+DELETE PPD 
+FROM providerpackagedetail PPD
+INNER JOIN providerpackage PP
+ON PP.ProviderPackageID = PPD.ProviderPackageID
+AND (PP.ProviderUserID = @UserId OR PP.visibleToClientID = @UserId)
+
+DELETE
+FROM providerpackage
+WHERE ProviderUserID = @UserId OR VisibleToClientID = @UserId
+
+delete
+FROM	CalendarProviderAttributes
+WHERE userid = @UserID
 
 delete
 FROM			UserAlert
 WHERE userid = @UserID
 
 delete
-FROM            userlicenseverification
+FROM            UserLicenseCertifications
 where provideruserid =  @UserId
 
 delete
@@ -122,3 +142,5 @@ where userid = @UserId
 delete
 FROM            webpages_facebookcredentials
 where userid = @UserId
+
+GO
