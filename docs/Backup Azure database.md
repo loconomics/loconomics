@@ -9,8 +9,13 @@ Next steps describe the SSIS method from the link, also know as using "Microsoft
 - Open SSMS as administrator.
 - Create local empty database, SQL 2008 or newer, strictly with collation *SQL_Latin1_General_CP1_CI_AS* (see Note 1).
 - Right-click database -> Tasks -> Import data.
-- Choose ".Net Provider for SQL Server" and set the Azure connection string to the hosted database.
-- Choose "SQL Server Native Client 11" and choose the local server and our empty database.
+- For source, choose ".Net Provider for SQL Server" and set the Azure connection string to the hosted database. This includes the following fields: 
+  - Authentication: SqlPassword
+  - Password 
+  - User ID
+  - Data Source
+  - Initial Catalog: Dev
+- For destination, choose "SQL Server Native Client 11" and choose the local server and our empty database.
 - Continue the process, choose all "dbo." objects (usually all excluding one starting by "sys." and the views, "dbo.vw*"), do not edit mappings.
 - Finish the process.
 
