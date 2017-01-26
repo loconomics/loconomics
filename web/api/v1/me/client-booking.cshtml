@@ -241,19 +241,31 @@
             int clientUserID = WebSecurity.CurrentUserId;
             var locale = LcRest.Locale.Current;
 
+            var booking = LcRest.Booking.Get(bookingID, true, true, clientUserID);
+
             var serviceStartTime = DateTimeOffsetFromISO(Request.Form["serviceStartTime"]);
             if (!serviceStartTime.HasValue)
             {
                 ModelState.AddError("startTime", "Start date and time is not valid");
             }
-            
-            var serviceAddress = GetFormServiceAddress(clientUserID, locale);
-            if (serviceAddress.IsNewAddress() || !serviceAddress.IsEmpty())
-            {
-                ApplyServiceAddressValidation();
-            }
 
+            // Read services
             var servicesIds = GetFormServices();
+            // Check if the services require an address
+            var pricingSummary = new LcRest.PricingSummary();
+            pricingSummary.SetDetailServices(booking.serviceProfessionalUserID, servicesIds);
+            LcRest.Address serviceAddress = null;
+            if (!pricingSummary.isPhoneServiceOnly)
+            {
+                serviceAddress = GetFormServiceAddress(clientUserID, locale);
+                // In case a new address is given (need to be created)
+                // or is an existent address with data tu update it,
+                // validate the data
+                if (serviceAddress.IsNewAddress() || !serviceAddress.IsEmpty())
+                {
+                    ApplyServiceAddressValidation();
+                }
+            }
 
             if (!Validation.IsValid() || !ModelState.IsValid)
             {
