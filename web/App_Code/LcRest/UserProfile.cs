@@ -239,6 +239,7 @@ namespace LcRest
                 return FromDB(db.QuerySingle(sqlSelectProfile, userID));
             }
         }
+
         public static string GetEmail(int userID)
         {
             using (var db = new LcDatabase())
@@ -247,6 +248,11 @@ namespace LcRest
                     SELECT email FROM UserProfile WHERE UserID = @0
                 ", userID);
             }
+        }
+
+        public static bool Exists(int userID)
+        {
+            return Get(userID) != null;
         }
         #endregion
 
