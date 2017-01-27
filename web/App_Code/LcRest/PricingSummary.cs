@@ -234,6 +234,10 @@ namespace LcRest
                     data.firstTimeServiceFeeMinimum
                 ));
 
+                // Copy the pre-computed flag, to prevent it from having
+                // a wrong default value
+                newData.isPhoneServiceOnly = data.isPhoneServiceOnly;
+
                 if (data.details != null)
                 {
                     // Set original with details,
