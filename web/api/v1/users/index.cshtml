@@ -46,7 +46,7 @@
             }
 
             var includeFullJobTitleID = Request.QueryString["includeFullJobTitleID"].AsInt(0);
-            
+
             var profile = LcRest.PublicUserProfile.Get(userID, WebSecurity.CurrentUserId);
             if (profile == null)
                 throw new HttpException(404, "User Not Found");
@@ -63,7 +63,8 @@
             var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.PublicUserJobTitle>)jobProfile).Select(x =>
             {
                 var full = includeFullJobTitleID == x.jobTitleID || includeFullJobTitleID == -1;
-
+                var servicesVisibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)
+                                                                     : LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
                 return new {
                     userID = x.userID,
                     jobTitleID = x.jobTitleID,
@@ -75,7 +76,7 @@
                     rating = LcRest.PublicUserRating.Get(userID, x.jobTitleID),
                     verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, x.jobTitleID),
                     serviceAddresses = full ? LcRest.Address.GetServiceAddresses(userID, x.jobTitleID) : null,
-                    services = full ? LcRest.ServiceProfessionalService.GetList(userID, x.jobTitleID) : null,
+                    services = full ? LcRest.ServiceProfessionalService.GetList(userID, x.jobTitleID, clientVisibility: servicesVisibility) : null,
                     serviceAttributes = full ? LcRest.PublicUserJobTitleServiceAttributes.Get(userID, x.jobTitleID, locale.languageID, locale.countryID) : null,
                     workPhotos = full ? LcData.Photo.GetUserWorkPhotos(userID, x.jobTitleID) : null,
                     verifications = full ? LcRest.PublicUserVerification.GetList(userID, x.jobTitleID) : null,

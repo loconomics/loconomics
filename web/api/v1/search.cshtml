@@ -109,7 +109,7 @@
     public class RestSearch : RestWebPage
     {
         public override dynamic Get()
-        {   
+        {
             // JUST global search
             // /search
             if (UrlData.Count == 0)
@@ -132,13 +132,16 @@
                     // /search/service-professionals**
                     case "service-professionals":
                     {
+                        var visibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)
+                                                                        : LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
+
                         // search/service-professionals
                         if (UrlData.Count == 1) {
                             var s = Request["searchTerm"];
                             var lat = Request["origLat"].AsDecimal();
                             var lng = Request["origLong"].AsDecimal();
                             var dist = Request["searchDistance"].AsInt();
-                            return LcRest.ServiceProfessionalSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current);
+                            return LcRest.ServiceProfessionalSearchResult.SearchBySearchTerm(s, lat, lng, dist, LcRest.Locale.Current, visibility);
                         }
                         // /search/service-professionals/by-job-title
                         else if (UrlData.Count == 2 && UrlData[1] == "by-job-title")
@@ -147,7 +150,7 @@
                             var lat = Request["origLat"].AsDecimal();
                             var lng = Request["origLong"].AsDecimal();
                             var dist = Request["searchDistance"].AsInt();
-                            return LcRest.ServiceProfessionalSearchResult.SearchByJobTitleID(j, lat, lng, dist, LcRest.Locale.Current);
+                            return LcRest.ServiceProfessionalSearchResult.SearchByJobTitleID(j, lat, lng, dist, LcRest.Locale.Current, visibility);
                         }
                         break;
                     }
