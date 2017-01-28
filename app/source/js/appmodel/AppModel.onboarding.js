@@ -56,6 +56,12 @@ exports.create = function create(appModel) {
         return false;
     };
 
+    api.skipWelcomeStep = function() {
+        if(this.inProgress()) {
+            this.setStep(OnboardingProgress.predefinedStepGroups.welcome[1]);
+        }
+    };
+
     // Update the given navbar with the current onboarding information (only if in progress)
     api.updateNavBar = function(navBar) {
         var yep = this.inProgress();
