@@ -12,6 +12,7 @@
         
         using (var dbo = new DBOperations())
         {
+            data = dbo.GetTables();
             foreach (var table in dbo.EnumerateTables())
             {
                 

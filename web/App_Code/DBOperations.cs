@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using WebMatrix.Data;
 using System.Text.RegularExpressions;
+using System.Data;
 
 /// <summary>
 /// Utility class to perform a set of special operations
@@ -31,6 +32,9 @@ public class DBOperations : IDisposable
     #endregion
 
     #region Read Scheme
+    /// <summary>
+    /// MS-SQL-Server specific objects query
+    /// </summary>
     const string sqlGetAllTables = @"select name from sysobjects where xtype = 'U' order by name ASC";
     public IEnumerable<string> EnumerateTables()
     {
@@ -38,6 +42,18 @@ public class DBOperations : IDisposable
         {
             yield return r.name;
         }
+    }
+
+    public DataTable GetTables()
+    {
+        db.Connection.Open();
+        return db.Connection.GetSchema("tables");
+    }
+
+    public DataTable GetColumnsFrom(string tableName)
+    {
+        db.Connection.Open();
+        return db.Connection.GetSchema("columns", new string[] { null, null, tableName });
     }
     #endregion
 
@@ -60,7 +76,6 @@ public class DBOperations : IDisposable
         db.Execute(sqlEnableAllConstraints);
         return this;
     }
-
     public IEnumerable<dynamic> GetAllDataFrom(string table)
     {
         return db.Query("SELECT * FROM [" + table + "]");
@@ -68,10 +83,6 @@ public class DBOperations : IDisposable
     #endregion
 
     #region Bulk data script generation
-    private void test()
-    {
-
-    }
     /// <summary>
     /// Create SQL script to replicate table.
     /// Helpful ressources for single table and multi table changes,
