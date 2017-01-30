@@ -9,11 +9,20 @@
     
     try {
         data = null;
+        
+        using (var dbo = new DBOperations())
+        {
+            foreach (var table in dbo.EnumerateTables())
+            {
+                
+            }
+        }
+        
     }
     catch (Exception ex) {
         data = ex;
     }
 }
-@(data)
+@ObjectInfo.Print(data)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())
