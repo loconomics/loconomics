@@ -10,13 +10,19 @@
     try {
         data = null;
         
-        using (var dbo = new DBOperations())
+        using (var dbo = new DBOperations.XClient("sqlloco"))
         {
-            data = dbo.GetTables();
-            foreach (var table in dbo.EnumerateTables())
-            {
-                
+            var a = new List<string>();
+            var errors = new List<string>();
+            foreach (var table in dbo.EnumerateTables()) {
+                try {
+                    a.Add(dbo.GetInsertTemplate(table));
+                }
+                catch(Exception ex) {
+                    errors.Add(table + "::" + ex.Message);
+                }
             }
+            data = new object[] { a.ToArray(), errors.ToArray() };
         }
         
     }

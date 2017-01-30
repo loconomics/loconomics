@@ -1,0 +1,816 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DbClient</name>
+    </assembly>
+    <members>
+        <member name="T:DbClient.FilterDelegate`1">
+            <summary>
+            Un delegado para realizar filtros genérico
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="valueToBeFiltered"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DbClient.Client">
+            <summary>
+            Descripción breve de Client.
+            </summary>
+        </member>
+        <member name="F:DbClient.Client.Config">
+            <summary>
+            Configuración específica que afecta a ésta instancia (a través de ficheros de configuración)
+            </summary>
+        </member>
+        <member name="F:DbClient.Client._connection">
+            <summary>
+            Objeto conexión
+            </summary>
+        </member>
+        <member name="F:DbClient.Client.lectorYaAbierto">
+            <summary>
+            Indica que ya se ha abierto un lector. Ésto se usa para que, en caso de solicitar la 
+            apertura de un nuevo lector, se abra un lector empleando una conexión nueva (ya que la misma
+            conexión no admite dos lectores simultáneos -inicialmente sí, pero al cerrar uno, se ven 
+            cerrados bruscamente el resto-).
+            IMPORTANT Se usa también para obedecer a la configuración ReadersRequireNewConnectionEver gracias
+            a que éste flag no se pone nunca a false al desconocer cuando el lector que lo ha forzado primero
+            ha sido cerrado/liberado. Si se añadiese soporte para ésto último, deberá cambiarse la implementación
+            de la opción ReadersRequireNewConnectionEver
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.#ctor(System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Instancia exenta de fichero de configuración, empleando la indicada por los parámetros
+            </summary>
+            <param name="connectionString">
+            Cadena de conexión
+            </param>
+            <param name="sqlServerFormat">
+            Formato admitido por el servidor sql. Se obtiene a partir de la referencia
+            cultural de éste (SQLServer por defecto está en inglés "en"). Ésto permite no tener problemas 
+            al pasar números y fechas como parámetros para un sql, y no es necesario que la cultura de la aplicación
+            sea la misma que el servidor SQL.
+            Se puede pasar una cadena vacía como valor para emplear la cultura invariable ('Invariant');
+            dado que ésta cultura indica los mismos parámetros que 'en-US' (english), usarla
+            junto con el proveedor SqlClient de MS-SQL-Server implica que se añadirá automáticamente 
+            una cadena AutoPreSql que establece como idioma de todas las sentencias ejecutadas
+            el inglés, siendo así la mejor opción a usar generalmente (invariant con SqlClient)
+            para evitar problemas de formato; éste último comportamiento (AutoPreSql) puede ser
+            evitado si es indeseado asignando otro valor (como null) a la propiedad AutoPreSql
+            tras ser instanciada la clase Client.
+            </param>
+            <param name="autoComiles">
+            Opción que permite habilitar el mecanismo automático de entrecomillado según el tipo de dato -sin que
+            la plantilla sql incluya las comillas, en principio, necesarias para encerrar los valores-. Ésta es
+            una opción ofrecida por la clase SqlBuilder, en la cual se provee mayor documentación.
+            </param>
+            <param name="providerName">
+            Tipo de proveedor de base de datos a utilizar
+            </param>
+        </member>
+        <member name="M:DbClient.Client.#ctor">
+            <summary>
+            Instancia por defecto, obtiene los datos del fichero de configuración
+            y conexión según las opciones por defecto
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.#ctor(System.String)">
+            <summary>
+            Instancia la conexión indicada
+            </summary>
+            <param name="connectionName"></param>
+        </member>
+        <member name="M:DbClient.Client.Open">
+            <summary>
+            Se asegura de abrir la conexión actual. Si ésta ya está abierta, no hace nada.
+            
+            Generalmente, cualquier llamada a métodos que requieran conexión con la base
+            de datos se encarga de abrir la conexión o reusar la ya existente (dado que lo que no hacen es cerrar
+            la conexión por cada operación evitando aperturas/cierres continuos). De éste modo, no es necesario
+            abrirla cada vez que se requiera una acción, pero es posible forzar la apertura llamando a éste 
+            método.
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.Close">
+            <summary>
+            Cierra la conexión -pero no la destruye, como Dispose()-, si existe y está abierta, sinó no hace nada.
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.Abort">
+            <summary>
+            Abort current operations by rejecting the opened transactions and close the connection.
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.Dispose">
+            <summary>
+            Cierra la conexión y libera recursos
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.EnsureCloseTransactions">
+            <summary>
+            Ensure that all transactions are closed and the stack disposed. If there are transactions pending, 
+            launch exception
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.TaskAutoClose">
+            <summary>
+            Cierra la conexión si se ha establecido el cierre automático por tarea y no hay transacciones activas (de usarse transacciones,
+            AutoCloseConnection.PerTask no provocará el cierre automático de la conexión, deberá usarse conjuntamente 
+            AutoCloseConnection.PerTransaction)
+            Éste método está pensado para ser ejecutado por métodos de ejecución de SQL tras acabar sus respectivas consultas, 
+            exceptuando casos en que la conexión tenga que ser devuelta siempre abierta -como los readers o los objetos básicos-.
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.TransactionAutoClose">
+            <summary>
+            Cierra la conexión si se ha establecido el cierre automático por transacción, y la transacción cerrada es la última -ya no
+            hay más pendientes-.
+            Éste método está pensado para ser ejecutado únicamente por los métodos internos de Rollback y Commit Transaction, tras haber
+            cerrado las transacciones.
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.ReaderAutoClose(System.Data.CommandBehavior)">
+            <summary>
+            Devuelve un CommandBehavior con la indicación expresa de que la conexión se cierre a la par que el cierre del lector (DataReader)
+            si se ha establecido el cierre automático por lector.
+            Éste método está pensado para ser ejecutado únicamente por los métodos que preparan lectores durante la preparación del CommandBehavior
+            del lector a ser devuelto
+            </summary>
+            <param name="behavior"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetCommandClosed(System.String,System.Object[])">
+            <summary>
+            Método interno que devuelve la conexión cerrada (GetCommand la devuelve siempre abierta)
+            </summary>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetCommandBuilder(DbClient.Client.CommandBuilderSetup)">
+            <summary>
+            Gets a Command Builder for the given set-up, with
+            all commands at its DataAdapter ready for use.
+            </summary>
+            <param name="setup">Object with all the set-up </param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetCommandBuilder">
+            <summary>
+            Creates an empty command builder for the provider,
+            ready to set-up, assing a DataAdapter with select-command
+            and start generating the others commands on top of that.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetDataReader(System.Data.CommandBehavior,DbClient.PaginationInfo,System.String,System.Object[])">
+            <summary>
+            Unexact method for emulate pagination with a normal DataReader. Create a reader with the sql an data
+            and moving it at the previously record you want read; you need execute a first Read() -like ever!- for
+            read the record you want -if you read data without execute Read() before, you read data from a record
+            out in the page of records-. It's an emulation because the records aren't filtered, only the first,
+            but not the last: if you continue calling Read() after the RecordsCount you need, the reader read
+            records out of your page of records, you must do this manually.
+            </summary>
+            <param name="behavior"></param>
+            <param name="pagInfo"></param>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetDataTable(System.String,System.Object[])">
+            <summary>
+            Get the sql results like a DataTable.
+            DataTable is ever contained in a DataSet, accesible throught his DataSet Property
+            Of course, only the first sql-resultset is returned.
+            </summary>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetDataTable(DbClient.PaginationInfo,System.String,System.Object[])">
+            <summary>
+            Get the sql results like a DataTable.
+            DataTable is ever contained in a DataSet, accesible throught his DataSet Property.
+            Of course, only the first sql-resultset is returned.
+            </summary>
+            <param name="pagInfo"></param>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.ExtractDataTable(System.Data.DataSet)">
+            <summary>
+            Get the first DataTable contained in the DataSet, or null if there is no Tables
+            or DataSet.
+            </summary>
+            <param name="ds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetDataView(System.String,System.Object[])">
+            <summary>
+            Get the sql results like a DataView.
+            The DataView returned is just the DefaultView of a DataTable
+            contained the data, that is contained in a DataSet too.
+            Of course, only the first sql-resultset is returned.
+            </summary>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetDataView(DbClient.PaginationInfo,System.String,System.Object[])">
+            <summary>
+            Get the sql results like a DataView.
+            The DataView returned is just the DefaultView of a DataTable
+            contained the data, that is contained in a DataSet too.
+            Of course, only the first sql-resultset is returned.
+            </summary>
+            <param name="pagInfo"></param>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetHashtable(System.String,System.Object[])">
+            <summary>
+            Load a record (the first in the first resultset) into a hashtable and return it.
+            "Record-To-Hashtable"
+            </summary>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetHashtables(System.String,System.Object[])">
+            <summary>
+            Load a table of data (the first resultset) into an array of hashtables (one per record) and return it.
+            "Table-To-Hashtables"
+            </summary>
+            <param name="sql"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetScalarWithName(System.String,System.String,System.Object,System.Object[])">
+            <summary>
+            Éste método permite lanzar un consulta cuyo resultado es un registro de múltiples valores y recuperar
+            sólamente el valor del campo indicado en name.
+            </summary>
+            <param name="name"></param>
+            <param name="sql"></param>
+            <param name="alt"></param>
+            <param name="vars"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.GetSql(System.String,System.Object[])">
+            <summary>
+            Devuelve la cadena sql pasada substituyendo los caracteres fin de interrogante (?) por los parámetros
+            adicionales pasados, en el orden de entrada (primer ? por primer parámetro adicional).
+            Si hay más parámetros que ?, éstos se añaden con coma delante (para procedimientos almacenados, pero deben
+            llevar siempre un primer ?))
+            Se evitan inyecciones de sql, transforma un valor null del lenguaje por una cadena NULL de sql e ídem
+            con las cadenas vacías.
+            **Quizás vars pueda ser un IConvertible[] y no object[] (Dado que ahora requiero la sobrecarga
+              ToString(IFormatProvider) para convertir correctamente al formato cultural del SQLServer
+              (por las fechas, puntos/comas decimales)
+            </summary>
+            <param name="sql">Cadena sql base o plantilla, con caracters ? a substituír</param>
+            <param name="vars">Valores numéricos, string o null</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.BeginTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Start a transaction. If there are a previously transaction, this method create a child transaction of it.
+            </summary>
+            <param name="isolation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.Client.CommitTransaction">
+            <summary>
+            Do the Commit in the current transaction. If it is not transaction, a SqlException is throwed.
+            </summary>
+        </member>
+        <member name="M:DbClient.Client.RollbackTransaction">
+            <summary>
+            Do the Rollback in the current transaction. If it is not transaction, a SqlException is throwed.
+            </summary>
+        </member>
+        <member name="E:DbClient.Client.Filter">
+            <summary>
+            event FilterDelegate Filter;
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.SqlServerFormat">
+            <summary>
+            Obtiene el formato admitido por el servidor sql. Se obtiene a partir de la referencia
+            cultural de éste (SQLServer por defecto está en inglés "en"). Ésto permite no tener problemas 
+            al pasar números y fechas como parámetros para un sql, y no es necesario que la cultura de la aplicación
+            sea la misma que el servidor SQL
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.AutoPreSql">
+            <summary>
+            A sql string that will be added 'as is' before every sql
+            that will be executed.
+            Consider add a whitespace at the end of the string.
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.AutoPostSql">
+            <summary>
+            A sql string that will be added 'as is' after every sql
+            that will be executed.
+            Consider add a whitespace at the start of the string.
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.TransactionsCount">
+            <summary>
+            Nº de transacciones abiertas (y dado que sólo pueden ser anidadas, es también la profundidad de éstas)
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.IsolationLevel">
+            <summary>
+            Get or Set the isolation level of the current transaction. Need a previously call to BeginTransaction 
+             (almost one), else an exception is throwed.
+            </summary>
+        </member>
+        <member name="T:DbClient.Client.CommandBuilderSetup">
+            <summary>
+            Class with set-up options of a command builder,
+            the TableName is the only one required,
+            others will fallback in the builder default (which is the
+            recommended for several options as documented per each).
+            Further Details of each Builder specific option in the
+            CommandBuilder documentation for the specifics providers.
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.TableName">
+            <summary>
+            Database TableName, a generic 'SELECT' will be
+            created for it, and the proper TableMappins added
+            to the resulting DataAdapter
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.CatalogLocation">
+            <summary>
+            The default given by the provider is usually enough
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.CatalogSeparator">
+            <summary>
+            The default given by the provider is usually enough
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.ConflictOption">
+            <summary>
+            Set up how update conflicts must be managed.
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.QuotePrefix">
+            <summary>
+            The default given by the provider is usually enough
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.QuoteSuffix">
+            <summary>
+            The default given by the provider is usually enough
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.SchemaSeparator">
+            <summary>
+            The default given by the provider is usually enough
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.SetAllValues">
+            <summary>
+            An update can set only modified values or all of them.
+            </summary>
+        </member>
+        <member name="P:DbClient.Client.CommandBuilderSetup.UseColumnsForParametersNames">
+            <summary>
+            This parameter matches the one given to the
+            methods for build insert/update/delete commands.
+            The same value will apply to all of them.
+            </summary>
+        </member>
+        <member name="M:DbClient.ClientConfig.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="configSectionName">Name of the configuration section in the application config file</param>
+            <param name="connectionName">Name of the connection to use (from the posible connection list in the
+            configuraction file)</param>
+        </member>
+        <member name="M:DbClient.ClientConfig.#ctor(System.String,System.String,System.Boolean,System.String,System.Boolean,System.Data.Common.DbProviderFactory)">
+            <summary>
+            This constructor allows specify a custom Factory instance. On this case, the @providerName is only informative and can be empty string.
+            </summary>
+            <param name="connectionString"></param>
+            <param name="sqlServerFormat"></param>
+            <param name="autoComiles"></param>
+            <param name="providerName"></param>
+            <param name="factory"></param>
+        </member>
+        <member name="F:DbClient.ClientConfig.AutoComiles">
+            <summary>
+            Auto entrecomillado: a True, provoca que se los parámetros pasados a GetSql() les sean añadidas
+            automáticamente las comillas (a todo tipo de datos). A False no serán entrecomillados, forzando a pasar
+            sentencias sql comilladas por el programador (p.ej: GetSql("getUserInfo @name='?'", Id))
+            </summary>
+        </member>
+        <member name="F:DbClient.ClientConfig.SqlFilters">
+            <summary>
+            Colección de filtros que se aplican al cliente actual.
+            </summary>
+        </member>
+        <member name="P:DbClient.ClientConfig.DefaultConfigSectionName">
+            <summary>
+            Name of the default configuration section for DbClient options, used when use a constructor
+            that not request the name of the configuration section
+            </summary>
+        </member>
+        <member name="F:DbClient.XDataReader.provider">
+            <summary>
+            Auto entrecomillado: a True, provoca que se los parámetros pasados a GetSql() les sean añadidas
+            automáticamente las comillas (a todo tipo de datos). A False no serán entrecomillados, forzando a pasar
+            sentencias sql comilladas por el programador (p.ej: GetSql("getUserInfo @name='?'", Id))
+            </summary>
+        </member>
+        <member name="M:DbClient.XDataReader.Read">
+            <summary>
+            Avanza al siguiente registro.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.XDataReader.Close">
+            <summary>
+            Proporciona acceso al método Close() de la instancia base reader.
+            </summary>
+        </member>
+        <member name="M:DbClient.XDataReader.GetOrdinal(System.String)">
+            <summary>
+            Devuelve el índice del campo indicado. Lanza FieldNotExistException si no existe el campo.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.XDataReader.#ctor(System.String,System.String,System.Data.CommandBehavior)">
+            <summary>
+            Using a connectionString, the CommandBehavior.CloseConnection is implicit 
+            (this cause that the internal connection object is closed when you close, dispose or destroy the Reader)
+            </summary>
+            <param name="sql"></param>
+            <param name="connectionString"></param>
+            <param name="behavior"></param>
+        </member>
+        <member name="M:DbClient.XDataReader.ReStart">
+            <summary>
+            Close (if open) the reader ('not the connection'- really yes, if CloseConnection is used)
+            and open again with a new reader instance but the same Command. Used for return to the firt record
+            and read again the data.
+            </summary>
+        </member>
+        <member name="M:DbClient.XDataReader.Filter(System.Int32,System.Int32)">
+            <summary>
+            Filter record by a Range of indexes. The startRecordIndex start to count from the current record 
+             (nothing if you don't call Read() yet).
+            A call of Read() is needed after this.
+            </summary>
+            <param name="startRecordIndex">base 0 - start in the first record will be included</param>
+            <param name="length">Number or consecutive records to include</param>
+        </member>
+        <member name="M:DbClient.XDataReader.ForwardTo(System.Int32)">
+            <summary>
+            Move the index cursor for the next record to Read to the recordIndex give it. A call to Read() is 
+            needed to read the recordIndex.
+            </summary>
+            <param name="recordIndex"></param>
+        </member>
+        <member name="M:DbClient.XDataReader.GetValues(System.String[],System.Object[],System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="columnsNames"></param>
+            <param name="values"></param>
+            <param name="alts">Para que todos los valores sean nulos, pasar simplemente 'null'</param>
+            <returns></returns>
+        </member>
+        <member name="P:DbClient.XDataReader.Item(System.String,System.Object)">
+            <summary>
+            Accesor tipo array incluyendo devolución de valor opcional
+             mismo resultado que: GetValue(string name, object alt))
+            </summary>
+            <param name="name"></param>
+            <param name="alt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DbClient.SqlLiteral">
+            <summary>
+            Representa una cadena de texto que será
+            considerada como código sql
+            (por lo que su tratamiento al incluirlo
+            en una plantilla sql como valor será
+            de forma literal, sin ningún tratamiento
+            ni adición de comillas, como si ocurriría
+            con una variable de tipo 'string')
+            </summary>
+        </member>
+        <member name="T:DbClient.PaginationInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:DbClient.PaginationInfo.RecordsCountSql">
+            <summary>
+            Sentencia sql que devuelve el total de registros de manera óptima.
+            Cuando se establece OptimizedPagingSql es obligatorio indicar también
+            una RecordsCountSql para que los datos sean correctos. De no ser así,
+            ésta es opcional para métodos que puedan calcular el número de registros
+            automáticamente y obligatoria para los demás (se obtendrá un valor de -1
+            si el valor no puede ser obtenido), aunque indicándola se usará con motivo de obtener
+            la cuenta de registros de forma más óptima que el mecanismo automático 
+            (éste, básicamente, ejecuta la sentencia sql original para obtener
+            la cuenta y después la vuelve a ejecutar para devolver los datos)
+            </summary>
+        </member>
+        <member name="F:DbClient.PaginationInfo.OptimizedPagingSql">
+            <summary>
+            Sentencia sql cuyo objetivo es proporcionar un conjunto de resultados
+            ya paginados por el servidor sql (mediante sentencias 'limit', 'between').
+            Ésto significa que, salvo que el paginador sea deshabilitado, se usará
+            ésta sentencia y no la proporcionada durante la consulta la empleada
+            para obtener los datos que sólo incluirán los registros correspondientes
+            a la página solicitada por PageIndex hasta el máximo PageSize.
+            Con ésta sentencia cualquier tarea de paginado realizada automáticamente
+            por las operaciones (tal que GetDataSet, GetXReader..) será descartada
+            ya que los datos ya estarán correctamente filtrados.
+            Ésta consulta debe hacer uso de los parámetros especiales de paginación
+            analizados por SqlBuilder.ApplyPaging ($startRecordIndex y $endRecordIndex
+            principalmente).
+            </summary>
+        </member>
+        <member name="T:DbClient.SqlBuilderParser">
+            <summary>
+            OR SqlBuilderParser
+            </summary>
+        </member>
+        <member name="M:DbClient.SqlBuilderParser.ToString(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="escapeKeywordsInLiterals">If true, add a backslash in the needed keywords that appear
+            inside literals texts. Basically, returns characters # and ? like \# and \? when was inside
+            comiles. This helps to generate sql code that will be re-analized by another SqlBuilderParser
+            instance, or for debug proposes. When generate code to send for sql servers this must be false.</param>
+            <returns></returns>
+        </member>
+        <member name="F:DbClient.SqlElement.Value">
+            <summary>
+            Value is: Parameter Name when Parameter; '?' when Wildcard; string-value when Literal; string-code when Code;
+            ';' when ForceEnd
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlElement.Type">
+            <summary>
+            Type of sql-template-node
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlElement.BetweenComiles">
+            <summary>
+            Value must be between comiles?
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlElement.UseName">
+            <summary>
+            Parameters have '@' at start? Parameters must use name in the result sql?
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlElement.Modifier">
+            <summary>
+            The text after ':' in Parameters Name. Now are no used; in the future will be the format of the 
+            final value or the value-type, modifiers, or .. I don't no now what more.
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlBuilder.unusedParameters">
+            <summary>
+            Lista de parámetros no 'usados' todavía - aquellos a los que no se ha asignado un 
+            valor mediante AddParameter o AddParameters
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlBuilder.indexWildcards">
+            <summary>
+            Lista de posiciones de los comodines de valores (o parámetros sin nombre)
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlBuilder.sqlServerFormat">
+            <summary>
+            Cultura y formato al que han de adaptarse los valores para enviarlos correctamente al servidor sql
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlBuilder.autoComiles">
+            <summary>
+            Marca si se realizará el autoentrecomillado de valores
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlBuilder.extensible">
+            <summary>
+            Marca si la plantilla es extensible en valores y parámetros o por el contraria es cerrada a los indicados
+            explícitamente. 
+            </summary>
+        </member>
+        <member name="F:DbClient.SqlBuilder.extensibilityStarted">
+            <summary>
+            Marca si se ha comenzado a añadir valores a partir de la marca (wildcard al final) de extensibilidad.
+            </summary>
+        </member>
+        <member name="M:DbClient.SqlBuilder.TryBuildSql">
+            <summary>
+            Construye y devuelve la sentencia sql resultante de aplicar valores y parámetros sobre la plantilla
+            como un string.
+            NO garantiza que la sql esté completada (por falta de substitución de valores).
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.TryBuildSql(System.Boolean)">
+            <summary>
+            Construye y devuelve la sentencia sql resultante de aplicar valores y parámetros sobre la plantilla
+            como un string.
+            NO garantiza que la sql esté completada (por falta de substitución de valores).
+            </summary>
+            <param name="escapeKeywordsInLiterals">If true, add a backslash in the needed keywords that appear
+            inside literals texts. Basically, returns characters # and ? like \# and \? when was inside
+            comiles. This helps to generate sql code that will be re-analized by another SqlBuilderParser
+            instance, or for debug proposes. When generate code to send for sql servers this must be false.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.BuildSql">
+            <summary>
+            Construye y devuelve la sentencia sql resultante de aplicar valores y parámetros sobre la plantilla
+            como un string. Producirá error si la resolución es incompleta, es decir, si no todos los Wildcards o
+            parámetros tienen asignado un valor.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.BuildSql(System.Boolean)">
+            <summary>
+            Construye y devuelve la sentencia sql resultante de aplicar valores y parámetros sobre la plantilla
+            como un string. Producirá error si la resolución es incompleta, es decir, si no todos los Wildcards o
+            parámetros tienen asignado un valor.
+            </summary>
+            <param name="escapeKeywordsInLiterals">If true, add a backslash in the needed keywords that appear
+            inside literals texts. Basically, returns characters # and ? like \# and \? when was inside
+            comiles. This helps to generate sql code that will be re-analized by another SqlBuilderParser
+            instance, or for debug proposes. When generate code to send for sql servers this must be false.</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.ToString">
+            <summary>
+            Se elimina (si hubiere) la coma final resultante de la adición de valores/parámetros por ser
+            extensible
+            Exception: SqlException for lost parameters or wildcards
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddValue(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="value">Cualquier tipo o clase.
+            Cualquier tipo de colección o array (implementan 
+            IEnumerable) será tratado como una colección de valores que se convertirán a una colección de
+            registro CSV.
+            [en su defecto] Se intentará realizar una conversión específica si 
+            la clase lo incluye, con los métodos de IConvertible.
+            Si todo lo anterior falla, se usa el método base Object.ToString().
+            </param>
+            <returns>
+            True: indica que aún quedan comodines (?) por substituír, o que la 
+            False: indica que no quedan más comodines (?) por substituír tras ésta operación.
+            Si la sql-template es extensible (finaliza con un comodín (?) y sin carácter de final de sentencia (;)),
+            el comportamiento una vez se acaben todos los comodines será 
+            añadir los valores como un parámetro al final de la sentencia, separándolos con una coma
+            justo despues del valor. La coma sobrante al final será eliminada antes de devolver la string
+            sql generada. Se devolverá True para indicar que se pueden seguir añadiendo valores.
+            </returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddValues(System.Object[])">
+            <summary>
+            Añadiendo de una sola vez múltiples valores. Para cada valor se emplea el método individual AddValue.
+            </summary>
+            <param name="values">Múltiples valores</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddParameter(System.String,System.Object)">
+            <summary>
+            Añade el valor para un parámetro concreto.
+            A diferencia de AddValue, puede establecerse el valor del mismo parámetros múltiples veces.
+            </summary>
+            <param name="parameterName"></param>
+            <param name="value"></param>
+            <returns>Devuelve True si el parámetro de nombre indicado existía y ha sido añadido su valor o si
+            se ha autoañadido correctamente si la sql es extensible. False
+            si el parámetro no existe.</returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddParameter(System.Data.Common.DbParameter)">
+            <summary>
+            
+            </summary>
+            <param name="parameter">¿o System.Data.IDataParameter?</param>
+            <returns>Devuelve True si el parámetro de nombre indicado existía y ha sido añadido su valor. False
+            si el parámetro no existe.</returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddParameters(System.Object[])">
+            <summary>
+            
+            </summary>
+            <param name="parametersNamesValues">Parámetros pasados como una colección par en la que el primer
+            elemento de cada pareja es el nombre del parámetro y el segundo el valor</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddParameters(System.Data.Common.DbParameter[])">
+            <summary>
+            
+            </summary>
+            <param name="parameters"></param>
+            <returns>Devuelve True si todos los parámetros existían y han sido añadidos su valores. False
+            si al menos un parámetro no existía.</returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.AddParameters(System.Data.Common.DbParameterCollection)">
+            <summary>
+            
+            </summary>
+            <param name="parameters">o IDataParameterCollection, o ICollection, o IEnumerable</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.ApplyPaging(DbClient.PaginationInfo)">
+            <summary>
+            Aplica opciones de paginación en la plantilla mediante la asignación de
+            valores extraídos del objeto PaginationInfo a una serie de parámetros
+            de nombre reservado empleados en la plantilla.
+            Se emplea para construir sentencias sql con paginación más efectiva, de
+            mejor rendimiento al realizar el filtro de registros devueltos directamente
+            en el servidor sql. Los posibles parámetros reservados a usar son:
+            $pageIndex, $pagesCount, $pageSize, $recordsCount, 
+            $startRecordIndex, $endRecordIndex
+            Éstos dos últimos son los más importantes y habituales a usar con sentencias
+            tipo:
+            emulación vía " rowIndex UBOUND #$startRecordIndex# AND #$endRecordIndex# " (sqlServer)
+            " LIMIT(#$startRecordIndex#, #$endRecordIndex#) " (mySql)
+            Los índices son base cero.
+            </summary>
+            <param name="pagInfo"></param>
+        </member>
+        <member name="M:DbClient.SqlBuilder.GetSql(System.String,System.IFormatProvider,System.Boolean,System.Object[])">
+            <summary>
+            Devuelve la cadena sql pasada substituyendo los caracteres fin de interrogante (?) por los parámetros
+            adicionales pasados, en el orden de entrada (primer ? por primer parámetro adicional). 
+            Se evitan inyecciones de sql y transforma un valor null del lenguaje por una cadena NULL de sql.
+            </summary>
+            <param name="sqlTemplate">Cadena sql base o plantilla, con caracters ? a substituír</param>
+            <param name="values">Valores numéricos, string o null</param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.GetUnparsedSql(System.String,DbClient.PaginationInfo)">
+            <summary>
+            Returns the sql 'as is', without be parsed or the optimizedPagingSql, replacing in that last
+            the pager parameters with a simple String.Replace. This can seem 'unsafety', but the possible
+            values to pager willcards/parameters are all simple integer numbers and there are not possible
+            sql-injection attacks in this step (the sql provided must be checked and verified previously, 
+            of course).
+            </summary>
+            <param name="sql"></param>
+            <param name="pagInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.getCsv(DbClient.IParseValue,System.Collections.IEnumerable,System.Boolean,System.IFormatProvider)">
+            <summary>
+            Obtiene una lista de valores separados por comas, sin coma inicial ni final (tendrá final sólo en 
+            el caso de valores vacíos a continuación)
+            </summary>
+            <param name="collection"></param>
+            <param name="putComiles"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DbClient.SqlBuilder.GetFormat(System.String)">
+            <summary>
+            Utilidad para obtener un proveedor de formato a partir de una cadena de indicación de idioma 
+            (idioma-país)
+            </summary>
+            <param name="language"></param>
+            <returns></returns>
+        </member>
+        <member name="P:DbClient.SqlBuilder.WildcardsCount">
+            <summary>
+            Número de Wildcards en la Plantilla, y por lo tanto número de posibles cantidad de valores a añadir
+            (con AddValue/s)
+            </summary>
+        </member>
+        <member name="P:DbClient.SqlBuilder.IsExtensible">
+            <summary>
+            La plantilla es extensible? (True: permite añadir valores más allá del número de Wildcards disponibles)
+            </summary>
+        </member>
+        <member name="P:DbClient.SqlBuilder.ParametersCount">
+            <summary>
+            Número de Parámetros en la Plantilla.
+            </summary>
+        </member>
+    </members>
+</doc>

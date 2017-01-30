@@ -31,7 +31,7 @@ public class DBOperations : IDisposable
     }
     #endregion
 
-    #region Read Scheme
+    #region Read Schema
     /// <summary>
     /// MS-SQL-Server specific objects query
     /// </summary>
@@ -47,7 +47,7 @@ public class DBOperations : IDisposable
     public DataTable GetTables()
     {
         db.Connection.Open();
-        return db.Connection.GetSchema("tables");
+        return db.Connection.GetSchema("tables", new string[] { null, null, null, "BASE TABLE" });
     }
 
     public DataTable GetColumnsFrom(string tableName)
@@ -160,6 +160,65 @@ public class DBOperations : IDisposable
             if (!string.IsNullOrWhiteSpace(str))
                 yield return str;
         }
+    }
+    #endregion
+
+    #region DBCLIENT
+    public class XClient : IDisposable
+    {
+        #region Constructor - dispose
+        DbClient.Client db;
+        public DbClient.Client Db { get { return Db; } }
+
+        public XClient(string connectionName)
+        {
+            db = new DbClient.Client(connectionName);
+        }
+
+        public void Dispose()
+        {
+            db.Dispose();
+        }
+        #endregion
+
+        #region Schema
+        public DataTable GetTables()
+        {
+            return db.GetConnection(true).GetSchema("tables", new string[] { null, null, null, "BASE TABLE" });
+        }
+
+        public IEnumerable<string> EnumerateTables()
+        {
+            foreach (DataRow r in GetTables().Rows)
+            {
+                yield return (string)r["TABLE_NAME"];
+            }
+        }
+        #endregion
+
+        #region SQL
+        public string GetInsertTemplate(string tableName)
+        {
+            // Instance a builder, that needs almost a Select to be able to
+            // get schema info to create other commands.
+            var cb = db.GetCommandBuilder();
+            // Create SELECT and Command as part of a new Adapter
+            var select = "SELECT * FROM " + cb.QuoteIdentifier(tableName);
+            cb.DataAdapter = db.GetDataAdapter(select);
+            // Table Mapping, from default 'Table' to the given TableName
+            cb.DataAdapter.TableMappings.Add("Table", tableName);
+            // Finally, our insert
+            return cb.GetInsertCommand(true).CommandText;
+        }
+
+        public string GetDeleteAllSql(string tableName)
+        {
+            var cb = db.GetCommandBuilder();
+            // Create SELECT and Command as part of a new Adapter
+            var select = "DELETE FROM " + cb.QuoteIdentifier(tableName);
+            return select;
+        }
+        #endregion
     }
     #endregion
 }
