@@ -1714,12 +1714,6 @@ namespace LcRest
                 // Persist on database:
                 SetPaymentState(this);
                 SetStatus(this);
-                // Send communications (it was avoided on it's creation, waiting for this to be successfully)
-                var send = LcMessaging.SendBooking.For(bookingID);
-                if (instantBooking)
-                    send.InstantBookingConfirmed();
-                else
-                    send.BookingRequest();
 
                 //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT: success booking save status");
             }
@@ -1738,6 +1732,32 @@ namespace LcRest
                 // re-throw exception
                 throw ex;
             }
+
+            try
+            {
+                // Send communications (it was avoided on it's creation, waiting for this to be successfully)
+                var send = LcMessaging.SendBooking.For(bookingID);
+                if (instantBooking)
+                    send.InstantBookingConfirmed();
+                else
+                    send.BookingRequest();
+            }
+            catch (Exception ex)
+            {
+                //ASP.LcHelpers.DebugLogger.LogEx("COLLECT PAYMENT (at send-message) CATCHES", ex);
+                try
+                {
+                    // Communicate Loconomics Stuff
+                    var jsbooking = Newtonsoft.Json.JsonConvert.SerializeObject(this);
+                    //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT CATCH, TO NOTIFY STUFF, jsbooking: " + jsbooking);
+                    LcMessaging.NotifyError("Payment collected for a booking and updated, but messages could not be sent", "Booking.CollectPayment", "Booking: " + jsbooking);
+                }
+                catch { }
+
+                // re-throw exception
+                throw ex;
+            }
+
             //ASP.LcHelpers.DebugLogger.Log("COLLECT PAYMENT SUCCESS, NO ERRORS!");
             // No errors:
             return null;

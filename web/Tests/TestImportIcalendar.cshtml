@@ -1,0 +1,225 @@
+﻿@* Placeholder testing area
+ *@
+@{
+    //LcHelpers.TestArea();
+    Layout = "_TestLayout.cshtml";
+
+    DateTime start = DateTime.Now;
+    dynamic data = null;
+    
+    try {
+        //data = testTypes();
+        
+        data = importIcalRaw();
+        data = getOccurrences();
+    }
+    catch (Exception ex) {
+        data = ex;
+    }
+}
+@functions {
+
+    dynamic tryConvertDTO2CDT(DateTimeOffset dto, string tzid) {
+        var timezone = NodaTime.DateTimeZoneProviders.Tzdb.GetZoneOrNull(tzid);
+        var zdt = NodaTime.Instant
+              .FromDateTimeOffset(dto)
+              .InZone(timezone);
+
+        var cdta = new Ical.Net.DataTypes.CalDateTime(zdt.ToDateTimeOffset().LocalDateTime, tzid);
+        var cdtb = new Ical.Net.DataTypes.CalDateTime(zdt.LocalDateTime.ToDateTimeUnspecified(), tzid);
+
+        return new
+        {
+            dto = dto,
+            tzid = tzid,
+            zdt = zdt,
+            cdta = cdta,
+            cdtb = cdtb
+        };
+    }
+
+    dynamic testTypes() {
+        var dto = new DateTimeOffset(2013, 1, 7, 18, 00, 00, TimeSpan.Zero);
+        var tzid = "UTC";
+        return new object[] {
+            tryConvertDTO2CDT(dto, tzid),
+            tryConvertDTO2CDT(new DateTimeOffset(2013, 1, 7, 18, 00, 00, TimeSpan.Zero), "Europe/Madrid"),
+            tryConvertDTO2CDT(new DateTimeOffset(2013, 1, 7, 17, 00, 00, TimeSpan.Zero), "Europe/Madrid"),
+        };
+    }
+
+    dynamic getOccurrences() {
+        var userID = 141;
+        var startTime = DateTimeOffset.Now.AddDays(-2);
+        var endTime = DateTimeOffset.Now.AddDays(7);
+        var cu = new CalendarDll.CalendarUtils();
+        return cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
+    }
+
+    dynamic getEvents() {
+        return LcCalendar.GetSimplifiedEvents(141, new int[] { 4 }, DateTimeOffset.Now.AddDays(-2), DateTimeOffset.Now.AddDays(2)).ToList();
+    }
+    
+    dynamic importIcalRaw() {
+        var rawContent = @"
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Prueba ical
+X-WR-TIMEZONE:Europe/Madrid
+X-WR-CALDESC:
+BEGIN:VTIMEZONE
+TZID:Europe/Madrid
+X-LIC-LOCATION:Europe/Madrid
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART:20161216T193000Z
+DTEND:20161216T233000Z
+DTSTAMP:20161215T160302Z
+UID:s0h7rrke99nfr85esaql8fftmo@google.com
+CREATED:20161215T155846Z
+DESCRIPTION:
+LAST-MODIFIED:20161215T155846Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Prueba mañana
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20161214T133000Z
+DTEND:20161214T160000Z
+DTSTAMP:20161215T160302Z
+UID:7fa9budppu2t2vf8el6irueuio@google.com
+CREATED:20161215T155839Z
+DESCRIPTION:
+LAST-MODIFIED:20161215T155839Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Prueba ayer
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20161215T170000Z
+DTEND:20161215T190000Z
+DTSTAMP:20161215T160302Z
+UID:idr473vsct5oqh33n8euc44gl4@google.com
+CREATED:20161215T155834Z
+DESCRIPTION:
+LAST-MODIFIED:20161215T155834Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Prueba tarde
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20161215T110000Z
+DTEND:20161215T130000Z
+DTSTAMP:20161215T160302Z
+UID:af69331a9npeucblv053ea4his@google.com
+CREATED:20161215T155827Z
+DESCRIPTION:
+LAST-MODIFIED:20161215T155827Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Prueba Mediodía
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130629T160000Z
+DTEND:20130629T203000Z
+DTSTAMP:20161215T160302Z
+UID:8hn2f4oeqkn160h485sdupo2m4@google.com
+CREATED:20130627T192215Z
+DESCRIPTION:
+LAST-MODIFIED:20130627T192251Z
+LOCATION:
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:busy
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Madrid:20130107T190000
+DTEND;TZID=Europe/Madrid:20130107T210000
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU
+DTSTAMP:20161215T160302Z
+UID:b44riqna5kc5lqegpihs2snovk@google.com
+CLASS:PRIVATE
+CREATED:20130104T121204Z
+DESCRIPTION:
+LAST-MODIFIED:20130627T171856Z
+LOCATION:
+SEQUENCE:4
+STATUS:CONFIRMED
+SUMMARY:gcal Repetición lunes-martes
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Madrid:20130514T080000
+DTEND;TZID=Europe/Madrid:20130514T130000
+RRULE:FREQ=WEEKLY;UNTIL=20130528T060000Z;BYDAY=TU
+EXDATE;TZID=Europe/Madrid:20130521T080000
+DTSTAMP:20161215T160302Z
+UID:53c15qmqq6r16gc6b9488h0m4g@google.com
+CREATED:20130508T091848Z
+DESCRIPTION:
+LAST-MODIFIED:20130508T092122Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Test 2
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
+
+    ";
+        dynamic data = null;
+
+        var iCaltoImport = Ical.Net.Calendar.LoadFromStream(new StringReader(rawContent));
+        
+        CalendarDll.CalendarUtils libCalendarUtil = new CalendarDll.CalendarUtils();
+        libCalendarUtil.FutureMonthsLimitForImportingFreeBusy = 2;
+        var calUser = new CalendarDll.CalendarUser(141);
+        
+        libCalendarUtil.ImportCalendar(iCaltoImport, calUser);
+
+        return data;
+    }
+    
+    dynamic importIcal() {
+        var uri = "https://calendar.google.com/calendar/ical/fc8pchr0c0od0k0tv98r4tc4f0%40group.calendar.google.com/private-58a36ce9cc047102455838335cae41ac/basic.ics";
+
+        /* using (var client = new WebClient())
+         {
+             return client.DownloadString(uri);
+         }*/
+        
+        LcCalendar.Import(141, uri);
+        return true;
+    }
+}
+
+@*foreach(var a in data) { @a }*@
+@ObjectInfo.Print(data)
+
+PROCESS DURATION: @((DateTime.Now - start).ToString())

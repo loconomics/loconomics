@@ -219,6 +219,7 @@ namespace LcRest
                     ,PP.priceRate
                     ,PP.priceRateUnit
                     ,PP.isPhone
+                    ,PP.visibleToClientID
 
                     ,PP.createdDate
                     ,PP.updatedDate
