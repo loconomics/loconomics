@@ -12,6 +12,12 @@
         
         using (var dbo = new DBOperations.XClient("sqlloco"))
         {
+            //data = dbo.GetEmptyDatabaseSql();
+            using (var target = new DBOperations.XClient("sqlloco_target")) {
+                //target.Db.ExecuteSql((string)data);
+                data = new { target = target.GetTotalDatabaseRows(), source = dbo.GetTotalDatabaseRows() };
+            }
+            /*
             var a = new List<string>();
             var errors = new List<string>();
             foreach (var table in dbo.EnumerateTables()) {
@@ -23,6 +29,7 @@
                 }
             }
             data = new object[] { a.ToArray(), errors.ToArray() };
+            */
         }
         
     }

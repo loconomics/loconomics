@@ -168,7 +168,7 @@ public class DBOperations : IDisposable
     {
         #region Constructor - dispose
         DbClient.Client db;
-        public DbClient.Client Db { get { return Db; } }
+        public DbClient.Client Db { get { return db; } }
 
         public XClient(string connectionName)
         {
@@ -196,6 +196,20 @@ public class DBOperations : IDisposable
         }
         #endregion
 
+        #region Info
+        public long GetTotalDatabaseRows()
+        {
+            var cb = db.GetCommandBuilder();
+            long c = 0;
+            foreach (var table in EnumerateTables())
+            {
+                var sql = "SELECT count(*) FROM " + cb.QuoteIdentifier(table);
+                c += (long)(int)db.GetScalar(sql, 0);
+            }
+            return c;
+        }
+        #endregion
+
         #region SQL
         public string GetInsertTemplate(string tableName)
         {
@@ -217,6 +231,19 @@ public class DBOperations : IDisposable
             // Create SELECT and Command as part of a new Adapter
             var select = "DELETE FROM " + cb.QuoteIdentifier(tableName);
             return select;
+        }
+
+        public string GetEmptyDatabaseSql()
+        {
+            var sqls = new List<string>();
+            foreach (var table in EnumerateTables())
+            {
+                sqls.Add(GetDeleteAllSql(table));
+            }
+            var sql = sqlDisableAllConstraints;
+            sql += sqls.Aggregate("", (ac, x) => ac + "\n" + x);
+            sql += sqlEnableAllConstraints;
+            return sql;
         }
         #endregion
     }
