@@ -9,8 +9,13 @@
     
     try {
         data = null;
-        
-        using (var dbo = new DBOperations.XClient("sqlloco"))
+
+        using (var target = new DBOperations.XClient("sqlloco_target"))
+        {
+            data = target.CopyDataFromDatabase("sqlloco_remote");
+        }
+
+        /*using (var dbo = new DBOperations.XClient("sqlloco"))
         {
             //data = dbo.GetEmptyDatabaseSql();
             using (var target = new DBOperations.XClient("sqlloco_target")) {
@@ -29,8 +34,8 @@
                 }
             }
             data = new object[] { a.ToArray(), errors.ToArray() };
-            */
-        }
+            * /
+        }*/
         
     }
     catch (Exception ex) {

@@ -5,6 +5,7 @@ using System.Web;
 using WebMatrix.Data;
 using System.Text.RegularExpressions;
 using System.Data;
+using System.Data.Common;
 
 /// <summary>
 /// Utility class to perform a set of special operations
@@ -211,7 +212,14 @@ public class DBOperations : IDisposable
         #endregion
 
         #region SQL
-        public string GetInsertTemplate(string tableName)
+        public string GetSelectAllSql(string tableName)
+        {
+            var cb = db.GetCommandBuilder();
+            var select = "SELECT * FROM " + cb.QuoteIdentifier(tableName);
+            return select;
+        }
+
+        public DbCommand GetInsertCommand(string tableName)
         {
             // Instance a builder, that needs almost a Select to be able to
             // get schema info to create other commands.
@@ -222,7 +230,12 @@ public class DBOperations : IDisposable
             // Table Mapping, from default 'Table' to the given TableName
             cb.DataAdapter.TableMappings.Add("Table", tableName);
             // Finally, our insert
-            return cb.GetInsertCommand(true).CommandText;
+            return cb.GetInsertCommand(true);
+        }
+
+        public string GetInsertTemplate(string tableName)
+        {
+            return GetInsertCommand(tableName).CommandText;
         }
 
         public string GetDeleteAllSql(string tableName)
@@ -244,6 +257,91 @@ public class DBOperations : IDisposable
             sql += sqls.Aggregate("", (ac, x) => ac + "\n" + x);
             sql += sqlEnableAllConstraints;
             return sql;
+        }
+        #endregion
+
+        #region Bulk
+        public class CopyReport
+        {
+            List<Exception> errors = new List<Exception>();
+            public List<Exception> Errors { get { return errors; } }
+
+            List<string> extraTablesAtSource = new List<string>();
+            public List<string> ExtraTablesAtSource { get { return extraTablesAtSource; } }
+
+            List<string> extraTablesAtTarget = new List<string>();
+            public List<string> ExtraTablesAtTarget { get { return extraTablesAtTarget; } }
+
+            internal int copiedRowsCount = 0;
+            public int CopiedRowsCount { get { return copiedRowsCount; } }
+        }
+        public CopyReport CopyDataFromDatabase(string connectionName)
+        {
+            var target = this;
+            var report = new CopyReport();
+            try
+            {
+                var targetTables = target.EnumerateTables().ToList();
+                target.Db.ExecuteSql(sqlDisableAllConstraints);
+
+                using (var source = new XClient(connectionName))
+                {
+                    var sourceTables = source.EnumerateTables().ToList();
+                    foreach (var sourceTable in sourceTables)
+                    {
+                        try
+                        {
+                            if (targetTables.Contains(sourceTable))
+                            {
+                                // Copy data
+                                // Prepare command to insert at target for current table
+                                var cmd = target.GetInsertCommand(sourceTable);
+                                // Start reading remote data and schema
+                                var selectAll = source.GetSelectAllSql(sourceTable);
+                                var reader = source.Db.GetDataReader(selectAll);
+                                var columns = reader.GetSchemaTable().Columns;
+                                // For each record
+                                while (reader.Read())
+                                {
+                                    // Get data of each columns and prepare at parameters
+                                    foreach (DataColumn col in columns)
+                                    {
+                                        cmd.Parameters[col.ColumnName].Value = reader[col.ColumnName];
+                                    }
+                                    // Insert data
+                                    report.copiedRowsCount += cmd.ExecuteNonQuery();
+                                }
+                            }
+                            else
+                            {
+                                report.ExtraTablesAtSource.Add(sourceTable);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            report.Errors.Add(ex);
+                        }
+                    }
+                    // Final check of what tables there are at target but not at source
+                    // so can be reported as 'no copied because no source'
+                    foreach (var targetTable in targetTables)
+                    {
+                        if (!sourceTables.Contains(targetTable))
+                        {
+                            report.ExtraTablesAtTarget.Add(targetTable);
+                        }
+                    }
+                }
+            }
+            catch (Exception bigEx)
+            {
+                report.Errors.Add(bigEx);
+            }
+            finally
+            {
+                target.Db.ExecuteSql(sqlEnableAllConstraints);
+            }
+            return report;
         }
         #endregion
     }
