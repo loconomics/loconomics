@@ -12,7 +12,9 @@
 
         using (var target = new DBOperations.XClient("sqlloco_target"))
         {
-            //data = target.GetInsertCommand("address").Parameters;
+            //target.Db.ExecuteSql(target.GetEmptyDatabaseSql());
+            //data = target.GetTotalDatabaseRows();
+            //data = target.GetInsertCommand("address", true).Parameters;
             data = target.CopyDataFromDatabase("sqlloco_remote");
         }
 

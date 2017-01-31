@@ -219,7 +219,7 @@ public class DBOperations : IDisposable
             return select;
         }
 
-        public DbCommand GetInsertCommand(string tableName)
+        public DbCommand GetInsertCommand(string tableName, bool enableIdentityInsert)
         {
             // Instance a builder, that needs almost a Select to be able to
             // get schema info to create other commands.
@@ -230,12 +230,30 @@ public class DBOperations : IDisposable
             // Table Mapping, from default 'Table' to the given TableName
             cb.DataAdapter.TableMappings.Add("Table", tableName);
             // Finally, our insert
-            return cb.GetInsertCommand(true);
+            var insertCmd = cb.GetInsertCommand(true);
+
+            if (enableIdentityInsert)
+            {
+                // Identity parameters are not automatically added,
+                // we need to detect them from table and add them
+                var dt = new DataTable();
+                cb.DataAdapter.FillSchema(dt, SchemaType.Source);
+                foreach (var k in dt.PrimaryKey)
+                {
+                    if (k.AutoIncrement)
+                    {
+                        var par = insertCmd.CreateParameter();
+                        par.ParameterName = "@" + k.ColumnName;
+                        insertCmd.Parameters.Add(par);
+                    }
+                }
+            }
+            return insertCmd;
         }
 
         public string GetInsertTemplate(string tableName)
         {
-            return GetInsertCommand(tableName).CommandText;
+            return GetInsertCommand(tableName, false).CommandText;
         }
 
         public string GetDeleteAllSql(string tableName)
@@ -302,24 +320,20 @@ public class DBOperations : IDisposable
                     var sourceTables = source.EnumerateTables().ToList();
                     foreach (var sourceTable in sourceTables)
                     {
-                        var parsNames = "";
                         try
                         {
                             if (targetTables.Contains(sourceTable))
                             {
                                 // Copy data
                                 // Prepare table to allow all data as-is (include identity)
+                                // Can raise exception when there is no autoincrement for the primary key in the table
                                 try
                                 {
                                     target.Db.ExecuteSql(target.GetDisableIdentityInsertFor(sourceTable));
-                                }catch{}
+                                } catch {}
                                 // Prepare command to insert at target for current table
-                                var cmd = target.GetInsertCommand(sourceTable);
+                                var cmd = target.GetInsertCommand(sourceTable, true);
                                 cmd.Connection.Open();
-                                foreach(DbParameter p in cmd.Parameters)
-                                {
-                                    parsNames += ";" + p.ParameterName;
-                                }
                                 // Start reading remote data
                                 var selectAll = source.GetSelectAllSql(sourceTable);
                                 using (var reader = source.Db.GetDataReader(selectAll))
@@ -338,6 +352,7 @@ public class DBOperations : IDisposable
                                     }
                                 }
                                 // Reset table identity constraint
+                                // Can raise exception when there is no autoincrement for the primary key in the table
                                 try
                                 {
                                     target.Db.ExecuteSql(target.GetEnableIdentityInsertFor(sourceTable));
@@ -371,7 +386,14 @@ public class DBOperations : IDisposable
             }
             finally
             {
-                target.Db.ExecuteSql(sqlEnableAllConstraints);
+                try
+                {
+                    target.Db.ExecuteSql(sqlEnableAllConstraints);
+                }
+                catch (Exception constraintEx)
+                {
+                    report.Errors.Add(constraintEx);
+                }
             }
             return report;
         }
