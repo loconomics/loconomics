@@ -261,6 +261,18 @@ public class DBOperations : IDisposable
         #endregion
 
         #region Bulk
+
+        public string GetDisableIdentityInsertFor(string tableName)
+        {
+            var cb = db.GetCommandBuilder();
+            return "SET IDENTITY_INSERT " + cb.QuoteIdentifier(tableName) + " OFF";
+        }
+        public string GetEnableIdentityInsertFor(string tableName)
+        {
+            var cb = db.GetCommandBuilder();
+            return "SET IDENTITY_INSERT " + cb.QuoteIdentifier(tableName) + " ON";
+        }
+
         public class CopyReport
         {
             List<Exception> errors = new List<Exception>();
@@ -275,6 +287,7 @@ public class DBOperations : IDisposable
             internal int copiedRowsCount = 0;
             public int CopiedRowsCount { get { return copiedRowsCount; } }
         }
+
         public CopyReport CopyDataFromDatabase(string connectionName)
         {
             var target = this;
@@ -289,28 +302,47 @@ public class DBOperations : IDisposable
                     var sourceTables = source.EnumerateTables().ToList();
                     foreach (var sourceTable in sourceTables)
                     {
+                        var parsNames = "";
                         try
                         {
                             if (targetTables.Contains(sourceTable))
                             {
                                 // Copy data
+                                // Prepare table to allow all data as-is (include identity)
+                                try
+                                {
+                                    target.Db.ExecuteSql(target.GetDisableIdentityInsertFor(sourceTable));
+                                }catch{}
                                 // Prepare command to insert at target for current table
                                 var cmd = target.GetInsertCommand(sourceTable);
-                                // Start reading remote data and schema
-                                var selectAll = source.GetSelectAllSql(sourceTable);
-                                var reader = source.Db.GetDataReader(selectAll);
-                                var columns = reader.GetSchemaTable().Columns;
-                                // For each record
-                                while (reader.Read())
+                                cmd.Connection.Open();
+                                foreach(DbParameter p in cmd.Parameters)
                                 {
-                                    // Get data of each columns and prepare at parameters
-                                    foreach (DataColumn col in columns)
-                                    {
-                                        cmd.Parameters[col.ColumnName].Value = reader[col.ColumnName];
-                                    }
-                                    // Insert data
-                                    report.copiedRowsCount += cmd.ExecuteNonQuery();
+                                    parsNames += ";" + p.ParameterName;
                                 }
+                                // Start reading remote data
+                                var selectAll = source.GetSelectAllSql(sourceTable);
+                                using (var reader = source.Db.GetDataReader(selectAll))
+                                {
+                                    // For each record
+                                    while (reader.Read())
+                                    {
+                                        // Get data of each columns and prepare at parameters
+                                        for (var iColumn = 0; iColumn < reader.FieldCount; iColumn++)
+                                        {
+                                            var columnName = reader.GetName(iColumn);
+                                            cmd.Parameters["@" + columnName].Value = reader[columnName];
+                                        }
+                                        // Insert data
+                                        report.copiedRowsCount += cmd.ExecuteNonQuery();
+                                    }
+                                }
+                                // Reset table identity constraint
+                                try
+                                {
+                                    target.Db.ExecuteSql(target.GetEnableIdentityInsertFor(sourceTable));
+                                }
+                                catch { }
                             }
                             else
                             {
