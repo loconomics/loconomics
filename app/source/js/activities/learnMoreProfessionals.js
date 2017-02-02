@@ -48,7 +48,8 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
             if (onboardingJobTitleSelected) {
                 // Normally jump to the dashboard/onboarding, but when a job is selected, then 
                 // go to job title step with default selection set through URL params
-                this.app.model.onboarding.skipWelcomeStep();
+                this.app.model.onboarding.skipToAddJobTitles();
+
                 this.app.shell.go(url);
             }
             else {
