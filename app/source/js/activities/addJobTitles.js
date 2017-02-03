@@ -174,7 +174,7 @@ function ViewModel(app) {
                 .then(function(profile) {
                     // Start onboarding
                     if (app.model.onboarding) {
-                        app.model.onboarding.setStep(profile.onboardingStep());
+                        app.model.onboarding.skipToAddJobTitles();
                     }
                     onEnd();
                 });

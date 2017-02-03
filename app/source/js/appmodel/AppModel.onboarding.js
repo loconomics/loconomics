@@ -38,9 +38,7 @@ exports.create = function create(appModel) {
     };
 
     api.skipToAddJobTitles = function() {
-        if(this.inProgress()) {
-            this.setStep(OnboardingProgress.steps.names[1]);
-        }
+        this.setStep(OnboardingProgress.steps.names[1]);
     };
 
     // Update the given navbar with the current onboarding information (only if in progress)
