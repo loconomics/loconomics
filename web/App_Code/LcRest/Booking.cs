@@ -2332,7 +2332,10 @@ namespace LcRest
         /// It checks if a address needs to be created for the booking, and setting it's id in place, or use the
         /// addressID, validating the owner user for the booking, sanitizing any value (the address can be prepopulated from
         /// form).
-        /// Must be executed after proper booking initialization/load.
+        /// An address may not be required, and then serviceAddressID being set to null, if the service(s) is phone-only.
+        /// 
+        /// Must be executed after proper booking initialization/load. That includes to use 'CreatePricing' or
+        /// 'pricingSummary.SetDetailServices', that sets properly the flag 'booking.pricingSummary.isPhoneServiceOnly'.
         /// Throws ConstraintException if ownership of the addressID fails for the booking.
         /// </summary>
         /// <param name="serviceAddress"></param>
@@ -2340,7 +2343,11 @@ namespace LcRest
         /// <param name="db"></param>
         private static void ProcessAddressForServiceProfessionalBooking(Address serviceAddress, Booking booking, LcDatabase db)
         {
-            if (!serviceAddress.IsNewAddress())
+            if (booking.pricingSummary.isPhoneServiceOnly)
+            {
+                booking.serviceAddressID = null;
+            }
+            else if (!serviceAddress.IsNewAddress())
             {
                 // Validate the address is one from client or service professional
                 if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
