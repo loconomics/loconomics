@@ -1,16 +1,16 @@
 /**
     RemoteModel class.
-    
+
     It helps managing a model instance, model versions
-    for in memory modification, and the process to 
+    for in memory modification, and the process to
     receive or send the model data
     to a remote sources, with glue code for the tasks
     and state properties.
-    
+
     Every instance or subclass must implement
     the fetch and pull methods that knows the specifics
     of the remotes.
-    
+
     TODO Implement fix for Concurrent Requests. There are less chances
     to that happens with the uses of this class, but still good to have.
     Currently implemented in the others ListRemoteModel, GroupRemoteModel
@@ -28,11 +28,11 @@ var ModelVersion = require('../utils/ModelVersion'),
 function RemoteModel(options) {
 
     EventEmitter.call(this);
-    
+
     options = options || {};
-    
+
     var firstTimeLoad = true;
-    
+
     // Marks a lock loading is happening, any user code
     // must wait for it
     this.isLoading = ko.observable(false);
@@ -49,20 +49,20 @@ function RemoteModel(options) {
     this.isLocked = ko.pureComputed(function(){
         return this.isLoading() || this.isSaving();
     }, this);
-    
+
     if (!options.data)
         throw new Error('RemoteModel data must be set on constructor and no changed later');
     this.data = options.data;
-    
+
     this.cache = new CacheControl({
         ttl: options.ttl
     });
-    
+
     this.clearCache = function clearCache() {
         this.cache.latest = null;
         this.data.model.reset();
     };
-    
+
     // Optional name used to persist a copy of the data as plain object
     // in the local storage on every successfully load/save operation.
     // With no name, no saved (default).
@@ -70,7 +70,7 @@ function RemoteModel(options) {
     // but any supported and initialized storage system, like WebSQL, IndexedDB or LocalStorage.
     // localforage must have a set-up previous use of this option.
     this.localStorageName = options.localStorageName || null;
-    
+
     // Recommended way to get the instance data
     // since it ensures to launch a load of the
     // data each time is accessed this way.
@@ -81,7 +81,7 @@ function RemoteModel(options) {
 
     this.newVersion = function newVersion() {
         var v = new ModelVersion(this.data);
-        
+
         // Update the version data with the original
         // after a lock load finish, like the first time,
         // since the UI to edit the version will be lock
@@ -118,7 +118,7 @@ function RemoteModel(options) {
 
         return v;
     };
-    
+
     this.fetch = options.fetch || function fetch() { throw new Error('Not implemented'); };
     this.push = options.push || function push() { throw new Error('Not implementd'); };
 
@@ -183,19 +183,19 @@ function RemoteModel(options) {
             throw err;
         }.bind(this));
     }.bind(this);
-    
+
     this.load = function load(options /*{ forceRemoteUpdate:false }*/) {
         //jshint maxcomplexity:9
         options = options || {};
         if (options.forceRemoteUpdate || this.cache.mustRevalidate()) {
-            
+
             if (firstTimeLoad)
                 this.isLoading(true);
             else
                 this.isSyncing(true);
-            
+
             var promise = null;
-            
+
             // If local storage is set for this, load first
             // from local, then follow with syncing from remote
             if (!options.forceRemoteUpdate &&
@@ -206,11 +206,11 @@ function RemoteModel(options) {
                 .then(function(localData) {
                     if (localData) {
                         this.data.model.updateWith(localData, true);
-                        
+
                         // Load done:
                         this.isLoading(false);
                         this.isSyncing(false);
-                        
+
                         // Local load done, do a background
                         // remote load.
                         loadFromRemote()
@@ -233,7 +233,7 @@ function RemoteModel(options) {
                 // Perform the remote load:
                 promise = loadFromRemote();
             }
-            
+
             // First time, blocking load:
             // it returns when the load returns
             if (firstTimeLoad) {
@@ -260,9 +260,20 @@ function RemoteModel(options) {
         }
     };
 
+    this.saveLocal = function() {
+        // persistent local copy?
+        if (this.localStorageName) {
+            return localforage.setItem(this.localStorageName, this.data.model.toPlainObject(true));
+        }
+        else {
+            // No local enabled
+            return Promise.resolve(null);
+        }
+    };
+
     this.save = function save() {
         this.isSaving(true);
-        
+
         // Preserve the timestamp after being saved
         // to avoid false 'obsolete' warnings with
         // the version that created the new original
@@ -274,25 +285,25 @@ function RemoteModel(options) {
             // cannot have circular references:
             this.data.model.updateWith(serverData, true);
             this.data.model.dataTimestamp(ts);
-            
+
             // persistent local copy?
             if (this.localStorageName) {
                 localforage.setItem(this.localStorageName, serverData);
             }
-            
+
             // Event
             this.emit('saved', serverData);
-            
+
             // Finally: common tasks on success or error
             this.isSaving(false);
-            
+
             this.cache.latest = new Date();
             return this.data;
         }.bind(this))
         .catch(function(err) {
             // Finally: common tasks on success or error
             this.isSaving(false);
-            
+
             // Event
             var errPkg = {
                 task: 'save',
@@ -308,15 +319,15 @@ function RemoteModel(options) {
                 // Log it when not handled (even if the promise error is handled)
                 console.error('RemoteModel Error', errPkg);
             }
-            
+
             // Rethrow error
             throw err;
         }.bind(this));
     };
-    
+
     /**
         Launch a syncing request. Returns nothing, the
-        way to track any result is with events or 
+        way to track any result is with events or
         the instance observables.
         IMPORTANT: right now is just a request for 'load'
         that avoids promise errors from throwing.
