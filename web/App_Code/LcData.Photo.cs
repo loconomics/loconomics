@@ -102,6 +102,41 @@ public static partial class LcData
         }
 
         /// <summary>
+        /// Ask to edit the original saved profile picture applying a rotation.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="angle"></param>
+        /// <returns>True when exists and everything fine, false if no photo exists so couldn't perform task. Throw exception if error</returns>
+        public static bool EditEditableProfilePicture(int userID, float angle)
+        {
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            var folder = System.Web.HttpContext.Current.Server.MapPath(virtualPath);
+            if (!Directory.Exists(folder))
+            {
+                return false;
+            }
+
+            var file = folder + avatarName + ".jpg";
+            if (!File.Exists(file))
+            {
+                return false;
+            }
+
+            // Use file as image
+            using (var srcImg = new System.Drawing.Bitmap(file))
+            {
+                // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
+                LcImaging.Rotate(img, angle);
+
+                // Save:
+                img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Dispose();
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Sets the previously uploaded 'editable avatar' image as the
         /// current user avatar, cropped with the given values and 
         /// optimized sizes.
