@@ -140,7 +140,7 @@
         public dynamic SetItem(int itemID)
         {
             // Parameters
-            int userID = WebSecurity.CurrentUserId;
+            int serviceProfessionalUserID = WebSecurity.CurrentUserId;
 
             Validation.RequireField("startTime", LcRessources.RequiredField("Start Date and Time"));
             Validation.RequireField("clientUserID", LcRessources.RequiredField("Client"));
@@ -148,18 +148,27 @@
             Validation.Add("addressID", Validator.Integer("Choose a valid location"));
 
             var locale = LcRest.Locale.Current;
-
-            var servicesIds = GetFormServices();
-
+            
             var startTime = DateTimeOffsetFromISO(Request["startTime"]);
             if (!startTime.HasValue) {
                 ModelState.AddError("startTime", "Start date/time is not valid");
             }
 
-            var serviceAddress = GetFormServiceAddress(locale);
-            if (serviceAddress.IsNewAddress())
+            // Read services
+            var servicesIds = GetFormServices();
+            // Check if the services require an address
+            var pricingSummary = new LcRest.PricingSummary();
+            pricingSummary.SetDetailServices(serviceProfessionalUserID, servicesIds);
+            LcRest.Address serviceAddress = null;
+            if (!pricingSummary.isPhoneServiceOnly)
             {
-                ApplyServiceAddressValidation();
+                serviceAddress = GetFormServiceAddress(locale);
+                // In case a new address is given (need to be created)
+                // validate the data
+                if (serviceAddress.IsNewAddress())
+                {
+                    ApplyServiceAddressValidation();
+                }
             }
 
             if (!Validation.IsValid() || !ModelState.IsValid) {
@@ -171,7 +180,7 @@
                 if (itemID == 0) {
                     itemID = LcRest.Booking.InsServiceProfessionalBooking(
                         Request["clientUserID"].AsInt(),
-                        userID,
+                        serviceProfessionalUserID,
                         Request["jobTitleID"].AsInt(),
                         serviceAddress,
                         startTime.Value,
@@ -186,7 +195,7 @@
                 else {
                     var itemExists = LcRest.Booking.UpdServiceProfessionalBooking(
                         itemID,
-                        userID,
+                        serviceProfessionalUserID,
                         serviceAddress,
                         startTime.Value,
                         servicesIds,
