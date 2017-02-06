@@ -14,7 +14,7 @@
     </div>
     <div class="LightForm-tool">
         <button type="button" class="btn btn-info btn-block"
-                data-bind="visible: localPhotoPreview, disable: isLocked, click: rotatePhoto">
+                data-bind="disable: isLocked, click: rotatePhoto">
             <span>Rotate photo</span>
         </button>
         <button type="button" class="btn btn-default btn-block"
@@ -33,5 +33,5 @@
     <div class="form-group">
         <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
 class="form-control" data-bind="value: profile.publicBio, disable: isLocked" placeholder="Who are you, anyway? Spruce up your profile with a personal touch and tell clients a bit about yourself. Something like…”I'm a San Francisco native,” or “I love b-ball,” or “I am currently pho-obsessed.” Need help with a snazzy photo of yourself? Let us know."></textarea>
-    </div>    
+    </div>
 </script>
