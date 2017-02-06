@@ -2332,7 +2332,10 @@ namespace LcRest
         /// It checks if a address needs to be created for the booking, and setting it's id in place, or use the
         /// addressID, validating the owner user for the booking, sanitizing any value (the address can be prepopulated from
         /// form).
-        /// Must be executed after proper booking initialization/load.
+        /// An address may not be required, and then serviceAddressID being set to null, if the service(s) is phone-only.
+        /// 
+        /// Must be executed after proper booking initialization/load. That includes to use 'CreatePricing' or
+        /// 'pricingSummary.SetDetailServices', that sets properly the flag 'booking.pricingSummary.isPhoneServiceOnly'.
         /// Throws ConstraintException if ownership of the addressID fails for the booking.
         /// </summary>
         /// <param name="serviceAddress"></param>
@@ -2340,7 +2343,11 @@ namespace LcRest
         /// <param name="db"></param>
         private static void ProcessAddressForServiceProfessionalBooking(Address serviceAddress, Booking booking, LcDatabase db)
         {
-            if (!serviceAddress.IsNewAddress())
+            if (booking.pricingSummary.isPhoneServiceOnly)
+            {
+                booking.serviceAddressID = null;
+            }
+            else if (!serviceAddress.IsNewAddress())
             {
                 // Validate the address is one from client or service professional
                 if (!Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
@@ -2951,67 +2958,74 @@ namespace LcRest
 
                 // 4º: Validate addressID or update the existent, service-specific, one
                 booking.FillServiceAddress();
-                // Validate owership of the address
-                if (!serviceAddress.IsNewAddress() && !Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
+                if (booking.pricingSummary.isPhoneServiceOnly)
                 {
-                    throw new ConstraintException("Selected location is not valid.");
-                }
-                if (!serviceAddress.IsNewAddress() && booking.serviceAddressID != serviceAddress.addressID)
-                {
-                    // A different addressID was given, update it in the booking
-                    // NOTE: When a different addressID is given, we do NOT allow updates, since is an address choosen from a list.
-                    booking.serviceAddressID = serviceAddress.addressID;
+                    booking.serviceAddressID = null;
                 }
                 else
                 {
-                    // if addressID is zero, so user wants to create a new address, we follow to create one
-                    if (serviceAddress.IsNewAddress())
+                    // Validate owership of the address
+                    if (!serviceAddress.IsNewAddress() && !Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID, booking.serviceProfessionalUserID))
                     {
-                        // CREATE address
-                        // Save new client address for the service
-                        serviceAddress.userID = clientUserID;
-                        // Is a client service address, where perform a service but not related to
-                        // a job title but as customer
-                        serviceAddress.kind = Address.AddressKind.Service;
-                        serviceAddress.isServiceLocation = true;
-                        serviceAddress.jobTitleID = Address.NotAJobTitleID;
-                        // Save and get ID (passed in the connection to be in the same transaction)
-                        booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                        throw new ConstraintException("Selected location is not valid.");
+                    }
+                    if (!serviceAddress.IsNewAddress() && booking.serviceAddressID != serviceAddress.addressID)
+                    {
+                        // A different addressID was given, update it in the booking
+                        // NOTE: When a different addressID is given, we do NOT allow updates, since is an address choosen from a list.
+                        booking.serviceAddressID = serviceAddress.addressID;
                     }
                     else
                     {
-                        // When addressID is the same: we need to check if user wants and can update the address details:
-                        // If the given address is empty, do nothing; just user wants to keep using the same address with no updates
-                        // If the given address has details but are the same as the stored one, do nothing.
-                        if (!serviceAddress.IsEmpty() && !serviceAddress.IsSimilar(booking.serviceAddress))
+                        // if addressID is zero, so user wants to create a new address, we follow to create one
+                        if (serviceAddress.IsNewAddress())
                         {
-                            // On the other cases: has data and is different, we need to know if we allow the user to update the given addressID with that details:
-                            // - If saved address has no name, was created specifically for this service, update that even if new address has a name.
-                            // - If the address name is the same, user intention is to update the same address details,
-                            //    otherwise, we create a new address on behalf the user and update the booking addressID.
-                            // - To allow update the address with same name, addressID must belongs to the client (previously, we checked if belongs client
-                            //    or professional, but we need to ensure is a client address here to avoid updates of professional addresses in an attack
-                            //    or client software error; if that happens, we silently skip address update.)
-                            var allowUpdate = (booking.serviceAddress.IsAnonymous() || booking.serviceAddress.addressName == serviceAddress.addressName) &&
-                                Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID);
-                            if (allowUpdate)
+                            // CREATE address
+                            // Save new client address for the service
+                            serviceAddress.userID = clientUserID;
+                            // Is a client service address, where perform a service but not related to
+                            // a job title but as customer
+                            serviceAddress.kind = Address.AddressKind.Service;
+                            serviceAddress.isServiceLocation = true;
+                            serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                            // Save and get ID (passed in the connection to be in the same transaction)
+                            booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                        }
+                        else
+                        {
+                            // When addressID is the same: we need to check if user wants and can update the address details:
+                            // If the given address is empty, do nothing; just user wants to keep using the same address with no updates
+                            // If the given address has details but are the same as the stored one, do nothing.
+                            if (!serviceAddress.IsEmpty() && !serviceAddress.IsSimilar(booking.serviceAddress))
                             {
-                                // Update address record
-                                Address.SetAddress(serviceAddress, db.Db);
-                            }
-                            else
-                            {
-                                // Create a new address and update booking reference to the new one
-                                serviceAddress.addressID = Address.NewAddressID;
-                                // Save new client address for the service
-                                serviceAddress.userID = clientUserID;
-                                // Is a client service address, where perform a service but not related to
-                                // a job title but as customer
-                                serviceAddress.kind = Address.AddressKind.Service;
-                                serviceAddress.isServiceLocation = true;
-                                serviceAddress.jobTitleID = Address.NotAJobTitleID;
-                                // Save and get ID (passed in the connection to be in the same transaction)
-                                booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                                // On the other cases: has data and is different, we need to know if we allow the user to update the given addressID with that details:
+                                // - If saved address has no name, was created specifically for this service, update that even if new address has a name.
+                                // - If the address name is the same, user intention is to update the same address details,
+                                //    otherwise, we create a new address on behalf the user and update the booking addressID.
+                                // - To allow update the address with same name, addressID must belongs to the client (previously, we checked if belongs client
+                                //    or professional, but we need to ensure is a client address here to avoid updates of professional addresses in an attack
+                                //    or client software error; if that happens, we silently skip address update.)
+                                var allowUpdate = (booking.serviceAddress.IsAnonymous() || booking.serviceAddress.addressName == serviceAddress.addressName) &&
+                                    Address.ItBelongsTo(serviceAddress.addressID, booking.clientUserID);
+                                if (allowUpdate)
+                                {
+                                    // Update address record
+                                    Address.SetAddress(serviceAddress, db.Db);
+                                }
+                                else
+                                {
+                                    // Create a new address and update booking reference to the new one
+                                    serviceAddress.addressID = Address.NewAddressID;
+                                    // Save new client address for the service
+                                    serviceAddress.userID = clientUserID;
+                                    // Is a client service address, where perform a service but not related to
+                                    // a job title but as customer
+                                    serviceAddress.kind = Address.AddressKind.Service;
+                                    serviceAddress.isServiceLocation = true;
+                                    serviceAddress.jobTitleID = Address.NotAJobTitleID;
+                                    // Save and get ID (passed in the connection to be in the same transaction)
+                                    booking.serviceAddressID = Address.SetAddress(serviceAddress, db.Db);
+                                }
                             }
                         }
                     }

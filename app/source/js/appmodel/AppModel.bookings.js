@@ -26,9 +26,9 @@ exports.create = function create(appModel) {
     };
 
     api.getBookingsByDates = function getBookingsByDates(date, end) {
-        
+
         end = end || moment(date).clone().add(1, 'days').toDate();
-        
+
         // Remote loading data
         return api.remote.getBookings({
             start: date,
@@ -39,14 +39,14 @@ exports.create = function create(appModel) {
             return arr;
         });
     };
-    
+
     /**
         Get upcoming bookings meta-information for dashboard page
     **/
     api.getUpcomingBookings = function getUpcomingBookings() {
         return appModel.rest.get('me/upcoming-bookings');
     };
-    
+
     /**
         Get upcoming appointments meta-information for dashboard page
     **/
@@ -64,7 +64,7 @@ exports.create = function create(appModel) {
             return new Booking(booking);
         });
     };
-    
+
     /**
         Converts an Appointment model into a simplified
         booking plain object, suitable to REST API for edition
@@ -74,7 +74,7 @@ exports.create = function create(appModel) {
             bookingID: apt.sourceBooking().bookingID(),
             jobTitleID: apt.jobTitleID(),
             clientUserID: apt.clientUserID(),
-            serviceAddress: apt.address().model.toPlainObject(),
+            serviceAddress: apt.address() ? apt.address().model.toPlainObject() : null,
             startTime: apt.startTime(),
             services: apt.pricing().map(function(pricing) {
                 // TODO: for now, the REST API allow only a list of IDs,
@@ -91,7 +91,7 @@ exports.create = function create(appModel) {
     /**
         Converst a Booking model into a simplified
         booking plain object, suitable to REST API for edition
-        
+
         ONLY FOR SERVICE-PROFESSIONAL-BOOKINGS
     **/
     api.bookingToSimplifiedBooking = function(booking) {
@@ -114,12 +114,12 @@ exports.create = function create(appModel) {
             postNotesToSelf: booking.postNotesToSelf()
         };
     };
-    
+
     /**
         Creates/updates a booking by a service professional, given a simplified booking
         object or an Appointment model or a Booking model
     **/
-    api.setServiceProfessionalBooking = function setServiceProfessionalBooking(booking, allowBookUnavailableTime) {    
+    api.setServiceProfessionalBooking = function setServiceProfessionalBooking(booking, allowBookUnavailableTime) {
         booking = booking.bookingID ?
             api.bookingToSimplifiedBooking(booking) :
             booking.sourceBooking ?
@@ -129,7 +129,7 @@ exports.create = function create(appModel) {
 
         var id = booking.bookingID || '',
             method = id ? 'put' : 'post';
-        
+
         booking.allowBookUnavailableTime = allowBookUnavailableTime || false;
 
         return appModel.rest[method]('me/service-professional-booking/' + id, booking)
@@ -150,7 +150,7 @@ exports.create = function create(appModel) {
             return new Booking(serverBooking);
         });
     };
-    
+
     api.declineBookingByServiceProfessional = function declineBookingByServiceProfessional(bookingID) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/deny')
         .then(function(serverBooking) {
@@ -159,7 +159,7 @@ exports.create = function create(appModel) {
             return new Booking(serverBooking);
         });
     };
-    
+
     api.cancelBookingByServiceProfessional = function cancelBookingByServiceProfessional(bookingID) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/cancel')
         .then(function(serverBooking) {
@@ -168,21 +168,21 @@ exports.create = function create(appModel) {
             return new Booking(serverBooking);
         });
     };
-    
+
     api.cancelBookingByClient = function cancelBookingByClient(bookingID) {
         return appModel.rest.post('me/client-booking/' + bookingID + '/cancel')
         .then(function(serverBooking) {
             return new Booking(serverBooking);
         });
     };
-    
+
     api.declineBookingByClient = function declineBookingByClient(bookingID) {
         return appModel.rest.post('me/client-booking/' + bookingID + '/deny')
         .then(function(serverBooking) {
             return new Booking(serverBooking);
         });
     };
-    
+
     // dateType values allowed by REST API: 'preferred', 'alternative1', 'alternative2'
     api.confirmBookingRequest = function confirmBookingRequest(bookingID, dateType) {
         return appModel.rest.post('me/service-professional-booking/' + bookingID + '/confirm', { dateType: dateType })
@@ -192,7 +192,7 @@ exports.create = function create(appModel) {
             return new Booking(serverBooking);
         });
     };
-    
+
     /**
         Using data to create a booking from a create client booking form,
         as: booking, billingAddress, paymentMethod, requestOptions (promotionalCode, bookCode, etc.)
@@ -204,7 +204,7 @@ exports.create = function create(appModel) {
         from a existent booking.
     **/
     var createClientBookingRequest = function(booking, requestOptions, paymentMethod) {
-        
+
         var billingAddress = paymentMethod && paymentMethod.billingAddress();
         paymentMethod = paymentMethod && paymentMethod.model.toPlainObject();
         if (billingAddress) {
@@ -218,30 +218,30 @@ exports.create = function create(appModel) {
             serviceStartTime: booking.serviceDate() && booking.serviceDate().startTime(),
             alternative1StartTime: booking.alternativeDate1() && booking.alternativeDate1().startTime(),
             alternative2StartTime: booking.alternativeDate2() && booking.alternativeDate2().startTime(),
-            
+
             serviceAddress: booking.serviceAddress() && booking.serviceAddress().model.toPlainObject(),
 
             services: booking.pricingSummary() && booking.pricingSummary().details()
             .map(function(pricing) {
                 return pricing.serviceProfessionalServiceID();
             }),
-            
+
             bookCode: ko.unwrap(requestOptions.bookCode),
             promotionalCode: ko.unwrap(requestOptions.promotionalCode),
-            
+
             // Only a group of fields from a standard address object are read by the server:
             billingAddress: billingAddress && {
                 addressLine1: billingAddress.addressLine1,
                 addressLine2: billingAddress.addressLine2,
                 postalCode: billingAddress.postalCode
             },
-            
+
             paymentMethod: paymentMethod,
-            
+
             specialRequests: booking.specialRequests()
         };
     };
-    
+
     /**
         Creates a client booking
         @param booking model/Booking
@@ -251,10 +251,10 @@ exports.create = function create(appModel) {
         var data = createClientBookingRequest(booking, requestOptions, billingAddress, paymentMethod);
         return appModel.rest.post('me/client-booking', data);
     };
-    
+
     /**
         Ask for initialization data of a new client booking
-        
+
         @param options {
             serviceProfessionalUserID:int,
             jobTitleID:int,
@@ -264,7 +264,7 @@ exports.create = function create(appModel) {
     api.getNewClientBooking = function getNewClientBooking(options) {
         return appModel.rest.get('me/client-booking', options);
     };
-    
+
     /**
         A client booking update allows a subset of the booking plain-data and some
         fields needs conversion (services, asn in createClientBookingRequest).
@@ -272,9 +272,9 @@ exports.create = function create(appModel) {
     **/
     var createClientBookingUpdateObject = function(booking) {
         return {
-            serviceStartTime: booking.serviceDate() && booking.serviceDate().startTime(),        
+            serviceStartTime: booking.serviceDate() && booking.serviceDate().startTime(),
             serviceAddress: booking.serviceAddress() && booking.serviceAddress().model.toPlainObject(),
-            
+
             services: booking.pricingSummary() && booking.pricingSummary().details()
             .map(function(pricing) {
                 return pricing.serviceProfessionalServiceID();
