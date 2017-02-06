@@ -130,7 +130,7 @@ public static partial class LcData
                 LcImaging.Rotate(img, angle);
 
                 // Save:
-                img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
                 img.Dispose();
             }
             return true;
