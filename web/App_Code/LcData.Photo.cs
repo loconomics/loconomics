@@ -123,16 +123,26 @@ public static partial class LcData
             }
 
             // Use file as image
-            using (var srcImg = new System.Drawing.Bitmap(file))
+            Image img = null;
+            try
             {
-                // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
-                LcImaging.Rotate(img, angle);
-
+                using (var srcImg = System.Drawing.Image.FromFile(file))
+                {
+                    // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                    img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
+                    LcImaging.Rotate(img, angle);
+                }
                 // Save:
                 img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
-                img.Dispose();
             }
+            finally
+            {
+                if (img != null)
+                {
+                    img.Dispose();
+                }
+            }
+
             return true;
         }
 
