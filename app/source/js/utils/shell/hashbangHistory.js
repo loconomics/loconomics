@@ -1,25 +1,35 @@
 /**
     Simple implementation of the History API using only hashbangs URLs,
     doesn't matters the browser support.
-    Used to avoid from setting URLs that has not an end-point,
-    like in local environments without a server doing url-rewriting,
-    in phonegap apps, or to completely by-pass browser support because
-    is buggy (like Android <= 4.1).
-    
+    Required when the context don't allow URL rewritting,
+    like in local environments without a server or server that don't support that,
+    for example in phonegap apps (where apps run at file://),
+    or to completely by-pass browser support of History API because
+    is buggy (like Android <= 4.1 and other old browsers).
+    Externally, a wrapper lib can make detection and auto selection of native History API vs hashbangHistory.
+
     NOTES:
-    - Browser must support 'hashchange' event.
-    - Browser must has support for standard JSON class.
+    - Browser must support 'hashchange' event. (There are polyfills out there, mostly using timers).
+    - Browser must has support for standard JSON class. (there are polyfills out there, like JSON2).
     - Relies on sessionstorage for persistance, supported by all browsers and webviews 
       for a enough long time now.
-    - Similar approach as History.js polyfill, but simplified, appending a fake query
-      parameter '_suid=0' to the hash value (actual query goes before the hash, but
+    - Similar approach as the popular module History.js, but simplified: it appends a fake query
+      parameter '_suid=0' to the hash value (yes, the actual query goes before the hash, but
       we need it inside).
     - For simplification, only the state is persisted, the 'title' parameter is not
-      used at all (the same as major browsers do, so is not a problem); in this line,
-      only history entries with state are persisted.
-      
-    TODO replaceState does not work as expected, it creates a history entry rather than replace it
-        A solution idea is to perform a browser go(-1) and the then hash change (push), but the go back
+      used at all (the same as major browsers do, so standard compatibility is not a problem); in this line,
+      only history entries with state are persisted. But don't looks complicated to support title if that's
+      wanted in a future or a fork :-)
+    - Browser must support 'js properties getters'. If older browsers need to be supported, a fork can change
+      the current use of getters syntax by using the defineProperty and similar functions.
+    - This class must be instantiated early because must be the first attaching a handler for native 'popstate',
+      so can block all others and avoid edge-case errors (more on the code at the end; may change if TODO-1 is successfully done).
+
+    TODO (1) Study and test alternative implementation to avoid conflicts with the native 'popstate' event at HistoryAPI capable browsers.
+        The current workaround work, but has and edge case problem (see NOTE).
+
+    TODO (2) replaceState does not work as expected, it creates a history entry rather than replace it
+        A solution idea is to perform a browser go(-1) and then the hash change (push), but the go back
         must bypass the events notification.
 **/
 //global location
