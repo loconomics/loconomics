@@ -174,6 +174,9 @@ function cannonicalUrl(url) {
     as a result of that API methods
 **/
 var latestPushedReplacedUrl = null;
+var preventEvents = false;
+// Variable to hold a callback that will be executed at next hashchange
+var onHash = null;
 
 /**
     History Polyfill
@@ -234,8 +237,24 @@ var hashbangHistory = {
 
         latestPushedReplacedUrl = url;
 
-        // update location to track history:
-        location.hash = '#!' + url;
+        // to replaceState work as expected, needs to destroy first the previous entry and
+        // then add the new one.
+        // For that, needs to perform a browser 'go back' (history back or go(-1))
+        // and then the hash change (push), but the go back
+        // must bypass the events notification
+        // (the bypass is achieved thanks to the latestPushedReplacedUrl check at hashchange
+        // and the popstate 'source' check' --both features introduced previous to this go-back fix).
+        console.log('replace goback');
+        preventEvents = true;
+        // Run at next hashchange
+        onHash = function() {
+            console.log('replace flip flag and set hash', url);
+            preventEvents = false;
+            onHash = null;
+            // update location to track history:
+            location.hash = '#!' + url;
+        };
+        window.history.back();
     },
     get state() {
 
@@ -263,7 +282,9 @@ var hashbangHistory = {
 // Attach hashcange event to trigger History API event 'popstate'
 var $w = $(window);
 $w.on('hashchange', function(e) {
-
+    if (onHash) onHash();
+    if (preventEvents) return;
+    console.log('hashchange', e.originalEvent.newURL, latestPushedReplacedUrl);
     var url = e.originalEvent.newURL;
     url = cannonicalUrl(url);
 
@@ -272,6 +293,7 @@ $w.on('hashchange', function(e) {
     if (url === latestPushedReplacedUrl)
         return;
 
+    console.log('trig popstate');
     // get state from history entry
     // for the updated URL, if any
     // (can have value when traversing
@@ -304,14 +326,17 @@ $w.on('hashchange', function(e) {
 // use replaceState there rather than
 // a hash change.
 $w.on('popstate', function(e, source) {
-
-    // Ensuring is the one we trigger
-    if (source === 'hashbangHistory')
-        return;
-
-    // In other case, block:
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    // Ensure we want to prevent it because was requested internally
+    // or because was not triggered by us.
+    var prevent = preventEvents || source !== 'hashbangHistory';
+    console.log('on popstate', prevent, source);
+    if (prevent) {
+        console.log('prevent popstate');
+        // In other case, block:
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    }
+    else console.log('POP STATE', window.location.hash);
 });
 
 // Expose API
