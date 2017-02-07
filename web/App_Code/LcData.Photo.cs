@@ -365,7 +365,7 @@ public static partial class LcData
             return DeleteWorkPhotoFiles(baseFolder, photoAddress);
         }
 
-        private static bool DeleteWorkPhotoFiles(string baseFolder, string photoPath)
+        private static bool DeleteWorkPhotoFiles(string baseFolder, string photoPath, bool keepOriginal = false)
         {
             if (!String.IsNullOrEmpty(photoPath))
             {
@@ -376,8 +376,11 @@ public static partial class LcData
                     // sizes and optimizations: delete all of them
                     var fileName = System.IO.Path.GetFileNameWithoutExtension(LcUtils.GetNameWithoutSuffix(photoPath));
 
-                    // Delete the original file, no suffix
-                    File.Delete(baseFolder + fileName + ".jpg");
+                    if (keepOriginal)
+                    {
+                        // Delete the original file, no suffix
+                        File.Delete(baseFolder + fileName + ".jpg");
+                    }
                     // Delete all files with suffix.
                     // File.Delete doesn't allow wildcards, find and delete each one
                     foreach (var f in Directory.GetFiles(baseFolder, fileName + "-*", SearchOption.TopDirectoryOnly))
@@ -511,12 +514,12 @@ public static partial class LcData
         public static int UploadWorkPhoto(int userID, Stream photo, int jobTitleID, int photoID = 0, string caption = null, int? rankPosition = null, int x = 0, int y = 0, int width = 0, int height = 0, float angle = 0)
         {
             string processedFileName = null;
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            var path = HttpContext.Current.Server.MapPath(virtualPath);
             if (photo != null)
             {
                 // Automatic name for new photo
                 string fileName = Guid.NewGuid().ToString().Replace("-", "");
-                string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
-                var path = HttpContext.Current.Server.MapPath(virtualPath);
 
                 if (photoID > 0)
                 {
@@ -529,6 +532,20 @@ public static partial class LcData
                 UploadEditablePhoto(photo, path, fileName, angle);
                 // Process best sizes and cropping
                 processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
+            }
+            else if (photoID > 0)
+            {
+                // Edit pre-uploaded photo, but skip if no edition parameters given
+                if (angle != 0 && width > 0 && height > 0)
+                {
+                    var savedPhoto = GetUserWorkPhoto(userID, jobTitleID, photoID);
+                    // Delete previous files except original (we will edit it)
+                    DeleteWorkPhotoFiles(path, savedPhoto.fileName, keepOriginal: true);
+
+                    EditEditablePhoto(userID, path, savedPhoto.fileName, angle);
+                    // Process best sizes and cropping
+                    processedFileName = ProcessWorkPhoto(path, savedPhoto.fileName, x, y, width, height);
+                }
             }
 
             // Save on database
@@ -567,6 +584,49 @@ public static partial class LcData
                 img.Save(path + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             photo.Dispose();
+        }
+
+        /// <summary>
+        /// Ask to edit an original saved photo applying a rotation.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="angle"></param>
+        /// <returns>True when exists and everything fine, false if no photo exists so couldn't perform task. Throw exception if error</returns>
+        public static bool EditEditablePhoto(int userID, string folder, string fileName, float angle)
+        {
+            if (!Directory.Exists(folder))
+            {
+                return false;
+            }
+
+            var file = folder + fileName + (fileName.Contains(".jpg") ? "" : ".jpg");
+            if (!File.Exists(file))
+            {
+                return false;
+            }
+
+            // Use file as image
+            Image img = null;
+            try
+            {
+                using (var srcImg = System.Drawing.Image.FromFile(file))
+                {
+                    // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                    img = LcImaging.Resize(srcImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain);
+                    LcImaging.Rotate(img, angle);
+                }
+                // Save:
+                img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            finally
+            {
+                if (img != null)
+                {
+                    img.Dispose();
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
