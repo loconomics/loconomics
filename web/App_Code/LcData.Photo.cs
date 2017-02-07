@@ -508,7 +508,7 @@ public static partial class LcData
         /// <param name="y"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public static int UploadWorkPhoto(int userID, Stream photo, int jobTitleID, int photoID = 0, string caption = null, int? rankPosition = null, int x = 0, int y = 0, int width = 0, int height = 0)
+        public static int UploadWorkPhoto(int userID, Stream photo, int jobTitleID, int photoID = 0, string caption = null, int? rankPosition = null, int x = 0, int y = 0, int width = 0, int height = 0, float angle = 0)
         {
             string processedFileName = null;
             if (photo != null)
@@ -526,7 +526,7 @@ public static partial class LcData
                 }
 
                 // New Photo File
-                UploadEditablePhoto(photo, path, fileName);
+                UploadEditablePhoto(photo, path, fileName, angle);
                 // Process best sizes and cropping
                 processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
             }
@@ -550,7 +550,7 @@ public static partial class LcData
         /// </summary>
         /// <param name="photo"></param>
         /// <param name="virtualPath"></param>
-        private static void UploadEditablePhoto(Stream photo, string path, string fileName) {
+        private static void UploadEditablePhoto(Stream photo, string path, string fileName, float angle) {
             // Check folder or create
             if (!Directory.Exists(path)) {
                 Directory.CreateDirectory(path);
@@ -561,6 +561,7 @@ public static partial class LcData
 
                 // Editable image: Resize to maximum allowed size to allow user cropping later
                 var img = LcImaging.Resize(srcImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain);
+                LcImaging.Rotate(img, angle);
 
                 // Save:
                 img.Save(path + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
