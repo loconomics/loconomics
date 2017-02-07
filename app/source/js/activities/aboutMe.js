@@ -14,12 +14,12 @@ var A = Activity.extend(function AboutMeActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     
-    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: this.viewModel.helpLinkProfessionals
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Profile', {
+        backLink: '/userProfile' , helpLink: this.viewModel.helpLinkProfessionals
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
-    var clientNavBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: this.viewModel.helpLinkClients
+    var clientNavBar = Activity.createSubsectionNavBar('Profile', {
+        backLink: '/userProfile' , helpLink: this.viewModel.helpLinkClients
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;

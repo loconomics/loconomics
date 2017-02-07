@@ -11,10 +11,9 @@ var A = Activity.extend(function OwnerInfoActivity() {
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel();
-    this.accessLevel = this.app.UserType.serviceProfessional;
-    this.navBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: this.viewModel.helpLink
-    });
+
+    this.accessLevel = this.app.UserType.isServiceProfessional;
+    this.navBar = Activity.createSectionNavBar('Cooperative');
 });
 
 exports.init = A.init;
