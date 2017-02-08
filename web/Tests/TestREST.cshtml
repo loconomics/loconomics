@@ -861,19 +861,21 @@
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             }
         },
         "My Work Photos by Job Title, upload update or delete": {
             "url": "/api/v1/en-US/me/work-photos/106/1",
             "put": {
-                "photo": "binary image/* content",
+                "photo": "binary image/* content; optional here, to allow only update associated data or crop/rotate pre-uploaded photo",
                 "caption": "This is my workshop",
                 "rankPosition": 1,
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             },
             "delete": {}
         },

@@ -103,7 +103,7 @@
                 else {
                     System.IO.FileInfo fileinfo = new FileInfo(fileuploaded.FileName);
                     var angle = Request["rotationAngle"].AsFloat();
-                    LcHelpers.DebugLogger.Log("PUT profile-picture:image: {0}, angle: {1}", fileinfo.Name, angle);
+                    //LcHelpers.DebugLogger.Log("PUT profile-picture:image: {0}, angle: {1}", fileinfo.Name, angle);
                     if (Request.InputStream.Length > 0)
                     {
                         LcData.Photo.SaveEditableProfilePicture(userID, fileuploaded.InputStream, angle);
