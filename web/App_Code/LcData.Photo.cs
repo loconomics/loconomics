@@ -409,6 +409,14 @@ public static partial class LcData
         {
             using (var db = Database.Open("sqlloco"))
             {
+                // We need an update date...
+                var updatedDate = DateTime.Now;
+                // .. that we use to version the filename, preventing cache issues.
+                // We use the cache technique that allows a dot+numbers previous file extension,
+                // while the actual file at disk has not that in the name, but is detected perfectly by
+                // the server (using web.config rewrite rules). We use date and time numbers
+                var fileVersion = updatedDate.ToString("yyMMddyyHHmmss");
+                var versionedFileName = LcUtils.InsertVersionInFileName(fileName, fileVersion);
                 /* SQL update of primary photo not used now, since field is not in use, but was on the sql beggining:
                     IF @isPrimaryPhoto = 1 BEGIN
                         UPDATE ProviderServicePhoto SET
@@ -421,11 +429,12 @@ public static partial class LcData
                     PhotoAddress = coalesce(@1, PhotoAddress)
                     ,PhotoCaption = coalesce(@2, PhotoCaption)
                     ,RankPosition = coalesce(@3, RankPosition)
+                    ,UpdatedDate = @6
                 WHERE   ProviderServicePhotoID = @0 AND UserID = @4 AND PositionID = @5
 
                 -- Test Alert
                 EXEC TestAlertShowcaseWork @4, @5
-            ", photoID, fileName, caption, rankPosition, userID, positionID);
+            ", photoID, versionedFileName, caption, rankPosition, userID, positionID, updatedDate);
             }
         }
 
@@ -539,7 +548,7 @@ public static partial class LcData
                 if (angle != 0 || width > 0 || height > 0)
                 {
                     var savedPhoto = GetUserWorkPhoto(userID, jobTitleID, photoID);
-                    var fileName = LcUtils.GetFileNameWithoutSuffix(savedPhoto.fileName);
+                    var fileName = LcUtils.RemoveVersionAndSuffixInFileName(savedPhoto.fileName);
                     // Delete previous files except original (we will edit it)
                     DeleteWorkPhotoFiles(path, fileName, keepOriginal: true);
 
@@ -548,16 +557,21 @@ public static partial class LcData
                     processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
                 }
             }
+            else
+            {
+                throw new Exception("A photo stream or a photo ID is required");
+            }
 
             // Save on database
-            if (photoID > 0)
-            {
-                SaveDbWorkPhoto(photoID, userID, jobTitleID, processedFileName, caption, rankPosition);
-            }
-            else
+            if (photoID == 0)
             {
                 photoID = RegisterDbWorkPhoto(userID, jobTitleID, processedFileName, caption, rankPosition);
             }
+            else if (processedFileName != null)
+            {
+                SaveDbWorkPhoto(photoID, userID, jobTitleID, processedFileName, caption, rankPosition);
+            }
+
             return photoID;
         }
 

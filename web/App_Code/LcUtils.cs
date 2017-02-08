@@ -378,5 +378,50 @@ public static partial class LcUtils
         var noSuffixNoExt = System.IO.Path.GetFileNameWithoutExtension(GetNameWithoutSuffix(fileName));
         return noSuffixNoExt + ext;
     }
+    /// <summary>
+    /// Given a file name and a string as the version, it introduces
+    /// a dot plus the version in the name just before the extension.
+    /// This is useful to create versioned names of files/paths 
+    /// to use wit the cache technique that allows a dot+numbers previous file extension,
+    /// while the actual file at disk has not that in the name, but is detected perfectly by
+    /// the server (using web.config rewrite rules)
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="version"></param>
+    /// <returns></returns>
+    public static string InsertVersionInFileName(string fileName, string version)
+    {
+        var ext = System.IO.Path.GetExtension(fileName);
+        var noExt = System.IO.Path.GetFileNameWithoutExtension(fileName);
+        return noExt + "." + version + ext;
+    }
+    /// <summary>
+    /// If the fileName has a version value introduced like by InsertVersionInFileName,
+    /// this remove it and returns the name without it, but keeping the file extension.
+    /// NOTE: because of implementation, is not checked if 'version' is just numbers,
+    /// and is anything after a dot but before extension, so really this works like
+    /// removing a second extension at the file name.
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static string RemoveVersionInFileName(string fileName)
+    {
+        var ext = System.IO.Path.GetExtension(fileName);
+        // The extra call GetFileNameWithoutExtension is needed when there is no suffix,
+        // because on that cases GetNameWithoutSuffix will keep the extension
+        var noVersionNoExt = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(fileName));
+        return noVersionNoExt + ext;
+    }
+    /// <summary>
+    /// Convenience method to manage Work Photos conventions, where 
+    /// both the suffix and the version are removed and actual file name
+    /// with extension is returned.
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static string RemoveVersionAndSuffixInFileName(string fileName)
+    {
+        return RemoveVersionInFileName(GetFileNameWithoutSuffix(fileName));
+    }
     #endregion
 }
