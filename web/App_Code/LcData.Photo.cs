@@ -609,7 +609,17 @@ public static partial class LcData
             {
                 // Resize to maximum allowed size (but not upscale) to allow user cropping later
                 var auxImg = LcImaging.Rotate(image, angle, DefaultBackground);
-                img = LcImaging.Resize(auxImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground);
+                var w = FixedSizeWidth * WorkPhotoOriginalScale;
+                var h = FixedSizeHeight * WorkPhotoOriginalScale;
+                if (auxImg.Width < auxImg.Height)
+                {
+                    // It's portrait, keep original in portrait to prevent the problem of photo getting smaller
+                    // with each rotation; further processing creating optimized photos will make it landscape.
+                    var aux = w;
+                    w = h;
+                    h = aux;
+                }
+                img = LcImaging.Resize(auxImg, w, h, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground);
                 auxImg.Dispose();
 
                 // Free source, no needed any more and if comes from file, saving will crash
@@ -686,14 +696,15 @@ public static partial class LcData
                 var sizeName = "-" + FixedSizeWidth.ToString() + "x" + FixedSizeHeight.ToString();
 
                 // Save image with regular size
-            
-                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth, FixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+
+                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth, FixedSizeHeight, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground))
+                {
                     regularFileName = fileName + sizeName + ".jpg";
                     modImg.Save(path + regularFileName, System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
 
                 // Same as previous but for hi-res 2x devices: (real pixel sizes is double but preserve the original size name to recognize it better adding the @2x suffix)
-                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth * 2, FixedSizeHeight * 2, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth * 2, FixedSizeHeight * 2, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground)) {
                     modImg.Save(path + fileName + sizeName + "@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
 
@@ -703,11 +714,13 @@ public static partial class LcData
             // if there was a crop:
             if (width > 0)
             {
-                // Replace original image with the cropped version, for future 'crop again' tasks
-                using (var replacedEditableImg = LcImaging.Resize(cropImg, FixedSizeWidth * 4, FixedSizeHeight * 4, LcImaging.SizeMode.Contain))
-                {
-                    replacedEditableImg.Save(path + fileName + ".jpg");
-                }
+                // TODO To Review when we enable cropping at UI again, because this gets more complicated with rotation and keeping original orientation
+                // at the 'editable' photo; maybe the cropping must happen when saving the editable version, and not here at each optimized image
+                //// Replace original image with the cropped version, for future 'crop again' tasks
+                //using (var replacedEditableImg = LcImaging.Resize(cropImg, FixedSizeWidth * 4, FixedSizeHeight * 4, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground))
+                //{
+                //    replacedEditableImg.Save(path + fileName + ".jpg");
+                //}
             }
             cropImg.Dispose();
         
