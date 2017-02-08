@@ -344,6 +344,9 @@ public static partial class LcUtils
     /// Get the inital part of a string until the last 'dash' is found,
     /// treating the part after that dash (and including that character)
     /// as the name suffix. Or the same 'name' if there is no dash.
+    /// WARNING: In a filename, this will remove the file extension too when
+    /// a suffix exists, but keep when not, to prevent problems with
+    /// that, use GetFileNameWithoutSuffix
     /// </summary>
     /// <param name="fileName"></param>
     /// <returns></returns>
@@ -356,6 +359,24 @@ public static partial class LcUtils
         else {
             return name;
         }
+    }
+    /// <summary>
+    /// Remove a suffix from a file name, returning the
+    /// remaining name and file extension.
+    /// A suffix is understood as the content after a dash (including that).
+    /// It will detect only latest dash as suffix, so a name can still
+    /// be separated by dashes and only detect the last part as the suffix to remove.
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public static string GetFileNameWithoutSuffix(string fileName)
+    {
+        // Detect extension
+        var ext = System.IO.Path.GetExtension(fileName);
+        // The extra call GetFileNameWithoutExtension is needed when there is no suffix,
+        // because on that cases GetNameWithoutSuffix will keep the extension
+        var noSuffixNoExt = System.IO.Path.GetFileNameWithoutExtension(GetNameWithoutSuffix(fileName));
+        return noSuffixNoExt + ext;
     }
     #endregion
 }

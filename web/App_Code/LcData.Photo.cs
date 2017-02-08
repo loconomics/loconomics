@@ -373,10 +373,10 @@ public static partial class LcData
                 try
                 {
                     // There are several files for the same photo, with suffixes for different
-                    // sizes and optimizations: delete all of them
+                    // sizes and optimizations: delete all of them and the extension too
                     var fileName = System.IO.Path.GetFileNameWithoutExtension(LcUtils.GetNameWithoutSuffix(photoPath));
 
-                    if (keepOriginal)
+                    if (!keepOriginal)
                     {
                         // Delete the original file, no suffix
                         File.Delete(baseFolder + fileName + ".jpg");
@@ -536,15 +536,16 @@ public static partial class LcData
             else if (photoID > 0)
             {
                 // Edit pre-uploaded photo, but skip if no edition parameters given
-                if (angle != 0 && width > 0 && height > 0)
+                if (angle != 0 || width > 0 || height > 0)
                 {
                     var savedPhoto = GetUserWorkPhoto(userID, jobTitleID, photoID);
+                    var fileName = LcUtils.GetFileNameWithoutSuffix(savedPhoto.fileName);
                     // Delete previous files except original (we will edit it)
-                    DeleteWorkPhotoFiles(path, savedPhoto.fileName, keepOriginal: true);
+                    DeleteWorkPhotoFiles(path, fileName, keepOriginal: true);
 
-                    EditEditablePhoto(userID, path, savedPhoto.fileName, angle);
+                    EditEditablePhoto(userID, path, fileName, angle);
                     // Process best sizes and cropping
-                    processedFileName = ProcessWorkPhoto(path, savedPhoto.fileName, x, y, width, height);
+                    processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
                 }
             }
 
@@ -640,7 +641,7 @@ public static partial class LcData
         
             // fileName could be given by a previous save including suffixes,
             // we need it without suffixes in order to work properly:
-            fileName = LcUtils.GetNameWithoutSuffix(fileName);
+            fileName = System.IO.Path.GetFileNameWithoutExtension(LcUtils.GetNameWithoutSuffix(fileName));
 
             // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
             // File.Delete doesn't allow wildcards, find and delete each one
