@@ -4,6 +4,9 @@
 'use strict';
 var Model = require('./Model');
 var ko = require('knockout');
+var FIXED_IMAGE_WIDTH = 442;
+var FIXED_IMAGE_HEIGHT = 332;
+var FIXED_IMAGE_RATE = FIXED_IMAGE_HEIGHT / FIXED_IMAGE_WIDTH;
 
 function WorkPhoto(values) {
     Model(this);
@@ -32,8 +35,21 @@ function WorkPhoto(values) {
      * visually rotating the image, to preview result.
      */
     this.photoRotationStyle = ko.pureComputed(function() {
-        var d = this.rotationAngle() |0;
-        return 'transform: rotate(' + d + 'deg);';
+        // We need to rotate, but too to scale the image by the original proportion,
+        // since the behavior implemented is to keep image as landscape with
+        // fixed width and height even if rotated or originally portrait.
+        var r = this.rotationAngle() |0;
+        var sr = 'rotate(' + r + 'deg)';
+        // Since we know the fixed size, we calculated the ratio and apply it as
+        // a downscale when image is rotated in portrait.
+        // It's simple since we only allow 90 degrees rotations at UI
+        var s = 1;
+        if (r === 90 || r === 270) {
+            s = FIXED_IMAGE_RATE;
+        }
+        var ss = 'scale(' + s + ', ' + s + ')';
+
+        return 'transform: ' + sr + ' ' + ss;
     }, this);
 }
 module.exports = WorkPhoto;
