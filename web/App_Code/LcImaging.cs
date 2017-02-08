@@ -104,13 +104,10 @@ public static class LcImaging
                          imgPhoto.VerticalResolution);
 
         Graphics grPhoto = Graphics.FromImage(bmPhoto);
-        if (sizeMode == SizeMode.Contain)
-        {
-            grPhoto.Clear(backgroundColor);
-        }
+        grPhoto.Clear(backgroundColor);
 
         grPhoto.SmoothingMode = SmoothingMode.HighQuality;
-        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        grPhoto.InterpolationMode = InterpolationMode.HighQualityBilinear;
         grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
         grPhoto.DrawImage(imgPhoto, 
