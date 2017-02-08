@@ -47,6 +47,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
         this.uploaderEventHandlers = {
             fileuploadadd: function (e, data) {
                 this.localPhotoData(data);
+                this.rotationAngle(0);
             },
             fileuploadprocessalways: function (e, data) {
                 var file = data.files[data.index];
@@ -130,6 +131,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
             .then(function(imgLocalUrl) {
                 this.localPhotoUrl(imgLocalUrl);
                 this.previewPhotoUrl(photoTools.getPreviewPhotoUrl(imgLocalUrl));
+                this.rotationAngle(0);
             }.bind(this))
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1
