@@ -23,6 +23,7 @@ public static partial class LcData
         {
             return "img/userphotos/u" + userID.ToString() + "/";
         }
+        public static readonly Color DefaultBackground = Color.FromArgb(0xF5, 0xF5, 0xF5);
         #endregion
 
         #region Profile Picture
@@ -90,8 +91,9 @@ public static partial class LcData
             {
 
                 // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
-                LcImaging.Rotate(img, angle);
+                var auxImg = LcImaging.Rotate(srcImg, angle, DefaultBackground);
+                var img = LcImaging.Resize(auxImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center, DefaultBackground);
+                auxImg.Dispose();
 
                 // Save:
                 img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -129,8 +131,9 @@ public static partial class LcData
                 using (var srcImg = System.Drawing.Image.FromFile(file))
                 {
                     // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                    img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
-                    LcImaging.Rotate(img, angle);
+                    var auxImg = LcImaging.Rotate(srcImg, angle, DefaultBackground);
+                    img = LcImaging.Resize(auxImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center, DefaultBackground);
+                    auxImg.Dispose();
                 }
                 // Save:
                 img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -589,16 +592,39 @@ public static partial class LcData
             }
 
             // Use file as image
-            using (var srcImg = System.Drawing.Image.FromStream(photo)) {
+            var srcImg = System.Drawing.Image.FromStream(photo);
+            PrepareAndSaveEditablePhoto(srcImg, path + fileName + ".jpg", angle);
+        }
 
-                // Editable image: Resize to maximum allowed size to allow user cropping later
-                var img = LcImaging.Resize(srcImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain);
-                LcImaging.Rotate(img, angle);
+        /// <summary>
+        /// Resize, rotate, incoming image, disposing it and saving transformations to disk
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="pathFileName"></param>
+        /// <param name="angle"></param>
+        private static void PrepareAndSaveEditablePhoto(Image image, string pathFileName, float angle)
+        {
+            Image img = null;
+            try
+            {
+                // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                var auxImg = LcImaging.Rotate(image, angle, DefaultBackground);
+                img = LcImaging.Resize(auxImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground);
+                auxImg.Dispose();
+
+                // Free source, no needed any more and if comes from file, saving will crash
+                image.Dispose();
 
                 // Save:
-                img.Save(path + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(pathFileName, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
-            photo.Dispose();
+            finally
+            {
+                if (img != null)
+                {
+                    img.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -621,25 +647,8 @@ public static partial class LcData
             }
 
             // Use file as image
-            Image img = null;
-            try
-            {
-                using (var srcImg = System.Drawing.Image.FromFile(file))
-                {
-                    // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                    img = LcImaging.Resize(srcImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain);
-                    LcImaging.Rotate(img, angle);
-                }
-                // Save:
-                img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
-            }
-            finally
-            {
-                if (img != null)
-                {
-                    img.Dispose();
-                }
-            }
+            var srcImg = System.Drawing.Image.FromFile(file);
+            PrepareAndSaveEditablePhoto(srcImg, file, angle);
 
             return true;
         }
