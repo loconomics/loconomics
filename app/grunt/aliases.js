@@ -45,27 +45,46 @@ module.exports = {
         'bliss:appDebug',
         'notify:html'
     ],
-    'prepare-phonegap': [
-        'bliss:phonegap',
+
+
+    'prepare-phonegapcli-live': [
         'copyto:phonegap',
+        'copyto:phonegapcli_res',
         'copyto:platform_merges',
         'bliss:cordovaConfigJson',
+        'bliss:phonegap',
         'bliss:cordovaConfigXml',
         'notify:phonegap'
     ],
-    
-    'prepare-phonegapbuild': [
-        // Create 'DEV' version files on phonegap folder and bundle
+    'prepare-phonegapcli-dev': [
+        'copyto:phonegap',
+        'copyto:phonegapcli_res',
+        'copyto:platform_merges',
+        'bliss:cordovaConfigJson',
+        'bliss:phonegapDev',
+        'bliss:cordovaConfigXml',
+        'notify:phonegap'
+    ],
+
+    'prepare-phonegapbuild-live': [
+        'copyto:phonegap',
+        'copyto:phonegapbuild_res',
+        'bliss:cordovaConfigJson',
+        'bliss:phonegap',
+        'bliss:cordovaConfigXml',
+        'zip:phonegap',
+        'notify:phonegap'
+    ],
+    'prepare-phonegapbuild-dev': [
+        'copyto:phonegap',
+        'copyto:phonegapbuild_res',
+        'bliss:cordovaConfigJson',
         'bliss:phonegapDev',
         'bliss:cordovaConfigXmlDev',
         'zip:phonegapDev',
-        
-        // Create 'LIVE' version files on phonegap folder (it replace previous ones) and bundle
-        'bliss:phonegap',
-        'bliss:cordovaConfigXml',
-        'zip:phonegap'
+        'notify:phonegap'
     ],
-    
+
     //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
 	'build-dev': [
@@ -81,8 +100,6 @@ module.exports = {
         'build-html',
         'build-images',
         'build-fonts',
-        'prepare-phonegap',
-        'prepare-phonegapbuild',
         'notify:build'
 	],
     'build-webapp-html': [
