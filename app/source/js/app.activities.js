@@ -61,6 +61,7 @@ module.exports = {
     'profile': require('./activities/profile'),
     'home': require('./activities/home'),
     'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
+    'welcomeHealingArtsProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
     'terms': require('./activities/terms'),
     'about': require('./activities/about'),
@@ -79,6 +80,5 @@ module.exports = {
     'cancellationPolicies': require('./activities/cancellationPolicies'),
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
-    'onboardingSuccess': require('./activities/onboardingSuccess'),
-    'welcomeHealingArtsProfessionals': require('./activities/welcomeHealingArtsProfessionals')
+    'onboardingSuccess': require('./activities/onboardingSuccess')
 };

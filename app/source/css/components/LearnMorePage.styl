@@ -4,11 +4,10 @@
 
 @import '../utils/input-group-addon-inset.styl';
 @import '../utils/arrows.styl';
-@import '../components/WebsiteFooter.styl';
-@import '../components/SearchBar.styl';
+@import './WebsiteFooter.styl';
+@import './SearchBar.styl';
 
-[data-activity=learnMoreProfessionals] {
-
+.LearnMorePage {
 
     // NO NAVBAR, disabled on the JS activity, so this can replace the default:
     top: 0 !important;
@@ -540,7 +539,7 @@
         }
     }
 
-    #learnMoreProfessionalsVideo {
+    .LearnMorePage-Video {
         max-width: 600px;
     }
 }
