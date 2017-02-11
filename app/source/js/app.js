@@ -36,23 +36,23 @@ function preBootstrapWorkarounds() {
     function getTargetFromTrigger($trigger) {
         var href,
             target = $trigger.attr('data-target') ||
-            (href = $trigger.attr('href')) && 
+            (href = $trigger.attr('href')) &&
             href.replace(/.*(?=#[^\s]+$)/, ''); // strip for ie7
 
         return $(target);
     }
-    
+
     // Bug: navbar-collapse elements hold a reference to their original
     // $trigger, but that trigger can change on different 'clicks' or
     // get removed the original, so it must reference the new one
-    // (the latests clicked, and not the cached one under the 'data' API).    
+    // (the latests clicked, and not the cached one under the 'data' API).
     // NOTE: handler must execute before the Bootstrap handler for the same
     // event in order to work.
     $(document).on('click.bs.collapse.data-api.workaround', '[data-toggle="collapse"]', function() {
         var $t = $(this),
             $target = getTargetFromTrigger($t),
             data = $target && $target.data('bs.collapse');
-        
+
         // If any
         if (data) {
             // Replace the trigger in the data reference:
@@ -68,15 +68,15 @@ function preBootstrapWorkarounds() {
 **/
 var app = {
     shell: require('./app.shell'),
-    
+
     // New app model, that starts with anonymous user
     model: new AppModel(),
-    
+
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
-    
+
     modals: require('./app.modals'),
-    
+
     /**
         Just redirect the better place for current user and state.
         NOTE: Its a delayed function, since on many contexts need to
@@ -89,8 +89,8 @@ var app = {
         in the history, that create the problem of 'broken back button'
     **/
     goDashboard: function goDashboard() {
-        
-        // To avoid infinite loops if we already are performing 
+
+        // To avoid infinite loops if we already are performing
         // a goDashboard task, we flag the execution
         // being care of the delay introduced in the execution
         if (goDashboard._going === true) {
@@ -103,7 +103,7 @@ var app = {
             // TODO: change by a real redirect that is able to
             // cancel the current app.shell routing process.
             setTimeout(function() {
-        
+
                 goDashboard._going = true;
 
                 var onboarding = this.model.onboarding.stepUrl();
@@ -116,7 +116,7 @@ var app = {
                 }
 
                 // Just because is delayed, needs
-                // to be set off after an inmediate to 
+                // to be set off after an inmediate to
                 // ensure is set off after any other attempt
                 // to add a delayed goDashboard:
                 setTimeout(function() {
@@ -138,7 +138,7 @@ app.getActivity = function getActivity(name) {
     if (activity) {
         var $act = this.shell.items.find(name);
         if ($act && $act.length)
-            return activity.init($act, this);
+            return activity.init($act, this, name);
     }
     return null;
 };
@@ -147,7 +147,7 @@ app.getActivityControllerByRoute = function getActivityControllerByRoute(route) 
     // From the route object, the important piece is route.name
     // that contains the activity name except if is the root
     var actName = route.name || this.shell.indexName;
-    
+
     return this.getActivity(actName);
 };
 
@@ -167,10 +167,10 @@ app.successSave = function successSave(settings) {
         message: 'Your changes have been saved',
         link: null
     }, settings);
-    
+
     // show notification
     this.showNavBarNotification(settings);
-    
+
     // requested link or current activity go back
     if (settings.link)
         this.shell.go(settings.link);
@@ -181,9 +181,9 @@ app.successSave = function successSave(settings) {
 /** App Init **/
 var appInit = function appInit() {
     /*jshint maxstatements:70,maxcomplexity:16 */
-    
+
     attachFastClick(document.body);
-    
+
     // NOTE: Put any jQuery-UI used components here and document their use in the
     //  activities that require them; do NOT require it there because will break
     //  the use of touch-punch (few lines below). But is recommended to use
@@ -194,7 +194,7 @@ var appInit = function appInit() {
     // Just AFTER jquery-ui is loaded (or the selected components), load
     // the fix for touch support:
     require('jquery.ui.touch-punch');
-    
+
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
     // may require adjustments on other scripts that listen to it.
@@ -202,7 +202,7 @@ var appInit = function appInit() {
     // than a lot of them in short time frames (as happen with 'resize' events).
     layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
     layoutUpdateEvent.on();
-    
+
     // Keyboard plugin events are not compatible with jQuery events, but needed to
     // trigger a layoutUpdate, so here are connected, mainly fixing bugs on iOS when the keyboard
     // is hidding.
@@ -211,7 +211,7 @@ var appInit = function appInit() {
     };
     window.addEventListener('native.keyboardshow', trigLayout);
     window.addEventListener('native.keyboardhide', trigLayout);
-    
+
     // IMPORTANT: WORKAROUND: iOS autoscroll problems
     // Race conditions may happen, making need a second call just a delay
     // after in case the first didn't make the trick
@@ -225,7 +225,7 @@ var appInit = function appInit() {
     });
 
     // iOS-7+ status bar fix. Apply on plugin loaded (cordova/phonegap environment)
-    // and in any system, so any other systems fix its solved too if needed 
+    // and in any system, so any other systems fix its solved too if needed
     // just updating the plugin (future proof) and ensure homogeneous cross plaftform behavior.
     if (window.StatusBar) {
         // Fix iOS-7+ overlay problem, and customize it
@@ -243,22 +243,22 @@ var appInit = function appInit() {
             window.StatusBar.backgroundColorByHexString('#00989a');
         }
     }
-    
+
     // Force an update delayed to ensure update after some things did additional work
     setTimeout(function() {
         $(window).trigger('layoutUpdate');
     }, 200);
-    
+
     // Bootstrap
     preBootstrapWorkarounds();
     require('bootstrap');
-    
+
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
     require('./utils/bootstrapSwitchBinding').plugIn(ko);
     require('./utils/pressEnterBindingHandler').plugIn(ko);
     require('./utils/fileUploaderBindingHandler').plugIn(ko);
-    
+
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
         // Explicitely, we WANT auto scroll on keyboard show up.
@@ -269,7 +269,7 @@ var appInit = function appInit() {
         // Fix bug on iOS 9.x with plugin version 2.2.0
         window.cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
     }
-    
+
     // Easy links to shell actions, like goBack, in html elements
     // Example: <button data-shell="goBack 2">Go 2 times back</button>
     // NOTE: Important, registered before the shell.run to be executed
@@ -283,13 +283,13 @@ var appInit = function appInit() {
 
         if (cmd && typeof(app.shell[cmd]) === 'function') {
             app.shell[cmd].apply(app.shell, args.slice(1));
-            
+
             // Cancel any other action on the link, to avoid double linking results
             e.stopImmediatePropagation();
             e.preventDefault();
         }
     });
-    
+
     // On Cordova/Phonegap app, special targets must be called using the window.open
     // API to ensure is correctly opened on the InAppBrowser (_blank) or system default
     // browser (_system).
@@ -299,10 +299,10 @@ var appInit = function appInit() {
             e.preventDefault();
         });
     }
-    
+
     // When an activity is ready in the Shell:
     app.shell.on(app.shell.events.itemReady, function($act, state) {
-        
+
         // Must be the same:
         var routeName = app.shell.currentRoute.name;
         var actName = $act.data('activity');
@@ -314,7 +314,7 @@ var appInit = function appInit() {
         var activity = app.getActivity(actName);
         // Trigger the 'show' logic of the activity controller:
         activity.show(state);
-        
+
         // The show logic may do a redirect, loading other activity, double check
         routeName = app.shell.currentRoute.name;
         if (routeName !== actName)
@@ -326,13 +326,13 @@ var appInit = function appInit() {
 
         // Update app navigation
         app.updateAppNav(activity, state);
-        
+
         // For debugging purposes, give access to current activity
         app._currentActivity = activity;
     });
     // When an activity is hidden
     app.shell.on(app.shell.events.closed, function($act) {
-        
+
         // Connect the 'activities' controllers to their views
         var actName = $act.data('activity');
         var activity = app.getActivity(actName);
@@ -344,7 +344,7 @@ var appInit = function appInit() {
     app.shell.on('error', function(err) {
         app.modals.showError({ error: err });
     });
-    
+
     // Scroll to element when clicking a usual fragment link (not a page link)
     var scrollToElement = require('./utils/scrollToElement');
     app.shell.on('fragmentNavigation', function(href) {
@@ -377,14 +377,14 @@ var appInit = function appInit() {
             }
         }
     });
-    
+
     // Navbar binding
     app.setupNavBarBinding();
-    
+
     var SmartNavBar = require('./components/SmartNavBar');
     var navBars = SmartNavBar.getAll();
     // Creates an event by listening to it, so other scripts can trigger
-    // a 'contentChange' event to force a refresh of the navbar (to 
+    // a 'contentChange' event to force a refresh of the navbar (to
     // calculate and apply a new size); expected from dynamic navbars
     // that change it content based on observables.
     navBars.forEach(function(navbar) {
@@ -392,7 +392,7 @@ var appInit = function appInit() {
             navbar.refresh();
         });
     });
-    
+
     // Listen for menu events (collapse in SmartNavBar)
     // to apply the backdrop; add another class, explicit for know the menu/nav is opened
     var togglingBackdrop = false;
@@ -414,14 +414,14 @@ var appInit = function appInit() {
             error: err
         });
     });
-    
+
     // Additional form elements attribute and behavior: data-autoselect=true
     // sets to automatically select the text content of an input text control
     // when gets the focus
     $(document).on('focus', '[data-autoselect="true"]', function() {
         $(this).select();
     });
-    
+
     // App init:
     var alertError = function(err) {
         app.modals.showError({
@@ -431,13 +431,13 @@ var appInit = function appInit() {
     };
 
     require('./utils/toggleActionSheet').on();
-    
+
     // Supporting sub-domain/channels, set the site-url same like baseUrl
     // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
     if (app.shell.baseUrl) {
         $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
     }
-    
+
     // Set-up Google Analytics
     if (window.ga) {
         var gaTrackerId = 'UA-72265353-4';
@@ -478,7 +478,7 @@ var appInit = function appInit() {
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
     .then(function() {
-        
+
         // TODO: Display a login popup/activity if a request require credentials and no log-in still??
         /*app.model.rest.onAuthorizationRequired = function(retry) {
         // Go to login activity if a request require credentials:
@@ -490,7 +490,7 @@ var appInit = function appInit() {
             //app.shell.go(url);
             xyz.showLogin().then(retry);
         };*/
-        
+
         // Connect username in navbar, and type flags
         ko.computed(function() {
             var u = app.model.userProfile.data,
@@ -512,7 +512,7 @@ var appInit = function appInit() {
                 app.navBarBinding.photoUrl(p);
             }
         });
-        
+
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
 
