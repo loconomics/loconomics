@@ -35,6 +35,7 @@ public static partial class LcPricingModel
         public int LanguageID;
         public int CountryID;
         public bool Active;
+        public int visibleToClientID;
         public List<int> ServiceAttributes = new List<int>();
         public PackageBaseData()
         {
@@ -62,6 +63,7 @@ public static partial class LcPricingModel
             LanguageID = package.LanguageID;
             CountryID = package.CountryID;
             Active = package.Active;
+            visibleToClientID = package.visibleToClientID;
         }
 
         #region Properties
@@ -77,7 +79,7 @@ public static partial class LcPricingModel
         #region Static tools
         public static PackageBaseData FromPackageID(int packageID)
         {
-            var d = LcData.GetProviderPackage(packageID);
+            var d = LcRest.ServiceProfessionalService.GetProviderPackage(packageID);
             return new PackageBaseData(d);
         }
         #endregion
@@ -109,8 +111,9 @@ public static partial class LcPricingModel
                     ,ModifiedBy
                     ,Active
                     ,IsAddon
+                    ,visibleToClientID
                 ) VALUES (
-                    @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', @15, @16
+                    @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, getdate(), getdate(), 'sys', @15, @16, @17
                 )
                 SET @PackageID = @@Identity
             END ELSE
@@ -128,6 +131,7 @@ public static partial class LcPricingModel
                     ,ModifiedBy = 'sys'
                     ,Active = @15
                     ,IsAddon = @16
+                    ,visibleToClientID = @17
                 WHERE ProviderPackageID = @PackageID
 
             -- Test Alert
@@ -229,7 +233,8 @@ public static partial class LcPricingModel
                     this.PriceRateUnit,
                     this.IsPhone,
                     1, // Active
-                    PricingConfig.IsAddon
+                    PricingConfig.IsAddon,
+                    this.visibleToClientID
                 );
 				// Use Mod to save some specific data (as variables),just after create/update the package
                 if (PricingConfig.Mod != null) {

@@ -17,7 +17,7 @@ var A = Activity.extend(function WorkPhotosActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    
+
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
@@ -87,7 +87,7 @@ A.prototype.show = function show(options) {
     this.viewModel.list.removeAll();
     this.viewModel.removedItems.removeAll();
     this.viewModel.jobTitleID(0);
-    
+
     Activity.prototype.show.call(this, options);
 
     var params = options && options.route && options.route.segments;
@@ -118,16 +118,16 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.list = ko.observableArray([]);
     this.removedItems = ko.observableArray([]);
-    
+
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
-    
+
     this.state = app.model.workPhotos.state;
-    
+
     this.saveBtnText = ko.pureComputed(function() {
         return this.state.isSaving() ? 'Saving..' : this.state.isLoading() ? 'Loading..' : this.state.isDeleting() ? 'Deleting..' : 'Save';
     }, this);
-    
-    
+
+
     // IMPORTANT: Size like the server 'original' photo, that's the 'visible size on screen' multiply
     // by the scale for the original used to create hidpi versions and to crop with quality.
     var cameraSettings = {
@@ -156,11 +156,11 @@ function ViewModel(app) {
             }
         });
     }.bind(this);
-    
+
     this.takePhotoForNew = function() {
         addNew(true);
     }.bind(this);
-    
+
     this.pickPhotoForNew = function() {
         addNew(false);
     }.bind(this);
@@ -168,6 +168,11 @@ function ViewModel(app) {
     this.removeImg = function(item) {
         this.removedItems.push(item);
         this.list.remove(item);
+    }.bind(this);
+
+    this.rotateImg = function(item) {
+        var d = item.rotationAngle() |0;
+        item.rotationAngle((d + 90) % 360);
     }.bind(this);
 
     this.openPhotoPicker = function(fromCamera) {
@@ -189,7 +194,7 @@ function ViewModel(app) {
             return Promise.reject('Take photo is not supported on the web right now');
         }
     };
-    
+
     this.updateSort = function(info) {
         /* info {
             item: Model,
@@ -209,7 +214,7 @@ function ViewModel(app) {
             list[i].rankPosition(i + 1);
         }
     };
-    
+
     // Delete on remote REST API all the registered items for deletion
     var remoteDeleteFlaggedItems = function() {
         return this.removedItems().reduce(function(cur, next) {
@@ -218,7 +223,7 @@ function ViewModel(app) {
             });
         }, Promise.resolve());
     }.bind(this);
-    
+
     // Upload to remote REST API every photo or data in sequence
     var uploadAllItems = function() {
         return this.list().reduce(function(cur, next) {
@@ -227,7 +232,7 @@ function ViewModel(app) {
             });
         }, Promise.resolve());
     }.bind(this);
-    
+
     this.save = function() {
         remoteDeleteFlaggedItems()
         .then(uploadAllItems)

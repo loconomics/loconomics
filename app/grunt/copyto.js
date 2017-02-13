@@ -37,6 +37,22 @@ module.exports = {
         dest: 'phonegap/www/',
         filter: 'isFile'
     },
+    // Phonegap needs the 'res' folder under different folder depending
+    // on building locally with CLI or PhonegapBuild service.
+    phonegapcli_res: {
+        expand: true,
+        cwd: 'source/res/',
+        src: ['**/*.*'],
+        dest: 'phonegap/res/',
+        filter: 'isFile'
+    },
+    phonegapbuild_res: {
+        expand: true,
+        cwd: 'source/res/',
+        src: ['**/*.*'],
+        dest: 'phonegap/www/res/',
+        filter: 'isFile'
+    },
     platform_merges: {
         expand: true,
         dest: './phonegap/platforms/',

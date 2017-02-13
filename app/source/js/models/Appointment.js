@@ -10,21 +10,21 @@ var ko = require('knockout'),
 var Address = require('./Address');
 
 function Appointment(values) {
-    
+
     Model(this);
 
     this.model.defProperties({
         // An appointment ever references an event, and its 'id' is a CalendarEventID
         // even if other complementary object are used as 'source'
         id: null,
-        
+
         startTime: null,
         endTime: null,
-        
+
         // CommonEvent fields:
         summary: 'New booking',
         description: null,
-        
+
         // Event specific fields:
         isAllDay: false,
 
@@ -41,11 +41,11 @@ function Appointment(values) {
         postNotesToClient: null,
         preNotesToSelf: null,
         postNotesToSelf: null,
-        
+
         jobTitleID: 0,
-        
+
         readOnly: false,
-        
+
         sourceEvent: {
             Model: CalendarEvent,
             defaultValue: null
@@ -56,46 +56,56 @@ function Appointment(values) {
         }
     }, values);
 
+    // Address property must NOT hold null value, if that
+    // happens (updating from server data for apt without address,
+    // like phone-only services), we create and empty address, suitable
+    // to be used for edition tasks, pick a date, new one form.
+    this.address.subscribe(function(val) {
+        if (!val) {
+            this.address(new Address());
+        }
+    }.bind(this));
+
     // Smart visualization of date and time
     this.displayedDate = ko.pureComputed(function() {
-        
+
         return moment(this.startTime()).locale('en-US-LC').calendar();
-        
+
     }, this);
-    
+
     this.displayedStartTime = ko.pureComputed(function() {
-        
+
         return moment(this.startTime()).locale('en-US-LC').format('LT');
-        
+
     }, this);
-    
+
     this.displayedEndTime = ko.pureComputed(function() {
-        
+
         return moment(this.endTime()).locale('en-US-LC').format('LT');
-        
+
     }, this);
-    
+
     this.displayedTimeRange = ko.pureComputed(function() {
-        
+
         return this.displayedStartTime() + '-' + this.displayedEndTime();
-        
+
     }, this);
-    
+
     this.itStarted = ko.pureComputed(function() {
         return (this.startTime() && new Date() >= this.startTime());
     }, this);
-    
+
     this.itEnded = ko.pureComputed(function() {
         return (this.endTime() && new Date() >= this.endTime());
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         return (!this.id());
     }, this);
-    
+
     this.stateHeader = ko.pureComputed(function() {
         //jshint maxcomplexity:10
-        
+
         var text = '';
         if (this.id() > 0 && this.sourceEvent()) {
             if (!this.sourceBooking()) {
@@ -124,7 +134,7 @@ function Appointment(values) {
         }
 
         return text;
-        
+
     }, this);
 }
 
@@ -135,7 +145,7 @@ module.exports = Appointment;
 **/
 Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     var apt = new Appointment();
-    
+
     // Include event in apt
     apt.id(event.calendarEventID());
     apt.startTime(event.startTime());
@@ -145,7 +155,7 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     apt.isAllDay(event.isAllDay());
     apt.readOnly(event.readOnly());
     apt.sourceEvent(event);
-    
+
     return apt;
 };
 
@@ -165,7 +175,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     }
     // Include event in apt
     var apt = Appointment.fromCalendarEvent(event);
-    
+
     // Include booking in apt
     apt.clientUserID(booking.clientUserID());
     apt.address().addressID(booking.serviceAddressID());
@@ -181,7 +191,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
     apt.postNotesToClient(booking.postNotesToClient());
     apt.preNotesToSelf(booking.preNotesToSelf());
     apt.postNotesToSelf(booking.postNotesToSelf());
-    
+
     // On bookings, readOnly must set to false (is sent as true ever from
     // the server, to prevent direct manipulation of the event that is part of
     // a booking
@@ -245,7 +255,7 @@ var Time = require('../utils/Time');
     }
 **/
 Appointment.newFreeSlot = function newFreeSlot(options) {
-    
+
     var start = options.start || new Time(options.date, 0, 0, 0),
         end = options.end || new Time(options.date, 0, 0, 0);
 
@@ -261,7 +271,7 @@ Appointment.newFreeSlot = function newFreeSlot(options) {
 };
 
 Appointment.newUnavailableSlot = function newUnavailableSlot(options) {
-    
+
     var start = options.start || new Time(options.date, 0, 0, 0),
         end = options.end || new Time(options.date, 0, 0, 0);
 

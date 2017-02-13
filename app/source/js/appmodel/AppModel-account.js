@@ -1,4 +1,4 @@
-/** 
+/**
     AppModel extension,
     focused on the Account related APIs:
     - login
@@ -61,7 +61,7 @@ exports.plugIn = function (AppModel) {
         this.rest.extraHeaders = null;
         localforage.removeItem('credentials');
         localforage.removeItem('profile');
-        
+
         // Local data clean-up!
         this.clearLocalData();
 
@@ -79,9 +79,9 @@ exports.plugIn = function (AppModel) {
 
         // Reset the extra headers to attempt the signup
         this.rest.extraHeaders = null;
-        
+
         data.returnProfile = true;
-        
+
         // Prepare 'utm' information passed into the query
         var query = getUrlQuery();
         var utm = {
@@ -101,7 +101,7 @@ exports.plugIn = function (AppModel) {
         return this.rest.post('signup?' + $.param(utm), data)
         .then(performLocalLogin(this, data.email, data.password));
     };
-    
+
     /**
         Request an email with token to reset the password for a given user
         @param data:Object {
@@ -138,7 +138,7 @@ exports.plugIn = function (AppModel) {
 function performLocalLogin(thisAppModel, username/*, password*/) {
 
     return function(logged) {
-        
+
         // Remove any previous local data if any:
         return thisAppModel.clearLocalData()
         .then(function() {
@@ -155,12 +155,12 @@ function performLocalLogin(thisAppModel, username/*, password*/) {
                 username: username,
                 authKey: logged.authKey
             });
-            // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
-            localforage.setItem('profile', logged.profile);
 
             // Set user data
             thisAppModel.user().model.updateWith(logged.profile);
-            
+            // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
+            thisAppModel.userProfile.saveLocal();
+
             // Google Analytics
             if (window.ga) {
                 if (window.cordova) {

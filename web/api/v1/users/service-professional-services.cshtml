@@ -33,6 +33,7 @@
         "priceRate": 14,
         "priceRateUnit": "hour",
         "isPhone": false,
+        "visibleToClientID": 0,
         "serviceAttributes": [
             442,
             441,
@@ -56,11 +57,15 @@
         /// <returns></returns>
         public override dynamic Get()
         {
-            var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
+            var providerID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
 
             // Item ID
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
-                return LcRest.ServiceProfessionalService.GetList(userID, UrlData[0].AsInt(0));
+                var jobTitleID = UrlData[0].AsInt(0);
+                var visibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)
+                                                             : LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
+
+                return LcRest.ServiceProfessionalService.GetList(providerID, jobTitleID, clientVisibility: visibility);
             }
             else if (UrlData.Count == 1) {
                 throw new HttpException(400, "The Job Title ID has bad format (must be an integer number)");

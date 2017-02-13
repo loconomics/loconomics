@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages;
+using WebMatrix.Data;
 
 namespace LcRest
 {
@@ -11,6 +13,9 @@ namespace LcRest
     /// </summary>
     public class ServiceProfessionalService
     {
+        public const int ClientVisibilityPublic = 0;      // visibleToClientID == 0 => visible to all
+        public const int ClientVisibilityMinimumValue = ClientVisibilityPublic;
+
         #region Fields
         public int serviceProfessionalServiceID;
         public int pricingTypeID;
@@ -27,6 +32,7 @@ namespace LcRest
         public decimal? priceRate;
         public string priceRateUnit = "hour";
         public bool isPhone = false;
+        public int visibleToClientID = 0;
         public DateTime createdDate;
         public DateTime updatedDate;
 
@@ -39,7 +45,7 @@ namespace LcRest
         #region Instances
         public ServiceProfessionalService() { }
 
-        public static ServiceProfessionalService FromDB(dynamic record, IEnumerable<dynamic> attributes = null)
+        private static ServiceProfessionalService FromDB(dynamic record, IEnumerable<dynamic> attributes = null)
         {
             if (record == null) return null;
 
@@ -58,6 +64,7 @@ namespace LcRest
                 priceRate = record.priceRate,
                 priceRateUnit = record.priceRateUnit,
                 isPhone = record.isPhone,
+                visibleToClientID = record.VisibleToClientID,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
 
@@ -69,7 +76,7 @@ namespace LcRest
             };
         }
 
-        public static ServiceProfessionalService FromDbProviderPackage(dynamic record, IEnumerable<dynamic> attributes = null)
+        private static ServiceProfessionalService FromDbProviderPackage(dynamic record, IEnumerable<dynamic> attributes = null)
         {
             if (record == null) return null;
 
@@ -88,6 +95,7 @@ namespace LcRest
                 priceRate = record.PriceRate,
                 priceRateUnit = record.PriceRateUnit,
                 isPhone = record.IsPhone,
+                visibleToClientID = record.VisibleToClientID,
                 createdDate = record.CreatedDate,
                 updatedDate = record.UpdatedDate,
 
@@ -103,7 +111,7 @@ namespace LcRest
         #region Fetch
         public static ServiceProfessionalService Get(int serviceProfessionalServiceID, int? serviceProfessionalUserID, int? jobTitleID = null)
         {
-            var service = FromDbProviderPackage(LcData.GetProviderPackage(serviceProfessionalServiceID));
+            var service = FromDbProviderPackage(GetProviderPackage(serviceProfessionalServiceID));
             if (service == null ||
                 serviceProfessionalUserID.HasValue && service.serviceProfessionalUserID != serviceProfessionalUserID.Value ||
                 jobTitleID.HasValue && service.jobTitleID != jobTitleID.Value)
@@ -114,9 +122,9 @@ namespace LcRest
             return service;
         }
 
-        public void FillAttributes()
+        private void FillAttributes()
         {
-            IEnumerable<dynamic> attributes = LcData.GetProviderPackageServiceAttributes(serviceProfessionalServiceID);
+            IEnumerable<dynamic> attributes = GetProviderPackageServiceAttributes(serviceProfessionalServiceID);
             // Array of IDs of serviceAttributes
             serviceAttributes = (attributes == null ? null : attributes.Select(att =>
             {
@@ -124,16 +132,24 @@ namespace LcRest
             }).ToList<int>());
         }
 
-        public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1)
+        private static IEnumerable<ServiceProfessionalService> BindDetailsToProviderPackage(ProviderPackagesView packages)
         {
-            var packages = LcData.GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID);
-
             return ((IEnumerable<dynamic>)packages.Packages).Select<dynamic, ServiceProfessionalService>(pak =>
             {
                 var pakID = (int)pak.ProviderPackageID;
                 var hasAtts = packages.PackagesDetailsByPackage.ContainsKey(pakID);
                 return FromDbProviderPackage(pak, hasAtts ? packages.PackagesDetailsByPackage[(int)pak.ProviderPackageID] : null);
-            }).ToList();
+            });
+        }
+
+        /// <returns></returns>
+        public static IEnumerable<ServiceProfessionalService> GetList(int serviceProfessionalUserID, int jobTitleID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, Visibility clientVisibility = null)
+        {
+            clientVisibility = clientVisibility ?? Visibility.BookableByPublic();
+
+            var packages = GetPricingPackagesByProviderPosition(serviceProfessionalUserID, jobTitleID, packageID, pricingTypeID, isAddon, clientVisibility);
+
+            return BindDetailsToProviderPackage(packages).ToList();
         }
 
         /// <summary>
@@ -203,6 +219,7 @@ namespace LcRest
                     ,PP.priceRate
                     ,PP.priceRateUnit
                     ,PP.isPhone
+                    ,PP.visibleToClientID
 
                     ,PP.createdDate
                     ,PP.updatedDate
@@ -232,5 +249,256 @@ namespace LcRest
             }
         }
         #endregion
+
+        private class ProviderPackagesView
+        {
+            public dynamic Packages;
+            public dynamic PackagesDetails;
+            public Dictionary<int, dynamic> PackagesByID;
+            public Dictionary<int, List<dynamic>> PackagesDetailsByPackage;
+        }
+
+        #region Package Type (Provider Packages)
+        public static dynamic GetProviderPackage(int providerPackageID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.QuerySingle(SQLSelectFromPackage + @"
+                WHERE   p.ProviderPackageID = @0
+            ", providerPackageID);
+            }
+        }
+
+        public static dynamic GetProviderPackageServiceAttributes(int providerPackageID)
+        {
+            using (var db = Database.Open("sqlloco"))
+            {
+                return db.Query(SQLGetPackageServiceAttributesByPackageID, providerPackageID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID());
+            }
+        }
+
+        public const string SQLSelectFromPackage = @"
+                SELECT  p.ProviderPackageID
+                        ,p.PricingTypeID
+                        ,p.ProviderUserID
+                        ,p.PositionID
+                        ,p.ProviderPackageName As Name
+                        ,p.ProviderPackageDescription As Description
+                        ,p.ProviderPackagePrice As Price
+                        ,p.ProviderPackageServiceDuration As ServiceDuration
+                        ,p.FirstTimeClientsOnly
+                        ,p.NumberOfSessions
+                        ,p.PriceRate
+                        ,p.PriceRateUnit
+                        ,p.IsPhone
+                        ,p.LanguageID
+                        ,p.CountryID
+                        ,p.CreatedDate
+                        ,p.UpdatedDate
+                        ,p.Active
+                        ,p.VisibleToClientID
+                FROM    ProviderPackage As P
+        ";
+
+        private const string SQLGetPackageServiceAttributesByPackageID = @"
+                SELECT  PD.ServiceAttributeID
+                        ,A.Name
+                        ,A.ServiceAttributeDescription
+                        ,P.ProviderPackageID
+                FROM    ProviderPackageDetail As PD
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = PD.ProviderPackageID
+                         INNER JOIN
+                        ServiceAttribute As A
+                          ON A.ServiceAttributeID = PD.ServiceAttributeID
+                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                WHERE   A.LanguageID = @1
+                        AND A.CountryID = @2
+                        AND PD.ProviderPackageID = @0
+                ORDER BY A.Name ASC
+        ";
+
+        private const string SQLGetPackageServiceAttributesByMulti = @"
+                SELECT  PD.ServiceAttributeID
+                        ,A.Name
+                        ,A.ServiceAttributeDescription
+                        ,P.ProviderPackageID
+                FROM    ProviderPackageDetail As PD
+                         INNER JOIN
+                        ProviderPackage As P
+                          ON P.ProviderPackageID = PD.ProviderPackageID
+                         INNER JOIN
+                        ServiceAttribute As A
+                          ON A.ServiceAttributeID = PD.ServiceAttributeID
+                            AND A.LanguageID = P.LanguageID AND A.CountryID = P.CountryID
+                WHERE   P.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
+                         AND P.LanguageID = @2 AND P.CountryID = @3
+                         AND PD.Active = 1 AND P.Active = 1
+                         AND (@4 = -1 OR P.ProviderPackageID = @4)
+                         AND (@5 = -1 OR P.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                ORDER BY A.Name ASC
+        ";
+
+        private static dynamic QueryPackagesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, Visibility clientVisibility = null)
+        {
+            // By default, return pricings that are bookable by the public
+            clientVisibility = clientVisibility ?? Visibility.BookableByPublic();
+
+            const string SQLGetPackagesByMulti = SQLSelectFromPackage + @"
+                         INNER JOIN
+                        PricingType As PT
+                          ON P.PricingTypeID = PT.PricingTypeID
+                            AND P.LanguageID = PT.LanguageID
+                            AND P.CountryID = PT.CountryID
+                         INNER JOIN
+                        PositionPricingType AS PPT
+                          ON PPT.PositionID = P.PositionID
+                            AND PPT.PricingTypeID = PT.PricingTypeID
+                            AND PPT.LanguageID = PT.LanguageID
+                            AND PPT.CountryID = PT.CountryID
+                            AND PPT.Active = 1
+                WHERE   p.ProviderUserID = @0
+                         AND (@1 = -1 OR P.PositionID = @1)
+                         AND 
+                        p.LanguageID = @2 AND p.CountryID = @3
+                         AND 
+                        p.Active = 1
+                         AND (@4 = -1 OR p.ProviderPackageID = @4)
+                         AND (@5 = -1 OR p.PricingTypeID = @5)
+                         AND (@6 = -1 OR P.IsAddOn = @6)
+                         AND P.VisibleToClientID IN ({0})
+                ORDER BY PT.DisplayRank ASC
+            ";
+
+            // Database.Query does not natively expand SQL IN clause list, so do it manually :(
+            string query = String.Format(SQLGetPackagesByMulti, String.Join(",", clientVisibility.VisibleToClientIDs()));
+
+            return db.Query(query,
+                providerUserID,
+                positionID,
+                LcData.GetCurrentLanguageID(),
+                LcData.GetCurrentCountryID(),
+                packageID,
+                pricingTypeID,
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
+            );
+        }
+
+        private static dynamic QueryPackageServiceAttributesByMulti(Database db, int providerUserID, int positionID = -1, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null)
+        {
+            return db.Query(SQLGetPackageServiceAttributesByMulti,
+                providerUserID,
+                positionID,
+                LcData.GetCurrentLanguageID(),
+                LcData.GetCurrentCountryID(),
+                packageID,
+                pricingTypeID,
+                (isAddon.HasValue ? (isAddon.Value ? 1 : 0) : -1)
+            );
+        }
+
+        private static ProviderPackagesView ProviderPackagesViewFromDB(dynamic packages, dynamic details)
+        {
+            // Create index of packages, Key:ID, Value:Package record
+            var index = new Dictionary<int, dynamic>(packages.Count);
+            foreach (var pak in packages)
+            {
+                index.Add(pak.ProviderPackageID, pak);
+            }
+            // Create index of packages details per package, Key:PackageID, Value:List of details records
+            var detailsIndex = new Dictionary<int, List<dynamic>>();
+            foreach (var det in details)
+            {
+                List<dynamic> detI = null;
+                if (detailsIndex.ContainsKey(det.ProviderPackageID))
+                    detI = detailsIndex[det.ProviderPackageID];
+                else
+                {
+                    detI = new List<dynamic>();
+                    detailsIndex.Add(det.ProviderPackageID, detI);
+                }
+                detI.Add(det);
+            }
+
+            return new ProviderPackagesView { Packages = packages, PackagesDetails = details, PackagesByID = index, PackagesDetailsByPackage = detailsIndex };
+        }
+
+        private static ProviderPackagesView GetPricingPackagesByProviderPosition(int providerUserID, int positionID, int packageID = -1, int pricingTypeID = -1, bool? isAddon = null, Visibility clientVisibility = null)
+        {
+            dynamic packages, details;
+            using (var db = Database.Open("sqlloco"))
+            {
+                // Get the Provider Packages
+                packages = QueryPackagesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon, clientVisibility);
+
+                details = QueryPackageServiceAttributesByMulti(db, providerUserID, positionID, packageID, pricingTypeID, isAddon);
+            }
+
+            return ProviderPackagesViewFromDB(packages, details);
+        }
+        #endregion
+
+        public class VisibleToClientValidator : RequestFieldValidatorBase
+        {
+            public VisibleToClientValidator(string errorMessage = null) : base(errorMessage) { }
+
+            protected override bool IsValid(HttpContextBase httpContext, string value)
+            {
+                try
+                {
+                    // value must be null, one of the constants, or an actual user id
+                    return (value == null)
+                           || (value.AsInt() == ServiceProfessionalService.ClientVisibilityPublic)
+                           || LcRest.UserProfile.Exists(value.AsInt());
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        public class Visibility
+        {
+            private int[] visibleToClientIDs;
+
+            private Visibility(int[] clientIDs)
+            {
+                visibleToClientIDs = clientIDs;
+            }
+
+            public static Visibility SpecificToClient(int clientID)
+            {
+                return new Visibility(new int[] { clientID });
+            }
+
+            public static Visibility BookableByProviderForClient(int clientID)
+            {
+                return new Visibility(new int[] { ServiceProfessionalService.ClientVisibilityPublic, clientID });
+            }
+
+            public static Visibility BookableByClient(int clientID)
+            {
+                return BookableByProviderForClient(clientID);
+            }
+
+            public static Visibility BookableByPublic()
+            {
+                return new Visibility(new int[] { ServiceProfessionalService.ClientVisibilityPublic });
+            }
+
+            public static Visibility BookableByProvider()
+            {
+                return BookableByPublic();
+            }
+
+            public int[] VisibleToClientIDs()
+            {
+                return visibleToClientIDs;
+            }
+        }
     }
 }

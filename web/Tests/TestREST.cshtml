@@ -539,19 +539,17 @@
             }
         },
 
-        "Freelancer Pricing - All user pricing": {
+        "Service Professional Pricing - All user pricing": {
             "url": "/api/v1/en-US/me/service-professional-services",
-            "get": {
-                "freelancerUserID": 141,
-                "api comment": "Avoid the freelancerUserID parameter to get the own pricing."
-            }
+            "get": {}
         },
-        "Freelancer Pricing - Per Job Title": {
+        "Service Professional Pricing - Client-specific pricing (all job titles)": {
+            "url": "/api/v1/en-US/me/service-professional-services/client/141",
+            "get": {}
+        },
+        "Service Professional Pricing - Per Job Title": {
             "url": "/api/v1/en-US/me/service-professional-services/106",
-            "get": {
-                "freelancerUserID": 141,
-                "api comment": "Avoid the freelancerUserID parameter to get the own pricing."
-            },
+            "get": {},
             "post": {
                 "pricingTypeID": 3,
                 "name": "Testing 2",
@@ -563,6 +561,7 @@
                 "priceRate": 14,
                 "priceRateUnit": "hour",
                 "isPhone": false,
+                "visibleToClientID": 0, // 0 for public, or clientID for client-specific pricing
                 "createdDate": "2013-08-28T21:05:59.947",
                 "updatedDate": "2013-08-28T21:08:02.113",
                 "serviceAttributes": [
@@ -572,7 +571,7 @@
                 "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
             }
         },
-        "Freelancer Pricing - Job Title - Pricing item": {
+        "Service Professional Pricing - Job Title - Pricing item": {
             "url": "/api/v1/en-US/me/service-professional-services/106/73",
             "get": { },
             "put": {
@@ -586,6 +585,7 @@
                 "priceRate": 14,
                 "priceRateUnit": "hour",
                 "isPhone": false,
+                "visibleToClientID": 0, // 0 for public, or clientID for client-specific pricing
                 "createdDate": "2013-08-28T21:05:59.947",
                 "updatedDate": "2013-08-28T21:08:02.113",
                 "serviceAttributes": [
@@ -595,6 +595,12 @@
                 "api comment": "Pricing is assigned to the logged user, cannot be added to other user so no user parameter is needed. serviceDurationMinutes parameter as an integer. Different validation rules apply depending on the pricing type"
             },
             "delete": {}
+        },
+        "Service Professional Pricing - Job Title and Client (client-specific and public pricings)": {
+            "url": "/api/v1/en-US/me/service-professional-services/106/client/562",
+            "get": {
+                "api comment": "The result includes all pricings for a job title that are available for the client - both client-specific pricings and public pricings"
+            }
         },
 
         "Upcoming Bookings (bookings where user is the service professional)": {
@@ -829,9 +835,20 @@
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             },
             "delete": {}
+        },
+        "Edit My Profile Picture (rotate, crop, previously uploaded photo)": {
+            "url": "/api/v1/en-US/me/profile-picture/edit",
+            "post": {
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0,
+                "rotationAngle": 0
+            }
         },
 
         "My Work Photos by Job Title (read and create)": {
@@ -844,19 +861,21 @@
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             }
         },
         "My Work Photos by Job Title, upload update or delete": {
             "url": "/api/v1/en-US/me/work-photos/106/1",
             "put": {
-                "photo": "binary image/* content",
+                "photo": "binary image/* content; optional here, to allow only update associated data or crop/rotate pre-uploaded photo",
                 "caption": "This is my workshop",
                 "rankPosition": 1,
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             },
             "delete": {}
         },

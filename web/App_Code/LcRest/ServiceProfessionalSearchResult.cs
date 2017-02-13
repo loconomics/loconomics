@@ -24,6 +24,8 @@ namespace LcRest
         public string allJobTitles;
         public double distance;
 
+        private LcRest.ServiceProfessionalService.Visibility clientVisibility;
+
         /// <summary>
         /// Same as in PublicUserProfile
         /// Automatic field right now, but is better
@@ -51,12 +53,12 @@ namespace LcRest
             rating = LcRest.PublicUserRating.Get(userID, jobTitleID);
             verificationsSummary = LcRest.PublicUserVerificationsSummary.Get(userID, jobTitleID);
             stats = LcRest.PublicUserStats.Get(userID);
-            jobStats = LcRest.PublicUserJobStats.Get(userID, jobTitleID);
+            jobStats = LcRest.PublicUserJobStats.Get(userID, jobTitleID, clientVisibility);
         }
         #endregion
 
         #region Instances
-        public static ServiceProfessionalSearchResult FromDB(dynamic record, bool fillLinks = false)
+        public static ServiceProfessionalSearchResult FromDB(dynamic record, LcRest.ServiceProfessionalService.Visibility visibility)
         {
             if (record == null) return null;
             var r = new ServiceProfessionalSearchResult
@@ -72,7 +74,8 @@ namespace LcRest
                 jobTitleNameSingular = record.jobTitleNameSingular,
                 otherJobTitles = record.otherJobTitles,
                 allJobTitles = record.allJobTitles,
-                distance = record.distance
+                distance = record.distance,
+                clientVisibility = visibility
             };
             r.FillLinks();
             return r;
@@ -80,8 +83,10 @@ namespace LcRest
         #endregion
 
         #region Fetch
-        public static IEnumerable<ServiceProfessionalSearchResult> SearchByJobTitleID(int JobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<ServiceProfessionalSearchResult> SearchByJobTitleID(int JobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale, LcRest.ServiceProfessionalService.Visibility visibility = null)
         {
+            visibility = visibility ?? LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
+
             using (var db = new LcDatabase())
             {
                return db.Query(@"
@@ -153,11 +158,13 @@ namespace LcRest
                         upp.InstantBooking,
                         p.PositionSingular
                     ", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
-                    .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
+                    .Select(x => (ServiceProfessionalSearchResult)FromDB(x, visibility));
             }
         }
-        public static IEnumerable<ServiceProfessionalSearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
+        public static IEnumerable<ServiceProfessionalSearchResult> SearchBySearchTerm(string SearchTerm, decimal origLat, decimal origLong, int SearchDistance, Locale locale, LcRest.ServiceProfessionalService.Visibility visibility = null)
         {
+            visibility = visibility ?? LcRest.ServiceProfessionalService.Visibility.BookableByPublic();
+
             using (var db = new LcDatabase())
             {
                return db.Query(@"
@@ -227,7 +234,7 @@ namespace LcRest
                         u.publicBio,
                         u.businessName
                     ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
-                    .Select(x => (ServiceProfessionalSearchResult)FromDB(x, true));
+                    .Select(x => (ServiceProfessionalSearchResult)FromDB(x, visibility));
             }
         }
         #endregion

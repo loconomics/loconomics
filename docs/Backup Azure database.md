@@ -9,10 +9,25 @@ Next steps describe the SSIS method from the link, also know as using "Microsoft
 - Open SSMS as administrator.
 - Create local empty database, SQL 2008 or newer, strictly with collation *SQL_Latin1_General_CP1_CI_AS* (see Note 1).
 - Right-click database -> Tasks -> Import data.
-- Choose ".Net Provider for SQL Server" and set the Azure connection string to the hosted database.
-- Choose "SQL Server Native Client 11" and choose the local server and our empty database.
-- Continue the process, choose all "dbo." objects (usually all excluding one starting by "sys."), do not edit mappings.
+- For source, choose ".Net Provider for SQL Server" and set the Azure connection string to the hosted database. This includes the following fields: 
+  - Authentication: SqlPassword
+  - Password 
+  - User ID
+  - Data Source
+  - Initial Catalog: Dev
+- For destination, choose "SQL Server Native Client 11" and choose the local server and our empty database.
+- Continue the process, choose all "dbo." objects (usually all excluding one starting by "sys." and the views, "dbo.vw*"), do not edit mappings.
 - Finish the process.
+- Next, you must migrate the views and stored functions from Dev to your new local loconomics database:
+  - In SSMS, Connect to Dev database
+  - In object explorer, under Dev database, click on Programmability -> Functions -> Scalar-valued Functions
+  - In the menu, click on View -> Object Explorer Details
+  - Highlight all of the functions in the details window, and right click
+  - Choose Script Function as -> CREATE To -> Clipboard
+  - Paste this query in a new loconomics database query
+  - At the top of the file, change `USE [Dev]` to `USE [loconomics]`
+  - Execute the query
+  - _(repeat this process for the views: Dev -> Views)_
 
 **Note 1:** a database created with a different collation than the source will lead to warnings about conversions between varchar columns (different size required for same data), and potentially an error in the process. The indicated collation is the default at Azure DB, but in case was manually changed check it running "SELECT DATABASEPROPERTYEX('TestDB', 'Collation')" (change TestDB by the database name).
 
