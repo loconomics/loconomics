@@ -14,6 +14,7 @@
         y:int [Optional] Vertical coordinate for the top left corner for cropping task
         w:int [Optional] Width of the cropped image. Zero will just mean 'original image width'
         h:int [Optional] Height of the cropped image. Zero will just mean 'original image height'
+        rotationAngle:float
 
     - PUT /{jobTitleID}/{photoID}
         photo:binary image/jpeg
@@ -23,6 +24,7 @@
         y:int [Optional] Vertical coordinate for the top left corner for cropping task
         w:int [Optional] Width of the cropped image. Zero will just mean 'original image width'
         h:int [Optional] Height of the cropped image. Zero will just mean 'original image height'
+        rotationAngle:float
 
     - DELETE /{jobTitleID}/{photoID}
 
@@ -39,19 +41,21 @@
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             }
         },
         "My Work Photos by Job Title, upload update or delete": {
             "url": "/api/v1/en-US/me/work-photos/106/1",
             "put": {
-                "photo": "binary image/* content",
+                "photo": "binary image/* content; optional here, to allow only update associated data or crop/rotate pre-uploaded photo",
                 "caption": "This is my workshop",
                 "rankPosition": 1,
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             },
             "delete": {}
         }
@@ -101,25 +105,30 @@
             try {
                 Stream photoStream = null;
                 var fileuploaded = Request.Files["photo"];
-                if (fileuploaded != null && !String.IsNullOrEmpty(fileuploaded.FileName)) {
+                if (fileuploaded != null && !String.IsNullOrEmpty(fileuploaded.FileName))
+                {
                     photoStream = fileuploaded.InputStream;
                 }
-                if (photoStream == null && photoID == 0) {
+                if (photoStream == null && photoID == 0)
+                {
                     ModelState.AddFormError("Please, include a photo");
                 }
-                else if (photoStream != null && photoStream.Length == 0) {
+                else if (photoStream != null && photoStream.Length == 0 && photoID == 0)
+                {
                     // DOUBT: to check for this error, must be the photoStream or Request.InputStream.Length? Double check
                     ModelState.AddFormError("Maximum request length exceeded");
                 }
-                else {
+                else
+                {
                     var caption = Request["caption"];
                     var rankPosition = Request["rankPosition"].AsInt();
                     var x = (int)Math.Round(Request["x"].AsDecimal());
                     var y = (int)Math.Round(Request["y"].AsDecimal());
                     var w = (int)Math.Round(Request["w"].AsDecimal());
                     var h = (int)Math.Round(Request["h"].AsDecimal());
+                    var angle = Request["rotationAngle"].AsFloat();
                     // It returns the photoID, the given or the created one
-                    photoID = LcData.Photo.UploadWorkPhoto(userID, photoStream, jobTitleID, photoID, caption, rankPosition, x, y, w, h);
+                    photoID = LcData.Photo.UploadWorkPhoto(userID, photoStream, jobTitleID, photoID, caption, rankPosition, x, y, w, h, angle);
                 }
             }
             catch (Exception ex)
