@@ -70,7 +70,8 @@ exports.create = function create(appModel) {
             url = this.stepAfter(api.currentActivity()).stepUrl();
         }
 
-        this.app.shell.go(url);
+        // replaceState flag is true, preventing browser back button to move between onboarding steps
+        this.app.shell.go(url, null, true);
     };
 
     api.isAtCurrentStep = ko.computed(function() {
