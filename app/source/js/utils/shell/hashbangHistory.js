@@ -143,16 +143,12 @@ function cannonicalUrl(url) {
     return url;
 }
 
-/**
-    Tracks the latest URL
-    being pushed or replaced by
-    the API.
-    This allows later to avoid
-    trigger the popstate event,
-    since must NOT be triggered
-    as a result of that API methods
-**/
-var latestPushedReplacedUrl = null;
+/*
+    Native pushState should not trigger hashchange. When
+    we manually trigger hashchange by setting location.hash,
+    we catch and suppress that hashchange event.
+*/
+var hashchangeTriggeredManually = false;
 
 /**
     History Polyfill
@@ -175,7 +171,7 @@ var hashbangHistory = {
             persist();
         }
 
-        latestPushedReplacedUrl = url;
+        hashchangeTriggeredManually = true;
 
         // update location to track history:
         location.hash = '#!' + url;
@@ -210,8 +206,6 @@ var hashbangHistory = {
             // call to persist the updated session
             persist();
         }
-
-        latestPushedReplacedUrl = url;
 
         // update location to track history:
         var hash = '#!' + url;
@@ -251,8 +245,10 @@ $w.on('hashchange', function(e) {
 
     // An URL being pushed or replaced
     // must NOT trigger popstate
-    if (url === latestPushedReplacedUrl)
+    if (hashchangeTriggeredManually) {
+        hashchangeTriggeredManually = false;
         return;
+    }
 
     // get state from history entry
     // for the updated URL, if any
