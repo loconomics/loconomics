@@ -209,7 +209,7 @@ function ViewModel(app) {
             app.model.jobTitleLicenses.clearCache();
             app.model.userLicensesCertifications.clearCache();
             // Go out
-            app.successSave();
+            app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
@@ -237,7 +237,7 @@ function ViewModel(app) {
         app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
         .then(function() {
             // Go out
-            app.successSave();
+            app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({

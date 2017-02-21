@@ -36,8 +36,7 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
             this.app.shell.goBack(this.requestData);
         }
         else {
-            // Just execute the standard save process
-            this.app.successSave();
+            this.app.shell.goBack();
         }
     }.bind(this);
 });
