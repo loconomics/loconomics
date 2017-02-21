@@ -20,6 +20,8 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 [Chrome Developer Tools](https://developer.chrome.com/devtools)
 
+[Browserstack (testing multiple browsers)](https://www.browserstack.com/)
+
 ### Database Query & Administration
 [Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris
 
