@@ -199,6 +199,10 @@ function ViewModel(app) {
         return false;
     }.bind(this);
 
+    this.jobTitleName = ko.pureComputed(function() {
+        return (this.jobTitle() && this.jobTitle().singularName()) || '';
+    }, this);
+
     this.submitText = ko.pureComputed(function() {
         return (
             this.isLoading() ? 
