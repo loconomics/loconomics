@@ -35,8 +35,11 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
             });
             this.app.shell.goBack(this.requestData);
         }
-        else {
+        if (this.app.model.onboarding.inProgress()) {
             this.app.shell.goBack();
+        }
+        else {
+            this.app.successSave();
         }
     }.bind(this);
 });

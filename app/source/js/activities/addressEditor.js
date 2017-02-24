@@ -76,8 +76,11 @@ var A = Activity.extend(function AddressEditorActivity() {
 
             this.app.shell.goBack(this.requestData);
         }
-        else {
+        else if (this.app.model.onboarding.inProgress()) {
             this.app.shell.goBack();
+        }
+        else {
+            this.app.successSave();
         }
     }.bind(this);
 });

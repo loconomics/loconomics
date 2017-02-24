@@ -209,7 +209,13 @@ function ViewModel(app) {
             app.model.jobTitleLicenses.clearCache();
             app.model.userLicensesCertifications.clearCache();
             // Go out
-            app.shell.goBack();
+
+            if (app.model.onboarding.inProgress()) {
+                app.shell.goBack();
+            }
+            else {
+                app.successSave();
+            }
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
