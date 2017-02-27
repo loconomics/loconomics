@@ -25,23 +25,6 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    /* NOTE: Commented out since we have now an OnboardingSuccess activity
-    if (this.requestData.completedOnboarding) {
-        switch (this.requestData.completedOnboarding) {
-            case 'welcome': // Schedule complete
-                this.app.modals.showNotification({
-                    title: 'Nice work!',
-                    message: 'You\'ll now be taken to your marketplace profile. ' +
-                        'Please complete the following: \n' +
-                        '1. Fill in the "About you" section \n' +
-                        '2. Add details about your services \n' +
-                        '3. Add pricing and service locations',
-                    buttonText: 'Got it'
-                });
-                break;
-        }
-    }*/
-
     if (this.viewModel.user.isServiceProfessional()) {
         this.viewModel.sync();
         this.app.model.marketplaceProfile.sync();

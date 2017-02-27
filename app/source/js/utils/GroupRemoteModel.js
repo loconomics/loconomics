@@ -277,7 +277,7 @@ function GroupRemoteModel(settings) {
                 //// Try sync, if original is newer will replace version
                 //version.sync();
                 // pull changes from the new original
-                version.pull({ eventIfNewer: true });
+                version.pull({ evenIfNewer: true });
                 return model;
             })
             .catch(function(err) {

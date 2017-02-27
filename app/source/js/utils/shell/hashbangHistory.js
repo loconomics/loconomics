@@ -24,28 +24,7 @@
       the current use of getters syntax by using the defineProperty and similar functions.
     - This class must be instantiated early because must be the first attaching a handler for native 'popstate',
       so can block all others and avoid edge-case errors (more on the code at the end; may change if TODO-1 is successfully done).
-
-    TODO (1) Study and test alternative implementation to avoid conflicts with the native 'popstate' event at HistoryAPI capable browsers.
-        The current workaround work, but has and edge case problem (see NOTE).
-
-    TODO (2) replaceState does not work as expected, it creates a history entry rather than replace it
-        A solution idea is to perform a browser go(-1) and then the hash change (push), but the go back
-        must bypass the events notification.
-        Unavoidable limitations:
-        - If browser is at the beggining of the history; no possible go back (will take no effect, so result will be like
-          a pushState rather than replaceState)
-        - If previous browser history entry is a different origin: the go back is the last code to execute here, the push will
-          no happens; equivalent to a 'crash' since we get out of the 'app'. Fix: to detect if there is a previous entry
-          keeping our own list of history records/count (rather than just rely on native window.history.length) and avoid
-          the go back there (but this will lead to the same bug that previous bullet point, but that's less serious).
-
-        B Alternative: similar to A, but rather to perform the back when at replaceState, let this to be as before (generating
-        a history entry) but marks that moment in history like a *bad* entry, and intercept the browser event from a 'go back',
-        forcing it to do a second 'go back' just to avoid or jump the *bad* entry; result: the 'replaced' entry will
-        ever exists, we just prevent that from being reached.
-
-        C Alternative: detect if browser has native replaceState, and use it, while keep doing our tasks to set state and that.
-        This just left out non capable browsers, that will behave different (and still have this bug).
+    - Browser must support history.replaceState
 **/
 //global location
 'use strict';
@@ -164,16 +143,12 @@ function cannonicalUrl(url) {
     return url;
 }
 
-/**
-    Tracks the latest URL
-    being pushed or replaced by
-    the API.
-    This allows later to avoid
-    trigger the popstate event,
-    since must NOT be triggered
-    as a result of that API methods
-**/
-var latestPushedReplacedUrl = null;
+/*
+    Native pushState should not trigger hashchange. When
+    we manually trigger hashchange by setting location.hash,
+    we catch and suppress that hashchange event.
+*/
+var hashchangeTriggeredManually = false;
 
 /**
     History Polyfill
@@ -196,7 +171,7 @@ var hashbangHistory = {
             persist();
         }
 
-        latestPushedReplacedUrl = url;
+        hashchangeTriggeredManually = true;
 
         // update location to track history:
         location.hash = '#!' + url;
@@ -232,10 +207,11 @@ var hashbangHistory = {
             persist();
         }
 
-        latestPushedReplacedUrl = url;
+        // update location to track history:
+        var hash = '#!' + url;
 
         // update location to track history:
-        location.hash = '#!' + url;
+        window.history.replaceState(state, title, location.origin + location.pathname + hash);
     },
     get state() {
 
@@ -269,8 +245,10 @@ $w.on('hashchange', function(e) {
 
     // An URL being pushed or replaced
     // must NOT trigger popstate
-    if (url === latestPushedReplacedUrl)
+    if (hashchangeTriggeredManually) {
+        hashchangeTriggeredManually = false;
         return;
+    }
 
     // get state from history entry
     // for the updated URL, if any

@@ -171,10 +171,10 @@ function ViewModel(app) {
             if (becomingProfessional) {
                 return app.model.userProfile
                 .load({ forceRemoteUpdate: true })
-                .then(function(profile) {
+                .then(function() {
                     // Start onboarding
                     if (app.model.onboarding) {
-                        app.model.onboarding.setStep(profile.onboardingStep());
+                        app.model.onboarding.skipToAddJobTitles();
                     }
                     onEnd();
                 });
