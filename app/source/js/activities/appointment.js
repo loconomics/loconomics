@@ -5,7 +5,9 @@ var $ = require('jquery'),
     moment = require('moment'),
     Appointment = require('../models/Appointment'),
     ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
+    getDateWithoutTime = require('../utils/getDateWithoutTime'),
+    AppointmentCardViewModel = require('../viewmodels/AppointmentCard'),
+    Listener = require('../utils/EventEmitterListener');
 
 require('../components/DatePicker');
 
@@ -22,6 +24,8 @@ var A = Activity.extend(function AppointmentActivity() {
     this.$chooseNew = $('#calendarChooseNew');
     
     this.viewModel = new ViewModel(this.app);
+
+    this.appointmentListeners = [];
     
     // Create default leftAction/backAction settings
     // later used to instantiate a new NavAction that will
@@ -115,9 +119,54 @@ var A = Activity.extend(function AppointmentActivity() {
         }.bind(this)._delayed(10)
         // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click event.
     });
+
+    this.registerHandler({
+        target: this.viewModel.currentAppointment,
+        handler: function() { this.registerAppointmentListeners(); }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.appointmentCardView,
+        handler: function() { this.registerAppointmentListeners(); }.bind(this)
+    });
 });
 
 exports.init = A.init;
+
+A.prototype.registerAppointmentListeners = function() {
+    var listeners = [],
+        events = AppointmentCardViewModel.events,
+        cardView = this.viewModel.appointmentCardView(),
+        viewModel = this.viewModel,
+        app = this.app;
+
+    this.disposeAppointmentListeners();
+
+    if(cardView) {
+        listeners.push(new Listener(cardView, events.confirmed, function(appointment) {
+            // Go to the confirmed card at the date that was confirmed
+            viewModel.setCurrent(null, appointment.sourceBooking().bookingID(), 'booking');
+        }));
+
+        listeners.push(new Listener(cardView, events.declined, function(appointment) {
+            // Go to the calendar day of the declined booking at the current appointment day
+            app.shell.go('calendar/' + appointment.startTime().toISOString());
+        }));
+
+        listeners.push(new Listener(cardView, events.cancelled, function(appointment) {
+            // Go to the calendar day of the cancelled booking at the appointment day
+            app.shell.go('calendar/' + appointment.startTime().toISOString());
+        }));
+
+        this.appointmentListeners = listeners;
+    }
+};
+
+A.prototype.disposeAppointmentListeners = function() {
+    this.appointmentListeners.forEach(function(listener) {
+        listener.dispose();
+    });
+};
 
 A.prototype.show = function show(options) {
     
@@ -200,7 +249,11 @@ A.prototype.show = function show(options) {
     .then(setupCard);
 };
 
-var Appointment = require('../models/Appointment');
+A.prototype.hide = function hide() {
+    Activity.prototype.hide.call(this);
+
+    this.disposeAppointmentListeners();
+};
 
 function findAppointmentInList(list, id) {
     var found = null,
