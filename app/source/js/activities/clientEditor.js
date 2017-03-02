@@ -241,6 +241,8 @@ function ViewModel(app) {
     this.serviceSummaries = ko.observable([]);
 
     this.loadServices = function(clientID) {
+        var view = this;
+
         this.isLoadingServices(true);
 
         Promise.all([app.model.serviceProfessionalServices.getClientSpecificServices(clientID),
@@ -252,17 +254,21 @@ function ViewModel(app) {
                 pricingTypes = models[2](),
                 summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
 
-            this.serviceSummaries(summaries);
-        }.bind(this))
+            view.serviceSummaries(summaries);
+        })
         .catch(function(error) {
+            var messagePrefix = 'Unable to load special services',
+                messageName = view.client() ? ' for ' + view.client().firstName() : '',
+                message = messagePrefix + messageName + '.';
+
             app.modals.showError({
-                title: 'There was an error while saving.',
+                title: message,
                 error: error
             });
         })
         .then(function() {
-            this.isLoadingServices(false);
-        }.bind(this));
+            view.isLoadingServices(false);
+        });
     };
 
     this.submitText = ko.pureComputed(function() {
