@@ -3,8 +3,9 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var is = require('is_js');
+var Activity = require('../components/Activity'),
+    is = require('is_js'),
+    ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter');
 
 var A = Activity.extend(function ClientEditionActivity() {
     
@@ -37,6 +38,15 @@ var A = Activity.extend(function ClientEditionActivity() {
                 urlID !== clientID) {
                 // Replace URL
                 this.app.shell.replaceState(null, null, 'clientEditor/' + clientID);
+            }
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.clientID,
+        handler: function (clientID) {
+            if (clientID) {
+                this.viewModel.loadServices(clientID);
             }
         }.bind(this)
     });
@@ -198,6 +208,7 @@ function ViewModel(app) {
 
     this.header = ko.observable('');
     
+// TODO loading must change
     this.isLoading = app.model.clients.state.isLoading;
     this.isSyncing = app.model.clients.state.isSyncing;
     this.isSaving = app.model.clients.state.isSaving;
@@ -220,6 +231,30 @@ function ViewModel(app) {
         var c = this.client();
         return !c || !c.updatedDate();
     }, this);
+
+    this.serviceSummaries = ko.observable([]);
+
+    this.loadServices = function(clientID) {
+        Promise.all([app.model.serviceProfessionalServices.getClientSpecificServices(clientID),
+                     app.model.userJobProfile.getJobTitles(),
+                     app.model.pricingTypes.getList()])
+        .then(function(models) {
+            var services = models[0],
+                jobTitles = models[1],
+                pricingTypes = models[2](),
+                summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
+
+            this.serviceSummaries(summaries);
+        }.bind(this))
+
+        .catch(function(error) {
+            app.modals.showError({
+// TODO: improve this message
+                title: 'There was an error while saving.',
+                error: error
+            });
+        });
+    };
 
     this.submitText = ko.pureComputed(function() {
         var v = this.clientVersion();
