@@ -208,8 +208,14 @@ function ViewModel(app) {
 
     this.header = ko.observable('');
     
-// TODO loading must change
-    this.isLoading = app.model.clients.state.isLoading;
+    this.isLoadingServices = ko.observable(false);
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            app.model.clients.state.isLoading() ||
+            this.isLoadingServices()
+        );
+    }, this);
+
     this.isSyncing = app.model.clients.state.isSyncing;
     this.isSaving = app.model.clients.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
@@ -235,6 +241,8 @@ function ViewModel(app) {
     this.serviceSummaries = ko.observable([]);
 
     this.loadServices = function(clientID) {
+        this.isLoadingServices(true);
+
         Promise.all([app.model.serviceProfessionalServices.getClientSpecificServices(clientID),
                      app.model.userJobProfile.getJobTitles(),
                      app.model.pricingTypes.getList()])
@@ -246,14 +254,15 @@ function ViewModel(app) {
 
             this.serviceSummaries(summaries);
         }.bind(this))
-
         .catch(function(error) {
             app.modals.showError({
-// TODO: improve this message
                 title: 'There was an error while saving.',
                 error: error
             });
-        });
+        })
+        .then(function() {
+            this.isLoadingServices(false);
+        }.bind(this));
     };
 
     this.submitText = ko.pureComputed(function() {
