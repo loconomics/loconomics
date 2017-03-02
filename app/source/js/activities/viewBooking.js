@@ -32,5 +32,13 @@ A.prototype.show = function show(state) {
         else {
             this.app.shell.go('/clientAppointment/' + bookingID, null, true);
         }
+    }.bind(this))
+    .catch(function(err) {
+        this.app.modals.showError({
+            title: 'Booking',
+            error: err
+        }).then(function() {
+            this.app.goDashboard();
+        }.bind(this));
     }.bind(this));
 };
