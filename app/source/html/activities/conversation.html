@@ -2,7 +2,7 @@
 <div data-activity="conversation" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">   
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div data-bind="if: bookingID" class="isolated">
-                        <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': '#!/appointment/' + bookingID() + '/booking' }">Open Booking</button>
+                        <button type="button" class="btn btn-default btn-block" data-bind="attr: { 'data-href': linkToBooking }">Open Booking</button>
                     </div>
                 </div>
             </div>
