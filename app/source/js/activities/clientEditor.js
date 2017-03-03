@@ -249,9 +249,10 @@ function ViewModel(app) {
                      app.model.userJobProfile.getJobTitles(),
                      app.model.pricingTypes.getList()])
         .then(function(models) {
-            var services = models[0],
+            var services = app.model.serviceProfessionalServices.asModel(models[0]),
                 jobTitles = models[1],
                 pricingTypes = models[2](),
+
                 summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
 
             view.serviceSummaries(summaries);

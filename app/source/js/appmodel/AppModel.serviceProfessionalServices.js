@@ -25,8 +25,7 @@ exports.create = function create(appModel) {
     });
 
     api.getClientSpecificServices = function(clientID) {
-        return appModel.rest.get(restUrlPrefix + 'client/' + clientID)
-               .then(function(services) { return api.asModel(services); });
+        return appModel.rest.get(restUrlPrefix + 'client/' + clientID);
     };
     
     return api;
