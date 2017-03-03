@@ -197,9 +197,11 @@ function ServiceProfessionalServiceViewModel(app) {
         };
     };
 
-    ///
     /// Load Data
-    var loadDataFor = function loadDataFor(serviceProfessionalID, jobTitleID) {
+    this.loadData = function(serviceProfessionalID, jobTitleID) {
+        this.serviceProfessionalID(serviceProfessionalID);
+        this.jobTitleID(jobTitleID);
+
         if (jobTitleID) {
             this.isLoading(true);
             // Get data for the Job title ID and pricing types.
@@ -260,25 +262,6 @@ function ServiceProfessionalServiceViewModel(app) {
             return Promise.resolve();
         }
     }.bind(this);
-    
-    var manualLoad = false;
-    
-    // Public interface
-    this.loadData = function(serviceProfessionalID, jobTitleID) {
-        manualLoad = true;
-        this.serviceProfessionalID(serviceProfessionalID);
-        this.jobTitleID(jobTitleID);
-        return loadDataFor(serviceProfessionalID, jobTitleID).then(function() {
-            manualLoad = false;
-        });
-    };
-
-    this.isAutoLoadEnabled = ko.observable(false);
-    // AUTO LOAD on job title change
-    ko.computed(function() {
-        if (manualLoad || !this.isAutoLoadEnabled()) return;
-        loadDataFor(this.serviceProfessionalID(), this.jobTitleID());
-    }.bind(this)).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
 ServiceProfessionalServiceViewModel._inherits(EventEmitter);
