@@ -197,70 +197,76 @@ function ServiceProfessionalServiceViewModel(app) {
         };
     };
 
-    /// Load Data
-    this.loadData = function(serviceProfessionalID, jobTitleID) {
+    /*
+        loadData
+
+        public interface for loading service professional services and supporting data for the view
+
+        serviceProfessionalID: (optional), can be null. When used for
+                               client view, include serviceProfessionalID of services provider
+        jobTitleID: ID of the job title
+        servicesPromise: the promise object for loading service professional services.
+                         Should yield list of raw objects, not models.
+    */
+    this.loadData = function(serviceProfessionalID, jobTitleID, servicesPromise) {
         this.serviceProfessionalID(serviceProfessionalID);
         this.jobTitleID(jobTitleID);
 
-        if (jobTitleID) {
-            this.isLoading(true);
-            // Get data for the Job title ID and pricing types.
-            // They are essential data
-            return Promise.all([
-                app.model.jobTitles.getJobTitle(jobTitleID),
-                app.model.pricingTypes.getList()
-            ])
-            .then(function(data) {
-                var jobTitle = data[0];
-                // Save for use in the view
-                this.jobTitle(jobTitle);
-                // Get services
-                if (serviceProfessionalID)
-                    return app.model.users.getServiceProfessionalServices(serviceProfessionalID, jobTitleID);
-                else
-                    return app.model.serviceProfessionalServices.getList(jobTitleID);
-            }.bind(this))
-            .then(function(list) {
+        this.isLoading(true);
+        // Get data for the Job title ID and pricing types.
+        // They are essential data
+        return Promise.all([
+            app.model.jobTitles.getJobTitle(jobTitleID),
+            app.model.pricingTypes.getList()
+        ])
+        .then(function(data) {
+            var jobTitle = data[0];
+            // Save for use in the view
+            this.jobTitle(jobTitle);
+            // Get services
+            return servicesPromise;
+        }.bind(this))
+        .then(function(list) {
 
-                list = app.model.serviceProfessionalServices.asModel(list);
+            list = app.model.serviceProfessionalServices.asModel(list);
 
-                // Read presets selection from requestData
-                var preset = this.preSelectedServices(),
-                    selection = this.selectedServices;
+            // Read presets selection from requestData
+            var preset = this.preSelectedServices(),
+                selection = this.selectedServices;
 
-                // Add the isSelected property to each item
-                list.forEach(function(item) {
-                    var preSelected = preset.some(function(pr) {
-                        if (pr.serviceProfessionalServiceID === item.serviceProfessionalServiceID())
-                            return true;
-                    }) || false;
+            // Add the isSelected property to each item
+            list.forEach(function(item) {
+                var preSelected = preset.some(function(pr) {
+                    if (pr.serviceProfessionalServiceID === item.serviceProfessionalServiceID())
+                        return true;
+                }) || false;
 
-                    item.isSelected = ko.observable(preSelected);
+                item.isSelected = ko.observable(preSelected);
 
-                    if (preSelected) {
-                        selection.push(item);
-                    }
-                });
-                this.list(list);
-                
-                this.isLoading(false);
-                
-                this.emit('loaded');
+                if (preSelected) {
+                    selection.push(item);
+                }
+            });
+            this.list(list);
 
-            }.bind(this))
-            .catch(function (err) {
-                this.isLoading(false);
-                app.modals.showError({
-                    title: 'There was an error while loading.',
-                    error: err
-                });
-            }.bind(this));
-        }
-        else {
-            this.list([]);
-            this.jobTitle(null);
-            return Promise.resolve();
-        }
+            this.isLoading(false);
+
+            this.emit('loaded');
+
+        }.bind(this))
+        .catch(function (err) {
+            this.isLoading(false);
+            app.modals.showError({
+                title: 'There was an error while loading.',
+                error: err
+            });
+        }.bind(this));
+     }.bind(this);
+
+    this.clearData = function() {
+        this.serviceProfessionalID(null);
+        this.list([]);
+        this.jobTitle(null);
     }.bind(this);
 }
 

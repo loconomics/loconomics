@@ -458,7 +458,10 @@ BaseClientBookingCardVM.prototype.loadServices = function() {
     var jid = b.jobTitleID();
     if (this.serviceProfessionalServices.serviceProfessionalID() !== spid ||
         this.serviceProfessionalServices.jobTitleID() !== jid) {
-        return this.serviceProfessionalServices.loadData(spid, jid);
+
+        var servicesPromise = this.app.model.users.getServiceProfessionalServices(spid, jid);
+
+        return this.serviceProfessionalServices.loadData(spid, jid, servicesPromise);
     }
 };
 

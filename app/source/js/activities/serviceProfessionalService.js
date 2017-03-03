@@ -57,15 +57,6 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
         }.bind(this)
     });
 
-    // On changing jobTitleID:
-    // - load pricing
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            this.viewModel.loadData(null, jobTitleID);
-         }.bind(this)
-     });
-
     // Go back with the selected pricing when triggered in the form/view
     this.viewModel.returnSelected = function(pricing, jobTitleID) {
         // Pass the selected client in the info
@@ -150,18 +141,21 @@ A.prototype.show = function show(options) {
 
     var matcher = new RouteMatcher([
         new Route(':jobTitleID/new', { isNew: true }),
-//        new Route(':jobTitleID/client/:clientID/new', { isNew: true }),
-//        new Route(':jobTitleID/client/:clientID'),
+        new Route(':jobTitleID/client/:clientID/new', { isNew: true }),
+        new Route(':jobTitleID/client/:clientID'),
         new Route('new', { isNew: true }),
         new Route(':jobTitleID'),
         new Route('')
     ]);
 
-    var params = matcher.match(options.route.segments.join('/'), { jobTitleID: 0, isNew: false }) || {};
+    var paramsDefaults = { jobTitleID: 0, isNew: false, clientID: null },
+        params = matcher.match(options.route.segments.join('/'), paramsDefaults) || {};
 
     var jobTitleID = +params.jobTitleID;
     if (jobTitleID === 0 && options.selectedJobTitleID > 0)
         jobTitleID = options.selectedJobTitleID |0;
+
+    this.viewModel.clientID(params.clientID);
 
     var isAdditionMode = params.isNew;
 
@@ -183,9 +177,13 @@ A.prototype.show = function show(options) {
     this.updateNavBarState();
 
     this.viewModel.jobTitleID(jobTitleID);
-    
+
     if (jobTitleID === 0) {
+        this.viewModel.clearData();
         this.viewModel.jobTitles.sync();
+    }
+    else {
+        this.viewModel.loadServicesData();
     }
 };
 
@@ -198,6 +196,8 @@ function ViewModel(app) {
     // Always load empty pricing types, regardless of view model mode
     this.loadEmptyPricingTypes(true);
 
+    this.clientID = ko.observable(null);
+
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
     this.isInOnboarding = app.model.onboarding.inProgress;
     this.headerText = ko.observable('Services');
@@ -208,7 +208,18 @@ function ViewModel(app) {
     this.jobTitles.baseUrl('/serviceProfessionalService');
     this.jobTitles.selectJobTitle = function(jobTitle) {
         this.jobTitleID(jobTitle.jobTitleID());
+        this.loadServicesData();
         return false;
+    }.bind(this);
+
+    this.loadServicesData = function() {
+        var clientID = this.clientID(),
+            jobTitleID = this.jobTitleID(),
+            model = app.model.serviceProfessionalServices,
+            services = clientID ? model.getClientSpecificServicesForJobTitle(clientID, jobTitleID) :
+                                  model.getList(jobTitleID);
+
+        return this.loadData(null, jobTitleID, services);
     }.bind(this);
 
     this.jobTitleName = ko.pureComputed(function() {
