@@ -1,1 +1,0 @@
-update alert set [required]=1 where alertid = 5 -- payment alert

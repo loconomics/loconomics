@@ -12,7 +12,7 @@ var datepickerAvailability = require('../utils/datepickerAvailability');
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function CalendarActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
@@ -24,10 +24,10 @@ var A = Activity.extend(function CalendarActivity() {
     this.$dailyView = this.$activity.find('#calendarDailyView');
     this.$dateTitle = this.$activity.find('.CalendarDateHeader > .btn');
     this.$chooseNew = $('#calendarChooseNew');
-    
+
     /* Init components */
     this.$datepicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
-    
+
     this.tagAvailability = datepickerAvailability.create(this.app, this.$datepicker, this.viewModel.isLoading);
 
     /* Event handlers */
@@ -43,7 +43,7 @@ var A = Activity.extend(function CalendarActivity() {
 
                     var isoDate = mdate.toISOString();
 
-                    // Update datepicker selected date on date change (from 
+                    // Update datepicker selected date on date change (from
                     // a different source than the datepicker itself
                     this.$datepicker.removeClass('is-visible');
                     // Change not from the widget?
@@ -61,7 +61,7 @@ var A = Activity.extend(function CalendarActivity() {
             }
 
             // Something fail, bad date or not date at all
-            // Set the current 
+            // Set the current
             this.viewModel.currentDate(getDateWithoutTime());
 
         }.bind(this)
@@ -83,7 +83,7 @@ var A = Activity.extend(function CalendarActivity() {
 
         }.bind(this)
     });
-    
+
     this.hideDatepicker = function() {
         // Run datepicker close logic by calling 'hide', it fixes some bugs
         this.$datepicker.datepicker('hide')
@@ -126,7 +126,7 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     // Avoid the bug of no-interaction if latest time the datepicker keep opened in a month or year mode
     this.hideDatepicker();
 
@@ -139,11 +139,11 @@ A.prototype.show = function show(options) {
         // Check is valid, and ensure is date at 12AM
         date = mdate.isValid() ? getDateWithoutTime(mdate.toDate()) : null;
     }
-    
+
     if (!date)
         // Today:
         date = getDateWithoutTime();
-    
+
     // Reset to force new data load (can happens if schedule was change or anything in the middle)
     this.viewModel.previousDate = null;
     this.viewModel.currentDate(date);
@@ -166,7 +166,7 @@ function ViewModel(app) {
         }
     }, this);
 
-    // slotsSource save the data as processed by a request of 
+    // slotsSource save the data as processed by a request of
     // data because a date change.
     // It's updated by changes on currentDate that performs the remote loading
     this.slotsSource = ko.observable(fullDayFree);
@@ -174,9 +174,9 @@ function ViewModel(app) {
     // As computed in order to allow any other observable change
     // from trigger the creation of a new value
     this.slots = ko.computed(function() {
-    
+
         var slots = this.slotsSource();
-        
+
         // Hide unavailable slots, except if there is only one slot (so there
         // is ever something displayed)
         if (slots.length > 1) {
@@ -184,11 +184,11 @@ function ViewModel(app) {
                 return slot.id() !== Appointment.specialIds.unavailable;
             });
         }
-        
+
         return slots.map(TimeSlotViewModel.fromAppointment);
 
     }, this);
-    
+
     this.isLoading = ko.observable(false);
 
     // Update current slots on date change
@@ -209,10 +209,10 @@ function ViewModel(app) {
         this.previousDate = date.toISOString();
 
         this.isLoading(true);
-        
+
         app.model.calendar.getDateAvailability(date)
         .then(function(dateAvail) {
-            
+
             // IMPORTANT: First, we need to check that we are
             // in the same date still, because several loadings
             // can happen at a time (changing quickly from date to date
@@ -222,31 +222,31 @@ function ViewModel(app) {
             // TODO: still this has the minor bug of losing the isLoading
             // if a previous triggered load still didn't finished; its minor
             // because is very rare that happens, moving this stuff
-            // to a special appModel for mixed bookings and events with 
+            // to a special appModel for mixed bookings and events with
             // per date cache that includes a view object with isLoading will
             // fix it and reduce this complexity.
             if (date.toISOString() !== this.currentDate().toISOString()) {
                 // Race condition, not the same!! out:
                 return;
             }
-        
+
             // Update the source:
             this.slotsSource(dateAvail.list());
             this.isLoading(false);
 
         }.bind(this))
         .catch(function(err) {
-            
+
             // Show free on error
             this.slotsSource(fullDayFree);
             this.isLoading(false);
-            
+
             var msg = 'Error loading calendar events.';
             app.modals.showError({
                 title: msg,
-                error: err && err.error || err
+                error: err
             });
-            
+
         }.bind(this));
 
     }.bind(this));

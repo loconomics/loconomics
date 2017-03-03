@@ -8,11 +8,13 @@ var $ = require('jquery');
 /**
     Generates a text message, with newlines if needed, describing the error
     object passed.
-    @param err:any As a string, is returned 'as is'; as falsy, it return a generic
+    @param {any} err As a string, is returned 'as is'; as falsy, it return a generic
     message for 'unknow error'; as object, it investigate what type of error is to
     provide the more meaninful result, with fallback to JSON.stringify prefixed
     with 'Technical details:'.
     Objects recognized:
+    - Object with 'error' property. The value of that property will be analyzed
+      by the other rules
     - XHR/jQuery for JSON responses: just objects with responseJSON property, is
       used as the 'err' object and passed to the other object tests.
     - Object with 'errorMessage' (server-side formatted error).
@@ -21,16 +23,25 @@ var $ = require('jquery');
       is set as prefix for the 'message' property value.
     - Object with 'errors' property. Each element in the array or object own keys
       is appended to the errorMessage or message separated by newline.
+    @param {string} defaultText In case err is null or empty
+
+    TODO High complexity, refactor, simplification of supported cases?
 **/
 exports.getErrorMessageFrom = function getErrorMessageFrom(err, defaultText) {
-    /*jshint maxcomplexity:14, maxdepth:5*/
+    /*jshint maxcomplexity:16, maxdepth:5*/
 
     defaultText = defaultText || 'Unknow error';
-    
+
     if (!err) {
         return defaultText;
     }
-    else if (typeof(err) === 'string') {
+
+    // Extrat in case the error is hold inside an 'error' property
+    if (err.error && (typeof(err.error) === 'object' || typeof(err.error) === 'string')) {
+        err = err.error;
+    }
+
+    if (typeof(err) === 'string') {
         return err || defaultText;
     }
     else {
@@ -52,7 +63,7 @@ exports.getErrorMessageFrom = function getErrorMessageFrom(err, defaultText) {
                 // is no details to show) makes us to show an annoying 'technical details'
                 var hasMoreInfo = jserr && jserr !== '{}';
                 // Too if there is no more information than the one extracted to build the
-                // message, since on that cases the 'technical details' will be just a 
+                // message, since on that cases the 'technical details' will be just a
                 // json formatted of the same displayed message
                 if (hasMoreInfo) {
                     // Reset initially, re-enabled only if there are more properties
@@ -109,13 +120,13 @@ exports.stringifyErrorsList = function (errors) {
     No formal rejection happens.
 **/
 exports.showError = function showErrorModal(options) {
-    
+
     var modal = $('#errorModal'),
         header = modal.find('#errorModal-label'),
         body = modal.find('#errorModal-body');
-    
+
     options = options || {};
-    
+
     // Fallback error message
     var msg = body.data('default-text');
 
@@ -126,7 +137,7 @@ exports.showError = function showErrorModal(options) {
     body.multiline(msg);
 
     header.text(options.title || header.data('default-text'));
-    
+
     return new Promise(function(resolve) {
         modal.modal('show');
         modal.on('hide.bs.modal', function() {
@@ -147,7 +158,7 @@ exports.showError = function showErrorModal(options) {
     and reject on button 'no' pressed or modal dismissed/closed.
 **/
 exports.confirm = function confirm(options) {
-    
+
     var modal = $('#confirmModal'),
         header = modal.find('#confirmModal-label'),
         body = modal.find('#confirmModal-body'),
@@ -193,14 +204,14 @@ exports.confirm = function confirm(options) {
     No formal rejection happens.
 **/
 exports.showNotification = function showNotification(options) {
-    
+
     var modal = $('#notificationModal'),
         header = modal.find('#notificationModal-label'),
         button = modal.find('#notificationModal-button'),
         body = modal.find('#notificationModal-body');
 
     options = options || {};
-    
+
     // Fallback message
     var msg = options.message || body.data('default-text');
 
@@ -208,7 +219,7 @@ exports.showNotification = function showNotification(options) {
 
     header.text(options.title || header.data('default-text'));
     button.text(options.buttonText || button.data('default-text'));
-    
+
     return new Promise(function(resolve) {
         modal.modal('show');
         modal.on('hide.bs.modal', function() {
