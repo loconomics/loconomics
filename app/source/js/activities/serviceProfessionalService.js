@@ -5,7 +5,9 @@
 
 var ko = require('knockout'),
     Activity = require('../components/Activity'),
-    ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService');
+    ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService'),
+    RouteMatcher = require('../utils/Router').RouteMatcher,
+    Route = require('../utils/Router').Route;
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -43,6 +45,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
                 if (this.viewModel.isSelectionMode()) return;
                 // If the URL didn't included the jobTitleID, or is different,
                 // we put it to avoid reload/resume problems
+
                 var found = /serviceProfessionalService\/(\d+)/i.exec(window.location);
                 var urlID = found && found[1] |0;
                 if (urlID !== jobTitleID) {
@@ -137,7 +140,6 @@ A.prototype.show = function show(options) {
     // Remember route to go back, from a request of 'mustReturn' or last requested
     this.mustReturnTo = this.requestData.route.query.mustReturn || this.mustReturnTo;
         
-    
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.reset();
@@ -145,14 +147,24 @@ A.prototype.show = function show(options) {
     this.viewModel.preSelectedServices(this.requestData.selectedServices || []);
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
-    
-    // Params
-    var params = options && options.route && options.route.segments;
-    var jobTitleID = params[0] |0;
+
+    var matcher = new RouteMatcher([
+        new Route(':jobTitleID/new', { isNew: true }),
+//        new Route(':jobTitleID/client/:clientID/new', { isNew: true }),
+//        new Route(':jobTitleID/client/:clientID'),
+        new Route('new', { isNew: true }),
+        new Route(':jobTitleID'),
+        new Route('')
+    ]);
+
+    var params = matcher.match(options.route.segments.join('/'), { jobTitleID: 0, isNew: false }) || {};
+
+    var jobTitleID = +params.jobTitleID;
     if (jobTitleID === 0 && options.selectedJobTitleID > 0)
         jobTitleID = options.selectedJobTitleID |0;
 
-    var isAdditionMode = params[0] === 'new' || params[1] === 'new';
+    var isAdditionMode = params.isNew;
+
     if (isAdditionMode) {
         // Sets referrer as cancelLink
         var ref = this.app.shell.referrerRoute;
