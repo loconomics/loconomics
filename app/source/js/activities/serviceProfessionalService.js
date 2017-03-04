@@ -57,6 +57,26 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
         }.bind(this)
     });
 
+    this.registerHandler({
+        target: this.viewModel.clientID,
+        handler: function(clientID) {
+            var viewModel = this.viewModel,
+                app = this.app;
+
+            viewModel.client(null);
+
+            if(clientID) {
+                app.model.clients.getItem(clientID)
+                .then(function(client) {
+                    viewModel.client(client);
+                })
+                .catch(function(error) {
+                    app.modals.showError({ title: 'Unable to load client.', error: error });
+                });
+            }
+        }.bind(this)
+    });
+
     // Go back with the selected pricing when triggered in the form/view
     this.viewModel.returnSelected = function(pricing, jobTitleID) {
         // Pass the selected client in the info
@@ -197,6 +217,7 @@ function ViewModel(app) {
     this.loadEmptyPricingTypes(true);
 
     this.clientID = ko.observable(null);
+    this.client = ko.observable(null);
 
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
     this.isInOnboarding = app.model.onboarding.inProgress;
@@ -221,6 +242,10 @@ function ViewModel(app) {
 
         return this.loadData(null, jobTitleID, services);
     }.bind(this);
+
+    this.clientName = ko.pureComputed(function() {
+        return (this.client() && this.client().firstName()) || '';
+    }, this);
 
     this.jobTitleName = ko.pureComputed(function() {
         return (this.jobTitle() && this.jobTitle().singularName()) || '';
