@@ -1,6 +1,6 @@
 /**
     UserJobProfileViewModel: loads data and keep state
-    to display the listing of job titles from the 
+    to display the listing of job titles from the
     user job profile.
 **/
 'use strict';
@@ -9,9 +9,9 @@ var ko = require('knockout'),
     UserJobTitle = require('../models/UserJobTitle');
 
 function UserJobProfileViewModel(app) {
-    
+
     this.showMarketplaceInfo = ko.observable(false);
-    
+
     // Load and save job title info
     var jobTitlesIndex = {};
     function syncJobTitle(jobTitleID) {
@@ -33,7 +33,7 @@ function UserJobProfileViewModel(app) {
             return this.jobTitle() && this.jobTitle().singularName() || 'Unknow';
         }, userJobTitle);
     }
-    
+
     function attachMarketplaceStatus(userJobtitle) {
         userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
             var status = this.statusID();
@@ -56,7 +56,7 @@ function UserJobProfileViewModel(app) {
         attachJobTitle(userJobtitle);
         attachMarketplaceStatus(userJobtitle);
     }
-    
+
     this.userJobProfile = ko.observableArray([]);
     // Updated using the live list, for background updates
     app.model.userJobProfile.list.subscribe(function(list) {
@@ -82,7 +82,7 @@ function UserJobProfileViewModel(app) {
     this.isSyncing = ko.observable(false);
     this.thereIsError = ko.observable(false);
     this.baseUrl = ko.observable('/jobtitles');
-    
+
     this.selectJobTitle = function(jobTitle) {
         // Gollow the next link:
         app.shell.go(this.baseUrl() + '/' + jobTitle.jobTitleID());
@@ -90,13 +90,13 @@ function UserJobProfileViewModel(app) {
         // Stop events
         return false;
     }.bind(this);
-    
+
     var showLoadingError = function showLoadingError(err) {
         app.modals.showError({
             title: 'An error happening when loading your job profile.',
-            error: err && err.error || err
+            error: err
         });
-        
+
         this.isLoading(false);
         this.isSyncing(false);
         this.thereIsError(true);

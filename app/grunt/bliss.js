@@ -8,10 +8,10 @@ module.exports = function(grunt) {
         cwd: includedDir,
         filter: grunt.file.isFile
     }, includedPatterns);
-    
+
     var facebookAppID = '180579422039773',
         facebookLang = 'en-US';
-    
+
     var moment = require('moment');
     var version = moment().format('YYYYMMDDHHmm');
     var pkg = grunt.file.readJSON('package.json');
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
                 debug: false,
                 includedFiles: includedFiles,
                 cordovajs: false,
-                siteUrl: 'http://dev.loconomics.com',
+                siteUrl: 'https://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
                 appVersion: '<%= package.version %>',
@@ -67,7 +67,7 @@ module.exports = function(grunt) {
                 debug: true,
                 includedFiles: includedFiles,
                 cordovajs: false,
-                siteUrl: 'http://dev.loconomics.com',
+                siteUrl: 'https://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
                 appVersion: '<%= package.version %>',
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
                 debug: true,
                 includedFiles: includedFiles,
                 cordovajs: true,
-                siteUrl: 'http://dev.loconomics.com',
+                siteUrl: 'https://dev.loconomics.com',
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
                 appVersion: '<%= package.version %>',
