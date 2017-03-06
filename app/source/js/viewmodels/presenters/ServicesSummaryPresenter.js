@@ -29,6 +29,10 @@ ServicesSummaryPresenter.prototype.jobTitle = function() {
     return this._jobTitle.singularName();
 };
 
+ServicesSummaryPresenter.prototype.jobTitleID = function() {
+    return this._jobTitle.jobTitleID();
+};
+
 ServicesSummaryPresenter.prototype.summaryText = function() {
     return this.serviceTypeSummaries().sort().reverse().join(', ');
 };

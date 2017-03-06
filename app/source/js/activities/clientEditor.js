@@ -348,7 +348,32 @@ function ViewModel(app) {
             });
         });
     }.bind(this);
-    
+
+    this.tapServiceSummary = function(serviceSummary, event) {
+        var url = ['serviceProfessionalService',
+                    serviceSummary.jobTitleID(),
+                    'client',
+                    this.clientID()].join('/');
+
+        app.shell.go(url, null);
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }.bind(this);
+
+    this.tapServiceSummaryNew = function(serviceSummary, event) {
+        var url = ['serviceProfessionalService',
+                    serviceSummary.jobTitleID(),
+                    'client',
+                    this.clientID(),
+                    'new'].join('/');
+
+        app.shell.go(url, null);
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }.bind(this);
+
     // Birth month day
     // TODO l10n
     this.months = ko.observableArray([
