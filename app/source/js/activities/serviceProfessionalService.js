@@ -134,10 +134,6 @@ A.prototype.applyOwnNavbarRules = function() {
 };
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    var itIs = this.viewModel.isSelectionMode();
-    
-    this.viewModel.headerText(itIs ? 'Select services' : 'Services');
-    
     // Perform updates that apply this request:
     this.app.model.onboarding.updateNavBar(this.navBar) ||
     //this.app.applyNavbarMustReturn(this.requestData) ||
@@ -221,7 +217,6 @@ function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
     this.isInOnboarding = app.model.onboarding.inProgress;
-    this.headerText = ko.observable('Services');
 
     this.isLocked = this.isLoading;
 
