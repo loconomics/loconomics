@@ -3,8 +3,9 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var is = require('is_js');
+var Activity = require('../components/Activity'),
+    is = require('is_js'),
+    ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter');
 
 var A = Activity.extend(function ClientEditionActivity() {
     
@@ -37,6 +38,15 @@ var A = Activity.extend(function ClientEditionActivity() {
                 urlID !== clientID) {
                 // Replace URL
                 this.app.shell.replaceState(null, null, 'clientEditor/' + clientID);
+            }
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.clientID,
+        handler: function (clientID) {
+            if (clientID) {
+                this.viewModel.loadServices(clientID);
             }
         }.bind(this)
     });
@@ -198,7 +208,14 @@ function ViewModel(app) {
 
     this.header = ko.observable('');
     
-    this.isLoading = app.model.clients.state.isLoading;
+    this.isLoadingServices = ko.observable(false);
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            app.model.clients.state.isLoading() ||
+            this.isLoadingServices()
+        );
+    }, this);
+
     this.isSyncing = app.model.clients.state.isSyncing;
     this.isSaving = app.model.clients.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
@@ -220,6 +237,40 @@ function ViewModel(app) {
         var c = this.client();
         return !c || !c.updatedDate();
     }, this);
+
+    this.serviceSummaries = ko.observable([]);
+
+    this.loadServices = function(clientID) {
+        var view = this;
+
+        this.isLoadingServices(true);
+
+        Promise.all([app.model.serviceProfessionalServices.getClientSpecificServices(clientID),
+                     app.model.userJobProfile.getJobTitles(),
+                     app.model.pricingTypes.getList()])
+        .then(function(models) {
+            var services = app.model.serviceProfessionalServices.asModel(models[0]),
+                jobTitles = models[1],
+                pricingTypes = models[2](),
+
+                summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
+
+            view.serviceSummaries(summaries);
+        })
+        .catch(function(error) {
+            var messagePrefix = 'Unable to load special services',
+                messageName = view.client() ? ' for ' + view.client().firstName() : '',
+                message = messagePrefix + messageName + '.';
+
+            app.modals.showError({
+                title: message,
+                error: error
+            });
+        })
+        .then(function() {
+            view.isLoadingServices(false);
+        });
+    };
 
     this.submitText = ko.pureComputed(function() {
         var v = this.clientVersion();

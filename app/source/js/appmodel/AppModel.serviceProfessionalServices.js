@@ -35,6 +35,6 @@ exports.create = function create(appModel) {
             });
         });
     };
-    
+
     return api;
 };
