@@ -5,7 +5,8 @@
 
 var Activity = require('../components/Activity'),
     is = require('is_js'),
-    ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter');
+    ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter'),
+    RouteParser = require('../utils/Router.js').RouteParser;
 
 var A = Activity.extend(function ClientEditionActivity() {
     
@@ -350,10 +351,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.tapServiceSummary = function(serviceSummary, event) {
-        var url = ['serviceProfessionalService',
-                    serviceSummary.jobTitleID(),
-                    'client',
-                    this.clientID()].join('/');
+        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!clientEditor/:clientID'),
+            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
 
         app.shell.go(url, null);
 
@@ -362,11 +361,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.tapServiceSummaryNew = function(serviceSummary, event) {
-        var url = ['serviceProfessionalService',
-                    serviceSummary.jobTitleID(),
-                    'client',
-                    this.clientID(),
-                    'new'].join('/');
+        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID/new'),
+            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
 
         app.shell.go(url, null);
 

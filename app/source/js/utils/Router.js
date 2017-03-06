@@ -68,4 +68,4 @@ RouteMatcher.prototype.match = function(url, defaults) {
     return firstMatch ? $.extend(defaults || {}, firstMatch) : firstMatch;
 };
 
-module.exports = { RouteMatcher : RouteMatcher, Route : Route };
+module.exports = { RouteMatcher : RouteMatcher, Route : Route, RouteParser : RouteParser };
