@@ -1,10 +1,10 @@
 /**
-    UserFees activity
+    UserFeePayments activity
 **/
 'use strict';
 
 var Activity = require('../components/Activity');
-var A = Activity.extend(function UserFeesActivity() {
+var A = Activity.extend(function UserFeePaymentsActivity() {
 
     Activity.apply(this, arguments);
 
