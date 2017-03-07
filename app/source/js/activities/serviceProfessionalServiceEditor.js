@@ -9,7 +9,9 @@
 'use strict';
 var ko = require('knockout'),
     Activity = require('../components/Activity'),
-    PricingType = require('../models/PricingType');
+    PricingType = require('../models/PricingType'),
+    RouteMatcher = require('../utils/Router').RouteMatcher,
+    Route = require('../utils/Router').Route;
 
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
@@ -63,13 +65,19 @@ A.prototype.show = function show(options) {
     this.viewModel.pricingType(null);
 
     // Params
-    var params = options && options.route && options.route.segments || [];
+    var matcher = new RouteMatcher([
+        new Route(':jobTitleID/pricing_type/:pricingTypeID/client/:clientID/new'),
+        new Route(':jobTitleID/pricing_type/:pricingTypeID/new'),
+        new Route(':jobTitleID/:serviceID')
+    ]);
 
-    var jobTitleID = params[0] |0,
-        // Parameter [1] can be 'new' followed by a pricingTypeID as [2]
-        pricingTypeID = params[1] === 'new' ? params[2] |0 : 0,
-        // Or a pricingID
-        serviceProfessionalServiceID = params[1] |0;
+    var paramsDefaults = { jobTitleID: 0, serviceID: 0, pricingTypeID: 0, clientID: 0 },
+        params = matcher.match(options.route.segments.join('/'), paramsDefaults) || {};
+
+    var jobTitleID = +params.jobTitleID,
+        pricingTypeID = +params.pricingTypeID,
+        serviceProfessionalServiceID = +params.serviceID,
+        clientID = +params.clientID;
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
@@ -116,7 +124,8 @@ A.prototype.show = function show(options) {
                 // New pricing
                 this.viewModel.serviceProfessionalServiceVersion(this.app.model.serviceProfessionalServices.newItemVersion({
                     jobTitleID: jobTitleID,
-                    pricingTypeID: pricingTypeID
+                    pricingTypeID: pricingTypeID,
+                    visibleToClientID: clientID
                 }));
                 pricingSetup();
             }

@@ -32,7 +32,8 @@ function ServiceProfessionalService(values) {
         // Array of integers, IDs of serviceAttributes
         serviceAttributes: [],
         createdDate: null,
-        updatedDate: null
+        updatedDate: null,
+        visibleToClientID: 0
     }, values);
     
     this.model.defID(['serviceProfessionalServiceID']);

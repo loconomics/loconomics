@@ -163,7 +163,11 @@ function ServiceProfessionalServiceViewModel(app) {
     
     this.tapNewService = function(group, event) {
         
-        var url = '#!serviceProfessionalServiceEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
+        var url = '#!serviceProfessionalServiceEditor/' +
+                  this.jobTitleID() +
+                  '/pricing_type/' +
+                  (group.type() && group.type().pricingTypeID()) +
+                  '/new';
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
