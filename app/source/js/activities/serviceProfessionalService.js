@@ -258,6 +258,17 @@ function ViewModel(app) {
         
         return isin && hasPricing;
     }, this);
+
+    var baseNewServiceURL = this.newServiceURL;
+
+    this.newServiceURL = function(jobTitleID, pricingTypeID) {
+        if(this.client()) {
+            return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricing_type/' + pricingTypeID + '/client' + this.clientID() + '/new';
+        }
+        else {
+            return baseNewServiceURL(jobTitleID, pricingTypeID);
+        }
+    }.bind(this);
     
     /**
         Ends the selection process, ready to collect selection

@@ -141,9 +141,13 @@ function ServiceProfessionalServiceViewModel(app) {
         else
             this.selectedServices.push(service);
     }.bind(this);
-    
+
+    this.editServiceURL = function(jobTitleID, serviceID) {
+        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/' + serviceID;
+    }.bind(this);
+
     this.editService = function(service) {
-        app.shell.go('serviceProfessionalServiceEditor/' + this.jobTitleID() + '/' + service.serviceProfessionalServiceID());
+        app.shell.go(this.editServiceURL(this.jobTitleID(), service.serviceProfessionalServiceID()));
     }.bind(this);
     
     /**
@@ -160,14 +164,13 @@ function ServiceProfessionalServiceViewModel(app) {
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
-    
+
+    this.newServiceURL = function(jobTitleID, pricingTypeID) {
+        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricing_type/' + pricingTypeID + '/new';
+    }.bind(this);
+
     this.tapNewService = function(group, event) {
-        
-        var url = '#!serviceProfessionalServiceEditor/' +
-                  this.jobTitleID() +
-                  '/pricing_type/' +
-                  (group.type() && group.type().pricingTypeID()) +
-                  '/new';
+        var url = this.newServiceURL(this.jobTitleID(), group.type() && group.type().pricingTypeID());
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
