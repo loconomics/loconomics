@@ -6,11 +6,11 @@
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function ConversationActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
-    
+
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Inbox', {
         backLink: '/inbox' , helpLink: this.viewModel.helpLinkProfessionals
     });
@@ -25,7 +25,7 @@ var A = Activity.extend(function ConversationActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
+
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
@@ -39,7 +39,7 @@ A.prototype.show = function show(state) {
     // Reset
     this.viewModel.threadID(0);
     this.viewModel.thread(null);
-    
+
     this.updateNavBarState();
 
     // Params
@@ -47,7 +47,7 @@ A.prototype.show = function show(state) {
         threadID = params[0] |0;
 
     this.viewModel.threadID(threadID);
-    
+
     // Load the data
     if (threadID) {
         this.viewModel.thread.sync(threadID)
@@ -72,7 +72,7 @@ A.prototype.show = function show(state) {
 var ko = require('knockout');
 
 function ViewModel(app) {
-    
+
     this.user = app.model.userProfile.data;
     this.helpLinkProfessionals = '/help/relatedArticles/201966986-sending-and-receiving-messages';
     this.helpLinkClients = '/help/relatedArticles/201966996-sending-and-receiving-messages';
@@ -111,7 +111,7 @@ function ViewModel(app) {
             profileVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // If the last message reference a booking, is
     // accessed with:
     this.bookingID = ko.pureComputed(function() {
@@ -124,5 +124,9 @@ function ViewModel(app) {
         else {
             return null;
         }
+    }, this);
+
+    this.linkToBooking = ko.pureComputed(function() {
+        return '#!/viewBooking/' + this.bookingID();
     }, this);
 }

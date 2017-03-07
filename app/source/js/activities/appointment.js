@@ -5,24 +5,28 @@ var $ = require('jquery'),
     moment = require('moment'),
     Appointment = require('../models/Appointment'),
     ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
+    getDateWithoutTime = require('../utils/getDateWithoutTime'),
+    AppointmentCardViewModel = require('../viewmodels/AppointmentCard'),
+    Listener = require('../utils/EventEmitterListener');
 
 require('../components/DatePicker');
 
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function AppointmentActivity() {
-    
+
     Activity.apply(this, arguments);
 
-    this.accessLevel = this.app.UserType.serviceProfessional;    
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.menuItem = 'calendar';
-    
+
     this.$appointmentView = this.$activity.find('#calendarAppointmentView');
     this.$chooseNew = $('#calendarChooseNew');
-    
+
     this.viewModel = new ViewModel(this.app);
-    
+
+    this.appointmentListeners = [];
+
     // Create default leftAction/backAction settings
     // later used to instantiate a new NavAction that will
     // dynamically change depending on viewModel data.
@@ -46,7 +50,7 @@ var A = Activity.extend(function AppointmentActivity() {
 
         if (editMode) {
             // Is cancel action
-            
+
             if (isNew) {
                 // Common way of keep a cancel button on navbar
                 var cancelLink = this.viewModel.appointmentCardView();
@@ -68,10 +72,10 @@ var A = Activity.extend(function AppointmentActivity() {
         else {
             // Is go to calendar/date action
             var defBackText = backActionSettings.text;
-            
+
             var link = this.viewModel.backToCalendarUrl();
             var text = this.viewModel.formattedCurrentDate() || defBackText;
-            
+
             this.navBar.leftAction().model.updateWith($.extend({}, backActionSettings, {
                 link: link,
                 text: text,
@@ -81,7 +85,7 @@ var A = Activity.extend(function AppointmentActivity() {
 
     }, this);
 
-    
+
     // On changing the current appointment:
     // - Update URL to match the appointment currently showed
     // - Attach handlers to ID and StartTime so we load data for the new
@@ -102,7 +106,7 @@ var A = Activity.extend(function AppointmentActivity() {
                 // must avoid the first time execution (creates an infinite loop)
                 apt.id.subscribe(function relocateList() {
                     var id = apt.id();
-    
+
                     if (prevID > 0 || id <= 0) return;
                     prevID = id;
                     this.viewModel.setCurrent(null, id)
@@ -111,16 +115,61 @@ var A = Activity.extend(function AppointmentActivity() {
                     }.bind(this));
                 }.bind(this));
             }
-            
+
         }.bind(this)._delayed(10)
         // IMPORTANT: delayed REQUIRED to avoid triple loading (activity.show) on first load triggered by a click event.
+    });
+
+    this.registerHandler({
+        target: this.viewModel.currentAppointment,
+        handler: function() { this.registerAppointmentListeners(); }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.appointmentCardView,
+        handler: function() { this.registerAppointmentListeners(); }.bind(this)
     });
 });
 
 exports.init = A.init;
 
+A.prototype.registerAppointmentListeners = function() {
+    var listeners = [],
+        events = AppointmentCardViewModel.events,
+        cardView = this.viewModel.appointmentCardView(),
+        viewModel = this.viewModel,
+        app = this.app;
+
+    this.disposeAppointmentListeners();
+
+    if(cardView) {
+        listeners.push(new Listener(cardView, events.confirmed, function(appointment) {
+            // Go to the confirmed card at the date that was confirmed
+            viewModel.setCurrent(null, appointment.sourceBooking().bookingID(), 'booking');
+        }));
+
+        listeners.push(new Listener(cardView, events.declined, function(appointment) {
+            // Go to the calendar day of the declined booking at the current appointment day
+            app.shell.go('calendar/' + appointment.startTime().toISOString());
+        }));
+
+        listeners.push(new Listener(cardView, events.cancelled, function(appointment) {
+            // Go to the calendar day of the cancelled booking at the appointment day
+            app.shell.go('calendar/' + appointment.startTime().toISOString());
+        }));
+
+        this.appointmentListeners = listeners;
+    }
+};
+
+A.prototype.disposeAppointmentListeners = function() {
+    this.appointmentListeners.forEach(function(listener) {
+        listener.dispose();
+    });
+};
+
 A.prototype.show = function show(options) {
-    
+
     if (options && options.appointment) {
         // We are editing an appointment, so avoid the scroll and that
         // way the user don't forget the focus on the field was editing
@@ -130,10 +179,10 @@ A.prototype.show = function show(options) {
         // Wanted on any other case
         this.resetScroll = true;
     }
-    
+
     /* jshint maxcomplexity:10 */
     Activity.prototype.show.call(this, options);
-    
+
     // Prepare cancelLink, before any attempt of internal URL rewriting
     if (!this.requestData.cancelLink) {
         var referrer = this.app.shell.referrerRoute;
@@ -145,10 +194,10 @@ A.prototype.show = function show(options) {
         if (referrer && reg.test(referrer)) {
             referrer = referrer.replace(reg, '/appointment/$1/');
         }
-        
+
         this.requestData.cancelLink = referrer;
     }
-    
+
     var s1 = options && options.route && options.route.segments[0],
         s2 = options && options.route && options.route.segments[1],
         s3 = options && options.route && options.route.segments[2],
@@ -169,7 +218,7 @@ A.prototype.show = function show(options) {
         id = s2 |0;
         type = s3;
     }
-    
+
     var setupCard = function() {
         // The card component needs to be updated on load
         // with any option passed to the activity since the component
@@ -200,7 +249,11 @@ A.prototype.show = function show(options) {
     .then(setupCard);
 };
 
-var Appointment = require('../models/Appointment');
+A.prototype.hide = function hide() {
+    Activity.prototype.hide.call(this);
+
+    this.disposeAppointmentListeners();
+};
 
 function findAppointmentInList(list, id) {
     var found = null,
@@ -229,24 +282,24 @@ function ViewModel(app) {
     this.currentIndex = ko.observable(0);
     this.editMode = ko.observable(false);
     this.isLoading = ko.observable(false);
-    
+
     this.dateAvailability = ko.observable();
     this.appointments = ko.pureComputed(function() {
         var dateAvail = this.dateAvailability();
-        return dateAvail && dateAvail.appointmentsList() || [];            
+        return dateAvail && dateAvail.appointmentsList() || [];
     }, this);
-    
+
     this.specialAppointmentIds = Appointment.specialIds;
     this.isNewCard = ko.pureComputed(function() {
         var id = this.currentID();
         return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
     }, this);
-    
+
     this.formattedCurrentDate = ko.pureComputed(function() {
         var date = this.currentDate();
         return date ? moment(date).format('dddd [(]M/D[)]') : '';
     }, this);
-    
+
     // Preserve last slash, for later use
     this.defaultBackToCalendarUrl = 'calendar/';
     this.backToCalendarUrl = ko.pureComputed(function() {
@@ -257,7 +310,7 @@ function ViewModel(app) {
     // To access the component API we use next observable,
     // updated by the component with its view
     this.appointmentCardView = ko.observable(null);
-    
+
     this.isEditButtonVisible = ko.pureComputed(function() {
         var a = this.appointmentCardView();
         return this.currentID() > 0 && a && !a.isLocked() && !a.editMode();
@@ -306,7 +359,7 @@ function ViewModel(app) {
             sourceBooking: new Booking()
         });
     };
-    
+
     this.currentAppointment = ko.observable(loadingAppointment);
 
     this.updateUrl = function updateUrl() {
@@ -323,7 +376,7 @@ function ViewModel(app) {
         if (!found ||
             urlId !== aptId.toString() ||
             urlDate !== curDateStr) {
-            
+
             var url = 'appointment/' + curDateStr + '/' + aptId;
 
             // If was an incomplete URL, just replace current state
@@ -436,7 +489,7 @@ function ViewModel(app) {
             // Start getting the first item in the list
             item = list[0];
             index = 0;
-            
+
             // With any ID value
             if (id) {
                 // Search the ID
@@ -454,25 +507,25 @@ function ViewModel(app) {
                     item = this.getSpecialItem(id);
                     index = -1;
                 }
-            }   
+            }
         }
 
         this.currentID(item.id());
         this.currentIndex(index);
         this.currentAppointment(item);
     };
-    
+
     var _setCurrent = function setCurrent(date, id, type) {
         //jshint maxcomplexity:8
         // IMPORTANT: the date to use must be ever
         // a new object rather than the referenced one to
         // avoid some edge cases where the same object is mutated
-        // and comparisions can fail. 
+        // and comparisions can fail.
         // getDateWithoutTime ensure to create a new instance ever.
         date = date && getDateWithoutTime(date) || null;
         if (date)
             this.currentDate(date);
-        
+
         if (!date) {
             if (id > 0) {
                 // remote search for id
@@ -488,7 +541,7 @@ function ViewModel(app) {
                     ids.bookingID = id;
                 else
                     ids.calendarEventID = id;
-                
+
                 return app.model.calendar.getAppointment(ids)
                 .then(function (item) {
                     if (item) {
@@ -527,7 +580,7 @@ function ViewModel(app) {
                 var msg = 'Error loading calendar events.';
                 app.modals.showError({
                     title: msg,
-                    error: err && err.error || err
+                    error: err
                 });
 
             }.bind(this));

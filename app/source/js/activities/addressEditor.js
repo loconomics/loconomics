@@ -73,10 +73,13 @@ var A = Activity.extend(function AddressEditorActivity() {
             else {
                 this.requestData.addressID = addressID;
             }
+
             this.app.shell.goBack(this.requestData);
         }
+        else if (this.app.model.onboarding.inProgress()) {
+            this.app.shell.goBack();
+        }
         else {
-            // Regular save
             this.app.successSave();
         }
     }.bind(this);

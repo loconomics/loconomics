@@ -17,9 +17,8 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Price your services</div>
-<!--                <span data-bind="text: jobTitleName"></span>-->
-                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Keeping your prices clear and realistic is a good idea so clients can see if you'll be within their budget. We're working on more pricing tools–let us know what you'd like to see.</p>
+                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Add the first offering to your <span data-bind="text: jobTitleName"></span> listing</div>
+                <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Clients will be able to book the offerings you create here. Create your first offering to make your listing available to clients and then add more later. Keeping your prices clear and realistic is a good idea so clients can see if you'll be within their budget.</p>
                 <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">
                     <span>Select a job title</span>
                 </h2>                     

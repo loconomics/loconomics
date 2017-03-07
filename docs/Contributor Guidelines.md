@@ -50,7 +50,7 @@ issue1076 - A1 - new customertransactiontype table.sql
 
 ## Use of Github
 
-We use Github to track all development issues, project management, product roadmaps, and documentation.
+We use Github to track all development issues, project management, product roadmaps, and documentation. An [internal repository](https://github.com/joshdanielson/loconomics-internal) includes tasks related to the internal operations of Loconomics and is limited to Loconomics Staff.
 
 ### Branch use and pull requests
 Please review [Understanding the Github Flow](https://guides.github.com/introduction/flow/) as we follow its process.
@@ -76,8 +76,9 @@ Try to include:
 * What actually happened - the buggy behaviour itself.
 * What web browser you were using.
 * Screen shots.
-* UserIDs, BookingIDs, JobTitleIDs involved.
+* BookingIDs, JobTitleIDs involved.
 * The /activityName from the URL.
+* **DO NOT INCLUDE** any personally identifiable information (no UserIDs, Names, Addresses, etc.)
 
 [File a new Github issue](https://github.com/loconomics/loconomics/issues/new) with two labels and include the severity in the title, e.g. Bug S1: Short description of bug:
 #### Bug Severity Level Label
@@ -92,11 +93,11 @@ Try to include:
 #### Feature Set Label
 ![feature set](https://cloud.githubusercontent.com/assets/1202838/20122985/beb9b0be-a5d0-11e6-92d1-200614a3a74e.png)
 
-#### Milestone
-Place into [Known Bugs](https://github.com/loconomics/loconomics/milestones)
+#### Pipeline/Milestone/Estimate/Epic
+Leave the pipeline default of "New Issues" and do not attach a milestone, estimate, or epic to the issue. This will be done by @joshdanielson and later reviewed by the Dev team.
 
 ### Filing development issues
-[File a new Github issue](https://github.com/loconomics/loconomics/issues/new) with four labels:
+[File a new Github issue](https://github.com/loconomics/loconomics/issues/new) with four labels if possible (if not sure, leave blank):
 
 #### Priority Level Label
 ![priority](https://cloud.githubusercontent.com/assets/1202838/20122988/bebb0522-a5d0-11e6-94b9-73c2dce28fe1.png)

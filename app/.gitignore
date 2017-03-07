@@ -1,11 +1,20 @@
 !.gitignore
 node_modules/*
 **/node_modules/*
+# Phonegap generated files
 phonegap/www/assets
 phonegap/www/index.html
 phonegap/www/config.xml
 phonegap/platforms/
 phonegap/plugins/
 phonegap/.cordova/config.json
+# Phonegap build error logs
+phonegap/*.log
+# Res folder for Phonegap CLI
+phonegap/res
+# Res folder for PhonegapBuild
+phonegap/www/res
+# Generated files
 build/
+# IDEs
 .brackets.json

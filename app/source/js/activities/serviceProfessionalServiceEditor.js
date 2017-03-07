@@ -35,8 +35,10 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
             });
             this.app.shell.goBack(this.requestData);
         }
+        if (this.app.model.onboarding.inProgress()) {
+            this.app.shell.goBack();
+        }
         else {
-            // Just execute the standard save process
             this.app.successSave();
         }
     }.bind(this);

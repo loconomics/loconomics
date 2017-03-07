@@ -106,12 +106,7 @@ var app = {
         
                 goDashboard._going = true;
 
-                var onboarding = this.model.onboarding.stepUrl();
-
-                if (onboarding) {
-                    this.shell.go(onboarding);
-                }
-                else {
+                if(!this.model.onboarding.goIfEnabled()) {
                     this.shell.go('/dashboard');
                 }
 
@@ -515,9 +510,25 @@ var appInit = function appInit() {
         
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
+        app.model.onboarding.setStep(app.model.user().onboardingStep());
 
         // Check onboarding
-        app.model.onboarding.goIfEnabled();
+        /*
+            IMPORTANT: Exception: if the page is loading coming from itself,
+            like from a target=_blank link, does not redirect to
+            avoid to break the proposal of the link (like a help or FAQ link
+            on onboarding)
+        
+            We check that there is a referrer (so comes from a link) and it shares the origin
+            (be aware that referrer includes origin+pathname, we just look for same origin).
+        */
+
+        var r = window.document.referrer,
+            fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
+
+        if (!fromItSelf) {
+            app.model.onboarding.goIfEnabled();
+        }
 
         // Mark the page as ready
         $('html').addClass('is-ready');

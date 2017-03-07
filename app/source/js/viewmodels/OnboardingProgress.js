@@ -6,45 +6,56 @@ var Model = require('../models/Model'),
     ko = require('knockout');
 
 function OnboardingProgress(values) {
+    var stepNumberFinished = -1;
 
     Model(this);
     
     this.model.defProperties({
-        group: '',
-        stepNumber: -1,
-        steps: [],
+        stepNumber: stepNumberFinished,
         // Let's set a job title to pass in to jobTitleSpecific steps as URL segment
         selectedJobTitleID: null
     }, values);
     
     this.totalSteps = ko.pureComputed(function() {
         // 'Zero' step is a welcome, not accounted:
-        return this.steps().length - 1;
+        return this.stepNames.length - 1;
     }, this);
-    
-    this.stepName = ko.pureComputed(function() {
-        var num = this.stepNumber(),
-            tot = this.steps().length;
 
-        if (tot > 0 &&
-            num > -1 &&
-            num < tot) {
-            var name = this.steps()[num] || '';
-            return name;
+    this.incrementStep = function() {
+        var currentStep = this.stepNumber();
+
+        if(this.isFinished()) {
+            return;
+        }
+        else if(currentStep == (this.stepNames.length - 1)){
+            this.finish();
         }
         else {
-            return null;
+            this.stepNumber(currentStep + 1);
         }
+    };
+
+    this.stepAfter = function(stepName) {
+        var nextStep = new OnboardingProgress({ selectedJobTitleID: this.selectedJobTitleID() });
+        nextStep.setStepByName(stepName);
+        nextStep.incrementStep();
+
+        return nextStep;
+    };
+
+    this.stepName = ko.pureComputed(function() {
+        return this.stepNames[this.stepNumber()] || null;
     }, this);
-    
+
+    this.stepNames = OnboardingProgress.steps.names;
+
     this.stepUrl = ko.pureComputed(function() {
         var name = this.stepName();
         if (!name) return null;
         var url = '/' + name;
 
         // Check if there is need for a jobTitleID in the URL
-        var defs = OnboardingProgress.stepsDefinitions[this.group()];
-        var def = defs && defs[name];
+        var def = OnboardingProgress.steps.definitions[name];
         var jobID = this.selectedJobTitleID();
         if (jobID && def && def.jobTitleSpecific) {
             url += '/' + jobID;
@@ -53,24 +64,28 @@ function OnboardingProgress(values) {
         return url;
     }, this);
 
-    this.stepReference = ko.pureComputed(function() {
-        return this.group() + ':' + this.stepName();
-    }, this);
-    
     this.progressText = ko.pureComputed(function() {
         // TODO L18N
         return this.stepNumber() + ' of ' + this.totalSteps();
     }, this);
     
     this.inProgress = ko.pureComputed(function() {
-        return !!this.stepUrl();
+        return !this.isFinished();
+    }, this);
+
+    this.finish = function() {
+        this.stepNumber(stepNumberFinished);
+    };
+
+    this.isFinished = ko.pureComputed(function() {
+        return this.stepNumber() === stepNumberFinished;
     }, this);
 }
 
 module.exports = OnboardingProgress;
 
 OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
-    var stepIndex = this.steps().indexOf(name);
+    var stepIndex = this.stepNames.indexOf(name);
     if (stepIndex > -1) {
         this.stepNumber(stepIndex);
         return true;
@@ -78,22 +93,10 @@ OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
     return false;
 };
 
-/**
-    Static list of all the steps groups for the app
-**/
-OnboardingProgress.predefinedStepGroups = {
-    // Scheduling onboarding, aka welcome
-    // testing bigger list as of #760
-    /*welcome: [
-        'welcome',
-        'addJobTitles',
-        // disabled on 2015-06-16 as of #575 comments
-        //'serviceProfessionalService',
-        //'serviceAddresses',
-        'schedulingPreferences',
-        'aboutMe'
-    ],*/
-    welcome: [
+// Definitions of the steps for 'welcome' onboarding, for any relevant set-up needed
+// on there, like if they need a jobTitleID
+OnboardingProgress.steps = {
+    names: [
         'welcome',
         'addJobTitles',
         'schedulingPreferences',
@@ -105,16 +108,7 @@ OnboardingProgress.predefinedStepGroups = {
         'aboutMe',
         'paymentAccount'
     ],
-    marketplace: [
-    ],
-    payment: [
-    ]
-};
-
-// Definitions of the steps for 'welcome' onboarding, for any relevant set-up needed
-// on there, like if they need a jobTitleID
-OnboardingProgress.stepsDefinitions = {
-    welcome: {
+    definitions: {
         welcome: {},
         addJobTitles: {},
         schedulingPreferences: {},
