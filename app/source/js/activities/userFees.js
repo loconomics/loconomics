@@ -14,8 +14,8 @@ var A = Activity.extend(function UserFeesActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
 
-    this.navBar = Activity.createSubsectionNavBar('Owner information', {
-        backLink: '/ownerInfo', helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar('Account', {
+        backLink: '/account', helpLink: this.viewModel.helpLink
     });
 });
 
