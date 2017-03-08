@@ -26,7 +26,7 @@
     The constants are most helpful when using several Routes and RouteMatcher.
 
     RouteMatcher checks multiple routes and returns the parameter hash from the
-    first route that matches a given URL.
+    first route that matches a given URL, false if there are no matches.
 
     Example:
       var m = new RouteMatcher([
@@ -38,9 +38,11 @@
       m.match('/jobs/3'); // { job: 3 }
       m.match('/will-not-match'); // false
 
-    RouteMatcher supports default parameter values
+    RouteMatcher supports default parameter values included in the matched
+    hash *only if there is a match*:
       m.match('/jobs/5', { isNew: false }); // { job: 5, isNew: false }
       m.match('/jobs/5', { job: 'a default' }); // { job: 5 }
+      m.match('/will-not-match', { job: 'default' }); // false
 */
 var RouteParser = require('route-parser'),
     $ = require('jquery');
