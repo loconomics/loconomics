@@ -99,14 +99,13 @@ A.prototype.show = function show(options) {
             // Required call after loading a pricing to reflect data correctly (cannot be automated)
             c.pricing.refreshNoPriceRate();
         }
-        this.viewModel.isLoading(false);
     }.bind(this);
     
-    var showInvalidRequestError = function() {
+    var showLoadingError = function(error) {
         this.viewModel.isLoading(false);
         this.app.modals.showError({
-            title: 'Invalid request',
-            error: { jobTitleID: jobTitleID, pricingTypeID: pricingTypeID, serviceProfessionalServiceID: serviceProfessionalServiceID }
+            title: 'Error loading data',
+            error: error
         })
         .then(function() {
             // On close modal, go back
@@ -115,61 +114,69 @@ A.prototype.show = function show(options) {
     }.bind(this);
 
     this.viewModel.isLoading(true);
+
+    var loadClient = function(service) {
+        var clientID = service.clientID();
+
+        if(clientID) {
+            return this.app.model.clients.getItem(clientID)
+            .then(function(client) {
+                this.viewModel.client(client);
+            }.bind(this));
+        }
+        else {
+            this.viewModel.client(null);
+            return Promise.resolve(service);
+        }
+    }.bind(this);
+
     if (pricingTypeID) {
         // Load the pricing Type
         this.app.model.pricingTypes.getItem(pricingTypeID)
         .then(function(type) {
-            if (type) {
-                this.viewModel.pricingType(type);
-                // New pricing
-                this.viewModel.serviceProfessionalServiceVersion(this.app.model.serviceProfessionalServices.newItemVersion({
-                    jobTitleID: jobTitleID,
-                    pricingTypeID: pricingTypeID,
-                    visibleToClientID: clientID
-                }));
-                pricingSetup();
-            }
-            else {
-                showInvalidRequestError();
-            }
+            this.viewModel.pricingType(type);
+            // New pricing
+            var serviceVersion = this.app.model.serviceProfessionalServices.newItemVersion({
+                jobTitleID: jobTitleID,
+                pricingTypeID: pricingTypeID,
+                visibleToClientID: clientID
+            });
+            this.viewModel.serviceProfessionalServiceVersion(serviceVersion);
+            pricingSetup();
+            return serviceVersion.version;
+        }.bind(this))
+        .then(loadClient)
+        .catch(showLoadingError)
+        .then(function() {
+            this.viewModel.isLoading(false);
         }.bind(this));
     }
     else if (serviceProfessionalServiceID) {
         // Get the pricing
         this.app.model.serviceProfessionalServices.getItemVersion(jobTitleID, serviceProfessionalServiceID)
         .then(function (serviceProfessionalServiceVersion) {
-            if (serviceProfessionalServiceVersion) {
-                // Load the pricing type before put the version
-                // returns to let the 'catch' to get any error
-                return this.app.model.pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
-                .then(function(type) {
-                    if (type) {
-                        this.viewModel.pricingType(type);
-                        this.viewModel.serviceProfessionalServiceVersion(serviceProfessionalServiceVersion);
-                        pricingSetup();
-                    }
-                    else {
-                        showInvalidRequestError();
-                    }
-                }.bind(this));
-            } else {
-                showInvalidRequestError();
+            if (!serviceProfessionalServiceVersion) {
+                throw new Error('Unable to load service');
             }
+            // Load the pricing type before put the version
+            // returns to let the 'catch' to get any error
+            return this.app.model.pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
+            .then(function(type) {
+                this.viewModel.pricingType(type);
+                this.viewModel.serviceProfessionalServiceVersion(serviceProfessionalServiceVersion);
+                pricingSetup();
 
-        }.bind(this))
-        .catch(function (err) {
-            this.app.modals.showError({
-                title: 'There was an error while loading.',
-                error: err
-            })
-            .then(function() {
-                // On close modal, go back
-                this.app.shell.goBack();
+                return serviceProfessionalServiceVersion.version;
             }.bind(this));
+        }.bind(this))
+        .then(loadClient)
+        .catch(showLoadingError)
+        .then(function() {
+            this.viewModel.isLoading(false);
         }.bind(this));
     }
     else {
-        showInvalidRequestError();
+        showLoadingError('Unable to load service — missing parameters');
     }
 };
 
@@ -201,16 +208,21 @@ function ViewModel(app) {
         return null;
     }, this);
 
+    this.client = ko.observable(null);
+
     this.header = ko.pureComputed(function() {
+        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
+            prefix = this.isNew() ? 'New ' : '',
+            postfix = this.client() ? (' only for ' + this.client().fullName()) : '';
+
         if (this.isLoading()) {
             return 'Loading...';
         }
         else if (this.serviceProfessionalServiceVersion()) {
-            var t = this.pricingType();
-            return t && t.singularName() || 'Service';
+            return prefix + pricingName + postfix;
         }
         else {
-            return 'Unknow service or was deleted';
+            return 'Unknown service or was deleted';
         }
 
     }, this);
@@ -227,6 +239,12 @@ function ViewModel(app) {
             };
         }
         return null;
+    }, this);
+
+    this.showFirstTimeClientsOnlyLabel = ko.pureComputed(function() {
+        var pricingLabel = this.pricingType() && this.pricingType().firstTimeClientsOnlyLabel();
+
+        return pricingLabel && !this.client();
     }, this);
 
     this.wasRemoved = ko.observable(false);

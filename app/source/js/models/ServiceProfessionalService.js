@@ -154,6 +154,10 @@ function ServiceProfessionalService(values) {
         else
             return dur || pr;
     }, this);
+
+    this.clientID = function() {
+        return this.visibleToClientID() > 0 ? this.visibleToClientID() : null;
+    };
 }
 
 module.exports = ServiceProfessionalService;
