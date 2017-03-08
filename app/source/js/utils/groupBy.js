@@ -23,8 +23,9 @@ var lodashGroupBy = require('lodash/groupBy'),
             => { '2': [], '3': [], '4': [4.2], '6': [6.1, 6.3] }
 */
 function groupBy(collection, iteratee, defaultKeys) {
-    var defaultKeys = defaultKeys || [],
-        defaultGroups = {};
+    var defaultGroups = {};
+
+    defaultKeys = defaultKeys || [];
 
     defaultKeys.forEach(function(key) { defaultGroups[key] = []; });
 
