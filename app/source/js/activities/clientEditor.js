@@ -45,6 +45,8 @@ var A = Activity.extend(function ClientEditionActivity() {
     this.registerHandler({
         target: this.viewModel.clientID,
         handler: function (clientID) {
+            this.viewModel.serviceSummaries([]);
+
             if (clientID) {
                 this.viewModel.loadServices(clientID);
             }
@@ -258,7 +260,7 @@ function ViewModel(app) {
             view.serviceSummaries(summaries);
         })
         .catch(function(error) {
-            var messagePrefix = 'Unable to load special services',
+            var messagePrefix = 'Unable to load special pricings',
                 messageName = view.client() ? ' for ' + view.client().firstName() : '',
                 message = messagePrefix + messageName + '.';
 
@@ -282,8 +284,8 @@ function ViewModel(app) {
                     this.isNew() ?
                         'Add client' :
                         v && v.areDifferent() ?
-                            'Save changes' :
-                            'Saved'
+                            'Save changes to client' :
+                            'Client saved'
         );
     }, this);
 
@@ -295,9 +297,13 @@ function ViewModel(app) {
     this.deleteText = ko.pureComputed(function() {
         return (
             this.isDeleting() ? 
-                'Deleting...' : 
-                'Delete'
+                'Deleting client...' :
+                'Delete client'
         );
+    }, this);
+
+    this.showServices = ko.pureComputed(function() {
+        return !this.isNew() && this.client();
     }, this);
 
     this.save = function() {
