@@ -65,14 +65,14 @@ A.prototype.show = function show(options) {
     this.viewModel.pricingType(null);
 
     // Params
-    var matcher = new RouteMatcher([
-        new Route(':jobTitleID/pricing_type/:pricingTypeID/client/:clientID/new'),
-        new Route(':jobTitleID/pricing_type/:pricingTypeID/new'),
-        new Route(':jobTitleID/:serviceID')
-    ]);
-
     var paramsDefaults = { jobTitleID: 0, serviceID: 0, pricingTypeID: 0, clientID: 0 },
-        params = matcher.match(options.route.segments.join('/'), paramsDefaults) || {};
+        matcher = new RouteMatcher([
+            new Route('/:jobTitleID/pricing_type/:pricingTypeID/client/:clientID/new'),
+            new Route('/:jobTitleID/pricing_type/:pricingTypeID/new'),
+            new Route('/:jobTitleID/:serviceID')
+        ], paramsDefaults);
+
+    var params = matcher.match(options.route.path) || {};
 
     var jobTitleID = +params.jobTitleID,
         pricingTypeID = +params.pricingTypeID,
