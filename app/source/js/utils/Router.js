@@ -18,12 +18,10 @@
       r.match('/my/pages/7'); // { page: 7 }
       r.match('/will-not-match'); // false
 
-    Optionally, you can include constants that will be included if the route matches.
-    These constants will overwrite any matched parameters by the same name:
-      var r = Route('/my/pages/:page');
-      r.match('/my/pages/7', { isMy: true }); // { page: 7, isMy: true }
-
-    The constants are most helpful when using several Routes and RouteMatcher.
+    Optionally, you can include defaults that will be included if the route matches.
+    These defaults will be overwritten with any matched parameters by the same name:
+      var r = Route('/my/pages/:page', { isMy: true });
+      r.match('/my/pages/7'); // { page: 7, isMy: true }
 
     RouteMatcher checks multiple routes and returns the parameter hash from the
     first route that matches a given URL, false if there are no matches.
@@ -38,36 +36,48 @@
       m.match('/jobs/3'); // { job: 3 }
       m.match('/will-not-match'); // false
 
-    RouteMatcher supports default parameter values included in the matched
+    RouteMatcher also supports default parameter values included in the matched
     hash *only if there is a match*:
-      m.match('/jobs/5', { isNew: false }); // { job: 5, isNew: false }
-      m.match('/jobs/5', { job: 'a default' }); // { job: 5 }
-      m.match('/will-not-match', { job: 'default' }); // false
+      var m = new RouteMatcher([
+          new Route('/jobs/new', { isNew: true }),
+          new Route('/jobs/:job')
+      ], { job: -1 });
+
+      m.match('/jobs/new') // { job: -1, isNew: true }
+      m.match('/jobs/3') // { job: 3, isNew: false }
+      m.match('/will-not-match'); // false
 */
 var RouteParser = require('route-parser'),
     $ = require('jquery');
 
-var Route = function(expression, constants) {
+var Route = function(expression, defaults) {
     this.routeParser = new RouteParser(expression);
-    this.constants = constants || {};
+    this.defaults = defaults || {};
 };
 
 Route.prototype.match = function(url) {
     var match = this.routeParser.match(url);
 
-    return match ? $.extend(match, this.constants) : match;
+    return match ? $.extend(this.defaults, match) : false;
 };
 
-var RouteMatcher = function(routes) {
+var RouteMatcher = function(routes, defaults) {
     this.routes = routes;
+    this.defaults = defaults || {};
 };
 
-RouteMatcher.prototype.match = function(url, defaults) {
-    // Future optimization: stop evaluating routes after first match
-    var matches = this.routes.map(function(route) { return route.match(url); }),
-        firstMatch = matches.find(function(match) { return !!match; });
+RouteMatcher.prototype.match = function(url) {
+    var firstMatch = false;
 
-    return firstMatch ? $.extend(defaults || {}, firstMatch) : firstMatch;
+    this.routes.some(function(route) {
+        var m = route.match(url);
+        if (m) {
+            firstMatch = m;
+            return true;
+        }
+    });
+
+    return firstMatch ? $.extend(this.defaults, firstMatch) : false;
 };
 
 module.exports = { RouteMatcher : RouteMatcher, Route : Route, RouteParser : RouteParser };
