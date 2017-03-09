@@ -153,17 +153,16 @@ A.prototype.show = function show(options) {
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
 
-    var matcher = new RouteMatcher([
-        new Route(':jobTitleID/new', { isNew: true }),
-        new Route(':jobTitleID/client/:clientID/new', { isNew: true }),
-        new Route(':jobTitleID/client/:clientID'),
-        new Route('new', { isNew: true }),
-        new Route(':jobTitleID'),
-        new Route('')
-    ]);
-
     var paramsDefaults = { jobTitleID: 0, isNew: false, clientID: null },
-        params = matcher.match(options.route.segments.join('/'), paramsDefaults) || {};
+        matcher = new RouteMatcher([
+            new Route('/:jobTitleID/new', { isNew: true }),
+            new Route('/:jobTitleID/client/:clientID/new', { isNew: true }),
+            new Route('/:jobTitleID/client/:clientID'),
+            new Route('/new', { isNew: true }),
+            new Route('/:jobTitleID')
+        ], paramsDefaults);
+
+    var params = matcher.match(options.route.path) || paramsDefaults;
 
     var jobTitleID = +params.jobTitleID;
     if (jobTitleID === 0 && options.selectedJobTitleID > 0)
