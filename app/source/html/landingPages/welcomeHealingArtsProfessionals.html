@@ -1,5 +1,5 @@
-<!-- Home activity (aka search) -->
-<div data-activity="welcomeHealingArtsProfessionals" class="LearnMorePage">
+@render('../parts/landingPageHead.html')
+<div id="landingPage" class="LearnMorePage">
     <div role="main">
         <div class="coop-search">
             <h1 class="coop-title">Work independently…together.</h1>
@@ -170,5 +170,6 @@
             <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
         </div>
     </div>
-    <div>@render('parts/WebsiteFooter.html')</div>
+    <div>@render('../parts/WebsiteFooter.html')</div>
 </div>
+@render('../parts/landingPageFoot.html')

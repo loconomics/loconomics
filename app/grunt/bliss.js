@@ -8,10 +8,10 @@ module.exports = function(grunt) {
         cwd: includedDir,
         filter: grunt.file.isFile
     }, includedPatterns);
-    
+
     var facebookAppID = '180579422039773',
         facebookLang = 'en-US';
-    
+
     var moment = require('moment');
     var version = moment().format('YYYYMMDDHHmm');
     var pkg = grunt.file.readJSON('package.json');
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     // Example: 1.1.0 -> 10100, 2.34.5 -> 23405
     var versionCode = appVersion.split('.').reverse().reduce(function(t, x, i) { return t + (x|0) * Math.pow(10, i * 2); }, 0);
 
-    return {
+    var tasks = {
         app: {
           files: {
             'build/app.html': ['source/html/app.js.html']
@@ -170,4 +170,33 @@ module.exports = function(grunt) {
             }
         }
     };
+
+    // Landing Pages
+    // Individual generated files for each landing
+    var landingIncludedDir = 'source/html/landingPages/';
+    var landingPages = grunt.file.expand({
+        cwd: landingIncludedDir,
+        filter: grunt.file.isFile
+    }, ['*.html']);
+    // Generate the files mapping object, that will be something like
+    // files: { '../web/welcome/one.html': ['source/html/landingPages/one.html'] }
+    var landingWebPath = '../web/welcome/';
+    var landingPagesFiles = {};
+    landingPages.forEach(function(page) {
+        landingPagesFiles[landingWebPath + page] = landingIncludedDir + page;
+    });
+    tasks.landingPages = {
+        files: landingPagesFiles,
+        options: {
+            context: {
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang,
+                cssVersion: version,
+                jsVersion: version,
+                cordovajs: false
+            }
+        }
+    };
+
+    return tasks;
 };
