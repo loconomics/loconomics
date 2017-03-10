@@ -61,7 +61,6 @@ module.exports = {
     'profile': require('./activities/profile'),
     'home': require('./activities/home'),
     'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
-    'welcomeHealingArtsProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
     'terms': require('./activities/terms'),
     'about': require('./activities/about'),

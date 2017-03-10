@@ -126,6 +126,7 @@ module.exports = {
     'build-landingPages': [
         'stylus:landingPages',
         'cssmin:landingPages',
-        'bliss:landingPages'
+        'bliss:landingPages',
+        'browserify:landingPages'
     ]
 };
