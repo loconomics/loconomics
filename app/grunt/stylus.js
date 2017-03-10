@@ -25,9 +25,7 @@ module.exports = {
     },
     landingPages: {
         files: {
-            '../web/assets/css/welcome.css': [
-                './source/css/landingPage.styl'
-            ]
+            'build/assets/css/welcome.css': './source/css/landingPage.styl'
         }
     }
 };

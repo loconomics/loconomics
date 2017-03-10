@@ -1,4 +1,4 @@
-@*context: {cssVersion:string, jsVersion:string, facebookLang:string, facebookAppID:string} *@
+@*context: {dotVersion:string, facebookLang:string, facebookAppID:string} *@
 <!DOCTYPE html>
 <html lang="en" class="App is-ready" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US">
     <head>
@@ -23,10 +23,10 @@
         </script>
         <!-- End Google Analytics -->
 
-        <link href="../assets/css/libs.min.@(cssVersion).css" rel="stylesheet">
-        <link href="../assets/css/welcome.min.@(cssVersion).css" rel="stylesheet">
-        <script src="../assets/js/styleguidelibs.min.@(cssVersion).js"></script>
-        <script src="../assets/js/libs.min.@(cssVersion).js"></script>
-        <script src="../assets/js/welcome.@(cssVersion).js"></script>
+        <link href="../assets/css/libs.min@(dotVersion).css" rel="stylesheet">
+        <link href="../assets/css/welcome.min@(dotVersion).css" rel="stylesheet">
+        <script src="../assets/js/styleguidelibs.min@(dotVersion).js"></script>
+        <script src="../assets/js/libs.min@(dotVersion).js"></script>
+        <script src="../assets/js/welcome.min@(dotVersion).js"></script>
     </head>
     <body>

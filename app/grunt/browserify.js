@@ -201,7 +201,7 @@ module.exports = function(/*grunt*/) {
         'src': [
             './source/js/landingPages.js'
         ],
-        'dest': '../web/assets/js/welcome.js',
+        'dest': './build/assets/js/welcome.js',
         'options': {
             // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
             'debug': true,

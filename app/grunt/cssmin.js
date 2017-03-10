@@ -28,12 +28,12 @@ module.exports = {
     },
     landingPages: {
         files: {
-            '../web/assets/css/welcome.min.css': [
+            './build/assets/css/welcome.min.css': [
                 //'./vendor/bootstrap/css/bootstrap.css',
                 //'./vendor/jquery-ui/jquery-ui.css',
                 //'./vendor/font-awesome/css/font-awesome.css',
                 //'./vendor/ionicons/css/ionicons.css',
-                '../web/assets/css/welcome.css'
+                './build/assets/css/welcome.css'
             ]
         }
     }

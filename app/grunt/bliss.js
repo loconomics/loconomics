@@ -172,27 +172,25 @@ module.exports = function(grunt) {
     };
 
     // Landing Pages
-    // Individual generated files for each landing
-    var landingIncludedDir = 'source/html/landingPages/';
-    var landingPages = grunt.file.expand({
-        cwd: landingIncludedDir,
-        filter: grunt.file.isFile
-    }, ['*.html']);
-    // Generate the files mapping object, that will be something like
-    // files: { '../web/welcome/one.html': ['source/html/landingPages/one.html'] }
-    var landingWebPath = '../web/welcome/';
-    var landingPagesFiles = {};
-    landingPages.forEach(function(page) {
-        landingPagesFiles[landingWebPath + page] = landingIncludedDir + page;
-    });
-    tasks.landingPages = {
-        files: landingPagesFiles,
+    var getLandingPagesFiles = require('./shared/getLandingPagesFiles');
+    tasks.landingPagesBuild = {
+        files: getLandingPagesFiles(grunt, 'build/welcome'),
         options: {
             context: {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                cssVersion: version,
-                jsVersion: version,
+                dotVersion: '',
+                cordovajs: false
+            }
+        }
+    };
+    tasks.landingPagesWeb = {
+        files: getLandingPagesFiles(grunt, '../web/welcome'),
+        options: {
+            context: {
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang,
+                dotVersion: version,
                 cordovajs: false
             }
         }

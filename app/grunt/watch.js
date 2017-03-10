@@ -11,7 +11,7 @@ module.exports = {
             'build',
         ]
     },
-    
+
     js: {
         files: ['<%= jshint.app.src %>'],
         tasks: [
@@ -21,7 +21,7 @@ module.exports = {
             'uglify:app' //'newer:uglify'
         ]
     },
-    
+
     css: {
         files: ['./source/css/**/*.styl', './source/css/**/*.css', 'Gruntfile.js'],
         tasks: [
@@ -30,7 +30,7 @@ module.exports = {
             'notify:css'
         ]
     },
-    
+
     images: {
         files: ['./source/images/**/*.png', './source/images/**/*.jpg', './source/images/**/*.svg', './source/images/**/*.ico'],
         tasks: [
@@ -38,24 +38,38 @@ module.exports = {
             'notify:images'
         ]
     },
-    
+
     html: {
         files: ['./source/html/app.js.html', './source/html/**/*.html', './source/html/modals/*.html'],
         tasks: ['build-html']
     },
-    
+
     configXml: {
         files: ['./source/cordova-config.js.xml'],
         tasks: ['bliss:cordovaConfigXml']
     },
-    
+
     configJson: {
         files: ['./source/cordova-config.js.json'],
         tasks: ['bliss:cordovaConfigJson']
     },
-    
+
     package: {
         files: ['./package.json'],
         tasks: ['build']
+    },
+
+    landingPages: {
+        files: [
+            './source/css/**/*.styl',
+            './source/css/**/*.css',
+            '<%= jshint.app.src %>',
+            './source/html/**/*.html',
+            './source/images/**/*.*'
+        ],
+        tasks: [
+            'build-landingPages',
+            'notify:landingPages'
+        ]
     }
 };

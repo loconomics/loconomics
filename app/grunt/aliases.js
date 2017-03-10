@@ -122,11 +122,22 @@ module.exports = {
         'connect:atbuild',
         'watch'
     ],
-
+    'atwork-landingPages': [
+        'connect:atbuild',
+        'watch:landingPages'
+    ],
     'build-landingPages': [
         'stylus:landingPages',
         'cssmin:landingPages',
-        'bliss:landingPages',
-        'browserify:landingPages'
+        'replace:html_bad_chars',
+        'bliss:landingPagesBuild',
+        'htmlmin:landingPagesBuild',
+        'browserify:landingPages',
+        'uglify:landingPages'
+    ],
+    'publish-landingPages': [
+        'bliss:landingPagesWeb',
+        'htmlmin:landingPagesWeb',
+        'copyto:landingPages_assets'
     ]
 };
