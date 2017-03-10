@@ -121,5 +121,11 @@ module.exports = {
     'atwork': [
         'connect:atbuild',
         'watch'
+    ],
+
+    'build-landingPages': [
+        'stylus:landingPages',
+        'cssmin:landingPages',
+        'bliss:landingPages'
     ]
 };

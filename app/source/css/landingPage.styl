@@ -1,0 +1,30 @@
+/*
+    Stylesheet for any landingPage.
+    Ideally, just generating one file from the landing stylesheet
+    would contain any import needed, and not shared with others,
+    but for now are few the changes and no much overload
+    plus some refactors needed here (maybe just 'app.styl')
+*/
+/* core */
+@import "nib"
+@import 'utils/mediaQueries.styl'
+@import 'utils/styleguideVars.styl'
+@import 'utils/bs-extensions.styl'
+
+/** Components styles **/
+@import 'components/ActionSheet.styl'
+@import 'components/LargeNavBar.styl'
+@import 'components/LearnMorePage.styl'
+
+/** Pages **/
+@import 'landingPages/healingArtsProfessionals.styl'
+
+/** App contains some general changes that may be needed**/
+/* TODO Ideally this will be shared utilities or components,
+ and no forcing the class App on the top */
+@import 'components/App.styl'
+
+.App > body {
+    // No navbar
+    padding-top: 0 !important;
+}

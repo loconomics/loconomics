@@ -2,7 +2,7 @@
 
 var assetsBannerTpl = require('./shared/assetsBannerTpl');
 
-module.exports = {   
+module.exports = {
     options: {
         // Eliminamos todos los comentarios incluso el banner original
         keepSpecialComments: 0,
@@ -24,6 +24,17 @@ module.exports = {
     libs: {
         files: {
             './build/assets/css/libs.min.css': ['./build/assets/css/libs.css']
+        }
+    },
+    landingPages: {
+        files: {
+            '../web/assets/css/welcome.min.css': [
+                //'./vendor/bootstrap/css/bootstrap.css',
+                //'./vendor/jquery-ui/jquery-ui.css',
+                //'./vendor/font-awesome/css/font-awesome.css',
+                //'./vendor/ionicons/css/ionicons.css',
+                '../web/assets/css/welcome.css'
+            ]
         }
     }
 };
