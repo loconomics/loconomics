@@ -123,17 +123,17 @@ public static partial class LcCalendar
     #region NEW
     public static bool NewCheckUserAvailability(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool excludeAdvanceTime = false)
     {
+        // IMPORTANT: the timeline needs to be optimized, with NO consecutive slots of the same availability type
+        // or the test will fail
         var timeline = LcCalendar.GetAvailability.GetUserTimeline(userID, startTime, endTime, !excludeAdvanceTime);
         foreach (var e in timeline)
         {
-            if ((e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||
-                e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.UNAVAILABLE ||
-                e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TENTATIVE) &&
-                startTime < e.EndTime &&
-                endTime > e.StartTime)
-                return false;
+            if (e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.FREE &&
+                startTime >= e.StartTime &&
+                endTime <= e.EndTime)
+                return true;
         }
-        return true;
+        return false;
     }
     #endregion
 
