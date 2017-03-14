@@ -87,7 +87,7 @@ public static partial class LcCalendar
     /// but only clients.</param>
     /// <returns></returns>
     [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static List<CalendarDll.ProviderAvailabilityResult> GetUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
+    public static List<ProviderAvailabilityResult> GetUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
     {
         var lcCalendar = new CalendarDll.CalendarUtils();
         return

@@ -105,10 +105,10 @@ public static partial class LcCalendar
         {
             var result = new Dictionary<string, object>();
             var data = LcCalendar.GetProviderWorkHours(userId);
-            
+
             // Create result
             var slots = new Dictionary<string, List<string>>();
-            
+
             // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
             // as the default state, then we only return 'available' (free on database) slots
             result["defaultStatus"] = "unavailable";
@@ -118,7 +118,7 @@ public static partial class LcCalendar
             // By default:
             result["timeZone"] = GetUserTimeZone(userId);
 
-            foreach(var r in data) {
+            foreach (var r in data) {
                 var wk = String.Format(systemCulture, "{0}", r.DayOfWeek).ToLower();
                 if (!slots.ContainsKey(wk)) {
                     slots.Add(wk, new List<string>());
@@ -140,7 +140,7 @@ public static partial class LcCalendar
                     forslot = forslot.Add(TimeSpan.FromMinutes(15));
                 }
             }
-            
+
             result["slots"] = slots;
             return result;
         }
@@ -149,7 +149,7 @@ public static partial class LcCalendar
         {
             var result = new Dictionary<string, object>();
             var dates = getMonthlyDatesRequested(startDate, endDate);
-            
+
             var data = LcCalendar.GetUserAvailability(userId, dates.Start, dates.End);
 
             // Create result
@@ -170,13 +170,13 @@ public static partial class LcCalendar
         {
             var result = new Dictionary<string, object>();
             var dates = getMonthlyDatesRequested(startDate, endDate);
-            
+
             var data = LcCalendar.GetMonthlyScheduleEvents(userId, dates);
 
             // Create result
             result["defaultStatus"] = "available";
             result["slots"] = getMonthlyScheduleSlots(dates, dateFormat, data);
-            
+
             // TODO: Recurrent events (since recurrent bookings are not used still and its more complex
             // do that computation -and time consuming- currently either GetBookingEvents nor fillBookingEvents
             // are being aware of the possibility to have recurrent rules with occurrences happening on our
@@ -203,7 +203,7 @@ public static partial class LcCalendar
             // Fix on the endDate to avoid one calendar back-end error for the dates range.
             // Too, endDate is given as inclusive but is exclusive when querying the data.
             endDate = endDate.AddDays(1).AddSeconds(-1);
-            
+
             // TODO: change how availability works in the calendar so it respects the time part of the filter
             // (right now is getting avail info for the full date of the given start-end)
             var data = LcCalendar.GetUserAvailability(userId, startDate, endDate);
@@ -231,14 +231,14 @@ public static partial class LcCalendar
                 // Next date
                 fordate = fordate.AddDays(1);
             }
-        
+
             // We set 'unavailable' (any database status except free -includes: unavailable, busy, tentative, offline)
             // as the default state, then we only return 'available' (free on database) slots
             result["defaultStatus"] = "unavailable";
             result["status"] = "available";
-            foreach(var ev in data) {
+            foreach (var ev in data) {
                 if (ev.CalendarAvailabilityTypeID == (int)LcCalendar.AvailabilityType.Free) {
-                    
+
                     var slotDT = ev.DT;
                     // Ensure filter the time properly
                     // (see note on getAvailability)
@@ -501,6 +501,36 @@ public static partial class LcCalendar
             }
         }
 
+        public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTime startTime, DateTime endTime, double advanceTime = 0)
+        {
+            var cu = new CalendarDll.CalendarUtils();
+            var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
+
+            // NOTE: To avoid to show as available past time or inside the AdvanceTime period,
+            // we need to add an unavailable slot (if needed). It too filters out and cut slots
+            // that happens or starts before of now
+            // IMPORTANT: Not only takes care of advanceTime, even when that is 0 (because is excluded or is the saved value)
+            // this method filters the beggining of the slots to set an unavailable slot for any time older than current server time,
+            // with careful for a current time that happens in between a slot range.
+            // TODO: WARNING: It does NOT filter the end time (only start time right now), so the result would include slots
+            // that end after the requested endTime most times. The App has currently a filtering for that, becoming not a problem.
+            data = OccurrencesWithAdvanceTimeSlot(data, startTime, advanceTime);
+
+            // Create result
+            return GetTimeline(data);
+        }
+
+        public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTime startTime, DateTime endTime, bool useAdvanceTime)
+        {
+            double advanceTime = 0;
+            var prefs = LcCalendar.GetSchedulingPreferences(userID);
+            if (useAdvanceTime)
+            {
+                advanceTime = (double)prefs.advanceTime;
+            }
+            return GetUserTimeline(userID, startTime, endTime, advanceTime);
+        }
+
         /// <summary>
         /// Public API for the availability/times endpoint.
         /// Get the Availability of the user as a timeline: a list of consecutive date time ranges,
@@ -525,21 +555,9 @@ public static partial class LcCalendar
                 advanceTime = (double)prefs.advanceTime;
             }
 
-            var cu = new CalendarDll.CalendarUtils();
-            var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
-
-            // NOTE: To avoid to show as available past time or inside the AdvanceTime period,
-            // we need to add an unavailable slot (if needed). It too filters out and cut slots
-            // that happens or starts before of now
-            // IMPORTANT: Not only takes care of advanceTime, even when that is 0 (because is excluded or is the saved value)
-            // this method filters the beggining of the slots to set an unavailable slot for any time older than current server time,
-            // with careful for a current time that happens in between a slot range.
-            // TODO: WARNING: It does NOT filter the end time (only start time right now), so the result would include slots
-            // that end after the requested endTime most times. The App has currently a filtering for that, becoming not a problem.
-            data = OccurrencesWithAdvanceTimeSlot(data, startTime, advanceTime);
-
             // Create result
-            result["times"] = GetTimelinePublicOutputFormat(GetTimeline(data));
+            var data = GetUserTimeline(userID, startTime, endTime, advanceTime);
+            result["times"] = GetTimelinePublicOutputFormat(data);
             // Communicating service professional Slot size, because Apps must show times in that precision
             // (server would enforce that rule, throwing availability errors if not met)
             result["incrementsSizeInMinutes"] = prefs.incrementsSizeInMinutes;
