@@ -459,9 +459,9 @@ public static partial class LcCalendar
         #region TIMES Availability Slots Timeline [mixed Public and Private API]
 
         private static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> OccurrencesWithAdvanceTimeSlot(
-            IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> occurences, DateTime startTime, double advanceTime)
+            IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> occurences, DateTimeOffset startTime, double advanceTime)
         {
-            var notBeforeTime = DateTime.Now.ToUniversalTime().AddHours(advanceTime);
+            var notBeforeTime = DateTimeOffset.Now.AddHours(advanceTime);
             if (startTime < notBeforeTime)
             {
                 var past = new CalendarDll.CalendarUtils.AvailabilitySlot
@@ -483,6 +483,7 @@ public static partial class LcCalendar
                     // Excluded, is old
                     continue;
                 }
+                // TODO Review: must check if less than parameter startTime rather than currentTime? or the min of both?
                 else if (s.StartTime < notBeforeTime)
                 {
                     // Intersection (since endTime is not older than notBeforeTime, by first 'if' check)
@@ -501,7 +502,7 @@ public static partial class LcCalendar
             }
         }
 
-        public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTime startTime, DateTime endTime, double advanceTime = 0)
+        public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTimeOffset startTime, DateTimeOffset endTime, double advanceTime = 0)
         {
             var cu = new CalendarDll.CalendarUtils();
             var data = cu.GetEventsOccurrencesInUtcAvailabilitySlotsByUser(userID, startTime, endTime);
@@ -520,7 +521,7 @@ public static partial class LcCalendar
             return GetTimeline(data);
         }
 
-        public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTime startTime, DateTime endTime, bool useAdvanceTime)
+        public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool useAdvanceTime)
         {
             double advanceTime = 0;
             var prefs = LcCalendar.GetSchedulingPreferences(userID);
@@ -536,7 +537,6 @@ public static partial class LcCalendar
         /// Get the Availability of the user as a timeline: a list of consecutive date time ranges,
         /// without overlapping, computed the precedence of availability types and intersections
         /// so a single, no holes, line of time is returned.
-        /// IMPORTANT: Times are in UTC ever.
         /// NOTE: Additional information, important for the public API, is offered, as incrementsSizeInMinutes
         /// from the user scheduling preferences.
         /// </summary>
@@ -544,7 +544,7 @@ public static partial class LcCalendar
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> Times(int userID, DateTime startTime, DateTime endTime, bool useAdvanceTime)
+        public static Dictionary<string, object> Times(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool useAdvanceTime)
         {
             var result = new Dictionary<string, object>();
 

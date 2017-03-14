@@ -137,11 +137,11 @@
                 throw new HttpException(404, "User Not Found");
             }
             
-            var startDate = Request["start"].AsDateTime(DateTime.Today);
-            var endDate = Request["end"].AsDateTime(DateTime.Today.AddDays(1));
+            var startDate = DateTimeOffsetFromISO(Request["start"]) ?? DateTime.Today;
+            var endDate = DateTimeOffsetFromISO(Request["end"]) ?? DateTime.Today.AddDays(1);
             
             if (UrlData[0] == "dates") {
-                var data = LcCalendar.GetAvailability.Monthly(userID, false, startDate, endDate);
+                var data = LcCalendar.GetAvailability.Monthly(userID, false, startDate.LocalDateTime, endDate.LocalDateTime);
                 // TODO Remove this new object creation and just return data when the LcCalendar.GetAvailability.Monthly API
                 // gets updated removing the unneeded property 'defaultStatus', and updated 'slots' to 'dates':
                 return new {
@@ -150,7 +150,7 @@
                 //return data;
             }
             else if (UrlData[0] == "slots") {
-                var data = LcCalendar.GetAvailability.Weekly(userID, startDate, endDate, true);
+                var data = LcCalendar.GetAvailability.Weekly(userID, startDate.LocalDateTime, endDate.LocalDateTime, true);
                 return data;
             }
             else if (UrlData[0] == "times") {
