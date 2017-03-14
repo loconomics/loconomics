@@ -120,6 +120,23 @@ public static partial class LcCalendar
         return true;
     }
 
+    #region NEW
+    public static bool NewCheckUserAvailability(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool excludeAdvanceTime = false)
+    {
+        var timeline = LcCalendar.GetAvailability.GetUserTimeline(userID, startTime, endTime, !excludeAdvanceTime);
+        foreach (var e in timeline)
+        {
+            if ((e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||
+                e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.UNAVAILABLE ||
+                e.AvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TENTATIVE) &&
+                startTime < e.EndTime &&
+                endTime > e.StartTime)
+                return false;
+        }
+        return true;
+    }
+    #endregion
+
     /// <summary>
     /// Check if the user has some block available for between dateStart and dateEnd.
     /// With almost one block available (free), will return true, and false for when there is
