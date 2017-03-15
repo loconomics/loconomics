@@ -35,9 +35,10 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
                 serviceProfessionalServiceID: pricing.serviceProfessionalServiceID,
                 totalPrice: pricing.totalPrice
             });
+
             this.app.shell.goBack(this.requestData);
         }
-        if (this.app.model.onboarding.inProgress()) {
+        else if (this.app.model.onboarding.inProgress()) {
             this.app.shell.goBack();
         }
         else {
