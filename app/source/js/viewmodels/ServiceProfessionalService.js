@@ -25,9 +25,6 @@ function ServiceProfessionalServiceViewModel(app) {
     this.selectedServices = ko.observableArray([]);
     // Preset selection, from a previous state (loaded data) or incoming selection:
     this.preSelectedServices = ko.observableArray([]);
-    // Add activity requestData to keep progress/navigation on links
-    this.requestData = ko.observable();
-    this.cancelLink = ko.observable(null);
     // Set to true if groupedServices should include pricing types that do not have any pricing instances
     this.loadEmptyPricingTypes = ko.observable(false);
 
@@ -44,8 +41,6 @@ function ServiceProfessionalServiceViewModel(app) {
         this.isSelectionMode(false);
         this.selectedServices([]);
         this.preSelectedServices([]);
-        this.requestData();
-        this.cancelLink(null);
     };
     
     this.allowAddServices = ko.pureComputed(function() {
@@ -146,8 +141,14 @@ function ServiceProfessionalServiceViewModel(app) {
         return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/' + serviceID;
     }.bind(this);
 
+    // Override in implementing viewmodel
+    this.editServiceRequest = function() {
+        return {};
+    }.bind(this);
+
     this.editService = function(service) {
-        app.shell.go(this.editServiceURL(this.jobTitleID(), service.serviceProfessionalServiceID()));
+        app.shell.go(this.editServiceURL(this.jobTitleID(), service.serviceProfessionalServiceID()),
+                     this.editServiceRequest());
     }.bind(this);
     
     /**
@@ -169,20 +170,20 @@ function ServiceProfessionalServiceViewModel(app) {
         return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricing_type/' + pricingTypeID + '/new';
     }.bind(this);
 
+    // Override in implementing viewmodel
+    this.newServiceRequest = function() {
+        return {};
+    }.bind(this);
+
     this.tapNewService = function(group, event) {
         var url = this.newServiceURL(this.jobTitleID(), group.type() && group.type().pricingTypeID());
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
         // (see the anotated comment about replaceState bug on this file)
-        var request = $.extend({}, this.requestData(), {
+        var request = $.extend({}, this.newServiceRequest(), {
             selectedJobTitleID: this.jobTitleID()
         });
-        if (!request.cancelLink) {
-            $.extend(request, {
-                cancelLink: this.cancelLink()
-            });
-        }
         
         // When in selection mode:
         // Add current selection as preselection, so can be recovered later and 

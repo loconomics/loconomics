@@ -6,6 +6,7 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity'),
     ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService'),
+    $ = require('jquery'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
     Route = require('../utils/Router').Route;
 
@@ -30,6 +31,9 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
         handler: function(/*jobTitle*/) {
             // Update navbar (may indicate the jobTitle name)
             this.updateNavBarState();
+
+            // May depend on current URL, will change with job title
+            this.viewModel.serviceEditorCancelLink(this.serviceEditorCancelLink(this.viewModel.isAdditionMode()));
         }.bind(this)
     });
 
@@ -37,21 +41,17 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.registerHandler({
         target: this.viewModel.jobTitleID,
         handler: function(jobTitleID) {
-            if (jobTitleID) {
-                /// Rewrite URL
-                // IMPORTANT: When in isSelectionMode, pushState cannot be use
-                // because it conflicts with the selection logic (on new-booking progress)
-                // TODO: discarded URL rewrite until the bug with replaceState in HashbangHistory is fixed
-                if (this.viewModel.isSelectionMode()) return;
-                // If the URL didn't included the jobTitleID, or is different,
-                // we put it to avoid reload/resume problems
 
-                var found = /serviceProfessionalService\/(\d+)/i.exec(window.location);
-                var urlID = found && found[1] |0;
-                if (urlID !== jobTitleID) {
-                    var url = '/serviceProfessionalService/' + jobTitleID;
-                    if (this.viewModel.isAdditionMode()) url += '/new';
-                    this.app.shell.replaceState(null, null, url);
+            if (jobTitleID) {
+
+                var params = this.parseRoute(this.requestData.route.path),
+                    urlJobTitleID = +params.jobTitleID,
+                    clientID = +params.clientID;
+
+                if (urlJobTitleID !== jobTitleID) {
+                    var url = this.buildRoute(jobTitleID, clientID, params.isNew);
+
+                    this.app.shell.replaceState(this.requestData, null, url);
                 }
             }
         }.bind(this)
@@ -95,7 +95,7 @@ exports.init = A.init;
 
 A.prototype.applyOwnNavbarRules = function() {
     //jshint maxcomplexity:10
-    
+
     var itIs = this.viewModel.isSelectionMode();
 
     if (this.requestData.title) {
@@ -138,10 +138,46 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     this.applyOwnNavbarRules();
 };
 
+A.prototype.referrerURL = function() {
+    return (this.app.shell.referrerRoute && this.app.shell.referrerRoute.url) || '/';
+};
+
+A.prototype.serviceEditorCancelLink = function(isAdditionMode) {
+    if (isAdditionMode) {
+        // Sets referrer as cancel link
+        return this.referrerURL();
+    }
+    else {
+        return '/serviceProfessionalService' + this.requestData.route.path;
+    }
+};
+
+A.prototype.buildRoute = function(jobTitleID, clientID, isAdditionMode) {
+    var base = '/serviceProfessionalService',
+        jobTitle = '/' + jobTitleID,
+        client = clientID > 0 ? ('/client/' + clientID) : '',
+        newParam = isAdditionMode ? '/new' : '';
+
+    return base + jobTitle + client + newParam;
+};
+
+A.prototype.parseRoute = function(url) {
+    var paramsDefaults = { jobTitleID: 0, isNew: false, clientID: null },
+        matcher = new RouteMatcher([
+            new Route('/:jobTitleID/new', { isNew: true }),
+            new Route('/:jobTitleID/client/:clientID/new', { isNew: true }),
+            new Route('/:jobTitleID/client/:clientID'),
+            new Route('/new', { isNew: true }),
+            new Route('/:jobTitleID')
+        ], paramsDefaults);
+
+    return matcher.match(url) || paramsDefaults;
+};
+
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:8
     Activity.prototype.show.call(this, options);
-    
+
     // Remember route to go back, from a request of 'mustReturn' or last requested
     this.mustReturnTo = this.requestData.route.query.mustReturn || this.mustReturnTo;
         
@@ -153,40 +189,24 @@ A.prototype.show = function show(options) {
 
     this.viewModel.isSelectionMode(this.requestData.selectPricing === true);
 
-    var paramsDefaults = { jobTitleID: 0, isNew: false, clientID: null },
-        matcher = new RouteMatcher([
-            new Route('/:jobTitleID/new', { isNew: true }),
-            new Route('/:jobTitleID/client/:clientID/new', { isNew: true }),
-            new Route('/:jobTitleID/client/:clientID'),
-            new Route('/new', { isNew: true }),
-            new Route('/:jobTitleID')
-        ], paramsDefaults);
-
-    var params = matcher.match(options.route.path) || paramsDefaults;
+    var params = this.parseRoute(options.route.path);
 
     var jobTitleID = +params.jobTitleID;
     if (jobTitleID === 0 && options.selectedJobTitleID > 0)
         jobTitleID = options.selectedJobTitleID |0;
 
-    this.viewModel.clientID(params.clientID);
+    this.viewModel.clientID(+params.clientID);
 
     var isAdditionMode = params.isNew;
 
+    this.viewModel.serviceEditorCancelLink(this.serviceEditorCancelLink(isAdditionMode));
+
     if (isAdditionMode) {
-        // Sets referrer as cancelLink
-        var ref = this.app.shell.referrerRoute;
-        ref = ref && ref.url || '/';
-        this.requestData.cancelLink = ref;
-        // Set for editor links in the view
-        this.viewModel.cancelLink(ref);
-    }
-    else {
-        // Set this page as cancelLink for editor links in the view
-        this.viewModel.cancelLink('/serviceProfessionalService/' + jobTitleID);
+        this.requestData.cancelLink = this.referrerURL();
     }
 
     this.viewModel.isAdditionMode(isAdditionMode);
-    
+
     this.updateNavBarState();
 
     this.viewModel.jobTitleID(jobTitleID);
@@ -211,6 +231,9 @@ function ViewModel(app) {
 
     this.clientID = ko.observable(null);
     this.client = ko.observable(null);
+
+    this.requestData = ko.observable(null);
+    this.serviceEditorCancelLink = ko.observable(null);
 
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
     this.isInOnboarding = app.model.onboarding.inProgress;
@@ -257,6 +280,14 @@ function ViewModel(app) {
         
         return isin && hasPricing;
     }, this);
+
+    this.editServiceRequest = function() {
+        return $.extend({ cancelLink: this.serviceEditorCancelLink() }, this.requestData());
+    }.bind(this);
+
+    this.newServiceRequest = function() {
+        return $.extend({ cancelLink: this.serviceEditorCancelLink() }, this.requestData());
+    }.bind(this);
 
     var baseNewServiceURL = this.newServiceURL;
 
