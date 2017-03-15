@@ -19,7 +19,7 @@ var Appointment = require('../models/Appointment'),
 function DateAvailability(values) {
 
     Model(this);
-    
+
     this.model.defProperties({
         date: null, // Date
         weeklySchedule: {
@@ -35,10 +35,12 @@ function DateAvailability(values) {
     }, values);
 
     this.freeScheduleSlots = ko.pureComputed(function () {
-        return availabilityCalculation.createFreeScheduleSlots(this.date(), this.weeklySchedule());
+        var d = this.date();
+        var w = this.weeklySchedule();
+        return availabilityCalculation.createFreeScheduleSlots(d, w);
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     /**
         :array<Appointment> List of appointments for all the times in the date.
         It introduces free and unavailable appointments using appointmentsList as base
@@ -112,7 +114,7 @@ function DateAvailability(values) {
         else // <= 0
             return 'none';
     }, this);
-    
+
     /**
         Retrieve a list of date-times that are free, available to be used,
         in this date with a separation between each of the given slotSize
@@ -125,15 +127,15 @@ function DateAvailability(values) {
     **/
     var createTimeSlots = require('../utils/createTimeSlots');
     this.getFreeTimeSlots = function getFreeTimeSlots(duration, slotSizeMinutes) {
-        
+
         slotSizeMinutes = slotSizeMinutes || this.schedulingPreferences().incrementsSizeInMinutes();
-        
+
         if (!duration)
             duration = slotSizeMinutes;
-        
+
         var date = this.date(),
             today = getDateWithoutTime();
-    
+
         // Quick return if with empty list when
         // - past date (no time)
         // - no available time (already computed)
@@ -145,17 +147,17 @@ function DateAvailability(values) {
             return createTimeSlots.forList(this.getFreeAvailableSlots(), slotSizeMinutes, duration, true);
         }
     };
-    
+
     /**
         Returns a list of objects of type AvailableSlot
         ( { startTime:Date, endTime:Date, availability:'free' } )
         for every free/available time range in the date
     **/
     this.getFreeAvailableSlots = function getFreeAvailableSlots() {
-        
+
         var date = this.date(),
             today = getDateWithoutTime();
-    
+
         // Quick return with empty list when
         // - past date (no time)
         // - no available time (already computed)

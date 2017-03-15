@@ -61,6 +61,9 @@ function RemoteModel(options) {
     this.clearCache = function clearCache() {
         this.cache.latest = null;
         this.data.model.reset();
+        // A cache cleared must left a state of 'no previous load'
+        // and that includes to force behave as 'is the first time'
+        firstTimeLoad = true;
     };
 
     // Optional name used to persist a copy of the data as plain object
