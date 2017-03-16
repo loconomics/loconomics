@@ -25,7 +25,7 @@ exports.create = function create(appModel) {
     });
 
     // Override GroupListRemoteModel's implementation until it
-    // supports actual individual fetch.
+    // supports actual individual fetch. Bypasses local cache.
     api.getItem = function(jobTitleID, serviceID) {
         api.state.isLoading(true);
 
@@ -39,6 +39,20 @@ exports.create = function create(appModel) {
                   api.state.isLoading(false);
                   throw err;
              });
+    };
+
+    var baseSetItem = api.setItem.bind(api);
+
+    // GroupListRemoteModel cache only works for one services API call: ...-services/{jobTitleID}
+    // Updates to service objects may change which calls they are returned by. Rather
+    // than implement fine-grained control on which cached items are adjusted on object
+    // update, clear the cache whenever an item is updated.
+    api.setItem = function(item) {
+        return baseSetItem(item)
+            .then(function(serverObject) {
+                api.clearCache();
+                return serverObject;
+            });
     };
 
     api.getClientSpecificServices = function(clientID) {
