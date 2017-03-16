@@ -24,6 +24,23 @@ exports.create = function create(appModel) {
         api.clearCache();
     });
 
+    // Override GroupListRemoteModel's implementation until it
+    // supports actual individual fetch.
+    api.getItem = function(jobTitleID, serviceID) {
+        api.state.isLoading(true);
+
+        // Returns plain data
+        return appModel.rest.get(restUrlPrefix + jobTitleID + '/' + serviceID)
+             .then(function(data) {
+                  api.state.isLoading(false);
+                  return data;
+             })
+             .catch(function(err) {
+                  api.state.isLoading(false);
+                  throw err;
+             });
+    };
+
     api.getClientSpecificServices = function(clientID) {
         return appModel.rest.get(restUrlPrefix + 'client/' + clientID);
     };
