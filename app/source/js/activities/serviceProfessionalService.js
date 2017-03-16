@@ -100,18 +100,23 @@ A.prototype.applyOwnNavbarRules = function() {
         this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink, this.requestData);
     }
     else {
-        // Reset to defaults, or given title:
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
-
-        var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
-            url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling'),
-            handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
-
-        this.navBar.leftAction().link(url);
-        this.navBar.leftAction().text(this.requestData.navTitle || jname);
-        this.navBar.leftAction().handler(handler);
+        this.navBar.leftAction().model.updateWith(this.newLeftAction(), true);
     }
+};
+
+A.prototype.newLeftAction = function() {
+    var leftAction = {},
+        jid = this.viewModel.jobTitleID(),
+        jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
+        url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling'),
+        handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
+
+    leftAction.link = url;
+    leftAction.text = this.requestData.navTitle || jname;
+    leftAction.handler = handler;
+
+    return leftAction;
 };
 
 A.prototype.updateNavBarState = function updateNavBarState() {
