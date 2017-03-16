@@ -287,7 +287,7 @@ function ViewModel(app) {
         return $.extend({ cancelLink: this.serviceEditorCancelLink() }, this.requestData());
     }.bind(this);
 
-    var baseNewServiceURL = this.newServiceURL;
+    var baseNewServiceURL = this.newServiceURL.bind(this);
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {
         if(this.client()) {
