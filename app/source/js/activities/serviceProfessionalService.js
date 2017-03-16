@@ -94,18 +94,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 exports.init = A.init;
 
 A.prototype.applyOwnNavbarRules = function() {
-    //jshint maxcomplexity:10
-
-    var itIs = this.viewModel.isSelectionMode();
-
-    if (this.requestData.title) {
-        // Replace title by title if required
-        this.navBar.title(this.requestData.title);
-    }
-    else {
-        // Title must be empty
-        this.navBar.title('');
-    }
+    this.navBar.title(this.requestData.title || '');
 
     if (this.requestData.cancelLink) {
         this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink, this.requestData);
@@ -116,18 +105,12 @@ A.prototype.applyOwnNavbarRules = function() {
 
         var jid = this.viewModel.jobTitleID(),
             jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
-            url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling');
+            url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling'),
+            handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
 
         this.navBar.leftAction().link(url);
         this.navBar.leftAction().text(this.requestData.navTitle || jname);
-    }
-
-    if (itIs && !this.requestData.cancelLink) {
-        // Uses a custom handler so it returns keeping the given state:
-        this.navBar.leftAction().handler(this.returnRequest);
-    }
-    else if (!this.requestData.cancelLink) {
-        this.navBar.leftAction().handler(null);
+        this.navBar.leftAction().handler(handler);
     }
 };
 
