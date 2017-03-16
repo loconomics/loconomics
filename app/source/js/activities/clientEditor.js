@@ -358,10 +358,9 @@ function ViewModel(app) {
 
     this.tapServiceSummary = function(serviceSummary, event) {
         var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!clientEditor/:clientID'),
-            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() }),
-            state = { navTitle: this.client().fullName() };
+            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
 
-        app.shell.go(url, state);
+        app.shell.go(url);
 
         event.preventDefault();
         event.stopImmediatePropagation();

@@ -108,15 +108,21 @@ A.prototype.applyOwnNavbarRules = function() {
 A.prototype.newLeftAction = function() {
     var leftAction = {},
         jid = this.viewModel.jobTitleID(),
-        jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
         url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling'),
         handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
 
     leftAction.link = url;
-    leftAction.text = this.requestData.navTitle || jname;
+    leftAction.text = this.leftActionText();
     leftAction.handler = handler;
 
     return leftAction;
+};
+
+A.prototype.leftActionText = function() {
+    var clientName = this.viewModel.client() && this.viewModel.clientFullName(),
+        jobTitle = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName();
+
+    return this.requestData.navTitle || clientName || jobTitle || 'Scheduler';
 };
 
 A.prototype.updateNavBarState = function updateNavBarState() {
@@ -248,6 +254,10 @@ function ViewModel(app) {
 
     this.clientName = ko.pureComputed(function() {
         return (this.client() && this.client().firstName()) || '';
+    }, this);
+
+    this.clientFullName = ko.pureComputed(function() {
+        return (this.client() && this.client().fullName()) || '';
     }, this);
 
     this.jobTitleName = ko.pureComputed(function() {
