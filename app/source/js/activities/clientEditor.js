@@ -74,11 +74,10 @@ exports.init = A.init;
 var ko = require('knockout');
 
 A.prototype.updateNavBarState = function updateNavBarState() {
+    var referrerRoute = this.app.shell.referrerRoute,
+        referrer = this.viewModel.clientID() === 0 ? referrerRoute && referrerRoute.url : null,
+        link = this.requestData.cancelLink || referrer || '/clients';
 
-    var referrer = this.app.shell.referrerRoute;
-    referrer = referrer && referrer.url || '/clients';
-    var link = this.requestData.cancelLink || referrer;
-    
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
@@ -88,8 +87,6 @@ A.prototype.show = function show(state) {
     
     // reset
     this.viewModel.clientID(0);
-    
-    this.updateNavBarState();
 
     // params
     var params = state && state.route && state.route.segments || [];
@@ -148,6 +145,8 @@ A.prototype.show = function show(state) {
             clientDataFromSearchText(this.requestData.newForSearchText || '', this.viewModel.client());
         }
     }
+
+    this.updateNavBarState();
 };
 
 /**
