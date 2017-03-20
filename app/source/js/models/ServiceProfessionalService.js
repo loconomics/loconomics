@@ -32,7 +32,8 @@ function ServiceProfessionalService(values) {
         // Array of integers, IDs of serviceAttributes
         serviceAttributes: [],
         createdDate: null,
-        updatedDate: null
+        updatedDate: null,
+        visibleToClientID: 0
     }, values);
     
     this.model.defID(['serviceProfessionalServiceID']);
@@ -153,6 +154,10 @@ function ServiceProfessionalService(values) {
         else
             return dur || pr;
     }, this);
+
+    this.isClientSpecific = function() {
+        return this.visibleToClientID() > 0;
+    }.bind(this);
 }
 
 module.exports = ServiceProfessionalService;
