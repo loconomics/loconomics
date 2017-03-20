@@ -458,6 +458,50 @@ public static partial class LcCalendar
 
         #region TIMES Availability Slots Timeline [mixed Public and Private API]
 
+        /// <summary>
+        /// Filter a list of occurrences, removing ones that are newer than the given endTime
+        /// and cutting anyone with the endTime in the middle.
+        /// </summary>
+        /// <param name="occurrences"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        private static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> FilterEndTimeOccurrences(
+            IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> occurrences, DateTimeOffset endTime)
+        {
+            foreach (var s in occurrences)
+            {
+                if (s.StartTime >= endTime)
+                {
+                    // Skip it
+                    continue;
+                }
+                else if (s.EndTime > endTime)
+                {
+                    // Intersection (since StartTime is not newer than endTime, by previous 'if' check)
+                    yield return new CalendarDll.CalendarUtils.AvailabilitySlot
+                    {
+                        StartTime = s.StartTime,
+                        EndTime = endTime,
+                        AvailabilityTypeID = s.AvailabilityTypeID
+                    };
+                }
+                else
+                {
+                    // Is In, give it 'as is'
+                    yield return s;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Filter a list of occurrences, removing ones that are older than the given startTime
+        /// and cutting anyone with the startTime in the middle, plus set as unavailable any occurrence
+        /// that happens inside the advanceTime (relative to the current machine time).
+        /// </summary>
+        /// <param name="occurences"></param>
+        /// <param name="startTime"></param>
+        /// <param name="advanceTime"></param>
+        /// <returns></returns>
         private static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> OccurrencesWithAdvanceTimeSlot(
             IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> occurences, DateTimeOffset startTime, double advanceTime)
         {
@@ -517,11 +561,10 @@ public static partial class LcCalendar
             // we need to add an unavailable slot (if needed). It too filters out and cut slots
             // that happens or starts before of now
             // IMPORTANT: Not only takes care of advanceTime, even when that is 0 (because is excluded or is the saved value)
-            // this method filters the beggining of the slots to set an unavailable slot for any time older than current server time,
+            // this method filters the beggining of the slots to set an unavailable slot for any time older than current machine time,
             // with careful for a current time that happens in between a slot range.
-            // TODO: WARNING: It does NOT filter the end time (only start time right now), so the result would include slots
-            // that end after the requested endTime most times. The App has currently a filtering for that, becoming not a problem.
             data = OccurrencesWithAdvanceTimeSlot(data, startTime, advanceTime);
+            data = FilterEndTimeOccurrences(data, endTime);
 
             // Create result
             return GetTimeline(data);
