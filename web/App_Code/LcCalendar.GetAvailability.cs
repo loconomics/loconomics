@@ -567,7 +567,7 @@ public static partial class LcCalendar
             data = FilterEndTimeOccurrences(data, endTime);
 
             // Create result
-            return GetTimeline(data);
+            return OptimizeTimeline(GetTimeline(data));
         }
 
         public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool useAdvanceTime)
@@ -672,6 +672,8 @@ public static partial class LcCalendar
         /// <summary>
         /// Gets a timeline of non overlapping slots, without holes (filled in with 'unavailable')
         /// for the given set of slots, sorted ascending.
+        /// But is NOT optimized, meaning can contains consecutive slots of same availability type; to
+        /// get an optimized, compressed, output, apply OptimizeTimeline to the result.
         /// </summary>
         /// <param name="AvailabilitySlots"></param>
         /// <returns></returns>
@@ -872,6 +874,52 @@ public static partial class LcCalendar
                 yield return range;
         }
 
+        /// <summary>
+        /// It optimizes a given timeline, as a list of non overlapping and ordered slots, by merging consecutive
+        /// slots of the same availabilityType in one, getting the smaller timeline list possible to represent
+        /// the same availability.
+        /// </summary>
+        /// <param name="slots">Non overlapping and ordered slots, as coming from GetTimeline; otherwise, results are unexpected. A null slot in the list will throw random exception.</param>
+        /// <returns></returns>
+        static private IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> OptimizeTimeline(IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> slots)
+        {
+            var enumerate = slots.GetEnumerator();
+            // Quick return on empty list
+            if (!enumerate.MoveNext())
+            {
+                yield break;
+            }
+
+            // Read first: is the initial 'previous one'
+            var prevSlot = enumerate.Current;
+
+            while (enumerate.MoveNext())
+            {
+                var currentSlot = enumerate.Current;
+
+                if (currentSlot.AvailabilityTypeID == prevSlot.AvailabilityTypeID)
+                {
+                    // Merge lastSlot and current slot
+                    prevSlot = new CalendarDll.CalendarUtils.AvailabilitySlot
+                    {
+                        AvailabilityTypeID = prevSlot.AvailabilityTypeID,
+                        StartTime = prevSlot.StartTime,
+                        EndTime = currentSlot.EndTime
+                    };
+                }
+                else
+                {
+                    // Merging not possible, return last one and 
+                    // replace reference with current one
+                    yield return prevSlot;
+                    prevSlot = currentSlot;
+                }
+            }
+
+            // Return the pending last slot
+            yield return prevSlot;
+        }
+
         #region Unit Testing
         /// <summary>
         /// Utility to compare a set of expected results with the actual results. Returns a list of errors
@@ -915,10 +963,9 @@ public static partial class LcCalendar
         /// Unit Tests for GetTimeline
         /// Returns a list of errors.
         /// 
-        /// IMPORTANT: Expected output written for initial versions that has un-optimized output, that means that the
-        /// output is correct representing the availability but can contains consecutive ranges for the same availability ID
-        /// that could, when optimized, being joined into a unique range. If the function is optimized, or a second 
-        /// optimization function is applied, the expected resultset must be updated in order to avoid false negatives.
+        /// IMPORTANT: Expected output for GetTimeline and OptimizeTimeline is different
+        /// since even both output are correct representing the availability, the un-optimized can contains consecutive ranges
+        /// for the same availability ID that could, when optimized, being joined into a unique range.
         /// </summary>
         /// <returns></returns>
         public static CheckTimelineResults GetTimeline_UnitTests()
@@ -985,11 +1032,6 @@ public static partial class LcCalendar
                 },
                 new CalendarDll.CalendarUtils.AvailabilitySlot {
                     StartTime = new DateTime(2015, 10, 3, 13, 0, 0),
-                    EndTime = new DateTime(2015, 10, 3, 14, 0, 0),
-                    AvailabilityTypeID = 2
-                },
-                new CalendarDll.CalendarUtils.AvailabilitySlot {
-                    StartTime = new DateTime(2015, 10, 3, 14, 0, 0),
                     EndTime = new DateTime(2015, 10, 3, 15, 0, 0),
                     AvailabilityTypeID = 2
                 },
@@ -1068,21 +1110,11 @@ public static partial class LcCalendar
                 },
                 new CalendarDll.CalendarUtils.AvailabilitySlot {
                     StartTime = new DateTime(2015, 10, 3, 17, 0, 0),
-                    EndTime = new DateTime(2015, 10, 3, 17, 30, 0),
-                    AvailabilityTypeID = 2
-                },
-                new CalendarDll.CalendarUtils.AvailabilitySlot {
-                    StartTime = new DateTime(2015, 10, 3, 17, 30, 0),
                     EndTime = new DateTime(2015, 10, 3, 18, 0, 0),
                     AvailabilityTypeID = 2
                 },
                 new CalendarDll.CalendarUtils.AvailabilitySlot {
                     StartTime = new DateTime(2015, 10, 3, 18, 0, 0),
-                    EndTime = new DateTime(2015, 10, 3, 20, 0, 0),
-                    AvailabilityTypeID = 3
-                },
-                new CalendarDll.CalendarUtils.AvailabilitySlot {
-                    StartTime = new DateTime(2015, 10, 3, 20, 0, 0),
                     EndTime = new DateTime(2015, 10, 3, 21, 0, 0),
                     AvailabilityTypeID = 3
                 },
@@ -1100,11 +1132,6 @@ public static partial class LcCalendar
                 },
                 new CalendarDll.CalendarUtils.AvailabilitySlot {
                     StartTime = new DateTime(2015, 10, 4, 2, 0, 0),
-                    EndTime = new DateTime(2015, 10, 4, 5, 0, 0),
-                    AvailabilityTypeID = 2
-                },
-                new CalendarDll.CalendarUtils.AvailabilitySlot {
-                    StartTime = new DateTime(2015, 10, 4, 5, 0, 0),
                     EndTime = new DateTime(2015, 10, 4, 6, 0, 0),
                     AvailabilityTypeID = 2
                 },
@@ -1132,16 +1159,6 @@ public static partial class LcCalendar
                 },
                 new CalendarDll.CalendarUtils.AvailabilitySlot {
                     StartTime = new DateTime(2015, 10, 5, 2, 0, 0),
-                    EndTime = new DateTime(2015, 10, 5, 3, 0, 0),
-                    AvailabilityTypeID = 2
-                },
-                new CalendarDll.CalendarUtils.AvailabilitySlot {
-                    StartTime = new DateTime(2015, 10, 5, 3, 0, 0),
-                    EndTime = new DateTime(2015, 10, 5, 4, 0, 0),
-                    AvailabilityTypeID = 2
-                },
-                new CalendarDll.CalendarUtils.AvailabilitySlot {
-                    StartTime = new DateTime(2015, 10, 5, 4, 0, 0),
                     EndTime = new DateTime(2015, 10, 5, 5, 0, 0),
                     AvailabilityTypeID = 2
                 },
@@ -1154,11 +1171,11 @@ public static partial class LcCalendar
 
             var result = new CheckTimelineResults();
 
-            var output = GetTimeline(testdataBasic).ToList();
+            var output = OptimizeTimeline(GetTimeline(testdataBasic)).ToList();
             result.Outputs.Add(output);
             result.Errors.Add(CheckTestTimeline("Basic", output, testresultBasic));
 
-            output = GetTimeline(testdata3Coincidences).ToList();
+            output = OptimizeTimeline(GetTimeline(testdata3Coincidences)).ToList();
             result.Outputs.Add(output);
             result.Errors.Add(CheckTestTimeline("3Coincidences", output, testresult3Coincidences));
 
