@@ -567,7 +567,7 @@ public static partial class LcCalendar
             data = FilterEndTimeOccurrences(data, endTime);
 
             // Create result
-            return OptimizeTimeline(GetTimeline(data));
+            return GetTimeline(data);
         }
 
         public static IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetUserTimeline(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool useAdvanceTime)
@@ -672,18 +672,19 @@ public static partial class LcCalendar
         /// <summary>
         /// Gets a timeline of non overlapping slots, without holes (filled in with 'unavailable')
         /// for the given set of slots, sorted ascending.
-        /// But is NOT optimized, meaning can contains consecutive slots of same availability type; to
-        /// get an optimized, compressed, output, apply OptimizeTimeline to the result.
+        /// The output is optimized to reduce size and prevent consecutive slots with the same AvailabilityTypeID.
         /// </summary>
         /// <param name="AvailabilitySlots"></param>
         /// <returns></returns>
         static public IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> GetTimeline(IEnumerable<CalendarDll.CalendarUtils.AvailabilitySlot> AvailabilitySlots)
         {
-            return GetTimeline(AvailabilitySlots, 0);
+            return OptimizeTimeline(GetTimeline(AvailabilitySlots, 0));
         }
         /// <summary>
         /// Gets a timeline of non overlapping slots, without holes (filled in with 'unavailable')
         /// for the given set of slots, sorted ascending.
+        /// But is NOT optimized, meaning can contains consecutive slots of same availability type; to
+        /// get an optimized, compressed, output, apply OptimizeTimeline to the result.
         /// </summary>
         /// <param name="AvailabilitySlots"></param>
         /// <param name="passNumber">Used only internally, to avoid that recursive calls creates an stack overflow.</param>
@@ -1171,11 +1172,11 @@ public static partial class LcCalendar
 
             var result = new CheckTimelineResults();
 
-            var output = OptimizeTimeline(GetTimeline(testdataBasic)).ToList();
+            var output = GetTimeline(testdataBasic).ToList();
             result.Outputs.Add(output);
             result.Errors.Add(CheckTestTimeline("Basic", output, testresultBasic));
 
-            output = OptimizeTimeline(GetTimeline(testdata3Coincidences)).ToList();
+            output = GetTimeline(testdata3Coincidences).ToList();
             result.Outputs.Add(output);
             result.Errors.Add(CheckTestTimeline("3Coincidences", output, testresult3Coincidences));
 
