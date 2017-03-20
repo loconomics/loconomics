@@ -97,31 +97,17 @@ public static partial class LcCalendar
                 dateEnd,
                 excludeAdvanceTime ? DateTimeOffset.MinValue : DateTimeOffset.Now);
     }
+
+    #region NEW
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd
     /// </summary>
     /// <param name="userID">UserID as in database</param>
-    /// <param name="dateStart">Start date and time for the time range (greater or equals than dateStart)</param>
-    /// <param name="dateEnd">End date and time for the time range (less than dateEnd)</param>
+    /// <param name="startTime">Start date and time for the time range (greater or equals than dateStart)</param>
+    /// <param name="endTime">End date and time for the time range (less than dateEnd)</param>
+    /// <param name="excludeAdvanceTime">Ask to do not check for advance time, as happens when the user checks its own availability</param>
     /// <returns>True when is available, False when not</returns>
-    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static bool CheckUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
-    {
-        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd, excludeAdvanceTime))
-        {
-            var edt = e.DT;
-            if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.BUSY ||
-                e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.UNAVAILABLE ||
-                e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TENTATIVE) &&
-                edt >= dateStart &&
-                edt < dateEnd)
-                return false;
-        }
-        return true;
-    }
-
-    #region NEW
-    public static bool NewCheckUserAvailability(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool excludeAdvanceTime = false)
+    public static bool CheckUserAvailability(int userID, DateTimeOffset startTime, DateTimeOffset endTime, bool excludeAdvanceTime = false)
     {
         // IMPORTANT: the timeline needs to be optimized, with NO consecutive slots of the same availability type
         // or the test will fail

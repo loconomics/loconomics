@@ -20,16 +20,9 @@
         var useAdvanceTime = true;
 
         taskStart = DateTime.Now;
-        var oldCheck = LcCalendar.CheckUserAvailability(userID, startTime, endTime, !useAdvanceTime);
-        var timeOldCheck = (DateTime.Now - taskStart).ToString();
-
-        taskStart = DateTime.Now;
-        var newCheck = LcCalendar.NewCheckUserAvailability(userID, startTime, endTime, !useAdvanceTime);
+        var newCheck = LcCalendar.CheckUserAvailability(userID, startTime, endTime, !useAdvanceTime);
         var timeNewCheck = (DateTime.Now - taskStart).ToString();
 
-        taskStart = DateTime.Now;
-        var oldRaw = LcCalendar.GetUserAvailability(userID, startTime, endTime, !useAdvanceTime);
-        var timeOldRaw = (DateTime.Now - taskStart).ToString();
         taskStart = DateTime.Now;
         var newRaw = LcCalendar.GetAvailability.GetUserTimeline(userID, startTime, endTime, useAdvanceTime);
         var timeNewRaw = (DateTime.Now - taskStart).ToString();
@@ -41,14 +34,10 @@
         {
             successfulTest = testsErrorsCount == 0,
             tests = testsErrorsCount > 0 ? LcCalendar.GetAvailability.GetTimeline_UnitTests() : null,
-            timeOldRaw = timeOldRaw,
-            timeNewRaw = timeNewRaw,
-            timeOldCheck = timeOldCheck,
-            timeNewCheck = timeNewCheck,
-            oldRaw = oldRaw,
-            newRaw = newRaw,
-            oldCheck = oldCheck,
-            newCheck = newCheck
+            timeRaw = timeNewRaw,
+            timeCheck = timeNewCheck,
+            raw = newRaw,
+            check = newCheck
         };
     }
     catch (Exception ex)
