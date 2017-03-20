@@ -472,6 +472,13 @@ public static partial class LcCalendar
                 };
                 yield return past;
             }
+            else
+            {
+                // Since the queried time is newer than the 'limit time in advance',
+                // then our new limit is the queried startTime (anything before that 
+                // is not wanted now)
+                notBeforeTime = startTime;
+            }
             // Occurrences need to be filtered to do not include ones that happens older than the advance time / startTime,
             // not just for performance of the timeline computation, but for consistency since it can breaks the logic there (since
             // it expects events sorted ascending by startTime, and occurrence with older start than advanceTime slot would break it).
@@ -483,7 +490,6 @@ public static partial class LcCalendar
                     // Excluded, is old
                     continue;
                 }
-                // TODO Review: must check if less than parameter startTime rather than currentTime? or the min of both?
                 else if (s.StartTime < notBeforeTime)
                 {
                     // Intersection (since endTime is not older than notBeforeTime, by first 'if' check)

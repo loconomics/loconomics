@@ -15,9 +15,9 @@
     {
         var taskStart = DateTime.Now;
         var userID = 141;
-        var startTime = new DateTimeOffset(2017, 3, 16, 22, 0, 0, new TimeSpan(1, 0, 0));
-        var endTime = new DateTimeOffset(2017, 3, 16, 22, 10, 0, new TimeSpan(1, 0, 0));
-        var useAdvanceTime = false;
+        var startTime = new DateTimeOffset(2017, 3, 20, 19, 30, 0, new TimeSpan(1, 0, 0));
+        var endTime = new DateTimeOffset(2017, 3, 20, 20, 10, 0, new TimeSpan(1, 0, 0));
+        var useAdvanceTime = true;
 
         taskStart = DateTime.Now;
         var oldCheck = LcCalendar.CheckUserAvailability(userID, startTime, endTime, !useAdvanceTime);
@@ -34,8 +34,13 @@
         var newRaw = LcCalendar.GetAvailability.GetUserTimeline(userID, startTime, endTime, useAdvanceTime);
         var timeNewRaw = (DateTime.Now - taskStart).ToString();
 
+        var tests = LcCalendar.GetAvailability.GetTimeline_UnitTests();
+        var testsErrorsCount = tests.Errors.Aggregate(0, (acc, x) => acc + x.Count);
+
         data = new
         {
+            successfulTest = testsErrorsCount == 0,
+            tests = testsErrorsCount > 0 ? LcCalendar.GetAvailability.GetTimeline_UnitTests() : null,
             timeOldRaw = timeOldRaw,
             timeNewRaw = timeNewRaw,
             timeOldCheck = timeOldCheck,
