@@ -10,13 +10,13 @@ var PublicUserProfile = require('../models/PublicUserProfile');
 
 exports.create = function create(appModel) {
     //jshint maxstatements:80
-    
+
     var api = {};
 
     //appModel.on('clearLocalData', function() {
     //    api.clearCache();
     //});
-    
+
     /**
         Get the user index/summary information. That includes
         an object with different properties that matches the results
@@ -29,7 +29,7 @@ exports.create = function create(appModel) {
     api.getUser = function(userID, options) {
         return appModel.rest.get('users/' + (userID |0), options);
     };
-    
+
     // IMPORTANT: We need cache for user profiles, since are used to fetch information
     // of users attached to thread-messages.
     var profile = new GroupRemoteModel({
@@ -45,23 +45,12 @@ exports.create = function create(appModel) {
         return profile.getItem(userID);
         //return appModel.rest.get('users/' + (userID |0) + '/profile');
     };
-    
+
     api.getJobProfile = function(userID) {
         return appModel.rest.get('users/' + (userID |0) + '/job-profile');
     };
     api.getJobTitle = function(userID, jobTitleID) {
         return appModel.rest.get('users/' + (userID |0) + '/job-profile/' + (jobTitleID |0));
-    };
-    
-    // TODO REMOVE THIS OLD?? REPLACED BY SERVER-SIDE AppModel.availability?
-    var getAvailability = function getAvailability(userID, format, query) {
-        return appModel.rest.get('users/' + (userID |0) + '/availability/' + format, query);
-    };
-    api.getAvailabilityPerDate = function(userID, startDate, endDate) {
-        return getAvailability(userID, 'dates', { start: startDate, end: endDate });
-    };
-    api.getAvailabilityInsSlots = function(userID, startDate, endDate) {
-        return getAvailability(userID, 'slots', { start: startDate, end: endDate });
     };
 
     var getRatings = function getRatings(modifier, userID) {
@@ -71,7 +60,7 @@ exports.create = function create(appModel) {
     api.getClientRatings = getRatings.bind(api, 'client');
     api.getServiceProfessionalRatings = getRatings.bind(api, 'service-professional');
     api.getJobTitleRatings = function(userID, jobTitleID) { return getRatings(jobTitleID |0, userID); };
-    
+
     api.getServiceAddresses = function(userID, jobTitleID) {
         return appModel.rest.get('users/' + (userID |0) + '/service-addresses/' + (jobTitleID |0));
     };
@@ -79,7 +68,7 @@ exports.create = function create(appModel) {
     api.getServiceProfessionalServices = function(serviceProfessionalUserID, jobTitleID) {
         return appModel.rest.get('users/' + (serviceProfessionalUserID |0) + '/service-professional-services/' + (jobTitleID |0));
     };
-    
+
     var getVerificationsSummary = function getVerificationsSummary(modifier, userID) {
         return appModel.rest.get('users/' + (userID |0) + '/verifications-summary' + (modifier ? '/' + modifier : ''));
     };
@@ -91,7 +80,7 @@ exports.create = function create(appModel) {
     api.getServiceAttributes = function getServiceAttributes(userID, jobTitleID) {
         return appModel.rest.get('users/' + (userID |0) + '/service-attributes/' + (jobTitleID |0));
     };
-    
+
     /**
         @options:Object {
             limit:int,
