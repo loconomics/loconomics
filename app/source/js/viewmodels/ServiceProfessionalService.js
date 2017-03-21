@@ -118,7 +118,7 @@ function ServiceProfessionalServiceViewModel(app) {
     this.groupedServices = ko.computed(function() {
         var pricingTypesByID = function(id) { return app.model.pricingTypes.getObservableItem(id); };
 
-        return this.list().length > 0 ? this.groupServices(this.list(), pricingTypesByID) : [];
+        return this.groupServices(this.list(), pricingTypesByID);
     }, this);
 
     /**
