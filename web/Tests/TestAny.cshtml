@@ -7,38 +7,9 @@
     DateTime start = DateTime.Now;
     dynamic data;
 
-    System.Threading.Thread.CurrentThread.CurrentCulture =
-    System.Threading.Thread.CurrentThread.CurrentUICulture =
-    System.Globalization.CultureInfo.CreateSpecificCulture("es-ES");
-
     try
     {
-        var taskStart = DateTime.Now;
-        var userID = 141;
-        var startTime = new DateTimeOffset(2017, 3, 20, 23, 30, 0, new TimeSpan(1, 0, 0));
-        var endTime = new DateTimeOffset(2017, 3, 21, 1, 0, 0, new TimeSpan(1, 0, 0));
-        var useAdvanceTime = true;
-
-        taskStart = DateTime.Now;
-        var newCheck = LcCalendar.CheckUserAvailability(userID, startTime, endTime, !useAdvanceTime);
-        var timeNewCheck = (DateTime.Now - taskStart).ToString();
-
-        taskStart = DateTime.Now;
-        var newRaw = LcCalendar.GetAvailability.GetUserTimeline(userID, startTime, endTime, useAdvanceTime);
-        var timeNewRaw = (DateTime.Now - taskStart).ToString();
-
-        var tests = LcCalendar.GetAvailability.GetTimeline_UnitTests();
-        var testsErrorsCount = tests.Errors.Aggregate(0, (acc, x) => acc + x.Count);
-
-        data = new
-        {
-            successfulTest = testsErrorsCount == 0,
-            tests = testsErrorsCount > 0 ? LcCalendar.GetAvailability.GetTimeline_UnitTests() : null,
-            timeRaw = timeNewRaw,
-            timeCheck = timeNewCheck,
-            raw = newRaw,
-            check = newCheck
-        };
+        data = null;
     }
     catch (Exception ex)
     {
