@@ -124,30 +124,6 @@ public static partial class LcCalendar
     #endregion
 
     /// <summary>
-    /// Check if the user has some block available for between dateStart and dateEnd.
-    /// With almost one block available (free), will return true, and false for when there is
-    /// no available block at all, just the opposite to GetUserAvailability.
-    /// </summary>
-    /// <param name="userID"></param>
-    /// <param name="dateStart"></param>
-    /// <param name="dateEnd"></param>
-    /// <returns></returns>
-    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static bool HasUserSomeAvailability(int userID, DateTime dateStart, DateTime dateEnd)
-    {
-        foreach (var e in GetUserAvailability(userID, dateStart, dateEnd))
-        {
-            var edt = e.DateSet + e.TimeBlock;
-            if ((e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.FREE ||
-                e.CalendarAvailabilityTypeID == (int)CalendarDll.AvailabilityTypes.TRANSPARENT) &&
-                edt >= dateStart &&
-                edt < dateEnd)
-                return true;
-        }
-        return false;
-    }
-
-    /// <summary>
     /// Get basic fields for a calendar event.
     /// Alternative, check the more basic, new API LcRest.EventDates.Get
     /// </summary>
@@ -180,7 +156,6 @@ public static partial class LcCalendar
     /// <param name="startTime"></param>
     /// <param name="endTime"></param>
     /// <returns></returns>
-    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
     public static bool DoubleCheckEventAvailability(int eventID, DateTimeOffset? startTime = null, DateTimeOffset? endTime = null, bool excludeAdvanceTime = false)
     {
         // We require an owned connection, to avoid conflict with other transactions
