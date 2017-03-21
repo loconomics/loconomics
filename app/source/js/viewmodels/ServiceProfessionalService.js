@@ -30,7 +30,6 @@ function ServiceProfessionalServiceViewModel(app) {
 
     this.isLoading = ko.observable(false);
 
-
     this.reset = function() {
         this.isLoading(false);
         this.list([]);
@@ -46,12 +45,13 @@ function ServiceProfessionalServiceViewModel(app) {
     this.allowAddServices = ko.pureComputed(function() {
         return this.serviceProfessionalID() === null;
     }, this);
-    
+
     // Grouped list of pricings:
     // Defined groups by pricing type
-    this.groupedServices = ko.computed(function(){
+    //
+    // groupServices can be replaced by implementing view models to group services differently
+    this.groupServices = function(list, pricingTypesByID) {
 
-        var list = this.list();
         var isSelection = this.isSelectionMode();
         var groupNamePrefix = isSelection ? 'Select ' : '';
 
@@ -67,7 +67,7 @@ function ServiceProfessionalServiceViewModel(app) {
                 var gr = {
                     services: groups[key],
                     // Load the pricing information
-                    type: app.model.pricingTypes.getObservableItem(key)
+                    type: pricingTypesByID(key)
                 };
                 gr.group = ko.computed(function() {
                     return groupNamePrefix + (
@@ -97,7 +97,7 @@ function ServiceProfessionalServiceViewModel(app) {
 
                     var gr = {
                         services: [],
-                        type: app.model.pricingTypes.getObservableItem(typeID)
+                        type: pricingTypesByID(typeID)
                     };
                     gr.group = ko.computed(function() {
                         return groupNamePrefix + (
@@ -113,6 +113,12 @@ function ServiceProfessionalServiceViewModel(app) {
 
         return groupsList;
 
+    };
+
+    this.groupedServices = ko.computed(function() {
+        var pricingTypesByID = function(id) { return app.model.pricingTypes.getObservableItem(id); };
+
+        return this.list().length > 0 ? this.groupServices(this.list(), pricingTypesByID) : [];
     }, this);
 
     /**
