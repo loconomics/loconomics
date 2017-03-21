@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ASP;
-using System.Web.WebPages;
-using WebMatrix.WebData;
 using System.Globalization;
+using System.Linq;
 
 public static partial class LcCalendar
 {
@@ -54,16 +50,7 @@ public static partial class LcCalendar
         #endregion
 
         #region User Weekly Schedule
-        static public string GetScheduleTimeZone(int userID)
-        {
-            foreach (var w in LcCalendar.GetProviderWorkHours(userID))
-                if (!String.IsNullOrWhiteSpace(w.TimeZone))
-                    return w.TimeZone;
-
-            return null;
-        }
-
-        static public string GetUserTimeZone(int userID)
+         static public string GetUserTimeZone(int userID)
         {
             using (var db = new LcDatabase())
             {
