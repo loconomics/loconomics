@@ -11,12 +11,21 @@ var ko = require('knockout'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    PricingSummaryDetail = require('../models/PricingSummaryDetail');
+    PricingSummaryDetail = require('../models/PricingSummaryDetail'),
+    EventEmitter = require('events').EventEmitter;
 var Booking = require('../models/Booking');
 var Address = require('../models/Address');
 
+var events = {
+    confirmed: 'confirmed',
+    declined: 'declined',
+    cancelled: 'cancelled'
+};
+
 function AppointmentCardViewModel(params) {
     /*jshint maxstatements: 60*/
+
+    EventEmitter.call(this);
 
     this.sourceItem = getObservable(params.sourceItem);
     var app = this.app = ko.unwrap(params.app);
@@ -256,11 +265,6 @@ function AppointmentCardViewModel(params) {
         return b ? b.canBeCancelledByServiceProfessional() : false;
     }, this);
 
-    this.bookingCanBeCancelledByClient = ko.computed(function() {
-        var b = this.item() && this.item().sourceBooking();
-        return b ? b.canBeCancelledByClient() : false;
-    }, this);
-
     this.bookingCanBeDeclinedByServiceProfessional = ko.computed(function() {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.canBeDeclinedByServiceProfessional() : false;
@@ -293,7 +297,7 @@ function AppointmentCardViewModel(params) {
     }, this);
 
     // For booking cancel/decline/confirm.
-    var afterSaveBooking = function(booking) {
+    var afterSaveBooking = function(booking, saveEvent) {
         var version = this.editedVersion();
         if (version) {
             version.original.sourceBooking(booking);
@@ -311,14 +315,17 @@ function AppointmentCardViewModel(params) {
         app.modals.showNotification({
             title: 'Done!',
             message: msg
-        });
+        })
+        .then(function() {
+            this.emit(saveEvent, this.sourceItem());
+        }.bind(this));
     }.bind(this);
 
     this.cancelBookingByServiceProfessional = function() {
         if (!this.bookingCanBeCancelledByServiceProfessional()) return;
         this.isSaving(true);
         app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
-        .then(afterSaveBooking)
+        .then(function(booking) { afterSaveBooking(booking, events.cancelled); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -334,31 +341,12 @@ function AppointmentCardViewModel(params) {
             this.isSaving(false);
         }.bind(this));
     };
-    this.cancelBookingByClient = function() {
-        if (!this.bookingCanBeCancelledByClient()) return;
-        this.isSaving(true);
-        app.model.bookings.cancelBookingByClient(this.bookingID())
-        .then(afterSaveBooking)
-        .catch(function(err) {
-            // The version data keeps untouched, user may want to retry
-            // or made changes on its un-saved data.
-            // Show error
-            app.modals.showError({
-                title: 'There was an error saving the data.',
-                error: err
-            });
-            // Don't replicate error, allow always
-        })
-        .then(function() {
-            // ALWAYS:
-            this.isSaving(false);
-        }.bind(this));
-    };
+
     this.declineBookingByServiceProfessional = function() {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
         app.model.bookings.declineBookingByServiceProfessional(this.bookingID())
-        .then(afterSaveBooking)
+        .then(function(booking) { afterSaveBooking(booking, events.declined); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -379,7 +367,7 @@ function AppointmentCardViewModel(params) {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
         app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
-        .then(afterSaveBooking)
+        .then(function(booking) { afterSaveBooking(booking, events.confirmed); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -566,6 +554,9 @@ function AppointmentCardViewModel(params) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
+// Modifies prototype. Call prior adding prototype functions.
+AppointmentCardViewModel._inherits(EventEmitter);
+
 /**
     It manages incoming data provided by external activities given
     the requestData received by the activity hosting this view instance.
@@ -680,5 +671,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     }
 };
 
+AppointmentCardViewModel.events = events;
 
 module.exports = AppointmentCardViewModel;
