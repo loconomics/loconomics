@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using CalendarDll;
+﻿using CalendarDll;
 using CalendarDll.Data;
-using WebMatrix.Data;
-using System.IO;
-using Ical;
 using Ical.Net;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using WebMatrix.Data;
 
 /// <summary>
 /// Calendaring Tasks, wrapper for some CalendarDll features.
@@ -76,29 +74,7 @@ public static partial class LcCalendar
 
     public const string serverTimeZoneID = "America/Los_Angeles";
 
-    /// <summary>
-    /// Get availability table for the user between given date and times
-    /// </summary>
-    /// <param name="userID"></param>
-    /// <param name="dateStart"></param>
-    /// <param name="dateEnd"></param>
-    /// <param name="excludeAdvanceTime">This avoids the check of 'advance time allowed to booking' by passing the lowest datetime possible
-    /// to the Calendar API. It's needed when the user checking availability is the same provider and don't want this time to block itself
-    /// but only clients.</param>
-    /// <returns></returns>
-    [Obsolete("Refactor to use the new GetAvailability.GetTimeline logic, far faster")]
-    public static List<ProviderAvailabilityResult> GetUserAvailability(int userID, DateTimeOffset dateStart, DateTimeOffset dateEnd, bool excludeAdvanceTime = false)
-    {
-        var lcCalendar = new CalendarDll.CalendarUtils();
-        return
-            lcCalendar.GetFreeEvents(
-                new CalendarDll.CalendarUser(userID),
-                dateStart,
-                dateEnd,
-                excludeAdvanceTime ? DateTimeOffset.MinValue : DateTimeOffset.Now);
-    }
-
-    #region NEW
+     #region NEW
     /// <summary>
     /// Check if the user is available for all the time between dateStart and dateEnd
     /// </summary>
@@ -377,108 +353,6 @@ public static partial class LcCalendar
     }
 
     /// <summary>
-    /// It expectes the Json structure parsed created by LcCalendar.GetAvailability.WorkHours API
-    /// and updated by the javascript availabilityCalendar.WorkHours component, its
-    /// analized and saved into database reusing the other specific methods for save work hour events.
-    /// 
-    /// It does not save if there is no data (then, it doesn't allow to remove all workHours).
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="workhours"></param>
-    /// <returns>It returns true if there was data and was saved, false otherwise</returns>
-    [Obsolete("Use SetWeeklySchedule and time-ranges instead of this.")]
-    public static bool SaveWorkHoursJsonData(int userId, dynamic workhours)
-    {
-        if (workhours == null || workhours.slots == null)
-            return false;
-
-        var thereIsData = false;
-
-        var slotsGap = TimeSpan.FromMinutes(15);
-        var slotsRanges = new List<LcCalendar.WorkHoursDay>();
-
-        var timeZone = serverTimeZoneID;
-        if (workhours.timeZone != null)
-        {
-            timeZone = workhours.timeZone.Value;
-        }
-
-        foreach (DayOfWeek wk in Enum.GetValues(typeof(DayOfWeek))) {
-            var wday = wk.ToString().ToLower();
-
-            if (workhours.slots[wday] != null) {
-
-                var slots = new List<string>();
-                slots.AddRange(workhours.slots[wday].Values<string>());
-                slots.Sort();
-                    
-                var firstSlot = TimeSpan.MinValue;
-                var lastSlot = TimeSpan.MinValue;
-                foreach(var slot in slots) {
-                    var slotTime = TimeSpan.Parse(slot);
-                        
-                    // first time
-                    if (firstSlot == TimeSpan.MinValue) {
-                        firstSlot = slotTime;
-                        lastSlot = firstSlot;
-                    }
-                    else {
-                        var expectedSlot = lastSlot.Add(slotsGap);
-
-                        // If the expected end slot is not current
-                        // then the range ended
-                        if (slotTime > expectedSlot) {
-                            // Add range to the list
-                            // Note: we have slots by its start-time, by the
-                            // range to save must include the end-time for the last slot
-                            slotsRanges.Add(new LcCalendar.WorkHoursDay {
-                                DayOfWeek = wk,
-                                StartTime = firstSlot,
-                                EndTime = lastSlot.Add(slotsGap)
-                            });
-
-                            // New range starts
-                            firstSlot = slotTime;
-                            lastSlot = slotTime;
-                        } else {
-                            // update last slot with the expected, contiguos slot
-                            // to continue building the range
-                            lastSlot = expectedSlot;
-                        }
-                    }
-                }
-                // Last range in the list (if there was something)
-                // Note: we have slots by its start-time, but the
-                // range to save must include the end-time for the last slot
-                if (firstSlot != TimeSpan.MinValue) {
-                    thereIsData = true;
-
-                    // Calculations can have precision errors, be aware to don't pass a time
-                    // after 24:00:00
-                    var finalEndTime = lastSlot.Add(slotsGap);
-                    if (finalEndTime.TotalHours >= 24.0)
-                        finalEndTime = TimeSpan.Zero;
-
-                    slotsRanges.Add(new LcCalendar.WorkHoursDay {
-                        DayOfWeek = wk,
-                        StartTime = firstSlot,
-                        EndTime = finalEndTime,
-                        TimeZone = timeZone
-                    });
-                }
-            }
-        }
-
-        if (thereIsData)
-        {
-            // Saving in database
-            SetAllProviderWorkHours(userId, slotsRanges);
-        }
-
-        return thereIsData;
-    }
-
-    /// <summary>
     /// It sets all time, all week days as available for the userId
     /// </summary>
     /// <param name="userId"></param>
@@ -497,140 +371,6 @@ public static partial class LcCalendar
         }
         
         SetAllProviderWorkHours(userId, workHoursList);
-    }
-
-    /// <summary>
-    /// Set a day work hours saving it as an Event on database
-    /// </summary>
-    /// <param name="userID"></param>
-    /// <param name="workHoursDay"></param>
-    [Obsolete("Use SetAllProviderWorkHours")]
-    public static void SetProviderWorkHours(int userID, WorkHoursDay workHoursDay) {
-        var ent = new loconomicsEntities();
-
-        // Start and End Dates are not used 'as is', they are
-        // treated in a special way when recurrence rules are present,
-        // for that we can use invented and convenient
-        // dates as 2006-01-01 (the year 2006 matchs the first day in the first week day--1:Sunday);
-        // the End Date will be greater thanks
-        // to the hour information gathered from the user generic work hours
-        var startDateTime = new DateTime(
-            2006,
-            1,
-            1,
-            workHoursDay.StartTime.Hours,
-            workHoursDay.StartTime.Minutes,
-            workHoursDay.StartTime.Seconds
-        );
-        var endDateTime = new DateTime(
-            2006,
-            1,
-            /* Must be the next day if end time is '00:00:00'; else the same day */
-            (workHoursDay.EndTime == TimeSpan.Zero ? 2 : 1),
-            workHoursDay.EndTime.Hours,
-            workHoursDay.EndTime.Minutes,
-            workHoursDay.EndTime.Seconds
-        );
-
-        // Find user events of type 'work-hours'
-        var events = ent.CalendarEvents
-            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
-
-        // Find the event with recurrence rule for the requested DayOfWeek
-        var eventExists = false;
-        foreach (var ev in events)
-        {
-            foreach (var evr in ev.CalendarReccurrence)
-            {
-                if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)workHoursDay.DayOfWeek).Count() > 0)
-                {
-                    // There is an event with recurrence rule for this work-week-day
-                    eventExists = true;
-                    // update it with the new data:
-                    ev.StartTime = startDateTime;
-                    ev.EndTime = endDateTime;
-                    ev.UpdatedDate = DateTime.Now;
-                    ev.ModifyBy = "UserID:" + userID;
-                }
-            }
-        }
-        // If there is not still an event for the work day, create it:
-        if (!eventExists)
-        {
-            var newevent = new CalendarDll.Data.CalendarEvents();
-            newevent.UserId = userID;
-            // Type work-hours: 2
-            newevent.EventType = 2;
-            // Automatic text, irrelevant
-            newevent.Summary = "Work hours";
-            //newevent.Description = "";
-            // free hours: 1
-            newevent.CalendarAvailabilityTypeID = 1;
-            newevent.Transparency = true;
-            newevent.StartTime = startDateTime;
-            newevent.EndTime = endDateTime;
-            newevent.IsAllDay = false;
-            newevent.UpdatedDate = DateTime.Now;
-            newevent.CreatedDate = DateTime.Now;
-            newevent.ModifyBy = "UserID:" + userID;
-
-            // Recurrence rule:
-            newevent.CalendarReccurrence.Add(new CalendarReccurrence
-            {
-                // Frequency Type Weekly:5
-                Frequency = (int)FrequencyType.Weekly,
-                // Every 1 week (week determined by previous Frequency)
-                Interval = 1,
-                // We need save as reference, the first day of week for this rrule:
-                FirstDayOfWeek = (int)System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek,
-
-                CalendarReccurrenceFrequency = new List<CalendarReccurrenceFrequency>
-                {
-                    new CalendarReccurrenceFrequency
-                    {
-                        ByDay = true,
-                        DayOfWeek = (int)workHoursDay.DayOfWeek,
-                        // FrequencyDay null, is for special values (first day on week, last,... not needed here)
-                        FrequencyDay = null
-                    }
-                }
-            });
-
-            // Add it to database
-            ent.CalendarEvents.Add(newevent);
-        }
-
-        // Send to database
-        ent.SaveChanges();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="userID"></param>
-    /// <param name="dayOfWeek"></param>
-    [Obsolete("Use SetAllProviderWorkHours")]
-    public static void DelProviderWorkHours(int userID, DayOfWeek dayOfWeek)
-    {
-        var ent = new loconomicsEntities();
-        // Find user events of type 'work-hours'
-        var events = ent.CalendarEvents
-            .Where(c => c.UserId == userID && c.EventType == 2).ToList();
-        // On that events, found what match the recurrence-frequency of the given day,
-        // and mark is for deletion:
-        // The extra 'ToList' are required to avoid an exception of kind 'collection modified in iterator'
-        foreach (var ev in events.ToList())
-        {
-            foreach (var evr in ev.CalendarReccurrence.ToList())
-            {
-                if (evr.CalendarReccurrenceFrequency.Where(c => c.DayOfWeek == (int)dayOfWeek).Count() > 0)
-                {
-                    ent.CalendarEvents.Remove(ev);
-                }
-            }
-        }
-        // Save to database: delete found event:
-        ent.SaveChanges();
     }
     #endregion
 
