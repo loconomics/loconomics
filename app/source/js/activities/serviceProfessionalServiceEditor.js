@@ -75,10 +75,10 @@ A.prototype.show = function show(options) {
 
     var params = matcher.match(options.route.path) || {};
 
-    var jobTitleID = +params.jobTitleID,
-        pricingTypeID = +params.pricingTypeID,
-        serviceProfessionalServiceID = +params.serviceID,
-        clientID = +params.clientID;
+    var jobTitleID = params.jobTitleID | 0,
+        pricingTypeID = params.pricingTypeID | 0,
+        serviceProfessionalServiceID = params.serviceID | 0,
+        clientID = params.clientID | 0;
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
