@@ -6,13 +6,20 @@
 var groupBy = require('../../utils/groupBy'),
     mapBy = require('../../utils/mapBy');
 
-var ProviderManagingServicesPresenter = function(services, pricingType) {
+var ProviderManagingServicesPresenter = function(services, pricingType, clientName) {
     this.services = services;
     this.type = pricingType;
-    this.group = (pricingType && pricingType.pluralName() || 'Services');
+    this.group = this.groupLabel(pricingType, clientName);
 };
 
-ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes) {
+ProviderManagingServicesPresenter.prototype.groupLabel = function(pricingType, clientName) {
+    var clientPostfix = clientName.length > 0 ? (' for ' + clientName) : '',
+        pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
+
+    return pricingTypeLabel + clientPostfix;
+};
+
+ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes, clientName) {
     var pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
 
     var groups = [],
@@ -24,7 +31,7 @@ ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes) {
 
     // Convert the indexed object into an array with some meta-data
     groupsList = Object.keys(groups).map(function(key) {
-        return new ProviderManagingServicesPresenter(groups[key], pricingTypesByID[key]);
+        return new ProviderManagingServicesPresenter(groups[key], pricingTypesByID[key], clientName);
     });
 
     // Since the groupsList is built from the existent pricing items
@@ -40,7 +47,7 @@ ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes) {
         if (groups.hasOwnProperty(typeID))
             return;
 
-        var presenter = new ProviderManagingServicesPresenter([], pricingType);
+        var presenter = new ProviderManagingServicesPresenter([], pricingType, clientName);
 
         groupsList.push(presenter);
     });
