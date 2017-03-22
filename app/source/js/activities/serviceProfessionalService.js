@@ -46,8 +46,8 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
             if (jobTitleID) {
 
                 var params = this.parseRoute(this.requestData.route.path),
-                    urlJobTitleID = +params.jobTitleID,
-                    clientID = +params.clientID;
+                    urlJobTitleID = params.jobTitleID | 0,
+                    clientID = params.clientID | 0;
 
                 if (urlJobTitleID !== jobTitleID) {
                     var url = this.buildRoute(jobTitleID, clientID, params.isNew);
@@ -186,11 +186,11 @@ A.prototype.show = function show(options) {
 
     var params = this.parseRoute(options.route.path);
 
-    var jobTitleID = +params.jobTitleID;
+    var jobTitleID = params.jobTitleID | 0;
     if (jobTitleID === 0 && options.selectedJobTitleID > 0)
         jobTitleID = options.selectedJobTitleID |0;
 
-    this.viewModel.clientID(+params.clientID);
+    this.viewModel.clientID(params.clientID | 0);
 
     var isAdditionMode = params.isNew;
 
@@ -310,7 +310,7 @@ function ViewModel(app) {
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {
         if(this.client()) {
-            return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricing_type/' + pricingTypeID + '/client/' + this.clientID() + '/new';
+            return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/client/' + this.clientID() + '/new';
         }
         else {
             return baseNewServiceURL(jobTitleID, pricingTypeID);

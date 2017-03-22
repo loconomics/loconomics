@@ -68,17 +68,17 @@ A.prototype.show = function show(options) {
     // Params
     var paramsDefaults = { jobTitleID: 0, serviceID: 0, pricingTypeID: 0, clientID: 0 },
         matcher = new RouteMatcher([
-            new Route('/:jobTitleID/pricing_type/:pricingTypeID/client/:clientID/new'),
-            new Route('/:jobTitleID/pricing_type/:pricingTypeID/new'),
+            new Route('/:jobTitleID/pricingType/:pricingTypeID/client/:clientID/new'),
+            new Route('/:jobTitleID/pricingType/:pricingTypeID/new'),
             new Route('/:jobTitleID/:serviceID')
         ], paramsDefaults);
 
     var params = matcher.match(options.route.path) || {};
 
-    var jobTitleID = +params.jobTitleID,
-        pricingTypeID = +params.pricingTypeID,
-        serviceProfessionalServiceID = +params.serviceID,
-        clientID = +params.clientID;
+    var jobTitleID = params.jobTitleID | 0,
+        pricingTypeID = params.pricingTypeID | 0,
+        serviceProfessionalServiceID = params.serviceID | 0,
+        clientID = params.clientID | 0;
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
