@@ -8,7 +8,8 @@ var ko = require('knockout'),
     ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService'),
     $ = require('jquery'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
-    Route = require('../utils/Router').Route;
+    Route = require('../utils/Router').Route,
+    ProviderBookingServicesPresenter = require('../viewmodels/presenters/ProviderBookingServicesPresenter');
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -217,6 +218,7 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    // jshint maxstatements:100
     // ViewModel has all of the properties of a ServiceProfessionalServiceViewModel
     ServiceProfessionalServiceViewModel.call(this, app);
 
@@ -246,8 +248,17 @@ function ViewModel(app) {
         var clientID = this.clientID(),
             jobTitleID = this.jobTitleID(),
             model = app.model.serviceProfessionalServices,
-            services = clientID ? model.getClientSpecificServicesForJobTitle(clientID, jobTitleID) :
-                                  model.getList(jobTitleID);
+            services = null;
+
+        if(this.isSelectionMode()) {
+            services = model.getServicesBookableByProvider(clientID, jobTitleID);
+        }
+        else if (clientID) {
+            services = model.getClientSpecificServicesForJobTitle(clientID, jobTitleID);
+        }
+        else {
+            services = model.getList(jobTitleID);
+        }
 
         return this.loadData(null, jobTitleID, services);
     }.bind(this);
@@ -256,6 +267,16 @@ function ViewModel(app) {
         return (this.client() && this.client().firstName()) || '';
     }, this);
 
+    var baseGroupServices = this.groupServices.bind(this);
+
+    this.groupServices = function(services, pricingTypes) {
+        if(this.isSelectionMode()) {
+            return ProviderBookingServicesPresenter.groupServices(services, pricingTypes, this.clientName());
+        }
+        else {
+            return baseGroupServices(services, pricingTypes);
+        }
+    };
     this.clientFullName = ko.pureComputed(function() {
         return (this.client() && this.client().fullName()) || '';
     }, this);
