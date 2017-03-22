@@ -4,9 +4,8 @@
 'use strict';
 
 var ko = require('knockout'),
-    groupBy = require('lodash/groupBy'),
     $ = require('jquery'),
-    mapBy = require('../utils/mapBy');
+    ProviderManagingServicesPresenter = require('../viewmodels/presenters/ProviderManagingServicesPresenter');
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -27,8 +26,6 @@ function ServiceProfessionalServiceViewModel(app) {
     this.selectedServices = ko.observableArray([]);
     // Preset selection, from a previous state (loaded data) or incoming selection:
     this.preSelectedServices = ko.observableArray([]);
-    // Set to true if groupedServices should include pricing types that do not have any pricing instances
-    this.loadEmptyPricingTypes = ko.observable(false);
 
     this.isLoading = ko.observable(false);
 
@@ -53,59 +50,8 @@ function ServiceProfessionalServiceViewModel(app) {
     // Defined groups by pricing type
     //
     // groupServices can be replaced by implementing view models to group services differently
-    this.groupServices = function(list, pricingTypes) {
-        var pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
-        var isSelection = this.isSelectionMode();
-        var groupNamePrefix = isSelection ? 'Select ' : '';
-
-        var groups = [],
-            groupsList = [];
-        if (!this.isAdditionMode()) {
-            groups = groupBy(list, function(service) {
-                return service.pricingTypeID();
-            });
-
-            // Convert the indexed object into an array with some meta-data
-            groupsList = Object.keys(groups).map(function(key) {
-                var type = pricingTypesByID[key],
-                    gr = {
-                      services: groups[key],
-                      // Load the pricing information
-                      type: type,
-                      group: groupNamePrefix + (type && type.pluralName() || 'Services')
-                  };
-
-                return gr;
-            });
-        }
-        
-        if (this.loadEmptyPricingTypes()) {
-            // Since the groupsList is built from the existent pricing items
-            // if there are no records for some pricing type (or nothing when
-            // just created the job title), that types/groups are not included,
-            // so review and include now.
-            // NOTE: as a good side effect of this approach, pricing types with
-            // some pricing will appear first in the list (nearest to the top)
-            pricingTypes.forEach(function (pricingType) {
-
-                var typeID = pricingType.pricingTypeID();
-                // Not if already in the list
-                if (groups.hasOwnProperty(typeID))
-                    return;
-
-                var gr = {
-                    services: [],
-                    type: pricingType,
-                    group: groupNamePrefix + (pricingType.pluralName() || 'Services')
-                };
-
-                groupsList.push(gr);
-            });
-        }
-
-        return groupsList;
-
-    };
+    this.defaultGroupServices = ProviderManagingServicesPresenter.groupServices;
+    this.groupServices = this.defaultGroupServices;
 
     this.groupedServices = ko.computed(function() {
         return this.groupServices(this.list(), this.pricingTypes());

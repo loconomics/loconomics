@@ -221,9 +221,10 @@ function ViewModel(app) {
     // jshint maxstatements:100
     // ViewModel has all of the properties of a ServiceProfessionalServiceViewModel
     ServiceProfessionalServiceViewModel.call(this, app);
-
+/*
     // Always load empty pricing types, regardless of view model mode
     this.loadEmptyPricingTypes(true);
+*/
 
     this.clientID = ko.observable(null);
     this.client = ko.observable(null);
@@ -267,14 +268,15 @@ function ViewModel(app) {
         return (this.client() && this.client().firstName()) || '';
     }, this);
 
-    var baseGroupServices = this.groupServices.bind(this);
-
     this.groupServices = function(services, pricingTypes) {
         if(this.isSelectionMode()) {
             return ProviderBookingServicesPresenter.groupServices(services, pricingTypes, this.clientName());
         }
+        else if(this.isAdditionMode()) {
+            return this.defaultGroupServices([], pricingTypes);
+        }
         else {
-            return baseGroupServices(services, pricingTypes);
+            return this.defaultGroupServices(services, pricingTypes);
         }
     };
     this.clientFullName = ko.pureComputed(function() {

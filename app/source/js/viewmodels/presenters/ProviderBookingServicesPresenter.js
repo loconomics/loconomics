@@ -1,5 +1,5 @@
 /*
-    Presenter object grouping services by client specificity and job title
+    Presenter object grouping services by client specificity and job title during booking
 */
 'use strict';
 
