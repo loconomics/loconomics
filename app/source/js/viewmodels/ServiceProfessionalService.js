@@ -163,7 +163,7 @@ function ServiceProfessionalServiceViewModel(app) {
     }.bind(this);
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {
-        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricing_type/' + pricingTypeID + '/new';
+        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/new';
     }.bind(this);
 
     // Override in implementing viewmodel

@@ -291,7 +291,7 @@ function ViewModel(app) {
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {
         if(this.client()) {
-            return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricing_type/' + pricingTypeID + '/client/' + this.clientID() + '/new';
+            return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/client/' + this.clientID() + '/new';
         }
         else {
             return baseNewServiceURL(jobTitleID, pricingTypeID);
