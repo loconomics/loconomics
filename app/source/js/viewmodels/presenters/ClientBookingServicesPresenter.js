@@ -3,7 +3,8 @@
 */
 'use strict';
 
-var groupBy = require('lodash/groupBy');
+var groupBy = require('lodash/groupBy'),
+    mapBy = require('../../utils/mapBy');
 
 var ClientBookingServicesPresenter = function(services, pricingType, isClientSpecific) {
     this.services = services;
@@ -13,15 +14,16 @@ var ClientBookingServicesPresenter = function(services, pricingType, isClientSpe
 
 ClientBookingServicesPresenter.prototype.groupLabel = function(isClientSpecific) {
     var prefix = 'Select From ',
-        pricingType = (this.type() && this.type().pluralName()) || 'Services',
+        pricingType = (this.type && this.type.pluralName()) || 'Services',
         postFix = isClientSpecific ? ' Just For You' : '';
 
     return prefix + pricingType + postFix;
 };
 
-ClientBookingServicesPresenter.groupServices = function(services, pricingTypesByID) {
+ClientBookingServicesPresenter.groupServices = function(services, pricingTypes) {
     var clientSpecificServices = services.filter(function(service) { return service.isClientSpecific(); }),
-        publicServices = services.filter(function(service) { return !service.isClientSpecific(); });
+        publicServices = services.filter(function(service) { return !service.isClientSpecific(); }),
+        pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
 
     var groupByPricingType = function(services, isClientSpecific) {
         var groups = groupBy(services, function(service) {
@@ -30,7 +32,7 @@ ClientBookingServicesPresenter.groupServices = function(services, pricingTypesBy
 
         // Convert the indexed object into an array with some meta-data
         return Object.keys(groups).map(function(id) {
-            return new ClientBookingServicesPresenter(groups[id], pricingTypesByID(id), isClientSpecific);
+            return new ClientBookingServicesPresenter(groups[id], pricingTypesByID[id], isClientSpecific);
         });
     };
 
