@@ -480,7 +480,8 @@ function AppointmentCardViewModel(params) {
     this.pickService = function pickService() {
         if (this.isLocked()) return;
 
-        editFieldOn('serviceProfessionalService/' + this.item().jobTitleID(), {
+        var activity = 'serviceProfessionalService/' + this.item().jobTitleID() + '/client/' + this.item().clientUserID();
+        editFieldOn(activity, {
             selectPricing: true,
             selectedServices: this.item().pricing()
             .map(function(pricing) {
