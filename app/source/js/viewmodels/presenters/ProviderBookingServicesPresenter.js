@@ -6,39 +6,28 @@
 */
 'use strict';
 
-var groupBy = require('../../utils/groupBy'),
-    mapBy = require('../../utils/mapBy'),
-    GroupedServicesPresenter = require('./GroupedServicesPresenter');
+var ClientSpecificServicesGrouper = require('./ClientSpecificServicesGrouper');
 
-var groupLabel = function(pricingType, clientName) {
+var label = function(options) {
     var prefix = 'Select From ',
+        pricingType = options.pricingType,
         pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
-        clientLabel = clientName.length > 0 ? (' Just For ' + clientName) : '';
+        clientLabel = options.isClientSpecific ? (' Just For ' + this.clientName) : '';
 
     return prefix + pricingTypeLabel + clientLabel;
 };
 
 var groupServices = function(services, pricingTypes, clientName) {
-    var clientSpecificServices = services.filter(function(service) { return service.isClientSpecific(); }),
-        publicServices = services.filter(function(service) { return !service.isClientSpecific(); }),
-        allPricingTypeIDs = pricingTypes.map(function(type) { return type.pricingTypeID(); }),
-        pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
-
-    var groupByPricingType = function(services, isClientSpecific) {
-        var groups = groupBy(services, function(service) {
-            return service.pricingTypeID();
-        }, allPricingTypeIDs);
-
-        // Convert the indexed object into an array with some meta-data
-        return Object.keys(groups).map(function(id) {
-            var pricingType = pricingTypesByID[id],
-                label = groupLabel(pricingType, isClientSpecific ? clientName :  '');
-
-            return new GroupedServicesPresenter(groups[id], pricingType, label, isClientSpecific);
+    var grouper = new ClientSpecificServicesGrouper({
+            services: services,
+            pricingTypes: pricingTypes,
+            defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
+            clientName: clientName             // label relies on client name
         });
-    };
 
-    return groupByPricingType(clientSpecificServices, true).concat(groupByPricingType(publicServices, false));
+    grouper.label = label;
+
+    return grouper.groupServices();
 };
 
 module.exports = { groupServices: groupServices };

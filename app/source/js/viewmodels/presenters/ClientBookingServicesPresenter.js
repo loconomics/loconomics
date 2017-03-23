@@ -8,38 +8,23 @@
 */
 'use strict';
 
-var groupBy = require('lodash/groupBy'),
-    mapBy = require('../../utils/mapBy'),
-    GroupedServicesPresenter = require('./GroupedServicesPresenter');
+var ClientSpecificServicesGrouper = require('./ClientSpecificServicesGrouper');
 
-var groupLabel = function(pricingType, isClientSpecific) {
+var label = function(options) {
     var prefix = 'Select From ',
+        pricingType = options.pricingType,
         pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
-        postFix = isClientSpecific ? ' Just For You' : '';
+        postFix = options.isClientSpecific ? ' Just For You' : '';
 
     return prefix + pricingTypeLabel + postFix;
 };
 
 var groupServices = function(services, pricingTypes) {
-    var clientSpecificServices = services.filter(function(service) { return service.isClientSpecific(); }),
-        publicServices = services.filter(function(service) { return !service.isClientSpecific(); }),
-        pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
+    var grouper = new ClientSpecificServicesGrouper({services: services, pricingTypes: pricingTypes});
 
-    var groupByPricingType = function(services, isClientSpecific) {
-        var groups = groupBy(services, function(service) {
-            return service.pricingTypeID();
-        });
+    grouper.label = label;
 
-        // Convert the indexed object into an array with some meta-data
-        return Object.keys(groups).map(function(id) {
-            var pricingType = pricingTypesByID[id],
-                label = groupLabel(pricingType, isClientSpecific);
-
-            return new GroupedServicesPresenter(groups[id], pricingType, label, isClientSpecific);
-        });
-    };
-
-    return groupByPricingType(clientSpecificServices, true).concat(groupByPricingType(publicServices, false));
+    return grouper.groupServices();
 };
 
 module.exports = { groupServices: groupServices };
