@@ -1,18 +1,16 @@
 /*
-    Presenter object grouping services by client specificity and job title during booking
+    Presenter object grouping services by client specificity and job title during booking.
+
+    Will include groups for all pricing types provided, even if there aren't any services
+    for that type in the collection of services provided.
 */
 'use strict';
 
 var groupBy = require('../../utils/groupBy'),
-    mapBy = require('../../utils/mapBy');
+    mapBy = require('../../utils/mapBy'),
+    GroupedServicesPresenter = require('./GroupedServicesPresenter');
 
-var ProviderBookingServicesPresenter = function(services, pricingType, clientName) {
-    this.services = services;
-    this.type = pricingType;
-    this.group = this.groupLabel(pricingType, clientName);
-};
-
-ProviderBookingServicesPresenter.prototype.groupLabel = function(pricingType, clientName) {
+var groupLabel = function(pricingType, clientName) {
     var prefix = 'Select From ',
         pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
         clientLabel = clientName.length > 0 ? (' Just For ' + clientName) : '';
@@ -20,7 +18,7 @@ ProviderBookingServicesPresenter.prototype.groupLabel = function(pricingType, cl
     return prefix + pricingTypeLabel + clientLabel;
 };
 
-ProviderBookingServicesPresenter.groupServices = function(services, pricingTypes, clientName) {
+var groupServices = function(services, pricingTypes, clientName) {
     var clientSpecificServices = services.filter(function(service) { return service.isClientSpecific(); }),
         publicServices = services.filter(function(service) { return !service.isClientSpecific(); }),
         allPricingTypeIDs = pricingTypes.map(function(type) { return type.pricingTypeID(); }),
@@ -33,11 +31,14 @@ ProviderBookingServicesPresenter.groupServices = function(services, pricingTypes
 
         // Convert the indexed object into an array with some meta-data
         return Object.keys(groups).map(function(id) {
-            return new ProviderBookingServicesPresenter(groups[id], pricingTypesByID[id], isClientSpecific ? clientName : '');
+            var pricingType = pricingTypesByID[id],
+                label = groupLabel(pricingType, isClientSpecific ? clientName :  '');
+
+            return new GroupedServicesPresenter(groups[id], pricingType, label, isClientSpecific);
         });
     };
 
     return groupByPricingType(clientSpecificServices, true).concat(groupByPricingType(publicServices, false));
 };
 
-module.exports = ProviderBookingServicesPresenter;
+module.exports = { groupServices: groupServices };

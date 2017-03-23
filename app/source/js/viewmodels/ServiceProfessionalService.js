@@ -5,7 +5,7 @@
 
 var ko = require('knockout'),
     $ = require('jquery'),
-    ProviderManagingServicesPresenter = require('../viewmodels/presenters/ProviderManagingServicesPresenter');
+    ProviderManagingServicesPresenter = require('./presenters/ProviderManagingServicesPresenter');
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -118,7 +118,7 @@ function ServiceProfessionalServiceViewModel(app) {
     }.bind(this);
 
     this.tapNewService = function(group, event) {
-        var url = this.newServiceURL(this.jobTitleID(), group.type && group.type.pricingTypeID());
+        var url = this.newServiceURL(this.jobTitleID(), group.type && group.type.pricingTypeID(), group.isClientSpecific);
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly

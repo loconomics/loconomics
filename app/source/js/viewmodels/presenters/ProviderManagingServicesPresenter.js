@@ -1,37 +1,35 @@
 /*
-    Presenter object grouping services by client specificity and job title during services management
+    Presenter object grouping services by client specificity and job title
+    during services management.
+
+    Separates services by pricing type
 */
 'use strict';
 
 var groupBy = require('../../utils/groupBy'),
-    mapBy = require('../../utils/mapBy');
+    mapBy = require('../../utils/mapBy'),
+    GroupedServicesPresenter = require('./GroupedServicesPresenter');
 
-var ProviderManagingServicesPresenter = function(services, pricingType, clientName) {
-    this.services = services;
-    this.type = pricingType;
-    this.group = this.groupLabel(pricingType, clientName);
-};
-
-ProviderManagingServicesPresenter.prototype.groupLabel = function(pricingType, clientName) {
+var groupLabel = function(pricingType, clientName) {
     var clientPostfix = clientName.length > 0 ? (' for ' + clientName) : '',
         pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
 
     return pricingTypeLabel + clientPostfix;
 };
 
-ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes, clientName) {
+var groupServices = function(list, pricingTypes, clientName, isClientSpecific) {
     var pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
 
-    var groups = [],
-        groupsList = [];
-
-    groups = groupBy(list, function(service) {
+    var groups = groupBy(list, function(service) {
         return service.pricingTypeID();
     });
 
     // Convert the indexed object into an array with some meta-data
-    groupsList = Object.keys(groups).map(function(key) {
-        return new ProviderManagingServicesPresenter(groups[key], pricingTypesByID[key], clientName);
+    var groupsList = Object.keys(groups).map(function(key) {
+        var pricingType = pricingTypesByID[key],
+            label = groupLabel(pricingType, clientName);
+
+        return new GroupedServicesPresenter(groups[key], pricingType, label, isClientSpecific);
     });
 
     // Since the groupsList is built from the existent pricing items
@@ -47,7 +45,8 @@ ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes, c
         if (groups.hasOwnProperty(typeID))
             return;
 
-        var presenter = new ProviderManagingServicesPresenter([], pricingType, clientName);
+        var label = groupLabel(pricingType, clientName),
+            presenter = new GroupedServicesPresenter([], pricingType, label, isClientSpecific);
 
         groupsList.push(presenter);
     });
@@ -55,4 +54,4 @@ ProviderManagingServicesPresenter.groupServices = function(list, pricingTypes, c
     return groupsList;
 };
 
-module.exports = ProviderManagingServicesPresenter;
+module.exports = { groupServices: groupServices };

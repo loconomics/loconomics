@@ -269,10 +269,10 @@ function ViewModel(app) {
             return ProviderBookingServicesPresenter.groupServices(services, pricingTypes, this.clientName());
         }
         else if(this.isAdditionMode()) {
-            return this.defaultGroupServices([], pricingTypes, this.clientName());
+            return this.defaultGroupServices([], pricingTypes, this.clientName(), false);
         }
         else {
-            return this.defaultGroupServices(services, pricingTypes, this.clientName());
+            return this.defaultGroupServices(services, pricingTypes, this.clientName(), this.clientID() > 0);
         }
     };
     this.clientFullName = ko.pureComputed(function() {
@@ -308,8 +308,8 @@ function ViewModel(app) {
 
     var baseNewServiceURL = this.newServiceURL.bind(this);
 
-    this.newServiceURL = function(jobTitleID, pricingTypeID) {
-        if(this.client()) {
+    this.newServiceURL = function(jobTitleID, pricingTypeID, isClientSpecific) {
+        if(isClientSpecific) {
             return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/client/' + this.clientID() + '/new';
         }
         else {
