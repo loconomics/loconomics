@@ -266,17 +266,15 @@ function ViewModel(app) {
     }, this);
 
     this.groupServices = function(services, pricingTypes) {
-        if(this.isSelectionMode()) {
-            return ProviderBookingServicesGrouping.groupServices(services, pricingTypes, this.clientName());
-        }
-        else if(this.isAdditionMode()) {
-            return ProviderManagingServicesGrouping.groupServices([], pricingTypes, this.clientName());
-        }
-        else {
-            var isClientSpecific = !!this.clientID();
-            return ProviderManagingServicesGrouping.groupServices(services, pricingTypes, this.clientName(), isClientSpecific);
-        }
+        var grouping = this.isSelectionMode() ? ProviderBookingServicesGrouping :
+                                                ProviderManagingServicesGrouping,
+            isClientSpecific = !!this.clientID();
+
+        services = this.isAdditionMode() ? [] : services;
+
+        return grouping.groupServices(services, pricingTypes, this.clientName(), isClientSpecific);
     };
+
     this.clientFullName = ko.pureComputed(function() {
         return (this.client() && this.client().fullName()) || '';
     }, this);
