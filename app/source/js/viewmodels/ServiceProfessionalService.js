@@ -5,7 +5,8 @@
 
 var ko = require('knockout'),
     groupBy = require('lodash/groupBy'),
-    $ = require('jquery');
+    $ = require('jquery'),
+    mapBy = require('../utils/mapBy');
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -18,6 +19,7 @@ function ServiceProfessionalServiceViewModel(app) {
     // 0 to load current user pricing and allow edit
     this.serviceProfessionalID = ko.observable(null);
     this.jobTitle = ko.observable(null);
+    this.pricingTypes = ko.observableArray([]);
     this.isAdditionMode = ko.observable(false);
     // Especial mode when instead of pick and edit we are just selecting
     this.isSelectionMode = ko.observable(false);
@@ -25,38 +27,34 @@ function ServiceProfessionalServiceViewModel(app) {
     this.selectedServices = ko.observableArray([]);
     // Preset selection, from a previous state (loaded data) or incoming selection:
     this.preSelectedServices = ko.observableArray([]);
-    // Add activity requestData to keep progress/navigation on links
-    this.requestData = ko.observable();
-    this.cancelLink = ko.observable(null);
     // Set to true if groupedServices should include pricing types that do not have any pricing instances
     this.loadEmptyPricingTypes = ko.observable(false);
 
     this.isLoading = ko.observable(false);
 
-
     this.reset = function() {
         this.isLoading(false);
         this.list([]);
         this.jobTitleID(0);
+        this.pricingTypes([]);
         this.serviceProfessionalID(null);
         this.jobTitle(null);
         this.isAdditionMode(false);
         this.isSelectionMode(false);
         this.selectedServices([]);
         this.preSelectedServices([]);
-        this.requestData();
-        this.cancelLink(null);
     };
     
     this.allowAddServices = ko.pureComputed(function() {
         return this.serviceProfessionalID() === null;
     }, this);
-    
+
     // Grouped list of pricings:
     // Defined groups by pricing type
-    this.groupedServices = ko.computed(function(){
-
-        var list = this.list();
+    //
+    // groupServices can be replaced by implementing view models to group services differently
+    this.groupServices = function(list, pricingTypes) {
+        var pricingTypesByID = mapBy(pricingTypes, function(type) { return type.pricingTypeID(); });
         var isSelection = this.isSelectionMode();
         var groupNamePrefix = isSelection ? 'Select ' : '';
 
@@ -69,17 +67,14 @@ function ServiceProfessionalServiceViewModel(app) {
 
             // Convert the indexed object into an array with some meta-data
             groupsList = Object.keys(groups).map(function(key) {
-                var gr = {
-                    services: groups[key],
-                    // Load the pricing information
-                    type: app.model.pricingTypes.getObservableItem(key)
-                };
-                gr.group = ko.computed(function() {
-                    return groupNamePrefix + (
-                        this.type() && this.type().pluralName() ||
-                        'Services'
-                    );
-                }, gr);
+                var type = pricingTypesByID[key],
+                    gr = {
+                      services: groups[key],
+                      // Load the pricing information
+                      type: type,
+                      group: groupNamePrefix + (type && type.pluralName() || 'Services')
+                  };
+
                 return gr;
             });
         }
@@ -91,33 +86,29 @@ function ServiceProfessionalServiceViewModel(app) {
             // so review and include now.
             // NOTE: as a good side effect of this approach, pricing types with
             // some pricing will appear first in the list (nearest to the top)
-            var pricingTypes = this.jobTitle() && this.jobTitle().pricingTypes();
-            if (pricingTypes && pricingTypes.length) {
-                pricingTypes.forEach(function (jobType) {
+            pricingTypes.forEach(function (pricingType) {
 
-                    var typeID = jobType.pricingTypeID();
-                    // Not if already in the list
-                    if (groups.hasOwnProperty(typeID))
-                        return;
+                var typeID = pricingType.pricingTypeID();
+                // Not if already in the list
+                if (groups.hasOwnProperty(typeID))
+                    return;
 
-                    var gr = {
-                        services: [],
-                        type: app.model.pricingTypes.getObservableItem(typeID)
-                    };
-                    gr.group = ko.computed(function() {
-                        return groupNamePrefix + (
-                            this.type() && this.type().pluralName() ||
-                            'Services'
-                        );
-                    }, gr);
+                var gr = {
+                    services: [],
+                    type: pricingType,
+                    group: groupNamePrefix + (pricingType.pluralName() || 'Services')
+                };
 
-                    groupsList.push(gr);
-                });
-            }
+                groupsList.push(gr);
+            });
         }
 
         return groupsList;
 
+    };
+
+    this.groupedServices = ko.computed(function() {
+        return this.groupServices(this.list(), this.pricingTypes());
     }, this);
 
     /**
@@ -141,9 +132,19 @@ function ServiceProfessionalServiceViewModel(app) {
         else
             this.selectedServices.push(service);
     }.bind(this);
-    
+
+    this.editServiceURL = function(jobTitleID, serviceID) {
+        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/' + serviceID;
+    }.bind(this);
+
+    // Override in implementing viewmodel
+    this.editServiceRequest = function() {
+        return {};
+    }.bind(this);
+
     this.editService = function(service) {
-        app.shell.go('serviceProfessionalServiceEditor/' + this.jobTitleID() + '/' + service.serviceProfessionalServiceID());
+        app.shell.go(this.editServiceURL(this.jobTitleID(), service.serviceProfessionalServiceID()),
+                     this.editServiceRequest());
     }.bind(this);
     
     /**
@@ -160,22 +161,25 @@ function ServiceProfessionalServiceViewModel(app) {
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
-    
+
+    this.newServiceURL = function(jobTitleID, pricingTypeID) {
+        return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/new';
+    }.bind(this);
+
+    // Override in implementing viewmodel
+    this.newServiceRequest = function() {
+        return {};
+    }.bind(this);
+
     this.tapNewService = function(group, event) {
-        
-        var url = '#!serviceProfessionalServiceEditor/' + this.jobTitleID() + '/new/' + (group.type() && group.type().pricingTypeID());
+        var url = this.newServiceURL(this.jobTitleID(), group.type && group.type.pricingTypeID());
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
         // (see the anotated comment about replaceState bug on this file)
-        var request = $.extend({}, this.requestData(), {
+        var request = $.extend({}, this.newServiceRequest(), {
             selectedJobTitleID: this.jobTitleID()
         });
-        if (!request.cancelLink) {
-            $.extend(request, {
-                cancelLink: this.cancelLink()
-            });
-        }
         
         // When in selection mode:
         // Add current selection as preselection, so can be recovered later and 
@@ -215,14 +219,17 @@ function ServiceProfessionalServiceViewModel(app) {
         this.isLoading(true);
         // Get data for the Job title ID and pricing types.
         // They are essential data
-        return Promise.all([
-            app.model.jobTitles.getJobTitle(jobTitleID),
-            app.model.pricingTypes.getList()
-        ])
-        .then(function(data) {
-            var jobTitle = data[0];
-            // Save for use in the view
+        return app.model.jobTitles.getJobTitle(jobTitleID)
+        .then(function(jobTitle) {
             this.jobTitle(jobTitle);
+
+            var pricingTypeIDs = jobTitle.pricingTypes().map(function(type) { return type.pricingTypeID(); });
+
+            return app.model.pricingTypes.getListByIDs(pricingTypeIDs);
+        }.bind(this))
+        .then(function(pricingTypes) {
+            this.pricingTypes(pricingTypes);
+
             // Get services
             return servicesPromise;
         }.bind(this))

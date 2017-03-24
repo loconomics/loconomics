@@ -74,11 +74,10 @@ exports.init = A.init;
 var ko = require('knockout');
 
 A.prototype.updateNavBarState = function updateNavBarState() {
+    var referrerRoute = this.app.shell.referrerRoute,
+        referrer = this.viewModel.clientID() === 0 ? referrerRoute && referrerRoute.url : null,
+        link = this.requestData.cancelLink || referrer || '/clients';
 
-    var referrer = this.app.shell.referrerRoute;
-    referrer = referrer && referrer.url || '/clients';
-    var link = this.requestData.cancelLink || referrer;
-    
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
@@ -88,8 +87,6 @@ A.prototype.show = function show(state) {
     
     // reset
     this.viewModel.clientID(0);
-    
-    this.updateNavBarState();
 
     // params
     var params = state && state.route && state.route.segments || [];
@@ -148,6 +145,8 @@ A.prototype.show = function show(state) {
             clientDataFromSearchText(this.requestData.newForSearchText || '', this.viewModel.client());
         }
     }
+
+    this.updateNavBarState();
 };
 
 /**
@@ -358,10 +357,9 @@ function ViewModel(app) {
 
     this.tapServiceSummary = function(serviceSummary, event) {
         var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!clientEditor/:clientID'),
-            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() }),
-            state = { navTitle: this.client().fullName() };
+            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
 
-        app.shell.go(url, state);
+        app.shell.go(url);
 
         event.preventDefault();
         event.stopImmediatePropagation();

@@ -2134,7 +2134,7 @@ namespace LcRest
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 // Convert times to professional time zone
-                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
+                var timeZone = LcCalendar.GetAvailability.GetUserTimeZone(serviceProfessionalUserID);
                 startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Because this API is only for providers, we avoid the advance time from the checking
@@ -2263,7 +2263,7 @@ namespace LcRest
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 // Convert times to professional time zone
-                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(booking.serviceProfessionalUserID);
+                var timeZone = LcCalendar.GetAvailability.GetUserTimeZone(booking.serviceProfessionalUserID);
                 startTime = LcUtils.Time.ConvertToTimeZone(startTime, timeZone);
                 var endTime = startTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Only if dates changed:
@@ -2659,7 +2659,7 @@ namespace LcRest
 
                 // 2º: Preparing event date-times, checking availability and creating event
                 // Convert times to professional time-zone:
-                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(serviceProfessionalUserID);
+                var timeZone = LcCalendar.GetAvailability.GetUserTimeZone(serviceProfessionalUserID);
                 serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
                 if (alternative1StartTime.HasValue)
                     alternative1StartTime = LcUtils.Time.ConvertToTimeZone(alternative1StartTime.Value, timeZone);
@@ -2923,7 +2923,7 @@ namespace LcRest
 
                 // 2º: Dates update? Checking availability and updating event dates if changed
                 // Convert times to professional time zone
-                var timeZone = LcCalendar.GetAvailability.GetScheduleTimeZone(booking.serviceProfessionalUserID);
+                var timeZone = LcCalendar.GetAvailability.GetUserTimeZone(booking.serviceProfessionalUserID);
                 serviceStartTime = LcUtils.Time.ConvertToTimeZone(serviceStartTime, timeZone);
                 var endTime = serviceStartTime.AddMinutes((double)(booking.pricingSummary.firstSessionDurationMinutes ?? 0));
                 // Only if dates changed:
