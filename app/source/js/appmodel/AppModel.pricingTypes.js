@@ -26,7 +26,7 @@ exports.create = function create(appModel) {
         return api.getList()
             .then(function(pricingTypes) {
                 return pricingTypes().filter(function(pricingType) {
-                    return pricingTypeIDs.includes(pricingType.pricingTypeID());
+                    return pricingTypeIDs.indexOf(pricingType.pricingTypeID()) > -1;
                 });
              });
     };
