@@ -13,7 +13,7 @@ var ServicesGrouper = require('./ServicesGrouper'),
     Include the labelFunction parameter to override ServicesGrouper's label function.
 */
 var ClientSpecificServicesGrouper = function(serviceGrouperOptions) {
-    var services = this.serviceGrouperOptions.services || [];
+    var services = serviceGrouperOptions.services || [];
 
     this.options = serviceGrouperOptions;
     this.clientServices = services.filter(function(s) { return s.isClientSpecific(); });
