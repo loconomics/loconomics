@@ -1472,11 +1472,6 @@
             <param name="objectType">The type of object to be serialized.</param>
             <param name="ctx">The serialization context.</param>
         </member>
-        <member name="T:Ical.Net.Serialization.iCalendar.Processors.ComponentPropertyConsolidator">
-            <summary>
-            FIXME: implement this.
-            </summary>
-        </member>
         <member name="P:Ical.Net.Serialization.SerializationContext.Default">
             <summary>
             Gets the Singleton instance of the SerializationContext class.
