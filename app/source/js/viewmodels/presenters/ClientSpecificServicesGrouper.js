@@ -1,82 +1,42 @@
 /*
-    Groups services by client-specificity
-
-    Override the label function 
+    Object to split client-specific services from public services prior to
+    grouping by pricing type. Uses ServicesGrouper to generate the presenters.
 */
 'use strict';
 
-var groupBy = require('../../utils/groupBy'),
-    mapBy = require('../../utils/mapBy'),
-    GroupedServicesPresenter = require('./GroupedServicesPresenter');
+var ServicesGrouper = require('./ServicesGrouper'),
+    $ = require('jquery');
 
 /*
-    options:
-      services: array services to group
-      pricingTypes: array of pricing types the services can reference (services only have a pricing type ID)
-      clientName: name of the client
-      defaultPricingTypes: pricing types use to create groups *even if* there are no services of these pricing types
+    Constructor options are passed to ServicesGrouper except services.
+
+    Include the labelFunction parameter to override ServicesGrouper's label function.
 */
-var Grouper = function(options) {
-    this.services = options.services || [];
-    this.pricingTypes = options.pricingTypes || [];
-    this.clientName = options.clientName || '';
-    this.defaultPricingTypes = options.defaultPricingTypes || [];
+var ClientSpecificServicesGrouper = function(serviceGrouperOptions) {
+    var services = this.serviceGrouperOptions.services || [];
+
+    this.options = serviceGrouperOptions;
+    this.clientServices = services.filter(function(s) { return s.isClientSpecific(); });
+    this.publicServices = services.filter(function(s) { return !s.isClientSpecific(); });
 };
 
 /*
-    options:
-      pricingType: the pricing type object for this group
-      isClientSpecific: whether this group represents client-specific pricing
+    Returns GroupedServicesPresenters grouped by client-specific pricings and pricing types
 */
-Grouper.prototype.label = function(options) {
-    var pricingType = options.pricingType;
+ClientSpecificServicesGrouper.prototype.groupServices = function() {
+    var options = this.options;
 
-    return (pricingType && pricingType.pluralName()) || 'Services';
+    var clientGroups = (new ServicesGrouper($.extend(options, {
+            services: this.clientServices,
+            isClientSpecific: true
+        }))).groupServices(),
+
+        publicGroups = (new ServicesGrouper($.extend(options, {
+            services: this.publicServices,
+            isClientSpecific: false
+        }))).groupServices();
+
+    return clientGroups.concat(publicGroups);
 };
 
-Grouper.prototype.clientSpecificServices = function() {
-    return this.services.filter(function(service) { return service.isClientSpecific(); });
-};
-
-Grouper.prototype.publicServices = function() {
-    return this.services.filter(function(service) { return !service.isClientSpecific(); });
-};
-
-Grouper.prototype.defaultPricingTypeIDs = function() {
-    return this.defaultPricingTypes.map(function(type) { return type.pricingTypeID(); });
-};
-
-Grouper.prototype.pricingTypesByID = function() {
-    return mapBy(this.pricingTypes, function(type) { return type.pricingTypeID(); });
-};
-
-Grouper.prototype.groupByPricingType = function(services) {
-    return groupBy(services, function(service) {
-        return service.pricingTypeID();
-    }, this.defaultPricingTypeIDs());
-};
-
-Grouper.prototype.groupsToPresenters = function(groups, isClientSpecific) {
-    return Object.keys(groups).map(function(id) {
-        var pricingType = this.pricingTypesByID()[id],
-            label = this.label({pricingType: pricingType, isClientSpecific: isClientSpecific});
-
-        return new GroupedServicesPresenter(groups[id], pricingType, label, isClientSpecific);
-    }.bind(this));
-};
-
-/*
-    Generate GroupedServicesPresenters for client-specific and public services
-*/
-Grouper.prototype.groupServices = function() {
-    var clientSpecificGroups = this.groupByPricingType(this.clientSpecificServices(), true),
-        publicGroups = this.groupByPricingType(this.publicServices(), false);
-
-    // Convert the indexed object into an array with some meta-data
-    var clientSpecificPresenters = this.groupsToPresenters(clientSpecificGroups, true),
-        publicPresenters = this.groupsToPresenters(publicGroups, false);
-
-    return clientSpecificPresenters.concat(publicPresenters);
-};
-
-module.exports = Grouper;
+module.exports = ClientSpecificServicesGrouper;

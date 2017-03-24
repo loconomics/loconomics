@@ -4,8 +4,7 @@
 'use strict';
 
 var ko = require('knockout'),
-    $ = require('jquery'),
-    ProviderManagingServicesPresenter = require('./presenters/ProviderManagingServicesPresenter');
+    $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -50,8 +49,9 @@ function ServiceProfessionalServiceViewModel(app) {
     // Defined groups by pricing type
     //
     // groupServices can be replaced by implementing view models to group services differently
-    this.defaultGroupServices = ProviderManagingServicesPresenter.groupServices;
-    this.groupServices = this.defaultGroupServices;
+    this.groupServices = function() {
+        return [];
+    };
 
     this.groupedServices = ko.computed(function() {
         return this.groupServices(this.list(), this.pricingTypes());

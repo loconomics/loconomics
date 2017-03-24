@@ -12,7 +12,7 @@ var label = function(options) {
     var prefix = 'Select From ',
         pricingType = options.pricingType,
         pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
-        clientLabel = options.isClientSpecific ? (' Just For ' + this.clientName) : '';
+        clientLabel = this.isClientSpecific ? (' Just For ' + this.clientName) : '';
 
     return prefix + pricingTypeLabel + clientLabel;
 };
@@ -22,10 +22,10 @@ var groupServices = function(services, pricingTypes, clientName) {
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
-            clientName: clientName             // label relies on client name
+            clientName: clientName,            // label relies on client name
+            isClientSpecific: true,
+            labelFunction: label
         });
-
-    grouper.label = label;
 
     return grouper.groupServices();
 };
