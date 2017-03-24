@@ -255,9 +255,18 @@ function ViewModel(app) {
     this.clientName = ko.pureComputed(function() {
         return (this.client() && this.client().firstName()) || '';
     }, this);
-
+  
     this.clientFullName = ko.pureComputed(function() {
         return (this.client() && this.client().fullName()) || '';
+    }, this);
+
+    this.clientManagerLink = ko.pureComputed(function() {
+        if (this.client() || this.isSelectionMode() || app.model.onboarding.inProgress()) {
+            return null;
+        }
+        else {
+            return '#!/clients';
+        }
     }, this);
 
     this.jobTitleName = ko.pureComputed(function() {
