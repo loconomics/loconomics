@@ -60,6 +60,9 @@
                         </div>
                     </a>
                 </div>
+                <p class="isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="text-secondary" role="button" title="Manage clients">First, select a client.</a>
+                </p>
+
                 <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
                 </div>
