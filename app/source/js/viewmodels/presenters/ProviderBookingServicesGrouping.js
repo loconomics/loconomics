@@ -17,14 +17,20 @@ var label = function(options) {
     return prefix + pricingTypeLabel + clientLabel;
 };
 
+var addNewLabel = function(options) {
+    var clientPostfix = this.isClientSpecific ? (' just for ' + this.clientName) : '';
+
+    return options.pricingType.addNewLabel() + clientPostfix;
+};
+
 var groupServices = function(services, pricingTypes, clientName) {
     var grouper = new ClientSpecificServicesGrouper({
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
             clientName: clientName,            // label relies on client name
-            isClientSpecific: true,
-            labelFunction: label
+            labelFunction: label,
+            addNewLabelFunction: addNewLabel
         });
 
     return grouper.groupServices();

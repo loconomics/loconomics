@@ -26,7 +26,8 @@ var ServicesGrouper = function(options) {
         clientName: '',
         defaultPricingTypes: [],
         isClientSpecific: false,
-        label: ServicesGrouper.prototype.label
+        labelFunction: ServicesGrouper.prototype.label,
+        addNewLabelFunction: ServicesGrouper.prototype.addNewLabel
     };
 
     options = $.extend(optionsDefaults, options);
@@ -37,6 +38,7 @@ var ServicesGrouper = function(options) {
     this.defaultPricingTypes = options.defaultPricingTypes;
     this.isClientSpecific = options.isClientSpecific;
     this.label = options.labelFunction;
+    this.addNewLabel = options.addNewLabelFunction;
 };
 
 /*
@@ -44,9 +46,11 @@ var ServicesGrouper = function(options) {
       pricingType: the pricing type object for this group
 */
 ServicesGrouper.prototype.label = function(options) {
-    var pricingType = options.pricingType;
+    return options.pricingType.pluralName() || 'Services';
+};
 
-    return (pricingType && pricingType.pluralName()) || 'Services';
+ServicesGrouper.prototype.addNewLabel = function(options) {
+    return options.pricingType.addNewLabel();
 };
 
 ServicesGrouper.prototype.defaultPricingTypeIDs = function() {
@@ -71,9 +75,16 @@ ServicesGrouper.prototype.groupServices = function() {
 
     return Object.keys(groups).map(function(id) {
         var pricingType = this.pricingTypesByID()[id],
-            label = this.label({pricingType: pricingType});
+            label = this.label({pricingType: pricingType}),
+            addNewLabel = this.addNewLabel({pricingType: pricingType});
 
-        return new GroupedServicesPresenter(groups[id], pricingType, label, this.isClientSpecific);
+        return new GroupedServicesPresenter({
+                services: groups[id],
+                pricingType: pricingType,
+                label: label,
+                isClientSpecific: this.isClientSpecific,
+                addNewLabel: addNewLabel
+            });
     }.bind(this));
 };
 

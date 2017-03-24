@@ -3,11 +3,12 @@
 */
 'use strict';
 
-var GroupedServicesPresenter = function(services, pricingType, label, isClientSpecific) {
-    this.services = services;
-    this.type = pricingType;
-    this.label = label;
-    this.isClientSpecific = isClientSpecific;
+var GroupedServicesPresenter = function(options) {
+    this.services = options.services;
+    this.type = options.pricingType;
+    this.label = options.label;
+    this.isClientSpecific = options.isClientSpecific;
+    this.addNewLabel = options.addNewLabel;
 };
 
 module.exports = GroupedServicesPresenter;
