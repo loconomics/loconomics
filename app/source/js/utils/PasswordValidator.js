@@ -52,7 +52,7 @@ function PasswordValidator(msg) {
             this.correctUpper + this.correctLower;
         var valid = this.correctLength && count >= MIN_REQUIREMENTS;
         // set error
-        this.errorMessage = valid ? defaultErrorMessage : null;
+        this.errorMessage = valid ? null : defaultErrorMessage;
         return valid;
     };
 }
