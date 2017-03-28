@@ -5,7 +5,7 @@
 
 var ServiceList = function(options) {
     this.services = options.services;
-    this.label = options.label;
+    this.title = options.title;
 
     this.newButtons = [];
     this.newButtons.push({

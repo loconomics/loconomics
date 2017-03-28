@@ -8,7 +8,7 @@
 
 var ClientSpecificServicesGrouper = require('./ClientSpecificServicesGrouper');
 
-var label = function(options) {
+var listTitle = function(options) {
     var prefix = 'Select From ',
         pricingType = options.pricingType,
         pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
@@ -28,8 +28,8 @@ var groupServices = function(services, pricingTypes, clientName) {
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
-            clientName: clientName,            // label relies on client name
-            labelFunction: label,
+            clientName: clientName,            // listTitle relies on client name
+            listTitleFunction: listTitle,
             addNewLabelFunction: addNewLabel
         });
 

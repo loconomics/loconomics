@@ -7,7 +7,7 @@
 
 var ClientSpecificServicesGrouper = require('./ClientSpecificServicesGrouper');
 
-var label = function(options) {
+var listTitle = function(options) {
     var prefix = 'Select From ',
         pricingType = options.pricingType,
         pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
@@ -20,7 +20,7 @@ var groupServices = function(services, pricingTypes) {
     var grouper = new ClientSpecificServicesGrouper({
             services: services,
             pricingTypes: pricingTypes,
-            labelFunction: label
+            listTitleFunction: listTitle
         });
 
     return grouper.groupServices();

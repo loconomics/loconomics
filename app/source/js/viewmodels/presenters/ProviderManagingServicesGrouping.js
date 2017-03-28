@@ -9,7 +9,7 @@
 
 var ServiceListGroup = require('../ServiceListGroup');
 
-var label = function(options) {
+var listTitle = function(options) {
     var clientPostfix = this.clientName.length > 0 ? (' for ' + this.clientName) : '',
         pricingType = options.pricingType,
         pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
@@ -22,9 +22,9 @@ var groupServices = function(services, pricingTypes, clientName, isClientSpecifi
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
-            clientName: clientName,            // label relies on client name
+            clientName: clientName,
             isClientSpecific: isClientSpecific,
-            labelFunction: label
+            listTitleFunction: listTitle       // listTitle relies on client name
         });
 
     return grouper.serviceLists();

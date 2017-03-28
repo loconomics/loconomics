@@ -2,7 +2,7 @@
     Groups services by pricing type and produces a ServiceList object
     for each group. 
 
-    Override the label function 
+    Override the listTitle function 
 */
 'use strict';
 
@@ -27,7 +27,7 @@ var ServicesListGroup = function(options) {
         clientName: '',
         defaultPricingTypes: [],
         isClientSpecific: false,
-        labelFunction: ServicesListGroup.prototype.label,
+        listTitleFunction: ServicesListGroup.prototype.listTitle,
         addNewLabelFunction: ServicesListGroup.prototype.addNewLabel
     };
 
@@ -39,7 +39,7 @@ var ServicesListGroup = function(options) {
     this.clientName = options.clientName;
     this.defaultPricingTypes = options.defaultPricingTypes;
     this.isClientSpecific = options.isClientSpecific;
-    this.label = options.labelFunction;
+    this.listTitle = options.listTitleFunction;
     this.addNewLabel = options.addNewLabelFunction;
 };
 
@@ -47,7 +47,7 @@ var ServicesListGroup = function(options) {
     options:
       pricingType: the pricing type object for this group
 */
-ServicesListGroup.prototype.label = function(options) {
+ServicesListGroup.prototype.listTitle = function(options) {
     return options.pricingType.pluralName() || 'Services';
 };
 
@@ -77,13 +77,13 @@ ServicesListGroup.prototype.serviceLists = function() {
 
     return Object.keys(groups).map(function(id) {
         var pricingType = this.pricingTypesByID()[id],
-            label = this.label({pricingType: pricingType}),
+            listTitle = this.listTitle({pricingType: pricingType}),
             addNewLabel = this.addNewLabel({pricingType: pricingType});
 
         return new ServiceList({
                 services: groups[id],
                 pricingType: pricingType,
-                label: label,
+                title: listTitle,
                 isClientSpecific: this.isClientSpecific,
                 addNewLabel: addNewLabel
             });
