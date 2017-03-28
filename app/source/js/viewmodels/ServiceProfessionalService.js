@@ -40,10 +40,6 @@ function ServiceProfessionalServiceViewModel(app) {
         this.selectedServices([]);
         this.preSelectedServices([]);
     };
-    
-    this.allowAddServices = ko.pureComputed(function() {
-        return this.serviceProfessionalID() === null;
-    }, this);
 
     // Grouped list of pricings:
     // Defined groups by pricing type
@@ -117,8 +113,8 @@ function ServiceProfessionalServiceViewModel(app) {
         return {};
     }.bind(this);
 
-    this.tapNewService = function(group, event) {
-        var url = this.newServiceURL(this.jobTitleID(), group.type && group.type.pricingTypeID(), group.isClientSpecific);
+    this.tapNewService = function(newButton, event) {
+        var url = this.newServiceURL(this.jobTitleID(), newButton.pricingTypeID, newButton.isClientSpecific);
 
         // Passing original data, for in-progress process (as new-booking)
         // and the selected title since the URL could not be updated properly
