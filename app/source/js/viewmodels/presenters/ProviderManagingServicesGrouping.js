@@ -7,7 +7,7 @@
 */
 'use strict';
 
-var ServicesGrouper = require('./ServicesGrouper');
+var ServiceListGroup = require('../ServiceListGroup');
 
 var label = function(options) {
     var clientPostfix = this.clientName.length > 0 ? (' for ' + this.clientName) : '',
@@ -18,7 +18,7 @@ var label = function(options) {
 };
 
 var groupServices = function(services, pricingTypes, clientName, isClientSpecific) {
-    var grouper = new ServicesGrouper({
+    var grouper = new ServiceListGroup({
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
@@ -27,7 +27,7 @@ var groupServices = function(services, pricingTypes, clientName, isClientSpecifi
             labelFunction: label
         });
 
-    return grouper.groupServices();
+    return grouper.serviceLists();
 };
 
 module.exports = { groupServices: groupServices };

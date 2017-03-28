@@ -6,9 +6,9 @@
 */
 'use strict';
 
-var groupBy = require('../../utils/groupBy'),
-    mapBy = require('../../utils/mapBy'),
-    ServiceList = require('../ServiceList'),
+var groupBy = require('../utils/groupBy'),
+    mapBy = require('../utils/mapBy'),
+    ServiceList = require('./ServiceList'),
     $ = require('jquery');
 
 /*
@@ -19,19 +19,21 @@ var groupBy = require('../../utils/groupBy'),
       defaultPricingTypes: pricing types use to create groups *even if* there are no services of these pricing types
       isClientSpecific: are the services in this collection client-specific?
 */
-var ServicesGrouper = function(options) {
+var ServicesListGroup = function(options) {
     var optionsDefaults = {
+        title: '',
         services: [],
         pricingTypes: [],
         clientName: '',
         defaultPricingTypes: [],
         isClientSpecific: false,
-        labelFunction: ServicesGrouper.prototype.label,
-        addNewLabelFunction: ServicesGrouper.prototype.addNewLabel
+        labelFunction: ServicesListGroup.prototype.label,
+        addNewLabelFunction: ServicesListGroup.prototype.addNewLabel
     };
 
     options = $.extend(optionsDefaults, options);
 
+    this.title = options.title;
     this.services = options.services;
     this.pricingTypes = options.pricingTypes;
     this.clientName = options.clientName;
@@ -45,32 +47,32 @@ var ServicesGrouper = function(options) {
     options:
       pricingType: the pricing type object for this group
 */
-ServicesGrouper.prototype.label = function(options) {
+ServicesListGroup.prototype.label = function(options) {
     return options.pricingType.pluralName() || 'Services';
 };
 
-ServicesGrouper.prototype.addNewLabel = function(options) {
+ServicesListGroup.prototype.addNewLabel = function(options) {
     return options.pricingType.addNewLabel();
 };
 
-ServicesGrouper.prototype.defaultPricingTypeIDs = function() {
+ServicesListGroup.prototype.defaultPricingTypeIDs = function() {
     return this.defaultPricingTypes.map(function(type) { return type.pricingTypeID(); });
 };
 
-ServicesGrouper.prototype.pricingTypesByID = function() {
+ServicesListGroup.prototype.pricingTypesByID = function() {
     return mapBy(this.pricingTypes, function(type) { return type.pricingTypeID(); });
 };
 
-ServicesGrouper.prototype.groupsByPricingType = function() {
+ServicesListGroup.prototype.groupsByPricingType = function() {
     return groupBy(this.services, function(service) {
         return service.pricingTypeID();
     }, this.defaultPricingTypeIDs());
 };
 
 /*
-    Generate GroupedServicesPresenters for client-specific and public services
+    Generate ServiceLists
 */
-ServicesGrouper.prototype.groupServices = function() {
+ServicesListGroup.prototype.serviceLists = function() {
     var groups = this.groupsByPricingType();
 
     return Object.keys(groups).map(function(id) {
@@ -88,4 +90,4 @@ ServicesGrouper.prototype.groupServices = function() {
     }.bind(this));
 };
 
-module.exports = ServicesGrouper;
+module.exports = ServicesListGroup;

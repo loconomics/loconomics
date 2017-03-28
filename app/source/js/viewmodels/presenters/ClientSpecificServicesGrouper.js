@@ -1,18 +1,18 @@
 /*
     Object to split client-specific services from public services prior to
-    grouping by pricing type. Uses ServicesGrouper to generate the presenters.
+    grouping by pricing type. Uses ServiceListGroup to generate the presenters.
 */
 'use strict';
 
-var ServicesGrouper = require('./ServicesGrouper'),
+var ServiceListGroup = require('../ServiceListGroup'),
     $ = require('jquery');
 
 /*
-    Constructor options are passed to ServicesGrouper except services.
+    Constructor options are passed to ServiceListGroup except services.
 
-    Include the labelFunction parameter to override ServicesGrouper's label function.
+    Include the labelFunction parameter to override ServiceListGroup's label function.
 */
-var ClientSpecificServicesGrouper = function(serviceGrouperOptions) {
+var ClientSpecificServiceListGroup = function(serviceGrouperOptions) {
     var services = serviceGrouperOptions.services || [];
 
     this.options = serviceGrouperOptions;
@@ -23,20 +23,20 @@ var ClientSpecificServicesGrouper = function(serviceGrouperOptions) {
 /*
     Returns GroupedServicesPresenters grouped by client-specific pricings and pricing types
 */
-ClientSpecificServicesGrouper.prototype.groupServices = function() {
+ClientSpecificServiceListGroup.prototype.groupServices = function() {
     var options = this.options;
 
-    var clientGroups = (new ServicesGrouper($.extend(options, {
+    var clientGroups = (new ServiceListGroup($.extend(options, {
             services: this.clientServices,
             isClientSpecific: true
-        }))).groupServices(),
+        }))).serviceLists(),
 
-        publicGroups = (new ServicesGrouper($.extend(options, {
+        publicGroups = (new ServiceListGroup($.extend(options, {
             services: this.publicServices,
             isClientSpecific: false
-        }))).groupServices();
+        }))).serviceLists();
 
     return clientGroups.concat(publicGroups);
 };
 
-module.exports = ClientSpecificServicesGrouper;
+module.exports = ClientSpecificServiceListGroup;
