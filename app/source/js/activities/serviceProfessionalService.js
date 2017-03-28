@@ -9,8 +9,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
     Route = require('../utils/Router').Route,
-    ProviderBookingServicesGrouping = require('../viewmodels/presenters/ProviderBookingServicesGrouping'),
-    ProviderManagingServicesGrouping = require('../viewmodels/presenters/ProviderManagingServicesGrouping');
+    serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -265,14 +264,15 @@ function ViewModel(app) {
         return (this.client() && this.client().firstName()) || '';
     }, this);
 
-    this.groupServices = function(services, pricingTypes) {
-        var grouping = this.isSelectionMode() ? ProviderBookingServicesGrouping :
-                                                ProviderManagingServicesGrouping,
+    this.serviceListGroupsFactory = function(services, pricingTypes) {
+        var factories = serviceListGroupFactories,
+            listGroupsFactory = this.isSelectionMode() ? factories.providerBookedServices :
+                                                         factories.providerManagedServices,
             isClientSpecific = !!this.clientID();
 
         services = this.isAdditionMode() ? [] : services;
 
-        return grouping.groupServices(services, pricingTypes, this.clientName(), isClientSpecific);
+        return listGroupsFactory(services, pricingTypes, this.clientName(), isClientSpecific);
     };
 
     this.clientFullName = ko.pureComputed(function() {

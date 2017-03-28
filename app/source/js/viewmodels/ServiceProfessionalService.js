@@ -41,16 +41,15 @@ function ServiceProfessionalServiceViewModel(app) {
         this.preSelectedServices([]);
     };
 
-    // Grouped list of pricings:
-    // Defined groups by pricing type
+    // Grouped list of services:
     //
-    // groupServices can be replaced by implementing view models to group services differently
-    this.groupServices = function() {
+    // serviceListGroupsFactory can be replaced by implementing view models to group services differently
+    this.serviceListGroupsFactory = function() {
         return [];
     };
 
-    this.groupedServices = ko.computed(function() {
-        return this.groupServices(this.list(), this.pricingTypes());
+    this.serviceListGroups = ko.computed(function() {
+        return this.serviceListGroupsFactory(this.list(), this.pricingTypes());
     }, this);
 
     /**
