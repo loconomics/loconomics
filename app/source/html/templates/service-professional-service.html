@@ -5,13 +5,13 @@
     </div>
     <!-- ko foreach: serviceListGroups -->
         <div data-bind="foreach: serviceLists()">
-            <div class="SectionTitle" data-bind="visible: !$parent.isAdditionMode()">
+            <div class="SectionTitle" data-bind="visible: !$parents[1].isAdditionMode()">
                 <span data-bind="text: title"></span>
             </div>
 
             <ul class="TilesList TilesList--openEnd Box-sm">
                 <!-- ko foreach: { data: services, as: 'service' } -->
-                    <li><a href="#" class="ItemTile" data-bind="click: $parents[1].tapService, css: { active: service.isSelected }" role="button">
+                    <li><a href="#" class="ItemTile" data-bind="click: $parents[2].tapService, css: { active: service.isSelected }" role="button">
                         <div class="Tile-marker"><p data-bind="text: service.displayedPrice"></p></div>
                         <div class="Tile-content">
                             <div data-bind="visible: service.sessionsAndDuration(), text: service.name"></div>
@@ -19,14 +19,14 @@
                             <p data-bind="visible: !service.sessionsAndDuration(), text: service.name"></p>
                         </div>
                         <div class="Tile-icon">
-                          <span data-bind="visible: $parents[1].isSelectionMode, attr: { 'aria-pressed': service.isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }"></span><span class="sr-only">Selected?</span></span>
-                          <span data-bind="visible: !$parents[1].isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
+                          <span data-bind="visible: $parents[2].isSelectionMode, attr: { 'aria-pressed': service.isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }"></span><span class="sr-only">Selected?</span></span>
+                          <span data-bind="visible: !$parents[2].isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
                         </div>
                     </a></li>
                 <!-- /ko -->
                 <!-- ko foreach: newButtons -->
                     <li>
-                        <a class="LinkTile" role="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $parents[1].tapNewService, text: label"></a>
+                        <a class="LinkTile" role="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $parents[2].tapNewService, text: label"></a>
                     </li>
                 <!-- /ko -->
             </ul>
