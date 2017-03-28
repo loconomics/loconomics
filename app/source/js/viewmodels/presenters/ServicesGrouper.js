@@ -1,5 +1,5 @@
 /*
-    Groups services by pricing type and produces a GroupedServicesPresenter object
+    Groups services by pricing type and produces a ServiceList object
     for each group. 
 
     Override the label function 
@@ -8,7 +8,7 @@
 
 var groupBy = require('../../utils/groupBy'),
     mapBy = require('../../utils/mapBy'),
-    GroupedServicesPresenter = require('./GroupedServicesPresenter'),
+    ServiceList = require('../ServiceList'),
     $ = require('jquery');
 
 /*
@@ -78,7 +78,7 @@ ServicesGrouper.prototype.groupServices = function() {
             label = this.label({pricingType: pricingType}),
             addNewLabel = this.addNewLabel({pricingType: pricingType});
 
-        return new GroupedServicesPresenter({
+        return new ServiceList({
                 services: groups[id],
                 pricingType: pricingType,
                 label: label,

@@ -3,7 +3,7 @@
 */
 'use strict';
 
-var GroupedServicesPresenter = function(options) {
+var ServiceList = function(options) {
     this.services = options.services;
     this.label = options.label;
 
@@ -15,4 +15,4 @@ var GroupedServicesPresenter = function(options) {
     });
 };
 
-module.exports = GroupedServicesPresenter;
+module.exports = ServiceList;
