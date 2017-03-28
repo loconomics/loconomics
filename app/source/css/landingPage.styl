@@ -10,14 +10,17 @@
 @import 'utils/mediaQueries.styl'
 @import 'utils/styleguideVars.styl'
 @import 'utils/bs-extensions.styl'
+@import 'utils/input-group-addon-inset.styl';
+@import 'utils/arrows.styl';
 
 /** Components styles **/
 @import 'components/ActionSheet.styl'
 @import 'components/LargeNavBar.styl'
-@import 'components/LearnMorePage.styl'
+@import 'components/SignupLogin.styl'
 
 /** Pages **/
 @import 'landingPages/healingArtsProfessionals.styl'
+@import 'landingPages/massageTherapists.styl'
 
 /** App contains some general changes that may be needed**/
 /* TODO Ideally this will be shared utilities or components,
@@ -28,3 +31,91 @@
     // No navbar
     padding-top: 0 !important;
 }
+
+.LandingPage {
+
+    // NO NAVBAR, disabled on the JS activity, so this can replace the default:
+    top: 0 !important;
+
+    // NOTE: all activities are absolute positioned, so is already a positioning context
+
+    [role=main] {
+        $arrowSize = 30px;
+        $sectionTitleFontSize = 32px;
+        $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);
+        $sectionTitleFontSizeSmall = 28px;
+        $sectionTitleLineHeightSmall = ceil($sectionTitleFontSizeSmall * 1.1);
+        
+        .landingpage-background {
+            padding-top: $LargeNavBar-height + 32px;
+            background: no-repeat center / cover;
+            background-image:
+              linear-gradient(
+                rgba(255, 255, 255, 0.7),
+                rgba(255, 255, 255, 0.7)
+              ),
+              url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
+          }
+        .landingpage-title {
+            color: $gray;
+            font-size: 44px;
+            font-weight: bold;
+            margin: 0.4em auto;
+            text-align: left
+
+            @media $mediaMaxSm {
+                font-size: 38px;
+            }
+        }
+        .landingpage-tagline {
+            color: $gray;
+            font-size: 24px;
+            margin: 0.5em auto;
+            text-align: left;
+        }
+        .landingpage-proposition {
+            color: $gray;
+            font-size: 18px;
+            margin: 0.5em auto;
+            text-align: left;
+        }
+
+
+        // Edge limit for phone
+        .landingpage-title,
+        .landingpage-tagline {
+            padding: 0 $grid-gap;
+        }
+        .SignupLogin {
+            @media $mediaMaxSm {
+                margin: 10px;
+            }
+        }
+        form {
+            margin: 40px auto;
+            max-width: 450px;
+
+            .form-control {
+                background: White;
+                font-size: 17px;
+            }
+
+            .form-control:focus {
+              border-bottom-color: #ccc;
+              border-top-color: transparent;
+              border-right-color: transparent;
+            }
+
+            // Reduce column gaps by a 20px in total
+            // for sizes bigger than XS (so keep standar in phone where
+            // forms goes vertical)
+            @media $mediaMinSm {
+                > * {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+}
+
