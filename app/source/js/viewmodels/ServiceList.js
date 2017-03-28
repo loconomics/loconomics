@@ -6,13 +6,13 @@
 var ServiceList = function(options) {
     this.services = options.services;
     this.title = options.title;
+    this.newButtons = options.newButtons || [];
+};
 
-    this.newButtons = [];
-    this.newButtons.push({
-        label: options.addNewLabel,
-        pricingTypeID: options.pricingType.pricingTypeID(),
-        isClientSpecific: options.isClientSpecific
-    });
+ServiceList.NewButton = function(options) {
+    this.label = options.label;
+    this.pricingTypeID = options.pricingTypeID;
+    this.isClientSpecific = options.isClientSpecific;
 };
 
 module.exports = ServiceList;

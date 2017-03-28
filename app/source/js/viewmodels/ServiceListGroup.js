@@ -69,23 +69,31 @@ ServicesListGroup.prototype.groupsByPricingType = function() {
     }, this.defaultPricingTypeIDs());
 };
 
+ServicesListGroup.prototype.newButtons = function(label, pricingTypeID) {
+    var options = {
+            label: label,
+            pricingTypeID: pricingTypeID,
+            isClientSpecific: this.isClientSpecific
+        };
+
+    return [new ServiceList.NewButton(options)];
+};
+
 /*
     Generate ServiceLists
 */
 ServicesListGroup.prototype.serviceLists = function() {
     var groups = this.groupsByPricingType();
 
-    return Object.keys(groups).map(function(id) {
-        var pricingType = this.pricingTypesByID()[id],
+    return Object.keys(groups).map(function(pricingTypeID) {
+        var pricingType = this.pricingTypesByID()[pricingTypeID],
             listTitle = this.listTitle({pricingType: pricingType}),
             addNewLabel = this.addNewLabel({pricingType: pricingType});
 
         return new ServiceList({
-                services: groups[id],
-                pricingType: pricingType,
+                services: groups[pricingTypeID],
                 title: listTitle,
-                isClientSpecific: this.isClientSpecific,
-                addNewLabel: addNewLabel
+                newButtons: this.newButtons(addNewLabel, pricingTypeID)
             });
     }.bind(this));
 };
