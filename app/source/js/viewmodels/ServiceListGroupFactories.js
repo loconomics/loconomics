@@ -2,36 +2,38 @@
 
 var ServiceCollection = require('../models/ServiceCollection'),
     ServiceListGroup = require('./ServiceListGroup'),
+    ServiceList = require('./ServiceList'),
     $ = require('jquery');
 
 var Factories = {};
 
+var ClientBookedServicesListGroup = function(options) {
+    ServiceListGroup.call(this, options);
+};
+
+ClientBookedServicesListGroup.prototype.listTitle = function(options) {
+    var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services',
+        postFix = this.isClientSpecific ? ' Just For You' : '';
+
+    return 'Select From ' + pricingTypeLabel + postFix;
+};
+
+ClientBookedServicesListGroup.prototype.newButtons = function() {
+    return [];  // no new buttons when client books services
+};
+
+ClientBookedServicesListGroup._inherits(ServiceListGroup);
+
 Factories.clientBookedServices = function(services, pricingTypes) {
-    var listTitle = function(options) {
-        var pricingType = options.pricingType,
-            pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
-            postFix = this.isClientSpecific ? ' Just For You' : '';
-
-        return 'Select From ' + pricingTypeLabel + postFix;
-    };
-
-    var newButtons = function() {
-        return []; // no new buttons when client books services
-    };
-
     var serviceCollection = new ServiceCollection(services),
-        options = {
-                pricingTypes: pricingTypes,
-                listTitleFunction: listTitle,
-                newButtonFunction: newButtons
-            };
+        options = { pricingTypes: pricingTypes };
 
-    var clientListGroup = new ServiceListGroup($.extend(options, {
+    var clientListGroup = new ClientBookedServicesListGroup($.extend(options, {
             services: serviceCollection.clientSpecificServices(),
             isClientSpecific: true
         }));
 
-    var publicListGroup = new ServiceListGroup($.extend(options, {
+    var publicListGroup = new ClientBookedServicesListGroup($.extend(options, {
             services: serviceCollection.publicServices(),
             isClientSpecific: false
         }));
@@ -39,60 +41,86 @@ Factories.clientBookedServices = function(services, pricingTypes) {
     return [clientListGroup, publicListGroup];
 };
 
+var ProviderBookedServicesListGroup = function(options) {
+    ServiceListGroup.call(this, options);
+};
+
+ProviderBookedServicesListGroup.prototype.listTitle = function(options) {
+    var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services';
+
+    return 'Select From ' + pricingTypeLabel;
+};
+
+ProviderBookedServicesListGroup._inherits(ServiceListGroup);
+
+var ProviderBookedClientServicesListGroup = function(options) {
+    this.clientName = options.clientName;
+    ServiceListGroup.call(this, options);
+};
+
+ProviderBookedClientServicesListGroup.prototype.listTitle = function(options) {
+    var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services';
+
+    return 'Select From ' + pricingTypeLabel + ' Just For ' + this.clientName;
+};
+
+ProviderBookedClientServicesListGroup.prototype.newButtonLabel = function(options) {
+    return options.pricingType.addNewLabel() + ' just for ' + this.clientName;
+};
+
+ProviderBookedClientServicesListGroup.prototype.newButtons = function(options) {
+    return this.pricingTypes.map(function(pricingType) {
+        return new ServiceList.NewButton({
+                label: options.label,
+                pricingTypeID: pricingType.pricingTypeID(),
+                isClientSpecific: this.isClientSpecific
+            });
+    });
+};
+
+ProviderBookedClientServicesListGroup._inherits(ServiceListGroup);
+
 Factories.providerBookedServices = function(services, pricingTypes, clientName) {
-    var listTitle = function(options) {
-        var pricingType = options.pricingType,
-            pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
-            clientLabel = this.isClientSpecific ? (' Just For ' + clientName) : '';
-
-        return 'Select From ' + pricingTypeLabel + clientLabel;
-    };
-
-    var addNewLabel = function(options) {
-        var clientPostfix = this.isClientSpecific ? (' just for ' + clientName) : '';
-
-        return options.pricingType.addNewLabel() + clientPostfix;
-    };
-
     services = new ServiceCollection(services);
 
-    var options = {
-            pricingTypes: pricingTypes,
-            defaultPricingTypes: pricingTypes,  // show a pricing type even if it has no services
-            listTitleFunction: listTitle,
-            addNewLabelFunction: addNewLabel
-        };
+    var options = { pricingTypes: pricingTypes };
 
-    var clientListGroup = new ServiceListGroup($.extend(options, {
+    var clientListGroup = new ProviderBookedClientServicesListGroup($.extend(options, {
             services: services.clientSpecificServices(),
-            isClientSpecific: true
+            isClientSpecific: true,
+            clientName: clientName
         }));
 
-    var publicListGroup = new ServiceListGroup($.extend(options, {
+    var publicListGroup = new ProviderBookedServicesListGroup($.extend(options, {
             services: services.publicServices(),
-            isClientSpecific: false
+            isClientSpecific: false,
+            defaultPricingTypes: pricingTypes  // create a list for pricing type even if it has no services
         }));
 
     return [clientListGroup, publicListGroup];
 };
 
-/*
-*/
+var ProviderManagedServicesListGroup = function(options) {
+    this.clientName = options.clientName;
+    ServiceListGroup.call(this, options);
+};
+
+ProviderManagedServicesListGroup.prototype.listTitle = function(options) {
+    var clientPostfix = this.clientName.length > 0 ? (' for ' + this.clientName) : '',
+        pricingType = options.pricingType,
+        pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
+
+    return pricingTypeLabel + clientPostfix;
+};
+
+ProviderManagedServicesListGroup._inherits(ServiceListGroup);
+
 Factories.providerManagedServices = function(services, pricingTypes, clientName, isClientSpecific) {
-    var listTitle = function(options) {
-        var clientPostfix = clientName.length > 0 ? (' for ' + clientName) : '',
-            pricingType = options.pricingType,
-            pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
-
-        return pricingTypeLabel + clientPostfix;
-    };
-
-    var serviceListGroup = new ServiceListGroup({
+    var serviceListGroup = new ProviderManagedServicesListGroup({
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
-            isClientSpecific: isClientSpecific,
-            listTitleFunction: listTitle       // listTitle relies on client name
+            isClientSpecific: isClientSpecific
         });
 
     return [serviceListGroup];

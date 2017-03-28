@@ -18,16 +18,13 @@ var groupBy = require('../utils/groupBy'),
       defaultPricingTypes: pricing types use to create groups *even if* there are no services of these pricing types
       isClientSpecific: are the services in this collection client-specific?
 */
-var ServicesListGroup = function(options) {
+var ServiceListGroup = function(options) {
     var optionsDefaults = {
         title: '',
         services: [],
         pricingTypes: [],
         defaultPricingTypes: [],
-        isClientSpecific: false,
-        listTitleFunction: ServicesListGroup.prototype.listTitle,
-        addNewLabelFunction: ServicesListGroup.prototype.addNewLabel,
-        newButtonFunction: ServicesListGroup.prototype.newButtons
+        isClientSpecific: false
     };
 
     options = $.extend(optionsDefaults, options);
@@ -37,64 +34,63 @@ var ServicesListGroup = function(options) {
     this.pricingTypes = options.pricingTypes;
     this.defaultPricingTypes = options.defaultPricingTypes;
     this.isClientSpecific = options.isClientSpecific;
-    this.listTitle = options.listTitleFunction;
-    this.addNewLabel = options.addNewLabelFunction;
-    this.newButtonFunction = options.newButtonFunction;
 };
 
 /*
     options:
       pricingType: the pricing type object for this group
 */
-ServicesListGroup.prototype.listTitle = function(options) {
+ServiceListGroup.prototype.listTitle = function(options) {
     return options.pricingType.pluralName() || 'Services';
 };
 
-ServicesListGroup.prototype.addNewLabel = function(options) {
+ServiceListGroup.prototype.newButtonLabel = function(options) {
     return options.pricingType.addNewLabel();
 };
 
-ServicesListGroup.prototype.defaultPricingTypeIDs = function() {
+ServiceListGroup.prototype.defaultGroups = function() {
     return this.defaultPricingTypes.map(function(type) { return type.pricingTypeID(); });
 };
 
-ServicesListGroup.prototype.pricingTypesByID = function() {
+ServiceListGroup.prototype.pricingTypesByID = function() {
     return mapBy(this.pricingTypes, function(type) { return type.pricingTypeID(); });
 };
 
-ServicesListGroup.prototype.groupsByPricingType = function() {
-    return groupBy(this.services, function(service) {
-        return service.pricingTypeID();
-    }, this.defaultPricingTypeIDs());
+ServiceListGroup.prototype.groupingFunction = function(service) {
+    return service.pricingTypeID();
 };
 
-ServicesListGroup.prototype.newButtons = function(label, pricingTypeID) {
-    var options = {
-            label: label,
-            pricingTypeID: pricingTypeID,
+ServiceListGroup.prototype.groupServices = function() {
+    return groupBy(this.services, this.groupingFunction, this.defaultGroups());
+};
+
+ServiceListGroup.prototype.newButtons = function(options) {
+    var newButtonOptions = {
+            label: options.label,
+            pricingTypeID: options.pricingTypeID,
             isClientSpecific: this.isClientSpecific
         };
 
-    return [new ServiceList.NewButton(options)];
+    return [new ServiceList.NewButton(newButtonOptions)];
 };
 
 /*
     Generate ServiceLists
 */
-ServicesListGroup.prototype.serviceLists = function() {
-    var groups = this.groupsByPricingType();
+ServiceListGroup.prototype.serviceLists = function() {
+    var groups = this.groupServices();
 
     return Object.keys(groups).map(function(pricingTypeID) {
         var pricingType = this.pricingTypesByID()[pricingTypeID],
             listTitle = this.listTitle({pricingType: pricingType}),
-            addNewLabel = this.addNewLabel({pricingType: pricingType});
+            newButtonLabel = this.newButtonLabel({pricingType: pricingType});
 
         return new ServiceList({
                 services: groups[pricingTypeID],
                 title: listTitle,
-                newButtons: this.newButtonFunction(addNewLabel, pricingTypeID)
+                newButtons: this.newButtons({label: newButtonLabel, pricingTypeID: pricingTypeID})
             });
     }.bind(this));
 };
 
-module.exports = ServicesListGroup;
+module.exports = ServiceListGroup;
