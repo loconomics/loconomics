@@ -38,13 +38,13 @@ Factories.providerBookedServices = function(services, pricingTypes, clientName) 
     var listTitle = function(options) {
         var pricingType = options.pricingType,
             pricingTypeLabel = (pricingType && pricingType.pluralName()) || 'Services',
-            clientLabel = this.isClientSpecific ? (' Just For ' + this.clientName) : '';
+            clientLabel = this.isClientSpecific ? (' Just For ' + clientName) : '';
 
         return 'Select From ' + pricingTypeLabel + clientLabel;
     };
 
     var addNewLabel = function(options) {
-        var clientPostfix = this.isClientSpecific ? (' just for ' + this.clientName) : '';
+        var clientPostfix = this.isClientSpecific ? (' just for ' + clientName) : '';
 
         return options.pricingType.addNewLabel() + clientPostfix;
     };
@@ -55,7 +55,6 @@ Factories.providerBookedServices = function(services, pricingTypes, clientName) 
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes,  // show a pricing type even if it has no services
             listTitleFunction: listTitle,
-            clientName: clientName,
             addNewLabelFunction: addNewLabel
         };
 
@@ -76,7 +75,7 @@ Factories.providerBookedServices = function(services, pricingTypes, clientName) 
 */
 Factories.providerManagedServices = function(services, pricingTypes, clientName, isClientSpecific) {
     var listTitle = function(options) {
-        var clientPostfix = this.clientName.length > 0 ? (' for ' + this.clientName) : '',
+        var clientPostfix = clientName.length > 0 ? (' for ' + clientName) : '',
             pricingType = options.pricingType,
             pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
 
@@ -87,7 +86,6 @@ Factories.providerManagedServices = function(services, pricingTypes, clientName,
             services: services,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
-            clientName: clientName,
             isClientSpecific: isClientSpecific,
             listTitleFunction: listTitle       // listTitle relies on client name
         });

@@ -15,7 +15,6 @@ var groupBy = require('../utils/groupBy'),
     options:
       services: array services to group
       pricingTypes: array of pricing types the services can reference (services only have a pricing type ID)
-      clientName: name of the client
       defaultPricingTypes: pricing types use to create groups *even if* there are no services of these pricing types
       isClientSpecific: are the services in this collection client-specific?
 */
@@ -24,7 +23,6 @@ var ServicesListGroup = function(options) {
         title: '',
         services: [],
         pricingTypes: [],
-        clientName: '',
         defaultPricingTypes: [],
         isClientSpecific: false,
         listTitleFunction: ServicesListGroup.prototype.listTitle,
@@ -36,7 +34,6 @@ var ServicesListGroup = function(options) {
     this.title = options.title;
     this.services = options.services;
     this.pricingTypes = options.pricingTypes;
-    this.clientName = options.clientName;
     this.defaultPricingTypes = options.defaultPricingTypes;
     this.isClientSpecific = options.isClientSpecific;
     this.listTitle = options.listTitleFunction;
