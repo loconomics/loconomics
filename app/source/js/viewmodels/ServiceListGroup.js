@@ -26,7 +26,8 @@ var ServicesListGroup = function(options) {
         defaultPricingTypes: [],
         isClientSpecific: false,
         listTitleFunction: ServicesListGroup.prototype.listTitle,
-        addNewLabelFunction: ServicesListGroup.prototype.addNewLabel
+        addNewLabelFunction: ServicesListGroup.prototype.addNewLabel,
+        newButtonFunction: ServicesListGroup.prototype.newButtons
     };
 
     options = $.extend(optionsDefaults, options);
@@ -38,6 +39,7 @@ var ServicesListGroup = function(options) {
     this.isClientSpecific = options.isClientSpecific;
     this.listTitle = options.listTitleFunction;
     this.addNewLabel = options.addNewLabelFunction;
+    this.newButtonFunction = options.newButtonFunction;
 };
 
 /*
@@ -90,7 +92,7 @@ ServicesListGroup.prototype.serviceLists = function() {
         return new ServiceList({
                 services: groups[pricingTypeID],
                 title: listTitle,
-                newButtons: this.newButtons(addNewLabel, pricingTypeID)
+                newButtons: this.newButtonFunction(addNewLabel, pricingTypeID)
             });
     }.bind(this));
 };

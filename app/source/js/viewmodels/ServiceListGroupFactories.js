@@ -15,10 +15,15 @@ Factories.clientBookedServices = function(services, pricingTypes) {
         return 'Select From ' + pricingTypeLabel + postFix;
     };
 
+    var newButtons = function() {
+        return []; // no new buttons when client books services
+    };
+
     var serviceCollection = new ServiceCollection(services),
         options = {
                 pricingTypes: pricingTypes,
-                listTitleFunction: listTitle
+                listTitleFunction: listTitle,
+                newButtonFunction: newButtons
             };
 
     var clientListGroup = new ServiceListGroup($.extend(options, {
