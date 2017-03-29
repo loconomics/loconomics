@@ -26,59 +26,59 @@
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+                <div data-bind="visible: jobTitleID() > 0">
+                    <h1 data-bind="visible: $root.isSelectionMode">
+                        What's included in <span data-bind="text: $root.clientName"></span>'s appointment?
+                    </h1>
 
-                <h1 data-bind="visible: $root.isSelectionMode">
-                    What's included in <span data-bind="text: $root.clientName"></span>'s appointment?
-                </h1>
-
-                <!-- ko foreach: serviceListGroups -->
-                    <h2 data-bind="visible: title.length > 0">
-                        <span data-bind="text: title"></span>
-                    </h2>
-                    <div data-bind="foreach: serviceLists()">
-                        <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
+                    <!-- ko foreach: serviceListGroups -->
+                        <h2 data-bind="visible: title.length > 0">
                             <span data-bind="text: title"></span>
                         </h2>
-                        <ul class="TilesList TilesList--openEnd" data-bind="">
-                            <!-- ko foreach: services -->
-                                <li>
-                                    <a href="#" class="ItemTile" data-bind="click: $root.tapService" role="button">
-                                        <div class="Tile-marker">
-                                            <p data-bind="text: displayedPrice"></p>
-                                        </div>
-                                        <div class="Tile-content">
-                                            <div data-bind="visible: sessionsAndDuration(), text: name"></div>
-                                            <em data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></em>
-                                            <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
-                                        </div>
-                                        <div class="Tile-icon">
-                                            <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button">
-                                                <span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }"></span>
-                                                <span class="sr-only">Selected?</span>
-                                            </span>
-                                            <span data-bind="visible: !$root.isSelectionMode()"><span class="fa ion ion-edit"></span>
-                                                <span class="sr-only">Edit</span>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </li>
-                            <!-- /ko -->
-                            <!-- ko foreach: newButtons -->
-                                <li>
-                                    <a class="CompactLinkTile" type="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
-                                        <div class="Tile-content text-muted"data-bind="text: label"></div>
-                                        <div class="Tile-icon text-muted">
-                                         <span class="fa ion ion-plus"></span>
-                                        </div>
-                                    </a>
-                                </li>
-                            <!-- /ko -->
-                        </ul>
-                    </div>
-                <!-- /ko -->
-                <p class="isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="text-secondary" role="button" title="Manage clients">First, select a client.</a>
-                </p>
-
+                        <div data-bind="foreach: serviceLists()">
+                            <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
+                                <span data-bind="text: title"></span>
+                            </h2>
+                            <ul class="TilesList TilesList--openEnd" data-bind="">
+                                <!-- ko foreach: services -->
+                                    <li>
+                                        <a href="#" class="ItemTile" data-bind="click: $root.tapService" role="button">
+                                            <div class="Tile-marker">
+                                                <p data-bind="text: displayedPrice"></p>
+                                            </div>
+                                            <div class="Tile-content">
+                                                <div data-bind="visible: sessionsAndDuration(), text: name"></div>
+                                                <em data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></em>
+                                                <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
+                                            </div>
+                                            <div class="Tile-icon">
+                                                <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button">
+                                                    <span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }"></span>
+                                                    <span class="sr-only">Selected?</span>
+                                                </span>
+                                                <span data-bind="visible: !$root.isSelectionMode()"><span class="fa ion ion-edit"></span>
+                                                    <span class="sr-only">Edit</span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <!-- /ko -->
+                                <!-- ko foreach: newButtons -->
+                                    <li>
+                                        <a class="CompactLinkTile" type="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
+                                            <div class="Tile-content text-muted"data-bind="text: label"></div>
+                                            <div class="Tile-icon text-muted">
+                                             <span class="fa ion ion-plus"></span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <!-- /ko -->
+                            </ul>
+                        </div>
+                    <!-- /ko -->
+                    <p class="isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="text-secondary" role="button" title="Manage clients">First, select a client.</a>
+                    </p>
+                </div>
                 <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
                 </div>
