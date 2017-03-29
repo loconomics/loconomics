@@ -27,18 +27,16 @@
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div data-bind="visible: jobTitleID() > 0">
-                    <h1 data-bind="visible: $root.isSelectionMode">
-                        What's included in <span data-bind="text: $root.clientName"></span>'s appointment?
+                    <h1 class="Prompt" data-bind="visible: $root.isSelectionMode">
+                        What's <span class="hidden-xs">included</span> in <span data-bind="text: $root.clientName"></span>'s appointment?
                     </h1>
 
-                    <!-- ko foreach: serviceListGroups -->
-                        <h2 data-bind="visible: title.length > 0">
-                            <span data-bind="text: title"></span>
-                        </h2>
+                    <div class="ServiceListGroup" data-bind="foreach: serviceListGroups">
+                        <h2 class="ServiceListGroup-title" data-bind="visible: title.length > 0, text: title"></h2>
                         <div data-bind="foreach: serviceLists()">
-                            <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
+                            <h3 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
                                 <span data-bind="text: title"></span>
-                            </h2>
+                            </h3>
                             <ul class="TilesList TilesList--openEnd" data-bind="">
                                 <!-- ko foreach: services -->
                                     <li>
@@ -75,7 +73,7 @@
                                 <!-- /ko -->
                             </ul>
                         </div>
-                    <!-- /ko -->
+                    </div>
                     <p class="isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="text-secondary" role="button" title="Manage clients">First, select a client.</a>
                     </p>
                 </div>
