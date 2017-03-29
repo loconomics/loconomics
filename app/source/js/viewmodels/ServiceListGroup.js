@@ -1,9 +1,5 @@
-/*
-    Groups services by pricing type and produces a ServiceList object
-    for each group. 
+/** @module viewmodels/ServiceListGroup */
 
-    Override the listTitle function 
-*/
 'use strict';
 
 var groupBy = require('../utils/groupBy'),
@@ -11,13 +7,27 @@ var groupBy = require('../utils/groupBy'),
     ServiceList = require('./ServiceList'),
     $ = require('jquery');
 
-/*
-    options:
-      services: array services to group
-      pricingTypes: array of pricing types the services can reference (services only have a pricing type ID)
-      defaultPricingTypes: pricing types use to create groups *even if* there are no services of these pricing types
-      isClientSpecific: are the services in this collection client-specific?
-*/
+/**
+ * Creates a new ServiceListGroup view model. Service list group creates lists
+ * of services grouped by pricing type. By default, each list includes a button
+ * to create a new service of that pricing type.
+ * 
+ * Default behavior can be changed by overriding the following functions:
+ *   listTitle, newButtonLabel, newButtons
+ *
+ * The interface implented by this object:
+ *   title property
+ *   serviceLists function
+ * 
+ * @class
+ * @param {Object} options
+ * @param {string} options.title (optional) title of the group of lists
+ * @param {Array} options.services (optional) array of services to group
+ * @param {Array} options.pricingTypes all pricing types referenced by any services in option.services
+ * @param {Array} options.defaultPricingTypes (optional) pricing types for which there should be a list regardless of whether there are services of that type in the services collection
+ * @param {boolean} options.isClientSpecific true if services in this collection are specific to a client
+ */
+
 var ServiceListGroup = function(options) {
     var optionsDefaults = {
         title: '',
@@ -36,61 +46,86 @@ var ServiceListGroup = function(options) {
     this.isClientSpecific = options.isClientSpecific;
 };
 
-/*
-    options:
-      pricingType: the pricing type object for this group
+/**
+ * Creates lists of services grouped by pricing type
+ * 
+ * @public
+ * @returns {Array} ServiceLists for each group
+*/
+ServiceListGroup.prototype.serviceLists = function() {
+    var groups = groupBy(this.services, function(service) {
+              return service.pricingTypeID();
+         }, this.defaultGroups());
+
+    return Object.keys(groups).map(function(pricingTypeID) {
+        var pricingType = this.pricingTypesByID()[pricingTypeID],
+            listTitle = this.listTitle({pricingType: pricingType});
+
+        return new ServiceList({
+                services: groups[pricingTypeID],
+                title: listTitle,
+                newButtons: this.newButtons({pricingType: pricingType})
+            });
+    }.bind(this));
+};
+
+/**
+ * Called for each list created by serviceLists. Implement this function
+ * in a sub-object to override the default behavior
+ * 
+ * @protected
+ * @param {Object} options
+ * @param {PricingType} options.pricingType for the list corresponding to this title
+ * @returns the title for the list
 */
 ServiceListGroup.prototype.listTitle = function(options) {
     return options.pricingType.pluralName() || 'Services';
 };
 
+/**
+ * Called for each button for each list created by serviceLists. Implement this function
+ * in a sub-object to override the default behavior
+ * 
+ * @protected
+ * @param {Object} options
+ * @param {PricingType} options.pricingType pricing type for the list
+ * @returns {string} the label for each new button added to the list
+*/
 ServiceListGroup.prototype.newButtonLabel = function(options) {
     return options.pricingType.addNewLabel();
 };
 
-ServiceListGroup.prototype.defaultGroups = function() {
-    return this.defaultPricingTypes.map(function(type) { return type.pricingTypeID(); });
-};
-
-ServiceListGroup.prototype.pricingTypesByID = function() {
-    return mapBy(this.pricingTypes, function(type) { return type.pricingTypeID(); });
-};
-
-ServiceListGroup.prototype.groupingFunction = function(service) {
-    return service.pricingTypeID();
-};
-
-ServiceListGroup.prototype.groupServices = function() {
-    return groupBy(this.services, this.groupingFunction, this.defaultGroups());
-};
-
+/**
+ * Called for each list created by serviceLists. Implement this function
+ * in a sub-object to override the default behavior
+ * 
+ * @protected
+ * @param {Object} options
+ * @param {PricingType} options.pricingType for the list
+ * @returns {Array} ServiceList.NewButton for each new button in the list
+ */
 ServiceListGroup.prototype.newButtons = function(options) {
     var newButtonOptions = {
-            label: options.label,
-            pricingTypeID: options.pricingTypeID,
+            label: this.newButtonLabel({pricingType: options.pricingType}),
+            pricingTypeID: options.pricingType.pricingTypeID(),
             isClientSpecific: this.isClientSpecific
         };
 
     return [new ServiceList.NewButton(newButtonOptions)];
 };
 
-/*
-    Generate ServiceLists
+/**
+ * @private
 */
-ServiceListGroup.prototype.serviceLists = function() {
-    var groups = this.groupServices();
+ServiceListGroup.prototype.defaultGroups = function() {
+    return this.defaultPricingTypes.map(function(type) { return type.pricingTypeID(); });
+};
 
-    return Object.keys(groups).map(function(pricingTypeID) {
-        var pricingType = this.pricingTypesByID()[pricingTypeID],
-            listTitle = this.listTitle({pricingType: pricingType}),
-            newButtonLabel = this.newButtonLabel({pricingType: pricingType});
-
-        return new ServiceList({
-                services: groups[pricingTypeID],
-                title: listTitle,
-                newButtons: this.newButtons({label: newButtonLabel, pricingTypeID: pricingTypeID})
-            });
-    }.bind(this));
+/**
+ * @private
+*/
+ServiceListGroup.prototype.pricingTypesByID = function() {
+    return mapBy(this.pricingTypes, function(type) { return type.pricingTypeID(); });
 };
 
 module.exports = ServiceListGroup;

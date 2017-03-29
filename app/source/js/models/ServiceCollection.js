@@ -1,8 +1,10 @@
+/** @module models/ServiceCollection */
 'use strict';
 
-/*
-
-*/
+/**
+ * Creates a collection from array of services
+ * @class {Array} services to include in the collection
+ */
 var ServiceCollection = function(services) {
     this.services = services;
 };
