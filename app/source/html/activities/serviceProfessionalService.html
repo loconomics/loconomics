@@ -35,7 +35,6 @@
                     <h2 data-bind="visible: title.length > 0">
                         <span data-bind="text: title"></span>
                     </h2>
-
                     <div data-bind="foreach: serviceLists()">
                         <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
                             <span data-bind="text: title"></span>
@@ -77,6 +76,9 @@
                         </ul>
                     </div>
                 <!-- /ko -->
+                <p class="isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="text-secondary" role="button" title="Manage clients">First, select a client.</a>
+                </p>
+
                 <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="event: { click: endSelection }, text: submitText, disable: isLocked">Save</button>
                 </div>

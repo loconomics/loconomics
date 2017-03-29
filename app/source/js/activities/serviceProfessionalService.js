@@ -279,6 +279,15 @@ function ViewModel(app) {
         return (this.client() && this.client().fullName()) || '';
     }, this);
 
+    this.clientManagerLink = ko.pureComputed(function() {
+        if (this.client() || this.isSelectionMode() || app.model.onboarding.inProgress()) {
+            return null;
+        }
+        else {
+            return '#!/clients';
+        }
+    }, this);
+
     this.jobTitleName = ko.pureComputed(function() {
         return (this.jobTitle() && this.jobTitle().singularName()) || '';
     }, this);
