@@ -26,6 +26,11 @@
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
+
+                <h1 data-bind="visible: $root.isSelectionMode">
+                    What's included in <span data-bind="text: $root.clientName"></span>'s appointment?
+                </h1>
+
                 <!-- ko foreach: serviceListGroups -->
                     <h2 data-bind="visible: title.length > 0">
                         <span data-bind="text: title"></span>
