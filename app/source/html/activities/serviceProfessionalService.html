@@ -27,8 +27,12 @@
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <!-- ko foreach: serviceListGroups -->
+                    <h2 data-bind="visible: title.length > 0">
+                        <span data-bind="text: title"></span>
+                    </h2>
+
                     <div data-bind="foreach: serviceLists()">
-                        <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode()">
+                        <h2 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
                             <span data-bind="text: title"></span>
                         </h2>
                         <ul class="TilesList TilesList--openEnd" data-bind="">

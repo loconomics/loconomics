@@ -55,30 +55,33 @@ ProviderBookedServicesListGroup._inherits(ServiceListGroup);
 
 var ProviderBookedClientServicesListGroup = function(options) {
     this.clientName = options.clientName;
-    ServiceListGroup.call(this, options);
+    this.pricingTypes = options.pricingTypes;
+    this.services = options.services;
+
+    this.title = 'Offerings only available to ' + options.clientName;
 };
 
-ProviderBookedClientServicesListGroup.prototype.listTitle = function(options) {
-    var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services';
+ProviderBookedClientServicesListGroup.prototype.newButtons = function() {
+    var clientName = this.clientName;
 
-    return 'Select From ' + pricingTypeLabel + ' Just For ' + this.clientName;
-};
-
-ProviderBookedClientServicesListGroup.prototype.newButtonLabel = function(options) {
-    return options.pricingType.addNewLabel() + ' just for ' + this.clientName;
-};
-
-ProviderBookedClientServicesListGroup.prototype.newButtons = function(options) {
     return this.pricingTypes.map(function(pricingType) {
         return new ServiceList.NewButton({
-                label: options.label,
+                label: pricingType.addNewLabel() + ' just for ' + clientName,
                 pricingTypeID: pricingType.pricingTypeID(),
-                isClientSpecific: this.isClientSpecific
+                isClientSpecific: true
             });
     });
 };
 
-ProviderBookedClientServicesListGroup._inherits(ServiceListGroup);
+ProviderBookedClientServicesListGroup.prototype.serviceLists = function() {
+    var serviceList = new ServiceList({
+            services: this.services,
+            title: '',
+            newButtons: this.newButtons()
+        });
+
+    return [serviceList];
+};
 
 Factories.providerBookedServices = function(services, pricingTypes, clientName) {
     services = new ServiceCollection(services);
@@ -87,14 +90,14 @@ Factories.providerBookedServices = function(services, pricingTypes, clientName) 
 
     var clientListGroup = new ProviderBookedClientServicesListGroup($.extend(options, {
             services: services.clientSpecificServices(),
-            isClientSpecific: true,
             clientName: clientName
         }));
 
     var publicListGroup = new ProviderBookedServicesListGroup($.extend(options, {
             services: services.publicServices(),
             isClientSpecific: false,
-            defaultPricingTypes: pricingTypes  // create a list for pricing type even if it has no services
+            defaultPricingTypes: pricingTypes,  // create a list for pricing type even if it has no services
+            title: 'Offerings Available to Everyone'
         }));
 
     return [clientListGroup, publicListGroup];
