@@ -41,9 +41,15 @@ function ServiceProfessionalServiceViewModel(app) {
         this.preSelectedServices([]);
     };
 
-    // Grouped list of services:
-    //
-    // serviceListGroupsFactory can be replaced by implementing view models to group services differently
+    /**
+      * Implementations of this view model should specify a factory function
+      * for creating list groups from services depending on the desired behavior
+      * 
+      * @see {@link viewmodels/ServiceListGroupFactories}
+      * @function
+      * @abstract
+      * @returns an array of viewmodels/ServiceListGroup objects
+      */
     this.serviceListGroupsFactory = function() {
         return [];
     };

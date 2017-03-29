@@ -12,10 +12,11 @@ var groupBy = require('../utils/groupBy'),
  * of services grouped by pricing type. By default, each list includes a button
  * to create a new service of that pricing type.
  * 
- * Default behavior can be changed by overriding the following functions:
+ * Using the template pattern, default behavior can be changed by
+ * implementing the following functions:
  *   listTitle, newButtonLabel, newButtons
  *
- * The interface implented by this object:
+ * The interface implented by this view model for templates:
  *   title property
  *   serviceLists function
  * 
@@ -23,11 +24,14 @@ var groupBy = require('../utils/groupBy'),
  * @param {Object} options
  * @param {string} options.title (optional) title of the group of lists
  * @param {Array} options.services (optional) array of services to group
- * @param {Array} options.pricingTypes all pricing types referenced by any services in option.services
- * @param {Array} options.defaultPricingTypes (optional) pricing types for which there should be a list regardless of whether there are services of that type in the services collection
- * @param {boolean} options.isClientSpecific true if services in this collection are specific to a client
+ * @param {Array} options.pricingTypes all pricing types referenced by any 
+ *                services in option.services
+ * @param {Array} options.defaultPricingTypes (optional) pricing types 
+ *                for which there should be a list regardless of whether there 
+ *                are services of that type in the services collection
+ * @param {boolean} options.isClientSpecific true if services in this
+ *                  collection are specific to a client
  */
-
 var ServiceListGroup = function(options) {
     var optionsDefaults = {
         title: '',
