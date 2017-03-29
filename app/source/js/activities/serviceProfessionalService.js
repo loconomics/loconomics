@@ -78,6 +78,14 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
         }.bind(this)
     });
 
+    this.registerHandler({
+        target: this.viewModel.client,
+        handler: function() {
+            // Update navbar (may include the client name)
+            this.updateNavBarState();
+        }.bind(this)
+    });
+
     // Go back with the selected pricing when triggered in the form/view
     this.viewModel.returnSelected = function(pricing, jobTitleID) {
         // Pass the selected client in the info
