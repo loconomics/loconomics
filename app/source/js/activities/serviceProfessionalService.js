@@ -8,7 +8,8 @@ var ko = require('knockout'),
     ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService'),
     $ = require('jquery'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
-    Route = require('../utils/Router').Route;
+    Route = require('../utils/Router').Route,
+    serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -74,6 +75,14 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
                     app.modals.showError({ title: 'Unable to load client.', error: error });
                 });
             }
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.client,
+        handler: function() {
+            // Update navbar (may include the client name)
+            this.updateNavBarState();
         }.bind(this)
     });
 
@@ -217,11 +226,9 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
+    // jshint maxstatements:100
     // ViewModel has all of the properties of a ServiceProfessionalServiceViewModel
     ServiceProfessionalServiceViewModel.call(this, app);
-
-    // Always load empty pricing types, regardless of view model mode
-    this.loadEmptyPricingTypes(true);
 
     this.clientID = ko.observable(null);
     this.client = ko.observable(null);
@@ -246,8 +253,17 @@ function ViewModel(app) {
         var clientID = this.clientID(),
             jobTitleID = this.jobTitleID(),
             model = app.model.serviceProfessionalServices,
-            services = clientID ? model.getClientSpecificServicesForJobTitle(clientID, jobTitleID) :
-                                  model.getList(jobTitleID);
+            services = null;
+
+        if(this.isSelectionMode()) {
+            services = model.getServicesBookableByProvider(clientID, jobTitleID);
+        }
+        else if (clientID) {
+            services = model.getClientSpecificServicesForJobTitle(clientID, jobTitleID);
+        }
+        else {
+            services = model.getList(jobTitleID);
+        }
 
         return this.loadData(null, jobTitleID, services);
     }.bind(this);
@@ -255,7 +271,18 @@ function ViewModel(app) {
     this.clientName = ko.pureComputed(function() {
         return (this.client() && this.client().firstName()) || '';
     }, this);
-  
+
+    this.serviceListGroupsFactory = function(services, pricingTypes) {
+        var factories = serviceListGroupFactories,
+            listGroupsFactory = this.isSelectionMode() ? factories.providerBookedServices :
+                                                         factories.providerManagedServices,
+            isClientSpecific = !!this.clientID();
+
+        services = this.isAdditionMode() ? [] : services;
+
+        return listGroupsFactory(services, pricingTypes, this.clientName(), isClientSpecific);
+    };
+
     this.clientFullName = ko.pureComputed(function() {
         return (this.client() && this.client().fullName()) || '';
     }, this);
@@ -298,8 +325,8 @@ function ViewModel(app) {
 
     var baseNewServiceURL = this.newServiceURL.bind(this);
 
-    this.newServiceURL = function(jobTitleID, pricingTypeID) {
-        if(this.client()) {
+    this.newServiceURL = function(jobTitleID, pricingTypeID, isClientSpecific) {
+        if(isClientSpecific) {
             return '#!serviceProfessionalServiceEditor/' + jobTitleID + '/pricingType/' + pricingTypeID + '/client/' + this.clientID() + '/new';
         }
         else {

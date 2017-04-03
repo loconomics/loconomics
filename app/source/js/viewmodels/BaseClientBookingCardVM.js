@@ -9,8 +9,7 @@ var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 var PublicUser = require('../models/PublicUser');
 var ModelVersion = require('../utils/ModelVersion');
-var ClientBookingServicesPresenter = require('../viewmodels/presenters/ClientBookingServicesPresenter');
-
+var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -35,7 +34,7 @@ function BaseClientBookingCardVM(app) {
     this.serviceProfessionalServices = new ServiceProfessionalServiceVM(app);
     this.serviceProfessionalServices.isSelectionMode(true);
     this.serviceProfessionalServices.preSelectedServices([]);
-    this.serviceProfessionalServices.groupServices = ClientBookingServicesPresenter.groupServices;
+    this.serviceProfessionalServices.serviceListGroupsFactory = serviceListGroupFactories.clientBookedServices;
     /// Addresses
     this.serviceAddresses = new ServiceAddresses();
     this.serviceAddresses.isSelectionMode(true);

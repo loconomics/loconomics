@@ -67,5 +67,9 @@ exports.create = function create(appModel) {
         });
     };
 
+    api.getServicesBookableByProvider = function(clientID, jobTitleID) {
+        return appModel.rest.get(restUrlPrefix + jobTitleID + '/client/' + clientID);
+    };
+
     return api;
 };
