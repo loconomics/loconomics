@@ -9,14 +9,21 @@ namespace LcRest
     {
         #region Fields
         public int userID;
+        public string subscriptionID;
         public string paymentPlan;
         public string paymentMethod;
-        public DateTime? paymentPlanLastChangedDate;
-        public DateTime? nextPaymentDueDate;
+        public DateTimeOffset paymentPlanLastChangedDate;
+        public DateTimeOffset? nextPaymentDueDate;
         public decimal? nextPaymentAmount;
-        public DateTime? lastPaymentDate;
-        public decimal? lastPaymentAmount;
-        public decimal? totalPastDueAmount;
+        public DateTimeOffset lastPaymentDate;
+        public decimal lastPaymentAmount;
+        public decimal totalPastDueAmount;
+        public DateTimeOffset firstBillingDate;
+        public DateTimeOffset? subscriptionEndDate;
+        public string paymentMethodToken;
+        public DateTimeOffset paymentExpiryDate;
+        public string planStatus;
+        public int daysPastDue;
         #endregion
 
         #region Instance
@@ -26,7 +33,7 @@ namespace LcRest
             return new UserPaymentPlan
             {
                 userID = record.userID,
-
+                subscriptionID = record.subscriptionID,
                 paymentPlan = record.paymentPlan,
                 paymentMethod = record.paymentMethod,
                 paymentPlanLastChangedDate = record.paymentPlanLastChangedDate,
@@ -34,7 +41,13 @@ namespace LcRest
                 nextPaymentAmount = record.nextPaymentAmount,
                 lastPaymentDate = record.lastPaymentDate,
                 lastPaymentAmount = record.lastPaymentAmount,
-                totalPastDueAmount = record.totalPastDueAmount
+                totalPastDueAmount = record.totalPastDueAmount,
+                firstBillingDate = record.firstBillingDate,
+                subscriptionEndDate = record.subscriptionEndDate,
+                paymentMethodToken = record.paymentMethodToken,
+                paymentExpiryDate = record.paymentExpiryDate,
+                planStatus = record.planStatus,
+                daysPastDue = record.daysPastDue
             };
         }
         #endregion
@@ -43,6 +56,7 @@ namespace LcRest
         const string sqlGetItem = @"
             SELECT
                 o.userID,
+                o.subscriptionID;
                 o.paymentPlan,
                 o.paymentMethod,
                 o.paymentPlanLastChangedDate,
@@ -50,7 +64,13 @@ namespace LcRest
                 o.nextPaymentAmount,
                 o.lastPaymentDate,
                 o.lastPaymentAmount,
-                o.totalPastDueAmount
+                o.totalPastDueAmount,
+                o.firstBillingDate,
+                o.subscriptionEndDate,
+                o.paymentMethodToken,
+                o.paymentExpiryDate,
+                o.planStatus,
+                o.daysPastDue
             FROM    UserPaymentPlan As O
             WHERE   O.userID = @0
         ";
@@ -63,23 +83,55 @@ namespace LcRest
         }
         #endregion
 
-        #region Update
+        #region Persist on DB
+        /// <summary>
+        /// Insert or Update SQL.
+        /// Insert allows to set all fields, while update prevents from changes to:
+        /// - userID
+        /// - subscriptionID?
+        /// - firstBillingDate
+        /// - TODO To complete docs and Update query
+        /// </summary>
         const string sqlSet = @"
             UPDATE UserPaymentPlan SET
-                paymentPlan = @1,
-                paymentMethod = @2,
-                paymentPlanLastChangedDate = @3,
-                NextPaymentDueDate = @4,
-                NextPaymentAmount = @5,
-                LastPaymentDate = @6,
-                LastPaymentAmount = @7,
-                TotalPastDueAmount = @8
+                paymentPlan = @2,
+                paymentMethod = @3,
+                paymentPlanLastChangedDate = @4,
+                NextPaymentDueDate = @5,
+                NextPaymentAmount = @6,
+                LastPaymentDate = @7,
+                LastPaymentAmount = @8,
+                firstBillingDate = @9,
+                SubscriptionEndDate = @10,
+                paymentMethodToken = @11,
+                paymentExpiryDate = @12,
+                planStatus = @13,
+                TotalPastDueAmount = @14,
+                daysPastDue = @15
             WHERE
                 UserID = @0
 
             IF @@rowcount = 0 THEN BEGIN
-                INSERT INTO UserPaymentPlan VALUES
-                @0, @1, @2, @3, @4, @5, @6, @7, @8
+                INSERT INTO UserPaymentPlan (
+                    userID, subscriptionID,
+                    paymentPlan, paymentMethod, paymentPlanLastChangedDate,
+                    nextPaymentDueDate, nextPaymentAmount,
+                    lastPaymentDate, lastPaymentAmount,
+                    firstBillingDate,
+                    subscriptionEndDate,
+                    paymentMethodToken, paymentExpiryDate,
+                    planStatus,
+                    totalPastDueAmount, daysPastDue
+                ) VALUES
+                @0, @1,
+                @2, @3, @4,
+                @5, @6,
+                @7, @8,
+                @9,
+                @10,
+                @11, @12,
+                @13,
+                @14, @15
             END
         ";
         public static void Set(UserPaymentPlan data)
@@ -88,6 +140,7 @@ namespace LcRest
             {
                 db.Execute(sqlSet,
                     data.userID,
+                    data.subscriptionID,
                     data.paymentPlan,
                     data.paymentMethod,
                     data.paymentPlanLastChangedDate,
@@ -95,10 +148,65 @@ namespace LcRest
                     data.nextPaymentAmount,
                     data.lastPaymentDate,
                     data.lastPaymentAmount,
-                    data.totalPastDueAmount
+                    data.firstBillingDate,
+                    data.subscriptionEndDate,
+                    data.paymentMethodToken,
+                    data.paymentExpiryDate,
+                    data.planStatus,
+                    data.totalPastDueAmount,
+                    data.daysPastDue
                 );
             }
         }
+        #endregion
+
+        #region Manage plan/subscription API
+        #region Internal DB utils
+        private static DateTimeOffset GetUserTrialEndDate(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.QueryValue("SELECT TrialEndDate FROM users WHERE userID=@0", userID) ?? DateTimeOffset.MaxValue;
+            }
+        }
+
+        private static string GetUserSubscriptionID(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.QueryValue("SELECT SubscriptionID FROM UserPaymentPlan WHERE userID=@0", userID);
+            }
+        }
+        #endregion
+
+        public static void CreateSubscription(int userID, LcPayment.Membership.SubscriptionPlan plan, string paymentMethodToken)
+        {
+            // Start creating the subscription at the payment gateway
+            var trialEndDate = GetUserTrialEndDate(userID);
+            var paymentPlan = new LcPayment.Membership();
+            var subscription = paymentPlan.CreateSubscription(userID, plan, paymentMethodToken, trialEndDate);
+
+            // Prepare data
+            // TODO
+
+            // Prepare object
+            var userPlan = new UserPaymentPlan()
+            {
+                userID = userID,
+                paymentPlan = plan.ToString(),
+                paymentMethodToken = paymentMethodToken,
+                paymentMethod = ""
+            };
+
+            // Persist
+            Set(userPlan);
+        }
+
+        /*
+           Reading payment subscription:
+           var subscriptionID = GetUserSubscriptionID(userID);
+           LcPayment.Membership.GetUserSubscription(subscriptionID);
+        */
         #endregion
     }
 }
