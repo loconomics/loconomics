@@ -53,8 +53,8 @@ var facebookMe = function() {
     }
 };
 
-var pwdRequirementsLabel = 'Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.';
-var pwdRegex = /(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/;
+var PasswordValidator = require('../utils/PasswordValidator');
+var pwdValidator = new PasswordValidator();
 
 function SignupVM(app) {
     //jshint maxstatements:55
@@ -116,7 +116,7 @@ if (!testResults.reduce((ok, r) => ok ? r : false))
 else
     console.info('Success');
 */
-    
+
     this.isPhoneValid = ko.pureComputed(function() {
         var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
         return phoneRegex.test(this.phone());
@@ -133,7 +133,7 @@ else
     }, this);
 
     this.isPasswordValid = ko.pureComputed(function() {
-        return pwdRegex.test(this.password());
+        return pwdValidator.test(this.password());
     }, this);
 
     this.signupError = ko.observable('');
@@ -285,7 +285,7 @@ else
 
     this.passwordRequirements = ko.pureComputed(function() {
         var pwd = this.password();
-        return pwdRegex.test(pwd) ? '' : pwdRequirementsLabel;
+        return pwdValidator.test(pwd) ? '' : pwdValidator.errorMessage;
     }, this);
 }
 
