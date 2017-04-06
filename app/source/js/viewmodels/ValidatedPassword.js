@@ -9,60 +9,58 @@ var ko = require('knockout'),
 
 function ValidatedPassword() {
     this.password = new Field();
-
-    this.showPasswordValidation = ko.observable(false);
-
-    this.showPasswordRequirementsLink = ko.observable(true);
+    this.showRequirements = ko.observable(false);
+    this.showRequirementsLink = ko.observable(true);
 
     this.reset = function() {
-        this.showPasswordValidation(false);
-        this.showPasswordRequirementsLink(true);
+        this.showRequirements(false);
+        this.showRequirementsLink(true);
         this.password('');
     };
 
-    this.showPasswordRequirements = function() {
-        this.showPasswordValidation(true);
+    this.requirementsLinkClick = function() {
+        this.showRequirements(true);
     }.bind(this);
 
-    this.passwordFocus = function() {
-        this.showPasswordValidation(true);
-        this.showPasswordRequirementsLink(false);
+    this.fieldFocus = function() {
+        this.showRequirements(true);
+        this.showRequirementsLink(false);
     }.bind(this);
 
-    this.passwordValidator = ko.pureComputed(function() {
+    this.validator = ko.pureComputed(function() {
         return new PasswordValidator(this.password());
     }, this);
 
     this.isPasswordValid = ko.pureComputed(function() {
-        return this.passwordValidator().isValid();
+        return this.validator().isValid();
     }, this);
 
-    this.passwordLengthValid = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectLength();
+    this.isLengthValid = ko.pureComputed(function() {
+        return this.validator().isCorrectLength();
     }, this);
 
-    this.passwordCharacterKindsValid = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectCharacterKinds();
+    this.isCharacterKindsValid = ko.pureComputed(function() {
+        return this.validator().isCorrectCharacterKinds();
     }, this);
 
-    this.passwordUsesSymbol = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectSymbol();
+    this.usesSymbol = ko.pureComputed(function() {
+        return this.validator().isCorrectSymbol();
     }, this);
 
-    this.passwordUsesUpper = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectUpper();
+    this.usesUpper = ko.pureComputed(function() {
+        return this.validator().isCorrectUpper();
     }, this);
 
-    this.passwordUsesLower = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectLower();
+    this.usesLower = ko.pureComputed(function() {
+        return this.validator().isCorrectLower();
     }, this);
 
-    this.passwordUsesNumber = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectNumber();
+    this.usesNumber = ko.pureComputed(function() {
+        return this.validator().isCorrectNumber();
     }, this);
 
-    this.passwordCharacterKindsText = ko.pureComputed(function() {
-        var count = this.passwordValidator().isCorrectCharacterKindsCount(),
+    this.characterKindsLabel = ko.pureComputed(function() {
+        var count = this.validator().isCorrectCharacterKindsCount(),
             labels = [
                     'Includes at least 3 kinds of characters:',
                     'Includes at least 2 more kinds of characters:',
