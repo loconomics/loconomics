@@ -33,7 +33,6 @@ module.exports = {
     'account': require('./activities/account'),
     'inbox': require('./activities/inbox'),
     'conversation': require('./activities/conversation'),
-    'jobtitles': require('./activities/jobtitles'),
     'help': require('./activities/help'),
     'feedbackForm': require('./activities/feedbackForm'),
     'contactForm': require('./activities/contactForm'),
