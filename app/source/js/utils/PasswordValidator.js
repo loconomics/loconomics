@@ -2,7 +2,7 @@
  * Lets validate a text against our password requirements.
  */
 'use strict';
-var DEFAULT_ERROR = 'Your password must be at least 8 characters long, have at least 3 out of these 4 requirements: one lowercase letter, one uppercase letter, one numeric digit and one symbol (~!@#$%^*&;?.+_).';
+
 var rLength = /.{8,}/;
 var rSymbol = /[^\w\s]/;
 var rNumber = /[0-9]/;
@@ -13,48 +13,88 @@ var MIN_REQUIREMENTS = 3;
 /**
  * Creates a password validator
  * @class
- * @param {string} [msg=DEFAULT_ERROR] Error message when validation fails
+ * @param {string} password the password to validate
  */
-function PasswordValidator(msg) {
-
-    var defaultErrorMessage = msg || DEFAULT_ERROR;
-
-    /**
-     * Error message from last tested value
-     */
-    this.errorMessage = null;
-
-    /**
-     * Latest tested value
-     */
-    this.latestValue = null;
-
+function PasswordValidator(password) {
     /**
      * Checks if the value is valid. It sets instance properties with latest
      * value and resulting errorMessage
      * @param {string} value Text to be validated
      * @returns {boolean} True if valid.
      */
-    this.test = function(value) {
-        // cache
-        if (value === this.latestValue) return !!this.errorMessage;
-        // remember
-        this.latestValue = value;
+    var test = function(value) {
         // check
         this.correctLength = rLength.test(value);
         this.correctSymbol = rSymbol.test(value);
         this.correctNumber = rNumber.test(value);
         this.correctUpper = rUpper.test(value);
         this.correctLower = rLower.test(value);
+
         // Lenght is ever required, others requirements are optional if
         // almost a minimum amount are met.
-        var count = this.correctSymbol + this.correctNumber +
+        this.correctCharacterKindsCount = this.correctSymbol + this.correctNumber +
             this.correctUpper + this.correctLower;
-        var valid = this.correctLength && count >= MIN_REQUIREMENTS;
-        // set error
-        this.errorMessage = valid ? null : defaultErrorMessage;
-        return valid;
-    };
+
+        this.correctCharacterKinds = this.correctCharacterKindsCount >= MIN_REQUIREMENTS;
+    }.bind(this);
+
+    test(password || '');
 }
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectLength = function() {
+    return this.correctLength;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectSymbol = function() {
+    return this.correctSymbol;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectNumber = function() {
+    return this.correctNumber;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectUpper = function() {
+    return this.correctUpper;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectLower = function() {
+    return this.correctLower;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectCharacterKindsCount = function() {
+    return this.correctCharacterKindsCount;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isCorrectCharacterKinds = function() {
+    return this.correctCharacterKinds;
+};
+
+/**
+ * @public
+ */
+PasswordValidator.prototype.isValid = function() {
+    return this.isCorrectLength() && this.isCorrectCharacterKinds();
+};
 
 module.exports = PasswordValidator;

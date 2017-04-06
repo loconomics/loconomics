@@ -54,7 +54,6 @@ var facebookMe = function() {
 };
 
 var PasswordValidator = require('../utils/PasswordValidator');
-var pwdValidator = new PasswordValidator();
 
 function SignupVM(app) {
     //jshint maxstatements:55
@@ -132,10 +131,6 @@ else
         return referralCodeRegex.test(this.referralCode());
     }, this);
 
-    this.isPasswordValid = ko.pureComputed(function() {
-        return pwdValidator.test(this.password());
-    }, this);
-
     this.signupError = ko.observable('');
 
     this.isSigningUp = ko.observable(false);
@@ -144,10 +139,16 @@ else
 
     this.emailIsLocked = ko.observable(false);
 
+    this.showPasswordValidation = ko.observable(false);
+
+    this.showPasswordRequirementsLink = ko.observable(true);
+
     // A static utility (currently only used to conditionally show/hide DownloadApp links)
     this.inApp = ko.observable(!!window.cordova);
 
     this.reset = function() {
+        this.showPasswordValidation(false);
+        this.showPasswordRequirementsLink(true);
         this.confirmationCode(null);
         this.firstName('');
         this.lastName('');
@@ -283,9 +284,56 @@ else
             });
     };
 
-    this.passwordRequirements = ko.pureComputed(function() {
-        var pwd = this.password();
-        return pwdValidator.test(pwd) ? '' : pwdValidator.errorMessage;
+    this.showPasswordRequirements = function() {
+        this.showPasswordValidation(true);
+    }.bind(this);
+
+    this.passwordFocus = function() {
+        this.showPasswordValidation(true);
+        this.showPasswordRequirementsLink(false);
+    }.bind(this);
+
+    this.passwordValidator = ko.pureComputed(function() {
+        return new PasswordValidator(this.password());
+    }, this);
+
+    this.isPasswordValid = ko.pureComputed(function() {
+        return this.passwordValidator().isValid();
+    }, this);
+
+    this.passwordLengthValid = ko.pureComputed(function() {
+        return this.passwordValidator().isCorrectLength();
+    }, this);
+
+    this.passwordCharacterKindsValid = ko.pureComputed(function() {
+        return this.passwordValidator().isCorrectCharacterKinds();
+    }, this);
+
+    this.passwordUsesSymbol = ko.pureComputed(function() {
+        return this.passwordValidator().isCorrectSymbol();
+    }, this);
+
+    this.passwordUsesUpper = ko.pureComputed(function() {
+        return this.passwordValidator().isCorrectUpper();
+    }, this);
+
+    this.passwordUsesLower = ko.pureComputed(function() {
+        return this.passwordValidator().isCorrectLower();
+    }, this);
+
+    this.passwordUsesNumber = ko.pureComputed(function() {
+        return this.passwordValidator().isCorrectNumber();
+    }, this);
+
+    this.passwordCharacterKindsText = ko.pureComputed(function() {
+        var count = this.passwordValidator().isCorrectCharacterKindsCount(),
+            labels = [
+                    'Includes at least 3 kinds of characters:',
+                    'Includes at least 2 more kinds of characters:',
+                    'Includes at least 1 more kind of character:',
+                    'Includes at least 3 kinds of characters'
+                ];
+        return labels[Math.min(count, labels.length - 1)];
     }, this);
 }
 

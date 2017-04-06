@@ -107,4 +107,51 @@
             color: $brand-success;
         }
     }
+
+    .form-help-cue {
+        cursor: pointer
+        float: right
+        font-size; .825em
+
+        .icon {
+            color: $gray
+            padding-left: .25em
+        }
+    }
+
+    .PasswordValidation {
+        li {
+          line-height: 1.5em
+        }
+
+        .PasswordValidation-list {
+            .PasswordValidation-requirement {
+                .icon {
+                    color: $gray-lighter
+                    padding-left: 0
+                }
+
+                ul {
+                    padding-left: .5em
+                    list-style-type: none
+
+                    .PasswordValidation-requirement-characterClass {}
+
+                    .PasswordValidation-requirement-characterClass--used {
+                        color: $gray-lighter
+                        text-decoration: line-through
+                    }
+                }
+            }
+            .PasswordValidation-requirement--valid {
+                .icon {
+                    color: $brand-success
+                }
+
+                ul {
+                    display: none
+                }
+            }
+        }
+    }
 }
