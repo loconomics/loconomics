@@ -229,9 +229,9 @@
             </li>
             <li><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'preferred'), css: { active: observerSelected('preferred') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                <div class="Tile-content">
-                    <div data-bind="visible: item().startTime(), text: item().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                    <div data-bind="visible: item().startTime(), text: item().displayedTimeRange()"></div>
+                <div class="Tile-content" data-bind="with: item().sourceBooking().serviceDate">
+                    <div data-bind="visible: startTime, text: startTime, format: { type: 'datetime', format: 'MMM Do' }"></div>
+                    <div data-bind="visible: startTime, text: displayedTimeRange"></div>
                 </div>
                 <div class="Tile-addon" aria-hidden="true">
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
@@ -240,9 +240,9 @@
             </button></li>
             <li data-bind="if: item().sourceBooking().alternativeDate1()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative1'), css: { active: observerSelected('alternative1') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                <div class="Tile-content">
-                    <div data-bind="visible: item().sourceBooking().alternativeDate1().startTime(), text: item().sourceBooking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                    <div data-bind="visible: item().sourceBooking().alternativeDate1().startTime(), text: item().sourceBooking().alternativeDate1().displayedTimeRange()"></div>
+                <div class="Tile-content" data-bind="with: item().sourceBooking().alternativeDate1">
+                    <div data-bind="visible: startTime, text: startTime, format: { type: 'datetime', format: 'MMM Do' }"></div>
+                    <div data-bind="visible: startTime, text: displayedTimeRange"></div>
                 </div>
                 <div class="Tile-addon" aria-hidden="true">
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
@@ -251,9 +251,9 @@
             </button></li>
             <li data-bind="if: item().sourceBooking().alternativeDate2()"><button type="button" class="ItemAddonTile" data-bind="click: setSelectedRequestDateType.bind(null, 'alternative2'), css: { active: observerSelected('alternative2') }">
                 <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                <div class="Tile-content">
-                    <div data-bind="visible: item().sourceBooking().alternativeDate2().startTime(), text: item().sourceBooking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'MMM Do' }"></div>
-                    <div data-bind="visible: item().sourceBooking().alternativeDate2().startTime(), text: item().sourceBooking().alternativeDate2().displayedTimeRange()"></div>
+                <div class="Tile-content" data-bind="with: item().sourceBooking().alternativeDate2">
+                    <div data-bind="visible: startTime, text: startTime, format: { type: 'datetime', format: 'MMM Do' }"></div>
+                    <div data-bind="visible: startTime, text: displayedTimeRange"></div>
                 </div>
                 <div class="Tile-addon" aria-hidden="true">
                     <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"

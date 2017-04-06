@@ -6,14 +6,16 @@
 
     DateTime start = DateTime.Now;
     dynamic data;
-    
-    try {
+
+    try
+    {
         data = null;
     }
-    catch (Exception ex) {
+    catch (Exception ex)
+    {
         data = ex;
     }
 }
-@(data)
+@ObjectInfo.Print(data)
 
 PROCESS DURATION: @((DateTime.Now - start).ToString())

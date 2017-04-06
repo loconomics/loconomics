@@ -204,7 +204,7 @@ public static class LcAuthHelper
     /// <returns></returns>
     public static LoginResult QuickSignup(WebPage page)
     {
-        page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
+        page.Validation.Add("password", new PasswordValidator());
         page.Validation.RequireField("email", "You must specify an email.");
         // Username is an email currently, so need to be restricted
         page.Validation.Add("email",
@@ -290,7 +290,7 @@ public static class LcAuthHelper
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
             page.Validation.RequireField("password", "You must specify a password.");
-            page.Validation.Add("password", Validator.Regex(LcAuth.ValidPasswordRegex, LcAuth.InvalidPasswordErrorMessage));
+            page.Validation.Add("password", new PasswordValidator());
         }
 
         if (useFacebookConnect)

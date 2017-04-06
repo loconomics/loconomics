@@ -149,7 +149,9 @@ function ViewModel(app) {
             // Is implicit at reset: this.isWorking(false);
             this.reset();
             this.isWorking(false);
-            
+
+            app.model.onboarding.setStep(app.model.user().onboardingStep());
+
             if (app.model.onboarding.goIfEnabled())
                 return;
             else if (this.redirectUrl())

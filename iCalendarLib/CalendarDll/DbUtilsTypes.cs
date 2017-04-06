@@ -82,7 +82,6 @@ namespace CalendarDll
                 var freeOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.FREE); //free
                 var busyOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.BUSY); //busy
                 var tentOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.TENTATIVE); //tentative
-                //var tranOc = ocurrences.FirstOrDefault(oc => ((iEvent)oc.Source).AvailabilityID == (Int32)AvailabilityTypes.TRANSPARENT); //Transparent
 
                 /*
                  take the occurrences in order of status, on top always, busy occurrence
@@ -97,12 +96,10 @@ namespace CalendarDll
                  * will not being analized when a higher is found (this happens per each slot, and there are a lot)
                  * */
 
-                if (busyOc.Source != null) ocurrence = busyOc;
-                else if (unavOc.Source != null) ocurrence = unavOc;
-                else if (tentOc.Source != null) ocurrence = tentOc;
-                else if (freeOc.Source != null) ocurrence = freeOc;
-
-                //if (tranOc.Source != null) ocurrence = tranOc;
+                if (busyOc != null && busyOc.Source != null) ocurrence = busyOc;
+                else if (unavOc != null && unavOc.Source != null) ocurrence = unavOc;
+                else if (tentOc != null && tentOc.Source != null) ocurrence = tentOc;
+                else if (freeOc != null && freeOc.Source != null) ocurrence = freeOc;
             }
             else ocurrence = ocurrences.FirstOrDefault();
 

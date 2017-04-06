@@ -20,6 +20,9 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 [Chrome Developer Tools](https://developer.chrome.com/devtools)
 
+![browserstack1](https://cloud.githubusercontent.com/assets/1202838/23223934/575af6d0-f8e1-11e6-9082-63464329f70e.png)
+[Click here to download](https://www.browserstack.com/)
+
 ### Database Query & Administration
 [Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris
 
@@ -40,3 +43,17 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 ## Database  
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
+
+# Supported Browsers and Platforms
+| Browser | Supported Version |
+| --- | --- |
+| IE | 11
+| Edge | Current, Current - 1
+| Firefox | Current, Current - 1
+| Chrome | Current, Current -1
+| Safari | Current, Current - 1
+| Opera | Current
+| iOS Safari | Current, Current - 1, Current - 2
+| Opera Mini | None
+| Android | 4.4+
+| Chrome for Android | Current

@@ -1341,38 +1341,25 @@ namespace CalendarDll
         /// <returns></returns>
         public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlotsUtc(Calendar ical, DateTimeOffset startTime, DateTimeOffset endTime)
         {
-            foreach (var ev in ical.Events)
-            {
-                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, endTime.UtcDateTime))
-                {
-                    yield return new AvailabilitySlot {
-                        StartTime = new DateTimeOffset(occ.Period.StartTime.AsUtc, TimeSpan.Zero),
-                        EndTime = new DateTimeOffset(occ.Period.EndTime.AsUtc, TimeSpan.Zero),
-                        AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
-                    };
-                }
-            }
-        }
+            // IMPORTANT: The GetOccurrences API discards the time part of the passed datetimes, it means that the endtime
+            // gets discarded, to be included in the results we need to add almost 1 day to the value.
+            // In the loop, we filter out occurrences out of the original endTime limit
+            var queryEndTime = endTime.AddDays(1);
 
-        /// <summary>
-        /// Compute the occurrences of all events, normal and recurrents, from the filled in Calendar given between the dates
-        /// as of the internal logic of the Calendar component.
-        /// Results are in the offset of the stored date time zone (but not the stored offset)
-        /// </summary>
-        /// <param name="ical"></param>
-        /// <param name="startTime"></param>
-        /// <param name="endTime"></param>
-        /// <returns></returns>
-        public IEnumerable<AvailabilitySlot> GetEventsOccurrencesInAvailabilitySlots(Calendar ical, DateTimeOffset startTime, DateTimeOffset endTime)
-        {
             foreach (var ev in ical.Events)
             {
-                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, endTime.UtcDateTime))
+                foreach (var occ in ev.GetOccurrences(startTime.UtcDateTime, queryEndTime.UtcDateTime))
                 {
-                    yield return new AvailabilitySlot
+                    var slotStart = new DateTimeOffset(occ.Period.StartTime.AsUtc, TimeSpan.Zero);
+                    var slotEnd = new DateTimeOffset(occ.Period.EndTime.AsUtc, TimeSpan.Zero);
+                    // Filter out occurrences out of the original endTime
+                    if (slotStart >= endTime)
                     {
-                        StartTime = DateTimeOffsetFromCalDateTime(occ.Period.StartTime),
-                        EndTime = DateTimeOffsetFromCalDateTime(occ.Period.EndTime),
+                        continue;
+                    }
+                    yield return new AvailabilitySlot {
+                        StartTime = slotStart,
+                        EndTime = slotEnd,
                         AvailabilityTypeID = ((iEvent)occ.Period.StartTime.AssociatedObject).AvailabilityID
                     };
                 }
@@ -1409,9 +1396,6 @@ namespace CalendarDll
         /// happens in that dates will be returned.
         /// 
         /// Resulting dates are given in UTC.
-        /// NOTE: Events from database are read as if they are in the machine local timezone (what is true currently for all events,
-        /// being the testing and production server at America/Los_Angeles timezone), passing in that information to the Calendar API
-        /// so performs conversions properly.
         /// </summary>
         /// <param name="userID"></param>
         /// <param name="startTime">Included (more than or equals)</param>
@@ -1424,11 +1408,6 @@ namespace CalendarDll
             var events = OptimizedGetEventsByUserDateRange(new CalendarUser(userID), startTime, endTime);
             foreach (var ievent in events)
                 data.Events.Add(ievent);
-
-            // The GetOccurrences API discards the part of the passed datetimes, it means that the endtime
-            // gets discarded, to be included in the results we need to add 1 day to it.
-            // A later process may want to filter out to don't have results out of the given dates.
-            endTime = endTime.AddDays(1);
 
             var occurrences = GetEventsOccurrencesInAvailabilitySlotsUtc(data, startTime, endTime).OrderBy(dr => dr.StartTime);
 

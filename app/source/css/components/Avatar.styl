@@ -1,6 +1,6 @@
 /**
     Avatar: style for the user profile photo
-    
+
     Modifiers:
     - colors: Avatar--primary, Avatar--secondary, ..all $brand-colors
     - sizes: Avatar--xs, Avatar--sm, Avatar--md, Avatar-lg
@@ -12,10 +12,14 @@ $Avatar-sizes = {
     md: 90px,
     lg: 120px
 };
- 
+
 .Avatar
-    overflow hidden 
+    overflow hidden
     margin 0 auto
+
+    // Animate rotation preview, inline styles are applied
+    transition: transform 400ms;
+
 
     img
     canvas
@@ -29,14 +33,14 @@ $Avatar-sizes = {
             canvas
                 border 2px solid $brand-colors[$colorName]
 
-    for $sizeName in $Avatar-sizes 
-        &.Avatar--{$sizeName} 
+    for $sizeName in $Avatar-sizes
+        &.Avatar--{$sizeName}
             &
             img
             canvas
                 height: $Avatar-sizes[$sizeName]
                 width: $Avatar-sizes[$sizeName]
-    
+
     &.Avatar--upperLeft
         margin 8px 0 0 20px
         display block

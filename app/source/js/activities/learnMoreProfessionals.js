@@ -42,8 +42,19 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         target: this.viewModel.signup,
         event: 'signedup',
         handler: function() {
-            var url = '/addJobTitles' + (this.viewModel.onboardingUrlParamsString() || '');
-            this.app.shell.go(url);
+            var onboardingJobTitleSelected = !!this.viewModel.onboardingUrlParamsString(),
+                url = '/addJobTitles' + (this.viewModel.onboardingUrlParamsString() || '');
+
+            if (onboardingJobTitleSelected) {
+                // Normally jump to the dashboard/onboarding, but when a job is selected, then 
+                // go to job title step with default selection set through URL params
+                this.app.model.onboarding.skipToAddJobTitles();
+
+                this.app.shell.go(url);
+            }
+            else {
+                this.app.goDashboard();
+            }
         }.bind(this)
     });
 
@@ -185,7 +196,7 @@ function ViewModel(app) {
             // After sign-up, the parameters must be provided to the onboarding
             this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true');
         }
-    };
+    }.bind(this);
     this.search().jobTitleHref('#learnMoreProfessionals-signup');
     this.search().noJobTitleHref('#learnMoreProfessionals-signup');
 }

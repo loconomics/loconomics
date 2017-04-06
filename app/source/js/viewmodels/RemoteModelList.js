@@ -9,14 +9,14 @@
 //var CachedData = require('../utils/CachedData');
 //
 //function A(settings) {
-//    
+//
 //    if (!settings) throw new Error('Settings are required');
 //
 //    var loadSources = [];
 //    if (settings.loadStorageName)
 //        loadSources.push(loadFromLocal);
 //    loadSources.push(loadFromRemote);
-//    
+//
 //    var cache = new CachedData({
 //        ttl: settings.ttl,
 //        loadSources: loadSources
@@ -34,15 +34,15 @@
 //            return localforage.getItem(settings.localStorageName);
 //        }
 //    }
-//    
+//
 //    function loadFromRemote(params) {
 //        return settings.fetchRemoteData(params);
 //    }
-//    
+//
 //    this.isLoading = ko.observable(false);
 //    this.isSyncing = ko.observable(false);
 //    this.isSaving = ko.observable(false);
-//    
+//
 //    this.getData = function getData() {
 //        if (this.data) {
 //            // return and launchs sync
@@ -63,14 +63,14 @@
 //            }.bind(this));
 //        }
 //    };
-//    
+//
 //    this.load = function load(params) {
 //        return cache.load(params);
 //    };
-//    
+//
 //    this.save = function save() {
 //        this.isSaving(true);
-//        
+//
 //        var promises = [];
 //
 //        // Save on local
@@ -84,18 +84,18 @@
 //        return Promise.all(promises)
 //        .then(function(d1, d2) {
 //            this.isSaving(false);
-//            
+//
 //            // Return data returned by remote only
-//            return settings.localStorageName ? d2 : d1;            
+//            return settings.localStorageName ? d2 : d1;
 //        }.bind(this));
 //    };
 //}
 //
 //var byDate = {};
 //function GetByDate(date) {
-//    
+//
 //    var sdate = (date || new Date()) && date.toISOString();
-//    
+//
 //    if (byDate[sdate]) {
 //        return byDate[sdate].getData();
 //    }
@@ -116,7 +116,7 @@
 //
 //var byJobTitle = {};
 //function GetByJobTitle(jobTitleID) {
-//    
+//
 //    if (byJobTitle[jobTitleID]) {
 //        return byJobTitle[jobTitleID].getData();
 //    }
@@ -148,11 +148,11 @@
 //function RemoteModelList(options) {
 //
 //    EventEmitter.call(this);
-//    
+//
 //    options = options || {};
-//    
+//
 //    var firstTimeLoad = true;
-//    
+//
 //    // Marks a lock loading is happening, any user code
 //    // must wait for it
 //    this.isLoading = ko.observable(false);
@@ -169,15 +169,15 @@
 //    this.isLocked = ko.pureComputed(function(){
 //        return this.isLoading() || this.isSaving();
 //    }, this);
-//    
+//
 //    if (!options.data)
 //        throw new Error('RemoteModel data must be set on constructor and no changed later');
 //    this.data = options.data;
-//    
+//
 //    this.cache = new CacheControl({
 //        ttl: options.ttl
 //    });
-//    
+//
 //    // Optional name used to persist a copy of the data as plain object
 //    // in the local storage on every successfully load/save operation.
 //    // With no name, no saved (default).
@@ -185,7 +185,7 @@
 //    // but any supported and initialized storage system, like WebSQL, IndexedDB or LocalStorage.
 //    // localforage must have a set-up previous use of this option.
 //    this.localStorageName = options.localStorageName || null;
-//    
+//
 //    // Recommended way to get the instance data
 //    // since it ensures to launch a load of the
 //    // data each time is accessed this way.
@@ -258,17 +258,17 @@
 //            throw err;
 //        }.bind(this));
 //    }.bind(this);
-//    
+//
 //    this.load = function load() {
 //        if (this.cache.mustRevalidate()) {
-//            
+//
 //            if (firstTimeLoad)
 //                this.isLoading(true);
 //            else
 //                this.isSyncing(true);
-//            
+//
 //            var promise = null;
-//            
+//
 //            // If local storage is set for this, load first
 //            // from local, then follow with syncing from remote
 //            if (firstTimeLoad &&
@@ -278,11 +278,11 @@
 //                .then(function(localData) {
 //                    if (localData) {
 //                        this.data.model.updateWith(localData, true);
-//                        
+//
 //                        // Load done:
 //                        this.isLoading(false);
 //                        this.isSyncing(false);
-//                        
+//
 //                        // Local load done, do a background
 //                        // remote load
 //                        loadFromRemote();
@@ -301,7 +301,7 @@
 //                // Perform the remote load:
 //                promise = loadFromRemote();
 //            }
-//            
+//
 //            // First time, blocking load:
 //            // it returns when the load returns
 //            if (firstTimeLoad) {
@@ -322,10 +322,10 @@
 //            return Promise.resolve(this.data);
 //        }
 //    };
-//    
+//
 //    /**
 //        Launch a syncing request. Returns nothing, the
-//        way to track any result is with events or 
+//        way to track any result is with events or
 //        the instance observables.
 //        IMPORTANT: right now is just a request for 'load'
 //        that avoids promise errors from throwing.
@@ -365,7 +365,7 @@
 //            // in the list and cache information
 //            userJobTitles: {}
 //        };
-//    
+//
 //    /**
 //        Convert raw array of pricing types records into
 //        an indexed array of models, actually an object
@@ -387,10 +387,10 @@
 //
 //        // Update cache state
 //        cache.userJobProfile.cache.latest = new Date();
-//        
+//
 //        return cache.userJobProfile.list;
 //    }
-//    
+//
 //    /**
 //        Get the full jobProfile from local copy, throwing a Promise reject exception if nothing
 //    **/
@@ -404,7 +404,7 @@
 //            throw { name: 'NotFoundLocal', message: 'Not found on local storage' };
 //        });
 //    }
-//    
+//
 //    /**
 //        Set a raw userJobProfile record (from server) and set it in the
 //        cache, creating or updating the model (so all the time the same model instance
@@ -428,11 +428,11 @@
 //        else {
 //            c.cache = new CacheControl({ ttl: defaultTtl });
 //        }
-//        
+//
 //        // Return the model, updated or just created
 //        return c.model;
 //    }
-//    
+//
 //    /**
 //        Get the content from the cache, for full profile
 //        and save it in local storage
@@ -444,7 +444,7 @@
 //        });
 //        localforage.setItem('userJobProfile', plain);
 //    }
-//    
+//
 //    // Private, fetch from remote
 //    var fetchUserJobProfile = function () {
 //        // Third and last, remote loading
@@ -455,7 +455,7 @@
 //            return mapToUserJobProfile(raw);
 //        });
 //    };
-//    
+//
 //    /**
 //        Public API
 //        Get the complete list of UserJobTitle for
@@ -477,7 +477,7 @@
 //                .catch(fetchUserJobProfile);
 //        }
 //    };
-//    
+//
 //    // Private, fetch from remote
 //    var fetchUserJobTitle = function(jobTitleID) {
 //        return appModel.rest.get('user-job-profile/' + jobTitleID)
@@ -490,7 +490,7 @@
 //            return m;
 //        });
 //    };
-//    
+//
 //    /**
 //        Public API
 //        Get a UserJobTitle record for the given
@@ -499,7 +499,7 @@
 //    api.getUserJobTitle = function (jobTitleID) {
 //        // Quick error
 //        if (!jobTitleID) return Promise.reject('Job Title ID required');
-//        
+//
 //        // If no cache or must revalidate, go remote
 //        if (!cache.userJobTitles[jobTitleID] ||
 //            cache.userJobTitles[jobTitleID].cache.mustRevalidate()) {
@@ -526,14 +526,14 @@
 //            }
 //        }
 //    };
-//    
+//
 //    return api;
 //};
 //
 //var ko = require('knockout');
 //
 //function UserJobProfileViewModel(app) {
-//    
+//
 //    this.userJobProfile = ko.observableArray([]);
 //
 //    this.isFirstTime = ko.observable(true);
@@ -544,9 +544,9 @@
 //    var showLoadingError = function showLoadingError(err) {
 //        app.modals.showError({
 //            title: 'An error happening when loading your job profile.',
-//            error: err && err.error || err
+//            error: err
 //        });
-//        
+//
 //        this.isLoading(false);
 //        this.isSyncing(false);
 //        this.thereIsError(true);
@@ -567,7 +567,7 @@
 //        // Keep data updated:
 //        app.model.userJobProfile.getUserJobProfile()
 //        .then(function(userJobProfile) {
-//            
+//
 //            // We need the job titles info before end
 //            Promise.all(userJobProfile.map(function(userJobTitle) {
 //                return syncJobTitle(userJobTitle.jobTitleID());
@@ -577,7 +577,7 @@
 //                // Create jobTitle property before update
 //                // observable with the profile
 //                userJobProfile.forEach(attachJobTitle);
-//                
+//
 //                this.userJobProfile(userJobProfile);
 //
 //                this.isLoading(false);
