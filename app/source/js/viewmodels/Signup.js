@@ -3,21 +3,11 @@
     shared across activity and client booking.
 **/
 'use strict';
+
 var ko = require('knockout'),
-    EventEmitter = require('events')
-    .EventEmitter;
-
-//var FormCredentials = require('../viewmodels/FormCredentials');
-var newFieldObs = function() {
-    var obs = ko.observable('');
-    obs.error = ko.observable('');
-    // Reset error after a change:
-    obs.subscribe(function() {
-        obs.error('');
-    });
-    return obs;
-};
-
+    EventEmitter = require('events').EventEmitter,
+    ValidatedPasswordViewModel = require('./ValidatedPassword'),
+    Field = require('./Field');
 
 // Facebook login support: native/plugin or web?
 var fb = require('../utils/facebookUtils');
@@ -53,30 +43,26 @@ var facebookMe = function() {
     }
 };
 
-var PasswordValidator = require('../utils/PasswordValidator');
-
 function SignupVM(app) {
     //jshint maxstatements:55
 
     EventEmitter.call(this);
 
     this.confirmationCode = ko.observable(null);
-    this.firstName = newFieldObs();
-    this.lastName = newFieldObs();
-    this.phone = newFieldObs();
-    this.postalCode = newFieldObs();
-    this.countryID = newFieldObs();
-    this.referralCode = newFieldObs();
-    this.device = newFieldObs();
+    this.firstName = new Field();
+    this.lastName = new Field();
+    this.phone = new Field();
+    this.postalCode = new Field();
+    this.countryID = new Field();
+    this.referralCode = new Field();
+    this.device = new Field();
 
     this.facebookUserID = ko.observable();
     this.facebookAccessToken = ko.observable();
 
-    //var credentials = new FormCredentials();
-    //this.email = credentials.username;
-    //this.password = credentials.password;
-    this.email = newFieldObs();
-    this.password = newFieldObs();
+    this.email = new Field();
+
+    this.validatedPassword = new ValidatedPasswordViewModel();
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
@@ -139,16 +125,10 @@ else
 
     this.emailIsLocked = ko.observable(false);
 
-    this.showPasswordValidation = ko.observable(false);
-
-    this.showPasswordRequirementsLink = ko.observable(true);
-
     // A static utility (currently only used to conditionally show/hide DownloadApp links)
     this.inApp = ko.observable(!!window.cordova);
 
     this.reset = function() {
-        this.showPasswordValidation(false);
-        this.showPasswordRequirementsLink(true);
         this.confirmationCode(null);
         this.firstName('');
         this.lastName('');
@@ -160,7 +140,7 @@ else
         this.facebookUserID('');
         this.facebookAccessToken('');
         this.email('');
-        this.password('');
+        this.validatedPassword.reset();
         this.signupError('');
         this.isSigningUp(false);
         this.profile('');
@@ -186,7 +166,7 @@ else
         var plainData = {
             confirmationCode: this.confirmationCode(),
             email: this.email(),
-            password: this.password(),
+            password: this.validatedPassword.password(),
             firstName: this.firstName(),
             lastName: this.lastName(),
             phone: this.phone(),
@@ -283,58 +263,6 @@ else
                     });
             });
     };
-
-    this.showPasswordRequirements = function() {
-        this.showPasswordValidation(true);
-    }.bind(this);
-
-    this.passwordFocus = function() {
-        this.showPasswordValidation(true);
-        this.showPasswordRequirementsLink(false);
-    }.bind(this);
-
-    this.passwordValidator = ko.pureComputed(function() {
-        return new PasswordValidator(this.password());
-    }, this);
-
-    this.isPasswordValid = ko.pureComputed(function() {
-        return this.passwordValidator().isValid();
-    }, this);
-
-    this.passwordLengthValid = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectLength();
-    }, this);
-
-    this.passwordCharacterKindsValid = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectCharacterKinds();
-    }, this);
-
-    this.passwordUsesSymbol = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectSymbol();
-    }, this);
-
-    this.passwordUsesUpper = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectUpper();
-    }, this);
-
-    this.passwordUsesLower = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectLower();
-    }, this);
-
-    this.passwordUsesNumber = ko.pureComputed(function() {
-        return this.passwordValidator().isCorrectNumber();
-    }, this);
-
-    this.passwordCharacterKindsText = ko.pureComputed(function() {
-        var count = this.passwordValidator().isCorrectCharacterKindsCount(),
-            labels = [
-                    'Includes at least 3 kinds of characters:',
-                    'Includes at least 2 more kinds of characters:',
-                    'Includes at least 1 more kind of character:',
-                    'Includes at least 3 kinds of characters'
-                ];
-        return labels[Math.min(count, labels.length - 1)];
-    }, this);
 }
 
 SignupVM._inherits(EventEmitter);

@@ -78,28 +78,7 @@
                     </div>
                 </div>
 
-                <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
-                    <label for="signupAccountPassword">Password</label>
-                    <a id="PasswordValidation-requirements-link" class="form-help-cue text-secondary" type="button" aria-controls="passwordValidationDescription" data-bind="click: showPasswordRequirements, visible: showPasswordRequirementsLink">
-                        Requirements<i class="icon fa fa-question-circle"></i>
-                    </a>
-                    <div type="password" id="signupAccountPassword" data-bind="template: { name: 'signup-field-with-events', data: { name: 'password', field: password, label: 'Make it strong, but easy to remember', type: 'password', inputEvent: { focus: passwordFocus }, icon: {'icon ion-android-done': isPasswordValid} } }, css: { 'is-valid': isPasswordValid }"></div>
-                    <div id="passwordValidationDescription" class="PasswordValidation" data-bind="visible: showPasswordValidation">
-                        <ul class="PasswordValidation-list fa-ul">
-                            <li class="PasswordValidation-requirement" data-bind="css: { 'PasswordValidation-requirement--valid': passwordLengthValid }">
-                                <i class="fa-li fa icon fa-check-circle-o" aria-hidden="true"></i>At least 8 characters long
-                            </li>
-                            <li class="PasswordValidation-requirement" data-bind="css: { 'PasswordValidation-requirement--valid': passwordCharacterKindsValid }">
-                                <i class="fa-li fa icon fa-check-circle-o" aria-hidden="true"></i><span data-bind="text: passwordCharacterKindsText"></span>
-                                <ul>
-                                    <li class="PasswordValidation-requirement-characterClass" data-bind="css: { 'PasswordValidation-requirement-characterClass--used': passwordUsesUpper }">uppercase letter (A-Z)</li>
-                                    <li class="PasswordValidation-requirement-characterClass" data-bind="css: { 'PasswordValidation-requirement-characterClass--used': passwordUsesLower }">lowercase letter (a-z)</li>
-                                    <li class="PasswordValidation-requirement-characterClass" data-bind="css: { 'PasswordValidation-requirement-characterClass--used': passwordUsesNumber }">number (0-9)</li>
-                                    <li class="PasswordValidation-requirement-characterClass" data-bind="css: { 'PasswordValidation-requirement-characterClass--used': passwordUsesSymbol }">symbol (~!@#$%^*&;?.+_)</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
                 </div>
 
                 <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
