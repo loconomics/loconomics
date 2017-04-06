@@ -31,7 +31,7 @@ function ValidatedPassword() {
         return new PasswordValidator(this.password());
     }, this);
 
-    this.isPasswordValid = ko.pureComputed(function() {
+    this.isValid = ko.pureComputed(function() {
         return this.validator().isValid();
     }, this);
 

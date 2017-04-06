@@ -37,7 +37,7 @@
         }
     }
     .fa {
-        font-size: 18px !important;
+        font-size: 18px;
         padding-left: 15px;
         margin-top: -4px;
 
@@ -115,41 +115,49 @@
 
         .icon {
             color: $gray
+            font-size: inherit;
             padding-left: .25em
         }
     }
 
-    .PasswordValidation {
+    .ValidatedPassword {
         li {
           line-height: 1.5em
         }
 
-        .PasswordValidation-list {
-            .PasswordValidation-requirement {
-                .icon {
-                    color: $gray-lighter
-                    padding-left: 0
-                }
+        .ValidatedPassword-requirements {
+            .fa {
+                font-size: 1.258em
+                margin-top: auto
+            }
 
-                ul {
-                    padding-left: .5em
-                    list-style-type: none
-
-                    .PasswordValidation-requirement-character {}
-
-                    .PasswordValidation-requirement-character--used {
+            .ValidatedPassword-list {
+                .ValidatedPassword-requirement {
+                    .icon {
                         color: $gray-lighter
-                        text-decoration: line-through
+                        padding-left: 0
+                    }
+
+                    ul {
+                        padding-left: .5em
+                        list-style-type: none
+
+                        .ValidatedPassword-character {}
+
+                        .ValidatedPassword-character--used {
+                            color: $gray-lighter
+                            text-decoration: line-through
+                        }
                     }
                 }
-            }
-            .PasswordValidation-requirement--valid {
-                .icon {
-                    color: $brand-success
-                }
+                .ValidatedPassword-requirement--valid {
+                    .icon {
+                        color: $brand-success
+                    }
 
-                ul {
-                    display: none
+                    ul {
+                        display: none
+                    }
                 }
             }
         }
