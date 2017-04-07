@@ -79,10 +79,10 @@ function ValidatedPassword() {
     this.characterKindsLabel = ko.pureComputed(function() {
         var count = this.validator().isCorrectCharacterKindsCount(),
             labels = [
-                    'Includes at least 3 kinds of characters:',
-                    'Includes at least 2 more kinds of characters:',
-                    'Includes at least 1 more kind of character:',
-                    'Includes at least 3 kinds of characters'
+                    'Includes at least 3 character types:',
+                    'Includes at least 2 more character types:',
+                    'Includes at least 1 more character type:',
+                    'Includes at least 3 character types'
                 ];
         return labels[Math.min(count, labels.length - 1)];
     }, this);
