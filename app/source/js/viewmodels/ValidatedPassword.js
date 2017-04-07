@@ -1,5 +1,5 @@
 /**
-  *
+  * @module viewmodels/ValidatedPassword
   */
 'use strict';
 
@@ -7,11 +7,25 @@ var ko = require('knockout'),
     PasswordValidator = require('../utils/PasswordValidator'),
     Field = require('./Field');
 
+/*
+ * View model representing a password field with validation and messages.
+ * 
+ * The password value is a Field 
+ * @class
+ */
 function ValidatedPassword() {
+    /**
+      * password is the value of the password field
+      *
+      * @public
+      */
     this.password = new Field();
     this.showRequirements = ko.observable(false);
     this.showRequirementsLink = ko.observable(true);
 
+    /**
+     * @public
+     */
     this.reset = function() {
         this.showRequirements(false);
         this.showRequirementsLink(true);
@@ -27,6 +41,9 @@ function ValidatedPassword() {
         this.showRequirementsLink(false);
     }.bind(this);
 
+    /**
+      * @private
+      */ 
     this.validator = ko.pureComputed(function() {
         return new PasswordValidator(this.password());
     }, this);
