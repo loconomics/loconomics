@@ -37,8 +37,12 @@ function ValidatedPassword() {
     }.bind(this);
 
     this.fieldFocus = function() {
+        if (!this.showRequirements()) {
+            // Only hide the link on focus if it hasn't been clicked on alreadyy
+            this.showRequirementsLink(false);
+        }
+
         this.showRequirements(true);
-        this.showRequirementsLink(false);
     }.bind(this);
 
     /**
