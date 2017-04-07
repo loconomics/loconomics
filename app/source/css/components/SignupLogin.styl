@@ -125,38 +125,44 @@
           line-height: 1.5em
         }
 
-        .ValidatedPassword-requirements {
-            .fa {
-                font-size: 1.258em
-                margin-top: auto
-            }
+        .ValidatedPassword-fieldGroup {
+            background-color: white
 
-            .ValidatedPassword-list {
-                .ValidatedPassword-requirement {
-                    .icon {
-                        color: $gray-lighter
-                        padding-left: 0
-                    }
+            .ValidatedPassword-requirements {
+                color: $gray
 
-                    ul {
-                        padding-left: .5em
-                        list-style-type: none
+                .fa {
+                    font-size: 1.258em
+                    margin-top: auto
+                }
 
-                        .ValidatedPassword-character {}
-
-                        .ValidatedPassword-character--used {
+                .ValidatedPassword-list {
+                    .ValidatedPassword-requirement {
+                        .icon {
                             color: $gray-lighter
-                            text-decoration: line-through
+                            padding-left: 0
+                        }
+
+                        ul {
+                            padding-left: .5em
+                            list-style-type: none
+
+                            .ValidatedPassword-character {}
+
+                            .ValidatedPassword-character--used {
+                                color: $gray-lighter
+                                text-decoration: line-through
+                            }
                         }
                     }
-                }
-                .ValidatedPassword-requirement--valid {
-                    .icon {
-                        color: $brand-success
-                    }
+                    .ValidatedPassword-requirement--valid {
+                        .icon {
+                            color: $brand-success
+                        }
 
-                    ul {
-                        display: none
+                        ul {
+                            display: none
+                        }
                     }
                 }
             }
