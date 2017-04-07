@@ -3,11 +3,11 @@
  */
 'use strict';
 
-var rLength = /.{8,}/;
-var rSymbol = /[^\w\s]/;
-var rNumber = /[0-9]/;
-var rUpper = /[A-Z]/;
-var rLower = /[a-z]/;
+var rLength = /.{8,}/;  // at least 8 characters long
+var rSymbol = /[^\w\s]|_/; // at least one of ~!@#$%^*&;?.+_
+var rNumber = /[0-9]/; // at least 1 number
+var rUpper = /[A-Z]/; // at least 1 uppercase letter
+var rLower = /[a-z]/; // at least 1 lowercase letter
 var MIN_REQUIREMENTS = 3;
 
 /**
