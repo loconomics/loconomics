@@ -81,6 +81,21 @@
     .form-control-feedback {
         position: relative;
     }
+
+    .form-control-feedback--valid {
+        display: none
+    }
+
+    .is-valid {
+        .form-control-feedback--valid {
+            display: inline-block
+        }
+
+        .form-control-feedback--default {
+            display: none
+        }
+    }
+
     .form-group {
         margin-right: 0px;
         margin-left: 0px;
