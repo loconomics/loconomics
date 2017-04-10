@@ -57,8 +57,12 @@ function ValidatedPassword() {
 
         showRequirements(true);
 
-        scrollToField(event.target);
+        scrollToField(scrollTarget(event.target));
     }.bind(this);
+
+    var scrollTarget = function(field) {
+        return $(field).parents('.ValidatedPassword').first();
+    };
 
     /**
      * Scroll to the password field when the heigt of the window
@@ -68,10 +72,10 @@ function ValidatedPassword() {
      *
      * @private
      */
-    var scrollToField = function(field) {
-        // only scroll to the field once and only if we are on a short display
+    var scrollToField = function(target) {
+        // only scroll to the target once and only if we are on a short display
         if($(window).height() < MINIMUM_HEIGHT_FOR_SCROLL && !hasScrolledToField) {
-            scrollToElement(field, { animation: { duration: SCROLL_ANIMATION_DURATION } });
+            scrollToElement(target, { animation: { duration: SCROLL_ANIMATION_DURATION } });
             hasScrolledToField = true;
         }
     };
