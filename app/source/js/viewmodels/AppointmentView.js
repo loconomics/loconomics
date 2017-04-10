@@ -14,7 +14,7 @@ module.exports = function AppointmentView(appointment, app) {
     appointment.client = ko.computed(function() {
         var b = this.sourceBooking();
         if (!b) return null;
-        
+
         var cid = this.clientUserID();
         if (cid) {
             return app.model.clients.getObservableItem(cid, true)();
@@ -22,7 +22,7 @@ module.exports = function AppointmentView(appointment, app) {
         return null;
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     ko.computed(function() {
         var add = this.address();
         var aid = add && add.addressID(),
@@ -42,7 +42,7 @@ module.exports = function AppointmentView(appointment, app) {
         return add && add.singleLineDetailed() || eventData && eventData.location() || '';
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     /* Property with the pricing array plus information about the
         serviceProfessionalService.
     */
@@ -66,22 +66,39 @@ module.exports = function AppointmentView(appointment, app) {
         }).join(', ');
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
-    // ServiceDuration as function, because is needed for cases when cannot wait for the 
-    // rated computed
+
+    /**
+     * Calculates the total time needed for the appointment based on the
+     * included services.
+     * It fetches up-to-date data, waiting if needed for services to load.
+     * @returns {Promise<Number>}
+     */
     appointment.getServiceDurationMinutes = function() {
+        var jid = this.jobTitleID();
+        var pricing = this.pricing();
+        if (!pricing) {
+            return Promise.resolve(0);
+        }
+        var tasks = pricing.map(function(service){
+            var id = service.serviceProfessionalServiceID();
+            return app.model.serviceProfessionalServices.getItem(jid, id);
+        });
+        return Promise.all(tasks).then(function(services) {
+            return services.reduce(function(prev, service) {
+                return prev + service.serviceDurationMinutes;
+            }, 0);
+        });
+    };
+    // ServiceDuration as computed so can be observed for changes
+    appointment.serviceDurationMinutes = ko.computed(function() {
         var pricing = this.pricingWithInfo();
         var sum = pricing.reduce(function(prev, service) {
             return prev + service.serviceProfessionalService().serviceDurationMinutes();
         }, 0);
         return sum;
-    };
-    // ServiceDuration as computed so can be observed for changes
-    appointment.serviceDurationMinutes = ko.computed(function() {
-        return this.getServiceDurationMinutes();
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     ko.computed(function() {
         var pricing = appointment.pricing();
         if (pricing.length === 0) {

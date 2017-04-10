@@ -449,11 +449,14 @@ function AppointmentCardViewModel(params) {
     this.pickDateTime = function pickDateTime() {
         if (this.isLocked()) return;
 
-        editFieldOn('datetimePicker', {
-            selectedDatetime: this.item().startTime(),
-            datetimeField: 'startTime',
-            headerText: 'Select the start time',
-            requiredDuration: this.item().getServiceDurationMinutes()
+        var item = this.item();
+        item.getServiceDurationMinutes().then(function(minutes){
+            editFieldOn('datetimePicker', {
+                selectedDatetime: item.startTime(),
+                datetimeField: 'startTime',
+                headerText: 'Select the start time',
+                requiredDuration: minutes
+            });
         });
     }.bind(this);
 
