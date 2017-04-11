@@ -54,7 +54,7 @@ module.exports = function AppointmentView(appointment, app) {
             details = this.pricing();
 
         return details.map(function(det) {
-            return PricingSummaryDetailView(det, jid, app);
+            return pricingSummaryDetailView(det, jid, app);
         });
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
@@ -89,6 +89,7 @@ module.exports = function AppointmentView(appointment, app) {
             }, 0);
         });
     };
+
     // ServiceDuration as computed so can be observed for changes
     appointment.serviceDurationMinutes = ko.computed(function() {
         var pricing = this.pricingWithInfo();
@@ -119,14 +120,16 @@ module.exports = function AppointmentView(appointment, app) {
     return appointment;
 };
 
-function PricingSummaryDetailView(pricingSummaryDetail, jobTitleID, app) {
+function pricingSummaryDetailView(pricingSummaryDetail, jobTitleID, app) {
+    var observable = ko.observable(app.model.serviceProfessionalServices.asModel()), // default empty object
+        serviceID = pricingSummaryDetail.serviceProfessionalServiceID();
 
-    pricingSummaryDetail.serviceProfessionalService = ko.computed(function() {
-        var pid = this.serviceProfessionalServiceID();
-        return app.model.serviceProfessionalServices
-            .getObservableItem(jobTitleID, pid, true)();
-    }, pricingSummaryDetail)
-    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
+    pricingSummaryDetail.serviceProfessionalService = observable;
+
+    app.model.serviceProfessionalServices.getItem(jobTitleID, serviceID).then(function(service) {
+        var serviceModel = app.model.serviceProfessionalServices.asModel(service);
+        observable(serviceModel);
+    });
 
     return pricingSummaryDetail;
 }
