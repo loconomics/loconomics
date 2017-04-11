@@ -1,6 +1,7 @@
 /**
     A component for styles specific to onboarding.
 **/
+$Tile-hgap = $grid-gap;
 
 .OnboardingTip {
   color: white;
@@ -34,4 +35,22 @@
   color: $brand-primary; 
   margin-top: 20px;
   text-align: center;
+}
+
+// Larger tile with 3 lines
+.OnboardingValueProp {
+    Tile()
+    InfoTile(3)
+    .Tile-icon {
+        font-size: 48px;
+    }
+    .Tile-content {
+        h2, p {
+            margin:0px;
+            display:block;
+        }
+        @media (max-width: 520px) {
+            margin: 0;
+        }
+    }
 }

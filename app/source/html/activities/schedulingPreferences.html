@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -22,7 +22,14 @@
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set up your schedule</div>
-                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">What are your hours? We'd like clients to know when they can expect to schedule your appointments. You can add multiple blocks per day.</p>
+                    <p data-bind="visible: isInOnboarding()" class="Tile PaddedBox-xs">What are your hours? We'd like clients to know when they can expect to schedule your appointments. You can add multiple blocks per day.</p>
+                    <div class="OnboardingValueProp"> 
+                        <span class="Tile-icon fa ion ion-ios-settings" aria-hidden="true"></span>
+                        <span class="Tile-content">
+                            <h2>Scheduling preferences</h2> 
+                            <p>Let clients know when you're generally free. We'll handle the rest.</p>
+                        </span>
+                    </div>
                 <form data-bind="submit: save" class="LightForm">
                     <div id="weeklySchedule" data-bind="with: weeklySchedule" class="WeeklySchedule PaddedBox-xs-only"><!-- WEEKLY SCHEDULE -->
                         <h2 class="SectionTitle">
