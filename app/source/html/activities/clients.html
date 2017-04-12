@@ -5,8 +5,11 @@
         <div class="row">   
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
-                    <li>
+                    <li data-bind="visible: !isSelectionMode()">
                         <a href="/cms"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Client Manager</a>
+                    </li>
+                    <li data-bind="visible: isSelectionMode()">
+                        <a data-bind="href: cancelLink" href="/cms">Cancel</a>
                     </li>
                 </ul>
             </div>
