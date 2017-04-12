@@ -12,8 +12,8 @@ var A = Activity.extend(function EducationActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Account', {
-        backLink: '/account' , helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar('Profile', {
+        backLink: '/userProfile' , helpLink: this.viewModel.helpLink
     });
 });
 
