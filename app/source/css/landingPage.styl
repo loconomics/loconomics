@@ -41,41 +41,45 @@
 
     [role=main] {
 
-        .navbar-brand {
+        .landingpage-brand {
             display: block;
             width: 100%;
-            height: 50px;
+            height: 100px;
             background: no-repeat;
             background-image: url('../images/logo-white-large.png');
             background-image: 
               linear-gradient(transparent, transparent),
               url('../images/logo-white.svg');
-            background-size: 100px;
+            background-size: 200px;
             margin: 20px $grid-gap;
             @media $mediaMaxSm {
                 background-position: center;
                 margin: 0px; 20px;
+                height: 50px;
+                background-size: 100px;
             }
         }
         
         .landingpage-copy {
-            margin: 30px; 0px; 30px; 30px;
+            margin-top: 75px;
+            padding: 30px; 0px; 30px; 30px;
+            background: rgba(0, 152, 154, 0.75); 
+            @media $mediaMaxSm {
+                margin-top: 0px;
+            }
         }
         .landingpage-background {
             padding-top: $LargeNavBar-height + 15px;
             background: no-repeat center / cover;
             background-image:
-              linear-gradient(
-                rgba(255, 255, 255, 0.7),
-                rgba(255, 255, 255, 0.7)
-              ),
-              url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
+              url('../images/1204339.jpg');
             @media $mediaMaxSm {
-                padding-top: 32px;
+                padding-top: 0px;
             }
           }
+        .landingpage-
         .landingpage-title {
-            color: $gray;
+            color: white;
             font-size: 38px;
             font-weight: bold;
             text-align: left;
@@ -84,7 +88,7 @@
             }
         }
         .landingpage-tagline {
-            color: $gray;
+            color: white;
             font-size: 24px;
             text-align: left;
             @media $mediaMaxSm {
@@ -92,13 +96,18 @@
             }
         }
         .landingpage-proposition {
-            color: $gray;
+            color: white;
             font-size: 18px;
             text-align: left;
             display: block;
             .fa,
             p {
                 display: inline-block;
+                margin-right: 5px;
+                font-size: 22px;
+                @media $mediaMaxSm {
+                    font-size: 16px;
+                }
             }
         }
 
@@ -121,7 +130,12 @@
                 button {
                     padding: 5px;
                     margin: 2px;
+                    border-width: 2px;
+                    font-weight: 600;
                 }
+            }
+            .LeadContent {
+                background: rgba(255, 255, 255, .75);
             }
         }
         form {
@@ -147,6 +161,70 @@
                     padding-left: 10px;
                     padding-right: 10px;
                 }
+            }
+        }
+        .press {
+            background-color: #f5f5f5;
+            vertical-align: baseline;
+            text-align: center;
+            box-sizing: content-box;
+            padding-bottom: 75px;
+            
+        }
+        .pressLogo {
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center center;
+            display: inline-block;
+            height: 55px;
+            margin: 30px;
+        }
+        .pressLogo-NYT {
+            background-image:
+              url('../images/nyt.png');
+            width: 375px;
+            @media $mediaMaxSm {
+                width: 200px;
+            }
+        }
+        .pressLogo-FastCompany {
+            background-image:
+              url('../images/Fast_Company.png');
+            width: 345px;
+            @media $mediaMaxSm {
+                width: 200px;
+            }
+        }
+        .pressLogo-EastBayExpress {
+            background-image:
+              url('../images/east-bay-express.png');
+            width: 320px;
+            @media $mediaMaxSm {
+                width: 200px;
+            }
+        }
+        .pressLogo-SFChronicle {
+            background-image:
+              url('../images/sf-chron.png');
+            width: 450px;
+            @media $mediaMaxSm {
+                width: 200px;
+            }
+        }
+        .pressLogo-Shareable {
+            background-image:
+              url('../images/shareable.png');
+            width: 355px;
+            @media $mediaMaxSm {
+                width: 200px;
+            }
+        }
+        .pressLogo-TheNation {
+            background-image:
+              url('../images/thenation.png');
+            width: 250px;
+            @media $mediaMaxSm {
+                width: 200px;
             }
         }
     }
