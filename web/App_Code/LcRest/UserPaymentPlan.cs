@@ -53,7 +53,7 @@ namespace LcRest
             SELECT
                 o.userPaymentPlanID,
                 o.userID,
-                o.subscriptionID;
+                o.subscriptionID,
                 o.paymentPlan,
                 o.paymentMethod,
                 o.paymentPlanLastChangedDate,
