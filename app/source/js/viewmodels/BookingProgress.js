@@ -74,27 +74,3 @@ BookingProgress.prototype.go = function(stepName) {
     this.currentStep(stepName);
     return this;
 };
-
-/*
-BookingProgress.prototype.getRequestData = function() {
-    
-    var data = {
-        progress: {}
-    };
-    
-    if (!this.ended()) {
-
-        var step = data.step() || 1,
-            total = data.totalSteps() || 1;
-        // TODO I18N
-        data.title = step + ' of ' + total;
-        data.navTitle = null;
-    } else {
-        // Edition title:
-        data.title = null;
-        data.navTitle = 'Booking';
-    }
-
-    return data;
-};
-*/

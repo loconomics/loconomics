@@ -96,6 +96,18 @@ function PublicUserJobTitle(values) {
             return numeral(price.price).format('$0.00');
         }
     }, this);
+
+    this.clientSpecificServices = function() {
+        return this.services().filter(function(service) {
+            return service.isClientSpecific();
+        });
+    };
+
+    this.publicServices = function() {
+        return this.services().filter(function(service) {
+            return !service.isClientSpecific();
+        });
+    };
 }
 
 module.exports = PublicUserJobTitle;
