@@ -81,16 +81,19 @@
                         </div>
 
                         <div id="profile-pricing" data-bind="with: selectedJobTitle">
-                            <h4 class="bold text-muted"><i class="icon ion-social-usd-outline h2"></i> Pricing</h4>
-                            <div class="row" data-bind="foreach: services">
+                            <script type="text/html" id="profile-services-listing-template">
                                 <div class="col-xs-6 panel-content">
                                     <section>
                                         <h5 class="bold margin0b" data-bind="text: name"></h5>
                                         <p class="bold loco-info" data-bind="text: displayedDurationAndPrice"></p>
                                         <article data-bind="visible: description, text: description"></article>
-                                    </section>
+                                  </section>
                                 </div>
-                            </div>
+                            </script>
+                            <h4 class="bold text-muted" data-bind="visible: clientSpecificServices().length > 0"><i class="icon ion-social-usd-outline h2"></i> Pricing Only For You</h4>
+                            <div class="row" data-bind="template: { name: 'profile-services-listing-template', foreach: clientSpecificServices() }"></div>
+                            <h4 class="bold text-muted"><i class="icon ion-social-usd-outline h2"></i> Pricing</h4>
+                            <div class="row" data-bind="template: { name: 'profile-services-listing-template', foreach: publicServices() }"></div>
                         </div>
 
                         <div id="profile-reviews" data-bind="with: selectedJobTitle">
