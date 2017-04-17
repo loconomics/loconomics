@@ -9,7 +9,7 @@ var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 var PublicUser = require('../models/PublicUser');
 var ModelVersion = require('../utils/ModelVersion');
-
+var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -34,6 +34,7 @@ function BaseClientBookingCardVM(app) {
     this.serviceProfessionalServices = new ServiceProfessionalServiceVM(app);
     this.serviceProfessionalServices.isSelectionMode(true);
     this.serviceProfessionalServices.preSelectedServices([]);
+    this.serviceProfessionalServices.serviceListGroupsFactory = serviceListGroupFactories.clientBookedServices;
     /// Addresses
     this.serviceAddresses = new ServiceAddresses();
     this.serviceAddresses.isSelectionMode(true);
@@ -458,7 +459,10 @@ BaseClientBookingCardVM.prototype.loadServices = function() {
     var jid = b.jobTitleID();
     if (this.serviceProfessionalServices.serviceProfessionalID() !== spid ||
         this.serviceProfessionalServices.jobTitleID() !== jid) {
-        return this.serviceProfessionalServices.loadData(spid, jid);
+
+        var servicesPromise = this.app.model.users.getServiceProfessionalServices(spid, jid);
+
+        return this.serviceProfessionalServices.loadData(spid, jid, servicesPromise);
     }
 };
 

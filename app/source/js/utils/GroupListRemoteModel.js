@@ -231,36 +231,6 @@ function GroupListRemoteModel(settings) {
     
     /** Some Utils **/
     
-    /**
-        Generates and returns an observable inmediately,
-        with the cached value or undefined,
-        launching an item load that will update the observable
-        on ready if there is no cached value.
-        A method 'sync' is added to the observable so can be requested
-        a data sync/reload on demand.
-    **/
-    api.getObservableItem = function getObservableItem(groupID, itemID, asModel) {
-        // Get first value
-        var firstValue = cache.getItemCache(groupID, itemID);
-        firstValue = firstValue && firstValue.item || undefined;
-        var obs = ko.observable(asModel ? api.asModel(firstValue) : firstValue);
-        // Create method 'sync'
-        obs.sync = function syncObservableItem() {
-            return api.getItem(groupID, itemID)
-            .then(function(item) {
-                if (asModel)
-                    obs().model.updateWith(item);
-                else
-                    obs(item);
-            });
-        };
-        // First load if no cached value
-        if (!firstValue)
-            obs.sync();
-        // Return
-        return obs;
-    };
-    
     api.asModel = function asModel(object) {
         var Model = this.settings.Model;
         // if is an array, return a list of models
