@@ -1,7 +1,12 @@
 'use strict';
 
-module.exports = function(/*grunt*/) {
+module.exports = function() {
     return {
-        all: ['source/html/test/**/*.html']
+        test: {
+            src: ['source/html/test/**/*.html'],
+            options: {
+                reporter: 'Spec'
+            }
+        }
     };
 };

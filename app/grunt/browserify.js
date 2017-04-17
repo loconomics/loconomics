@@ -199,11 +199,11 @@ module.exports = function(/*grunt*/) {
     **/
     bconfig.tests = {
         'src': [
-            './source/js/test/**/*.js'
+            './source/test/**/*.js'
         ],
         'dest': './build/assets/js/tests.js',
         'options': {
-            'debug': true,
+            'debug': true, // true breaks with sinon (old browserify bug?)
             // Modules from other bundles
             'external': Array.prototype.concat(
                 styleguidelibsModules,
