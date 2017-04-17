@@ -5,13 +5,11 @@ module.exports = {
 		'build',
 		'test'
 	],
-	// 'qunit-test': [
-		// 'connect:qunit',
-		// 'qunit'
-	// ],
 	'test': [
-		'jshint'//'newer:jshint:all',
-		//,'qunit'
+		'browserify:styleguidelibs',
+		'browserify:libs',
+		'browserify:tests',
+    'mocha'
 	],
 	'build-js': [
 		'jshint',//'newer:jshint',
