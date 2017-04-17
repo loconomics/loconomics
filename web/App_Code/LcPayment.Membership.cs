@@ -90,6 +90,7 @@ public partial class LcPayment
                 return null;
             }
         }
-		#endregion
+
+        #endregion
     }
 }
