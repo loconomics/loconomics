@@ -1,5 +1,5 @@
 /** AppointmentCard view model.
-    It provides data and method to visualize and 
+    It provides data and method to visualize and
     edit and appointment card, with booking, event
     or placeholder information
 **/
@@ -11,49 +11,59 @@ var ko = require('knockout'),
     AppointmentView = require('../viewmodels/AppointmentView'),
     ModelVersion = require('../utils/ModelVersion'),
     getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    PricingSummaryDetail = require('../models/PricingSummaryDetail');
+    PricingSummaryDetail = require('../models/PricingSummaryDetail'),
+    EventEmitter = require('events').EventEmitter;
 var Booking = require('../models/Booking');
+var Address = require('../models/Address');
+
+var events = {
+    confirmed: 'confirmed',
+    declined: 'declined',
+    cancelled: 'cancelled'
+};
 
 function AppointmentCardViewModel(params) {
     /*jshint maxstatements: 60*/
+
+    EventEmitter.call(this);
 
     this.sourceItem = getObservable(params.sourceItem);
     var app = this.app = ko.unwrap(params.app);
 
     this.editMode = getObservable(params.editMode);
     this.editedVersion = ko.observable(null);
-    
+
     this.isSaving = ko.observable(false);
     this.isLoading = getObservable(params.isLoading);
-    
+
     this.item = ko.observable(AppointmentView(this.sourceItem(), app));
-    
+
     this.allowBookUnavailableTime = ko.observable(false);
-    
+
     this.specialAppointmentIds = Appointment.specialIds;
-    
+
     this.currentID = ko.pureComputed(function() {
         var it = this.item();
         return it && it.id() || 0;
     }, this);
-    
+
     this.currentDatetime = ko.pureComputed(function() {
         return this.item() && this.item().startTime() || new Date();
     }, this);
-    
+
     this.currentDate = ko.pureComputed(function() {
         return getDateWithoutTime(this.item() && this.item().startTime());
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         var id = this.currentID();
         return id === Appointment.specialIds.newBooking || id === Appointment.specialIds.newEvent;
     }, this);
-    
+
     this.isBooking = ko.pureComputed(function() {
         return this.item() && this.item().sourceBooking();
     }, this);
-    
+
     /* Return true if is an event object but not a booking */
     this.isEvent = ko.pureComputed(function() {
         return this.item() && this.item().sourceEvent() && !this.item().sourceBooking();
@@ -70,7 +80,7 @@ function AppointmentCardViewModel(params) {
     this.isLocked = ko.pureComputed(function() {
         return this.isReadOnlyEvent() || this.isSaving() || this.isLoading();
     }, this);
-    
+
     this.headerClass = ko.pureComputed(function() {
         return (
             this.isBooking() ? (this.editMode() ? 'Card-title--warning' : 'Card-title--primary') :
@@ -78,23 +88,23 @@ function AppointmentCardViewModel(params) {
             ''
         );
     }, this);
-    
+
     this.newAppointmentVisible = ko.pureComputed(function() {
         var id = this.currentID();
         return id === Appointment.specialIds.free || id === Appointment.specialIds.emptyDate || id === Appointment.specialIds.unavailable;
     }, this);
-    
+
     this.editScheduleVisible = ko.pureComputed(function() {
         return this.currentID() === Appointment.specialIds.unavailable;
     }, this);
-    
+
     this.submitText = ko.pureComputed(function() {
         var v = this.editedVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         this.isNew() && this.isBooking() ?
                             'Book' :
@@ -134,7 +144,7 @@ function AppointmentCardViewModel(params) {
             version.version.sourceBooking(this.sourceItem().sourceBooking());
             this.editedVersion(version);
             this.item(AppointmentView(version.version, app));
-            
+
             if (this.isNew() && this.isEvent()) {
                 // Some defaults for events
                 this.item().sourceEvent().availabilityTypeID(0); // Unavailable
@@ -154,7 +164,7 @@ function AppointmentCardViewModel(params) {
         // A subscribed handler ensure to do the needed tasks
         this.editMode(true);
     }.bind(this);
-    
+
     var afterSave = function afterSave(savedApt) {
         var version = this.editedVersion();
         // Do not do a version push, just update with remote
@@ -180,7 +190,7 @@ function AppointmentCardViewModel(params) {
             });
         }
     }.bind(this);
-    
+
     this.save = function save() {
         if (this.isLocked()) return;
 
@@ -218,7 +228,7 @@ function AppointmentCardViewModel(params) {
         // Out of edit mode
         this.editMode(false);
     }.bind(this);
-    
+
     this.confirmCancel = function confirmCancel() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
@@ -242,7 +252,7 @@ function AppointmentCardViewModel(params) {
     this.deleteEvent = function() {
         // TODO
     };
-    
+
     /**
         Special updates and related flags
     **/
@@ -254,27 +264,22 @@ function AppointmentCardViewModel(params) {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.canBeCancelledByServiceProfessional() : false;
     }, this);
-    
-    this.bookingCanBeCancelledByClient = ko.computed(function() {
-        var b = this.item() && this.item().sourceBooking();
-        return b ? b.canBeCancelledByClient() : false;
-    }, this);
-    
+
     this.bookingCanBeDeclinedByServiceProfessional = ko.computed(function() {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.canBeDeclinedByServiceProfessional() : false;
     }, this);
-    
+
     this.isBookingRequest = ko.pureComputed(function() {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.isRequest() : false;
     }, this);
-    
+
     this.isServiceProfessionalBooking = ko.pureComputed(function() {
         var b = this.item() && this.item().sourceBooking();
         return b ? b.isServiceProfessionalBooking() : false;
     }, this);
-    
+
     // IMPORTANT Editing rule
     this.canChangePricing = ko.pureComputed(function() {
         if (this.isNew()) return true;
@@ -290,9 +295,9 @@ function AppointmentCardViewModel(params) {
         }
         return false;
     }, this);
-    
+
     // For booking cancel/decline/confirm.
-    var afterSaveBooking = function(booking) {
+    var afterSaveBooking = function(booking, saveEvent) {
         var version = this.editedVersion();
         if (version) {
             version.original.sourceBooking(booking);
@@ -304,20 +309,23 @@ function AppointmentCardViewModel(params) {
         else {
             this.sourceItem().sourceBooking(booking);
         }
-        
+
         var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
         app.modals.showNotification({
             title: 'Done!',
             message: msg
-        });
+        })
+        .then(function() {
+            this.emit(saveEvent, this.sourceItem());
+        }.bind(this));
     }.bind(this);
 
     this.cancelBookingByServiceProfessional = function() {
         if (!this.bookingCanBeCancelledByServiceProfessional()) return;
         this.isSaving(true);
         app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
-        .then(afterSaveBooking)
+        .then(function(booking) { afterSaveBooking(booking, events.cancelled); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -333,31 +341,12 @@ function AppointmentCardViewModel(params) {
             this.isSaving(false);
         }.bind(this));
     };
-    this.cancelBookingByClient = function() {
-        if (!this.bookingCanBeCancelledByClient()) return;
-        this.isSaving(true);
-        app.model.bookings.cancelBookingByClient(this.bookingID())
-        .then(afterSaveBooking)
-        .catch(function(err) {
-            // The version data keeps untouched, user may want to retry
-            // or made changes on its un-saved data.
-            // Show error
-            app.modals.showError({
-                title: 'There was an error saving the data.',
-                error: err
-            });
-            // Don't replicate error, allow always
-        })
-        .then(function() {
-            // ALWAYS:
-            this.isSaving(false);
-        }.bind(this));
-    };
+
     this.declineBookingByServiceProfessional = function() {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
         app.model.bookings.declineBookingByServiceProfessional(this.bookingID())
-        .then(afterSaveBooking)
+        .then(function(booking) { afterSaveBooking(booking, events.declined); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -378,7 +367,7 @@ function AppointmentCardViewModel(params) {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
         app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
-        .then(afterSaveBooking)
+        .then(function(booking) { afterSaveBooking(booking, events.confirmed); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
@@ -394,7 +383,7 @@ function AppointmentCardViewModel(params) {
             this.isSaving(false);
         }.bind(this));
     };
-    
+
     this.confirmCancelBookingByServiceProfessional = function() {
         this.app.modals.confirm({
             title: 'Cancel booking',
@@ -407,7 +396,7 @@ function AppointmentCardViewModel(params) {
             this.cancelBookingByServiceProfessional();
         }.bind(this));
     }.bind(this);
-    
+
     /// Booking Request selectable options
     this.selectedRequestDateType = ko.observable();
     this.observerSelected = function(dateType) {
@@ -434,9 +423,9 @@ function AppointmentCardViewModel(params) {
 
         // Include appointment to recover state on return:
         data.appointment = this.item().model.toPlainObject(true);
-        
+
         data.cancelLink = this.cancelLink;
-        
+
         if (this.progress &&
             !this.progress.ended) {
             data.progress = this.progress;
@@ -460,11 +449,14 @@ function AppointmentCardViewModel(params) {
     this.pickDateTime = function pickDateTime() {
         if (this.isLocked()) return;
 
-        editFieldOn('datetimePicker', {
-            selectedDatetime: this.item().startTime(),
-            datetimeField: 'startTime',
-            headerText: 'Select the start time',
-            requiredDuration: this.item().getServiceDurationMinutes()
+        var item = this.item();
+        item.getServiceDurationMinutes().then(function(minutes){
+            editFieldOn('datetimePicker', {
+                selectedDatetime: item.startTime(),
+                datetimeField: 'startTime',
+                headerText: 'Select the start time',
+                requiredDuration: minutes
+            });
         });
     }.bind(this);
 
@@ -491,7 +483,8 @@ function AppointmentCardViewModel(params) {
     this.pickService = function pickService() {
         if (this.isLocked()) return;
 
-        editFieldOn('serviceProfessionalService/' + this.item().jobTitleID(), {
+        var activity = 'serviceProfessionalService/' + this.item().jobTitleID() + '/client/' + this.item().clientUserID();
+        editFieldOn(activity, {
             selectPricing: true,
             selectedServices: this.item().pricing()
             .map(function(pricing) {
@@ -513,7 +506,7 @@ function AppointmentCardViewModel(params) {
 
         editFieldOn('serviceAddresses/' + this.item().jobTitleID(), {
             selectAddress: true,
-            selectedAddressID: this.item().address().addressID(),
+            selectedAddressID: this.item().address() ? this.item().address().addressID() : 0,
             clientUserID: this.item().clientUserID()
         });
     }.bind(this);
@@ -528,7 +521,7 @@ function AppointmentCardViewModel(params) {
 
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
-        
+
         app.modals.showTextEditor({
             title: textFieldsHeaders[field],
             text: this.item()[field]()
@@ -543,12 +536,12 @@ function AppointmentCardViewModel(params) {
             // No error, do nothing just was dismissed
         });
     }.bind(this);
-    
+
     // pass this ready model view as an API to the outside
     if (typeof(params.api) === 'function') {
         params.api(this);
     }
-    
+
     // Calculate the endTime given an appointment duration, retrieved
     // from the selected service
     ko.computed(function calculateEndTime() {
@@ -565,6 +558,9 @@ function AppointmentCardViewModel(params) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 }
 
+// Modifies prototype. Call prior adding prototype functions.
+AppointmentCardViewModel._inherits(EventEmitter);
+
 /**
     It manages incoming data provided by external activities given
     the requestData received by the activity hosting this view instance.
@@ -573,7 +569,7 @@ function AppointmentCardViewModel(params) {
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     /*jshint maxcomplexity:23,maxstatements:40 */
-    
+
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)
     if (requestData.appointment) {
@@ -589,12 +585,12 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         // set off edit mode discarding unsaved data:
         this.cancel();
     }
-    
+
     // Reset booking request option
     this.selectedRequestDateType('');
 
     /// Manage specific single data from externally provided
-    
+
     if (requestData.selectClient === true) {
         this.item().clientUserID(requestData.selectedClientID);
     }
@@ -607,6 +603,9 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
         this.item().jobTitleID(requestData.selectedJobTitleID);
     }
     if (requestData.selectAddress === true) {
+        if (!this.item().address()) {
+            this.item().address(new Address());
+        }
         if (requestData.address)
             this.item().address().model.updateWith(requestData.address, true);
         else if (requestData.selectedAddressID)
@@ -619,7 +618,7 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
             })
         );
     }
-    
+
     if (this.isNew()) {
         if (requestData && requestData.cancelLink) {
             this.cancelLink = requestData.cancelLink;
@@ -676,5 +675,6 @@ AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
     }
 };
 
+AppointmentCardViewModel.events = events;
 
 module.exports = AppointmentCardViewModel;

@@ -1,1 +1,0 @@
-exec sp_rename @objname = 'dbo.positionlicense', @newname = 'jobTitleLicense'

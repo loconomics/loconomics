@@ -7,9 +7,7 @@
         userId = WebSecurity.CurrentUserId;
     }
 
-    var type = Context.GetRouteValue("type");    
-
-    string userFolder = "img/userphotos/u" + userId.ToString() + "/";
+    var type = Context.GetRouteValue("type");
 
     LcData.Photo.OutputProfilePicture(userId, type);
 }

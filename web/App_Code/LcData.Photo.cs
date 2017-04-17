@@ -23,6 +23,7 @@ public static partial class LcData
         {
             return "img/userphotos/u" + userID.ToString() + "/";
         }
+        public static readonly Color DefaultBackground = Color.FromArgb(0xF5, 0xF5, 0xF5);
         #endregion
 
         #region Profile Picture
@@ -90,8 +91,9 @@ public static partial class LcData
             {
 
                 // Resize to maximum allowed size (but not upscale) to allow user cropping later
-                var img = LcImaging.Resize(srcImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center);
-                LcImaging.Rotate(img, angle);
+                var auxImg = LcImaging.Rotate(srcImg, angle, DefaultBackground);
+                var img = LcImaging.Resize(auxImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center, DefaultBackground);
+                auxImg.Dispose();
 
                 // Save:
                 img.Save(folder + avatarName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -99,6 +101,52 @@ public static partial class LcData
             }
 
             photo.Dispose();
+        }
+
+        /// <summary>
+        /// Ask to edit the original saved profile picture applying a rotation.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="angle"></param>
+        /// <returns>True when exists and everything fine, false if no photo exists so couldn't perform task. Throw exception if error</returns>
+        public static bool EditEditableProfilePicture(int userID, float angle)
+        {
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            var folder = System.Web.HttpContext.Current.Server.MapPath(virtualPath);
+            if (!Directory.Exists(folder))
+            {
+                return false;
+            }
+
+            var file = folder + avatarName + ".jpg";
+            if (!File.Exists(file))
+            {
+                return false;
+            }
+
+            // Use file as image
+            Image img = null;
+            try
+            {
+                using (var srcImg = System.Drawing.Image.FromFile(file))
+                {
+                    // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                    var auxImg = LcImaging.Rotate(srcImg, angle, DefaultBackground);
+                    img = LcImaging.Resize(auxImg, profilePictureFixedSizeWidth * profilePictureOriginalScale, profilePictureFixedSizeHeight * profilePictureOriginalScale, profilePictureSizeMode, LcImaging.AnchorPosition.Center, DefaultBackground);
+                    auxImg.Dispose();
+                }
+                // Save:
+                img.Save(file, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            finally
+            {
+                if (img != null)
+                {
+                    img.Dispose();
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -320,7 +368,7 @@ public static partial class LcData
             return DeleteWorkPhotoFiles(baseFolder, photoAddress);
         }
 
-        private static bool DeleteWorkPhotoFiles(string baseFolder, string photoPath)
+        private static bool DeleteWorkPhotoFiles(string baseFolder, string photoPath, bool keepOriginal = false)
         {
             if (!String.IsNullOrEmpty(photoPath))
             {
@@ -328,11 +376,14 @@ public static partial class LcData
                 try
                 {
                     // There are several files for the same photo, with suffixes for different
-                    // sizes and optimizations: delete all of them
+                    // sizes and optimizations: delete all of them and the extension too
                     var fileName = System.IO.Path.GetFileNameWithoutExtension(LcUtils.GetNameWithoutSuffix(photoPath));
 
-                    // Delete the original file, no suffix
-                    File.Delete(baseFolder + fileName + ".jpg");
+                    if (!keepOriginal)
+                    {
+                        // Delete the original file, no suffix
+                        File.Delete(baseFolder + fileName + ".jpg");
+                    }
                     // Delete all files with suffix.
                     // File.Delete doesn't allow wildcards, find and delete each one
                     foreach (var f in Directory.GetFiles(baseFolder, fileName + "-*", SearchOption.TopDirectoryOnly))
@@ -361,6 +412,14 @@ public static partial class LcData
         {
             using (var db = Database.Open("sqlloco"))
             {
+                // We need an update date...
+                var updatedDate = DateTime.Now;
+                // .. that we use to version the filename, preventing cache issues.
+                // We use the cache technique that allows a dot+numbers previous file extension,
+                // while the actual file at disk has not that in the name, but is detected perfectly by
+                // the server (using web.config rewrite rules). We use date and time numbers
+                var fileVersion = updatedDate.ToString("yyMMddyyHHmmss");
+                var versionedFileName = LcUtils.InsertVersionInFileName(fileName, fileVersion);
                 /* SQL update of primary photo not used now, since field is not in use, but was on the sql beggining:
                     IF @isPrimaryPhoto = 1 BEGIN
                         UPDATE ProviderServicePhoto SET
@@ -373,11 +432,12 @@ public static partial class LcData
                     PhotoAddress = coalesce(@1, PhotoAddress)
                     ,PhotoCaption = coalesce(@2, PhotoCaption)
                     ,RankPosition = coalesce(@3, RankPosition)
+                    ,UpdatedDate = @6
                 WHERE   ProviderServicePhotoID = @0 AND UserID = @4 AND PositionID = @5
 
                 -- Test Alert
                 EXEC TestAlertShowcaseWork @4, @5
-            ", photoID, fileName, caption, rankPosition, userID, positionID);
+            ", photoID, versionedFileName, caption, rankPosition, userID, positionID, updatedDate);
             }
         }
 
@@ -463,15 +523,15 @@ public static partial class LcData
         /// <param name="y"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public static int UploadWorkPhoto(int userID, Stream photo, int jobTitleID, int photoID = 0, string caption = null, int? rankPosition = null, int x = 0, int y = 0, int width = 0, int height = 0)
+        public static int UploadWorkPhoto(int userID, Stream photo, int jobTitleID, int photoID = 0, string caption = null, int? rankPosition = null, int x = 0, int y = 0, int width = 0, int height = 0, float angle = 0)
         {
             string processedFileName = null;
+            string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
+            var path = HttpContext.Current.Server.MapPath(virtualPath);
             if (photo != null)
             {
                 // Automatic name for new photo
                 string fileName = Guid.NewGuid().ToString().Replace("-", "");
-                string virtualPath = LcUrl.RenderAppPath + GetUserPhotoFolder(userID);
-                var path = HttpContext.Current.Server.MapPath(virtualPath);
 
                 if (photoID > 0)
                 {
@@ -481,20 +541,40 @@ public static partial class LcData
                 }
 
                 // New Photo File
-                UploadEditablePhoto(photo, path, fileName);
+                UploadEditablePhoto(photo, path, fileName, angle);
                 // Process best sizes and cropping
                 processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
             }
-
-            // Save on database
-            if (photoID > 0)
+            else if (photoID > 0)
             {
-                SaveDbWorkPhoto(photoID, userID, jobTitleID, processedFileName, caption, rankPosition);
+                // Edit pre-uploaded photo, but skip if no edition parameters given
+                if (angle != 0 || width > 0 || height > 0)
+                {
+                    var savedPhoto = GetUserWorkPhoto(userID, jobTitleID, photoID);
+                    var fileName = LcUtils.RemoveVersionAndSuffixInFileName(savedPhoto.fileName);
+                    // Delete previous files except original (we will edit it)
+                    DeleteWorkPhotoFiles(path, fileName, keepOriginal: true);
+
+                    EditEditablePhoto(userID, path, fileName, angle);
+                    // Process best sizes and cropping
+                    processedFileName = ProcessWorkPhoto(path, fileName, x, y, width, height);
+                }
             }
             else
             {
+                throw new Exception("A photo stream or a photo ID is required");
+            }
+
+            // Save on database
+            if (photoID == 0)
+            {
                 photoID = RegisterDbWorkPhoto(userID, jobTitleID, processedFileName, caption, rankPosition);
             }
+            else if (processedFileName != null)
+            {
+                SaveDbWorkPhoto(photoID, userID, jobTitleID, processedFileName, caption, rankPosition);
+            }
+
             return photoID;
         }
 
@@ -505,22 +585,82 @@ public static partial class LcData
         /// </summary>
         /// <param name="photo"></param>
         /// <param name="virtualPath"></param>
-        private static void UploadEditablePhoto(Stream photo, string path, string fileName) {
+        private static void UploadEditablePhoto(Stream photo, string path, string fileName, float angle) {
             // Check folder or create
             if (!Directory.Exists(path)) {
                 Directory.CreateDirectory(path);
             }
 
             // Use file as image
-            using (var srcImg = System.Drawing.Image.FromStream(photo)) {
+            var srcImg = System.Drawing.Image.FromStream(photo);
+            PrepareAndSaveEditablePhoto(srcImg, path + fileName + ".jpg", angle);
+        }
 
-                // Editable image: Resize to maximum allowed size to allow user cropping later
-                var img = LcImaging.Resize(srcImg, FixedSizeWidth * WorkPhotoOriginalScale, FixedSizeHeight * WorkPhotoOriginalScale, LcImaging.SizeMode.Contain);
+        /// <summary>
+        /// Resize, rotate, incoming image, disposing it and saving transformations to disk
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="pathFileName"></param>
+        /// <param name="angle"></param>
+        private static void PrepareAndSaveEditablePhoto(Image image, string pathFileName, float angle)
+        {
+            Image img = null;
+            try
+            {
+                // Resize to maximum allowed size (but not upscale) to allow user cropping later
+                var auxImg = LcImaging.Rotate(image, angle, DefaultBackground);
+                var w = FixedSizeWidth * WorkPhotoOriginalScale;
+                var h = FixedSizeHeight * WorkPhotoOriginalScale;
+                if (auxImg.Width < auxImg.Height)
+                {
+                    // It's portrait, keep original in portrait to prevent the problem of photo getting smaller
+                    // with each rotation; further processing creating optimized photos will make it landscape.
+                    var aux = w;
+                    w = h;
+                    h = aux;
+                }
+                img = LcImaging.Resize(auxImg, w, h, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground);
+                auxImg.Dispose();
+
+                // Free source, no needed any more and if comes from file, saving will crash
+                image.Dispose();
 
                 // Save:
-                img.Save(path + fileName + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                img.Save(pathFileName, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
-            photo.Dispose();
+            finally
+            {
+                if (img != null)
+                {
+                    img.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ask to edit an original saved photo applying a rotation.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="angle"></param>
+        /// <returns>True when exists and everything fine, false if no photo exists so couldn't perform task. Throw exception if error</returns>
+        public static bool EditEditablePhoto(int userID, string folder, string fileName, float angle)
+        {
+            if (!Directory.Exists(folder))
+            {
+                return false;
+            }
+
+            var file = folder + fileName + (fileName.Contains(".jpg") ? "" : ".jpg");
+            if (!File.Exists(file))
+            {
+                return false;
+            }
+
+            // Use file as image
+            var srcImg = System.Drawing.Image.FromFile(file);
+            PrepareAndSaveEditablePhoto(srcImg, file, angle);
+
+            return true;
         }
 
         /// <summary>
@@ -534,7 +674,7 @@ public static partial class LcData
         
             // fileName could be given by a previous save including suffixes,
             // we need it without suffixes in order to work properly:
-            fileName = LcUtils.GetNameWithoutSuffix(fileName);
+            fileName = System.IO.Path.GetFileNameWithoutExtension(LcUtils.GetNameWithoutSuffix(fileName));
 
             // Remove previous cropped/sized/adapted photos (except editable one), all start with fileName plus dash
             // File.Delete doesn't allow wildcards, find and delete each one
@@ -556,14 +696,15 @@ public static partial class LcData
                 var sizeName = "-" + FixedSizeWidth.ToString() + "x" + FixedSizeHeight.ToString();
 
                 // Save image with regular size
-            
-                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth, FixedSizeHeight, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+
+                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth, FixedSizeHeight, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground))
+                {
                     regularFileName = fileName + sizeName + ".jpg";
                     modImg.Save(path + regularFileName, System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
 
                 // Same as previous but for hi-res 2x devices: (real pixel sizes is double but preserve the original size name to recognize it better adding the @2x suffix)
-                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth * 2, FixedSizeHeight * 2, LcImaging.SizeMode.Cover, LcImaging.AnchorPosition.Center)) {
+                using (var modImg = LcImaging.Resize(cropImg, FixedSizeWidth * 2, FixedSizeHeight * 2, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground)) {
                     modImg.Save(path + fileName + sizeName + "@2x.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 }
 
@@ -573,11 +714,13 @@ public static partial class LcData
             // if there was a crop:
             if (width > 0)
             {
-                // Replace original image with the cropped version, for future 'crop again' tasks
-                using (var replacedEditableImg = LcImaging.Resize(cropImg, FixedSizeWidth * 4, FixedSizeHeight * 4, LcImaging.SizeMode.Contain))
-                {
-                    replacedEditableImg.Save(path + fileName + ".jpg");
-                }
+                // TODO To Review when we enable cropping at UI again, because this gets more complicated with rotation and keeping original orientation
+                // at the 'editable' photo; maybe the cropping must happen when saving the editable version, and not here at each optimized image
+                //// Replace original image with the cropped version, for future 'crop again' tasks
+                //using (var replacedEditableImg = LcImaging.Resize(cropImg, FixedSizeWidth * 4, FixedSizeHeight * 4, LcImaging.SizeMode.Contain, LcImaging.AnchorPosition.Center, DefaultBackground))
+                //{
+                //    replacedEditableImg.Save(path + fileName + ".jpg");
+                //}
             }
             cropImg.Dispose();
         

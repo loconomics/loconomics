@@ -25,7 +25,8 @@ public static class LcImaging
         int Width,
         int Height,
         SizeMode sizeMode = SizeMode.Cover,
-        AnchorPosition Anchor = AnchorPosition.Center)
+        AnchorPosition Anchor = AnchorPosition.Center,
+        Color backgroundColor = default(Color))
     {
         int sourceWidth = imgPhoto.Width;
         int sourceHeight = imgPhoto.Height;
@@ -103,14 +104,10 @@ public static class LcImaging
                          imgPhoto.VerticalResolution);
 
         Graphics grPhoto = Graphics.FromImage(bmPhoto);
-        if (sizeMode == SizeMode.Contain)
-        {
-            // Using a clear gray as background, the previous black was too dark
-            grPhoto.Clear(Color.FromArgb(0xF5, 0xF5, 0xF5));
-        }
+        grPhoto.Clear(backgroundColor);
 
         grPhoto.SmoothingMode = SmoothingMode.HighQuality;
-        grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        grPhoto.InterpolationMode = InterpolationMode.HighQualityBilinear;
         grPhoto.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
         grPhoto.DrawImage(imgPhoto, 
@@ -122,21 +119,83 @@ public static class LcImaging
         return bmPhoto;
     }
 
-    public static void Rotate(Image imgPhoto, float angle)
+    public static Image Rotate(Image imgPhoto, float angle, Color backgroundColor)
     {
         if (angle != 0)
         {
-            Graphics grPhoto = Graphics.FromImage(imgPhoto);
-            //move rotation point to center of image
-            grPhoto.TranslateTransform((float)imgPhoto.Width / 2, (float)imgPhoto.Height / 2);
+            // Adjust angle
+            angle = angle % 360;
+            if (angle > 180)
+            {
+                angle -= 360;
+            }
+
+            // Choose pixel format, may depend on given back color
+            var pf = default(System.Drawing.Imaging.PixelFormat);
+            if (backgroundColor == Color.Transparent)
+            {
+                pf = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
+            }
+            else
+            {
+                pf = imgPhoto.PixelFormat;
+            }
+
+            // Calculate the rotated width and height
+            var sin = (float)Math.Abs(Math.Sin(angle * Math.PI / 180.0));
+            var cos = (float)Math.Abs(Math.Cos(angle * Math.PI / 180.0));
+            var newWidth = (float)imgPhoto.Height * sin + imgPhoto.Width * cos;
+            var newHeight = (float)imgPhoto.Height * cos + imgPhoto.Width * sin;
+
+            // Calculate rotation operation origin
+            var originX = 0f;
+            var originY = 0f;
+            if (angle > 0)
+            {
+                if (angle <= 90)
+                {
+                    originX = sin * imgPhoto.Height;
+                }
+                else
+                {
+                    originX = newWidth;
+                    originY = newHeight - sin * imgPhoto.Width;
+                }
+            }
+            else
+            {
+                if (angle >= -90)
+                {
+                    originY = sin * imgPhoto.Width;
+                }
+                else
+                {
+                    originX = newWidth - sin * imgPhoto.Height;
+                    originY = newHeight;
+                }
+            }
+
+            // Create new image object
+            Bitmap newPhoto = new Bitmap((int)newWidth, (int)newHeight, pf);
+
+            // Prepare a 'canvas' and perform rotation
+            Graphics grPhoto = Graphics.FromImage(newPhoto);
+            // Paint background
+            grPhoto.Clear(backgroundColor);
+            // position where rotation will happens
+            grPhoto.TranslateTransform(originX, originY);
             // rotate
             grPhoto.RotateTransform(angle);
-            //move image back
-            grPhoto.TranslateTransform(-(float)imgPhoto.Width / 2, -(float)imgPhoto.Height / 2);
-            // save
-            grPhoto.DrawImage(imgPhoto, new Point(0, 0));
-
+            grPhoto.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            // draw image at canvas
+            grPhoto.DrawImageUnscaled(imgPhoto, new Point(0, 0));
             grPhoto.Dispose();
+
+            return newPhoto;
+        }
+        else
+        {
+            return (Image)imgPhoto.Clone();
         }
     }
 

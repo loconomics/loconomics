@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -61,6 +61,7 @@
     "moment-timezone": "~0.5.9",
     "nib": "~1.0.1",
     "numeral": "~1.5.3",
+    "route-parser": "0.0.5",
     "stylus": "~0.49.0",
     "time-grunt": "~1.0.0"
   }

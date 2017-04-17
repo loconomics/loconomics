@@ -19,6 +19,8 @@ var $ = require('jquery');
 // }
 module.exports = function scrollToElement(el, options) {
     //jshint maxcomplexity:10
+    el = (el instanceof $) ? el : $(el);
+
     var parent = $(el).parent();
 
     var topOffset = options && options.topOffset || 0;

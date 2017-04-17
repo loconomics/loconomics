@@ -51,14 +51,14 @@
     // Public User profile photo, KEEPING URL AS IN Release-6.3 FOR RELEASE-7+
     RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo", "~/_specialRoutes/UserProfilePhoto.cshtml");
     RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}", "~/_specialRoutes/UserProfilePhoto.cshtml");
-    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");    
-    
+    RouteTable.Routes.MapWebPageRoute("{locale}/profile/photo/{userID}/{type}", "~/_specialRoutes/UserProfilePhoto.cshtml");
+
     // Auth
     RouteTable.Routes.MapWebPageRoute("{locale}/auth/login", "~/_specialRoutes/Login.cshtml");
     RouteTable.Routes.MapWebPageRoute("{locale}/auth/confirm", "~/_specialRoutes/Confirm.cshtml");
     RouteTable.Routes.MapWebPageRoute("auth/login", "~/_specialRoutes/Login.cshtml");
     RouteTable.Routes.MapWebPageRoute("auth/confirm", "~/_specialRoutes/Confirm.cshtml");
-    
+
     // App/Webapp explicit rules
     // TODO: some day this list needs to be automatic, from the activity list, right now has some explicit rules to avoid conflicts with
     // more generic rules after this (the problematic is the customURL rule, basically)
@@ -74,6 +74,25 @@
     RouteTable.Routes.MapWebPageRoute(LcRest.MarketplaceProfile.CustomUrlPrefix + "{customurl}/", "~/_specialRoutes/CustomURL.cshtml");
     // Refer professionals
     RouteTable.Routes.MapWebPageRoute("refer/", "~/_specialRoutes/refer.cshtml");
+
+
+    /*
+     * Because a false positive at the PCI Scan (2017-03-07, ScanID 7340331)
+     * we need to prevent returning a success HTTP response to URLs that 
+     * include "/webcart". That pages don't exists in our system, but we are
+     * throwing a valid response to anything rather than not-found right now,
+     * making the scan to 'believe' that we are returning sensitive data at that
+     * URLs (when not).
+     * 
+     * The scan says:
+     * > At least one of these file or directories is world readable : /webcart/orders/
+     * /webcart/orders/import.txt /webcart/carts/ /webcart/config/
+     * /webcart/config/clients.txt /webcart-lite/orders/import.txt
+     * /webcart-lite/config/clients.txt This misconfiguration may allow an attacker to gather the
+     * credit card numbers of your clients. See also : http://marc.info/?l=bugtraq&m=92462991805485&w=2
+    */
+    RouteTable.Routes.MapWebPageRoute("webcart/{*any}", "~/Errors/Error404.cshtml");
+    RouteTable.Routes.MapWebPageRoute("webcart-lite/{*any}", "~/Errors/Error404.cshtml");
 
     // MANAGE SPA ROUTES REDIRECTING TO INDEX
     // CATCH-ALL:

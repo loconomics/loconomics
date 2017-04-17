@@ -6,8 +6,9 @@
 
     DateTime start = DateTime.Now;
     dynamic data;
-    
-    try {
+
+    try
+    {
         data = null;
 
         using (var target = new DBOperations.XClient("sqlloco_target"))
@@ -41,7 +42,8 @@
         }*/
         
     }
-    catch (Exception ex) {
+    catch (Exception ex)
+    {
         data = ex;
     }
 }

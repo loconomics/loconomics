@@ -653,20 +653,6 @@
                 "end": "2016-08-30T22:00:00Z"
             }
         },
-        "User Availability at times detail as fixed size slots": {
-            "url": "/api/v1/en-US/users/141/availability/slots",
-            "get": {
-                "start": "2016-08-01T22:00:00Z",
-                "end": "2016-08-30T22:00:00Z"
-            }
-        },
-        "User Availability at dates detail": {
-            "url": "/api/v1/en-US/users/141/availability/dates",
-            "get": {
-                "start": "2016-08-01T22:00:00Z",
-                "end": "2016-08-30T22:00:00Z"
-            }
-        },
 
         "Public user profile summary": {
             "url": "/api/v1/en-US/users/141",
@@ -835,9 +821,20 @@
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             },
             "delete": {}
+        },
+        "Edit My Profile Picture (rotate, crop, previously uploaded photo)": {
+            "url": "/api/v1/en-US/me/profile-picture/edit",
+            "post": {
+                "x": 0,
+                "y": 0,
+                "w": 0,
+                "h": 0,
+                "rotationAngle": 0
+            }
         },
 
         "My Work Photos by Job Title (read and create)": {
@@ -850,19 +847,21 @@
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             }
         },
         "My Work Photos by Job Title, upload update or delete": {
             "url": "/api/v1/en-US/me/work-photos/106/1",
             "put": {
-                "photo": "binary image/* content",
+                "photo": "binary image/* content; optional here, to allow only update associated data or crop/rotate pre-uploaded photo",
                 "caption": "This is my workshop",
                 "rankPosition": 1,
                 "x": 0,
                 "y": 0,
                 "w": 0,
-                "h": 0
+                "h": 0,
+                "rotationAngle": 0
             },
             "delete": {}
         },

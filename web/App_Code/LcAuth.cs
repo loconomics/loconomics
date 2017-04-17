@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
+using System.Web.Security;
+using System.Web.WebPages;
 using WebMatrix.Data;
 using WebMatrix.WebData;
-using WebMatrix.Security;
-using System.Web.WebPages;
-using System.Web.Security;
 
 /// <summary>
 /// Utilities class about authentication and authorization,
@@ -23,16 +20,7 @@ public static class LcAuth
             return db.QuerySingle("EXEC CheckUserEmail @0", email) != null;
         }
     }
-    /// <summary>
-    /// For HIPAA compliance (#974) and strong security, passwords must be checked against next regex. It requires:
-    /// - Almost 8 characters
-    /// - Non-alphabetic characters: ~!@#$%^*&;?.+_
-    /// - Base 10 digits (0 through 9)
-    /// - English uppercase characters (A through Z)
-    /// - English lowercase characters (a through z)
-    /// </summary>
-    public static string ValidPasswordRegex = @"(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*";
-    public static string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.";
+
     /// <summary>
     /// Auto generate a password: will be a random one that meets the complexity and length requirements
     /// </summary>
@@ -80,9 +68,9 @@ public static class LcAuth
     )
     {
         // Check password validity.
-        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        if (!PasswordValidator.IsValid(password))
         {
-            throw new ConstraintException(InvalidPasswordErrorMessage);
+            throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
 
         using (var db = Database.Open("sqlloco"))
@@ -189,9 +177,9 @@ public static class LcAuth
     public static bool ResetPassword(string token, string password)
     {
         // Check password validity.
-        if (!System.Text.RegularExpressions.Regex.IsMatch(password, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        if (!PasswordValidator.IsValid(password))
         {
-            throw new ConstraintException(InvalidPasswordErrorMessage);
+            throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
         return WebSecurity.ResetPassword(token, password);
     }
@@ -199,9 +187,9 @@ public static class LcAuth
     public static bool ChangePassword(string email, string currentPassword, string newPassword)
     {
         // Check password validity.
-        if (!System.Text.RegularExpressions.Regex.IsMatch(newPassword, ValidPasswordRegex, System.Text.RegularExpressions.RegexOptions.ECMAScript))
+        if (!PasswordValidator.IsValid(newPassword))
         {
-            throw new ConstraintException(InvalidPasswordErrorMessage);
+            throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
         return WebSecurity.ChangePassword(email, currentPassword, newPassword);
     }
