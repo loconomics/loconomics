@@ -10,15 +10,15 @@
     <div id="mocha"></div>
 
     <!-- mocha -->
-    <script src="../../node_modules/mocha/mocha.js" charset="utf-8"></script>
-    <script charset="utf-8">
+    <script src="../../node_modules/mocha/mocha.js"></script>
+    <script>
         // This will be overridden by mocha-helper if you run with grunt
         mocha.setup('bdd');
     </script>
 
-    <script src="../../node_modules/chai/chai.js"charset="utf-8"></script>
-    <script charset="utf-8">
-        // Setup chai
+    <!-- chai -->
+    <script src="../../node_modules/chai/chai.js"></script>
+    <script>
         var expect = chai.expect;
     </script>
 
@@ -27,15 +27,14 @@
     <script src="../../build/assets/js/libs.js"></script>
 
     <!-- tests + supporting app code -->
-    <script src="../../build/assets/js/tests.js" charset="utf-8"></script>
+    <script src="../../build/assets/js/tests.js"></script>
 
     <!-- run mocha -->
-    <script charset="utf-8">
+    <script>
         // If tests run in a real browser
         // Can alternatively do a check on window.PHANTOMJS
         if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-            mocha
-                .run();
+            mocha.run();
         }
     </script>
 </body>
