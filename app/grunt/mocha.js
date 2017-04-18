@@ -3,7 +3,7 @@
 module.exports = function() {
     return {
         test: {
-            src: ['source/html/test/**/*.html'],
+            src: ['source/test/**/*.html'],
             options: {
                 reporter: 'Spec'
             }
