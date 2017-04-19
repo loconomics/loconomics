@@ -91,7 +91,7 @@ namespace LcRest
         }
 
         /// <summary>
-        /// Get the full list of plans (active and history) for a give user
+        /// Get the full list of plans (active and history) for a given user
         /// </summary>
         /// <param name="userID"></param>
         /// <returns></returns>
@@ -99,7 +99,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetByUser, userID));
+                return db.Query(sqlGetByUser, userID).Select(FromDB);
             }
         }
 
