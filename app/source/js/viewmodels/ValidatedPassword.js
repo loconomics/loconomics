@@ -11,8 +11,8 @@ var $ = require('jquery'),
 
 /*
  * View model representing a password field with validation and messages.
- * 
- * The password value is a Field 
+ *
+ * The password value is a Field
  * @class
  */
 function ValidatedPassword() {
@@ -130,7 +130,7 @@ function ValidatedPassword() {
     }, this);
 
     this.characterKindsLabel = ko.pureComputed(function() {
-        var count = validator().isCorrectCharacterKindsCount(),
+        var count = validator().getCorrectCharacterKindsCount(),
             labels = [
                     'Includes at least 3 character types:',
                     'Includes at least 2 more character types:',

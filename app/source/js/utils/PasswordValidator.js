@@ -20,7 +20,6 @@ function PasswordValidator(password) {
      * Checks if the value is valid. It sets instance properties with latest
      * value and resulting errorMessage
      * @param {string} value Text to be validated
-     * @returns {boolean} True if valid.
      */
     var test = function(value) {
         // check
@@ -79,7 +78,7 @@ PasswordValidator.prototype.isCorrectLower = function() {
 /**
  * @public
  */
-PasswordValidator.prototype.isCorrectCharacterKindsCount = function() {
+PasswordValidator.prototype.getCorrectCharacterKindsCount = function() {
     return this.correctCharacterKindsCount;
 };
 
