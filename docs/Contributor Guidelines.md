@@ -23,16 +23,16 @@ We use ES5 (Ecmascript 5 edition) syntax in strict mode, with the addition of th
 We use [jshint](http://jshint.com/) to validate and enforce some good practices, helping reduce the number of bugs. Every commit must pass the jshint rules.
 
 We split source files in modules, following the [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) syntax.
-We use a preprocessor, [Browserify](http://browserify.org/), to bundled the modules in a few files.
+We use a preprocessor, [Browserify](http://browserify.org/), to bundle the modules in a few files.
 
-**Hint**: the *[debugger;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)* javascript statement can be used for easier debugging, but remember to remove before commit your changes.
+**Hint**: the *[debugger;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)* javascript statement can be used for easier debugging, but remember to remove it before commiting your changes.
 
 ## HTML
 
 We use HTML5.
 
-Since we use the [KnockoutJS](http://knockoutjs.com/) library, there are a lot of 'data-bind' attributes, with javascript syntax in the value; this is used to connect elements with data generated from javascript files, while the javascript inside the 'data-bind' attribute must be kept at minimum as needed (avoid large or complex expressions, if can be just a variable assignement the better).
-We use 'custom-elements' syntax sometimes at the HTML, for components created with KnockoutJS.
+Since we use the [KnockoutJS](http://knockoutjs.com/) library, there are a lot of 'data-bind' attributes, with javascript syntax in the value; this is used to connect elements with data generated from javascript files, while the javascript inside the 'data-bind' attribute must be kept at minimum as needed (avoid large or complex expressions, it's better if it can be just a variable assignement).
+We use 'custom-elements' syntax sometimes in the HTML, for components created with KnockoutJS.
 
 We use a preprocessor, [Bliss](https://github.com/cstivers78/bliss) at the minimum; it uses Asp.net Razor-like syntax, adapted for javascript. Generally, we use it only at the files wrapping all the html (examples: app.js.html, web.js.html).
 
@@ -62,13 +62,13 @@ Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the maste
 If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
 
 #### Pull requests
-We prefer you create a Github issue for a specific task to tackle with it's own branch named issueXX . However, pull requests are fine if you want to make general updates or suggest a change.
+We prefer you to create a Github issue for a specific task to tackle with it's own branch named issueXX. However, pull requests are fine if you want to make general updates or suggest a change.
 
 ### Bugs
 Before reporting a bug:
 * Please have a look in [Known Bugs](https://github.com/loconomics/loconomics/milestones) and the current release folder to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
 
-The first thing we do with a bug report is confirm we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
+The first thing we do with a bug report is to confirm that we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
 
 Try to include:
 * What steps you took just before the bug.
@@ -105,7 +105,7 @@ Leave the pipeline default of "New Issues" and do not attach a milestone, estima
 ##### Definitions:
 - P1 (The issue will be seen by all users.)
 - P2 (The issue will be seen by most users.)
-- P3 (The issue will be seen by about half of users.)
+- P3 (The issue will be seen by about half of the users.)
 - P4 (The issue will not be seen by most users. Usually the issue is a very specific use case or corner case.)
 
 #### Category Label
