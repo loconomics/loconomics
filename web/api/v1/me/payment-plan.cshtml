@@ -1,4 +1,5 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Read, create and change the logged user payment plan (membership).
 
     EXAMPLES {
@@ -7,7 +8,15 @@
             "get": { },
             "post": {
                 "paymentPlan": "MonthlyLite",
-                "paymentMethodToken": "fake-valid-nonce"
+                "paymentMethod": {
+                    "paymentMethodID": "TEST: previously saved method token",
+                    "cardNumber": "123443121234",
+                    "nameOnCard": "Me",
+                    "expirationMonth": "11",
+                    "expirationYear": "2018",
+                    "securityCode": "123",
+                    "savePayment": true
+                }
             }
         },
         "Payment plan: user history": {
@@ -46,23 +55,51 @@
 
             // Validation
             Validation.RequireField("paymentPlan", "Choose a plan");
-            Validation.RequireField("paymentMethodToken", "Provide a payment method");
 
-            if (!Validation.IsValid())
+            // For payment, we need either a paymentMethodID or the data
+            // 
+            var paymentData = new LcPayment.InputPaymentMethod
+            {
+                paymentMethodID = Request["paymentMethod[paymentMethodID]"],
+                cardNumber = Request["paymentMethod[cardNumber]"],
+                nameOnCard = Request["paymentMethod[nameOnCard]"],
+                expirationMonth = Request["paymentMethod[expirationMonth]"],
+                expirationYear = Request["paymentMethod[expirationYear]"],
+                securityCode = Request["paymentMethod[securityCode]"]
+            };
+
+            if (!paymentData.IsSavedID())
+            {
+                var paymentErrors = paymentData.Validate();
+                if (paymentErrors != null)
+                {
+                    foreach (var paymentErr in paymentErrors)
+                    {
+                        ModelState.AddError(paymentErr.Key, paymentErr.Value);
+                    }
+                }
+            }
+
+            LcEnum.SubscriptionPlan plan = LcEnum.SubscriptionPlan.MonthlyLite;
+            if (!Enum.TryParse<LcEnum.SubscriptionPlan>(Request.Form["paymentPlan"], true, out plan))
+            {
+                // Parse error, bad plan ID given
+                ModelState.AddError("paymentPlan", "Invalid payment plan");
+            }
+
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
             {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 
-            var plan = (LcPayment.Membership.SubscriptionPlan)Enum.Parse(
-                typeof(LcPayment.Membership.SubscriptionPlan), Request.Form["paymentPlan"]);
-            var token = Request.Form["paymentMethodToken"];
-            LcRest.UserPaymentPlan.CreateSubscription(userId, plan, token);
+            LcRest.UserPaymentPlan.CreateSubscription(userId, plan, paymentData);
 
             return GetActive();
         }
     }
 }
 @{   
-    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
     new RestPaymentPlan().JsonResponse(this);
 }

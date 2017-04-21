@@ -73,6 +73,12 @@ public static partial class LcPayment
             return ConfigurationManager.AppSettings["Braintree.FraudProtectionTools.Enabled"].AsBool();
         }
     }
+
+    /// <summary>
+    /// The emulation allows to shortcut Braintree, for local dev environments where is
+    /// not possible even to use Braintree Sandbox
+    /// </summary>
+    public static readonly bool TESTING_EMULATEBRAINTREE = ASP.LcHelpers.Channel == "localdev";
     #endregion
 
     #region Actions: Create or prepare transactions and cards
@@ -738,7 +744,7 @@ public static partial class LcPayment
 
     #endregion
 
-    #region Fake, testing transactions that avoid Braintree
+    #region Fake, testing transactions/methods/subcriptions IDs that avoid Braintree
     public const string FakeTransactionPrefix = "TEST:";
     public static string CreateFakeTransactionId()
     {
@@ -755,6 +761,14 @@ public static partial class LcPayment
     public static bool IsFakePaymentMethod(string paymentMethodID)
     {
         return String.IsNullOrEmpty(paymentMethodID) || paymentMethodID.StartsWith(FakeTransactionPrefix);
+    }
+    public static string CreateFakeSubscriptionId()
+    {
+        return FakeTransactionPrefix + Guid.NewGuid().ToString();
+    }
+    public static bool IsFakeSubscription(string subscriptionID)
+    {
+        return String.IsNullOrEmpty(subscriptionID) || subscriptionID.StartsWith(FakeTransactionPrefix);
     }
     #endregion
 }

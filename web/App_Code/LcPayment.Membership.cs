@@ -1,5 +1,6 @@
 ﻿using Braintree;
 using System;
+using LcEnum;
 
 public partial class LcPayment
 {
@@ -24,12 +25,6 @@ public partial class LcPayment
         #endregion
 
         #region Subscription
-        public enum SubscriptionPlan
-        {
-			MonthlyLite,
-			MonthlyFull,
-			AnnualFull
-        }
 
 		public string GetSubscriptionPlanDescriptor(SubscriptionPlan plan)
         {

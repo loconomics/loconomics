@@ -21,6 +21,16 @@ public partial class LcPayment
 
         public static PaymentMethodInfo Get(string paymentMethodToken)
         {
+            // Give fake info
+            if (IsFakePaymentMethod(paymentMethodToken))
+            {
+                return new PaymentMethodInfo
+                {
+                    ExpirationDate = null,
+                    Description = "FakeCard ending in 6789"
+                };
+            }
+
             var gateway = NewBraintreeGateway();
 
             if (String.IsNullOrWhiteSpace(paymentMethodToken)) return null;
