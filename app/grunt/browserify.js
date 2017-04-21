@@ -25,35 +25,12 @@ module.exports = function(/*grunt*/) {
         'src': [],
         'dest': './build/assets/js/styleguidelibs.js',
         'options': {
-            // Despite that plugins and some other modules doesn't return itselfs,
-            // we still need the alias to be localizable by the 'require' calls
-            // in other bundles (must replicate alias in its 'external' option)
-            // Shim generates already alias for each key.
-            shim: {
-                // Using a shim we avoid jquery to detect the CommonJS loader and
-                // it attachs itself to the global namespace (window) what let
-                // the plugins works fine.
-                jquery: {
-                    path: './vendor/jquery/jquery-2.1.4.js',
-                    exports: 'jQuery'
-                },
-                'bootstrap': {
-                    // Using latest Bootstrap version:
-                    path: './vendor/bootstrap/js/bootstrap.js',
-                    exports: null,
-                    depends: { 'jquery': 'jquery' }
-                },
-                'bootstrap-switch': {
-                    path: './vendor/bootstrap-switch/js/bootstrap-switch.js',
-                    exports: null,
-                    depends: { 'jquery': 'jquery', 'bootstrap': 'bootstrap' }
-                },
-                'jquery.ajaxQueue': {
-                    path: './vendor/caoglish/jquery.ajaxQueue.js',
-                    exports: null,
-                    depends: { 'jquery': 'jquery' }
-                }
-            }
+            'require': [
+                'jquery',
+                'bootstrap',
+                'bootstrap-switch',
+                'jquery.ajaxQueue'
+            ]
         }
     };
 
@@ -68,7 +45,7 @@ module.exports = function(/*grunt*/) {
         'options': {
             'debug': false,
             'external': styleguidelibsModules,
-            'alias': [
+            'require': [
                 'moment',
                 'numeral',
                 'knockout',
@@ -88,97 +65,17 @@ module.exports = function(/*grunt*/) {
                 './vendor/iagosrl/layoutUpdateEvent:layoutUpdateEvent',
                 './vendor/iagosrl/throttle:iagosrl/throttle',
                 'knockout-sortable',
-                'geocomplete'
-            ],
-            'shim': {
-                /*'jquery-ui':  {
-                    'path': './vendor/jquery-ui/jquery-ui.js',
-                    'exports': null,
-                    'depends': { 'jquery': null }
-                },*/
-                'jquery-mobile':  {
-                    'path': './vendor/jquerymobile/jquery.mobile.custom.js',
-                    'exports': null,
-                    'depends': { 'jquery': null }
-                },
-                // NOTE: NOT USED RIGHT NOW, IS BUGGY with the app-shell-history
-                /*'history': {
-                    'path': './vendor/history/jquery.history.js',
-                    'exports': 'History'
-                },*/
-                'fastclick': {
-                    path: './vendor/fastclick-forked/fastclick.js',
-                    exports: 'FastClick'
-                },
-                'jquery.ui.touch-punch': {
-                    path: './vendor/touch-punch/jquery.ui.touch-punch.min',
-                    exports: null,
-                    'depends': { 'jquery': null }
-                },
-
-                /// JQUERY FILEUPLOAD WITH IMAGE PREVIEW SUPPORT
-                // the jquery-ui widget constructor is needed, but this included dependency
-                // can be avoided if jquery-ui is included already in the project
-                /*'jquery.ui.widget': {
-                    path: './vendor/jquery.fileupload/js/vendor/jquery.ui.widget.js',
-                    exports: null,
-                    depends: { jquery: 'jquery' }
-                },*/
-                // Basic fileupload through XHR component
-                'jquery.fileupload': {
-                    path: './vendor/jquery.fileupload/js/jquery.fileupload.js',
-                    exports: null,
-                    depends: {
-                        jquery: 'jquery',
-                        // jquery-ui is included in the project, use it rather than add duplicated content, and the specific widget module if possible
-                        'jquery-ui/widget': null
-                        //'jquery-ui': null
-                        //'jquery.ui.widget': 'jquery.ui.widget'
-                    }
-                },
-                // Image Preview support, requires the loadImage lib with its dependecies, a polyfill for canvas.toBlob
-                // and the fileupload-process plugin
-                'load-image': {
-                    path: './vendor/js.loadImage/js/load-image.js',
-                    exports: 'loadImage',
-                    depends: {
-                        'jquery': null
-                    }
-                },
-                'load-image.meta': {
-                    path: './vendor/js.loadImage/js/load-image-meta.js',
-                    exports: null,
-                    depends: {
-                        'load-image': null
-                    }
-                },
-                'load-image.ios': {
-                    path: './vendor/js.loadImage/js/load-image-ios.js',
-                    exports: null,
-                    depends: {
-                        'load-image': null
-                    }
-                },
-                'jquery.fileupload-process': {
-                    path: './vendor/jquery.fileupload/js/jquery.fileupload-process.js',
-                    exports: null,
-                    depends: {
-                        'jquery.fileupload': null
-                    }
-                },
-                'jquery.fileupload-image': {
-                    path: './vendor/jquery.fileupload/js/jquery.fileupload-image.js',
-                    exports: null,
-                    depends: {
-                        'jquery.fileupload': null,
-                        'jquery.fileupload-process': null,
-                        'load-image': null,
-                        'load-image.ios': null,
-                        'load-image.meta': null,
-                        'blueimp-canvas-to-blob': null
-                    }
-                }
-            }
+                'geocomplete',
+                'jquery-mobile',
+                'fastclick',
+                'jquery.ui.touch-punch',
+                'jquery.fileupload',
+                'load-image',
+                'load-image.meta',
+                'load-image.ios',
+                'jquery.fileupload-process',
+                'jquery.fileupload-image'
+            ]
         }
     };
 
