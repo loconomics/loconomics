@@ -57,7 +57,6 @@ After the tests have been built, you can also run (and debug) them in the browse
 
 - [Mocha](http://mochajs.org/) for unit tests
 - [Expect API](http://chaijs.com/api/bdd/) from [Chai](http://chaijs.com/) for assertions
-- [Sinon](http://sinonjs.org/) for mocks and stubs
 
 ### Conventions
 

@@ -64,7 +64,6 @@
     "moment-timezone": "~0.5.9",
     "nib": "~1.0.1",
     "numeral": "~1.5.3",
-    "sinon": "^2.1.0",
     "stylus": "~0.49.0",
     "time-grunt": "~1.0.0"
   }

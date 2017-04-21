@@ -203,7 +203,7 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/tests.js',
         'options': {
-            'debug': true, // true breaks with sinon (old browserify bug?)
+            'debug': true,
             // Modules from other bundles
             'external': Array.prototype.concat(
                 styleguidelibsModules,
