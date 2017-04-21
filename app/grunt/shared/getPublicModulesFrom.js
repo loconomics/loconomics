@@ -1,14 +1,14 @@
 'use strict';
 
 /**
-    Extract external modules from the config alias and shim's.
+    Extract external modules from the config require and shim's.
 **/
 function getPublicModulesFrom(config) {
     var list = [];
     
     if (config.options) {
-        if (config.options.alias) {
-            config.options.alias.forEach(function(v){
+        if (config.options.require) {
+            config.options.require.forEach(function(v){
                 var i = v.indexOf(':');
                 if (i > -1)
                     list.push(v.substr(i + 1));
