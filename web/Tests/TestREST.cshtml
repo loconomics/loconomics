@@ -289,7 +289,16 @@
                     "securityCode": "1565",
                     "savePayment": false
                 },
-                "specialRequests": "Some notes to the professional"
+                "specialRequests": "Some notes to the professional",
+                "paymentMethod": {
+                    "paymentMethodID": "TEST: previously saved method token",
+                    "cardNumber": "123443121234",
+                    "nameOnCard": "Me",
+                    "expirationMonth": "11",
+                    "expirationYear": "2018",
+                    "securityCode": "123",
+                    "savePayment": true
+                }
             }
         },
         "Client Booking: Update booking": {
@@ -1041,15 +1050,22 @@
 
         "Payment plan (get active plan and create first one)": {
             "url": "/api/v1/en-US/me/payment-plan",
-            "get": { },
+            "get": {},
             "post": {
                 "paymentPlan": "MonthlyLite",
-                "paymentMethodToken": "fake-valid-nonce"
+                "paymentMethod": {
+                    "paymentMethodID": "TEST: previously saved method token",
+                    "cardNumber": "123443121234",
+                    "nameOnCard": "Me",
+                    "expirationMonth": "11",
+                    "expirationYear": "2018",
+                    "securityCode": "123"
+                }
             }
         },
         "Payment plan: user history": {
             "url": "/api/v1/en-US/me/payment-plan/history",
-            "get": { }
+            "get": {}
         }
     };
 
