@@ -1,31 +1,31 @@
 'use strict';
 
 module.exports = {
-  'default': [
-    'build',
-    'test'
-  ],
-  'test': [
-    'browserify:styleguidelibs',
-    'browserify:libs',
-    'browserify:tests',
-    'mocha'
-  ],
-  'build-js': [
-    'jshint',//'newer:jshint',
-    'browserify:styleguidelibs',
-    'browserify:libs',
-    'browserify:app',
-    'uglify',//'newer:uglify'
-    'notify:browserify'
-  ],
-  'build-css': [
-    'concat:css-libs',
-    'stylus:app',
-    'cssmin:libs',//'newer:cssmin'
-    'cssmin:app',//'newer:cssmin'
-    'notify:css'
-  ],
+    'default': [
+        'build',
+        'test'
+    ],
+    'test': [
+        'browserify:styleguidelibs',
+        'browserify:libs',
+        'browserify:tests',
+        'mocha'
+    ],
+    'build-js': [
+        'jshint',//'newer:jshint',
+        'browserify:styleguidelibs',
+        'browserify:libs',
+        'browserify:app',
+        'uglify',//'newer:uglify'
+        'notify:browserify'
+    ],
+    'build-css': [
+        'concat:css-libs',
+        'stylus:app',
+        'cssmin:libs',//'newer:cssmin'
+        'cssmin:app',//'newer:cssmin'
+        'notify:css'
+    ],
     'build-images': [
         'copyto:images',
         'copyto:jqueryuiimages',
@@ -85,37 +85,37 @@ module.exports = {
 
     //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
-  'build-dev': [
-    'browserify',
-    'stylus:app',
+    'build-dev': [
+        'browserify',
+        'stylus:app',
         'bliss:appDebug',
         'notify:build'
-  ],
-  'build': [
+    ],
+    'build': [
         'build-js',
         'prepare-bootstrap-variables',
-    'build-css',
+        'build-css',
         'build-html',
         'build-images',
         'build-fonts',
         'notify:build'
-  ],
+    ],
     'build-webapp-html': [
         'bliss:webapp',
         'htmlmin:webapp',
         'copyto:webapp_assets',
         'notify:html'
     ],
-  'build-webapp': [
+    'build-webapp': [
         'build-js',
         'prepare-bootstrap-variables',
-    'build-css',
+        'build-css',
         'build-webapp-html',
         'build-images',
         'build-fonts',
         'copyto:webapp_assets',
         'notify:build'
-  ],
+    ],
     'atwork': [
         'connect:atbuild',
         'watch'
