@@ -399,6 +399,15 @@ exports.create = function create(appModel) {
             };
         });
     };
+
+    // Returns JobTitle objects for each job title in user's profile
+    api.getJobTitles = function() {
+        return api.getUserJobProfile().then(function(list) {
+            return Promise.all(list.map(function(userJobTitle) {
+                return appModel.jobTitles.getJobTitle(userJobTitle.jobTitleID());
+            }));
+        });
+    };
     
     return api;
 };
