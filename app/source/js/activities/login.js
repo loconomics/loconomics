@@ -4,7 +4,8 @@
 'use strict';
 
 var ko = require('knockout'),
-    Activity = require('../components/Activity');
+    Activity = require('../components/Activity'),
+    ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
 
 var A = Activity.extend(function LoginActivity() {
     
@@ -99,7 +100,7 @@ function ViewModel(app) {
     var credentials = new FormCredentials();    
     this.username = credentials.username;
     this.password = credentials.password;
-    this.confirmPassword = ko.observable('');
+    this.validatedPassword = new ValidatedPasswordViewModel();
     this.resetToken = ko.observable('');
     this.view = ko.observable('login');
     this.requestResetMessage = ko.observable('');
@@ -109,7 +110,7 @@ function ViewModel(app) {
     this.reset = function() {
         this.username('');
         this.password('');
-        this.confirmPassword('');
+        this.validatedPassword.reset();
         this.resetToken('');
         this.requestResetMessage('');
         this.isWorking(false);
@@ -188,10 +189,18 @@ function ViewModel(app) {
     }.bind(this);
 
     this.confirmReset = function confirmReset() {
+        if (!this.validatedPassword.isValid()) {
+            app.modals.showError({
+                title: 'Validation',
+                error: 'Please create a valid password'
+            });
+            return;
+        }
+
         this.isWorking(true);
+
         app.model.confirmResetPassword({
-            password: this.password(),
-            confirm: this.confirmPassword(),
+            password: this.validatedPassword.password(),
             token: this.resetToken()
         }).then(function(result) {
             app.modals.showNotification({

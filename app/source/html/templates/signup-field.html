@@ -1,6 +1,11 @@
+<!-- Accepted data: { name: string, field: string, label: string, type: string, icon: string(optional), inputEvent: object(optional) } -->
 <script type="text/html" id="signup-field">
     <div class="form-group" data-bind="css: { 'has-error': field.error }">
-        <input class="form-control has-feedback" data-bind="textInput: field, valueUpdate:'afterkeydown', attr: { placeholder: label, 'aria-label': label, type: type, name: name }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-        <i class="fa form-control-feedback text-muted pull-right icon-right" aria-hidden="true" data-bind="css: icon"></i>
+        <input class="form-control has-feedback" data-bind="textInput: field,
+            attr: { placeholder: label, 'aria-label': label, type: type, name: name },
+            popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' },
+            disable: $parent.isLocked, event: $data.inputEvent">
+        <i class="fa form-control-feedback form-control-feedback--valid text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
+        <i class="fa form-control-feedback form-control-feedback--default text-muted pull-right icon-right icon" aria-hidden="true" data-bind="css: $data.icon"></i>
     </div>
 </script>

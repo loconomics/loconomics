@@ -50,9 +50,11 @@
             </div>
             <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
                 <label for="firstName">First Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text', icon: {'icon ion-android-done': isFirstNameValid} } }, css: {'is-valid': isFirstNameValid}"></div>
+                <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
+
                 <label for="lastName">Last Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, css: {'is-valid': isLastNameValid}"></div>
+                <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
+
                 <label for="countryID">Country</label>
                 <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
                     <select data-bind="value: countryID" class="form-control select-unstyled">
@@ -66,21 +68,19 @@
                     <label class="col-xs-7" for="referralCode">Referral Code</label>
                 </div>
                 <div class="row">
-                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { name: 'postalCode', field: postalCode, label: 'Postal code', type: 'text', icon: { 'icon ion-android-done': isPostalCodeValid } } }, css: { 'is-valid': isPostalCodeValid }"></div>
-                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { name: 'referralCode', field: referralCode, label: 'Referral code', type: 'text', icon: { 'icon ion-android-done': isReferralCodeValid } } }, css: { 'is-valid': isReferralCodeValid }"></div>
+                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { name: 'postalCode', field: postalCode, label: 'Postal code', type: 'text' } }, css: { 'is-valid': isPostalCodeValid }"></div>
+                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { name: 'referralCode', field: referralCode, label: 'Referral code', type: 'text' } }, css: { 'is-valid': isReferralCodeValid }"></div>
                 </div>
                 <label for="phone" data-bind="visible: forServiceProfessional">Mobile Phone</label>
-                <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel', icon: {'icon ion-android-done': isPhoneValid} } }, css: {'is-valid': isPhoneValid }, visible: forServiceProfessional"></div>
+                <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel' } }, css: {'is-valid': isPhoneValid }, visible: forServiceProfessional"></div>
 
                 <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
                     <label for="signupAccountEmail">E-mail address</label>
-                    <div type="email" id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { name: 'email', field: email, label: 'E-mail address', type: 'email', icon: {'icon ion-android-done': isEmailValid } } }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
+                    <div type="email" id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { name: 'email', field: email, label: 'E-mail address', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
                     </div>
                 </div>
 
-                <div class="form-group has-feedback" data-bind="css: { 'has-error': password.error }, visible: !facebookUserID()">
-                    <label for="signupAccountPassword">Password</label>
-                    <div type="password" id="signupAccountPassword" placeholder="Min-lenght: 8" data-bind="template: { name: 'signup-field', data: { name: 'password', field: password, label: 'Password', type: 'password', icon: {'icon ion-android-done': isPasswordValid} } }, css: { 'is-valid': isPasswordValid }, popover: { content: password.error() || passwordRequirements(), trigger: 'focus', container: 'body', placement: 'top' }"></div>
+                <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
                 </div>
 
                 <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">

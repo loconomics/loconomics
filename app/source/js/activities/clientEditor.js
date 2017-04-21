@@ -3,8 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var is = require('is_js');
+var Activity = require('../components/Activity'),
+    is = require('is_js'),
+    ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter'),
+    RouteParser = require('../utils/Router.js').RouteParser;
 
 var A = Activity.extend(function ClientEditionActivity() {
     
@@ -40,6 +42,17 @@ var A = Activity.extend(function ClientEditionActivity() {
             }
         }.bind(this)
     });
+
+    this.registerHandler({
+        target: this.viewModel.clientID,
+        handler: function (clientID) {
+            this.viewModel.serviceSummaries([]);
+
+            if (clientID) {
+                this.viewModel.loadServices(clientID);
+            }
+        }.bind(this)
+    });
     
     // Special treatment of the save operation
     this.viewModel.onSave = function(clientID) {
@@ -61,11 +74,10 @@ exports.init = A.init;
 var ko = require('knockout');
 
 A.prototype.updateNavBarState = function updateNavBarState() {
+    var referrerRoute = this.app.shell.referrerRoute,
+        referrer = this.viewModel.clientID() === 0 ? referrerRoute && referrerRoute.url : null,
+        link = this.requestData.cancelLink || referrer || '/clients';
 
-    var referrer = this.app.shell.referrerRoute;
-    referrer = referrer && referrer.url || '/clients';
-    var link = this.requestData.cancelLink || referrer;
-    
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
@@ -75,8 +87,6 @@ A.prototype.show = function show(state) {
     
     // reset
     this.viewModel.clientID(0);
-    
-    this.updateNavBarState();
 
     // params
     var params = state && state.route && state.route.segments || [];
@@ -135,6 +145,8 @@ A.prototype.show = function show(state) {
             clientDataFromSearchText(this.requestData.newForSearchText || '', this.viewModel.client());
         }
     }
+
+    this.updateNavBarState();
 };
 
 /**
@@ -198,7 +210,14 @@ function ViewModel(app) {
 
     this.header = ko.observable('');
     
-    this.isLoading = app.model.clients.state.isLoading;
+    this.isLoadingServices = ko.observable(false);
+    this.isLoading = ko.pureComputed(function() {
+        return (
+            app.model.clients.state.isLoading() ||
+            this.isLoadingServices()
+        );
+    }, this);
+
     this.isSyncing = app.model.clients.state.isSyncing;
     this.isSaving = app.model.clients.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
@@ -221,6 +240,40 @@ function ViewModel(app) {
         return !c || !c.updatedDate();
     }, this);
 
+    this.serviceSummaries = ko.observable([]);
+
+    this.loadServices = function(clientID) {
+        var view = this;
+
+        this.isLoadingServices(true);
+
+        Promise.all([app.model.serviceProfessionalServices.getClientSpecificServices(clientID),
+                     app.model.userJobProfile.getJobTitles(),
+                     app.model.pricingTypes.getList()])
+        .then(function(models) {
+            var services = app.model.serviceProfessionalServices.asModel(models[0]),
+                jobTitles = models[1],
+                pricingTypes = models[2](),
+
+                summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
+
+            view.serviceSummaries(summaries);
+        })
+        .catch(function(error) {
+            var messagePrefix = 'Unable to load special pricings',
+                messageName = view.client() ? ' for ' + view.client().firstName() : '',
+                message = messagePrefix + messageName + '.';
+
+            app.modals.showError({
+                title: message,
+                error: error
+            });
+        })
+        .then(function() {
+            view.isLoadingServices(false);
+        });
+    };
+
     this.submitText = ko.pureComputed(function() {
         var v = this.clientVersion();
         return (
@@ -231,8 +284,8 @@ function ViewModel(app) {
                     this.isNew() ?
                         'Add client' :
                         v && v.areDifferent() ?
-                            'Save changes' :
-                            'Saved'
+                            'Save changes to client' :
+                            'Client saved'
         );
     }, this);
 
@@ -244,9 +297,13 @@ function ViewModel(app) {
     this.deleteText = ko.pureComputed(function() {
         return (
             this.isDeleting() ? 
-                'Deleting...' : 
-                'Delete'
+                'Deleting client...' :
+                'Delete client'
         );
+    }, this);
+
+    this.showServices = ko.pureComputed(function() {
+        return !this.isNew() && this.client();
     }, this);
 
     this.save = function() {
@@ -297,7 +354,27 @@ function ViewModel(app) {
             });
         });
     }.bind(this);
-    
+
+    this.tapServiceSummary = function(serviceSummary, event) {
+        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!clientEditor/:clientID'),
+            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
+
+        app.shell.go(url);
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }.bind(this);
+
+    this.tapServiceSummaryNew = function(serviceSummary, event) {
+        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID/new'),
+            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
+
+        app.shell.go(url, null);
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }.bind(this);
+
     // Birth month day
     // TODO l10n
     this.months = ko.observableArray([
