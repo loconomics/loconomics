@@ -278,41 +278,63 @@ namespace LcRest
             };
 
             // Create subscription at gateway and set details
-            if (LcPayment.TESTING_EMULATEBRAINTREE)
+            // Wrapped in a try-catch to implement a transaction-like operation:
+            // if something fail after succesfully create the Braintree subscription, like not being
+            // able to save details on database, we need to 'rollback' the subscription, asking for removal
+            // to Braintree
+            string generatedSubscriptionId = null;
+            var paymentPlan = new LcPayment.Membership();
+            try
             {
-                userPlan.subscriptionID = LcPayment.CreateFakeSubscriptionId();
-                userPlan.paymentPlanLastChangedDate = DateTimeOffset.Now;
-                userPlan.nextPaymentDueDate = DateTimeOffset.Now.Add(new TimeSpan(365, 0, 0, 0));
-                userPlan.nextPaymentAmount = 99;
-                userPlan.firstBillingDate = DateTimeOffset.Now;
-                userPlan.planStatus = "ACTIVE";
-                userPlan.daysPastDue = 0;
+                if (LcPayment.TESTING_EMULATEBRAINTREE)
+                {
+                    userPlan.subscriptionID = LcPayment.CreateFakeSubscriptionId();
+                    userPlan.paymentPlanLastChangedDate = DateTimeOffset.Now;
+                    userPlan.nextPaymentDueDate = DateTimeOffset.Now.Add(new TimeSpan(365, 0, 0, 0));
+                    userPlan.nextPaymentAmount = 99;
+                    userPlan.firstBillingDate = DateTimeOffset.Now;
+                    userPlan.planStatus = "ACTIVE";
+                    userPlan.daysPastDue = 0;
+                }
+                else
+                {
+                    // Start creating the subscription at the payment gateway
+                    var trialEndDate = GetUserTrialEndDate(userID);
+
+                    // Create the subscription at the payment gateway
+                    // It returns the subscription object with a correct ID on success, otherwise an exception is thrown
+                    var subscription = paymentPlan.CreateSubscription(userID, plan, paymentMethodToken, trialEndDate);
+                    generatedSubscriptionId = subscription.Id;
+                    userPlan.subscriptionID = subscription.Id;
+                    userPlan.paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
+                    userPlan.nextPaymentDueDate = subscription.NextBillingDate;
+                    userPlan.nextPaymentAmount = subscription.NextBillAmount;
+                    userPlan.firstBillingDate = subscription.FirstBillingDate.Value;
+                    userPlan.planStatus = subscription.Status.ToString();
+                    userPlan.daysPastDue = subscription.DaysPastDue ?? 0;
+                }
+
+                // Fill payment method info
+                var info = LcPayment.PaymentMethodInfo.Get(paymentMethodToken);
+                userPlan.paymentExpiryDate = info.ExpirationDate;
+                userPlan.paymentMethodToken = paymentMethodToken;
+                userPlan.paymentMethod = info.Description;
+
+                // Persist subscription on database
+                Set(userPlan);
             }
-            else
+            catch (Exception ex)
             {
-                // Start creating the subscription at the payment gateway
-                var trialEndDate = GetUserTrialEndDate(userID);
+                // Rollback
+                if (generatedSubscriptionId != null)
+                {
+                    // Rollback subscription at Payment Gateway
+                    paymentPlan.CancelSubscription(generatedSubscriptionId);
+                }
 
-                // Create the subscription at the payment gateway
-                var paymentPlan = new LcPayment.Membership();
-                var subscription = paymentPlan.CreateSubscription(userID, plan, paymentMethodToken, trialEndDate);
-                userPlan.subscriptionID = subscription.Id;
-                userPlan.paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
-                userPlan.nextPaymentDueDate = subscription.NextBillingDate;
-                userPlan.nextPaymentAmount = subscription.NextBillAmount;
-                userPlan.firstBillingDate = subscription.FirstBillingDate.Value;
-                userPlan.planStatus = subscription.Status.ToString();
-                userPlan.daysPastDue = subscription.DaysPastDue ?? 0;
+                // The exception needs to be communicated anyway, so re-throw
+                throw ex;
             }
-
-            // Fill payment method info
-            var info = LcPayment.PaymentMethodInfo.Get(paymentMethodToken);
-            userPlan.paymentExpiryDate = info.ExpirationDate;
-            userPlan.paymentMethodToken = paymentMethodToken;
-            userPlan.paymentMethod = info.Description;
-
-            // Persist subscription on database
-            Set(userPlan);
 
             return userPlan;
         }

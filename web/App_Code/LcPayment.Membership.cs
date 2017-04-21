@@ -86,6 +86,25 @@ public partial class LcPayment
             }
         }
 
+        /// <summary>
+        /// Cancel and return a subscription by ID.
+        /// Returns null if not found.
+        /// </summary>
+        /// <param name="subscriptionID"></param>
+        /// <returns></returns>
+        public Subscription CancelSubscription(string subscriptionID)
+        {
+            try
+            {
+                var result = Gateway.Subscription.Cancel(subscriptionID);
+                return result.Subscription;
+            }
+            catch (Braintree.Exceptions.NotFoundException)
+            {
+                return null;
+            }
+        }
+
         #endregion
     }
 }
