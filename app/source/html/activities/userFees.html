@@ -2,7 +2,7 @@
 <div data-activity="userFees" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">   
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -14,10 +14,44 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
-                        <span>Owner user fees</span>
+                    <span>Owner user fees</span>
                 </h2>
-                <div class="LeadContent">
-                    <h1>Coming soon!</h1>
+                <script type="text/html" id="userFees-item-tpl">
+                    <div class="radio">
+                        <div class="input-group">
+                            <label class="form-control-static btn-block">
+                                <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
+                                <span data-bind="text: itemLabel"></span>
+                            </label>
+                            <span class="input-group-btn">
+                                <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false"
+                                    data-bind="attr: { 'data-target': '#userFees-info-' + itemValue(), 'data-controls': '#userFees-info-' + itemValue() }">
+                                    View details
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </script>
+
+                <div data-bind="visible: isNew">
+                    <div data-bind="foreach: { data: plans, as: 'plan' }" class="PaddedBox-xs Box-md bg-white">
+                        <!-- ko template: { name: 'userFees-item-tpl', data: {
+                            checkedValue: $parent.selectedPaymentPlanID,
+                            itemValue: plan.paymentPlanID,
+                            disabled: $parent.isLocked,
+                            itemLabel: plan.name
+                        } } --><!-- /ko -->
+                        <div class="collapse container-fluid"
+                            data-bind="attr: { id: 'userFees-info-' + plan.paymentPlanID() }">
+                            <strong><span data-bind="text: plan.name"></span>: </strong><span data-bind="text: plan.description"></span>
+                        </div>
+                    </div>
+                    <div class="LightForm">
+                        <div class="LightForm-submitBar">
+                            <button type="button" class="btn btn-primary btn-block"
+                                data-bind="click: save, text: submitText, disable: isLocked">Save</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
