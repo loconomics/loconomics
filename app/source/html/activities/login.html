@@ -19,12 +19,12 @@
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
                 <label for="login-username">Email address</label>
                 <input type="email" class="form-control" id="login-username" placeholder="Email address" data-bind="value: username, popover: { content: username.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-                <i class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></i>
+                <i class="fa form-control-feedback　ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></i>
             </div>
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': password.error }, 'has-success': !password.error()">
                 <label for="accountPassword">Password</label>
                 <input type="password" class="form-control" id="accountPassword" placeholder="Password" data-bind="value: password, popover: { content: password.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-                <i class="fa ion ion-ios-locked-outline text-muted pull-right icon-right" aria-hidden="true"></i>
+                <i class="fa form-control-feedback ion ion-ios-locked-outline text-muted pull-right icon-right" aria-hidden="true"></i>
             </div>
             <div class="isolated">
                 <!--      data-bind="attr: { 'aria-pressed': rememberMe }" 
@@ -50,7 +50,7 @@
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
                 <label for="login-reset-username" class="sr-only">Email address</label>
                 <input type="email" class="form-control" id="login-reset-username" placeholder="Email Address" data-bind="value: username, popover: { content: username.error(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-                <i class="fa ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></i>
+                <i class="fa form-control-feedback ion ion-ios-email-outline text-muted pull-right icon-right" aria-hidden="true"></i>
             </div>
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: requestResetButtonText, disable: isWorking"></button>
         </form>
@@ -62,18 +62,11 @@
             <div class="form-group has-feedback">
                 <label for="login-confirm-reset-resetToken">Reset code</label>
                 <input type="text" id="login-confirm-reset-resetToken" class="form-control" placeholder="The reset code we sent you" data-bind="value: resetToken">
-                <i class="fa ion ion-ios-locked-outline text-muted pull-right icon-right" aria-hidden="true"></i>
             </div>
-            <div class="form-group has-feedback">
-                <label for="login-confirm-reset-pwd">New password</label>
-                <input type="password" id="login-confirm-reset-pwd" class="form-control" placeholder="New password" data-bind="value: password">
-                <i class="fa ion ion-ios-locked-outline text-muted pull-right icon-right" aria-hidden="true"></i>
+            <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }">
             </div>
-            <div class="form-group has-feedback">
-                <label for="login-confirm-reset-confirmPassword">Confirm password</label>
-                <input type="password" id="login-confirm-reset-confirmPassword" class="form-control" placeholder="Repeat password" data-bind="value: confirmPassword">
-                <i class="fa ion ion-ios-locked-outline text-muted pull-right icon-right" aria-hidden="true"></i>
-            </div>
+
+
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: confirmResetButtonText, disable: isWorking"></button>
         </form> 
     </div>
