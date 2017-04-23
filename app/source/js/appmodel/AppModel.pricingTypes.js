@@ -22,5 +22,14 @@ exports.create = function create(appModel) {
         api.clearCache();
     });
 
+    api.getListByIDs = function(pricingTypeIDs) {
+        return api.getList()
+            .then(function(pricingTypes) {
+                return pricingTypes().filter(function(pricingType) {
+                    return pricingTypeIDs.indexOf(pricingType.pricingTypeID()) > -1;
+                });
+             });
+    };
+
     return api;
 };

@@ -143,15 +143,13 @@ A.prototype.applyOwnNavbarRules = function() {
     else {
         // Reset to defaults, or given title:
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
-        if (this.requestData.navTitle)
-            this.navBar.leftAction().text(this.requestData.navTitle);
 
         var jid = this.viewModel.jobTitleID(),
             jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
             url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling');
 
         this.navBar.leftAction().link(url);
-        this.navBar.leftAction().text(jname);
+        this.navBar.leftAction().text(this.requestData.navTitle || jname);
     }
 
     if (itIs && !this.requestData.cancelLink) {

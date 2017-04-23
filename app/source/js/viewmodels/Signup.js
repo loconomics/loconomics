@@ -3,21 +3,11 @@
     shared across activity and client booking.
 **/
 'use strict';
+
 var ko = require('knockout'),
-    EventEmitter = require('events')
-    .EventEmitter;
-
-//var FormCredentials = require('../viewmodels/FormCredentials');
-var newFieldObs = function() {
-    var obs = ko.observable('');
-    obs.error = ko.observable('');
-    // Reset error after a change:
-    obs.subscribe(function() {
-        obs.error('');
-    });
-    return obs;
-};
-
+    EventEmitter = require('events').EventEmitter,
+    ValidatedPasswordViewModel = require('./ValidatedPassword'),
+    Field = require('./Field');
 
 // Facebook login support: native/plugin or web?
 var fb = require('../utils/facebookUtils');
@@ -53,31 +43,26 @@ var facebookMe = function() {
     }
 };
 
-var pwdRequirementsLabel = 'Your password must be at least 8 characters long, have at least: one lowercase letter, one uppercase letter, one symbol (~!@#$%^*&;?.+_), and one numeric digit.';
-var pwdRegex = /(?=.{8,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*/;
-
 function SignupVM(app) {
     //jshint maxstatements:55
 
     EventEmitter.call(this);
 
     this.confirmationCode = ko.observable(null);
-    this.firstName = newFieldObs();
-    this.lastName = newFieldObs();
-    this.phone = newFieldObs();
-    this.postalCode = newFieldObs();
-    this.countryID = newFieldObs();
-    this.referralCode = newFieldObs();
-    this.device = newFieldObs();
+    this.firstName = new Field();
+    this.lastName = new Field();
+    this.phone = new Field();
+    this.postalCode = new Field();
+    this.countryID = new Field();
+    this.referralCode = new Field();
+    this.device = new Field();
 
     this.facebookUserID = ko.observable();
     this.facebookAccessToken = ko.observable();
 
-    //var credentials = new FormCredentials();
-    //this.email = credentials.username;
-    //this.password = credentials.password;
-    this.email = newFieldObs();
-    this.password = newFieldObs();
+    this.email = new Field();
+
+    this.validatedPassword = new ValidatedPasswordViewModel();
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
@@ -116,7 +101,7 @@ if (!testResults.reduce((ok, r) => ok ? r : false))
 else
     console.info('Success');
 */
-    
+
     this.isPhoneValid = ko.pureComputed(function() {
         var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
         return phoneRegex.test(this.phone());
@@ -130,10 +115,6 @@ else
     this.isReferralCodeValid = ko.pureComputed(function() {
         var referralCodeRegex = /^.{3,}$/;
         return referralCodeRegex.test(this.referralCode());
-    }, this);
-
-    this.isPasswordValid = ko.pureComputed(function() {
-        return pwdRegex.test(this.password());
     }, this);
 
     this.signupError = ko.observable('');
@@ -159,7 +140,7 @@ else
         this.facebookUserID('');
         this.facebookAccessToken('');
         this.email('');
-        this.password('');
+        this.validatedPassword.reset();
         this.signupError('');
         this.isSigningUp(false);
         this.profile('');
@@ -185,7 +166,7 @@ else
         var plainData = {
             confirmationCode: this.confirmationCode(),
             email: this.email(),
-            password: this.password(),
+            password: this.validatedPassword.password(),
             firstName: this.firstName(),
             lastName: this.lastName(),
             phone: this.phone(),
@@ -282,11 +263,6 @@ else
                     });
             });
     };
-
-    this.passwordRequirements = ko.pureComputed(function() {
-        var pwd = this.password();
-        return pwdRegex.test(pwd) ? '' : pwdRequirementsLabel;
-    }, this);
 }
 
 SignupVM._inherits(EventEmitter);
