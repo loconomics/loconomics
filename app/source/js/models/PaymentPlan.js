@@ -11,6 +11,7 @@ function PaymentPlan(values) {
     this.model.defProperties({
         paymentPlanID: '',
         name: '',
+        summary: '',
         description: ''
     }, values);
 }

@@ -13,38 +13,23 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h1 class="SectionTitle">Your plan</h1>
-                <div class="PaddedBox-xs Box-md bg-white">
-                    <div class="radio">
-                        <label class="form-control-static btn-block">
-                            <span><strong>$29.95 monthly</strong> – charged once a month</span>
-                        </label>
-                    </div>
-                    <a class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;">Change plan</a>
-                </div>
-                <h1 class="SectionTitle">Select a plan</h1>
-                <strong>Mockup Example:</strong>
-                <div class="PaddedBox-xs Box-md bg-white">
-                    <div class="radio">
-                        <label class="form-control-static btn-block">
-                            <input type="radio" name="userFees-monthlyOption"/>
-                            <span><strong>Monthly plan</strong> – $29.95 charged once a month</span>
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label class="form-control-static btn-block">
-                            <input type="radio" name="userFees-annualOption"/>
-                            <span><strong>Annual plan</strong> – $299.95 charged once a year (Save $59.90 with this option)</span>
-                        </label>
+                <h1 class="SectionTitle" data-bind="visible: !isNew()">Your plan</h1>
+                <div class="PaddedBox-xs Box-md bg-white" data-bind="visible: !isNew()">
+                    <div class="PaddedBox-xs" data-bind="with: activePaymentPlan">
+                        <p>
+                            <strong data-bind="text: name"></strong> - <span data-bind="text: summary">
+                        </p>
+                        <a class="btn btn-default btn-block" data-bind="click: $parent.changePlan">Change plan</a>
                     </div>
                 </div>
-                <strong>Initial data binded plans:</strong>
+
+                <h1 class="SectionTitle" data-bind="visible: isNew">Select a plan</h1>
                 <script type="text/html" id="userFees-item-tpl">
                     <div class="radio">
                         <div class="input-group">
                             <label class="form-control-static btn-block">
                                 <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
-                                <span data-bind="text: itemLabel"></span>
+                                <strong data-bind="text: itemLabel"></strong> - <span data-bind="text: itemSummary">
                             </label>
                             <span class="input-group-btn">
                                 <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false"
@@ -55,18 +40,18 @@
                         </div>
                     </div>
                 </script>
-
                 <div data-bind="visible: isNew">
                     <div data-bind="foreach: { data: plans, as: 'plan' }" class="PaddedBox-xs Box-md bg-white">
                         <!-- ko template: { name: 'userFees-item-tpl', data: {
                             checkedValue: $parent.selectedPaymentPlanID,
                             itemValue: plan.paymentPlanID,
                             disabled: $parent.isLocked,
-                            itemLabel: plan.name
+                            itemLabel: plan.name,
+                            itemSummary: plan.summary
                         } } --><!-- /ko -->
                         <div class="collapse container-fluid"
                             data-bind="attr: { id: 'userFees-info-' + plan.paymentPlanID() }">
-                            <strong><span data-bind="text: plan.name"></span>: </strong><span data-bind="text: plan.description"></span>
+                            <span data-bind="text: plan.description"></span>
                         </div>
                     </div>
                     <div class="LightForm">

@@ -9,21 +9,24 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 
 // PRESET
 var data = [
-    new PaymentPlan({
+    {//new PaymentPlan({
         paymentPlanID: 'MonthlyLite',
         name: 'Monthly Lite',
+        summary: '$14.95 charged once a month',
         description: 'Includes: ...'
-    }),
-    new PaymentPlan({
+    },
+    {//new PaymentPlan({
         paymentPlanID: 'MonthlyFull',
         name: 'Monthly Full',
+        summary: '$29.95 charged once a month',
         description: 'Includes: ...'
-    }),
-    new PaymentPlan({
+    },
+    {//new PaymentPlan({
         paymentPlanID: 'AnnualFull',
         name: 'Annual Full',
+        summary: '$299.95 charged once a year (Save $59.90 with this option)',
         description: 'Includes: ...'
-    })
+    }
 ];
 
 exports.create = function create(appModel) {
@@ -43,11 +46,11 @@ exports.create = function create(appModel) {
     });
 
     // Replace cached list with preset data
-    api.list(data);
+    api.list = data;
 
-    // Replace getList to just return the preset
+    // Replace getList to just return the preset (avoid internal remote fetch)
     api.getList = function() {
-        return Promise.resolve(data);
+        return Promise.resolve(api.list());
     };
 
     return api;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using LcEnum;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LcRest
 {
@@ -11,6 +13,7 @@ namespace LcRest
         public int userPaymentPlanID;
         public int userID;
         public string subscriptionID;
+        [JsonConverter(typeof(StringEnumConverter))]
         public SubscriptionPlan paymentPlan;
         public string paymentMethod;
         public DateTimeOffset paymentPlanLastChangedDate;

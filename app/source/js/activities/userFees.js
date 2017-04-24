@@ -38,7 +38,7 @@ function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201964153-how-owner-user-fees-work';
 
     this.plans = app.model.paymentPlans.list;
-    this.activePaymentPlan = app.model.userPaymentPlan.data;
+    this.activeUserPaymentPlan = app.model.userPaymentPlan.data;
 
     this.selectedPaymentPlanID = ko.observable(null);
     this.paymentMethod = new InputPaymentMethod();
@@ -57,7 +57,17 @@ function ViewModel(app) {
     }, this);
 
     this.isNew = ko.pureComputed(function() {
-        return !this.activePaymentPlan.userPaymentPlanID();
+        return !this.activeUserPaymentPlan.userPaymentPlanID();
+    }, this);
+
+    this.activePaymentPlan = ko.pureComputed(function(){
+        var id = this.activeUserPaymentPlan.paymentPlan();
+        if (id) {
+            return app.model.paymentPlans.getObservableItem(id)();
+        }
+        else {
+            return null;
+        }
     }, this);
 
     this.submitText = ko.pureComputed(function() {
@@ -98,4 +108,8 @@ function ViewModel(app) {
             throw { name: 'NotImplemented', description: 'Change active plan' };
         }
     }.bind(this);
+
+    this.changePlan = function() {
+        app.modals.showNotification({ title: 'Not Implemented', message: 'Not Implemented' });
+    };
 }
