@@ -209,7 +209,14 @@ module.exports = function(/*grunt*/) {
             'external': Array.prototype.concat(
                 styleguidelibsModules,
                 libsModules
-            )
+            ),
+            'shim': {
+                'bootstrap-carousel': {
+                    path: './vendor/bootstrap-source/js/carousel.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery' }
+                }
+            }
         }
     };
 
