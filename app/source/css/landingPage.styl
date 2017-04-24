@@ -64,6 +64,9 @@
             margin-top: 75px;
             padding: 30px; 0px; 30px; 30px;
             background: rgba(0, 152, 154, 0.75); 
+            @media $mediaMaxMd {
+                margin-top: 30px;
+            }
             @media $mediaMaxSm {
                 margin-top: 0px;
                 background: none;
@@ -136,7 +139,7 @@
                 text-align: center;
             }
             @media $mediaMaxSm {
-                margin: 10px;
+                margin: 15px;
             }
             #job-title-selection {
                 margin: 10px;
@@ -148,10 +151,7 @@
                 }
             }
             .LeadContent {
-                background: rgba(255, 255, 255, .75);
-            }
-            @media $mediaMaxSm {
-               padding: 20px;
+                background: rgba(255, 255, 255, .85);
             }
         }
         form {
