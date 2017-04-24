@@ -54,28 +54,56 @@
                             <span data-bind="text: plan.description"></span>
                         </div>
                     </div>
-                    <div class="LightForm">
-                        <div class="LightForm-submitBar">
-                            <button type="button" class="btn btn-primary btn-block"
-                                data-bind="click: save, text: submitText, disable: isLocked">Save</button>
-                        </div>
-                    </div>
                 </div>
                 <h1 class="SectionTitle">Enter payment info</h1>
-                <h1 class="SectionTitle">Credit card information</h1>
-                <ul class="TilesList TilesList--openEnd">
+                <div data-bind="with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
+                    <div class="form-group">
+                        <span class="input-group">
+                            <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
+                            <span class="input-group-addon" aria-hidden="true">
+                                <span class="fa ion ion-card fa-lg"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-7">
+                            <div class="form-group">
+                                <span class="input-group">
+                                    <span class="input-group-addon">Expiry</span>
+                                    <input type="text" class="form-control" data-bind="value: expirationMonthYear, disable: $parent.isLocked" placeholder="mm/yyyy">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-5">
+                            <app-unlabeled-input params="placeholder: 'CCV', value: securityCode, disable: $parent.isLocked"></app-unlabeled-input>
+                        </div>
+                    </div>
+                    <div class="secure-form-warning">
+                        <span class="fa ion ion-ios-locked-outline fa-lg" aria-hidden="true"></span>
+                        <span>This is a secure 128 bit SSL encrypted form, and we're PCI compliant</span>
+                    </div>
+                </div>
+                <h1 class="SectionTitle" data-bind="visible: !isNew()">Credit card information</h1>
+                <ul class="TilesList TilesList--openEnd" data-bind="visible: !isNew(), with: activeUserPaymentPlan">
                     <li>
                         <a class="InfoTile" href="/userFees">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-card" aria-hidden="true"></span>
                             </div>
                             <div class="Tile-content">
-                                <div>Visa ending in 2011</div>
-                                <em>Expires 08/2018</em>
+                                <div data-bind="text: paymentMethod"></div>
+                                <em>Expires <span data-bind="text: paymentExpiryDate, format: { type: 'datetime', format: 'MM/YYYY' }"></span></em>
                             </div>
                         </a>
                     </li>
                 </ul>
+
+                <div class="LightForm">
+                    <div class="LightForm-submitBar">
+                        <button type="button" class="btn btn-primary btn-block"
+                            data-bind="click: save, text: submitText, disable: isLocked">Save</button>
+                    </div>
+                </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'coopFee', helpLink: helpLink"></app-inline-side-menu>
