@@ -199,7 +199,7 @@ module.exports = function(/*grunt*/) {
      */
     bconfig.landingPages = {
         'src': [
-            './source/js/landingPages.js'
+            './source/js/landingPage.js'
         ],
         'dest': './build/assets/js/welcome.js',
         'options': {
