@@ -45,6 +45,10 @@
                         userID = WebSecurity.CurrentUserId
                     };
                 }
+                else
+                {
+                    return active;
+                }
             }
             else if (UrlData.Count == 1 && UrlData[0] == "history")
             {
