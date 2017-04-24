@@ -90,9 +90,9 @@ namespace LcRest
                  AND
                 PaymentDate = @1
 
-            IF @@rowcount = 0 THEN BEGIN
+            IF @@rowcount = 0 BEGIN
                 INSERT INTO UserFeePayments VALUES
-                @0, @1, @2, @3, @4, @5, @6
+                (@0, @1, @2, @3, @4, @5, @6)
             END
         ";
         public static void Set(UserFeePayment data)

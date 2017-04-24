@@ -147,7 +147,7 @@ namespace LcRest
             WHERE
                 UserPaymentPlanID = @0
 
-            IF @@rowcount = 0 THEN BEGIN
+            IF @@rowcount = 0 BEGIN
                 INSERT INTO UserPaymentPlan (
                     userID, subscriptionID,
                     paymentPlan, paymentMethod, paymentPlanLastChangedDate,
@@ -157,15 +157,16 @@ namespace LcRest
                     paymentMethodToken, paymentExpiryDate,
                     planStatus,
                     daysPastDue
-                ) VALUES
-                @1, @2,
-                @3, @4, @5,
-                @6, @7,
-                @8,
-                @9,
-                @10, @11,
-                @12,
-                @13
+                ) VALUES (
+                    @1, @2,
+                    @3, @4, @5,
+                    @6, @7,
+                    @8,
+                    @9,
+                    @10, @11,
+                    @12,
+                    @13
+                )
             END
         ";
         public static void Set(UserPaymentPlan data)
