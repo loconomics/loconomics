@@ -101,9 +101,12 @@
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="ion-levels" aria-hidden="true"></span>
                             </div>
-                            <div class="Tile-content">
-                                <div>Plan: <strong>Monthly</strong></div>
-                                <em>Billed to Visa ending in 2011</em>
+                            <div class="Tile-content" data-bind="visible: !activeUserPaymentPlan.isNew()">
+                                <div>Plan: <strong data-bind="text: activeUserPaymentPlan.paymentPlan"></strong></div>
+                                <em>Billed to <span data-bind="text: activeUserPaymentPlan.paymentMethod"></em>
+                            </div>
+                            <div class="Tile-content" data-bind="visible: activeUserPaymentPlan.isNew">
+                                <p>Choose a plan</p>
                             </div>
                         </a>
                     </li>

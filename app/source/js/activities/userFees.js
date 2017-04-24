@@ -56,9 +56,7 @@ function ViewModel(app) {
         return this.isLoading() || this.isSaving();
     }, this);
 
-    this.isNew = ko.pureComputed(function() {
-        return !this.activeUserPaymentPlan.userPaymentPlanID();
-    }, this);
+    this.isNew = this.activeUserPaymentPlan.isNew;
 
     this.activePaymentPlan = ko.pureComputed(function(){
         var id = this.activeUserPaymentPlan.paymentPlan();

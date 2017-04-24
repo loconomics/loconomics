@@ -3,6 +3,7 @@
 'use strict';
 
 var Model = require('../models/Model');
+var ko = require('knockout');
 
 function UserPaymentPlan(values) {
 
@@ -24,6 +25,10 @@ function UserPaymentPlan(values) {
         planStatus: '',
         daysPastDue: null
     }, values);
+
+    this.isNew = ko.pureComputed(function() {
+        return !this.userPaymentPlanID();
+    }, this);
 }
 
 module.exports = UserPaymentPlan;
