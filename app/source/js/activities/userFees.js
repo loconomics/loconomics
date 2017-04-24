@@ -29,7 +29,7 @@ A.prototype.show = function show(state) {
 
     // Request to sync plans, just in case there are remote changes
     this.app.model.paymentPlans.sync();
-    // Load titles to display for selection
+    // Load active plan, if any
     this.app.model.userPaymentPlan.sync();
 };
 

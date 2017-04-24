@@ -55,8 +55,8 @@
                         </div>
                     </div>
                 </div>
-                <h1 class="SectionTitle">Enter payment info</h1>
-                <div data-bind="with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
+                <h1 class="SectionTitle" data-bind="visible: isNew">Enter payment info</h1>
+                <div data-bind="visible: isNew, with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
                     <div class="form-group">
                         <span class="input-group">
                             <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
