@@ -1,0 +1,71 @@
+﻿@using WebMatrix.WebData;
+@*
+    Reading and updating the owner acknowledgment.
+
+    EXAMPLES {
+        "Owner Acknowledgment (get and set)": {
+            "url": "/api/v1/en-US/me/owner-acknowledgment",
+            "get": { },
+            "post": {
+                "ownerFullName": "FirstName LastName as in user account"
+            }
+        }
+    }
+*@
+@functions{
+    public class RestOwnerAcknowledgment : RestWebPage
+    {
+        private dynamic GetData()
+        {
+            return LcRest.OwnerAcknowledgment.Get(WebSecurity.CurrentUserId);
+        }
+
+        public override dynamic Get()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+
+            return GetData();
+        }
+
+        public override dynamic Post()
+        {
+            var userID = WebSecurity.CurrentUserId;
+            var name = Request.Form["ownerFullName"];
+            if (String.IsNullOrWhiteSpace(name))
+            {
+                ModelState.AddError("ownerFullName", "Type your full name as acknowlegment");
+            }
+            else
+            {
+                var profile = LcRest.UserProfile.Get(userID);
+                var names = new string[] { profile.firstName , profile.lastName, profile.secondLastName};
+                var profileName = String.Join(" ", names.Where<string>(x => !String.IsNullOrWhiteSpace(x)));
+                if (profileName != name)
+                {
+                    ModelState.AddError("ownerFullName", "The name is not correct");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            var ack = new LcRest.OwnerAcknowledgment
+            {
+                userID = userID,
+                dateAcknowledged = DateTimeOffset.Now
+            };
+            ack.DetectIP(Request);
+            LcRest.OwnerAcknowledgment.Set(ack);
+
+            return GetData();
+        }
+    }
+    }
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestOwnerAcknowledgment().JsonResponse(this);
+}
