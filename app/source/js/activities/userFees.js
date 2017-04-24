@@ -87,8 +87,11 @@ function ViewModel(app) {
         app.model.userPaymentPlan.createSubscription(plain)
         .then(function() {
             this.isSaving(false);
-            // Move forward:
-            app.successSave();
+            app.modals.showNotification({ title: 'Payment Plan saved', message: 'Thank you' })
+            .then(function() {
+                // Move forward:
+                app.successSave();
+            });
         }.bind(this))
         .catch(function(err) {
             this.isSaving(false);
