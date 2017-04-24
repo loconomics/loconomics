@@ -27,12 +27,17 @@ exports.create = function create(appModel) {
      * @param {Object} data
      */
     rem.createSubscription = function createSubscription(data) {
-
+        rem.isSaving(true);
         return appModel.rest.post('me/payment-plan', data)
-        .then(function() {
-            // If success, save persistent local copy of the data to ensure the
-            // new onboardingStep is saved
-            localforage.setItem(rem.localStorageName, rem.data.model.toPlainObject());
+        .then(function(serverData) {
+            rem.data.model.updateWith(serverData, true);
+            // If success, save persistent local copy of the data
+            localforage.setItem(rem.localStorageName, serverData);
+            rem.isSaving(false);
+        })
+        .catch(function(err) {
+            rem.isSaving(false);
+            throw err;
         });
     };
 
