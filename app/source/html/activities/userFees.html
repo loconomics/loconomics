@@ -85,20 +85,18 @@
                 </div>
                 <h1 class="SectionTitle" data-bind="visible: !isNew()">Credit card information</h1>
                 <ul class="TilesList TilesList--openEnd" data-bind="visible: !isNew(), with: activeUserPaymentPlan">
-                    <li>
-                        <a class="InfoTile" href="/userFees">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-card" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <div data-bind="text: paymentMethod"></div>
-                                <em>Expires <span data-bind="text: paymentExpiryDate, format: { type: 'datetime', format: 'MM/YYYY' }"></span></em>
-                            </div>
-                        </a>
+                    <li class="InfoTile" href="/userFees">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-card" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div data-bind="text: paymentMethod"></div>
+                            <em>Expires <span data-bind="text: paymentExpiryDate, format: { type: 'datetime', format: 'MM/YYYY' }"></span></em>
+                        </div>
                     </li>
                 </ul>
 
-                <div class="LightForm">
+                <div class="LightForm" data-bind="visible: isNew">
                     <div class="LightForm-submitBar">
                         <button type="button" class="btn btn-primary btn-block"
                             data-bind="click: save, text: submitText, disable: isLocked">Save</button>
