@@ -40,6 +40,14 @@
         public override dynamic Post()
         {
             var userID = WebSecurity.CurrentUserId;
+
+            var itExists = GetData() != null;
+            if (itExists)
+            {
+                ModelState.AddFormError("You already submitted your acknowlegment of this disclosure");
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
             var name = Request.Form["ownerFullName"];
             if (String.IsNullOrWhiteSpace(name))
             {
