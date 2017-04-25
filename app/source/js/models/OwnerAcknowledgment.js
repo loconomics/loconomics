@@ -3,6 +3,7 @@
 'use strict';
 
 var Model = require('../models/Model');
+var ko = require('knockout');
 
 function OwnerAcknowledgment(values) {
 
@@ -15,6 +16,10 @@ function OwnerAcknowledgment(values) {
         createdDate: null,
         updatedDate: null
     }, values);
+
+    this.isSigned = ko.pureComputed(function() {
+        return this.createdDate() && this.dateAcknowledged();
+    }, this);
 }
 
 module.exports = OwnerAcknowledgment;

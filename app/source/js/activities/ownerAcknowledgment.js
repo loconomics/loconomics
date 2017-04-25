@@ -20,12 +20,28 @@ var A = Activity.extend(function OwnerAcknowledgmentActivity() {
 
 module.exports = A;
 
+A.prototype.show = function show(state) {
+    // Reset
+    this.viewModel.reset();
+
+    Activity.prototype.show.call(this, state);
+
+    // Load data, if any
+    this.app.model.ownerAcknowledgment.sync();
+};
+
 function ViewModel(app) {
 
     this.isLoading = app.model.ownerAcknowledgment.isLoading;
     this.isSaving = app.model.ownerAcknowledgment.isSaving;
 
+    this.acknowledgment = app.model.ownerAcknowledgment.data;
+
     this.ownerFullName = ko.observable('');
+
+    this.reset = function() {
+        this.ownerFullName('');
+    };
 
     this.acknowledge = function() {
         app.model.ownerAcknowledgment.acknowledge({ ownerFullName: this.ownerFullName() })

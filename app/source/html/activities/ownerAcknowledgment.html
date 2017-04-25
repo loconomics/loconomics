@@ -46,7 +46,7 @@
                         <li><strong>Pay User Fee.</strong> <a href="/userFees" target="_blank">Pay any User Fee</a> associated with use of the Platform, if applicable, as determined from time to time by the Board of Directors.</li>
                     </ul>
                 </div>
-                <div class="container-fluid LightForm">
+                <div class="container-fluid LightForm" data-bind="visible: !acknowledgment.isSigned()">
                     <div class="form-group">
                         <label>Type your full name as acknowlegment</label>
                         <input type="text" class="form-control" data-bind="textInput: ownerFullName" placeholder="First and last name"/>
@@ -55,10 +55,13 @@
                         <button type="button" data-bind="click: acknowledge" class="btn btn-primary btn-block">Submit</button>
                     </div>
                 </div>
-                <div class="container-fluid LightForm">
+                <div class="container-fluid LightForm" data-bind="visible: acknowledgment.isSigned">
                     <div class="form-group">
                         <label>You submitted your acknowlegment of this disclosure on:</label>
-                        <p>Septebmer 27th, 2016 at 12:01pm from IP Address: 192.168.12.1</p>
+                        <p>
+                            <span data-bind="text: acknowledgment.dateAcknowledged, format: { type: 'datetime', format: 'MMMM Do, YYYY [at] h:mm a' }"></span>
+                            from IP Address: <span data-bind="text: acknowledgment.acknowledgedFromIP"></span>
+                        </p>
                     </div>
                 </div>
             </div>
