@@ -15,7 +15,7 @@ var A = Activity.extend(function MarketplaceProfileActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Your Listings');
-    
+
     this.viewModel.showMarketplaceInfo(true);
     this.viewModel.baseUrl('/marketplaceJobtitles');
 });
@@ -35,10 +35,10 @@ function ViewModel(app) {
     // Just use the job profile view model (created for the job title listing
     // at 'scheduling'), instance, extend and return
     var jobVm = new UserJobProfileViewModel(app);
-    
+
     // TODO read verifications count from model; computed
     jobVm.verificationsCount = ko.observable(3);
-    
+
     jobVm.displayedVerificationsNumber = ko.computed(function() {
         var verificationsCount = this.verificationsCount();
         // Format
@@ -55,15 +55,15 @@ function ViewModel(app) {
         // L18N
         return remaining > 0 ? 'You can add up to ' + remaining + ' more' : 'You cannot add more';
     }, jobVm);
-    
+
     jobVm.displayedLastBackgroundCheck = ko.computed(function() {
         // TODO read last check date
         var lastDate = new Date(2014, 10, 14);
         return moment(lastDate).format('L');
     }, jobVm);
-    
+
     jobVm.user = app.model.userProfile.data;
-    
+
     jobVm.marketplaceProfileUrl = ko.computed(function() {
         var example = 'www.loconomics.com/YOURNAME';
         // IMPORTANT: the ProfileUrl ever returns a value, with automatic SEO URL when no custom slug
@@ -72,7 +72,7 @@ function ViewModel(app) {
         var url = app.model.marketplaceProfile.data.serviceProfessionalProfileUrl();
         return slug ? url : example;
     }, jobVm);
-    
+
     var UserJobTitle = require('../models/UserJobTitle');
     jobVm.isPreviewReady = ko.pureComputed(function() {
         return this.userJobProfile().reduce(function(a, b) {
