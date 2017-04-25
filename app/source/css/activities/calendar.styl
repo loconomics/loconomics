@@ -5,6 +5,25 @@
 
 [data-activity=calendar] {
     
+    .CalendarSettings {
+        color: $brand-secondary;
+        margin-right: 15px;
+        margin-top: 10px;
+        .ion {
+            margin-right: 5px;
+        }
+        text-transform: capitalize;
+        @media $mediaMinMd {
+            font-size: 18px;
+            color: $brand-secondary;
+            margin-top: 10px;
+            .ion {
+                margin-right: 5px;
+            }
+        }
+             
+    }
+    
     #calendarDailyView {
         padding-top: $SectionTitle-height;
         min-height: 100%;
@@ -24,20 +43,25 @@
         top: 0;
         left: 0;
         right: 0;
-        
         button {
             &:hover,
             &:focus {
                 outline: none;
             }
         }
+        .btn-link {
+            text-align: left;
+        }
         @media $mediaMinMd {
-          position: relative;
-          button {
-            margin-top: 15px;
-            font-size: 28px;
-            text-transform: none;
-          }
+            position: relative;
+            button {
+                margin-top: 15px;
+                font-size: 28px;
+                text-transform: none;
+            }
+            .btn-link {
+                text-align: center;
+            }
         }
     }
     #calendarDatePicker {

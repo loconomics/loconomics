@@ -3,7 +3,9 @@
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <h1 class="hidden-xs hidden-sm">Who, what, when &amp; where</h1>
+            <div class="col-md-7 col-sm-reset">
+                <h1 class="hidden-xs hidden-sm">Calendar<span class="pull-right CalendarSettings" href="/schedulingPreferences"><span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availabilty Settings</span></h1>
+            </div>
             <div class="col-md-7 col-sm-reset">
                 <h1 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
                     <button class="btn btn-default fa ion ion-ios-arrow-left hidden-xs hidden-sm" data-bind="click: prevDate"></button>
@@ -12,45 +14,12 @@
                         <span class="caret"></span>
                     </button>
                     <button class="btn btn-default fa ion ion-ios-arrow-right hidden-xs hidden-sm" data-bind="click: nextDate"></button>
+                    <span class="pull-right CalendarSettings visible-xs visible-sm" href="/schedulingPreferences"><span class="fa ion ion-ios-settings" aria-hidden="true"></span>Settings</span>
                 </h1>
                 <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
                 <!-- Daily View (appointments list) -->
                 <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 <div id="calendarDailyView" class="TilesList TilesList--openEnd" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
-                <h2 class="SectionTitle">Your availability</h2>
-                <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="InfoTile" href="/schedulingPreferences">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-settings" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Weekly schedule</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/appointment/-3">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa fa-ban" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Block time off calendar</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/calendarSyncing">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-loop" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Sync existing calendars</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-                <app-feedback-entry class="visible-xs visible-sm" params="section: 'calendar'"></app-feedback-entry>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'calendar'"></app-inline-side-menu>
