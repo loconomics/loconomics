@@ -22,11 +22,19 @@
 
         public override dynamic Get()
         {
-            if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+            if (UrlData.Count == 0) {
+                var data = GetData();
+                if (data == null)
+                {
+                    throw new HttpException(404, "Not found");
+                }
+                else
+                {
+                    return data;
+                }
             }
 
-            return GetData();
+            throw new HttpException(404, "Not found");
         }
 
         public override dynamic Post()

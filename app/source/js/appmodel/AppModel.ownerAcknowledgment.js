@@ -12,7 +12,19 @@ exports.create = function create(appModel) {
         ttl: { minutes: 1 },
         localStorageName: 'ownerAcknowledgment',
         fetch: function fetch() {
-            return appModel.rest.get('me/owner-acknowledgment');
+            return appModel.rest.get('me/owner-acknowledgment')
+            .catch(function(err) {
+                // Catch Not Found errors, since the first time does not exists
+                // a record and is fine.
+                if (err && err.status === 404) {
+                    // Empty data
+                    rem.data.model.reset();
+                }
+                else {
+                    // Re-throw any other error
+                    throw err;
+                }
+            });
         },
         push: function push() {
             throw { name: 'Raw update of payment plan is not supported; use specialized methods' };
