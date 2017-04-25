@@ -12,7 +12,7 @@ var ko = require('knockout'),
     NavAction = require('./viewmodels/NavAction');
 
 exports.extend = function (app) {
-    
+
     // REVIEW: still needed? Maybe the per activity navBar means
     // this is not needed. Some previous logic was already removed
     // because was useless.
@@ -65,9 +65,9 @@ exports.extend = function (app) {
     // per activity change
     //app.model.user().isAnonymous.subscribe(updateStatesOnUserChange);
     //app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
-    
+
     app.navBar = ko.observable(null);
-    
+
     var refreshNav = function refreshNav() {
         // Trigger event to force a component update
         $('.AppNav').trigger('contentChange');
@@ -105,17 +105,17 @@ exports.extend = function (app) {
             // Use default one
             app.navBar(new NavBar());
         }
-        
+
         if (!app.applyNavbarMustReturn(state)) {
             // Changes depending on non-logged user
             adjustUserBar();
         }
-        
+
         refreshNav();
         autoRefreshNav(app.navBar().leftAction());
         autoRefreshNav(app.navBar().rightAction());
     };
-    
+
     app.applyNavbarMustReturn = function(state) {
         if (state && state.route && state.route.query &&
             state.route.query.mustReturn) {
@@ -143,16 +143,16 @@ exports.extend = function (app) {
         }
         return false;
     };
-    
-    
+
+
     /**
         Update the app menu to highlight the
         given link name
     **/
     app.updateMenu = function updateMenu(/*name*/) {
-        
+
         var $menu = $('.App-menus .navbar-collapse');
-        
+
         /* DONE WITH KNOCKOUT BINDING RIGHT NOW
         // Remove any active
         $menu
@@ -191,19 +191,19 @@ exports.extend = function (app) {
             app.navBarBinding.isAtCurrentOnboardingStep(app.model.onboarding.isAtCurrentStep());
         });
     });
-    
+
     app.navBarBinding.continueOnboarding = function() {
         app.model.onboarding.goCurrentStep();
     };
-    
+
     app.shell.on(app.shell.events.itemReady, function() {
         app.navBarBinding.active(app.shell.currentRoute.name);
     });
-    
+
     app.navBarBinding.isAnonymous = ko.pureComputed(function() {
         return !this.isServiceProfessional() && !this.isClient();
     }, app.navBarBinding);
-    
+
     app.navBarBinding.cssIfActive = function(activityName) {
         return ko.computed(function() {
             return activityName === app.navBarBinding.active() ? 'active' : '';
@@ -214,7 +214,7 @@ exports.extend = function (app) {
         app.navBarBinding.isApp(!!window.cordova);
         ko.applyBindings(app.navBarBinding, $('.AppNav').get(0));
     };
-    
+
     /**
         Performs the 'back' task from the navbar link, if any.
         That is, trigger the left action.
@@ -236,7 +236,7 @@ exports.extend = function (app) {
             this.shell.goBack();
         }
     };
-    
+
     /**
         It shows an unobtrusive notification on the navbar place, that
         hides after a short timeout
@@ -251,20 +251,20 @@ exports.extend = function (app) {
         $el.text(msg);
         $el.fadeIn(transitionDuration)
         .queue(function() {
-            
+
             // Manual hide on clicking
             $el
             .off('click.manualHide')
             .on('click.manualHide', function() {
                 $el.fadeOut(transitionDuration);
             });
-            
+
             // Auto hide after timeout
             clearTimeout(lastNotificationTimer);
             lastNotificationTimer = setTimeout(function() {
                 $el.fadeOut(transitionDuration);
             }, duration);
-            
+
             $(this).dequeue();
         });
     };

@@ -127,7 +127,6 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
-    this.app.applyNavbarMustReturn(this.requestData);
     // Avoid the bug of no-interaction if latest time the datepicker keep opened in a month or year mode
     this.hideDatepicker();
 
