@@ -7,18 +7,18 @@
     
     .CalendarSettings {
         color: $brand-secondary;
-        line-height: 28.6px;
-        margin-right: 15px;
-        margin-top: 10px;
         text-transform: capitalize;
-
+        padding: $SectionTitle-topGap $container-padding-right $SectionTitle-bottomGap $container-padding-left;
         .ion {
             margin-right: 5px;
         }
 
         @media $mediaMinMd {
             font-size: 18px;
+            line-height: 28.6px;
             margin-top: 22px;
+            margin-right: 15px;
+            padding: 0;
         }
              
     }
@@ -34,7 +34,6 @@
     
     .CalendarDateHeader {
         display: block;
-        text-align: center;
         
         // We need full screen for the content
         // absolute vs fixed because the iOS problem with scrolling
@@ -53,6 +52,8 @@
         }
         @media $mediaMinMd {
             position: relative;
+            text-align: center;
+
             button {
                 margin-top: 15px;
                 font-size: 28px;
