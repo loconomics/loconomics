@@ -133,7 +133,7 @@ exports.extend = function (app) {
      * the desired place to go back, or null if no parameters are present.
      * @returns {ReturnRequestInfo} Null if nothing is requested.
      */
-    app.getReturnLink = function(state) {
+    app.getReturnRequestInfo = function(state) {
         var q = state && state.route && state.route.query;
 
         if (q.mustReturn) {
@@ -168,7 +168,7 @@ exports.extend = function (app) {
      * were applied, false if untouched.
      */
     app.applyNavbarMustReturn = function(state) {
-        var info = app.getReturnLink(state);
+        var info = app.getReturnRequestInfo(state);
         if (info) {
             if (info.isGoBack) {
                 // Left action forced to be a go-back

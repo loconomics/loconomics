@@ -54,6 +54,12 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         // Reset
         this.navBar.model.updateWith(this.defaultNavBar, true);
     }
+
+    // Touch desktop navigation too
+    var info = this.app.getReturnRequestInfo(this.requestData);
+    this.viewModel.goBackLink(info && info.link || '/calendar');
+    this.viewModel.goBackLabel(info && info.label || 'Calendar');
+    // Does not support the info.isGoBack option
 };
 
 A.prototype.show = function show(state) {
@@ -72,6 +78,9 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201961423-setting-your-scheduling-preferences';
+
+    this.goBackLink = ko.observable('');
+    this.goBackLabel = ko.observable('');
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 

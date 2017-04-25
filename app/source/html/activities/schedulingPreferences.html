@@ -9,12 +9,12 @@
         </div>
     </div>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/calendar/">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Calendar
+                        <a href="" data-bind="attr: { href: goBackLink }">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> <span data-bind="text: goBackLabel"></span>
                         </a>
                     </li>
                 </ul>
@@ -27,7 +27,7 @@
                     <div id="weeklySchedule" data-bind="with: weeklySchedule" class="WeeklySchedule PaddedBox-xs-only"><!-- WEEKLY SCHEDULE -->
                         <h2 class="SectionTitle">
                             <span>Your weekly schedule</span>
-                        </h2>                     
+                        </h2>
                         <div data-bind="css: { 'is-loading': isLoading }">
                             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                         </div>
@@ -87,7 +87,7 @@
                         <script type="text/html" id="weeklySchedule-timeRangeTpl">
                             <div class="WeeklySchedule-weekDay-timeRange"><button type="button" class="btn btn-default" data-bind="click: $parent.day.removeTimeRange">
                                     <span class="glyphicon glyphicon-minus" aria-hidden="true"></span><span class="sr-only">Remove time</span>
-                                </button><!-- ko template: { 
+                                </button><!-- ko template: {
                                         name: 'weeklySchedule-timeSelectorHourMinutesTpl',
                                         data: {
                                             value: fromMinute,
@@ -95,7 +95,7 @@
                                             midnightAtBeginning: true,
                                             midnightAtEnd: false
                                         }
-                                } --><!-- /ko --> <span>to</span> <!-- ko template: { 
+                                } --><!-- /ko --> <span>to</span> <!-- ko template: {
                                         name: 'weeklySchedule-timeSelectorHourMinutesTpl',
                                         data: {
                                             value: toMinute,
@@ -127,7 +127,7 @@
 
                         <div class="WeeklySchedule-allTime">
                             <label>
-                                <span>All days/times</span> 
+                                <span>All days/times</span>
                                 <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
                             </label>
                         </div>
@@ -164,7 +164,7 @@
                     <div id="schedulingPreferences" data-bind="with: schedulingPreferences"><!-- SCHEDULING PREFERENCES -->
                         <h2 class="SectionTitle">
                             <span>Scheduling preferences</span>
-                        </h2>                     
+                        </h2>
                         <div data-bind="css: { 'is-loading': isLoading }">
                             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                         </div>
@@ -242,4 +242,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
