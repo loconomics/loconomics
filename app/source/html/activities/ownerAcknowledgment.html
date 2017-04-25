@@ -1,7 +1,7 @@
 <div data-activity="ownerAcknowledgment" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -37,7 +37,7 @@
                     </p>
                     <p>
                        To become an Owner of Loconomics, a Service Professional must do each of the following:
-                    </p> 
+                    </p>
                     <ul type="disc">
                         <li><strong>Create a profile.</strong> Create an online profile on the Loconomics Marketplace describing the Owner and the services that the Owner provides.</li>
                         <li><strong>Complete two bookings with positive reviews.</strong> Complete Services for at least two bookings through the Loconomics Marketplace or online scheduler with a Client review of 3 stars or higher. Service Professionals regulated by HIPAA are exempt from the positive reviews requirement.</li>
@@ -46,16 +46,16 @@
                         <li><strong>Pay User Fee.</strong> <a href="/userFees" target="_blank">Pay any User Fee</a> associated with use of the Platform, if applicable, as determined from time to time by the Board of Directors.</li>
                     </ul>
                 </div>
-                <div class="container-fluid LightForm">                
+                <div class="container-fluid LightForm">
                     <div class="form-group">
                         <label>Type your full name as acknowlegment</label>
-                        <input type="text" class="form-control" placeholder="First and last name"/>
+                        <input type="text" class="form-control" data-bind="textInput: ownerFullName" placeholder="First and last name"/>
                     </div>
                     <div class="LightForm-submitBar">
-                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                        <button type="button" data-bind="click: acknowledge" class="btn btn-primary btn-block">Submit</button>
                     </div>
                 </div>
-                <div class="container-fluid LightForm">                
+                <div class="container-fluid LightForm">
                     <div class="form-group">
                         <label>You submitted your acknowlegment of this disclosure on:</label>
                         <p>Septebmer 27th, 2016 at 12:01pm from IP Address: 192.168.12.1</p>
@@ -67,4 +67,4 @@
             </div>
         </div>
     </div>
-</div>   
+</div>

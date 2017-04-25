@@ -163,6 +163,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.help = require('./AppModel.help').create(this);
     this.paymentPlans = require('./AppModel.paymentPlans').create(this);
     this.userPaymentPlan = require('./AppModel.userPaymentPlan').create(this);
+    this.ownerAcknowledgment = require('./AppModel.ownerAcknowledgment').create(this);
 
     this.emit('modulesLoaded');
 };
