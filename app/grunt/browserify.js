@@ -193,6 +193,24 @@ module.exports = function(/*grunt*/) {
             )
         }
     };
+
+    /**
+        Tests bundle
+    **/
+    bconfig.tests = {
+        'src': [
+            './source/test/**/*.js'
+        ],
+        'dest': './build/assets/js/tests.js',
+        'options': {
+            'debug': true,
+            // Modules from other bundles
+            'external': Array.prototype.concat(
+                styleguidelibsModules,
+                libsModules
+            )
+        }
+    };
     
     return bconfig;
 };
