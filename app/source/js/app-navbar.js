@@ -116,16 +116,64 @@ exports.extend = function (app) {
         autoRefreshNav(app.navBar().rightAction());
     };
 
-    app.applyNavbarMustReturn = function(state) {
-        if (state && state.route && state.route.query &&
-            state.route.query.mustReturn) {
-            var returnLink = decodeURIComponent(state.route.query.mustReturn);
-            // A text can be provided
-            var returnText = decodeURIComponent(state.route.query.returnText || '');
+    /**
+     * It describes the values of a return-to request
+     * @typedef {Object} ReturnRequestInfo
+     * @property {string} [link] Local URL where the request must return to
+     * @property {bool} isGoBack It's true in case must return with a 'go back'
+     * call; it discards the link value since it will just go to previous step,
+     * and the link value is required if this is false.
+     * @property {string} [label] Text to display in the 'return' link
+     */
+
+    /**
+     * Looks for parameters in the navigation state requesting to
+     * use a specific setting for the current activity 'back' button.
+     * It returns an object with values properly processed describing
+     * the desired place to go back, or null if no parameters are present.
+     * @returns {ReturnRequestInfo} Null if nothing is requested.
+     */
+    app.getReturnLink = function(state) {
+        var q = state && state.route && state.route.query;
+
+        if (q.mustReturn) {
+            var data = {
+                link: null,
+                label: null,
+                isGoBack: false
+            };
+
+            // Link: auto goBack or explicit link
+            var returnLink = decodeURIComponent(q.mustReturn);
             if (returnLink === '1' || returnLink === 'true') {
+                data.isGoBack = true;
+            }
+            else {
+                data.link = returnLink;
+            }
+            // A text can be provided
+            data.label = decodeURIComponent(q.returnText || '');
+            return data;
+        }
+        return null;
+    },
+
+    /**
+     * Detects parameters requesting a specific 'go back' behavior
+     * and updates the navbar to reflect that, or left untouched if
+     * no parameters present.
+     * Parameter that triggers the logic: state.route.query.mustReturn
+     * Optional parameter: state.route.query.returnText
+     * @returns {bool} True if parameters present and changes to navbar
+     * were applied, false if untouched.
+     */
+    app.applyNavbarMustReturn = function(state) {
+        var info = app.getReturnLink(state);
+        if (info) {
+            if (info.isGoBack) {
                 // Left action forced to be a go-back
                 app.navBar().leftAction(NavAction.goBack.model.clone({
-                    text: returnText,
+                    text: info.label,
                     isShell: true,
                     isTitle: true
                 }));
@@ -133,8 +181,8 @@ exports.extend = function (app) {
             else {
                 // Left action force to return to the given URL
                 app.navBar().leftAction(NavAction.goBack.model.clone({
-                    link: returnLink,
-                    text: returnText,
+                    link: info.link,
+                    text: info.label,
                     isShell: false,
                     isTitle: true
                 }));
