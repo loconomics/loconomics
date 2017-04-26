@@ -64,6 +64,8 @@ function SignupVM(app) {
 
     this.validatedPassword = new ValidatedPasswordViewModel();
 
+    this.isCountryVisible = ko.observable(true);
+
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
         var firstNameRegex = /^(\S{2,}\s*)+$/;

@@ -49,8 +49,8 @@
                 </p>
             </div>
             <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-                <label for="countryID">Country</label>
-                <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
+                <label for="countryID" data-bind="visible: isCountryVisible">Country</label>
+                <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': countryID.error }, visible: isCountryVisible">
                     <select data-bind="value: countryID" class="form-control select-unstyled">
                         @render('parts/countriesOptions.html')
                     </select>
