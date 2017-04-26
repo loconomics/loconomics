@@ -10,7 +10,7 @@
     </div>
     <div class="container">
         <div class="row">             
-            <div class="col-md-7 col-sm-reset">
+            <div class="col-md-12 col-sm-reset">
                 <div class="LeadContent">
                     <div data-bind="visible: isServiceProfessional()">
                         <h2>Congrats, <span data-bind="text: userProfile.firstName"></span>!</h2>
@@ -27,9 +27,6 @@
                         <a class="text-secondary btn btn-link btn-block" href="/" data-bind="click: clientOnboarding">Tour the app</a>
                     </div>
                 </div>
-            </div>
-            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'welcome', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>
