@@ -6,13 +6,15 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/account"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Account</a>
+                        <a href="/userProfile">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Profile
+                        </a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
-                    <span>Your education</span>
+                    <span>Your training and education</span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -39,7 +41,7 @@
                     </div>
                     <div class="CompactLinkTile">  
                         <a href="/educationForm">
-                            <div class="Tile-content text-muted">Add education</div>
+                            <div class="Tile-content text-muted">Add certificate or degree</div>
                             <div class="Tile-icon text-muted">
                                 <span class="fa ion ion-plus"></span>
                             </div>

@@ -19,7 +19,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
     });
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
-    
+
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
 
@@ -39,7 +39,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
 
                     // Fill in job title name
                     this.viewModel.jobTitleName(jobTitle.singularName());
-                    
+
                     // Get addresses
                     return this.app.model.serviceAddresses.getList(jobTitleID);
                 }.bind(this))
@@ -56,7 +56,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                         error: err
                     });
                 }.bind(this));
-                
+
                 /// Rewrite URL
                 // IMPORTANT: When in isSelectionMode, pushState cannot be use
                 // because it conflicts with the selection logic (on new-booking progress)
@@ -80,7 +80,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
             }
         }.bind(this)
     });
-    
+
     // On changing clientUserID: load its addresses
     this.registerHandler({
         target: this.viewModel.clientUserID,
@@ -125,7 +125,7 @@ exports.init = A.init;
 
 A.prototype.applyOwnNavbarRules = function() {
     //jshint maxcomplexity:10
-    
+
     var itIs = this.viewModel.serviceAddresses.isSelectionMode();
 
     if (this.requestData.title) {
@@ -165,18 +165,17 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     //jshint maxcomplexity:12
 
     var itIs = this.viewModel.serviceAddresses.isSelectionMode();
-    
+
     this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
 
     // Perform updates that apply this request:
     this.app.model.onboarding.updateNavBar(this.navBar) ||
-    //this.app.applyNavbarMustReturn(this.requestData) ||
     this.applyOwnNavbarRules();
 };
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     // Remember route to go back, from a request of 'mustReturn' or last requested
     this.mustReturnTo = this.requestData.route.query.mustReturn || this.mustReturnTo;
 
@@ -191,7 +190,7 @@ A.prototype.show = function show(options) {
 
     var params = options && options.route && options.route.segments;
     var jobTitleID = params[0] |0;
-    
+
     // Check if it comes from an addressEditor that
     // received the flag 'returnNewAsSelected': we were in selection mode->creating address->must
     // return the just created address to the previous page
@@ -210,7 +209,7 @@ A.prototype.show = function show(options) {
     this.viewModel.jobTitleID(jobTitleID);
 
     this.updateNavBarState();
-    
+
     if (jobTitleID === 0) {
         this.viewModel.jobTitles.sync();
     }
@@ -223,11 +222,11 @@ function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
-    
+
     this.serviceAddresses = new ServiceAddresses();
 
     this.headerText = ko.observable('Locations');
-    
+
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
 
@@ -238,13 +237,13 @@ function ViewModel(app) {
     // The list of client addresses is used only in selection mode
     this.clientAddresses.isSelectionMode(true);
 
-    this.jobTitleName = ko.observable('Job Title'); 
+    this.jobTitleName = ko.observable('Job Title');
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceAddress');
     this.jobTitles.selectJobTitle = function(jobTitle) {
-        
+
         this.jobTitleID(jobTitle.jobTitleID());
-        
+
         return false;
     }.bind(this);
 
@@ -255,7 +254,7 @@ function ViewModel(app) {
         var cli = app.model.clientAddresses.state.isLoading();
         return add || jobs || cli;
     }, this);
-    
+
     this.goNext = function() {
         if (app.model.onboarding.inProgress()) {
             // Ensure we keep the same jobTitleID in next steps as here:
@@ -267,7 +266,7 @@ function ViewModel(app) {
     // Replace default selectAddress
     this.serviceAddresses.selectAddress = function(selectedAddress, event) {
         if (this.serviceAddresses.isSelectionMode() === true) {
-            // Run method injected by the activity to return a 
+            // Run method injected by the activity to return a
             // selected address:
             this.returnSelected(
                 selectedAddress.addressID(),
@@ -280,12 +279,12 @@ function ViewModel(app) {
                 '/' + selectedAddress.addressID()
             );
         }
-        
+
         event.preventDefault();
         event.stopImmediatePropagation();
 
     }.bind(this);
-    
+
     this.clientAddresses.selectAddress = function(selectedAddress, event) {
         if (this.clientAddresses.isSelectionMode() === true) {
             // Run method injected by the activity to return a
@@ -305,7 +304,7 @@ function ViewModel(app) {
         });
         app.shell.go(url, request);
     }.bind(this);
-    
+
     this.addServiceArea = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/serviceArea';
         var request = $.extend({}, this.requestData, {
@@ -313,7 +312,7 @@ function ViewModel(app) {
         });
         app.shell.go(url, request);
     }.bind(this);
-    
+
     this.addClientLocation = function() {
         var url = '#!addressEditor/service/' + this.jobTitleID() + '/clientLocation/' + this.clientUserID();
         var request = $.extend({}, this.requestData, {
@@ -321,7 +320,7 @@ function ViewModel(app) {
         });
         app.shell.go(url, request);
     }.bind(this);
-    
+
     this.onboardingNextReady = ko.computed(function() {
         var isin = app.model.onboarding.inProgress(),
             hasItems = this.serviceAddresses.sourceAddresses().length > 0;
