@@ -176,7 +176,7 @@ module.exports = function(grunt) {
         landingPageTemplatesPatterns = ['templates/signup.html',
                                         'templates/signup-field.html',
                                         'templates/validated-password.html',
-                                        'templates/countries-options.html'],
+                                        'modals/errorModal.html'],
         landingPageTemplatesFiles = grunt.file.expand({
                 cwd: includedDir,
                 filter: grunt.file.isFile

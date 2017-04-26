@@ -5,8 +5,7 @@
  **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity'),
+var Activity = require('../components/Activity'),
     SignupVM = require('../viewmodels/Signup');
 
 var A = Activity.extend(function LandingPageActivity() {

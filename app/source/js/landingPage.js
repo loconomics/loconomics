@@ -5,6 +5,7 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
+require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
@@ -112,7 +113,7 @@ var appInit = function appInit() {
         // Launch 'activity' logic
         var $act = $('#landingPage');
         require('./activities/landingPage')
-        .init($act, this)
+        .init($act, app)
         .show({ route: {} });
     }, alertError);
 
