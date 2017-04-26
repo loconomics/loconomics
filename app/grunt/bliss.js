@@ -172,13 +172,23 @@ module.exports = function(grunt) {
     };
 
     // Landing Pages
-    var getLandingPagesFiles = require('./shared/getLandingPagesFiles');
+    var getLandingPagesFiles = require('./shared/getLandingPagesFiles'),
+        landingPageTemplatesPatterns = ['templates/signup.html',
+                                        'templates/signup-field.html',
+                                        'templates/validated-password.html',
+                                        'templates/countries-options.html'],
+        landingPageTemplatesFiles = grunt.file.expand({
+                cwd: includedDir,
+                filter: grunt.file.isFile
+            }, landingPageTemplatesPatterns);
+
     tasks.landingPagesBuild = {
         files: getLandingPagesFiles(grunt, 'build/welcome'),
         options: {
             context: {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
+                includedFiles: landingPageTemplatesFiles,
                 dotVersion: '',
                 cordovajs: false
             }
@@ -190,6 +200,7 @@ module.exports = function(grunt) {
             context: {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
+                includedFiles: landingPageTemplatesFiles,
                 dotVersion: version,
                 cordovajs: false
             }

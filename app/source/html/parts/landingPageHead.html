@@ -1,4 +1,4 @@
-@*context: {dotVersion:string, facebookLang:string, facebookAppID:string} *@
+@*context: {dotVersion:string, includedFiles:[], facebookLang:string, facebookAppID:string} *@
 <!DOCTYPE html>
 <html lang="en" class="App is-ready" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US">
     <head>
@@ -34,3 +34,8 @@
         <script src="../assets/js/welcome.min@(dotVersion).js"></script>
     </head>
     <body>
+        <div class="App-activities">
+            @for(var f=0; f < includedFiles.length; f++) {
+                @render('../' + includedFiles[f])
+            }
+        </div>
