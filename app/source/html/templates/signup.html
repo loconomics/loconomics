@@ -58,7 +58,7 @@
                 <label for="countryID">Country</label>
                 <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
                     <select data-bind="value: countryID" class="form-control select-unstyled">
-                        @render('parts/countriesOptions.html')
+                        <!-- ko template: { name: 'countries-options' } --><!-- /ko -->
                     </select>
                     <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                     <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
