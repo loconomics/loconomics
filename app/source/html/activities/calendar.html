@@ -7,7 +7,7 @@
                 <div class="row hidden-xs hidden-sm">
                     <h1 class="col-md-7">Calendar</h1>
                     <a class="pull-right RelatedLink CalendarSettings" href="/schedulingPreferences">
-                        <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availabilty Settings</span>
+                        <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availabilty settings
                     </a>
                 </div>
                 <h2 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
@@ -25,8 +25,8 @@
                 <!-- Daily View (appointments list) -->
                 <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 <div id="calendarDailyView" class="TilesList TilesList--openEnd" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
-                <a class="pull-right RelatedLink" href="/calendarSyncing">
-                    <span class="fa ion ion-ios-loop" aria-hidden="true"></span>Calendar Sync Settings
+                <a class="pull-right RelatedLink text-secondary" href="/calendarSyncing">
+                    <span class="fa ion ion-ios-loop" aria-hidden="true"></span>Calendar sync settings
                 </a>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
