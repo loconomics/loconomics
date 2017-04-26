@@ -111,7 +111,7 @@ var appInit = function appInit() {
 
         // Launch 'activity' logic
         var $act = $('#landingPage');
-        require('./activities/learnMoreProfessionals')
+        require('./activities/landingPage')
         .init($act, this)
         .show({ route: {} });
     }, alertError);
