@@ -247,23 +247,28 @@ else
     this.facebook = function() {
         var vm = this;
 
+        // First ask to log-in with Facebook
         // email,user_about_me
         facebookLogin()
-            .then(function(result) {
-                var auth = result.authResponse;
-                // Set FacebookId to link accounts:
-                vm.facebookUserID(auth.userID);
-                vm.facebookAccessToken(auth.accessToken);
-                // Request more user data
-                facebookMe()
-                    .then(function(user) {
-                        //Fill Data
-                        vm.email(user.email);
-                        vm.firstName(user.first_name);
-                        vm.lastName(user.last_name);
-                        //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
-                    });
-            });
+        .then(function(result) {
+            // Set credentials
+            var auth = result.authResponse;
+            // Set FacebookId to link accounts:
+            vm.facebookUserID(auth.userID);
+            vm.facebookAccessToken(auth.accessToken);
+
+            // Request more user data
+            return facebookMe();
+        })
+        .then(function(user) {
+            //Fill Data
+            vm.email(user.email);
+            vm.firstName(user.first_name);
+            vm.lastName(user.last_name);
+            //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
+        })
+        // Complete sign-up
+        .then(this.clickSignup);
     };
 }
 
