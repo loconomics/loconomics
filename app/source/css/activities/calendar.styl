@@ -8,22 +8,32 @@
         position: relative; /* for absolute positioning of date picker */
     }
     
-    .CalendarSettings {
-        color: $brand-secondary;
-        text-transform: capitalize;
-        padding: $SectionTitle-topGap $container-padding-right $SectionTitle-bottomGap $container-padding-left;
+    .RelatedLink {
+        padding: 1em $container-padding-right 1em $container-padding-left;
+
         .ion {
             margin-right: 5px;
         }
 
         @media $mediaMinMd {
             font-size: 18px;
+            padding-right: 0;
+            padding-left: 0;
+        }
+    }
+
+    .CalendarSettings {
+        color: $brand-secondary;
+        padding-top: $SectionTitle-topGap;
+        padding-bottom: $SectionTitle-bottomGap;
+        text-transform: capitalize;
+
+        @media $mediaMinMd {
             line-height: 28.6px;
             margin-top: 22px;
             margin-right: 15px;
             padding: 0;
         }
-             
     }
     
     #calendarDailyView {

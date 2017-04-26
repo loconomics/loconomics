@@ -6,7 +6,7 @@
             <div class="CalendarContainer col-md-7 col-sm-reset">
                 <div class="row hidden-xs hidden-sm">
                     <h1 class="col-md-7">Calendar</h1>
-                    <a class="pull-right CalendarSettings" href="/schedulingPreferences">
+                    <a class="pull-right RelatedLink CalendarSettings" href="/schedulingPreferences">
                         <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availabilty Settings</span>
                     </a>
                 </div>
@@ -17,7 +17,7 @@
                         <span class="caret"></span>
                     </button>
                     <button class="btn btn-default fa ion ion-ios-arrow-right hidden-xs hidden-sm" data-bind="click: nextDate"></button>
-                    <a class="pull-right CalendarSettings visible-xs visible-sm" href="/schedulingPreferences">
+                    <a class="pull-right RelatedLink CalendarSettings visible-xs visible-sm" href="/schedulingPreferences">
                         <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availabilty
                     </a>
                 </h2>
@@ -25,6 +25,9 @@
                 <!-- Daily View (appointments list) -->
                 <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 <div id="calendarDailyView" class="TilesList TilesList--openEnd" data-bind="template: { name: 'time-slot-tile-template', foreach: slots, as: 'slot' }"></div>
+                <a class="pull-right RelatedLink" href="/calendarSyncing">
+                    <span class="fa ion ion-ios-loop" aria-hidden="true"></span>Calendar Sync Settings
+                </a>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'calendar'"></app-inline-side-menu>
