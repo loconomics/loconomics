@@ -203,7 +203,7 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/welcome.js',
         'options': {
-            // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
+            // Enable debug eve when compiling script.js, the min.js will delete debug info for production use:
             'debug': true,
             // Modules from other bundles
             'external': Array.prototype.concat(
@@ -217,6 +217,24 @@ module.exports = function(/*grunt*/) {
                     depends: { 'jquery': 'jquery' }
                 }
             }
+        }
+    };
+
+    /**
+        Tests bundle
+    **/
+    bconfig.tests = {
+        'src': [
+            './source/test/**/*.js'
+        ],
+        'dest': './build/assets/js/tests.js',
+        'options': {
+            'debug': true,
+            // Modules from other bundles
+            'external': Array.prototype.concat(
+                styleguidelibsModules,
+                libsModules
+            )
         }
     };
 

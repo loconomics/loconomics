@@ -8,14 +8,14 @@ var ko = require('knockout');
 var moment = require('moment-timezone');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-    
-    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: '/scheduling',
+
+    this.navBar = Activity.createSubsectionNavBar('Calendar', {
+        backLink: '/calendar',
         helpLink: this.viewModel.helpLink
     });
 
@@ -32,7 +32,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
             });
         }.bind(this)
     });
-    
+
     this.registerHandler({
         target: this.app.model.schedulingPreferences,
         event: 'error',
@@ -49,18 +49,24 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
+
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
         this.navBar.model.updateWith(this.defaultNavBar, true);
     }
+
+    // Touch desktop navigation too
+    var info = this.app.getReturnRequestInfo(this.requestData);
+    this.viewModel.goBackLink(info && info.link || '/calendar');
+    this.viewModel.goBackLabel(info && info.label || 'Calendar');
+    // Does not support the info.isGoBack option
 };
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     this.updateNavBarState();
-    
+
     // Keep data updated:
     this.app.model.schedulingPreferences.sync();
     this.app.model.weeklySchedule.sync();
@@ -73,8 +79,11 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201961423-setting-your-scheduling-preferences';
 
+    this.goBackLink = ko.observable('');
+    this.goBackLabel = ko.observable('');
+
     this.isInOnboarding = app.model.onboarding.inProgress;
-    
+
     this.schedulingPreferences = new SchedulingPreferencesVM(app);
     this.weeklySchedule = new WeeklyScheduleVM(app);
 
@@ -99,12 +108,12 @@ function ViewModel(app) {
             // catch error, managed on event
         });
     }.bind(this);
-    
+
     this.discard = function discard() {
         this.schedulingPreferences.discard();
         this.weeklySchedule.discard();
     }.bind(this);
-    
+
     this.isLoading = ko.pureComputed(function() {
         return this.schedulingPreferences.isLoading() || this.weeklySchedule.isLoading();
     }, this);
@@ -114,15 +123,15 @@ function ViewModel(app) {
     this.isLocked = ko.pureComputed(function() {
         return this.schedulingPreferences.isLocked() || this.weeklySchedule.isLocked();
     }, this);
-    
+
     this.submitText = ko.pureComputed(function() {
         return (
             app.model.onboarding.inProgress() ?
                 'Save and continue' :
-                this.isLoading() ? 
-                    'loading...' : 
-                    this.isSaving() ? 
-                        'Saving...' : 
+                this.isLoading() ?
+                    'loading...' :
+                    this.isSaving() ?
+                        'Saving...' :
                         'Save'
         );
     }, this);
@@ -146,14 +155,14 @@ function SchedulingPreferencesVM(app) {
             prefsVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.prefs = prefsVersion.version;
 
     this.isLoading = schedulingPreferences.isLoading;
     this.isSaving = schedulingPreferences.isSaving;
     this.isLocked = schedulingPreferences.isLocked;
-    
+
     this.discard = function discard() {
         prefsVersion.pull({ evenIfNewer: true });
     }.bind(this);
@@ -161,14 +170,14 @@ function SchedulingPreferencesVM(app) {
     this.save = function save() {
         return prefsVersion.pushSave();
     }.bind(this);
-    
+
     this.incrementsExample = ko.pureComputed(function() {
-        
+
         var str = 'e.g. ',
             incSize = this.incrementsSizeInMinutes(),
             m = moment({ hour: 10, minute: 0 }),
             hours = [m.format('HH:mm')];
-        
+
         for (var i = 1; i < 4; i++) {
             hours.push(
                 m.add(incSize, 'minutes')
@@ -176,9 +185,9 @@ function SchedulingPreferencesVM(app) {
             );
         }
         str += hours.join(', ');
-        
+
         return str;
-        
+
     }, this.prefs);
 }
 
@@ -202,14 +211,14 @@ function WeeklyScheduleVM(app) {
             scheduleVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.schedule = scheduleVersion.version;
 
     this.isLoading = weeklySchedule.isLoading;
     this.isSaving = weeklySchedule.isSaving;
     this.isLocked = weeklySchedule.isLocked;
-    
+
     this.discard = function discard() {
         scheduleVersion.pull({ evenIfNewer: true });
     };
