@@ -37,7 +37,7 @@
         }
     }
     .fa {
-        font-size: 18px !important;
+        font-size: 18px;
         padding-left: 15px;
         margin-top: -4px;
 
@@ -81,6 +81,21 @@
     .form-control-feedback {
         position: relative;
     }
+
+    .form-control-feedback--valid {
+        display: none
+    }
+
+    .is-valid {
+        .form-control-feedback--valid {
+            display: inline-block
+        }
+
+        .form-control-feedback--default {
+            display: none
+        }
+    }
+
     .form-group {
         margin-right: 0px;
         margin-left: 0px;
@@ -96,7 +111,7 @@
     select {
         -webkit-appearance: none;
     }
-    
+
     .is-valid {
         input {
             border-bottom: 1px solid $brand-success !important;
@@ -105,6 +120,68 @@
 
         .icon-right {
             color: $brand-success;
+        }
+    }
+
+    .form-help-cue {
+        color: $gray
+        cursor: pointer
+        float: right
+        font-size: .825em
+
+        .icon {
+            font-size: inherit;
+            padding-left: .25em
+        }
+    }
+
+    .ValidatedPassword {
+        li {
+          line-height: 1.5em
+        }
+
+        .ValidatedPassword-fieldGroup {
+            background-color: white
+
+            .ValidatedPassword-requirements {
+                padding: 0 12px 6px 12px
+                color: $gray
+
+                .fa {
+                    font-size: 1.258em
+                    margin-top: auto
+                }
+
+                .ValidatedPassword-list {
+                    .ValidatedPassword-requirement {
+                        .icon {
+                            color: $gray-lighter
+                            padding-left: 0
+                        }
+
+                        ul {
+                            padding-left: .5em
+                            list-style-type: none
+
+                            .ValidatedPassword-character {}
+
+                            .ValidatedPassword-character--used {
+                                color: $gray-lighter
+                                text-decoration: line-through
+                            }
+                        }
+                    }
+                    .ValidatedPassword-requirement--valid {
+                        .icon {
+                            color: $brand-success
+                        }
+
+                        ul {
+                            display: none
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -449,11 +449,14 @@ function AppointmentCardViewModel(params) {
     this.pickDateTime = function pickDateTime() {
         if (this.isLocked()) return;
 
-        editFieldOn('datetimePicker', {
-            selectedDatetime: this.item().startTime(),
-            datetimeField: 'startTime',
-            headerText: 'Select the start time',
-            requiredDuration: this.item().getServiceDurationMinutes()
+        var item = this.item();
+        item.getServiceDurationMinutes().then(function(minutes){
+            editFieldOn('datetimePicker', {
+                selectedDatetime: item.startTime(),
+                datetimeField: 'startTime',
+                headerText: 'Select the start time',
+                requiredDuration: minutes
+            });
         });
     }.bind(this);
 
@@ -480,7 +483,8 @@ function AppointmentCardViewModel(params) {
     this.pickService = function pickService() {
         if (this.isLocked()) return;
 
-        editFieldOn('serviceProfessionalService/' + this.item().jobTitleID(), {
+        var activity = 'serviceProfessionalService/' + this.item().jobTitleID() + '/client/' + this.item().clientUserID();
+        editFieldOn(activity, {
             selectPricing: true,
             selectedServices: this.item().pricing()
             .map(function(pricing) {

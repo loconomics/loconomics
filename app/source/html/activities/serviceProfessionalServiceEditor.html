@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="checkbox" data-bind="visible: type.firstTimeClientsOnlyLabel">
+                        <div class="checkbox" data-bind="visible: $root.showFirstTimeClientsOnlyLabel">
                             <label>
                                 <input type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked" />
                                 <span data-bind="text: type.firstTimeClientsOnlyLabel"></span>
