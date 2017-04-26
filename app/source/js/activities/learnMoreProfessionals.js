@@ -168,6 +168,9 @@ function ViewModel(app) {
     this.signup.isCountryVisible(false);
     this.signup.countryID(COUNTRY_CODE_USA);
 
+    // A static utility (currently only used to conditionally show/hide DownloadApp links)
+    this.inApp = ko.observable(!!window.cordova);
+
     this.onboardingUrlParamsString = ko.observable();
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
