@@ -155,7 +155,7 @@ function ViewModel(app) {
         // Hide and preset the country
         this.signup.isCountryVisible(false);
         // default preset is already united state in the VM
-    };
+    }.bind(this);
     presetSignupSettings();
 
     // A static utility (currently only used to conditionally show/hide DownloadApp links)
@@ -166,7 +166,7 @@ function ViewModel(app) {
         this.search().searchTerm('');
         this.signup.reset();
         presetSignupSettings();
-    };
+    }.bind(this);
 
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
