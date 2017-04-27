@@ -21,15 +21,15 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Set up your schedule</div>
-                    <p data-bind="visible: isInOnboarding()" class="Tile PaddedBox-xs">What are your hours? We'd like clients to know when they can expect to schedule your appointments. You can add multiple blocks per day.</p>
-                    <div class="OnboardingValueProp"> 
+                <div class="OnboardingValueProp"> 
+                    <div class="Icon-container">
                         <span class="Tile-icon fa ion ion-ios-settings" aria-hidden="true"></span>
-                        <span class="Tile-content">
-                            <h2>Scheduling preferences</h2> 
-                            <p>Let clients know when you're generally free. We'll handle the rest.</p>
-                        </span>
                     </div>
+                    <span class="Tile-content">
+                        <h2><span data-bind="visible: isInOnboarding()">Set your availability</span><span data-bind="visible: !isInOnboarding()">Availability settings</span></h2> 
+                        <p>Show clients when you're generally free. They'll be more apt to book you.</p>
+                    </span>
+                </div>
                 <form data-bind="submit: save" class="LightForm">
                     <div id="weeklySchedule" data-bind="with: weeklySchedule" class="WeeklySchedule PaddedBox-xs-only"><!-- WEEKLY SCHEDULE -->
                         <h2 class="SectionTitle">
@@ -126,7 +126,7 @@
                                      data-bind="visible: day.isEnabled">
                                     <!-- ko template: { name: 'weeklySchedule-timeRangeTpl', foreach: day() } --><!-- /ko -->
                                     <button type="button" class="btn btn-default" data-bind="click: day.addTimeRange, visible: day.canAddMore">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span class="sr-only">Add times</span>
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><span> Add a  time block</span>
                                     </button>
                                 </div>
                             </div>
@@ -167,7 +167,6 @@
                             </div>
                         </div>
                     </div>
-                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Need some time between clients? Don't want last-minute bookings? No biggie. Set your preferences below for the schedule you want.</p>
                     <div id="schedulingPreferences" data-bind="with: schedulingPreferences"><!-- SCHEDULING PREFERENCES -->
                         <h2 class="SectionTitle">
                             <span>Scheduling preferences</span>
@@ -175,33 +174,32 @@
                         <div data-bind="css: { 'is-loading': isLoading }">
                             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                         </div>
-                        <script type="text/html" id="schedulingPrefs-radioButton">
-                            <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
-                                <input type="radio" name="incremensSizeInMinutes" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                                <span data-bind="text: labelText"></span>
-                            </label>
-                        </script>
-                        <div class="center-block isolated" style="text-align: center">
-                            <p>Show my availability in increments of:</p>
-                            <div class="btn-group ut-noRadioCheck">
-                                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 15, disabled: isLocked, labelText: '15 min' } } --><!-- /ko -->
-                                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 30, disabled: isLocked, labelText:  '30 min' } } --><!-- /ko -->
-                                <!-- ko template: { name: 'schedulingPrefs-radioButton', data: { value: prefs.incrementsSizeInMinutes, itemValue: 60, disabled: isLocked, labelText: '1 hour' } } --><!-- /ko -->
-                            </div>
-                            <p class="isolated" data-bind="text: incrementsExample">e.g. 10:00, 10:15, 10:30, 10:45</p>
-                        </div>
-
                         <div class="container-fluid">
+                            <div class="form-group row">
+                                <label for="schedulingPrefs-increments"
+                                       class="col-sm-6">
+                                    When can clients start their appointments?
+                                </label>
+                                <div class="col-sm-6">
+                                    <select id="schedulingPrefs-increments"
+                                            data-bind="value: prefs.incrementsSizeInMinutes, disable: isLocked"
+                                            class="form-control">
+                                        <option value="15">On the quarter hour (:00, :15, :30, :45)</option>
+                                        <option value="30">On the half hour (:00, :30)</option>
+                                        <option value="60">On the hour (:00)</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label for="schedulingPrefs-advanceTime"
                                        class="col-sm-7">
-                                    Time clients can book you in advance:
+                                    How much notice do you need before an appointment booking?
                                 </label>
                                 <div class="col-sm-5">
                                     <select id="schedulingPrefs-advanceTime"
                                             data-bind="value: prefs.advanceTime, disable: isLocked"
                                             class="form-control">
-                                        <option value="0">Anytime</option>
+                                        <option value="0">None</option>
                                         <option value="0.5">30 minutes</option>
                                         <option value="1">1 hour</option>
                                         <option value="2">2 hours</option>
@@ -218,7 +216,7 @@
                             <div class="form-group row">
                                 <label for="schedulingPrefs-betweenTime"
                                        class="col-sm-7">
-                                    Preparation time needed between clients:
+                                    How much time do you need time between clients?
                                 </label>
                                 <div class="col-sm-5">
                                     <select id="schedulingPrefs-betweenTime"

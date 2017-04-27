@@ -19,11 +19,15 @@
             </div>
             <div class="LightForm col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <!-- ko if: isInOnboarding -->
-                    <div class="OnboardingStepTitle">Create your first listing</div>
-                    <p class="OnboardingTip PaddedBox-xs">Clients will find you when searching by job title in our marketplace. Search for or add your first job title below. You can always add more later. Keep in mind that even though you're obviously talented in an amazing number of ways, clients will find you by typing “photographer” rather than “product photographer.”</p>
-                <!-- /ko -->
-
+                <div class="OnboardingValueProp"> 
+                    <div class="Icon-container">
+                        <span class="Tile-icon fa ion ion-settings" aria-hidden="true"></span>
+                    </div>
+                    <span class="Tile-content">
+                        <h2><span data-bind="visible: isInOnboarding()">Add a job title</span><span data-bind="visible: !isInOnboarding()">Add job titles</span></h2> 
+                        <p>Clients will find you when searching by job title in our marketplace. Clients will find you by typing “photographer” rather than “product photographer.”</p>
+                    </span>
+                </div>
                 <h2 class="SectionTitle">
                     <span data-bind="visible: !isInOnboarding()">Add one or more job titles</span>
                     <span data-bind="visible: isInOnboarding()">Add a job title</span>

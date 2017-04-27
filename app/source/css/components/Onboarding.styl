@@ -32,25 +32,45 @@ $Tile-hgap = $grid-gap;
 }
 .OnboardingSuccessIcon {
   font-size: 200px; 
-  color: $brand-primary; 
+  color: $brand-secondary-dark; 
   margin-top: 20px;
   text-align: center;
 }
 
 // Larger tile with 3 lines
-.OnboardingValueProp {
-    Tile()
-    InfoTile(3)
-    .Tile-icon {
-        font-size: 48px;
+.OnboardingValueProp {   
+    margin-top: 30px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid $brand-secondary-dark;
+    position: relative;
+    .Icon-container {
+        width: 90%;
+        text-align: center;
+        .Tile-icon {
+            position: absolute;
+            top: -25px;
+            font-size: 30px;
+            color: $brand-secondary-dark;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            line-height: 50px;
+            float: none;
+            border: 1px solid $brand-secondary-dark;
+        }
     }
     .Tile-content {
         h2, p {
-            margin:0px;
             display:block;
+            text-align: center;
         }
-        @media (max-width: 520px) {
-            margin: 0;
+        p {
+            margin-top: 1em;
         }
     }
 }

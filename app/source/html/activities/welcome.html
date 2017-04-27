@@ -13,13 +13,13 @@
             <div class="col-md-12 col-sm-reset">
                 <div class="LeadContent">
                     <div data-bind="visible: isServiceProfessional()">
-                        <h2>Congrats, <span data-bind="text: userProfile.firstName"></span>!</h2>
-                        <p>You've just become a founding member of the Loconomics Cooperative. We're helping each other manage and grow our independent businesses. First things first: set up your profile!</p>
+                        <h2>Welcome<span data-bind="if: userProfile.firstName">, <span data-bind="text: userProfile.firstName"></span></span>!</h2>
+                        <p>We're excited to have you on board. Let's start by creating your free listing to attract new clients in our marketplace. You'll then be invited to become a member-owner.</p>
                         <br>
                         <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Get started</button>
                     </div>
                     <div data-bind="visible: !isServiceProfessional()">
-                        <h2>Thank you, <span data-bind="text: userProfile.firstName"></span>!</h2>
+                        <h2>Thank you<span data-bind="if: userProfile.firstName">, <span data-bind="text: userProfile.firstName"></span></span>!</h2>
                         <p>We're currently growing our network of talented and cool service professionals in the Bay Area. We will keep you in the loop as we expand.</p>
                         <p>In the meantime, share our mission! If you know an independent businessperson who'd make a great Loconomics member-owner, let them know about us.</p>
                         <br/>
