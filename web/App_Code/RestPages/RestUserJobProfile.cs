@@ -13,11 +13,13 @@ public class RestUserJobProfile : RestWebPage
     public override dynamic Get()
     {
         RequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+        // Parameters
+        int userId = WebSecurity.CurrentUserId;
 
         // Item ID
         if (UrlData.Count == 1 && UrlData[0].IsInt())
         {
-            return GetItem(UrlData[0].AsInt(0));
+            return GetItem(userId, UrlData[0].AsInt(0));
         }
         else if (UrlData.Count == 1)
         {
@@ -28,9 +30,6 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Not Found");
         }
 
-        // Parameters
-        int userId = WebSecurity.CurrentUserId;
-
         return LcData.JobTitle.GetUserJobTitles(userId);
     }
 
@@ -39,11 +38,8 @@ public class RestUserJobProfile : RestWebPage
     /// </summary>
     /// <param name="itemID"></param>
     /// <returns></returns>
-    private dynamic GetItem(int itemID)
+    private dynamic GetItem(int userID, int itemID)
     {
-        // Parameters
-        int userID = WebSecurity.CurrentUserId;
-
         if (itemID > 0)
         {
             var items = LcData.JobTitle.GetUserJobTitles(userID, itemID);
@@ -92,13 +88,13 @@ public class RestUserJobProfile : RestWebPage
                         else
                         {
                             // Return an updated item
-                            return GetItem(jobTitleID);
+                            return GetItem(userID, jobTitleID);
                         }
 
                     case "reactivate":
 
                         // Double check if item exists
-                        if (GetItem(jobTitleID) == null)
+                        if (GetItem(userID, jobTitleID) == null)
                         {
                             throw new HttpException(404, "Not found");
                         }
@@ -120,7 +116,7 @@ public class RestUserJobProfile : RestWebPage
                             else
                             {
                                 // Return an updated item
-                                return GetItem(jobTitleID);
+                                return GetItem(userID, jobTitleID);
                             }
                         }
 
@@ -257,7 +253,7 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Job Title not found or disapproved");
         }
 
-        return GetItem(jobTitleID);
+        return GetItem(userID, jobTitleID);
     }
 
     /// <summary>
@@ -283,9 +279,9 @@ public class RestUserJobProfile : RestWebPage
         {
             throw new HttpException(404, "Not Found");
         }
-
+        int userID = WebSecurity.CurrentUserId;
         // Check that the item exists
-        if (GetItem(itemID) == null)
+        if (GetItem(userID, itemID) == null)
         {
             throw new HttpException(404, "Job Title not found");
         }
@@ -358,7 +354,7 @@ public class RestUserJobProfile : RestWebPage
         );
 
         // Return the updated item
-        return GetItem(itemID);
+        return GetItem(userID, itemID);
     }
 
     /// <summary>
@@ -374,13 +370,13 @@ public class RestUserJobProfile : RestWebPage
         // Item ID
         var itemID = CheckAndGetItemID();
 
+        int userID = WebSecurity.CurrentUserId;
         // Get item to be deleted.
         // It already throws 'not found' 
         // if doesn't exists
-        var item = GetItem(itemID);
+        var item = GetItem(userID, itemID);
 
         // Parameters
-        int userID = WebSecurity.CurrentUserId;
         var jobTitleID = itemID;
 
         // Delete

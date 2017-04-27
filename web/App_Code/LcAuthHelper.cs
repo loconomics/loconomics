@@ -55,7 +55,7 @@ public static class LcAuthHelper
         /// that we need now for the secure session-less REST calls
         /// </summary>
         public string authKey;
-        public dynamic profile;
+        public LcRest.UserProfile profile;
         public string onboardingStep;
     }
 

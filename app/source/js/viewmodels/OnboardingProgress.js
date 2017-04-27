@@ -9,13 +9,13 @@ function OnboardingProgress(values) {
     var stepNumberFinished = -1;
 
     Model(this);
-    
+
     this.model.defProperties({
         stepNumber: stepNumberFinished,
         // Let's set a job title to pass in to jobTitleSpecific steps as URL segment
         selectedJobTitleID: null
     }, values);
-    
+
     this.totalSteps = ko.pureComputed(function() {
         // 'Zero' step is a welcome, not accounted:
         return this.stepNames.length - 1;
@@ -68,7 +68,7 @@ function OnboardingProgress(values) {
         // TODO L18N
         return this.stepNumber() + ' of ' + this.totalSteps();
     }, this);
-    
+
     this.inProgress = ko.pureComputed(function() {
         return !this.isFinished();
     }, this);
@@ -95,6 +95,11 @@ OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
 
 // Definitions of the steps for 'welcome' onboarding, for any relevant set-up needed
 // on there, like if they need a jobTitleID
+// IMPORTANT: A server side feature at sign-up depends strictly on the order
+// of the first three steps, to skip the addJobTitles when a jobTitle is
+// given in the process, so move directly into schedulingPreferences.
+// If this changes, the server must be udpated properly or some steps
+// may end being skipt wrongly
 OnboardingProgress.steps = {
     names: [
         'welcome',
