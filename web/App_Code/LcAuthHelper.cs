@@ -205,12 +205,12 @@ public static class LcAuthHelper
     /// - countryID [optional defaults to COUNTRY_CODE_USA]
     /// - profileType [optional defaults to client]
     /// - utm [optional, not a named form parameter but the whole query string]
-    /// - firstName [optional]
-    /// - lastName [optional]
+    /// - firstName [optional for professionals, required for clients]
+    /// - lastName [optional for professionals, required for clients]
     /// - postalCode [optional]
     /// - referralCode [optional]
     /// - device [optional]
-    /// - phone [optional]
+    /// - phone [optional for professionals, required for clients]
     /// - returnProfile [optional defaults to false] Returns the user profile in a property of the result
     /// </summary>
     /// <param name="page"></param>
@@ -225,13 +225,20 @@ public static class LcAuthHelper
         // First data
         var profileTypeStr = Request.Form["profileType"] ?? "";
         var isServiceProfessional = SERVICE_PROFESSIONAL_TYPE == profileTypeStr.ToUpper();
+        var isClient = !isServiceProfessional;
         var facebookUserID = Request.Form["facebookUserID"].AsLong(0);
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
+        // Removed validations per #312
+        //page.Validation.RequireField("postalCode", "You must specify your postal/zip code.");
+        //page.Validation.RequireField("countryID", "You must specify your country.");
 
+        //
         // Conditional validations
+        // Facebook
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
-        if (!useFacebookConnect) {
+        if (!useFacebookConnect)
+        {
             page.Validation.RequireField("password", "You must specify a password.");
             // We manually validate if a password was given, in order to prevent
             // showing up the validation format message additionally to the 'required password' message
@@ -240,14 +247,20 @@ public static class LcAuthHelper
                 page.Validation.Add("password", new PasswordValidator());
             }
         }
-
-        if (useFacebookConnect)
+        else
         {
             var prevFbUser = LcAuth.GetFacebookUser(facebookUserID);
             if (prevFbUser != null)
             {
                 throw new HttpException(409, "Facebook account already connected. Sign in.");
             }
+        }
+        // Profile Type
+        if (isClient)
+        {
+            page.Validation.RequireField("phone", "You must specify your mobile phone number.");
+            page.Validation.RequireField("firstName", "You must specify your first name.");
+            page.Validation.RequireField("lastName", "You must specify your last name.");
         }
 
         if (page.Validation.IsValid())
