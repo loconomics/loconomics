@@ -202,7 +202,8 @@ else
             facebookUserID: this.facebookUserID(),
             facebookAccessToken: this.facebookAccessToken(),
             profileType: this.profile(),
-            jobTitleID: this.jobTitleID()
+            jobTitleID: this.jobTitleID(),
+            jobTitleName: this.jobTitleName()
         };
 
         return app.model.signup(plainData)
