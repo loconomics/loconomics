@@ -233,7 +233,12 @@ public static class LcAuthHelper
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect) {
             page.Validation.RequireField("password", "You must specify a password.");
-            page.Validation.Add("password", new PasswordValidator());
+            // We manually validate if a password was given, in order to prevent
+            // showing up the validation format message additionally to the 'required password' message
+            if (!String.IsNullOrWhiteSpace(Request.Form["password"]))
+            {
+                page.Validation.Add("password", new PasswordValidator());
+            }
         }
 
         if (useFacebookConnect)
