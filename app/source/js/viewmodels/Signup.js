@@ -9,6 +9,15 @@ var ko = require('knockout'),
     ValidatedPasswordViewModel = require('./ValidatedPassword'),
     Field = require('./Field');
 
+/**
+ * Enum with valid values for profile type.
+ * The value is the expected parameter value.
+ */
+var profileType = {
+    serviceProfessional: 'service-professional',
+    client: 'client'
+};
+
 // Facebook login support: native/plugin or web?
 var fb = require('../utils/facebookUtils');
 var facebookLogin = function() {
@@ -63,6 +72,8 @@ function SignupVM(app) {
     this.email = new Field();
 
     this.validatedPassword = new ValidatedPasswordViewModel();
+
+    this.isCountryVisible = ko.observable(true);
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
@@ -121,7 +132,7 @@ else
 
     this.isSigningUp = ko.observable(false);
 
-    this.profile = ko.observable(''); // client, service-professional
+    this.profile = ko.observable(''); // profileType
 
     this.emailIsLocked = ko.observable(false);
 
@@ -201,13 +212,12 @@ else
                 err = err && err.responseJSON;
 
                 var msg = err && err.errorMessage;
-                if (msg) {
-                    // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
-                    app.modals.showError({
-                        title: 'There was an error signing-up',
-                        error: msg
-                    });
-                }
+                // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
+                app.modals.showError({
+                    title: 'There was an error signing-up',
+                    error: err
+                });
+
                 // Process validation errors, tagging fields or general error
                 if (err && err.errorSource === 'validation' && err.errors) {
                     Object.keys(err.errors)
@@ -239,32 +249,42 @@ else
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
-        return this.profile() === 'service-professional';
+        return this.profile() === profileType.serviceProfessional;
+    }, this);
+
+    this.forClient = ko.pureComputed(function() {
+        return !this.forServiceProfessional();
     }, this);
 
     this.facebook = function() {
         var vm = this;
 
+        // First ask to log-in with Facebook
         // email,user_about_me
         facebookLogin()
-            .then(function(result) {
-                var auth = result.authResponse;
-                // Set FacebookId to link accounts:
-                vm.facebookUserID(auth.userID);
-                vm.facebookAccessToken(auth.accessToken);
-                // Request more user data
-                facebookMe()
-                    .then(function(user) {
-                        //Fill Data
-                        vm.email(user.email);
-                        vm.firstName(user.first_name);
-                        vm.lastName(user.last_name);
-                        //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
-                    });
-            });
+        .then(function(result) {
+            // Set credentials
+            var auth = result.authResponse;
+            // Set FacebookId to link accounts:
+            vm.facebookUserID(auth.userID);
+            vm.facebookAccessToken(auth.accessToken);
+
+            // Request more user data
+            return facebookMe();
+        })
+        .then(function(user) {
+            //Fill Data
+            vm.email(user.email);
+            vm.firstName(user.first_name);
+            vm.lastName(user.last_name);
+            //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
+        })
+        // Complete sign-up
+        .then(this.clickSignup);
     };
 }
 
 SignupVM._inherits(EventEmitter);
 
 module.exports = SignupVM;
+SignupVM.profileType = profileType;

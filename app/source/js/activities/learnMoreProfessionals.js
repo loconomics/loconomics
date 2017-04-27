@@ -1,6 +1,6 @@
 /**
     Home activity (aka Search)
-    //used to get apisearch results by term, lat, long, 
+    //used to get apisearch results by term, lat, long,
 **/
 'use strict';
 var $ = require('jquery');
@@ -12,6 +12,7 @@ var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 
+var COUNTRY_CODE_USA = 1;
 
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
@@ -36,7 +37,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
             }
         }
     });
-    
+
     // Redircect on success
     this.registerHandler({
         target: this.viewModel.signup,
@@ -46,7 +47,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
                 url = '/addJobTitles' + (this.viewModel.onboardingUrlParamsString() || '');
 
             if (onboardingJobTitleSelected) {
-                // Normally jump to the dashboard/onboarding, but when a job is selected, then 
+                // Normally jump to the dashboard/onboarding, but when a job is selected, then
                 // go to job title step with default selection set through URL params
                 this.app.model.onboarding.skipToAddJobTitles();
 
@@ -82,7 +83,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
                 country: 'US'
             }
         };
-        
+
         // WITH PLUGIN:
         $location.geocomplete(options);
         $location.on('geocode:result', function(e, place) {
@@ -100,7 +101,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         var autocomplete = new google.maps.places.Autocomplete(
             $location.get(0), options
         );
-        
+
         google.maps.event.addListener(
             autocomplete,
             'place_changed',
@@ -131,7 +132,7 @@ A.prototype._registerSnapPoints = function() {
             // Add the box height but sustract the header height because that is fixed and overlaps
             $searchBox.outerHeight() - this.$header.outerHeight()
         ) |0);
-    
+
     var pointsEvents = {
         // Just after start scrolling
         0: 'scroll-fixed-header'
@@ -143,7 +144,7 @@ A.prototype._registerSnapPoints = function() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     if (!this._notFirstShow) {
         this._registerSnapPoints();
         this._notFirstShow = true;
@@ -161,9 +162,15 @@ function ViewModel(app) {
         return u && u.isClient();
     });
     //Signup
-    this.signup = new SignupVM(app); 
-    this.signup.profile('service-professional');
-    
+    this.signup = new SignupVM(app);
+    this.signup.profile(SignupVM.profileType.serviceProfessional);
+    // Hide and preset the country
+    this.signup.isCountryVisible(false);
+    this.signup.countryID(COUNTRY_CODE_USA);
+
+    // A static utility (currently only used to conditionally show/hide DownloadApp links)
+    this.inApp = ko.observable(!!window.cordova);
+
     this.onboardingUrlParamsString = ko.observable();
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
