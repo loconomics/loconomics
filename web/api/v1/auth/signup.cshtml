@@ -1,4 +1,5 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Sign-up a user, getting logged if success and returns the same
     result as the Login method. If the user and password exists
     already and match, it just get logged (exception: if the user
@@ -73,7 +74,47 @@
                 }
             }
             else {
-                return LcAuthHelper.Signup(this.WebPage);
+                var ret = LcAuthHelper.Signup(this.WebPage);
+
+                // Special parameters for professionals: the signup
+                // can do the task of POST:user-job-profile if
+                // the expected parameters are given, simplifing the
+                // onboarding that skips the 'add job title' step.
+                if (ret.profile.isServiceProfessional)
+                {
+                    var userJobTitleApi = new RestUserJobProfile();
+                    userJobTitleApi.WebPage = this.WebPage;
+                    int userID = ret.userID;
+                    var jobTitleID = Request["jobTitleID"].AsInt(0);
+                    var jobTitleName = userJobTitleApi.GetValidatedJobTitleName(Request.Form["jobTitleName"]);
+                    // If we have the required fields, we attempt to add the job title
+                    // to the just created user profile
+                    // We need a positive jobTitleID or a validated jobTitleName (it's null if was not valid
+                    // or empty)
+                    if (jobTitleID > 0 || jobTitleName != null)
+                    {
+                        // Throws exceptions if something wrong
+                        // All are about: job title ID don't exist or is forbidden, not allowed
+                        // create job title for the given name.
+                        // In that cases, throwing an error will stop sign-up but account already exists
+                        // so attempts after may fail and the problem is not easy to fix by the user,
+                        // is better to left the original onboarding to happening, leading user to 
+                        // the addJobTitle step that will throw detailed error messages if user
+                        // try the same input --is not the perfect usability that extra on that cases
+                        // but more reasonable than left the user thinking couldn't create the account
+                        // when is already set-up
+                        try
+                        {
+                            userJobTitleApi.Create(userID, jobTitleID, jobTitleName);
+                            // Everything fine, update Onboarding step to 
+                            // next after 'add job titles' (that is the first, after a zero-welcome step)
+                            ret.onboardingStep = "schedulingPreferences";
+                        }
+                        catch { }
+                    }
+                }
+
+                return ret;
             }
         }
     }
