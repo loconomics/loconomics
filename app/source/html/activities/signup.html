@@ -1,4 +1,5 @@
 <!-- Activity Signup -->
 <div data-activity="signup">
     <div data-bind="template: {name: 'signup-template', data: $data}"></div>
+    <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
 </div>

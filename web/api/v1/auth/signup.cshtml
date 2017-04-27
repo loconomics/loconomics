@@ -7,14 +7,6 @@
 
     TODO Coordinate with login about changes in things like old redirectUrl
 
-    - POST /quick:
-        - email:string
-        - password:string
-        - returnProfile:bool as in Login
-        - profileType:string Enumeration: 'service-professional', 'client'
-            NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
-                any other value or not value will create a 'client' profile.
-
     - POST:
         - email:string
         - password:string
@@ -39,7 +31,7 @@
     - return: same as Login, or 400 with validation errors.
 
     EXAMPLES {
-        "Signup, detailed data required": {
+        "Signup": {
             "url": "/api/v1/en-US/auth/signup",
             "post": {
                  "email": "some user email",
@@ -53,16 +45,6 @@
                  "profileType": "service-professional",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
-                 "returnProfile": false,
-                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
-            }
-        },
-        "Quick Signup, simplified to require just email and password": {
-            "url": "/api/v1/en-US/auth/signup/quick",
-            "post": {
-                 "email": "some user email",
-                 "password": "",
-                 "profileType": "service-professional",
                  "returnProfile": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
@@ -86,15 +68,12 @@
                 if (UrlData[0] == "facebook") {
                     return LcAuthHelper.FacebookSignup(this.WebPage);
                 }
-                else if (UrlData[0] == "quick") {
-                    return LcAuthHelper.QuickSignup(this.WebPage);
-                }
                 else {
                     throw new HttpException(404, "Not Found");
                 }
             }
             else {
- 	            return LcAuthHelper.DetailedSignup(this.WebPage);
+                return LcAuthHelper.Signup(this.WebPage);
             }
         }
     }
