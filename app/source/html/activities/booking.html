@@ -355,9 +355,7 @@
                                 <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, css: {'is-valid': isLastNameValid}"></div>
                                 <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
                                     <label for="countryID">Country</label>
-                                    <select data-bind="value: countryID" class="form-control select-unstyled">
-                                        @render('parts/countriesOptions.html')
-                                    </select>
+                                    <select id="countryID" data-bind="value: country, options: countriesOptions, optionsText: 'name', optionsValues: 'id'" class="form-control select-unstyled"></select>
                                     <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                                     <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
                                 </div>

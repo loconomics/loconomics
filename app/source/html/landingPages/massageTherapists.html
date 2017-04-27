@@ -23,72 +23,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-md-offset-1">
-                    <div class="SignupLogin">
-                        <div class="LeadContent" data-bind="visible: profile">
-                            <h2>Your first listing is free</h2>
-                            <h3>Select a job title:</h3>
-                            <div id="job-title-selection">                                
-                                <button type="submit" class="btn btn-default">
-                                    <span data-bind="text: submitText">Dog Walker</span>
-                                </button>                                
-                                <button type="submit" class="btn btn-default">
-                                    <span data-bind="text: submitText">Dog Boarder</span>
-                                </button>                                
-                                <button type="submit" class="btn btn-default">
-                                    <span data-bind="text: submitText">Cat Sitter</span>
-                                </button>                                
-                                <button type="submit" class="btn btn-default">
-                                    <span data-bind="text: submitText">Other</span>
-                                </button>                                 
-                            </div>
-                            <div>
-                                <p class="isolated text-center" data-bind="visible: !facebookUserID()">
-                                    <svg height="5" width="43%">
-                                        <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                    </svg>
-                                    <span> and </span>
-                                    <svg height="5" width="43%">
-                                        <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                    </svg>
-                                </p>
-                                <div data-bind="visible: !facebookUserID()">
-                                    <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
-                                    <!-- <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
-                                </div>
-                                <p class="isolated text-center" data-bind="visible: !facebookUserID()">
-                                    <svg height="5" width="45%">
-                                        <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                    </svg>
-                                    <span> or </span>
-                                    <svg height="5" width="45%">
-                                        <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                    </svg>
-                                </p>
-                            </div>
-                            <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-                                <label for="firstName">Email</label>
-                                    <div class="form-group" data-bind="css: { 'has-error': field.error }">
-                                        <input class="form-control has-feedback" placeholder="example@@address.com" data-bind="textInput: field, valueUpdate:'afterkeydown', attr: { placeholder: label, 'aria-label': label, type: type, name: name }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-                                        <i class="fa form-control-feedback text-muted pull-right icon-right" aria-hidden="true" data-bind="css: icon"></i>
-                                    </div>
-                                <label for="firstName">Password</label>
-                                    <div class="form-group" data-bind="css: { 'has-error': field.error }">
-                                        <input class="form-control has-feedback" placeholder="Make it tricky, yet memorable" data-bind="textInput: field, valueUpdate:'afterkeydown', attr: { placeholder: label, 'aria-label': label, type: type, name: name }, popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' }, disable: $parent.isLocked">
-                                        <i class="fa form-control-feedback text-muted pull-right icon-right" aria-hidden="true" data-bind="css: icon"></i>
-                                    </div>
-
-                                <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': facebookUserID }">
-                                    <span data-bind="visible: facebookUserID">&nbsp;&nbsp;</span>
-                                    <span data-bind="text: submitText">Create first listing</span>
-                                </button>
-                            </form>
-
-                            <p class="isolated">
-                                By clicking on "<span data-bind="text: submitText">Create first listing</span>" or "Sign up with Facebook", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
-                                <a href="#!terms/privacy-policy?mustReturn=true" class="text-secondary">Privacy Policy</a>
-                            </p>
-                        </div>
-                    </div>
+                    <div data-bind="template: {name: 'signup-template', data: signup}"></div>
                 </div>
             </div>
         </div>

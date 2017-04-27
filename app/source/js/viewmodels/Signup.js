@@ -7,7 +7,8 @@
 var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter,
     ValidatedPasswordViewModel = require('./ValidatedPassword'),
-    Field = require('./Field');
+    Field = require('./Field'),
+    countriesOptions = require('./CountriesOptions');
 
 // Facebook login support: native/plugin or web?
 var fb = require('../utils/facebookUtils');
@@ -53,7 +54,9 @@ function SignupVM(app) {
     this.lastName = new Field();
     this.phone = new Field();
     this.postalCode = new Field();
-    this.countryID = new Field();
+    this.countriesOptions = countriesOptions();
+    this.country = new Field();
+    this.country(countriesOptions.unitedStates);
     this.referralCode = new Field();
     this.device = new Field();
 
@@ -134,7 +137,7 @@ else
         this.lastName('');
         this.phone('');
         this.postalCode('');
-        this.countryID('');
+        this.country(countriesOptions.unitedStates);
         this.referralCode('');
         this.device('');
         this.facebookUserID('');
@@ -171,7 +174,7 @@ else
             lastName: this.lastName(),
             phone: this.phone(),
             postalCode: this.postalCode(),
-            countryID: this.countryID(),
+            countryID: this.country().id,
             referralCode: this.referralCode(),
             device: this.device(),
             facebookUserID: this.facebookUserID(),
