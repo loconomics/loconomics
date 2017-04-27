@@ -17,7 +17,6 @@ require('./utils/Function.prototype._delayed');
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
-require('bootstrap-carousel');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var AppModel = require('./appmodel/AppModel');
@@ -56,6 +55,7 @@ var appInit = function appInit() {
 
     // Bootstrap
     require('bootstrap');
+    require('bootstrap-carousel');
 
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
