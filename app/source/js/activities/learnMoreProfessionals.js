@@ -12,8 +12,6 @@ var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 
-var COUNTRY_CODE_USA = 1;
-
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
     Activity.apply(this, arguments);
@@ -166,7 +164,7 @@ function ViewModel(app) {
     this.signup.profile(SignupVM.profileType.serviceProfessional);
     // Hide and preset the country
     this.signup.isCountryVisible(false);
-    this.signup.countryID(COUNTRY_CODE_USA);
+    // default preset is already united state in the VM
 
     // A static utility (currently only used to conditionally show/hide DownloadApp links)
     this.inApp = ko.observable(!!window.cordova);
