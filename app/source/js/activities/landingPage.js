@@ -30,6 +30,6 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
-    this.signup = new SignupVM(app); 
-    this.signup.profile('service-professional');
+    this.signup = new SignupVM(app);
+    this.signup.profile(SignupVM.profileType.serviceProfessional);
 }
