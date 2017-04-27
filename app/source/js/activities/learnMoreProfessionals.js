@@ -163,7 +163,7 @@ function ViewModel(app) {
     });
     //Signup
     this.signup = new SignupVM(app);
-    this.signup.profile('service-professional');
+    this.signup.profile(SignupVM.profileType.serviceProfessional);
     // Hide and preset the country
     this.signup.isCountryVisible(false);
     this.signup.countryID(COUNTRY_CODE_USA);

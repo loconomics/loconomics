@@ -50,11 +50,13 @@
             </div>
             <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
 
-                <label for="firstName">First Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
+                <div data-bind="visible: forClient">
+                    <label for="firstName">First Name</label>
+                    <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
 
-                <label for="lastName">Last Name</label>
-                <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
+                    <label for="lastName">Last Name</label>
+                    <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
+                </div>
 
                 <label for="countryID" data-bind="visible: isCountryVisible">Country</label>
                 <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': countryID.error }, visible: isCountryVisible">
@@ -76,8 +78,10 @@
                 </div>
                 -->
 
-                <label for="phone" data-bind="visible: forServiceProfessional">Mobile Phone</label>
-                <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel' } }, css: {'is-valid': isPhoneValid }, visible: forServiceProfessional"></div>
+                <div data-bind="visible: forClient">
+                    <label for="phone">Mobile Phone</label>
+                    <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
+                </div>
 
                 <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
                     <label for="signupAccountEmail">E-mail address</label>

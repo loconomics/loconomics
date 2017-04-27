@@ -9,6 +9,15 @@ var ko = require('knockout'),
     ValidatedPasswordViewModel = require('./ValidatedPassword'),
     Field = require('./Field');
 
+/**
+ * Enum with valid values for profile type.
+ * The value is the expected parameter value.
+ */
+var profileType = {
+    serviceProfessional: 'service-professional',
+    client: 'client'
+};
+
 // Facebook login support: native/plugin or web?
 var fb = require('../utils/facebookUtils');
 var facebookLogin = function() {
@@ -123,7 +132,7 @@ else
 
     this.isSigningUp = ko.observable(false);
 
-    this.profile = ko.observable(''); // client, service-professional
+    this.profile = ko.observable(''); // profileType
 
     this.emailIsLocked = ko.observable(false);
 
@@ -241,7 +250,11 @@ else
     }.bind(this);
 
     this.forServiceProfessional = ko.pureComputed(function() {
-        return this.profile() === 'service-professional';
+        return this.profile() === profileType.serviceProfessional;
+    }, this);
+
+    this.forClient = ko.pureComputed(function() {
+        return !this.forServiceProfessional();
     }, this);
 
     this.facebook = function() {
@@ -275,3 +288,4 @@ else
 SignupVM._inherits(EventEmitter);
 
 module.exports = SignupVM;
+SignupVM.profileType = profileType;
