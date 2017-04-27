@@ -412,14 +412,17 @@ public static class LcAuthHelper
                         WHERE userID = @0
                     ", userID, firstName, lastName, phone, device);
 
-                    var address = LcRest.Address.GetHomeAddress(userID);
-                    if (address.postalCode != postalCode)
+                    if (!String.IsNullOrEmpty(postalCode))
                     {
-                        address.postalCode = postalCode;
-                        //address.countryCode = countryCode;
-                        address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
-                        address.countryID = countryID;
-                        LcRest.Address.SetAddress(address);
+                        var address = LcRest.Address.GetHomeAddress(userID);
+                        if (address.postalCode != postalCode)
+                        {
+                            address.postalCode = postalCode;
+                            //address.countryCode = countryCode;
+                            address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
+                            address.countryID = countryID;
+                            LcRest.Address.SetAddress(address);
+                        }
                     }
                 }
 
