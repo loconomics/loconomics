@@ -149,6 +149,7 @@ function ViewModel(app) {
     });
     //Signup
     this.signup = new SignupVM(app);
+
     var presetSignupSettings = function() {
         this.signup.profile(SignupVM.profileType.serviceProfessional);
         // Hide and preset the country
