@@ -31,11 +31,11 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
         // since we don't need to create an error for the
         // app init, if there is not enough saved information
         // the app has code to request a login.
-        var resolveAnyway = function(doesnMatter){        
+        var resolveAnyway = function(doesnMatter){
             console.warning('App Model Init err', doesnMatter);
             resolve();
         };
-        
+
         // If there are credentials saved
         localforage.getItem('credentials').then(function(credentials) {
 
@@ -51,7 +51,7 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
                 };
                 // Load User Profile, from local with server fallback and server synchronization, silently
                 this.userProfile.load().then(resolve, resolveAnyway);
-                
+
                 // Google Analytics
                 if (window.ga) {
                     if (window.cordova) {
@@ -73,7 +73,7 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
 
 /** Initialize and wait for anything up **/
 AppModel.prototype.init = function init() {
-    
+
     // Local data
     // TODO Investigate why automatic selection an IndexedDB are
     // failing and we need to use the worse-performance localstorage back-end
@@ -85,7 +85,7 @@ AppModel.prototype.init = function init() {
         description : 'Loconomics App',
         driver: localforage.LOCALSTORAGE
     });
-    
+
     // First, get any saved local config
     // NOTE: for now, this is optional, to get a saved siteUrl rather than the
     // default one, if any.
@@ -93,21 +93,25 @@ AppModel.prototype.init = function init() {
     .then(function(config) {
         // Optional config
         config = config || {};
-        
+
         if (config.siteUrl) {
             // Update the html URL
             $('html').attr('data-site-url', config.siteUrl);
         }
         else {
-            config.siteUrl = $('html').attr('data-site-url');
+            // Need to default to empty, because in case the attribute
+            // don't exists, it will return undefined and used as a
+            // string when composing the final URL (something like
+            // 'undefined/api/..')
+            config.siteUrl = $('html').attr('data-site-url') || '';
         }
-        
+
         this.config = config;
         this.rest = new Rest(config.siteUrl + '/api/v1/en-US/');
-        
+
         // With config loaded and REST ready, load all modules
         this.loadModules();
-        
+
         // Initialize: check the user has login data and needed
         // cached data, return its promise
         return this.loadLocalCredentials();
@@ -116,7 +120,7 @@ AppModel.prototype.init = function init() {
 
 AppModel.prototype.loadModules = function loadModules() {
     //jshint maxstatements: 80
-    
+
     this.userProfile = require('./AppModel.userProfile').create(this);
     // NOTE: Alias for the user data
     // TODO:TOREVIEW if continue to makes sense to keep this 'user()' alias, document
@@ -161,7 +165,7 @@ AppModel.prototype.loadModules = function loadModules() {
     this.clientAddresses = require('./AppModel.clientAddresses').create(this);
     this.cancellationPolicies = require('./AppModel.cancellationPolicies').create(this);
     this.help = require('./AppModel.help').create(this);
-    
+
     this.emit('modulesLoaded');
 };
 
@@ -180,7 +184,7 @@ AppModel.prototype.clearLocalData = function clearLocalData() {
             // Set config again
             localforage.setItem('config', config);
         }
-        
+
         // Trigger notification, so other components
         // can make further clean-up or try synchronizations,
         // for example to clean-up in-memory cache.
