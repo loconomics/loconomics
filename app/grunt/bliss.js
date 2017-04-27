@@ -190,7 +190,8 @@ module.exports = function(grunt) {
                 facebookLang: facebookLang,
                 includedFiles: landingPageTemplatesFiles,
                 dotVersion: '',
-                cordovajs: false
+                cordovajs: false,
+                siteUrl: 'https://dev.loconomics.com'
             }
         }
     };
@@ -202,7 +203,8 @@ module.exports = function(grunt) {
                 facebookLang: facebookLang,
                 dotVersion: '.' + version,
                 includedFiles: landingPageTemplatesFiles,
-                cordovajs: false
+                cordovajs: false,
+                siteUrl: 'https://loconomics.com'
             }
         }
     };
