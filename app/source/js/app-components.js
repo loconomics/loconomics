@@ -15,6 +15,7 @@ var ko = require('knockout'),
     getObservable = require('./utils/getObservable');
 
 exports.registerAll = function(app) {
+    //jshint maxstatements:100
 
     /// navbar-action
     ko.components.register('app-navbar-action', {
@@ -455,7 +456,7 @@ exports.registerAll = function(app) {
      */
     ko.components.register('app-select-job-title', {
         template: { element: 'select-job-title-template' },
-        //synchronous: true,
+        synchronous: true,
         viewModel: {
             createViewModel: function(params/*, componentInfo.element*/) {
 
@@ -481,6 +482,21 @@ exports.registerAll = function(app) {
                     vm.list(l);
                 }
 
+                return vm;
+            }
+        }
+    });
+
+    var SignupVM = require('./viewmodels/Signup');
+    ko.components.register('app-signup', {
+        template: { element: 'signup-template' },
+        synchronous: true,
+        viewModel: {
+            createViewModel: function(params/*, componentInfo.element*/) {
+                var vm = new SignupVM(app);
+                if (params && params.api) {
+                    params.api(vm);
+                }
                 return vm;
             }
         }

@@ -22,7 +22,12 @@
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <div data-bind="template: {name: 'signup-template', data: signup}"></div>
+                        <!--<div data-bind="template: {name: 'signup-template', data: signup}"></div>-->
+                        <app-signup params="api: signup">
+                            <app-select-job-title params="selectedJobTitleID: jobTitleID,
+                                jobTitles: { 'Massage Therapist': 106, 'Acupuncturist': 185, 'Bodyworker': 310 }">
+                            </app-select-job-title>
+                        </app-signup>
                     </div>
                 </div>
             </div>
