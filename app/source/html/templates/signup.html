@@ -38,6 +38,12 @@
                 expected an optional app-select-job-title -->
             <div data-bind="template: { nodes: $componentTemplateNodes }"></div>
 
+            <div data-bind="visible: isThenLabelDisplayed">
+                <p class="isolated text-center">
+                    then
+                </p>
+            </div>
+
             <div data-bind="visible: !isSigningUpWithFacebook()">
                 <div>
                     <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>

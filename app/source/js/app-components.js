@@ -529,6 +529,8 @@ exports.registerAll = function(app) {
      * signuperror event gets emitted
      *
      * Allowed children:
+     * h5.SignupLogin-prompt: [single]
+     * - {string} content Text to display before the job titles list
      * select-job-title: [single]
      * - {KnockoutObservable<number>} selected Must be set to jobTitleID in order
      * to work connected with the signup form.
@@ -538,7 +540,7 @@ exports.registerAll = function(app) {
         template: { element: 'signup-template' },
         synchronous: true,
         viewModel: {
-            createViewModel: function(params) {
+            createViewModel: function(params, componentInfo) {
                 var vm = new SignupVM(app);
                 // Let expose the whole viewmodel as the component API
                 if (ko.isWritableObservable(params.api)) {
@@ -566,6 +568,16 @@ exports.registerAll = function(app) {
                         params.onSignUpError.call(vm, error);
                     });
                 }
+                // We have a new special setting, setting visualization
+                // of the language that join job titles list and the
+                // form/buttons.
+                vm.isThenLabelDisplayed = ko.observable(false);
+                // We detect if there are children elements, that means
+                // we need to display the label
+                if (componentInfo.templateNodes.length) {
+                    vm.isThenLabelDisplayed(true);
+                }
+
                 return vm;
             }
         }
