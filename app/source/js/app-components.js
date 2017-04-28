@@ -450,7 +450,7 @@ exports.registerAll = function(app) {
      * Ko component 'select-job-title' to display a concrete
      * list of job titles and pick one.
      * @param {object} params
-     * @param {KnockoutObservable<number>} params.selectedJobTitleID Get or set
+     * @param {KnockoutObservable<number>} params.selected Get or set
      * the selected job title by ID, if available in the list
      * @param {InvertedJobTitlesDictionary} [params.jobTitles] Dictionary of job
      * titles available for selection
@@ -471,10 +471,10 @@ exports.registerAll = function(app) {
                     list: ko.observableArray([])
                 };
 
-                if (params && ko.isWritableObservable(params.selectedJobTitleID)) {
+                if (params && ko.isWritableObservable(params.selected)) {
                     // two-way updates
-                    vm.selected.subscribe(params.selectedJobTitleID);
-                    params.selectedJobTitleID.subscribe(vm.selected);
+                    vm.selected.subscribe(params.selected);
+                    params.selected.subscribe(vm.selected);
                 }
 
                 if (params && params.jobTitles) {
@@ -514,7 +514,7 @@ exports.registerAll = function(app) {
         template: { element: 'signup-template' },
         synchronous: true,
         viewModel: {
-            createViewModel: function(params/*, componentInfo.element*/) {
+            createViewModel: function(params) {
                 var vm = new SignupVM(app);
                 if (params && params.api) {
                     params.api(vm);
