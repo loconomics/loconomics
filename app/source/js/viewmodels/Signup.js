@@ -7,10 +7,10 @@
 var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter,
     ValidatedPasswordViewModel = require('./ValidatedPassword'),
-    Field = require('./Field');
+    Field = require('./Field'),
+    fb = require('../utils/facebookUtils');
 
 // Facebook login support: native/plugin or web?
-var fb = require('../utils/facebookUtils');
 var facebookLogin = function() {
     if (window.facebookConnectPlugin) {
         // native/plugin
@@ -47,6 +47,8 @@ function SignupVM(app) {
     //jshint maxstatements:55
 
     EventEmitter.call(this);
+
+    fb.load(); // load FB asynchronously, if it hasn't already been loaded
 
     this.confirmationCode = ko.observable(null);
     this.firstName = new Field();
