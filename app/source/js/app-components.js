@@ -449,16 +449,22 @@ exports.registerAll = function(app) {
     /**
      * Ko component 'select-job-title' to display a concrete
      * list of job titles and pick one.
-     * @param {KnockoutObservable<number>} selectedJobTitleID Get or set
+     * @param {object} params
+     * @param {KnockoutObservable<number>} params.selectedJobTitleID Get or set
      * the selected job title by ID, if available in the list
-     * @param {InvertedJobTitlesDictionary} jobTitles Dictionary of job
+     * @param {InvertedJobTitlesDictionary} [params.jobTitles] Dictionary of job
      * titles available for selection
+     *
+     * Allowed children:
+     * item: [repeteable]
+     *  - {number} id attribute, the jobTitleID
+     *  - {string} content, the job title display name
      */
     ko.components.register('app-select-job-title', {
         template: { element: 'select-job-title-template' },
         synchronous: true,
         viewModel: {
-            createViewModel: function(params/*, componentInfo.element*/) {
+            createViewModel: function(params, componentInfo) {
 
                 var vm = {
                     selected: ko.observable(null),
@@ -480,6 +486,22 @@ exports.registerAll = function(app) {
                         };
                     });
                     vm.list(l);
+                }
+                else {
+                    // Read static 'item' children at the markup
+                    componentInfo.templateNodes.forEach(function(node) {
+                        // 'item' supported
+                        if (node.tagName && node.tagName.toLowerCase() === 'item') {
+                            // An integer jobTitleID
+                            var id = node.getAttribute('id') |0;
+                            // The job title display name
+                            var name = node.textContent;
+                            vm.list.push({
+                                id: id,
+                                name: name
+                            });
+                        }
+                    });
                 }
 
                 return vm;
