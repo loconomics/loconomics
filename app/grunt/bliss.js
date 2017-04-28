@@ -201,7 +201,7 @@ module.exports = function(grunt) {
             context: {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                dotVersion: '.' + version,
+                dotVersion: '.min.' + version,
                 includedFiles: landingPageTemplatesFiles,
                 cordovajs: false,
                 siteUrl: ''
