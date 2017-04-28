@@ -131,6 +131,7 @@ else
     this.signupError = ko.observable('');
 
     this.isSigningUp = ko.observable(false);
+    this.isSigningUpWithFacebook = ko.observable(false);
 
     this.profile = ko.observable(''); // profileType
 
@@ -154,6 +155,7 @@ else
         this.validatedPassword.reset();
         this.signupError('');
         this.isSigningUp(false);
+        this.isSigningUpWithFacebook(false);
         this.profile('');
         this.emailIsLocked(false);
     };
@@ -161,6 +163,7 @@ else
     this.submitText = ko.pureComputed(function() {
         return (
             this.isSigningUp() ? 'Signing up...' :
+            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
             this.facebookUserID() ? 'Sign up with Facebook' :
             'Sign up'
         );
@@ -259,6 +262,8 @@ else
     this.facebook = function() {
         var vm = this;
 
+        this.isSigningUpWithFacebook(true);
+
         // First ask to log-in with Facebook
         // email,user_about_me
         facebookLogin()
@@ -280,7 +285,13 @@ else
             //(user.gender); // gender, birthday or any other, need to be included in the fields list at facebookMe to fetch them
         })
         // Complete sign-up
-        .then(this.clickSignup);
+        .then(this.clickSignup)
+        .then(function() {
+            this.isSigningUpWithFacebook(false);
+        }.bind(this))
+        .catch(function(err) {
+            this.emit('signuperror', err);
+        }.bind(this));
     };
 }
 
