@@ -454,9 +454,11 @@ exports.registerAll = function(app) {
      * the selected job title by ID, if available in the list
      * @param {InvertedJobTitlesDictionary} [params.jobTitles] Dictionary of job
      * titles available for selection
+     * @param {string|KnockoutObservable<string>} [params.caption] Text before
+     * select any option; equivalent to set a null ID.
      *
      * Allowed children:
-     * item: [repeteable]
+     * item: [list]
      *  - {number} id attribute, the jobTitleID
      *  - {string} content, the job title display name
      */
@@ -468,7 +470,8 @@ exports.registerAll = function(app) {
 
                 var vm = {
                     selected: ko.observable(null),
-                    list: ko.observableArray([])
+                    list: ko.observableArray([]),
+                    caption: getObservable(params.caption)
                 };
 
                 if (params && ko.isWritableObservable(params.selected)) {
