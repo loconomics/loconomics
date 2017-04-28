@@ -204,7 +204,7 @@ module.exports = function(grunt) {
                 dotVersion: '.' + version,
                 includedFiles: landingPageTemplatesFiles,
                 cordovajs: false,
-                siteUrl: 'https://loconomics.com'
+                siteUrl: ''
             }
         }
     };

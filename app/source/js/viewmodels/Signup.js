@@ -72,6 +72,15 @@ function SignupVM(app) {
     this.facebookUserID = ko.observable();
     this.facebookAccessToken = ko.observable();
 
+    // Optionally, allow for service professional sign-up to
+    // specify a job title that will be added to the profile at
+    // the same sign-up call
+    this.jobTitleID = ko.observable();
+    // When user did not find a wanted job title, can provide
+    // a name to request to create a new one.
+    // Note: any value here is discarded if jobTitleID is provided
+    this.jobTitleName = ko.observable();
+
     this.email = new Field();
 
     this.validatedPassword = new ValidatedPasswordViewModel();
@@ -161,6 +170,8 @@ else
         this.isSigningUpWithFacebook(false);
         this.profile('');
         this.emailIsLocked(false);
+        this.jobTitleID(null);
+        this.jobTitleName(null);
     };
 
     this.submitText = ko.pureComputed(function() {
@@ -194,6 +205,8 @@ else
             facebookUserID: this.facebookUserID(),
             facebookAccessToken: this.facebookAccessToken(),
             profileType: this.profile(),
+            jobTitleID: this.jobTitleID(),
+            jobTitleName: this.jobTitleName()
         };
 
         return app.model.signup(plainData)
