@@ -474,8 +474,8 @@ exports.registerAll = function(app) {
                     var l = Object.keys(params.jobTitles)
                     .map(function (key) {
                         return {
-                            id: key,
-                            name: params.list[key]
+                            id: params.jobTitles[key],
+                            name: key
                         };
                     });
                     vm.list(l);
