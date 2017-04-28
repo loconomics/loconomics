@@ -13,11 +13,36 @@ var A = Activity.extend(function LandingPageActivity() {
 
     this.viewModel = new ViewModel(this.app);
 
+    var app = this.app;
+    /**
+     * Navigate to onboarding or dashboard.
+     * It's a simplified and adapted version of app.goDashboard that
+     * uses internally onboarding.goIfEnabled. Both this cannot be
+     * used in this context since we have not a full shell here and
+     * we need to do a real browser redirect that will load the
+     * full webapp at the expected URL/activity.
+     */
+    var redirectLoggedUser = function() {
+        // Default URL to home
+        var url = '/';
+        // Try getting onboarding URL
+        var onboardingUrl = app.model.onboarding.stepUrl();
+        if(onboardingUrl) {
+            url = '/#!' + onboardingUrl;
+        }
+        else {
+            // Go dashboard when no onboarding
+            url = '/#!/dashboard';
+        }
+        // Perform redirect
+        window.location.href = url;
+    };
+
     this.registerHandler({
         target: this.viewModel.signup,
         event: 'signedup',
-        handler: function(signedupData) {
-            window.location.href = signedupData.redirectUrl;
+        handler: function(/*signedupData*/) {
+            redirectLoggedUser();
         }.bind(this)
     });
 
