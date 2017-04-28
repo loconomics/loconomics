@@ -512,6 +512,27 @@ exports.registerAll = function(app) {
         }
     });
 
+    /**
+     * KO component 'signup' that implements the sign-up form
+     *
+     * @param {object} params Can include any value of the SignupVM, to
+     * set-up the instance and keep updated from internal changes,
+     * a couple of examples:
+     * @param {bool} [params.isCountryVisible]
+     * @param {string} [params.profile]
+     * @param {KnockoutObservable<SignupVM>} [params.api] Allow to provide an empty
+     * observable that will be initialized with the component instance
+     * view model
+     * @param {function} [params.onSignedUp] Handler to be executed when the
+     * signedup event gets emitted
+     * @param {function} [params.onSignUpError] Handler to be executed when the
+     * signuperror event gets emitted
+     *
+     * Allowed children:
+     * select-job-title: [single]
+     * - {KnockoutObservable<number>} selected Must be set to jobTitleID in order
+     * to work connected with the signup form.
+     */
     var SignupVM = require('./viewmodels/Signup');
     ko.components.register('app-signup', {
         template: { element: 'signup-template' },
@@ -519,8 +540,31 @@ exports.registerAll = function(app) {
         viewModel: {
             createViewModel: function(params) {
                 var vm = new SignupVM(app);
-                if (params && params.api) {
+                // Let expose the whole viewmodel as the component API
+                if (ko.isWritableObservable(params.api)) {
                     params.api(vm);
+                }
+                // Let access to set from params every writable
+                // observable in the Signup viewmodel
+                Object.keys(params).forEach(function(key) {
+                    if (ko.isWritableObservable(vm[key])) {
+                        vm[key](ko.unwrap(params[key]));
+                        // Keep original parameter notified of change
+                        if (ko.isObservable(params[key])) {
+                            vm[key].subscribe(params[key]);
+                        }
+                    }
+                });
+                // Let set a handler for each event emitted
+                if (typeof (params.onSignedUp) == 'function') {
+                    vm.on('signedup', function(signedupData) {
+                        params.onSignedUp.call(vm, signedupData);
+                    });
+                }
+                if (typeof (params.onSignUpError) == 'function') {
+                    vm.on('signuperror', function(error) {
+                        params.onSignUpError.call(vm, error);
+                    });
                 }
                 return vm;
             }

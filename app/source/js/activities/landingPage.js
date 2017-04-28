@@ -12,28 +12,11 @@ var A = Activity.extend(function LandingPageActivity() {
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
-
-
-    /*this.registerHandler({
-        target: this.viewModel.signup,
-        event: 'signedup',
-        handler: function() {
-            redirectLoggedUser();
-        }.bind(this)
-    });*/
-
 });
 
 exports.init = A.init;
 
-A.prototype.show = function show(state) {
-    Activity.prototype.show.call(this, state);
-};
-
-var ko = require('knockout');
 function ViewModel(app) {
-    this.signup = ko.observable();// new SignupVM(app);
-
     /**
      * Navigate to onboarding or dashboard.
      * It's a simplified and adapted version of app.goDashboard that
@@ -42,7 +25,7 @@ function ViewModel(app) {
      * we need to do a real browser redirect that will load the
      * full webapp at the expected URL/activity.
      */
-    this.redirectLoggedUser = function() {
+    this.redirect = function(/*signedupData*/) {
         // Default URL to home
         var url = '/';
         // Try getting onboarding URL
@@ -58,13 +41,5 @@ function ViewModel(app) {
         window.location.href = url;
     };
 
-    this.signup.subscribe(function (signup) {
-        if (signup) {
-            signup.profile(SignupVM.profileType.serviceProfessional);
-            signup.isCountryVisible(false);
-            signup.on('signedup', function(/*signedupData*/) {
-                this.redirectLoggedUser();
-            }.bind(this));
-        }
-    }.bind(this));
+    this.profile = SignupVM.profileType.serviceProfessional;
 }

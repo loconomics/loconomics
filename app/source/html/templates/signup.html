@@ -34,9 +34,9 @@
             <h2 data-bind="visible: !forServiceProfessional()">Sign up for free</h2>
             <h2 data-bind="visible: forServiceProfessional">Your first listing is free</h2>
 
+            <!-- Entry point for children elements provided when the component is instantiated,
+                expected an optional app-select-job-title -->
             <div data-bind="template: { nodes: $componentTemplateNodes }"></div>
-
-            <p><strong>Selected:</strong><span data-bind="text: jobTitleID"></span></p>
 
             <div data-bind="visible: !isSigningUpWithFacebook()">
                 <div>
