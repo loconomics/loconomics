@@ -1,5 +1,6 @@
 <!-- contact-info-fieldset -->
 <script type="text/html" id="contact-info-fieldset-template">
+    <!-- ko with: contactInfo --> 
     <h2 class="SectionTitle">
         <span data-bind="visible: headerText, text: headerText"></span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -14,7 +15,7 @@
             Can receive text messages
         </label>
     </div>
-    <h2 class="SectionTitle">Your address for our records</h2>
+    <h2 class="SectionTitle">Your address (for our records)</h2>
     <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
     <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
     <div class="form-group" data-bind="css: { 'has-error': errorMessages.postalCode() }">
@@ -29,12 +30,15 @@
             <!-- White space to reserve vertical space -->
             &nbsp;
         </p>
+    </div> 
+    <div data-bind="visible: $parent.showNonEssentialFields"> 
+        <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
+        <div class="form-group">
+            <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
+        </div>
+        <div class="form-group">
+            <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
+        </div>
     </div>
-    <app-unlabeled-input params="placeholder: 'Alternative e-mail address (optional)', value: profile.alternativeEmail, disable: isLocked"></app-unlabeled-input>
-    <div class="form-group">
-        <select class="form-control" data-bind="value: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: isLocked"></select>
-    </div>
-    <div class="form-group">
-        <select class="form-control" data-bind="value: profile.birthMonthDay, options: monthDays, optionsCaption: 'Birth Day (optional)', disable: isLocked"></select>
-    </div>
+    <!-- /ko --> 
 </script>

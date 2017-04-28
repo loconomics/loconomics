@@ -33,8 +33,8 @@
                                     <p>Clients see your photo, first name, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</p>
                                 </span>
                             </div>
-                            <div data-bind="template: { name: 'contact-info-fieldset-template', data: contactInfo }"></div>
-                            <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: marketplaceProfilePicture }"></div>
+                            <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>
+                            <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: {marketplaceProfilePicture: marketplaceProfilePicture, showNonEssentialFields: !isInOnboarding()} }"></div>
                             <div data-bind="visible: !isInOnboarding(), template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
                             <div data-bind="visible: !isInOnboarding(), template: { name: user.isServiceProfessional() ? 'service-professional-website-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
                             <div class="LightForm-submitBar">
@@ -42,7 +42,6 @@
                             </div>
                         </form>
                     </div>
-                    <div data-bind="template: { name: 'profile-picture-bio-photo-sheet-template', data: marketplaceProfilePicture }"></div>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

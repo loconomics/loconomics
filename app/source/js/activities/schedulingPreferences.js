@@ -5,7 +5,6 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var moment = require('moment-timezone');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
 
