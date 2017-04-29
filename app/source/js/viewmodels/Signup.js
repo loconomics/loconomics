@@ -86,6 +86,7 @@ function SignupVM(app) {
     this.validatedPassword = new ValidatedPasswordViewModel();
 
     this.isCountryVisible = ko.observable(true);
+    this.isEmailSignupDisplayed = ko.observable(false);
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
@@ -308,6 +309,10 @@ else
         .catch(function(err) {
             this.emit('signuperror', err);
         }.bind(this));
+    };
+
+    this.showEmailSignup = function() {
+        this.isEmailSignupDisplayed(true);
     };
 }
 

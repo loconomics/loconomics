@@ -59,7 +59,12 @@
                     </svg>
                 </p>
             </div>
-            <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
+            <div data-bind="visible: !isEmailSignupDisplayed()">
+                <div>
+                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-default btn-block btn-email"><i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i><span>Sign up with Email</span></a>
+                </div>
+            </div>
+            <form role="form" data-bind="visible: isEmailSignupDisplayed, event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
                 <!-- Form fields hidden if Facebook is connected -->
                 <div data-bind="visible: !isSigningUpWithFacebook()">
                     <div data-bind="visible: forClient">

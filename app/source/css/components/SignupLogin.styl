@@ -44,14 +44,20 @@
             border-color: $brand-secondary;
         }
     }
+    .btn-facebook,
+    .btn-email {
+        > .fa {
+            font-size: 29px !important;
+            // Setting a consistent width so both buttons icons
+            // are aligned ant their texts. If no, one icon
+            // is 25 and other 36.
+            width: 38px;
+        }
+    }
     .fa {
         font-size: 18px;
         padding-left: 15px;
         margin-top: -4px;
-
-        &.ion-social-facebook {
-            font-size: 29px !important;
-        }
     }
     .icon-right {
         padding-left: 0px;
