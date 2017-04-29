@@ -27,10 +27,6 @@
             </ul>
         </div>
         <div class="LeadContent" data-bind="visible: profile">
-            <div class="isolated">
-                <span>Already have an account?</span>
-                <a href="/login" class="btn-default pull-right">Login</a>
-            </div>
             <h2 data-bind="visible: !forServiceProfessional()">Sign up for free</h2>
             <h2 data-bind="visible: forServiceProfessional">Your first listing is free</h2>
 
@@ -46,7 +42,7 @@
 
             <div>
                 <div>
-                    <a href="#facebook" data-bind="click: facebook, disable: isSigningUpWithFacebook" class="btn btn-block btn-facebook">
+                    <a href="#facebook" data-bind="click: facebook, disable: isSigningUpWithFacebook" class="btn btn-lg btn-block btn-facebook">
                         <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
                     </a>
                     <!-- <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
@@ -63,7 +59,7 @@
             </div>
             <div data-bind="visible: !isEmailSignupDisplayed()">
                 <div>
-                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-default btn-block btn-email">
+                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-lg btn-default btn-block btn-email">
                         <i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i><span>Sign up with Email</span>
                     </a>
                 </div>
@@ -116,6 +112,11 @@
                     <span data-bind="text: submitText"></span>
                 </button>
             </form>
+
+            <div class="SignupLogin-loginReminder text-center">
+                <span>Already have an account?</span>
+                <a href="/login" class="btn btn-default">Login</a>
+            </div>
 
             <p class="isolated">
                 By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
