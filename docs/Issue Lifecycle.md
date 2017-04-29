@@ -4,10 +4,11 @@ Action | Corresponding Board
 --- | ---
 Issue created by anyone | New Issue
 Josh prioritizes based on business goals | Phase {X}
-Josh/developers refine stories/epics, developers assign story points in 
+Josh/developers refine stories/epics, developers assign story points 
 Josh/Matt/Iago agree on top priorities; must be completable and estimated | Top Priorities
+(Optional design work, when finished unassign from designer and return to Top Priorities) | Top Priorities
 Developer starts work | In Progress 
-Developer finishes work, requests review/testing | Review/QA
+Developer finishes work, requests review/testing and assigns issue to those who need to test it, applies _Ready for Testing_ label | Review/QA
 Issue tested and merged into master branch, closed | Release Milestone {X}
 
 ## Story Points
