@@ -178,9 +178,14 @@ else
     this.submitText = ko.pureComputed(function() {
         return (
             this.isSigningUp() ? 'Signing up...' :
-            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
-            this.facebookUserID() ? 'Sign up with Facebook' :
             'Sign up'
+        );
+    }, this);
+
+    this.facebookSubmitText = ko.pureComputed(function() {
+        return (
+            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
+            'Sign up with Facebook'
         );
     }, this);
 
@@ -280,6 +285,8 @@ else
         var vm = this;
 
         this.isSigningUpWithFacebook(true);
+        // Switch visualization of email form
+        this.isEmailSignupDisplayed(false);
 
         // First ask to log-in with Facebook
         // email,user_about_me

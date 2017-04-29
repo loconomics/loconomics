@@ -44,9 +44,11 @@
                 </p>
             </div>
 
-            <div data-bind="visible: !isSigningUpWithFacebook()">
+            <div>
                 <div>
-                    <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
+                    <a href="#facebook" data-bind="click: facebook, disable: isSigningUpWithFacebook" class="btn btn-block btn-facebook">
+                        <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
+                    </a>
                     <!-- <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
                 </div>
                 <p class="isolated text-center">
@@ -61,12 +63,13 @@
             </div>
             <div data-bind="visible: !isEmailSignupDisplayed()">
                 <div>
-                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-default btn-block btn-email"><i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i><span>Sign up with Email</span></a>
+                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-default btn-block btn-email">
+                        <i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i><span>Sign up with Email</span>
+                    </a>
                 </div>
             </div>
             <form role="form" data-bind="visible: isEmailSignupDisplayed, event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-                <!-- Form fields hidden if Facebook is connected -->
-                <div data-bind="visible: !isSigningUpWithFacebook()">
+                <div>
                     <div data-bind="visible: forClient">
                         <label for="firstName">First Name</label>
                         <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
@@ -108,7 +111,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': isSigningUpWithFacebook }, disable: isSigningUpWithFacebook() || isSigningUp()">
+                <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isSigningUp()">
                     <span data-bind="visible: facebookUserID">&nbsp;&nbsp;</span>
                     <span data-bind="text: submitText"></span>
                 </button>
