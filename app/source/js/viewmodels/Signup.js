@@ -170,6 +170,7 @@ else
         this.emailIsLocked(false);
         this.jobTitleID(null);
         this.jobTitleName(null);
+        this.isEmailSignupDisplayed(false);
     };
 
     this.submitText = ko.pureComputed(function() {
