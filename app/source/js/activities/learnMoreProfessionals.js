@@ -157,7 +157,7 @@ function ViewModel(app) {
         }
     };
     this.signup.subscribe(this.resetSignup.bind(this));
-    // Redircect on success signup
+    // Redirect on success signup
     this.signupRedirect = function() {
         app.goDashboard();
     };
