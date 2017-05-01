@@ -22,8 +22,15 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Add details to your <span data-bind="text: jobTitleName"></span> listing</div>
-                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Show clients what services you provide as a <span data-bind="text: jobTitleName"></span>. Make sure your passion and experience shine through! And keep it simple and clear—so that clients know what to expect from you. You can always change these details later. After this step you will create your first offering that your clients can book!</p>
+                <div class="OnboardingValueProp"> 
+                    <div class="Icon-container">
+                        <span class="Tile-icon fa ion ion-clipboard" aria-hidden="true"></span>
+                    </div>
+                    <span class="Tile-content">
+                        <h2><span data-bind="visible: isInOnboarding()">Describe your <span data-bind="text: jobTitleName"></span> services</span><span data-bind="visible: !isInOnboarding()"><span data-bind="text: jobTitleName"></span> services description</span></h2> 
+                        <p>Tell clients what your work is all about–they want to know!</p>
+                    </span>
+                </div>
                 <form class="container-fluid LightForm" role="form" data-bind="submit: save">
                     <h2 class="SectionTitle">
                         <span>Brief description of your services</span>
@@ -35,7 +42,7 @@
                     <div data-bind="visible: jobTitleID">
                         <div class="form-group">
                             <textarea aria-label="Job title intro" rows="6"
-                                      class="form-control" placeholder="What makes your services special? Avoid mentioning information you'll fill out below." data-bind="value: intro, disable: isLocked"></textarea>
+                                      class="form-control" placeholder="Make sure your passion and experience shine through! And keep it simple and clear—so that clients know what to expect from you. You can always change these details later. After this step you will create your first offering that your clients can book!" data-bind="value: intro, disable: isLocked"></textarea>
                         </div>
                         <div data-bind="foreach: categoriesView">
                             <h2 class="SectionTitle" data-bind="text: category().name"></h2>
