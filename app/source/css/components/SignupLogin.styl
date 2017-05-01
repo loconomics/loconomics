@@ -214,4 +214,28 @@
             margin: 0 15px;
         }
     }
+
+    // Trick from https://codepen.io/ericrasch/pen/Irlpm
+    .SignupLogin-lineBehind {
+        display: table;
+        white-space: nowrap;
+        width: 100%;
+        &:before, &:after {
+            border-top: 1px solid rgb(204,204,204);
+            content: '';
+            display: table-cell;
+            position: relative;
+            // If text is uppercase, 0.5em is a good setting
+            // For lowercase 0.7em looks better
+            top: 0.7em;
+            // Width allows to separate more or less
+            // the lines from the text
+            // But a big width (towards 50%) will make
+            // the layout break depending on text lenght
+            width: 44%;
+        }
+        // Extra separation
+        //&:before { right: 1.5%; }
+        //&:after { left: 1.5%; }
+    }
 }
