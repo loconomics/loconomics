@@ -10,19 +10,27 @@
                             <h1 class="landingpage-title">Work independently…together</h1>
                             <p class="landingpage-tagline">Find clients, community, tools and resources. Grow and manage your business on your terms.</p>
                             <br>
-                            <div class="landingpage-proposition">                            
+                            <div class="landingpage-proposition">
                                 <p><span class="fa ion-ios-checkmark-outline" aria-hidden="true"></span><strong>Free listing</strong><span class="hidden-xs"> – Clients book you in our marketplace with 0% commissions. Your first listing is free.</span></p>
                             </div>
                             <div class="landingpage-proposition">
                                 <p><span class="fa ion-ios-checkmark-outline" aria-hidden="true"></span><strong>Referrals</strong><span class="hidden-xs"> – Our cooperative thrives on recommendations. Meet other Bay Area professionals.</span></p>
                             </div>
-                            <div class="landingpage-proposition">                       
+                            <div class="landingpage-proposition">
                                 <p><span class="fa ion-ios-checkmark-outline" aria-hidden="true"></span><strong>Profit-sharing</strong><span class="hidden-xs"> – Owner plans start from $19/mo. Get access to exclusive events, resources, and dividends.</span></p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-5">
-                        <div data-bind="template: {name: 'signup-template', data: signup}"></div>
+                        <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: profile">
+                            <h5 class="SignupLogin-prompt">What is your primary area of work?</h5>
+                            <app-select-job-title params="selected: jobTitleID, caption: 'Choose one to start'">
+                                <item id="106">Massage Therapist</item>
+                                <item id="185">Acupuncturist</item>
+                                <item id="310">Bodyworker</item>
+                                <item id="0">Other</item>
+                            </app-select-job-title>
+                        </app-signup>
                     </div>
                 </div>
             </div>

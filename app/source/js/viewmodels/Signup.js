@@ -86,6 +86,7 @@ function SignupVM(app) {
     this.validatedPassword = new ValidatedPasswordViewModel();
 
     this.isCountryVisible = ko.observable(true);
+    this.isEmailSignupDisplayed = ko.observable(false);
 
     this.isFirstNameValid = ko.pureComputed(function() {
         // \p{L} the Unicode Characterset not supported by JS
@@ -149,9 +150,6 @@ else
 
     this.emailIsLocked = ko.observable(false);
 
-    // A static utility (currently only used to conditionally show/hide DownloadApp links)
-    this.inApp = ko.observable(!!window.cordova);
-
     this.reset = function() {
         this.confirmationCode(null);
         this.firstName('');
@@ -172,14 +170,20 @@ else
         this.emailIsLocked(false);
         this.jobTitleID(null);
         this.jobTitleName(null);
+        this.isEmailSignupDisplayed(false);
     };
 
     this.submitText = ko.pureComputed(function() {
         return (
             this.isSigningUp() ? 'Signing up...' :
-            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
-            this.facebookUserID() ? 'Sign up with Facebook' :
             'Sign up'
+        );
+    }, this);
+
+    this.facebookSubmitText = ko.pureComputed(function() {
+        return (
+            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
+            'Sign up with Facebook'
         );
     }, this);
 
@@ -279,6 +283,8 @@ else
         var vm = this;
 
         this.isSigningUpWithFacebook(true);
+        // Switch visualization of email form
+        this.isEmailSignupDisplayed(false);
 
         // First ask to log-in with Facebook
         // email,user_about_me
@@ -308,6 +314,10 @@ else
         .catch(function(err) {
             this.emit('signuperror', err);
         }.bind(this));
+    };
+
+    this.showEmailSignup = function() {
+        this.isEmailSignupDisplayed(true);
     };
 }
 

@@ -36,15 +36,6 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         }
     });
 
-    // Redircect on success
-    this.registerHandler({
-        target: this.viewModel.signup,
-        event: 'signedup',
-        handler: function() {
-            this.app.goDashboard();
-        }.bind(this)
-    });
-
     this.registerHandler({
         target: this.$activity,
         event: 'scroll-search',
@@ -147,16 +138,36 @@ function ViewModel(app) {
         var u = app.model.user();
         return u && u.isClient();
     });
-    //Signup
-    this.signup = new SignupVM(app);
 
-    var presetSignupSettings = function() {
-        this.signup.profile(SignupVM.profileType.serviceProfessional);
-        // Hide and preset the country
-        this.signup.isCountryVisible(false);
-        // default preset is already united state in the VM
-    }.bind(this);
-    presetSignupSettings();
+    ///
+    /// Signup
+    // Component API entry point: expects SignupVM
+    this.signup = ko.observable();
+    this.resetSignup = function() {
+        var signup = this.signup();
+        if (signup instanceof SignupVM) {
+            signup.reset();
+
+            // Presets: settings we require to keep the same
+            // like untouched by the reset
+            signup.profile(SignupVM.profileType.serviceProfessional);
+            // Hide and preset the country
+            signup.isCountryVisible(false);
+            // default preset is already united state in the VM
+        }
+    };
+    this.signup.subscribe(this.resetSignup.bind(this));
+    // Redirect on success signup
+    this.signupRedirect = function() {
+        app.goDashboard();
+    };
+    this.setSignupJobTitle = function(id, name) {
+        var signup = this.signup();
+        if (signup instanceof SignupVM) {
+            signup.jobTitleID(id || undefined);
+            signup.jobTitleName(name || undefined);
+        }
+    };
 
     // A static utility (currently only used to conditionally show/hide DownloadApp links)
     this.inApp = ko.observable(!!window.cordova);
@@ -164,8 +175,7 @@ function ViewModel(app) {
     this.reset = function() {
         // Reset user values, no preset settings
         this.search().searchTerm('');
-        this.signup.reset();
-        presetSignupSettings();
+        this.resetSignup();
     }.bind(this);
 
     // API entry-point for search component
@@ -175,7 +185,7 @@ function ViewModel(app) {
         // let the link to scroll down to sign-up form (hash link must be in place)
         // setting up the jobTitleID value in the signup data
         if (app.model.userProfile.data.isAnonymous()) {
-            this.signup.jobTitleID(jobTitle.jobTitleID());
+            this.setSignupJobTitle(jobTitle.jobTitleID());
         }
         else {
             // For logged users, assist them to add the job title:
@@ -192,8 +202,7 @@ function ViewModel(app) {
         // settingup the jobTitleName value in the signup data
         // (and reset any previous ID just in case)
         if (app.model.userProfile.data.isAnonymous()) {
-            this.signup.jobTitleName(jobTitleName);
-            this.signup.jobTitleID(null);
+            this.setSignupJobTitle(null, jobTitleName);
         }
         else {
             // For logged users, assist them to add the job title:

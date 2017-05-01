@@ -166,7 +166,10 @@
         <div id="learnMoreProfessionals-signup" class="coop-signup" data-bind="visible: !isServiceProfessional()">
             <h1 class="coop-title">Join up.</h1>
             <p class="coop-tagline">Provide local services? Work for yourself? Become a Loconomics owner.</p>
-            <div data-bind="visible: !isClient(), template: {name: 'signup-template', data: signup}"></div>
+            <div data-bind="visible: !isClient()">
+                <app-signup params="api: signup, onSignedUp: signupRedirect">
+                </app-signup>
+            </div>
             <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
             <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
         </div>

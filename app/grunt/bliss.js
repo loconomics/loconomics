@@ -176,7 +176,8 @@ module.exports = function(grunt) {
         landingPageTemplatesPatterns = ['templates/signup.html',
                                         'templates/signup-field.html',
                                         'templates/validated-password.html',
-                                        'modals/errorModal.html'],
+                                        'modals/errorModal.html',
+                                        'templates/select-job-title.html'],
         landingPageTemplatesFiles = grunt.file.expand({
                 cwd: includedDir,
                 filter: grunt.file.isFile
@@ -201,7 +202,7 @@ module.exports = function(grunt) {
             context: {
                 facebookAppID: facebookAppID,
                 facebookLang: facebookLang,
-                dotVersion: '.' + version,
+                dotVersion: '.min.' + version,
                 includedFiles: landingPageTemplatesFiles,
                 cordovajs: false,
                 siteUrl: ''

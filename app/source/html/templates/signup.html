@@ -27,30 +27,39 @@
             </ul>
         </div>
         <div class="LeadContent" data-bind="visible: profile">
-            <div class="isolated">
-                <span>Already have an account?</span>
-                <a href="/login" class="btn-default pull-right">Login</a>
-            </div>
             <h2 data-bind="visible: !forServiceProfessional()">Sign up for free</h2>
             <h2 data-bind="visible: forServiceProfessional">Your first listing is free</h2>
-            <div data-bind="visible: !isSigningUpWithFacebook()">
+
+            <!-- Entry point for children elements provided when the component is instantiated,
+                expected an optional app-select-job-title -->
+            <div data-bind="template: { nodes: $componentTemplateNodes }"></div>
+
+            <div data-bind="visible: isThenLabelDisplayed">
+                <p class="isolated text-center SignupLogin-lineBehind">
+                    then
+                </p>
+            </div>
+
+            <div>
                 <div>
-                    <a href="#facebook" data-bind="click: facebook" class="btn btn-block btn-facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Sign up with Facebook</span></a>
+                    <a href="#facebook" data-bind="click: facebook, disable: isSigningUpWithFacebook" class="btn btn-lg btn-block btn-facebook">
+                        <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
+                    </a>
                     <!-- <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
                 </div>
                 <p class="isolated text-center">
-                    <svg height="5" width="45%">
-                        <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                    </svg>
-                    <span> or </span>
-                    <svg height="5" width="45%">
-                        <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                    </svg>
+                    or
                 </p>
             </div>
-            <form role="form" data-bind="event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-                <!-- Form fields hidden if Facebook is connected -->
-                <div data-bind="visible: !isSigningUpWithFacebook()">
+            <div data-bind="visible: !isEmailSignupDisplayed()">
+                <div>
+                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-lg btn-default btn-block btn-email">
+                        <i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i><span>Sign up with Email</span>
+                    </a>
+                </div>
+            </div>
+            <form role="form" data-bind="visible: isEmailSignupDisplayed, event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
+                <div>
                     <div data-bind="visible: forClient">
                         <label for="firstName">First Name</label>
                         <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
@@ -92,11 +101,16 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-secondary btn-block" data-bind="css: { 'btn-facebook': isSigningUpWithFacebook }, disable: isSigningUpWithFacebook() || isSigningUp()">
+                <button type="submit" class="btn btn-lg btn-secondary btn-block" data-bind="disable: isSigningUp()">
                     <span data-bind="visible: facebookUserID">&nbsp;&nbsp;</span>
                     <span data-bind="text: submitText"></span>
                 </button>
             </form>
+
+            <div class="SignupLogin-loginReminder text-center">
+                <span>Already have an account?</span>
+                <a href="/login" class="btn btn-default">Login</a>
+            </div>
 
             <p class="isolated">
                 By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
