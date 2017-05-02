@@ -8,7 +8,7 @@ module.exports = function(/*grunt*/) {
         Browserify config
     **/
 	var bconfig = {};
-    
+
     /**
         Styleguide Libs
     **/
@@ -21,7 +21,7 @@ module.exports = function(/*grunt*/) {
             // in other bundles (must replicate alias in its 'external' option)
             // Shim generates already alias for each key.
             shim: {
-                // Using a shim we avoid jquery to detect the CommonJS loader and 
+                // Using a shim we avoid jquery to detect the CommonJS loader and
                 // it attachs itself to the global namespace (window) what let
                 // the plugins works fine.
                 jquery: {
@@ -47,9 +47,9 @@ module.exports = function(/*grunt*/) {
             }
         }
     };
-    
+
     var styleguidelibsModules = getPublicModulesFrom(bconfig.styleguidelibs);
-    
+
     /**
         Libs bundle
     **/
@@ -106,7 +106,7 @@ module.exports = function(/*grunt*/) {
                     exports: null,
                     'depends': { 'jquery': null }
                 },
-                
+
                 /// JQUERY FILEUPLOAD WITH IMAGE PREVIEW SUPPORT
                 // the jquery-ui widget constructor is needed, but this included dependency
                 // can be avoided if jquery-ui is included already in the project
@@ -172,7 +172,7 @@ module.exports = function(/*grunt*/) {
             }
         }
     };
-    
+
     var libsModules = getPublicModulesFrom(bconfig.libs);
 
     /**
@@ -195,6 +195,32 @@ module.exports = function(/*grunt*/) {
     };
 
     /**
+     * Landing pages bundle
+     */
+    bconfig.landingPages = {
+        'src': [
+            './source/js/landingPage.js'
+        ],
+        'dest': './build/assets/js/welcome.js',
+        'options': {
+            // Enable debug eve when compiling script.js, the min.js will delete debug info for production use:
+            'debug': true,
+            // Modules from other bundles
+            'external': Array.prototype.concat(
+                styleguidelibsModules,
+                libsModules
+            ),
+            'shim': {
+                'bootstrap-carousel': {
+                    path: './vendor/bootstrap-source/js/carousel.js',
+                    exports: null,
+                    depends: { 'jquery': 'jquery' }
+                }
+            }
+        }
+    };
+
+    /**
         Tests bundle
     **/
     bconfig.tests = {
@@ -211,6 +237,6 @@ module.exports = function(/*grunt*/) {
             )
         }
     };
-    
+
     return bconfig;
 };

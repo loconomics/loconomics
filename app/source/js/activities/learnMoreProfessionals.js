@@ -1,6 +1,6 @@
 /**
     Home activity (aka Search)
-    //used to get apisearch results by term, lat, long, 
+    //used to get apisearch results by term, lat, long,
 **/
 'use strict';
 var $ = require('jquery');
@@ -11,7 +11,6 @@ var snapPoints = require('../utils/snapPoints');
 var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
-
 
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
@@ -35,27 +34,6 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
                 $header.removeClass('is-fixed');
             }
         }
-    });
-    
-    // Redircect on success
-    this.registerHandler({
-        target: this.viewModel.signup,
-        event: 'signedup',
-        handler: function() {
-            var onboardingJobTitleSelected = !!this.viewModel.onboardingUrlParamsString(),
-                url = '/addJobTitles' + (this.viewModel.onboardingUrlParamsString() || '');
-
-            if (onboardingJobTitleSelected) {
-                // Normally jump to the dashboard/onboarding, but when a job is selected, then 
-                // go to job title step with default selection set through URL params
-                this.app.model.onboarding.skipToAddJobTitles();
-
-                this.app.shell.go(url);
-            }
-            else {
-                this.app.goDashboard();
-            }
-        }.bind(this)
     });
 
     this.registerHandler({
@@ -82,7 +60,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
                 country: 'US'
             }
         };
-        
+
         // WITH PLUGIN:
         $location.geocomplete(options);
         $location.on('geocode:result', function(e, place) {
@@ -100,7 +78,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
         var autocomplete = new google.maps.places.Autocomplete(
             $location.get(0), options
         );
-        
+
         google.maps.event.addListener(
             autocomplete,
             'place_changed',
@@ -131,7 +109,7 @@ A.prototype._registerSnapPoints = function() {
             // Add the box height but sustract the header height because that is fixed and overlaps
             $searchBox.outerHeight() - this.$header.outerHeight()
         ) |0);
-    
+
     var pointsEvents = {
         // Just after start scrolling
         0: 'scroll-fixed-header'
@@ -143,12 +121,12 @@ A.prototype._registerSnapPoints = function() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     if (!this._notFirstShow) {
         this._registerSnapPoints();
         this._notFirstShow = true;
     }
-    this.viewModel.search().searchTerm('');
+    this.viewModel.reset();
 };
 
 function ViewModel(app) {
@@ -160,41 +138,79 @@ function ViewModel(app) {
         var u = app.model.user();
         return u && u.isClient();
     });
-    //Signup
-    this.signup = new SignupVM(app); 
-    this.signup.profile('service-professional');
-    
-    this.onboardingUrlParamsString = ko.observable();
+
+    ///
+    /// Signup
+    // Component API entry point: expects SignupVM
+    this.signup = ko.observable();
+    this.resetSignup = function() {
+        var signup = this.signup();
+        if (signup instanceof SignupVM) {
+            signup.reset();
+
+            // Presets: settings we require to keep the same
+            // like untouched by the reset
+            signup.profile(SignupVM.profileType.serviceProfessional);
+            // Hide and preset the country
+            signup.isCountryVisible(false);
+            // default preset is already united state in the VM
+        }
+    };
+    this.signup.subscribe(this.resetSignup.bind(this));
+    // Redirect on success signup
+    this.signupRedirect = function() {
+        app.goDashboard();
+    };
+    this.setSignupJobTitle = function(id, name) {
+        var signup = this.signup();
+        if (signup instanceof SignupVM) {
+            signup.jobTitleID(id || undefined);
+            signup.jobTitleName(name || undefined);
+        }
+    };
+
+    // A static utility (currently only used to conditionally show/hide DownloadApp links)
+    this.inApp = ko.observable(!!window.cordova);
+
+    this.reset = function() {
+        // Reset user values, no preset settings
+        this.search().searchTerm('');
+        this.resetSignup();
+    }.bind(this);
+
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
     this.search().onClickJobTitle = function(jobTitle, e) {
-        // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
-        // For logged users, assist them to add the job title:
-        if (!app.model.userProfile.data.isAnonymous()) {
+        // For anonymous users, we just
+        // let the link to scroll down to sign-up form (hash link must be in place)
+        // setting up the jobTitleID value in the signup data
+        if (app.model.userProfile.data.isAnonymous()) {
+            this.setSignupJobTitle(jobTitle.jobTitleID());
+        }
+        else {
+            // For logged users, assist them to add the job title:
             e.preventDefault();
             e.stopImmediatePropagation();
 
             var url = 'addJobTitles?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
             app.shell.go(url);
         }
-        else {
-            // After sign-up, the parameters must be provided to the onboarding
-            this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID()));
-        }
     }.bind(this);
     this.search().onClickNoJobTitle = function(jobTitleName, e) {
-        // For anonymous users, we just let the link to scroll down to sign-up form (hash link must be in place)
-        // For logged users, assist them to add the job title:
-        if (!app.model.userProfile.data.isAnonymous()) {
+        // For anonymous users, we just
+        // let the link to scroll down to sign-up form (hash link must be in place)
+        // settingup the jobTitleName value in the signup data
+        // (and reset any previous ID just in case)
+        if (app.model.userProfile.data.isAnonymous()) {
+            this.setSignupJobTitle(null, jobTitleName);
+        }
+        else {
+            // For logged users, assist them to add the job title:
             e.preventDefault();
             e.stopImmediatePropagation();
             // Go to addJobTitles
             var url = 'addJobTitles?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
             app.shell.go(url);
-        }
-        else {
-            // After sign-up, the parameters must be provided to the onboarding
-            this.onboardingUrlParamsString('?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true');
         }
     }.bind(this);
     this.search().jobTitleHref('#learnMoreProfessionals-signup');

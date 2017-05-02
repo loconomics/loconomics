@@ -1,9 +1,9 @@
 /**
     Registration of custom html components used by the App.
     All with 'app-' as prefix.
-    
+
     Some definitions may be included on-line rather than on separated
-    files (viewmodels), templates are linked so need to be 
+    files (viewmodels), templates are linked so need to be
     included in the html file with the same ID that referenced here,
     usually using as DOM ID the same name as the component with sufix '-template'.
 **/
@@ -15,7 +15,8 @@ var ko = require('knockout'),
     getObservable = require('./utils/getObservable');
 
 exports.registerAll = function(app) {
-    
+    //jshint maxstatements:100
+
     /// navbar-action
     ko.components.register('app-navbar-action', {
         template: { element: 'navbar-action-template' },
@@ -30,7 +31,7 @@ exports.registerAll = function(app) {
             });
         }
     });
-    
+
     /// unlabeled-input
     ko.components.register('app-unlabeled-input', {
         template: { element: 'unlabeled-input-template' },
@@ -39,7 +40,7 @@ exports.registerAll = function(app) {
             this.value = getObservable(params.value);
             this.placeholder = getObservable(params.placeholder);
             this.disable = getObservable(params.disable);
-            
+
             var userAttr = getObservable(params.attr);
             this.attr = ko.pureComputed(function() {
                 var attr = userAttr() || {};
@@ -49,21 +50,21 @@ exports.registerAll = function(app) {
                     type: this.type()
                 });
             }, this);
-            
-            var type = getObservable(params.type);            
+
+            var type = getObservable(params.type);
             this.type = ko.computed(function() {
                 return type() || 'text';
             }, this);
         }
     });
-    
+
     /// inline-user-menu
     ko.components.register('app-inline-user-menu', {
         template: { element: 'inline-user-menu-template' },
         viewModel: { instance: app.navBarBinding }
     });
-    
-    
+
+
     /// inline-side-menu
     ko.components.register('app-inline-side-menu', {
         template: { element: 'inline-side-menu-template' },
@@ -82,7 +83,7 @@ exports.registerAll = function(app) {
             vm.contactLink = ko.pureComputed(function() {
                 return 'contactForm/' + this.vocElement();
             }, vm);
-            
+
             // FAQs
             vm.helpLink = getObservable(params.helpLink || '');
             // List or objects { link: link, label: 'Index' }
@@ -184,7 +185,7 @@ exports.registerAll = function(app) {
             }, vm);
         }
     });
-    
+
     /// feedback-entry
     ko.components.register('app-feedback-entry', {
         template: { element: 'feedback-entry-template' },
@@ -196,13 +197,13 @@ exports.registerAll = function(app) {
             }, this);
         }
     });
-    
+
     /// feedback-entry
     ko.components.register('app-time-slot-tile', {
         template: { element: 'time-slot-tile-template' },
         viewModel: require('./viewmodels/TimeSlot')
     });
-    
+
     /// loading-spinner
     ko.components.register('app-loading-spinner', {
         template: { element: 'loading-spinner-template' },
@@ -224,7 +225,7 @@ exports.registerAll = function(app) {
         template: { element: 'appointment-card-template' },
         viewModel: require('./viewmodels/AppointmentCard')
     });
-    
+
     /// job titles list
     ko.components.register('app-job-titles-list', {
         template: { element: 'job-titles-list-template' },
@@ -240,7 +241,7 @@ exports.registerAll = function(app) {
             this.showMarketplaceInfo = getObservable(params.showMarketplaceInfo || false);
         }
     });
-    
+
     /// Stars
     ko.components.register('app-stars-rating', {
         template: { element: 'stars-rating-template' },
@@ -248,7 +249,7 @@ exports.registerAll = function(app) {
             this.rating = getObservable(params.rating || 0);
             this.total = getObservable(params.total || 0);
             this.size = getObservable(params.size || '');
-            
+
             // Example: rating=3.6, starPosition=1 (or 2, 3, 4, 5)
             function computeStarValue(rating, starPosition) {
                 var x = (rating / starPosition) |0;
@@ -266,7 +267,7 @@ exports.registerAll = function(app) {
                     return 0;
                 }
             }
-            
+
             this.stars = ko.pureComputed(function() {
                 var r = this.rating(),
                     list = [];
@@ -280,14 +281,14 @@ exports.registerAll = function(app) {
                 // TODO Conditional formatting for big numbers cases
                 return '(' + this.total() + ')';
             }, this);
-            
+
             this.classes = ko.pureComputed(function() {
                 if (this.size()) return 'StarsRating--' + this.size();
                 return '';
             }, this);
         }
     });
-    
+
     /// ServiceProfessionalInfo
     var PublicUser = require('./models/PublicUser');
     ko.components.register('app-service-professional-info', {
@@ -298,12 +299,12 @@ exports.registerAll = function(app) {
                 var view = new PublicUser();
                 if (params && params.api)
                     params.api(view);
-                
+
                 return view;
             }
         }
     });
-    
+
     /// DatetimePicker
     var DateTimePickerVM = require('./viewmodels/DatetimePicker');
     ko.components.register('app-datetime-picker', {
@@ -323,12 +324,12 @@ exports.registerAll = function(app) {
                                 view[key].subscribe(params[key]);
                         }
                     });
-                
+
                 return view;
             }
         }
     });
-    
+
     /// AddressMap
     var googleMapReady = require('./utils/googleMapReady');
     var i18n = require('./utils/i18n');
@@ -349,7 +350,7 @@ exports.registerAll = function(app) {
                     circle: null
                 };
                 v.circleColor = v.isServiceLocation ? '#5F2393' : '#00989A';
-                
+
                 var c = i18n.getCurrentCulture();
                 var unit = i18n.distanceUnits[c.country];
                 if (v.isServiceLocation || !v.radius) {
@@ -400,7 +401,7 @@ exports.registerAll = function(app) {
             }
         }
     });
-    
+
     // Onboarding
     var OnboardingProgressMarkVM = require('./viewmodels/OnboardingProgressMarkVM');
     ko.components.register('app-onboarding-progress-mark', {
@@ -412,7 +413,7 @@ exports.registerAll = function(app) {
         template: { element: 'onboarding-progress-bar-template' },
         viewModel: { createViewModel: function() { return new OnboardingProgressBarVM(app); } }
     });
-    
+
     /// search components
     var SearchJobTitlesVM = require('./viewmodels/SearchJobTitlesVM');
     ko.components.register('app-search-job-titles', {
@@ -434,8 +435,150 @@ exports.registerAll = function(app) {
                                 view[key].subscribe(params[key]);
                         }
                     });
-                
+
                 return view;
+            }
+        }
+    });
+
+    /**
+     * A dictionary of job titles with the name to display
+     * as a key and the jobTitleID as the value.
+     * @typedef InvertedJobTitlesDictionary
+     */
+    /**
+     * Ko component 'select-job-title' to display a concrete
+     * list of job titles and pick one.
+     * @param {object} params
+     * @param {KnockoutObservable<number>} params.selected Get or set
+     * the selected job title by ID, if available in the list
+     * @param {InvertedJobTitlesDictionary} [params.jobTitles] Dictionary of job
+     * titles available for selection
+     * @param {string|KnockoutObservable<string>} [params.caption] Text before
+     * select any option; equivalent to set a null ID.
+     *
+     * Allowed children:
+     * item: [list]
+     *  - {number} id attribute, the jobTitleID
+     *  - {string} content, the job title display name
+     */
+    ko.components.register('app-select-job-title', {
+        template: { element: 'select-job-title-template' },
+        synchronous: true,
+        viewModel: {
+            createViewModel: function(params, componentInfo) {
+
+                var vm = {
+                    selected: ko.observable(null),
+                    list: ko.observableArray([]),
+                    caption: getObservable(params.caption)
+                };
+
+                if (params && ko.isWritableObservable(params.selected)) {
+                    // two-way updates
+                    vm.selected.subscribe(params.selected);
+                    params.selected.subscribe(vm.selected);
+                }
+
+                if (params && params.jobTitles) {
+                    var l = Object.keys(params.jobTitles)
+                    .map(function (key) {
+                        return {
+                            id: params.jobTitles[key],
+                            name: key
+                        };
+                    });
+                    vm.list(l);
+                }
+                else {
+                    // Read static 'item' children at the markup
+                    componentInfo.templateNodes.forEach(function(node) {
+                        // 'item' supported
+                        if (node.tagName && node.tagName.toLowerCase() === 'item') {
+                            // An integer jobTitleID
+                            var id = node.getAttribute('id') |0;
+                            // The job title display name
+                            var name = node.textContent;
+                            vm.list.push({
+                                id: id,
+                                name: name
+                            });
+                        }
+                    });
+                }
+
+                return vm;
+            }
+        }
+    });
+
+    /**
+     * KO component 'signup' that implements the sign-up form
+     *
+     * @param {object} params Can include any value of the SignupVM, to
+     * set-up the instance and keep updated from internal changes,
+     * a couple of examples:
+     * @param {bool} [params.isCountryVisible]
+     * @param {string} [params.profile]
+     * @param {KnockoutObservable<SignupVM>} [params.api] Allow to provide an empty
+     * observable that will be initialized with the component instance
+     * view model
+     * @param {function} [params.onSignedUp] Handler to be executed when the
+     * signedup event gets emitted
+     * @param {function} [params.onSignUpError] Handler to be executed when the
+     * signuperror event gets emitted
+     *
+     * Allowed children:
+     * h5.SignupLogin-prompt: [single]
+     * - {string} content Text to display before the job titles list
+     * select-job-title: [single]
+     * - {KnockoutObservable<number>} selected Must be set to jobTitleID in order
+     * to work connected with the signup form.
+     */
+    var SignupVM = require('./viewmodels/Signup');
+    ko.components.register('app-signup', {
+        template: { element: 'signup-template' },
+        synchronous: true,
+        viewModel: {
+            createViewModel: function(params, componentInfo) {
+                var vm = new SignupVM(app);
+                // Let expose the whole viewmodel as the component API
+                if (ko.isWritableObservable(params.api)) {
+                    params.api(vm);
+                }
+                // Let access to set from params every writable
+                // observable in the Signup viewmodel
+                Object.keys(params).forEach(function(key) {
+                    if (ko.isWritableObservable(vm[key])) {
+                        vm[key](ko.unwrap(params[key]));
+                        // Keep original parameter notified of change
+                        if (ko.isObservable(params[key])) {
+                            vm[key].subscribe(params[key]);
+                        }
+                    }
+                });
+                // Let set a handler for each event emitted
+                if (typeof (params.onSignedUp) == 'function') {
+                    vm.on('signedup', function(signedupData) {
+                        params.onSignedUp.call(vm, signedupData);
+                    });
+                }
+                if (typeof (params.onSignUpError) == 'function') {
+                    vm.on('signuperror', function(error) {
+                        params.onSignUpError.call(vm, error);
+                    });
+                }
+                // We have a new special setting, setting visualization
+                // of the language that join job titles list and the
+                // form/buttons.
+                vm.isThenLabelDisplayed = ko.observable(false);
+                // We detect if there are children elements, that means
+                // we need to display the label
+                if (componentInfo.templateNodes.length) {
+                    vm.isThenLabelDisplayed(true);
+                }
+
+                return vm;
             }
         }
     });

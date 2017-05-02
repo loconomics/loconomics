@@ -65,5 +65,11 @@ module.exports = {
         'files': {
             './build/assets/js/styleguidelibs.min.js': ['<%= browserify.styleguidelibs.dest %>']
         }
+    },
+    'landingPages': {
+        'options': conservativeOptions,
+        'files': {
+            './build/assets/js/welcome.min.js': ['<%= browserify.landingPages.dest %>']
+        }
     }
 };

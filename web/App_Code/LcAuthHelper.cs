@@ -55,7 +55,7 @@ public static class LcAuthHelper
         /// that we need now for the secure session-less REST calls
         /// </summary>
         public string authKey;
-        public dynamic profile;
+        public LcRest.UserProfile profile;
         public string onboardingStep;
     }
 
@@ -194,106 +194,60 @@ public static class LcAuthHelper
     #endregion
 
     #region Signup
+    const int COUNTRY_CODE_USA = 1;
+    const string SERVICE_PROFESSIONAL_TYPE = "SERVICE-PROFESSIONAL";
+
     /// <summary>
-    /// Quick signup, just username/email and a password.
-    /// 
-    /// IMPORTANT: It was used in a previous iteration of the project, now the detailed is in use and this lacks some of the latest
-    /// additions, like client-confirmationCode code.
+    /// Signup with fields:
+    /// - email [required]
+    /// - password [required when no facebookUserID is given]
+    /// - facebookUserID [optional]
+    /// - countryID [optional defaults to COUNTRY_CODE_USA]
+    /// - profileType [optional defaults to client]
+    /// - utm [optional, not a named form parameter but the whole query string]
+    /// - firstName [optional for professionals, required for clients]
+    /// - lastName [optional for professionals, required for clients]
+    /// - postalCode [optional]
+    /// - referralCode [optional]
+    /// - device [optional]
+    /// - phone [optional for professionals, required for clients]
+    /// - returnProfile [optional defaults to false] Returns the user profile in a property of the result
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
-    public static LoginResult QuickSignup(WebPage page)
-    {
-        page.Validation.Add("password", new PasswordValidator());
-        page.Validation.RequireField("email", "You must specify an email.");
-        // Username is an email currently, so need to be restricted
-        page.Validation.Add("email",
-            Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
-        page.Validation.RequireField("password", "You must specify a password.");
-        
-        if (page.Validation.IsValid()) {
-            var username = Request.Form["email"];
-            var password = Request.Form["password"];
-            var rememberMe = Request.Form["rememberMe"].AsBool();
-            var returnProfile = Request.Form["returnProfile"].AsBool();
-            var profileTypeStr = Request.Form["profileType"] ?? "";
-            var isProvider = new string[] { "SERVICE-PROFESSIONAL", "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
-            var utm = Request.Url.Query;
-
-            // If the user exists, try to log-in with the given password,
-            // becoming a provider if that was the requested profileType and follow as 
-            // a normal login.
-            // If the password didn't match, throw a sign-up specific error (email in use)
-            // Otherwise, just register the user.
-            if (LcAuth.ExistsEmail(username))
-            {
-                // Try Login
-                try
-                {
-                    var logged = Login(username, password, rememberMe, returnProfile);
-                    // throw exception on error
-                    if (isProvider) {
-                        LcAuth.BecomeProvider(logged.userID);
-                    }
-                    return logged;
-                }
-                catch (HttpException ex)
-                {
-                    // Not valid log-in, throw a 'email exists' error with Conflict http code
-                    throw new HttpException(409, "Email address is already in use.");
-                }
-            }
-            else
-            {
-                var registered = LcAuth.RegisterUser(username, "", "", password, isProvider, utm);
-                LcAuth.SendRegisterUserEmail(registered);
-                // Auto login:
-                return Login(username, password, rememberMe, returnProfile, true);
-            }
-        }
-        else {
-            // Bad request, input data incorrect because of validation rules
-            throw new HttpException(400, LcRessources.ValidationSummaryTitle);
-        }
-    }
-
-    /// <summary>
-    /// Signup with detailed account details: name, postal code,...
-    /// </summary>
-    /// <param name="page"></param>
-    /// <returns></returns>
-    public static LoginResult DetailedSignup(WebPage page)
+    public static LoginResult Signup(WebPage page)
     {
         page.Validation.RequireField("email", "You must specify an email.");
         // Username is an email currently, so need to be restricted
         page.Validation.Add("email",
             Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
-        page.Validation.RequireField("firstName", "You must specify your first name.");
-        page.Validation.RequireField("lastName", "You must specify your last name.");
-        page.Validation.RequireField("postalCode", "You must specify your postal/zip code.");
-        page.Validation.RequireField("countryID", "You must specify your country.");
 
         // First data
         var profileTypeStr = Request.Form["profileType"] ?? "";
-        var isServiceProfessional = new string[] { "SERVICE-PROFESSIONAL", "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
+        var isServiceProfessional = SERVICE_PROFESSIONAL_TYPE == profileTypeStr.ToUpper();
+        var isClient = !isServiceProfessional;
         var facebookUserID = Request.Form["facebookUserID"].AsLong(0);
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
+        // Removed validations per #312
+        //page.Validation.RequireField("postalCode", "You must specify your postal/zip code.");
+        //page.Validation.RequireField("countryID", "You must specify your country.");
 
+        //
         // Conditional validations
-        if (isServiceProfessional)
-        {
-            page.Validation.RequireField("phone", "You must specify your mobile phone number.");
-            // Disabled after removal from UI at commit#fd68f69fbdd04a777135cfae092b9c16c4e2d182
-            //page.Validation.RequireField("device", "You must select a device. Soon we will send you a link to download the app for your device.");
-        }
+        // Facebook
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
-        if (!useFacebookConnect) {
+        if (!useFacebookConnect)
+        {
             page.Validation.RequireField("password", "You must specify a password.");
-            page.Validation.Add("password", new PasswordValidator());
+            // We manually validate if a password was given, in order to prevent
+            // showing up the validation format message additionally to the 'required password' message
+            if (!String.IsNullOrWhiteSpace(Request.Form["password"]))
+            {
+                page.Validation.Add("password", new PasswordValidator());
+            }
         }
-
-        if (useFacebookConnect)
+        else
         {
             var prevFbUser = LcAuth.GetFacebookUser(facebookUserID);
             if (prevFbUser != null)
@@ -301,25 +255,37 @@ public static class LcAuthHelper
                 throw new HttpException(409, "Facebook account already connected. Sign in.");
             }
         }
+        // Profile Type
+        if (isClient)
+        {
+            page.Validation.RequireField("phone", "You must specify your mobile phone number.");
+            page.Validation.RequireField("firstName", "You must specify your first name.");
+            page.Validation.RequireField("lastName", "You must specify your last name.");
+        }
 
         if (page.Validation.IsValid())
         {
             var postalCode = Request.Form["postalCode"];
             // TODO To use countryCode for a more 'open' public REST API, where 'code' is a well know ISO 2-letters CODE
-            //var countryCode = Request.Form["countryCode"];
-            var countryID = Request.Form["countryID"].AsInt();
+            //var countryCode = Request.Form["countryCode"] ?? "US";
+            var countryID = Request.Form["countryID"].AsInt(COUNTRY_CODE_USA);
 
-            // Validate postal code before continue
-            if (!LcRest.Address.AutosetByCountryPostalCode(new LcRest.Address
+            // Postal code is Optional
+            if (!String.IsNullOrEmpty(postalCode))
             {
-                postalCode = postalCode,
-                //countryCode = countryCode
-                countryID = countryID
-            }))
-            {
-                // bad postal code
-                page.ModelState.AddError("postalCode", "Invalid postal code");
-                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                // Validate postal code before continue
+                var add = new LcRest.Address
+                {
+                    postalCode = postalCode,
+                    //countryCode = countryCode
+                    countryID = countryID
+                };
+                if (!LcRest.Address.AutosetByCountryPostalCode(add))
+                {
+                    // bad postal code
+                    page.ModelState.AddError("postalCode", "Invalid postal code");
+                    throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+                }
             }
 
             // Autogenerated password (we need to save one) on facebook connect:
@@ -439,27 +405,30 @@ public static class LcAuthHelper
                 {
                     db.Execute(@"
                         UPDATE users SET
-                            firstName = @1,
-                            lastName = @2,
-                            mobilePhone = @3,
-                            signupDevice = @4
+                            firstName = coalesce(@1, firstName),
+                            lastName = coalesce(@2, lastName),
+                            mobilePhone = coalesce(@3, mobilePhone),
+                            signupDevice = coalesce(@4, signupDevice)
                         WHERE userID = @0
                     ", userID, firstName, lastName, phone, device);
 
-                    var address = LcRest.Address.GetHomeAddress(userID);
-                    if (address.postalCode != postalCode)
+                    if (!String.IsNullOrEmpty(postalCode))
                     {
-                        address.postalCode = postalCode;
-                        //address.countryCode = countryCode;
-                        address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
-                        address.countryID = countryID;
-                        LcRest.Address.SetAddress(address);
+                        var address = LcRest.Address.GetHomeAddress(userID);
+                        if (address.postalCode != postalCode)
+                        {
+                            address.postalCode = postalCode;
+                            //address.countryCode = countryCode;
+                            address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
+                            address.countryID = countryID;
+                            LcRest.Address.SetAddress(address);
+                        }
                     }
                 }
 
-                // SPLASH BETA SIGNUP
-                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
-                    <html><body><h3>Sign-up for the beta from the Splash page.</h3>
+                // SIGNUP
+                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Sign-up", String.Format(@"
+                    <html><body><h3>Sign-up.</h3>
                     <strong>This user was already in the database, is re-registering itself again!</strong><br/>
                     <dl>
                     <dt>Profile:</dt><dd>{0}</dd>
@@ -490,13 +459,16 @@ public static class LcAuthHelper
                 }
 
                 var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone, device);
-                // Set address
-                var address = LcRest.Address.GetHomeAddress(registered.UserID);
-                address.postalCode = postalCode;
-                //address.countryCode = countryCode;
-                address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
-                address.countryID = countryID;
-                LcRest.Address.SetAddress(address);
+                if (!String.IsNullOrEmpty(postalCode))
+                {
+                    // Set address
+                    var address = LcRest.Address.GetHomeAddress(registered.UserID);
+                    address.postalCode = postalCode;
+                    //address.countryCode = countryCode;
+                    address.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
+                    address.countryID = countryID;
+                    LcRest.Address.SetAddress(address);
+                }
 
                 if (useFacebookConnect)
                 {
@@ -507,9 +479,9 @@ public static class LcAuthHelper
                 // Welcome and confirmation e-mail
                 LcAuth.SendRegisterUserEmail(registered);
 
-                // SPLASH BETA SIGNUP
-                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Beta Sign-up", String.Format(@"
-                    <html><body><h3>Sign-up for the beta from the Splash page.</h3>
+                // SIGNUP
+                LcMessaging.SendMail("joshua.danielson@loconomics.com", "Sign-up", String.Format(@"
+                    <html><body><h3>Sign-up.</h3>
                     <dl>
                     <dt>Profile:</dt><dd>{0}</dd>
                     <dt>First Name:</dt><dd>{1}</dd>
@@ -602,7 +574,7 @@ public static class LcAuthHelper
     public static LoginResult FacebookSignup(WebPage page)
     {
         var profileTypeStr = Request.Form["profileType"] ?? "";
-        var isProvider = new string[] { "SERVICE-PROFESSIONAL", "FREELANCE", "FREELANCER", "PROVIDER" }.Contains(profileTypeStr.ToUpper());
+        var isProvider = SERVICE_PROFESSIONAL_TYPE == profileTypeStr.ToUpper();
 
         return FacebookLogin(page, true, isProvider);
     }

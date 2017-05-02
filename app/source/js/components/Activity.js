@@ -20,15 +20,15 @@ function Activity($activity, app) {
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
     this.accessLevel = null;
-    
+
     // By default, reset scroll to top on activity.show
     this.resetScroll = true;
-    
+
     // TODO: Future use of a viewState, plain object representation
     // of part of the viewModel to be used as the state passed to the
     // history and between activities calls.
     this.viewState = {};
-    
+
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
     this.requestData = null;
@@ -39,7 +39,7 @@ function Activity($activity, app) {
         leftAction: null,
         rightAction: null
     });
-    
+
     // Knockout binding of viewState delayed to first show
     // to avoid problems with subclasses replacing the viewState
 }
@@ -62,10 +62,10 @@ Activity.prototype.show = function show(options) {
         ko.applyBindings(this.viewModel || {}, this.$activity.get(0));
         this.__bindingDone = true;
     }
-    
+
     options = options || {};
     this.requestData = options;
-    
+
     // Enable registered handlers
     // Validation of each settings object is performed
     // on registered, avoided here.
@@ -105,7 +105,7 @@ Activity.prototype.show = function show(options) {
         // changes from the same activity.
         this._handlersAreConnected = true;
     }
-    
+
     // Scroll to top immediately, if wanted by the activity (defaults to true):
     if (this.resetScroll)
         this.$activity.scrollTop(0);
@@ -113,11 +113,11 @@ Activity.prototype.show = function show(options) {
 
 /**
     Perform tasks to stop anything running or stop handlers from listening.
-    Must be executed every time the activity is hidden/removed 
+    Must be executed every time the activity is hidden/removed
     from the current view.
 **/
 Activity.prototype.hide = function hide() {
-    
+
     // Disable registered handlers
     if (this._handlers) {
         this._handlers.forEach(function(settings) {
@@ -142,7 +142,7 @@ Activity.prototype.hide = function hide() {
                 console.error('Activity.hide: Bad registered handler', settings);
             }
         });
-        
+
         this._handlersAreConnected = false;
     }
 };
@@ -162,17 +162,17 @@ Activity.prototype.hide = function hide() {
 **/
 Activity.prototype.registerHandler = function registerHandler(settings) {
     /*jshint maxcomplexity:8 */
-    
+
     if (!settings)
         throw new Error('Register require a settings object');
-    
+
     if (!settings.target || (!settings.target.on && !settings.target.subscribe))
         throw new Error('Target is null or not a jQuery, EventEmmiter or Observable object');
-    
+
     if (typeof(settings.handler) !== 'function') {
         throw new Error('Handler must be a function.');
     }
-    
+
     if (!settings.event && !settings.target.subscribe) {
         throw new Error('Event is null; it\'s required for non observable objects');
     }
@@ -199,9 +199,9 @@ Activity.createSectionNavBar = function createSectionNavBar(title) {
 };
 
 Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options) {
-    
+
     options = options || {};
-    
+
     var goBackOptions = {
         text: title,
         isTitle: true
@@ -233,23 +233,23 @@ Activity.createSubsectionNavBar = function createSubsectionNavBar(title, options
 };
 
 Activity.prototype.createCancelAction = function createCancelAction(cancelLink, state) {
-    
+
     var app = this.app;
-    
+
     var action = new NavAction({
         link: cancelLink,
         text: 'Cancel',
         handler: function(event) {
             var link = this.link(),
                 eoptions = event && event.options || {};
-            
+
             var goLink = function() {
                 if (link)
                     app.shell.go(link, state);
                 else
                     app.shell.goBack(state);
             };
-            
+
             // A silentMode passed to the event requires
             // avoid the modal (used when executing a saving task for example)
             if (eoptions.silentMode) {
@@ -282,17 +282,22 @@ Activity.prototype.convertToCancelAction = function convertToCancelAction(action
 };
 
 /**
-    Singleton helper
+    Singleton helper.
+    With the name parameter, a named instance can be created allowing
+    several instances per class not being purely 'singleton', more like
+    a factory where singletons per name are created.
 **/
-var singlentonInstances = {};
-var createSingleton = function createSingleton(ActivityClass, $activity, app) {
-    
-    if (singlentonInstances[ActivityClass.name] instanceof ActivityClass) {
-        return singlentonInstances[ActivityClass.name];
+var singletonInstances = {};
+var createSingleton = function createSingleton(ActivityClass, $activity, app, name) {
+
+    var key = ActivityClass.name + '::' + (name || '');
+
+    if (singletonInstances[key] instanceof ActivityClass) {
+        return singletonInstances[key];
     }
     else {
         var s = new ActivityClass($activity, app);
-        singlentonInstances[ActivityClass.name] = s;
+        singletonInstances[key] = s;
         return s;
     }
 };
@@ -307,10 +312,10 @@ var createSingleton = function createSingleton(ActivityClass, $activity, app) {
     (so just removed the 's').
 **/
 Activity.extend = function extendsActivity(ClassFn) {
-    
+
     ClassFn._inherits(Activity);
-    
+
     ClassFn.init = createSingleton.bind(null, ClassFn);
-    
+
     return ClassFn;
 };

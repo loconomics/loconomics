@@ -1,5 +1,6 @@
 <!-- profile-picture-bio-fieldset -->
 <script type="text/html" id="profile-picture-bio-fieldset-template">
+    <!-- ko with: marketplaceProfilePicture --> 
     <h2 class="SectionTitle">
         <span>Profile picture (of you)</span>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
@@ -26,12 +27,15 @@
             <input type="file" data-bind="disable: isLocked, fileUploader: { options: uploaderOptions, eventHandlers: uploaderEventHandlers }">
         </span>
     </div>
-    <h2 class="SectionTitle">
-        <span>Public bio</span>
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <div class="form-group">
-        <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
-class="form-control" data-bind="value: profile.publicBio, disable: isLocked" placeholder="Who are you, anyway? Spruce up your profile with a personal touch and tell clients a bit about yourself. Something like…”I'm a San Francisco native,” or “I love b-ball,” or “I am currently pho-obsessed.” Need help with a snazzy photo of yourself? Let us know."></textarea>
+    <div data-bind="visible: $parent.showNonEssentialFields"> 
+        <h2 class="SectionTitle">
+            <span>Public bio</span>
+            <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+        </h2>
+        <div class="form-group">
+            <textarea aria-label="Public bio" id="profilePictureBio-publicBio" rows="6"
+    class="form-control" data-bind="value: profile.publicBio, disable: isLocked" placeholder="Who are you, anyway? Spruce up your profile with a personal touch and tell clients a bit about yourself. Something like…”I'm a San Francisco native,” or “I love b-ball,” or “I am currently pho-obsessed.” Need help with a snazzy photo of yourself? Let us know."></textarea>
+        </div>
     </div>
+    <!-- /ko --> 
 </script>

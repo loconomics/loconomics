@@ -3,18 +3,18 @@
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'login' }">
         <h2 class="hidden-xs hidden-sm">Log in to your account</h2>
         <div>
-        <a href="#facebook" class="btn btn-block btn-facebook" data-bind="click: facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Log in with Facebook</span></a>
+        <a href="#facebook" class="btn btn-lg btn-block btn-facebook" data-bind="click: facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Log in with Facebook</span></a>
 <!--        <a href="#google" class="btn btn-block btn-google "><i class="Icon-google pull-left" aria-hidden="true"></i><span>Log in with Google</span></a>-->
         </div>
         <p class="isolated text-center">
             <svg height="5" width="45%">
                 <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-            </svg>  
-            <span> or </span> 
+            </svg>
+            <span> or </span>
             <svg height="5" width="45%">
                 <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
             </svg>
-        </p> 
+        </p>
         <form role="form" data-bind="submit: performLogin" novalidate>
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
                 <label for="login-username">Email address</label>
@@ -27,25 +27,25 @@
                 <i class="fa form-control-feedback ion ion-ios-locked-outline text-muted pull-right icon-right" aria-hidden="true"></i>
             </div>
             <div class="isolated">
-                <!--      data-bind="attr: { 'aria-pressed': rememberMe }" 
+                <!--      data-bind="attr: { 'aria-pressed': rememberMe }"
                 data-bind="css: { 'ion-android-checkbox-outline': rememberMe, 'ion-android-checkbox-outline-blank': !rememberMe() }"
-                 data-bind="checked: rememberMe" 
+                 data-bind="checked: rememberMe"
                 <span role="button" class="fa fa-lg ion ion-android-checkbox-outline"></span>
                 <input type="checkbox" hidden /> Remember me
                 -->
-                <button type="button" class="btn btn-link pull-right text-secondary" data-bind="click: goReset">Forget password?</button>
+                <button type="button" class="btn btn-lg btn-link pull-right text-secondary" data-bind="click: goReset">Forget password?</button>
             </div>
-            <button type="submit"  data-bind="text: loginButtonText, disable: isWorking" class="btn btn-primary btn-block">Log in</button>
-        </form>    
+            <button type="submit" data-bind="text: loginButtonText, disable: isWorking" class="btn btn-lg btn-primary btn-block">Log in</button>
+        </form>
         <hr>
-        <div class="isolated">
+        <div class="SignupLogin-loginReminder text-center">
             <span>Don't have an account?</span>
-            <button href="/signup/client" class="btn-default pull-right">Sign up</button>
+            <button href="/signup/client" class="btn btn-default">Sign up</button>
         </div>
     </div>
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'reset-password' }">
         <h2>Reset your password</h2>
-        <p class="isolated text-center">Enter your email address that's associated with your account. We'll send you a link so you can reset your password.</p>      
+        <p class="isolated text-center">Enter your email address that's associated with your account. We'll send you a link so you can reset your password.</p>
         <form role="form" data-bind="submit: requestReset" novalidate>
             <div class="form-group has-feedback" data-bind="css: { 'has-warning': username.error }, 'has-success': !username.error()">
                 <label for="login-reset-username" class="sr-only">Email address</label>
@@ -68,6 +68,6 @@
 
 
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: confirmResetButtonText, disable: isWorking"></button>
-        </form> 
+        </form>
     </div>
 </div>

@@ -1,0 +1,41 @@
+@*context: {dotVersion:string, includedFiles:[], facebookLang:string, facebookAppID:string, siteUrl:string} *@
+<!DOCTYPE html>
+<html lang="en" class="App is-ready" data-site-url="@(siteUrl)" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="Loconomics.com">
+        <meta name="author" content="Loconomics Coop.">
+        <link rel="icon" href="/assets/images/favicon.ico" />
+        <meta
+          name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+        <meta name="format-detection" content="telephone=no" />
+
+        <title>Loconomics Cooperative</title>
+
+        <!-- Google Analytics -->
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        </script>
+        <!-- End Google Analytics -->
+        <!--Start of loconomics Zendesk Widget script -->
+        <script>/*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var e=this.createElement("script");n&&(this.domain=n),e.id="js-iframe-async",e.src="https://assets.zendesk.com/embeddable_framework/main.js",this.t=+new Date,this.zendeskHost="loconomics.zendesk.com",this.zEQueue=a,this.body.appendChild(e)},o.write('<body onload="document._l();">'),o.close()}();
+        /*]]>*/</script>
+        <!--End of loconomics Zendesk Widget script -->
+
+        <link href="../assets/css/libs@(dotVersion).css" rel="stylesheet">
+        <link href="../assets/css/welcome@(dotVersion).css" rel="stylesheet">
+        <script src="../assets/js/styleguidelibs@(dotVersion).js"></script>
+        <script src="../assets/js/libs@(dotVersion).js"></script>
+        <script src="../assets/js/welcome@(dotVersion).js"></script>
+    </head>
+    <body>
+        <div class="App-activities">
+            @for(var f=0; f < includedFiles.length; f++) {
+                @render('../' + includedFiles[f])
+            }
+        </div>
