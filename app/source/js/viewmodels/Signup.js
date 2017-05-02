@@ -148,6 +148,10 @@ else
     this.isSigningUp = ko.observable(false);
     this.isSigningUpWithFacebook = ko.observable(false);
 
+    this.enableFacebookButton = ko.pureComputed(function() {
+        return !this.isSigningUpWithFacebook() && fb.isReady();
+    }, this);
+
     this.profile = ko.observable(''); // profileType
 
     this.emailIsLocked = ko.observable(false);
@@ -183,10 +187,15 @@ else
     }, this);
 
     this.facebookSubmitText = ko.pureComputed(function() {
-        return (
-            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
-            'Sign up with Facebook'
-        );
+        if(!fb.isReady()) {
+            return 'Loading Facebook...';
+        }
+        else if(this.isSigningUpWithFacebook()) {
+            return 'Signing up with Facebook...';
+        }
+        else {
+            return 'Sign up with Facebook';
+        }
     }, this);
 
     this.performSignup = function performSignup() {
