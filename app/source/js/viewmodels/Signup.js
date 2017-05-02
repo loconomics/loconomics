@@ -216,16 +216,34 @@ else
         return app.model.signup(plainData)
             .then(function(signupData) {
 
-                this.isSigningUp(false);
+                // The reset includes already a call
+                // to: this.isSigningUp(false);
+                // we left the task to that so the form can get
+                // locked if a handler attacked choose to not reset the form
 
                 // Start onboarding
-                if (app.model.onboarding)
+                if (app.model.onboarding) {
                     app.model.onboarding.setStep(signupData.onboardingStep);
+                }
 
-                // Remove form data
-                this.reset();
-
-                this.emit('signedup', signupData);
+                // Emit event before resetting data (to prevent some
+                // flickering effects, wrong state visualization), but
+                // we ensure that
+                // - the 'reset' happens even if an error is throw at handlers
+                // - the error still throws to the promise
+                // - if no handler connected, reset happens immediately
+                // - otherwise, the handler is in charge to call the reset
+                //  (that allows to set some presets too, or alternative
+                //  actions, like block the form)
+                try {
+                    if (!this.emit('signedup', signupData)) {
+                        this.reset();
+                    }
+                }
+                catch (ex) {
+                    // Remove form data
+                    this.reset();
+                }
 
                 return signupData;
 
