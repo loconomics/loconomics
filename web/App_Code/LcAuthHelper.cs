@@ -229,9 +229,6 @@ public static class LcAuthHelper
         var facebookUserID = Request.Form["facebookUserID"].AsLong(0);
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
-        // Removed validations per #312
-        //page.Validation.RequireField("postalCode", "You must specify your postal/zip code.");
-        //page.Validation.RequireField("countryID", "You must specify your country.");
 
         //
         // Conditional validations
