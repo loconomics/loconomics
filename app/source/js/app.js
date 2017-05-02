@@ -473,7 +473,20 @@ var appInit = function appInit() {
     app.model.init()
     .then(app.shell.run.bind(app.shell), alertError)
     .then(function() {
-
+        // Get a copy from local storage, if any, of the user profile.
+        // This is needed to detect and resume an onboarding, like happens
+        // if a user closes and go back to the app/site, or when coming
+        // from a signup redirect like in a landing page (#381)
+        // NOTE: the usual methods (load, getData) are not used since may
+        // trigger a remote load, and even wait for it, with very bad side effects:
+        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
+        // - worse performance, waiting for a remote request in order to start
+        // (the app must be able to start up without remote connection), while
+        // - remote data is not needed at all; if user is logged, the required
+        // data is ever locally stored
+        return app.model.userProfile.loadFromLocal();
+    })
+    .then(function(userProfile) {
         // TODO: Display a login popup/activity if a request require credentials and no log-in still??
         /*app.model.rest.onAuthorizationRequired = function(retry) {
         // Go to login activity if a request require credentials:
@@ -510,7 +523,7 @@ var appInit = function appInit() {
 
         // Onboarding model needs initialization
         app.model.onboarding.init(app);
-        app.model.onboarding.setStep(app.model.user().onboardingStep());
+        app.model.onboarding.setStep(userProfile.onboardingStep);
 
         // Check onboarding
         /*
@@ -518,7 +531,7 @@ var appInit = function appInit() {
             like from a target=_blank link, does not redirect to
             avoid to break the proposal of the link (like a help or FAQ link
             on onboarding)
-        
+
             We check that there is a referrer (so comes from a link) and it shares the origin
             (be aware that referrer includes origin+pathname, we just look for same origin).
         */
