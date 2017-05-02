@@ -75,17 +75,6 @@
                         <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
                     </div>
 
-                    <!-- VISUALLY REMOVED as of #312
-                    <div class="row">
-                        <label class="col-xs-5" for="postalCode">Postal Code</label>
-                        <label class="col-xs-7" for="referralCode">Referral Code</label>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { name: 'postalCode', field: postalCode, label: 'Postal code', type: 'text' } }, css: { 'is-valid': isPostalCodeValid }"></div>
-                        <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { name: 'referralCode', field: referralCode, label: 'Referral code', type: 'text' } }, css: { 'is-valid': isReferralCodeValid }"></div>
-                    </div>
-                    -->
-
                     <div data-bind="visible: forClient">
                         <label for="phone">Mobile Phone</label>
                         <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
