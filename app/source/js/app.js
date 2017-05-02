@@ -470,35 +470,12 @@ var appInit = function appInit() {
         });
     }
 
-    app.model.init()
-    .then(app.shell.run.bind(app.shell), alertError)
-    .then(function() {
-        // Get a copy from local storage, if any, of the user profile.
-        // This is needed to detect and resume an onboarding, like happens
-        // if a user closes and go back to the app/site, or when coming
-        // from a signup redirect like in a landing page (#381)
-        // NOTE: the usual methods (load, getData) are not used since may
-        // trigger a remote load, and even wait for it, with very bad side effects:
-        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
-        // - worse performance, waiting for a remote request in order to start
-        // (the app must be able to start up without remote connection), while
-        // - remote data is not needed at all; if user is logged, the required
-        // data is ever locally stored
-        return app.model.userProfile.loadFromLocal();
-    })
-    .then(function(userProfile) {
-        // TODO: Display a login popup/activity if a request require credentials and no log-in still??
-        /*app.model.rest.onAuthorizationRequired = function(retry) {
-        // Go to login activity if a request require credentials:
-        /*app.model.rest.onAuthorizationRequired = function(retry) {
-            // Show login with a promise to know the result, retry if successfully.
-            // Note: no error must be returned, the caller of the original process
-            // must have it's own control.
-            //var url = '#!login?redirectUrl=' + encodeURIComponent();
-            //app.shell.go(url);
-            xyz.showLogin().then(retry);
-        };*/
-
+    /**
+     * Set-up, after app.model initialization,
+     * some observables with user data with the global navbar
+     * that needs to display the name, photo and type of user
+     */
+    var connectUserNavbar = function() {
         // Connect username in navbar, and type flags
         ko.computed(function() {
             var u = app.model.userProfile.data,
@@ -520,36 +497,67 @@ var appInit = function appInit() {
                 app.navBarBinding.photoUrl(p);
             }
         });
+    };
 
-        // Onboarding model needs initialization
-        app.model.onboarding.init(app);
-        app.model.onboarding.setStep(userProfile.onboardingStep);
+    /**
+     * Initializes the onboarding appModel, getting locally stored user
+     * data if is a logged user, and resume the onboarding process
+     * when required
+     */
+    var setupOnboarding = function() {
+        // Get a copy from local storage, if any, of the user profile.
+        // This is needed to detect and resume an onboarding, like happens
+        // if a user closes and go back to the app/site, or when coming
+        // from a signup redirect like in a landing page (#381)
+        // NOTE: the usual methods (load, getData) are not used since may
+        // trigger a remote load, and even wait for it, with very bad side effects:
+        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
+        // - worse performance, waiting for a remote request in order to start
+        // (the app must be able to start up without remote connection), while
+        // - remote data is not needed at all; if user is logged, the required
+        // data is ever locally stored
+        return app.model.userProfile.loadFromLocal()
+        .then(function(userProfile) {
+            // Set-up onboarding and current step, if any
+            app.model.onboarding.init(app);
+            app.model.onboarding.setStep(userProfile.onboardingStep);
+            // Resume onboarding
+            /*
+                IMPORTANT: Exception: if the page is loading coming from itself,
+                like from a target=_blank link, does not redirect to
+                avoid to break the proposal of the link (like a help or FAQ link
+                on onboarding)
 
-        // Check onboarding
-        /*
-            IMPORTANT: Exception: if the page is loading coming from itself,
-            like from a target=_blank link, does not redirect to
-            avoid to break the proposal of the link (like a help or FAQ link
-            on onboarding)
+                We check that there is a referrer (so comes from a link) and it shares the origin
+                (be aware that referrer includes origin+pathname, we just look for same origin).
+            */
+            var r = window.document.referrer,
+                fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
 
-            We check that there is a referrer (so comes from a link) and it shares the origin
-            (be aware that referrer includes origin+pathname, we just look for same origin).
-        */
+            if (!fromItSelf) {
+                app.model.onboarding.goIfEnabled();
+            }
+        });
+    };
 
-        var r = window.document.referrer,
-            fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
-
-        if (!fromItSelf) {
-            app.model.onboarding.goIfEnabled();
-        }
-
+    /**
+     * Performs the tasks to mark and visualize the app as ready.
+     */
+    var setAppAsReady = function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
         // As app, hides splash screen
         if (window.navigator && window.navigator.splashscreen) {
             window.navigator.splashscreen.hide();
         }
-    }, alertError);
+    };
+
+    app.model.init()
+    .then(app.shell.run.bind(app.shell))
+    .then(connectUserNavbar)
+    .then(setupOnboarding)
+    .then(setAppAsReady)
+    .catch(alertError);
 
     // DEBUG
     window.app = app;
