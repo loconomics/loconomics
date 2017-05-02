@@ -96,6 +96,7 @@ var facebookLogin = function() {
 };
 
 function ViewModel(app) {
+    fb.load();
 
     var credentials = new FormCredentials();    
     this.username = credentials.username;
@@ -128,7 +129,15 @@ function ViewModel(app) {
     this.confirmResetButtonText = ko.pureComputed(function() {
         return this.isWorking() ? 'Resetting password...' : 'Reset my password';
     }, this);
-    
+
+    this.facebookButtonText = ko.pureComputed(function() {
+        return fb.isReady() ? 'Log in with Facebook' : 'Loading Facebook...';
+    }, this);
+
+    this.enableFacebookButton = ko.pureComputed(function() {
+        return fb.isReady();
+    }, this);
+
     this.performLogin = function performLogin() {
         // Validation
         if (this.username.error() ||
