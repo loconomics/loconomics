@@ -1,5 +1,5 @@
 @render('../parts/landingPageHead.html')
-<div id="landingPage" data-activity="massageTherapists" class="LandingPage">
+<div id="landingPage" data-activity="music-teachers" class="LandingPage">
     <div role="main">
         <div class="landingpage-background">
             <div class="container-fluid">
@@ -23,12 +23,14 @@
                     </div>
                     <div class="col-md-5">
                         <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: profile">
-                            <h5 class="SignupLogin-prompt">What is your primary area of work?</h5>
+                            <h5 class="SignupLogin-prompt">What instrument do you primarily teach?</h5>
                             <app-select-job-title params="selected: jobTitleID, caption: 'Choose one to start'">
-                                <item id="106">Massage Therapist</item>
-                                <item id="185">Acupuncturist</item>
-                                <item id="310">Bodyworker</item>
-                                <item id="0">Other</item>
+                                <item id="272">Piano</item>
+                                <item id="277">Guitar</item>
+                                <item id="275">Drum</item>
+                                <item id="273">Cello</item>
+                                <item id="276">Violin</item>
+                                <item id="0">I'll choose in the next step</item>
                             </app-select-job-title>
                         </app-signup>
                     </div>
