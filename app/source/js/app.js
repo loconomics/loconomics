@@ -520,7 +520,7 @@ var appInit = function appInit() {
         .then(function(userProfile) {
             // Set-up onboarding and current step, if any
             app.model.onboarding.init(app);
-            app.model.onboarding.setStep(userProfile.onboardingStep);
+            app.model.onboarding.setStep(userProfile && userProfile.onboardingStep || null);
             // Resume onboarding
             /*
                 IMPORTANT: Exception: if the page is loading coming from itself,
