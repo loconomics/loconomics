@@ -57,6 +57,7 @@ public static class LcAuthHelper
         public string authKey;
         public LcRest.UserProfile profile;
         public string onboardingStep;
+        public int onboardingJobTitleID;
     }
 
     public static LoginResult Login(WebPage page) {

@@ -521,6 +521,16 @@ var appInit = function appInit() {
             // Set-up onboarding and current step, if any
             app.model.onboarding.init(app);
             app.model.onboarding.setStep(userProfile && userProfile.onboardingStep || null);
+
+            // Workaround #374: because the onboarding selectedJobTitleID is not stored
+            // on server or at local profile, we need an speciallized method. This ensures
+            // that the value is set in place when the async task ends, no further action is required.
+            // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
+            // is recommended
+            return app.model.onboarding.recoverLocalJobTitleID();
+        })
+        .then(function() {
+            // Now we are ready with values in place
             // Resume onboarding
             /*
                 IMPORTANT: Exception: if the page is loading coming from itself,
