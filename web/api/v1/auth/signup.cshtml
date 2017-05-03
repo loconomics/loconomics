@@ -105,10 +105,12 @@
                         // when is already set-up
                         try
                         {
-                            userJobTitleApi.Create(userID, jobTitleID, jobTitleName);
+                            var userJobTitle = userJobTitleApi.Create(userID, jobTitleID, jobTitleName);
                             // Everything fine, update Onboarding step to 
                             // next after 'add job titles' (that is the first, after a zero-welcome step)
                             ret.onboardingStep = "schedulingPreferences";
+                            // Set the selected/created jobTitleID (#374)
+                            ret.onboardingJobTitleID = userJobTitle.jobTitleID;
                             // Additionally, update the step at the profile (it's value is used
                             // at 'resuming onboarding' at the app start-up; this is related to 
                             // the fix for #381)

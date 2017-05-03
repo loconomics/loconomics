@@ -234,6 +234,7 @@ else
 
                 // Start onboarding
                 if (app.model.onboarding) {
+                    app.model.onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
                     app.model.onboarding.setStep(signupData.onboardingStep);
                 }
 
