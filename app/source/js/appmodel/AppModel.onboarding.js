@@ -109,7 +109,7 @@ exports.create = function create(appModel) {
      */
     var persistLocalJobTitleID = function(jobTitleID) {
         return localforage.setItem(LOCAL_JOBTITLEID_KEY, jobTitleID);
-    }
+    };
     /**
      * Get local copy of the ID for resuming onboarding.
      * @private
