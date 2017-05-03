@@ -125,6 +125,17 @@ function RemoteModel(options) {
     this.fetch = options.fetch || function fetch() { throw new Error('Not implemented'); };
     this.push = options.push || function push() { throw new Error('Not implementd'); };
 
+    this.loadFromLocal = function loadFromLocal() {
+        var data = this.data;
+        return localforage.getItem(this.localStorageName)
+        .then(function(localData) {
+            if (localData) {
+                data.model.updateWith(localData, true);
+            }
+            return localData;
+        });
+    };
+
     var loadFromRemote = function loadFromRemote() {
         return this.fetch()
         .then(function (serverData) {
@@ -205,11 +216,9 @@ function RemoteModel(options) {
                 firstTimeLoad &&
                 this.localStorageName) {
 
-                promise = localforage.getItem(this.localStorageName)
+                promise = this.loadFromLocal()
                 .then(function(localData) {
                     if (localData) {
-                        this.data.model.updateWith(localData, true);
-
                         // Load done:
                         this.isLoading(false);
                         this.isSyncing(false);

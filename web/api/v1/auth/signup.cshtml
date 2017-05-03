@@ -109,6 +109,13 @@
                             // Everything fine, update Onboarding step to 
                             // next after 'add job titles' (that is the first, after a zero-welcome step)
                             ret.onboardingStep = "schedulingPreferences";
+                            // Additionally, update the step at the profile (it's value is used
+                            // at 'resuming onboarding' at the app start-up; this is related to 
+                            // the fix for #381)
+                            if (ret.profile != null)
+                            {
+                                ret.profile.onboardingStep = ret.onboardingStep;
+                            }
                         }
                         catch { }
                     }
