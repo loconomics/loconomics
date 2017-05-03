@@ -1,10 +1,12 @@
-<!-- Activity login -->
+  <!-- Activity login -->
 <div data-activity="login" class="SignupLogin">
     <div class="LightForm LeadContent" data-bind="attr: { hidden: view() !== 'login' }">
         <h2 class="hidden-xs hidden-sm">Log in to your account</h2>
         <div>
-        <a href="#facebook" class="btn btn-lg btn-block btn-facebook" data-bind="click: facebook"><i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span>Log in with Facebook</span></a>
-<!--        <a href="#google" class="btn btn-block btn-google "><i class="Icon-google pull-left" aria-hidden="true"></i><span>Log in with Google</span></a>-->
+            <a href="#facebook" class="btn btn-lg btn-block btn-facebook" data-bind="click: facebook; disable: !enableFacebookButton()">
+                <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i>
+                <span data-bind="text: facebookButtonText"></span>
+            </a>
         </div>
         <p class="isolated text-center">
             <svg height="5" width="45%">

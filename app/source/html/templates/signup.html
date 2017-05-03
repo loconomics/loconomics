@@ -42,10 +42,9 @@
 
             <div>
                 <div>
-                    <a href="#facebook" data-bind="click: facebook, disable: isSigningUpWithFacebook" class="btn btn-lg btn-block btn-facebook">
+                    <a href="#facebook" data-bind="click: facebook, disable: !enableFacebookButton()" class="btn btn-lg btn-block btn-facebook">
                         <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
                     </a>
-                    <!-- <a href="#google" class="btn btn-block btn-google "><i class="icon-google pull-left" aria-hidden="true"></i><span>Sign up with Google</span></a>             -->
                 </div>
                 <p class="isolated text-center">
                     or

@@ -8,6 +8,7 @@ var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter,
     ValidatedPasswordViewModel = require('./ValidatedPassword'),
     Field = require('./Field'),
+    fb = require('../utils/facebookUtils'),
     countriesOptions = require('./CountriesOptions');
 
 /**
@@ -20,7 +21,6 @@ var profileType = {
 };
 
 // Facebook login support: native/plugin or web?
-var fb = require('../utils/facebookUtils');
 var facebookLogin = function() {
     if (window.facebookConnectPlugin) {
         // native/plugin
@@ -57,6 +57,8 @@ function SignupVM(app) {
     //jshint maxstatements:55
 
     EventEmitter.call(this);
+
+    fb.load(); // load FB asynchronously, if it hasn't already been loaded
 
     this.confirmationCode = ko.observable(null);
     this.firstName = new Field();
@@ -146,6 +148,10 @@ else
     this.isSigningUp = ko.observable(false);
     this.isSigningUpWithFacebook = ko.observable(false);
 
+    this.enableFacebookButton = ko.pureComputed(function() {
+        return !this.isSigningUpWithFacebook() && fb.isReady();
+    }, this);
+
     this.profile = ko.observable(''); // profileType
 
     this.emailIsLocked = ko.observable(false);
@@ -181,10 +187,15 @@ else
     }, this);
 
     this.facebookSubmitText = ko.pureComputed(function() {
-        return (
-            this.isSigningUpWithFacebook() ? 'Signing up with Facebook...' :
-            'Sign up with Facebook'
-        );
+        if(!fb.isReady()) {
+            return 'Loading Facebook...';
+        }
+        else if(this.isSigningUpWithFacebook()) {
+            return 'Signing up with Facebook...';
+        }
+        else {
+            return 'Sign up with Facebook';
+        }
     }, this);
 
     this.performSignup = function performSignup() {
