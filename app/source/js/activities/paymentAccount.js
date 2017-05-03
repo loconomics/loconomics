@@ -58,6 +58,18 @@ function ViewModel(app) {
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
+    /**
+     * Sets if the form must reduce the number of fields.
+     * This is enabled automatically if we are in onboarding
+     * (change is observed, and is set too at the 'discard' method).
+     * Additionally, the value switchs off if an error is throw on saving,
+     * letting the user to fix any error at hidden fields (#196)
+     */
+    this.simplifiedFormEnabled = ko.observable(false);
+    this.isInOnboarding.subscribe(function (itIs) {
+        this.simplifiedFormEnabled(itIs);
+    }.bind(this));
+
     var paymentAccount = app.model.paymentAccount;
     this.errorMessages = paymentAccount.errorMessages;
 
@@ -98,6 +110,7 @@ function ViewModel(app) {
         dataVersion.pull({ evenIfNewer: true });
         this.formVisible(!dataVersion.version.status());
         this.userSelectedAccount(null);
+        this.simplifiedFormEnabled(this.isInOnboarding());
     }.bind(this);
 
     this.save = function save() {
@@ -122,8 +135,11 @@ function ViewModel(app) {
                 }
             })
             .catch(function() {
+                // Show all fields, letting user to fix error in previously
+                // hidden fields.
+                this.simplifiedFormEnabled(false);
                 // catch error, managed on event
-            });
+            }.bind(this));
         }
     }.bind(this);
 

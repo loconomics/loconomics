@@ -55,17 +55,17 @@
                 </div>
                 <div class="LightForm container-fluid" data-bind="with: paymentAccount, visible: formVisible">
 <!--                    <h2 class="SectionTitle">Your contact information</h2>-->
-                    <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.isInOnboarding()">
+                    <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.simplifiedFormEnabled()">
                       <input type="number" class="form-control"
                              placeholder="Postal code" aria-label="Postal code"
                              data-bind="textInput: postalCode, disable: $root.isLocked,
                                         popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                     </div>
-                    <div class="form-group" data-bind="visible: !$parent.isInOnboarding()">
+                    <div class="form-group" data-bind="visible: !$parent.simplifiedFormEnabled()">
                         <p class="form-control-static">
                             <span data-bind="visible: city() || stateProvinceCode()">
                                 <span data-bind="text: city"></span>,
