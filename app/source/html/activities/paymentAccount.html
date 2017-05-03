@@ -100,6 +100,8 @@
                     </p>
                     <label class="form-label"><input type="checkbox" data-bind="checked: agree, disable: $root.isLocked" /> <span>I agree to the above terms of service</span></label>
 
+                </div>
+                <div class="LightForm container-fluid" data-bind="visible: formVisible() || isInOnboarding()">
                     <div class="LightForm-submitBar">
                         <div>
                             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: $root.isLocked, click: $root.save">Save</button>

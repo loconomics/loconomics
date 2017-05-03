@@ -114,21 +114,33 @@ function ViewModel(app) {
     }.bind(this);
 
     this.save = function save() {
-        dataVersion.pushSave()
-        .then(function() {
-            // Move forward:
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
-            } else {
-                app.successSave();
-            }
-        })
-        .catch(function() {
-            // Show all fields, letting user to fix error in previously
-            // hidden fields.
-            this.simplifiedFormEnabled(false);
-            // catch error, managed on event
-        }.bind(this));
+        // If clicking 'save and continue' and no form visible
+        // just skip saving:
+        // is at onboarding, user has added payment info already and didn't
+        // want to edit it. This allows to skip some buggy situations #196
+        if (this.isInOnboarding() &&
+            dataVersion.version.status() &&
+            !this.formVisible()) {
+            app.model.onboarding.goNext();
+        }
+        else {
+            // Save
+            dataVersion.pushSave()
+            .then(function() {
+                // Move forward:
+                if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.goNext();
+                } else {
+                    app.successSave();
+                }
+            })
+            .catch(function() {
+                // Show all fields, letting user to fix error in previously
+                // hidden fields.
+                this.simplifiedFormEnabled(false);
+                // catch error, managed on event
+            }.bind(this));
+        }
     }.bind(this);
 
     this.errorMessages = {
