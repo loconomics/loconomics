@@ -1,13 +1,7 @@
 <!-- AddJobTitles activity -->
 <div data-activity="addJobTitles"  class="Boxes-sm animated">
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
-    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
-        <div class="PageMenu-list">
-            <ul>
-                <li><a>Get started</a></li>
-            </ul>
-        </div>
-    </div>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
         <div class="row">  
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
