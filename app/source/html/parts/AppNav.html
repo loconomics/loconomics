@@ -16,7 +16,7 @@
     <div class="App-menus">
         <div id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg">
             <h4 class="App-menus-header" data-bind="visible: !isAnonymous()">
-                <a href="/profilePictureBio">
+                <a href="/aboutMe">
                 <div class="App-menus-header-photo" data-bind="visible: !isAnonymous()"><img data-bind="attr: { src: photoUrl }" /></div>
                 <span class="App-menus-header-user" data-bind="text: userName, visible: !isAnonymous()"></span></a>
             </h4>
@@ -24,7 +24,7 @@
                 @render('parts/UserMenuContents.html')
             </ul>
         </div>
-        <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg">  
+        <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg">
             <ul class="nav navbar-nav">
           @render('parts/AddNewMenuContents.html')
             </ul>
