@@ -64,6 +64,10 @@ exports.registerAll = function(app) {
         viewModel: { instance: app.navBarBinding }
     });
 
+    ko.components.register('app-onboarding-menu', {
+        template: { element: 'onboarding-menu-template' },
+        viewModel: { instance: {} }
+    });
 
     /// inline-side-menu
     ko.components.register('app-inline-side-menu', {

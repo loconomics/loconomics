@@ -14,11 +14,11 @@ var A = Activity.extend(function WelcomeActivity() {
     
     this.viewModel = new ViewModel(this.app);        
     
-    var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Get started', {
+    var serviceProfessionalNavBar = Activity.createSubsectionNavBar(this.app.model.onboarding.navbarTitle(), {
         leftAction: Activity.NavAction.goLogout, helpLink: this.viewModel.helpLinkProfessionals
     });
     this.serviceProfessionalNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
-    var clientNavBar = Activity.createSubsectionNavBar('Get started', {
+    var clientNavBar = Activity.createSubsectionNavBar(this.app.model.onboarding.navbarTitle(), {
         leftAction: Activity.NavAction.goLogout, helpLink: this.viewModel.helpLinkClients
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
