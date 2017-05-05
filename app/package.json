@@ -76,6 +76,7 @@
   },
   "browser": {
     "bootstrap": "./vendor/bootstrap/js/bootstrap.js",
+    "bootstrap-carousel": "./vendor/bootstrap-source/js/carousel.js",
     "bootstrap-switch": "./vendor/bootstrap-switch/js/bootstrap-switch.js",
     "fastclick": "./vendor/fastclick-forked/fastclick.js",
     "jquery": "./vendor/jquery/jquery-2.1.4.js",
@@ -91,6 +92,7 @@
   },
   "browserify-shim": {
     "bootstrap": { "depends": [ "jquery" ] },
+    "bootstrap-carousel": { "depends": [ "jquery", "bootstrap" ] },
     "bootstrap-switch": { "depends": ["jquery", "bootstrap" ] },
     "fastclick": { "exports": "FastClick" },
     "jquery": { "exports": "jQuery" },
