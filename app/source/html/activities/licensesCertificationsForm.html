@@ -1,9 +1,10 @@
 <!-- licensesCertificationsForm activity -->
 <div data-activity="licensesCertificationsForm" class="Boxes-sm animated">
-    <app-inline-user-menu></app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container" data-bind="css: { 'is-loading': isLoading }">
-        <div class="row">   
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <div class="row">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/licensesCertifications/" data-bind="attr: {href: '/licensesCertifications/' + jobTitleID()}">
