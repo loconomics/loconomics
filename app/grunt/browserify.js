@@ -8,7 +8,7 @@ module.exports = function(/*grunt*/) {
         Browserify config
     **/
     var bconfig = {};
-    
+
     /**
         Styleguide Libs
     **/
@@ -24,9 +24,9 @@ module.exports = function(/*grunt*/) {
             ]
         }
     };
-    
+
     var styleguidelibsModules = getPublicModulesFrom(bconfig.styleguidelibs);
-    
+
     /**
         Libs bundle
     **/
@@ -69,7 +69,7 @@ module.exports = function(/*grunt*/) {
             ]
         }
     };
-    
+
     var libsModules = getPublicModulesFrom(bconfig.libs);
 
     /**
@@ -90,6 +90,44 @@ module.exports = function(/*grunt*/) {
             )
         }
     };
-    
+
+    /**
+     * Landing pages bundle
+     */
+    bconfig.landingPages = {
+        'src': [
+            './source/js/landingPage.js'
+        ],
+        'dest': './build/assets/js/welcome.js',
+        'options': {
+            // Enable debug eve when compiling script.js, the min.js will delete debug info for production use:
+            'debug': true,
+            // Modules from other bundles
+            'external': Array.prototype.concat(
+                styleguidelibsModules,
+                libsModules
+            ),
+            'require': ['boostrap-carousel']
+        }
+    };
+
+    /**
+        Tests bundle
+    **/
+    bconfig.tests = {
+        'src': [
+            './source/test/**/*.js'
+        ],
+        'dest': './build/assets/js/tests.js',
+        'options': {
+            'debug': true,
+            // Modules from other bundles
+            'external': Array.prototype.concat(
+                styleguidelibsModules,
+                libsModules
+            )
+        }
+    };
+
     return bconfig;
 };

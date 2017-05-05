@@ -8,7 +8,7 @@ var ko = require('knockout');
 var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 var A = Activity.extend(function PaymentAccountActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
@@ -16,9 +16,9 @@ var A = Activity.extend(function PaymentAccountActivity() {
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account' , helpLink: this.viewModel.helpLink
     });
-    
+
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
-    
+
     this.registerHandler({
         target: this.app.model.paymentAccount,
         event: 'error',
@@ -35,7 +35,7 @@ var A = Activity.extend(function PaymentAccountActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
+
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
         this.navBar.model.updateWith(this.defaultNavBar, true);
@@ -44,7 +44,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     this.updateNavBarState();
 
     // Discard any previous unsaved edit
@@ -58,9 +58,21 @@ function ViewModel(app) {
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
+    /**
+     * Sets if the form must reduce the number of fields.
+     * This is enabled automatically if we are in onboarding
+     * (change is observed, and is set too at the 'discard' method).
+     * Additionally, the value switchs off if an error is throw on saving,
+     * letting the user to fix any error at hidden fields (#196)
+     */
+    this.simplifiedFormEnabled = ko.observable(false);
+    this.isInOnboarding.subscribe(function (itIs) {
+        this.simplifiedFormEnabled(itIs);
+    }.bind(this));
+
     var paymentAccount = app.model.paymentAccount;
     this.errorMessages = paymentAccount.errorMessages;
-    
+
     var dataVersion = paymentAccount.newVersion();
     dataVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
@@ -76,7 +88,7 @@ function ViewModel(app) {
             this.formVisible(!dataVersion.version.status());
         }
     }.bind(this));
-    
+
     // Actual data for the form:
     this.paymentAccount = dataVersion.version;
 
@@ -86,10 +98,10 @@ function ViewModel(app) {
         return (
             app.model.onboarding.inProgress() ?
                 'Save and continue' :
-                this.isLoading() ? 
-                    'loading...' : 
-                    this.isSaving() ? 
-                        'saving...' : 
+                this.isLoading() ?
+                    'loading...' :
+                    this.isSaving() ?
+                        'saving...' :
                         'Save'
         );
     }, paymentAccount);
@@ -98,34 +110,50 @@ function ViewModel(app) {
         dataVersion.pull({ evenIfNewer: true });
         this.formVisible(!dataVersion.version.status());
         this.userSelectedAccount(null);
+        this.simplifiedFormEnabled(this.isInOnboarding());
     }.bind(this);
 
     this.save = function save() {
-        dataVersion.pushSave()
-        .then(function() {
-            // Move forward:
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
-            } else {
-                app.successSave();
-            }
-        })
-        .catch(function() {
-            // catch error, managed on event
-        });
+        // If clicking 'save and continue' and no form visible
+        // just skip saving:
+        // is at onboarding, user has added payment info already and didn't
+        // want to edit it. This allows to skip some buggy situations #196
+        if (this.isInOnboarding() &&
+            dataVersion.version.status() &&
+            !this.formVisible()) {
+            app.model.onboarding.goNext();
+        }
+        else {
+            // Save
+            dataVersion.pushSave()
+            .then(function() {
+                // Move forward:
+                if (app.model.onboarding.inProgress()) {
+                    app.model.onboarding.goNext();
+                } else {
+                    app.successSave();
+                }
+            })
+            .catch(function() {
+                // Show all fields, letting user to fix error in previously
+                // hidden fields.
+                this.simplifiedFormEnabled(false);
+                // catch error, managed on event
+            }.bind(this));
+        }
     }.bind(this);
-    
+
     this.errorMessages = {
         postalCode: ko.observable()
     };
-    
+
     // On change to a valid code, do remote look-up
     createPostalCodeAutolookup({
         appModel: app.model,
         address: this.paymentAccount,
         postalCodeError: this.errorMessages.postalCode
     });
-    
+
     this.formVisible = ko.observable(false);
     this.showForm = function() {
         this.formVisible(true);

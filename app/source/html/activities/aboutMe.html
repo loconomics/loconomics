@@ -13,8 +13,8 @@
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/account">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Account
+                        <a href="/userProfile">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Profile
                         </a>
                     </li>
                 </ul>
@@ -24,20 +24,24 @@
                     <div class="SmartNavContent container-fluid nogaps-md nogaps-lg">
                         <form class="LightForm" role="form" data-bind="submit: save">
                             <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                            <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell Loconomics a little about yourself</div>
-                            <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Please fill out the information below. Confirmed clients will only receive your email and phone number once they book you. As always, all of your data is safe with us.</p>
-                            <div data-bind="template: { name: 'contact-info-fieldset-template', data: contactInfo }"></div>
-                            <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Who are you, anyway? Spruce up your profile with a personal touch and tell clients a bit about yourself. Something like…”I'm a San Francisco native,” or “I love b-ball,” or “I am currently pho-obsessed.” Need help with a snazzy photo of yourself? Let us know.</p>
-                            <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: marketplaceProfilePicture }"></div>
-                            <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Don't have your own website? Use your Loconomics profile as one! Just create a custom URL below.</p>
-                            <div data-bind="template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
-                            <div data-bind="template: { name: user.isServiceProfessional() ? 'service-professional-website-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
+                            <div class="OnboardingValueProp"> 
+                                <div class="Icon-container">
+                                    <span class="Tile-icon fa ion-ios-contact-outline" aria-hidden="true"></span>
+                                </div>
+                                <span class="Tile-content">
+                                    <h2><span data-bind="visible: isInOnboarding()">Introduce yourself</span><span data-bind="visible: !isInOnboarding()">Your profile</span></h2> 
+                                    <p>Clients see your photo, first name, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</p>
+                                </span>
+                            </div>
+                            <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>
+                            <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: {marketplaceProfilePicture: marketplaceProfilePicture, showNonEssentialFields: !isInOnboarding()} }"></div>
+                            <div data-bind="visible: !isInOnboarding(), template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
+                            <div data-bind="visible: !isInOnboarding(), template: { name: user.isServiceProfessional() ? 'service-professional-website-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
                             <div class="LightForm-submitBar">
                                 <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                             </div>
                         </form>
                     </div>
-                    <div data-bind="template: { name: 'profile-picture-bio-photo-sheet-template', data: marketplaceProfilePicture }"></div>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

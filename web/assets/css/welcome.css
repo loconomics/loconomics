@@ -1,0 +1,2826 @@
+/*! LoconomicsApp 2017-03-10
+   Author: Loconomics Inc. */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\grunt-contrib-stylus\node_modules\stylus\lib\functions\index.styl */
+
+/* line undefined : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+/*
+    Stylesheet for any landingPage.
+    Ideally, just generating one file from the landing stylesheet
+    would contain any import needed, and not shared with others,
+    but for now are few the changes and no much overload
+    plus some refactors needed here (maybe just 'app.styl')
+*/
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+/* core */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\index.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\mediaQueries.styl */
+
+/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\variables.styl */
+
+/* line 381 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+
+/* line 330 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\variables.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\mixins\buttons.styl */
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.btn-secondary {
+  color: #fff;
+  background-color: #ff7674;
+  border-color: #e75551;
+}
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary.focus,
+.btn-secondary:active,
+.btn-secondary.active,
+.open > .dropdown-toggle.btn-secondary {
+  color: #fff;
+  background-color: #ff514f;
+  border-color: #e23530;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary:active,
+.btn-secondary.active,
+.open > .dropdown-toggle.btn-secondary {
+  background-image: none;
+}
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\mixins\buttons.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary.disabled,
+.btn-secondary[disabled],
+fieldset[disabled] .btn-secondary,
+.btn-secondary.disabled:hover,
+.btn-secondary[disabled]:hover,
+fieldset[disabled] .btn-secondary:hover,
+.btn-secondary.disabled:focus,
+.btn-secondary[disabled]:focus,
+fieldset[disabled] .btn-secondary:focus,
+.btn-secondary.disabled.focus,
+.btn-secondary[disabled].focus,
+fieldset[disabled] .btn-secondary.focus,
+.btn-secondary.disabled:active,
+.btn-secondary[disabled]:active,
+fieldset[disabled] .btn-secondary:active,
+.btn-secondary.disabled.active,
+.btn-secondary[disabled].active,
+fieldset[disabled] .btn-secondary.active {
+  background-color: #ff7674;
+  border-color: #e75551;
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\mixins\buttons.styl */
+.btn-secondary .badge {
+  color: #ff7674;
+  background-color: #fff;
+}
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+a:hover,
+a:focus {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.btn-default {
+  background: transparent;
+  border-color: #555;
+  color: #555;
+}
+
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default:target,
+.btn-default:link {
+  color: #ff6765;
+  border-color: #ff6765;
+  background: transparent;
+}
+
+/* line 42 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.text-secondary {
+  color: #ff6765;
+}
+
+/* line 52 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.form-control-static {
+  padding: 7px 13px;
+}
+
+/* line 66 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+
+/* line 67 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.ut-noRadioCheck input[type="radio"],
+.ut-noRadioCheck input[type="checkbox"] {
+  position: absolute;
+  left: -99999px;
+  clip: rect(0px, 0px, 0px, 0px);
+}
+
+/* line 78 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.ut-noRadioCheck label span {
+  pointer-events: none;
+}
+
+/* line 87 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.form-control,
+.input-group > .input-group-addon,
+.input-group > .form-control,
+.btn {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  font-weight: 700;
+}
+
+/* line 92 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.form-control:hover,
+.input-group > .input-group-addon:hover,
+.input-group > .form-control:hover,
+.btn:hover,
+.form-control:focus,
+.input-group > .input-group-addon:focus,
+.input-group > .form-control:focus,
+.btn:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+/* line 97 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+
+/* line 98 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active {
+  text-decoration: none;
+  outline: none;
+}
+
+/* line 104 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.btn-link.text-secondary {
+  color: #ff6765;
+  background-color: transparent;
+}
+
+/* line 107 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.btn-link.text-secondary:hover,
+.btn-link.text-secondary:focus,
+.btn-link.text-secondary:active {
+  color: #e4423e;
+}
+
+/* line 113 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.form-control,
+.input-group-addon,
+.btn-primary,
+.btn-secondary,
+.btn-info,
+.btn-success,
+.btn-warning,
+.btn-danger {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+
+/* line 125 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.form-control,
+.input-group-addon,
+.btn {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/* line 129 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.input-group > .form-control.inset,
+.input-group > .form-control.inset {
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+/* line 138 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.form-control {
+  background: #fff;
+}
+
+/* line 157 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.col-lg-reset {
+  padding-right: 0;
+  padding-left: 0;
+  min-height: 0;
+  position: static;
+}
+@media (max-width: 767px) {
+
+/* line 161 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .col-xs-reset {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+  }
+}
+@media (max-width: 991px) {
+
+/* line 166 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .col-sm-reset {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+  }
+}
+@media (max-width: 1199px) {
+
+/* line 171 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .col-md-reset {
+    padding-right: 0;
+    padding-left: 0;
+    min-height: 0;
+    position: static;
+  }
+}
+
+/* line 180 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.fa-xl {
+  font-size: 25px;
+}
+
+/* line 195 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+@media (max-width: 767px) {
+
+/* line 197 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-xs,
+  .container-fluid.nogaps-xs {
+    padding: 0;
+  }
+
+/* line 190 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-xs .SectionTitle,
+  .container-fluid.nogaps-xs .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+
+/* line 204 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-sm,
+  .container-fluid.nogaps-sm {
+    padding: 0;
+  }
+
+/* line 190 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-sm .SectionTitle,
+  .container-fluid.nogaps-sm .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+
+/* line 211 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-md,
+  .container-fluid.nogaps-md {
+    padding: 0;
+  }
+
+/* line 190 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-md .SectionTitle,
+  .container-fluid.nogaps-md .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+@media (min-width: 1200px) {
+
+/* line 217 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-lg,
+  .container-fluid.nogaps-lg {
+    padding: 0;
+  }
+
+/* line 190 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+  .container.nogaps-lg .SectionTitle,
+  .container-fluid.nogaps-lg .SectionTitle {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* line 226 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu {
+  float: left;
+  margin-top: 0px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1.5px 0 0 #f5f5f5;
+  -webkit-box-shadow: 0 1.5px 0 0 #f5f5f5;
+  box-shadow: 0 1.5px 0 0 #f5f5f5;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+
+/* line 234 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu .App-menus-group-header {
+  padding: 0px 10px 10px;
+  border-bottom: 1px solid #777;
+  color: #777;
+  font-size: 1.1em;
+}
+
+/* line 240 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu > li {
+  width: 250px;
+}
+
+/* line 242 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu > li.go-help,
+.dropdown-menu > li.go-download {
+  display: none;
+}
+
+/* line 245 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu > li > a {
+  color: #555;
+  font-size: 1.1em;
+  padding: 10px 10px 10px 40px;
+  margin: 0;
+}
+
+/* line 252 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu > li > a > i {
+  color: #555;
+  font-size: 1.5em;
+  margin-right: 5px;
+}
+
+/* line 258 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #e4423e !important;
+  background-color: transparent;
+  padding-left: 42px;
+}
+
+/* line 262 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu > li > a:hover > i,
+.dropdown-menu > li > a:focus > i {
+  color: #e4423e !important;
+}
+
+/* line 272 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu li.active > a {
+  color: #333 !important;
+  background: transparent;
+}
+
+/* line 275 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.dropdown-menu li.active > a > i {
+  color: #333 !important;
+}
+
+/* line 280 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.bootstrap-switch {
+  border-color: #555;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+
+/* line 284 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.bootstrap-switch-handle-on,
+.bootstrap-switch-primary {
+  background-color: #47b347;
+  color: #fff;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+
+/* line 290 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.bootstrap-switch-handle-off,
+.bootstrap-switch-default {
+  background-color: #f5f5f5;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+
+/* line 295 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.bootstrap-switch-label {
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+
+/* line 298 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.checkbox,
+.radio {
+  margin-left: 15px;
+}
+
+/* line 301 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.well {
+  margin: 15px 35px;
+  padding: 20px 20px -5px 20px;
+  background-color: #ffffa5;
+  border: none;
+}
+
+/* line 306 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.well .list-group {
+  margin-bottom: 0px;
+  padding-left: 20px;
+}
+
+/* line 312 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.modal .modal-header .close {
+  margin-top: -10px;
+  margin-right: -12px;
+  padding: 8px 12px;
+}
+
+/* line 318 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* line 323 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.bg-white {
+  background-color: #fff;
+}
+
+/* line 326 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\bs-extensions.styl */
+.icon-secure {
+  font-size: 29px !important;
+  top: 27px;
+}
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+/** Components styles **/
+
+/* line 23 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheetBackdrop,
+.App .AppNav:after {
+  background: rgba(0,0,0,0.4);
+  -webkit-transition: opacity 300ms;
+  -moz-transition: opacity 300ms;
+  -o-transition: opacity 300ms;
+  -ms-transition: opacity 300ms;
+  transition: opacity 300ms;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 90100;
+}
+
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.has-ActionSheet-open .ActionSheetBackdrop {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  pointer-events: auto;
+}
+
+/* line 37 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet {
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+  text-align: center;
+  margin: 0 auto;
+  z-index: 90900;
+  padding-bottom: 20px;
+  -webkit-transition: -webkit-transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: -moz-transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: -o-transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: -ms-transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: transform 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  -o-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
+  display: block !important;
+}
+
+/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul {
+  padding: 0;
+  margin: 0;
+  background: rgba(255,255,255,0.9);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* line 56 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul.ActionSheet-close {
+  background: White;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* line 63 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul > li {
+  display: block;
+  -webkit-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  -o-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
+}
+
+/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul > li[hidden] {
+  opacity: 0.3;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  filter: alpha(opacity=30);
+  pointer-events: none;
+}
+
+/* line 73 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul > li > a {
+  display: block;
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* line 78 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul > li > a:hover,
+.ActionSheet > ul > li > a:active,
+.ActionSheet > ul > li > a:focus {
+  text-decoration: none;
+  background: #ddd;
+  color: inherit;
+}
+
+/* line 85 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet > ul > li + li {
+  border-top: 1px solid #ccc;
+}
+
+/* line 93 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\ActionSheet.styl */
+.ActionSheet[hidden] {
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -o-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  transform: translateY(100%);
+  -webkit-box-shadow: 0;
+  box-shadow: 0;
+}
+
+/* line 98 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\index.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 2 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar {
+  border: none;
+  padding: 0;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar .input-group {
+  border: none;
+}
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar .input-group .input-group-addon {
+  background: transparent;
+  border: none;
+  padding-right: 0;
+}
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar .input-group .form-control {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none;
+  background: White;
+  vertical-align: top;
+  height: 1em;
+  line-height: 1em;
+  font-size: 16px;
+}
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.SearchBar .input-group .form-control::-moz-placeholder {
+  color: #999;
+}
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.SearchBar .input-group .form-control:-ms-input-placeholder {
+  color: #999;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.SearchBar .input-group .form-control::-webkit-input-placeholder {
+  color: #999;
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar {
+  height: 62px;
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #777;
+  position: relative;
+  z-index: 250;
+  padding: 2px 60px 2px 60px;
+  display: table;
+/* DOUBLE CHECK TO REMOVE BY USING A STANDARD MESSAGETILE */
+}
+
+/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > .LargeNavBar-brand,
+.LargeNavBar > .LargeNavBar-navBar,
+.LargeNavBar > .LargeNavBar-searchBar {
+  float: none;
+  display: table-cell;
+  vertical-align: top;
+  white-space: nowrap;
+  width: auto;
+}
+
+/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > .LargeNavBar-brand {
+  width: 100px;
+}
+
+/* line 52 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar > .LargeNavBar-searchBar {
+  width: 100%;
+}
+
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-searchBar {
+  border-left: 1px solid #ccc;
+  border: none;
+  padding: 0;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group {
+  border: none;
+}
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .input-group-addon {
+  background: transparent;
+  border: none;
+  padding-right: 0;
+}
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none;
+  background: White;
+  vertical-align: top;
+  height: 58px;
+  line-height: 58px;
+  font-size: 16px;
+}
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control::-moz-placeholder {
+  color: #999;
+}
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control:-ms-input-placeholder {
+  color: #999;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.LargeNavBar .LargeNavBar-searchBar .input-group .form-control::-webkit-input-placeholder {
+  color: #999;
+}
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-brand {
+  padding-right: 15px;
+}
+
+/* line 64 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-brand .navbar-brand {
+  height: 58px;
+}
+
+/* line 68 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar {
+  padding: 0px;
+  float: right;
+}
+
+/* line 72 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > li {
+  display: inline-block;
+  height: 58px;
+  line-height: 26px;
+  width: auto;
+  padding: 0;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+/* line 82 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > li .LargeNavBar-label {
+  max-width: 96px;
+  white-space: nowrap;
+  word-break: break-all;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  vertical-align: top;
+  display: inline-block;
+}
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > li > a {
+  height: 58px;
+  line-height: 58px;
+  color: #555;
+  padding-top: 0;
+  padding-bottom: 0;
+  font-size: 16px;
+}
+
+/* line 99 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > li > a .btn {
+  font-size: 16px;
+}
+
+/* line 103 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > li > a:hover,
+.LargeNavBar .LargeNavBar-navBar > li > a:focus {
+  background-color: transparent;
+  color: #e4423e !important;
+  border-color: transparent;
+  border-bottom: none;
+}
+
+/* line 111 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 113 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > .open > a {
+  color: #555;
+  background-color: #fff;
+}
+
+/* line 118 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 120 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-dashboard > a,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-onboarding > a,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-logout > a {
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+/* line 126 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-dashboard > a:hover,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-onboarding > a:hover,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-logout > a:hover,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-dashboard > a:focus,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-onboarding > a:focus,
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu .go-logout > a:focus {
+  padding-left: 17px;
+}
+
+/* line 130 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 131 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu.Category-menu > li {
+  text-align: center;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+/* line 135 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu.Category-menu > li > a {
+  white-space: normal;
+  font-size: inherit;
+  padding: 10px 0px;
+}
+
+/* line 141 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar > .open > .dropdown-menu.Category-menu > li:last-child {
+  border-bottom: none;
+}
+
+/* line 149 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 150 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar .mail-nav i,
+.LargeNavBar .LargeNavBar-navBar .mail-nav .caret {
+  vertical-align: middle;
+}
+
+/* line 153 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar .LargeNavBar-navBar .mail-alert {
+  background-color: White;
+  border: 1px solid #00989a;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  color: #00989a;
+  height: 20px;
+  position: absolute;
+  right: 20px;
+  top: 8px;
+  width: 20px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+/* line 167 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 168 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar ul.message-dropdown {
+  padding: 0px;
+  max-height: 250px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* line 174 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar ul.alert-dropdown {
+  width: 200px;
+}
+
+/* line 177 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+
+/* line 178 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar li.message-preview {
+  width: 275px !important;
+  border-bottom: 1px solid rgba(0,0,0,0.15);
+}
+
+/* line 181 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar li.message-preview > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/* line 185 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+.LargeNavBar li.message-footer {
+  margin: 5px 0;
+}
+@media (min-width: 992px) {
+
+/* line 191 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right .dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+
+/* line 195 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right .dropdown-menu-left {
+    left: 0;
+    right: auto;
+  }
+
+/* line 199 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-left {
+    float: left !important;
+  }
+
+/* line 202 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right {
+    float: right !important;
+    margin-right: -15px;
+  }
+
+/* line 206 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LargeNavBar.styl */
+  .LargeNavBar .navbar-right ~ .navbar-right {
+    margin-right: 0;
+  }
+}
+
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-group-addon-inset.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-group-addon-inset.styl */
+.input-group-btn.inset,
+.input-group-addon.inset {
+  background: White;
+}
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-group-addon-inset.styl */
+.input-group-btn.inset + .form-control,
+.input-group-addon.inset + .form-control {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-group-addon-inset.styl */
+.input-group-btn.inset:first-child,
+.input-group-addon.inset:first-child {
+  padding-right: 0;
+}
+
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-group-addon-inset.styl */
+.input-group-btn.inset:last-child,
+.input-group-addon.inset:last-child {
+  padding-left: 0;
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-group-addon-inset.styl */
+.form-control.inset {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/* line 25 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+
+/* line 115 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter {
+  background: #777;
+  margin: 0 auto;
+  display: block;
+  padding: 10px;
+  text-align: center;
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter,
+.WebsiteFooter a {
+  color: White;
+  font-weight: bold;
+}
+
+/* line 21 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-links li {
+  display: inline-block;
+}
+
+/* line 25 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-links li a {
+  font-size: 16px;
+  padding: 20px 26px;
+  display: inline-block;
+}
+@media (max-width: 767px) {
+
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+  .WebsiteFooter .WebsiteFooter-links li a {
+    font-size: 14px;
+    padding: 4px 16px;
+  }
+}
+
+/* line 38 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+
+/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-social.WebsiteFooter-social--on-top {
+  margin-top: 24px;
+}
+
+/* line 43 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-social h6 {
+  display: inline-block;
+  padding-right: 10px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+@media (max-width: 767px) {
+
+/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+  .WebsiteFooter .WebsiteFooter-social h6 {
+    font-size: 14px;
+  }
+}
+
+/* line 54 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-social ul {
+  display: inline-block;
+}
+
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-social ul li {
+  display: inline-block;
+}
+
+/* line 60 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-social ul li a {
+  padding: 6px;
+  display: inline-block;
+}
+
+/* line 64 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-social ul li a i {
+  font-size: 25px;
+  vertical-align: middle;
+}
+
+/* line 73 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+.WebsiteFooter .WebsiteFooter-copyright {
+  padding: 20px 0;
+  font-size: 16px;
+}
+@media (max-width: 767px) {
+
+/* line 76 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\WebsiteFooter.styl */
+  .WebsiteFooter .WebsiteFooter-copyright {
+    font-size: 14px;
+  }
+}
+
+/* line 81 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar {
+  border: none;
+  padding: 0;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar .input-group {
+  border: none;
+}
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar .input-group .input-group-addon {
+  background: transparent;
+  border: none;
+  padding-right: 0;
+}
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\SearchBar.styl */
+.SearchBar .input-group .form-control {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none;
+  background: White;
+  vertical-align: top;
+  height: 1em;
+  line-height: 1em;
+  font-size: 16px;
+}
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.SearchBar .input-group .form-control::-moz-placeholder {
+  color: #999;
+}
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.SearchBar .input-group .form-control:-ms-input-placeholder {
+  color: #999;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.SearchBar .input-group .form-control::-webkit-input-placeholder {
+  color: #999;
+}
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage {
+  top: 0 !important;
+}
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-section-title {
+  color: White;
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: bold;
+  margin: 0 auto;
+  padding: 0.4em 15px;
+  text-align: center;
+}
+@media (max-width: 767px) {
+
+/* line 33 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-section-title {
+    font-size: 28px;
+    line-height: 31px;
+  }
+}
+
+/* line 39 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-join-up {
+  width: 340px;
+  margin: auto;
+  padding-bottom: 2em;
+}
+@media (max-width: 767px) {
+
+/* line 46 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-join-up {
+    width: auto;
+    display: block;
+    margin: 0 15px;
+  }
+
+/* line 51 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-join-up > .btn {
+    max-width: 340px;
+    margin: 0 auto;
+  }
+}
+
+/* line 57 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-join-up .btn {
+  border-color: White;
+}
+
+/* line 62 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search {
+  padding-top: 94px;
+  background: no-repeat center/cover;
+  background-image: -webkit-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: -moz-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: -o-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: -ms-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+}
+
+/* line 67 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search .coop-title {
+  color: White;
+  font-size: 44px;
+  font-weight: bold;
+  margin: 0.4em auto;
+  text-align: center;
+}
+@media (max-width: 991px) {
+
+/* line 74 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-search .coop-title {
+    font-size: 38px;
+  }
+}
+
+/* line 79 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search .coop-tagline {
+  color: White;
+  font-size: 24px;
+  margin: 0.5em auto;
+  text-align: center;
+}
+
+/* line 87 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search .coop-title,
+.LearnMorePage [role=main] .coop-search .coop-tagline {
+  padding: 0 15px;
+}
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search form {
+  margin: 40px auto;
+  max-width: 450px;
+}
+
+/* line 95 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search form .form-control {
+  background: White;
+  font-size: 17px;
+}
+
+/* line 100 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search form .form-control:focus {
+  border-bottom-color: #ccc;
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+@media (min-width: 768px) {
+
+/* line 110 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-search form > * {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+/* line 120 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw {
+  text-align: center;
+  color: #555;
+  background: White;
+  position: relative;
+}
+
+/* line 69 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+.LearnMorePage [role=main] .coop-hiw:after {
+  border-top: 30px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  border-top-color: White;
+  bottom: -30px;
+  left: 50%;
+  margin-left: -30px;
+  right: auto;
+}
+
+/* line 94 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+.LearnMorePage [role=main] .coop-hiw:before {
+  border-top: 30px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  border-top-color: none;
+  left: 50%;
+  margin-left: -30px;
+  right: auto;
+  bottom: -30px;
+}
+
+/* line 128 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw ul {
+  margin-top: 63px;
+  margin-bottom: 0;
+  padding-bottom: 45px;
+}
+
+/* line 133 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw ul > li {
+  margin-top: -45px;
+}
+
+/* line 138 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw h3 {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+/* line 144 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw i {
+  background: #00989a;
+  font-size: 56px;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  width: 90px;
+  line-height: 90px;
+  color: White;
+}
+
+/* line 156 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits {
+  background: #ff6765;
+  text-align: center;
+  padding-top: 40px;
+  position: relative;
+}
+
+/* line 69 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+.LearnMorePage [role=main] .coop-benefits:after {
+  border-top: 30px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  border-top-color: #ff6765;
+  bottom: -30px;
+  left: 50%;
+  margin-left: -30px;
+  right: auto;
+}
+
+/* line 94 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+.LearnMorePage [role=main] .coop-benefits:before {
+  border-top: 30px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  border-top-color: none;
+  left: 50%;
+  margin-left: -30px;
+  right: auto;
+  bottom: -30px;
+}
+
+/* line 166 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul {
+  color: #555;
+  text-align: center;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  max-width: 1200px;
+}
+
+/* line 174 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul li {
+  background: White;
+  display: inline-block;
+  width: 340px;
+  margin: 1.5%;
+  padding: 16px;
+  vertical-align: middle;
+}
+@media (max-width: 767px) {
+
+/* line 190 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-benefits ul li {
+    width: auto;
+    display: block;
+    max-width: 340px;
+    margin: 15px auto;
+  }
+}
+
+/* line 197 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul li a {
+  color: #ff6765;
+  font-weight: bold;
+}
+
+/* line 202 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul li h2 {
+  font-size: 38px;
+  font-weight: bold;
+  color: #ff6765;
+  margin: 0;
+  text-align: center;
+}
+
+/* line 210 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul li .Icon-bookNow {
+  display: inline-block;
+  width: 100px;
+  height: 37px;
+  color: #ff6765;
+  -webkit-background-size: 100px 37px;
+  -moz-background-size: 100px 37px;
+  background-size: 100px 37px;
+  background-image: url("../images/book-now.png");
+  background-image: -webkit-linear-gradient(transparent, transparent), url("../images/book-now.svg");
+  background-image: -moz-linear-gradient(transparent, transparent), url("../images/book-now.svg");
+  background-image: -o-linear-gradient(transparent, transparent), url("../images/book-now.svg");
+  background-image: -ms-linear-gradient(transparent, transparent), url("../images/book-now.svg");
+  background-image: linear-gradient(transparent, transparent), url("../images/book-now.svg");
+}
+
+/* line 221 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul li h3 {
+  font-size: 15px;
+  font-weight: bold;
+}
+@media (max-width: 767px) {
+
+/* line 228 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-benefits ul {
+    margin: 0 15px;
+  }
+}
+
+/* line 233 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits ul i {
+  color: #ff6765;
+  font-size: 3em;
+  display: block;
+}
+
+/* line 243 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-ownership {
+  text-align: center;
+  color: #555;
+  background: White;
+  position: relative;
+  padding-top: 40px;
+}
+
+/* line 69 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+.LearnMorePage [role=main] .coop-ownership:after {
+  border-top: 30px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  border-top-color: White;
+  bottom: -30px;
+  left: 50%;
+  margin-left: -30px;
+  right: auto;
+}
+
+/* line 94 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\arrows.styl */
+.LearnMorePage [role=main] .coop-ownership:before {
+  border-top: 30px solid transparent;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  content: "";
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  border-top-color: none;
+  left: 50%;
+  margin-left: -30px;
+  right: auto;
+  bottom: -30px;
+}
+
+/* line 252 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-ownership .coop-section-title {
+  color: #333;
+}
+
+/* line 256 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-ownership ul {
+  margin-top: 63px;
+  margin-bottom: 0;
+  padding-bottom: 45px;
+}
+@media (max-width: 520px) {
+
+/* line 261 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-ownership ul {
+    margin-top: 0px;
+  }
+}
+
+/* line 265 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-ownership ul > li {
+  margin-top: -45px;
+}
+@media (max-width: 520px) {
+
+/* line 268 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-ownership ul > li {
+    margin-top: 30px;
+  }
+}
+@media (max-width: 767px) {
+
+/* line 273 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-ownership ul > li {
+    margin-top: 0px;
+  }
+}
+@media (max-width: 520px) {
+
+/* line 278 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-ownership {
+    margin: 0 15px;
+  }
+}
+
+/* line 284 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-ownership h3 {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+/* line 290 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-ownership i {
+  background: #fff;
+  border: 2px solid #ff6765;
+  font-size: 56px;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
+  line-height: 90px;
+  color: #ff6765;
+}
+
+/* line 303 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing {
+  background: #f5f5f5;
+  text-align: center;
+  padding-top: 40px;
+}
+
+/* line 311 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing h2 {
+  color: #555;
+}
+
+/* line 315 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing ul {
+  color: #555;
+  text-align: center;
+  margin: 0 auto;
+  padding-bottom: 10px;
+  max-width: 1200px;
+}
+
+/* line 323 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing ul li {
+  background: White no-repeat top center/contain;
+  -webkit-background-size: 240px auto;
+  -moz-background-size: 240px auto;
+  background-size: 240px auto;
+  display: inline-block;
+  width: 300px;
+  height: 240px;
+  margin: 1.5%;
+  vertical-align: middle;
+  -webkit-box-shadow: 0 1.5px 0 0 rgba(0,0,0,0.1);
+  box-shadow: 0 1.5px 0 0 rgba(0,0,0,0.1);
+/* DISABLED, background does not looks good, and not so needed
+                    // For a small size where only one card fits the space (~pixels)
+                    // use an automatic width so the card does not looks with lot of
+                    // margin space and fits on sizes smaller than original card size,
+                    // but keeping a maximum size so it does not looks too wide.
+                    // On the beggining, the XS breakpoint was used, but was too wide
+                    // and lot of devices still hold two columns easily, so custom breakpoint
+                    // for the current design and $boxSize and $boxMargin
+                    // Margin is auto for centering and added gap on list container
+                    //@media $mediaMaxXs {
+                    @media (max-width: 520px) {
+                        width: auto;
+                        display: block;
+                        max-width: 340px;
+                        margin: $grid-gap auto;
+                        // Don't allow the background to lost alignment with the icon
+                        // NOTE: side-effect, image lost aspect rate
+                        background-size: 100% 157px;
+                    }
+                    */
+}
+
+/* line 355 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing ul li h3 {
+  font-size: 36px;
+  color: #fff;
+  background-color: #00989a;
+  padding: 25px 0px;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  margin: 0px;
+}
+
+/* line 365 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing ul li h1 {
+  font-size: 56px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* line 371 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing ul li p {
+  margin: 0px 0px 30px;
+  color: #333;
+  font-size: 16px;
+}
+@media (max-width: 767px) {
+
+/* line 377 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-pricing ul li {
+    max-width: 280px;
+    margin: 15px auto;
+  }
+}
+
+/* line 383 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-pricing ul .coop-or {
+  display: block;
+  margin: 20px 30px;
+  text-align: center;
+}
+@media (min-width: 992px) {
+
+/* line 387 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-pricing ul .coop-or {
+    display: inline-block;
+  }
+}
+
+/* line 406 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-search {
+  padding-bottom: 126px;
+}
+
+/* line 411 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw {
+  margin-bottom: -126px;
+}
+
+/* line 414 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw .coop-section-title,
+.LearnMorePage [role=main] .coop-hiw .coop-section-listing {
+  position: relative;
+  top: -126px;
+}
+
+/* line 418 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-hiw:after,
+.LearnMorePage [role=main] .coop-hiw:before {
+  bottom: 96px;
+}
+@media (max-width: 767px) {
+
+/* line 424 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-hiw .coop-section-title {
+    height: 62px;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+  }
+
+/* line 430 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-hiw ul {
+    margin-top: 0;
+  }
+
+/* line 434 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-hiw ul > li {
+    margin-top: -4px;
+  }
+}
+
+/* line 440 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+
+/* line 441 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-benefits .coop-section-title {
+  clear: both;
+}
+
+/* line 450 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup {
+  padding-top: 32px;
+  padding-bottom: 32px;
+  background: no-repeat center/cover;
+  background-image: -webkit-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: -moz-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: -o-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: -ms-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+  background-image: linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_546856.jpg");
+}
+
+/* line 456 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .coop-title {
+  color: White;
+  font-size: 44px;
+  font-weight: bold;
+  margin: 0.4em auto;
+  text-align: center;
+}
+@media (max-width: 991px) {
+
+/* line 463 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+  .LearnMorePage [role=main] .coop-signup .coop-title {
+    font-size: 38px;
+  }
+}
+
+/* line 468 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .coop-tagline {
+  color: White;
+  font-size: 24px;
+  margin: 0.5em auto;
+  text-align: center;
+}
+
+/* line 476 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .coop-title,
+.LearnMorePage [role=main] .coop-signup .coop-tagline {
+  padding: 0 15px;
+}
+
+/* line 480 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .btn-add-profile {
+  display: block;
+  height: 56px;
+  width: 300px;
+  font-size: 24px;
+  color: #fff;
+  border-color: #fff;
+  margin: auto;
+}
+
+/* line 488 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .btn-add-profile:hover,
+.LearnMorePage [role=main] .coop-signup .btn-add-profile:focus,
+.LearnMorePage [role=main] .coop-signup .btn-add-profile:active {
+  color: #ff6765;
+  border-color: #ff6765;
+}
+
+/* line 493 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+
+/* line 494 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .DownloadApp h2 {
+  color: #fff;
+}
+
+/* line 498 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+
+/* line 499 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .SignupLogin .LeadContent {
+  background: transparent;
+  padding-bottom: 32px;
+  border: none;
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+/* line 505 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .SignupLogin .LeadContent .btn-default {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* line 509 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .SignupLogin .LeadContent .fa {
+  font-size: 26px !important;
+}
+
+/* line 512 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .SignupLogin .LeadContent .icon-right {
+  margin-top: -33px;
+}
+
+/* line 515 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage [role=main] .coop-signup .SignupLogin .LeadContent .form-control {
+  height: 40px;
+  font-size: 14px;
+}
+
+/* line 524 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\LearnMorePage.styl */
+.LearnMorePage .LearnMorePage-Video {
+  max-width: 600px;
+}
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+/** Pages **/
+
+/* line 32 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPages\healingArtsProfessionals.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPages\healingArtsProfessionals.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPages\healingArtsProfessionals.styl */
+
+/* line 7 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPages\healingArtsProfessionals.styl */
+[data-activity=welcomeHealingArtsProfessionals] [role=main] .coop-search {
+  background-image: -webkit-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_32232.jpg");
+  background-image: -moz-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_32232.jpg");
+  background-image: -o-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_32232.jpg");
+  background-image: -ms-linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_32232.jpg");
+  background-image: linear-gradient(rgba(0,152,154,0.1), rgba(0,152,154,0.1)), url("../images/Stocksy_txp67b81859qys000_Small_32232.jpg");
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+/** App contains some general changes that may be needed**/
+
+/* line 23 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+/* TODO Ideally this will be shared utilities or components,
+ and no forcing the class App on the top */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+
+/* line 139 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\styleguideVars.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\vendor\bootstrap\styl\variables.styl */
+
+/* line 381 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\index.styl */
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\border.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\clearfix.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\color-image.styl */
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\flex.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\gradients.styl */
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\iconic.styl */
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\image.styl */
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\overflow.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\positions.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\reset.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\index.styl */
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\aliases.styl */
+
+/* line 13 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\ellipsis.styl */
+
+/* line 10 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\hide-text.styl */
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\replace-text.styl */
+
+/* line 1 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\text\shadow-stroke.styl */
+
+/* line undefined : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\vendor.styl */
+
+/* line 578 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\config.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\node_modules\nib\lib\nib\size.styl */
+
+/* line 12 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav {
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  position: absolute;
+}
+
+/* line 20 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-brand {
+  float: none;
+  display: inline-block;
+  padding: 12px;
+  line-height: 13px;
+  text-indent: -99999px;
+  background-repeat: no-repeat;
+  -webkit-background-size: 100px 38px;
+  -moz-background-size: 100px 38px;
+  background-size: 100px 38px;
+  background-image: url("../images/logo-large.png");
+  background-image: -webkit-linear-gradient(transparent, transparent), url("../images/logo.svg");
+  background-image: -moz-linear-gradient(transparent, transparent), url("../images/logo.svg");
+  background-image: -o-linear-gradient(transparent, transparent), url("../images/logo.svg");
+  background-image: -ms-linear-gradient(transparent, transparent), url("../images/logo.svg");
+  background-image: linear-gradient(transparent, transparent), url("../images/logo.svg");
+  min-width: 100px;
+  min-height: 39px;
+  height: 44px;
+}
+@media (min-width: 992px) {
+
+/* line 38 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+  .AppNav .navbar-brand {
+    height: 62px;
+    background-position: center;
+  }
+}
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle {
+  float: none;
+  margin-right: 0;
+}
+
+/* line 50 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 52 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .SmartNavBar .SmartNavBar-btn h1 {
+  color: #555;
+  font-weight: normal;
+}
+
+/* line 59 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus {
+  background: #fff;
+}
+
+/* line 64 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus > .navbar-collapse {
+  background: rgba(0,0,0,0.86);
+  position: fixed;
+  left: 0;
+  right: 25%;
+  overflow: auto;
+  bottom: 0;
+  top: 0;
+  padding-top: 44px;
+  z-index: 300;
+  border-top: none;
+}
+@media (min-width: 992px) {
+
+/* line 73 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+  .AppNav .App-menus > .navbar-collapse {
+    padding-top: 62px;
+  }
+}
+
+/* line 83 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus #menuNewItem {
+  left: 44%;
+  right: 0;
+}
+
+/* line 87 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus #menuNewItem .App-menus-group-header {
+  text-align: right;
+}
+
+/* line 91 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus #menuNewItem a {
+  padding: 10px 10px 10px 20px;
+  text-align: right;
+}
+
+/* line 94 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus #menuNewItem a:hover,
+.AppNav .App-menus #menuNewItem a:focus {
+  padding-left: 12px;
+}
+
+/* line 98 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus #menuNewItem i {
+  margin-left: 5px;
+}
+
+/* line 103 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus > .navbar-collapse.collapsing {
+  overflow: hidden;
+}
+
+/* line 109 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .nav {
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 200;
+  overflow: auto;
+}
+
+/* line 117 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .App-menus-header {
+  margin: 0 -15px 0 -15px;
+  padding: 15px;
+  border-bottom: 1px solid White;
+  color: White;
+  font-size: 1.1em;
+}
+
+/* line 124 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .App-menus-header .App-menus-header-user {
+  text-align: center;
+  font-size: 1.1em;
+  display: block;
+  margin: 10px 0 0 0;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* line 133 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .App-menus-header .App-menus-header-photo {
+  display: block;
+  margin: auto;
+  text-align: center;
+  background: none;
+}
+
+/* line 139 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .App-menus-header .App-menus-header-photo img {
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  border: 3px solid White;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* line 149 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 150 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .App-menus-header a:hover,
+.AppNav .App-menus .App-menus-header a:focus {
+  text-decoration: none;
+}
+
+/* line 156 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .App-menus-group-header {
+  padding: 0px 10px 10px;
+  border-bottom: 1px solid #777;
+  color: #777;
+  font-size: 1.1em;
+}
+
+/* line 163 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav {
+  padding-top: 10px;
+}
+
+/* line 167 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav a {
+  color: #ccc;
+  font-size: 1.1em;
+  padding: 10px 10px 10px 40px;
+  margin: 0;
+}
+
+/* line 174 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav a > i {
+  color: #ccc;
+  font-size: 1.5em;
+  margin-right: 5px;
+}
+
+/* line 180 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav a:hover,
+.AppNav .App-menus .navbar-nav a:focus {
+  color: #fff;
+  font-weight: 500;
+  padding-left: 42px;
+  background-color: transparent;
+}
+
+/* line 185 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav a:hover > i,
+.AppNav .App-menus .navbar-nav a:focus > i {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* line 192 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav .go-dashboard > a,
+.AppNav .App-menus .navbar-nav .go-logout > a {
+  padding-left: 10px;
+  padding-bottom: 15px;
+}
+
+/* line 197 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav .go-dashboard > a:hover,
+.AppNav .App-menus .navbar-nav .go-logout > a:hover,
+.AppNav .App-menus .navbar-nav .go-dashboard > a:focus,
+.AppNav .App-menus .navbar-nav .go-logout > a:focus {
+  padding-left: 17px;
+}
+
+/* line 216 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav li.active > a {
+  color: #fff;
+  font-weight: 500;
+  background: transparent;
+}
+
+/* line 220 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .App-menus .navbar-nav li.active > a > i {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* line 233 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle,
+.AppNav > .SmartNavBar > .SmartNavBar-edge {
+  overflow: hidden;
+  -o-text-overflow: clip !important;
+  text-overflow: clip !important;
+}
+
+/* line 239 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 241 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .SmartNavBar .SmartNavBar-btn .ion {
+  font-size: 2em;
+  line-height: 44px;
+}
+
+/* line 248 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .SmartNavBar .SmartNavBar-btn .ion-navicon {
+  font-size: 31px;
+}
+
+/* line 252 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle {
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+}
+
+/* line 254 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle > * {
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  display: block;
+}
+
+/* line 261 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle > * > .icon {
+  display: block;
+}
+
+/* line 269 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle:before {
+  font-family: "Ionicons";
+  content: "";
+  font-size: 2em;
+  line-height: 44px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  -webkit-transition-property: -webkit-transform, opacity;
+  -moz-transition-property: -moz-transform, opacity;
+  -o-transition-property: -o-transform, opacity;
+  -ms-transition-property: -ms-transform, opacity;
+  transition-property: transform, opacity;
+  -webkit-transition-duration: 300ms;
+  -moz-transition-duration: 300ms;
+  -o-transition-duration: 300ms;
+  -ms-transition-duration: 300ms;
+  transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -o-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+}
+@media (min-width: 992px) {
+
+/* line 277 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+  .AppNav .navbar-toggle:before {
+    line-height: 62px;
+  }
+}
+
+/* line 296 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 298 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle[aria-expanded="true"] > * {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+
+/* line 305 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-toggle[aria-expanded="true"]:before {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+
+/* line 314 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 315 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .dropdown-menu > li.is-disabled > a,
+.AppNav .dropdown-menu > li.is-disabled > a > i {
+  color: #ccc;
+}
+
+/* line 320 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 321 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .navbar-nav > li.is-disabled > a,
+.AppNav .navbar-nav > li.is-disabled > a > i {
+  color: #555;
+}
+@media (max-width: 991px) {
+
+/* line 338 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 339 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+  body.has-appNav-open .SmartNavBar {
+    background: transparent;
+    border-bottom-color: transparent;
+    pointer-events: none;
+  }
+
+/* line 343 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+  body.has-appNav-open .SmartNavBar .SmartNavBar-edge,
+  body.has-appNav-open .SmartNavBar .SmartNavBar-btn {
+    pointer-events: auto;
+  }
+
+/* line 346 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+  body.has-appNav-open .SmartNavBar h1 {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    pointer-events: none;
+  }
+}
+
+/* line 354 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 355 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .SmartNavBar {
+  -webkit-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1), border 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+/* line 357 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .SmartNavBar .SmartNavBar-btn {
+  -webkit-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: color 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+/* line 360 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.AppNav .SmartNavBar h1 {
+  -webkit-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+
+/* line 366 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu {
+  background: #f5f5f5;
+  padding-bottom: 20px;
+  text-align: left;
+  margin-right: 15px;
+  padding-left: 0px;
+}
+
+/* line 372 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu .App-menus-group-header {
+  margin-top: 20px;
+  color: #777;
+  text-align: left;
+  border-bottom: 1px solid #777;
+}
+
+/* line 378 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu .navbar-nav {
+  margin: 0;
+}
+
+/* line 381 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+
+/* line 382 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu .nav a {
+  padding: 10px 20px 10px 25px;
+  text-align: left;
+  color: #333;
+  font-size: 18px;
+}
+
+/* line 387 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu .nav a:hover,
+.SideMenu .nav a:focus {
+  color: #e4423e !important;
+  font-weight: 500;
+  padding-left: 22px;
+  background-color: transparent;
+}
+
+/* line 392 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu .nav a:hover > i,
+.SideMenu .nav a:focus > i {
+  color: #e4423e !important;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+/* line 399 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SideMenu .nav i {
+  margin-left: 5px;
+  font-size: 18px;
+}
+
+/* line 405 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SubSectionNavBar {
+  position: relative;
+}
+
+/* line 407 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SubSectionNavBar ul {
+  background: #f5f5f5;
+  display: block;
+  width: 100% !important;
+  list-style: none;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  line-height: 1.1;
+  padding-left: 5px;
+}
+
+/* line 416 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SubSectionNavBar ul li {
+  font-size: 18px;
+  color: #555;
+  text-decoration: none;
+  display: inline;
+}
+
+/* line 421 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SubSectionNavBar ul li a {
+  text-decoration: none;
+  color: #555;
+}
+
+/* line 424 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SubSectionNavBar ul li a:hover,
+.SubSectionNavBar ul li a:focus {
+  text-decoration: none;
+  color: #e4423e;
+}
+
+/* line 431 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav.styl */
+.SubSectionNavBar > button {
+  position: absolute;
+  display: inline-block;
+  top: 15px;
+  right: 25px;
+}
+
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+
+/* line 5 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home {
+  z-index: 250;
+  -webkit-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: background 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home .SmartNavBar {
+  background-color: transparent;
+  border-bottom: 1px solid #777;
+}
+
+/* line 13 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home .LargeNavBar {
+  background-color: transparent;
+}
+
+/* line 16 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+
+/* line 17 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-fixed) .SmartNavBar {
+  border-bottom: transparent;
+}
+
+/* line 19 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-fixed) .SmartNavBar .SmartNavBar-btn {
+  color: White;
+}
+
+/* line 24 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-fixed) .LargeNavBar {
+  border-bottom: none;
+}
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-fixed) .LargeNavBar .nav > li > a {
+  color: White;
+}
+
+/* line 29 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-fixed) .LargeNavBar .nav > .open > a {
+  background: transparent;
+}
+
+/* line 34 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-fixed) .navbar-brand {
+  background-image: url("../images/logo-white-large.png");
+  background-image: -webkit-linear-gradient(transparent, transparent), url("../images/logo-white.svg");
+  background-image: -moz-linear-gradient(transparent, transparent), url("../images/logo-white.svg");
+  background-image: -o-linear-gradient(transparent, transparent), url("../images/logo-white.svg");
+  background-image: -ms-linear-gradient(transparent, transparent), url("../images/logo-white.svg");
+  background-image: linear-gradient(transparent, transparent), url("../images/logo-white.svg");
+}
+
+/* line 41 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home .LargeNavBar-searchBar {
+  -webkit-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -moz-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -o-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  -ms-transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  transition: opacity 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  pointer-events: auto;
+}
+
+/* line 46 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home:not(.is-search) .LargeNavBar-searchBar {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  pointer-events: none;
+}
+
+/* line 54 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\AppNav--home.styl */
+.AppNav.AppNav--home.is-fixed {
+  background: White;
+}
+
+/* line 2 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+  .App .btn-google {
+    background-color: #fff;
+    color: #555;
+    border: 1px solid #777;
+  }
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+  .App .btn-google:hover,
+  .App .btn-google:focus {
+    color: #ea4335;
+    border-color: #ea4335;
+  }
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+  .App .icon-google {
+    display: inline-block;
+    width: 75px;
+    height: 75px;
+    -webkit-background-size: 75px 75px;
+    -moz-background-size: 75px 75px;
+    background-size: 75px 75px;
+    clip-path: rectangle(0, 0, 74px, 74px, 0, 0);
+    background-repeat: no-repeat;
+    margin: -26px 0px 0px -14px;
+    background-image: url("../images/btn_google_signin_light_normal_web@2x.png");
+    background-image: -webkit-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+    background-image: -moz-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+    background-image: -o-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+    background-image: -ms-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+    background-image: linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+  }
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+  .App .btn-facebook {
+    background-color: #085394;
+    color: #fff;
+    border: 1px solid #085394;
+  }
+
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+  .App .btn-facebook:hover,
+  .App .btn-facebook:focus {
+    color: #085394;
+    background-color: #fff;
+  }
+ {
+/** We use ever all the available screen **/
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+/**
+        Some small utilities,
+        they *may* upgrade to its own class as
+        part of the Styleguide elements.
+    **/
+/** Customized or extended Bootstrap components **/
+/* bottom modal */
+/* top modal: modals appear on top by default, but
+        needs an extra margin to avoid hide the top
+        nav (thats blocked but gets more nice UI)
+    */
+/* why modals has not the standard modal-backdrop? anyway, fix.. */
+}
+
+/* line 15 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App > body > * {
+  visibility: hidden;
+}
+
+/* line 18 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App > body > *.SplashScreen {
+  visibility: visible;
+}
+
+/* line 22 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App.is-ready > body > * {
+  visibility: inherit;
+}
+
+/* line 25 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App.is-ready > body > *.SplashScreen {
+  visibility: hidden;
+}
+
+/* line 40 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App [data-activity] {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* line 44 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App > body {
+  height: 100%;
+/* Space for app-nav on top */
+  padding-top: 44px;
+}
+@media (min-width: 992px) {
+
+/* line 49 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+  .App > body {
+    padding-top: 62px;
+  }
+}
+
+/* line 11 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+
+/* line 4 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+.App .btn-google {
+  background-color: #fff;
+  color: #555;
+  border: 1px solid #777;
+}
+
+/* line 8 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+.App .btn-google:hover,
+.App .btn-google:focus {
+  color: #ea4335;
+  border-color: #ea4335;
+}
+
+/* line 14 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+.App .icon-google {
+  display: inline-block;
+  width: 75px;
+  height: 75px;
+  -webkit-background-size: 75px 75px;
+  -moz-background-size: 75px 75px;
+  background-size: 75px 75px;
+  clip-path: rectangle(0, 0, 74px, 74px, 0, 0);
+  background-repeat: no-repeat;
+  margin: -26px 0px 0px -14px;
+  background-image: url("../images/btn_google_signin_light_normal_web@2x.png");
+  background-image: -webkit-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+  background-image: -moz-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+  background-image: -o-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+  background-image: -ms-linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+  background-image: linear-gradient(transparent, transparent), url("../images/btn_google_light_normal_ios.svg");
+}
+
+/* line 26 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+.App .btn-facebook {
+  background-color: #085394;
+  color: #fff;
+  border: 1px solid #085394;
+}
+
+/* line 30 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\signup-btns.styl */
+.App .btn-facebook:hover,
+.App .btn-facebook:focus {
+  color: #085394;
+  background-color: #fff;
+}
+
+/* line 70 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+
+/* line 71 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .modal.bottom .modal-dialog {
+  position: absolute;
+  padding: 10px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* line 84 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+
+/* line 85 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .modal .modal-dialog {
+  padding-top: 44px;
+}
+@media (min-width: 992px) {
+
+/* line 87 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+  .App .modal .modal-dialog {
+    padding-top: 62px;
+  }
+}
+
+/* line 94 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .modal {
+  background: rgba(0,0,0,0.4);
+}
+
+/* line 98 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App #errorModal {
+  z-index: 101050;
+}
+
+/* line 104 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+
+/* line 105 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App app-feedback-entry .ion-lightbulb,
+.App app-feedback-entry .ion-ios-lightbulb-outline {
+  color: #f0ad4e;
+}
+
+/* line 110 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .App-activities {
+  background: White;
+}
+
+/* line 113 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .ion-ios-lightbulb {
+  color: #f0ad4e;
+}
+
+/* line 121 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .AppNav .SmartNavBar {
+  position: relative;
+}
+
+/* line 124 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .AppNav:after {
+  content: '';
+}
+
+/* line 128 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+.App .has-ActionSheet-open .AppNav:after {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  pointer-events: auto;
+}
+
+/* line 133 : D:\Iago\Proxectos\Loconomics\code\app\source\css\components\App.styl */
+
+/* line 3 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.App input::-moz-placeholder,
+.App textarea::-moz-placeholder {
+  font-weight: 200;
+}
+
+/* line 6 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.App input:-ms-input-placeholder,
+.App textarea:-ms-input-placeholder {
+  font-weight: 200;
+}
+
+/* line 9 : D:\Iago\Proxectos\Loconomics\code\app\source\css\utils\input-placeholder.styl */
+.App input::-webkit-input-placeholder,
+.App textarea::-webkit-input-placeholder {
+  font-weight: 200;
+}
+
+/* line 27 : D:\Iago\Proxectos\Loconomics\code\app\source\css\landingPage.styl */
+.App > body {
+  padding-top: 0 !important;
+}

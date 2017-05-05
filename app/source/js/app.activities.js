@@ -33,8 +33,6 @@ module.exports = {
     'account': require('./activities/account'),
     'inbox': require('./activities/inbox'),
     'conversation': require('./activities/conversation'),
-    'scheduling': require('./activities/scheduling'),
-    'jobtitles': require('./activities/jobtitles'),
     'help': require('./activities/help'),
     'feedbackForm': require('./activities/feedbackForm'),
     'contactForm': require('./activities/contactForm'),
@@ -79,5 +77,6 @@ module.exports = {
     'cancellationPolicies': require('./activities/cancellationPolicies'),
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
-    'onboardingSuccess': require('./activities/onboardingSuccess')
+    'onboardingSuccess': require('./activities/onboardingSuccess'),
+    'userProfile': require('./activities/userProfile')
 };

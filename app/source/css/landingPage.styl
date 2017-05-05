@@ -1,0 +1,294 @@
+/*
+    Stylesheet for any landingPage.
+    Ideally, just generating one file from the landing stylesheet
+    would contain any import needed, and not shared with others,
+    but for now are few the changes and no much overload
+    plus some refactors needed here (maybe just 'app.styl')
+*/
+/* core */
+@import "nib"
+@import 'utils/mediaQueries.styl'
+@import 'utils/styleguideVars.styl'
+@import 'utils/bs-extensions.styl'
+@import 'utils/input-group-addon-inset.styl';
+@import 'utils/arrows.styl';
+
+/** Utilities styles **/
+@import 'utils/isolated.styl'
+
+/** Components styles **/
+@import 'components/ActionSheet.styl'
+@import 'components/SignupLogin.styl'
+@import 'components/LargeNavBar.styl'
+@import 'components/LearnMorePage.styl'
+
+@import '../../vendor/bootstrap/styl/mixins/image.styl'
+@import '../../vendor/bootstrap/styl/scaffolding.styl'
+@import '../../vendor/bootstrap/styl/carousel.styl'
+
+/** Pages **/
+@import 'landingPages/dog-care-professionals.styl'
+@import 'landingPages/music-teachers.styl'
+
+/** App contains some general changes that may be needed**/
+/* TODO Ideally this will be shared utilities or components,
+ and no forcing the class App on the top */
+@import 'components/App.styl'
+
+.App > body {
+    // No navbar
+    padding-top: 0 !important;
+}
+
+.LandingPage {
+
+    // NO NAVBAR, disabled on the JS activity, so this can replace the default:
+    top: 0 !important;
+
+    // NOTE: all activities are absolute positioned, so is already a positioning context
+
+    [role=main] {
+
+        .landingpage-brand {
+            display: block;
+            width: 100%;
+            height: 100px;
+            background: no-repeat;
+            background-image: url('../images/logo-white-large.png');
+            background-image: 
+              linear-gradient(transparent, transparent),
+              url('../images/logo-white.svg');
+            background-size: 200px;
+            margin: 20px $grid-gap;
+            @media $mediaMaxSm {
+                background-position: center;
+                margin: 0px; 20px;
+                height: 50px;
+                background-size: 100px;
+            }
+        }
+        
+        .landingpage-copy {
+            margin-bottom: 30px;
+            padding: 30px; 0px; 30px; 30px;
+            background: rgba(0, 152, 154, 0.75); 
+
+            @media $mediaMaxSm {
+                margin-bottom: 0;
+                margin-top: 0;
+                background: none;
+            }
+
+            @media $mediaMaxXs {
+                padding: 15px;
+            }
+        }
+        .landingpage-copyBackground {
+            background: none;            
+            @media $mediaMaxSm {
+                padding: 20px; 0px; 0px; 0px;
+                background: rgba(0, 152, 154, 0.75);   
+                margin-top: 10px;
+                h1 {
+                    margin-top:0px;
+                    font-size:21px;
+                }
+            }                     
+        }
+        .landingpage-background {
+            padding-top: 30px;
+            background: no-repeat center / cover;
+            background-image:
+              url('../images/Stocksy_txpa4f3500ae7T100_Small_1204339.jpg');
+            @media $mediaMaxSm {
+                padding-top: 0px;
+            }
+          }
+        .landingpage-
+        .landingpage-title {
+            color: white;
+            font-size: 38px;
+            font-weight: bold;
+            text-align: left;
+            @media $mediaMaxSm {
+                font-size: 24px;
+            }
+        }
+        .landingpage-tagline {
+            color: white;
+            font-size: 24px;
+            text-align: left;
+            @media $mediaMaxSm {
+                font-size: 16px;
+            }
+        }
+        .landingpage-proposition {
+            color: white;
+            font-size: 18px;
+            text-align: left;
+            display: block;
+            .fa,
+            p {
+                display: inline-block;
+                margin-right: 5px;
+                font-size: 22px;
+                @media $mediaMaxSm {
+                    font-size: 16px;
+                }
+            }
+        }
+
+
+        // Edge limit for phone
+        .landingpage-title,
+        .landingpage-tagline,
+        .landingpage-proposition{
+            padding: 0 $grid-gap;
+        }
+        .SignupLogin {
+            h2 {
+                text-align: center;
+            }
+
+            #job-title-selection {
+                margin: 10px;
+                button {
+                    padding: 5px;
+                    margin: 2px;
+                    border-width: 2px;
+                    font-weight: 600;
+                }
+            }
+            .LeadContent {
+                background: rgba(255, 255, 255, .85);
+                margin-top: 0;
+            }
+        }
+        form {
+            margin: 0 auto 40px;
+            max-width: 450px;
+
+            .form-control {
+                background: White;
+                font-size: 17px;
+            }
+
+            .form-control:focus {
+              border-bottom-color: #ccc;
+              border-top-color: transparent;
+              border-right-color: transparent;
+            }
+
+            // Reduce column gaps by a 20px in total
+            // for sizes bigger than XS (so keep standar in phone where
+            // forms goes vertical)
+            @media $mediaMinSm {
+                > * {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                }
+            }
+        }
+        .press {
+            background-color: #f5f5f5;
+            vertical-align: baseline;
+            text-align: center;
+            box-sizing: content-box;
+            padding-bottom: 75px;
+            
+        }
+        .pressLogo {
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center center;
+            display: inline-block;
+            height: 55px;
+            margin: 30px;
+            width: 300px;
+            @media $mediaMaxSm {
+                width: 200px;
+            }
+        }
+        .pressLogo-NYT {
+            background-image:
+              url('../images/nyt.png');
+        }
+        .pressLogo-FastCompany {
+            background-image:
+              url('../images/Fast_Company.png');
+        }
+        .pressLogo-EastBayExpress {
+            background-image:
+              url('../images/east-bay-express.png');
+        }
+        .pressLogo-SFChronicle {
+            background-image:
+              url('../images/sf-chron.png');
+        }
+        .pressLogo-FT {
+            background-image:
+              url('../images/ft.png');
+        }
+        .pressLogo-Shareable {
+            background-image:
+              url('../images/shareable.png');
+        }
+        .pressLogo-TheNation {
+            background-image:
+              url('../images/thenation.png');
+        }
+        #quote-carousel {
+            padding: 0 10px 30px 10px;
+            margin-top: 60px;
+        }
+        #quote-carousel .carousel-control {
+            background: none;
+            color: #CACACA;
+            font-size: 2.3em;
+            text-shadow: none;
+            margin-top: 30px;
+        }
+        #quote-carousel .carousel-indicators {
+            position: relative;
+            right: 50%;
+            top: auto;
+            bottom: 0px;
+            margin-top: 20px;
+            margin-right: -19px;
+        }
+        #quote-carousel .carousel-indicators li {
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            opacity: 0.4;
+            overflow: hidden;
+            transition: all .4s ease-in;
+            vertical-align: middle;
+        }
+        #quote-carousel .carousel-indicators .active {
+            width: 128px;
+            height: 128px;
+            opacity: 1;
+            transition: all .2s;
+        }
+        #quote-carousel .carousel-control {
+            @media $mediaMaxMd {
+                width: 10%;
+            }
+        }
+        .item blockquote {
+            border-left: none;
+            margin: 0;
+        }
+        .item blockquote p:before {
+            content: "\f10d";
+            font-family: 'Fontawesome';
+            float: left;
+            margin-right: 10px; 
+        }
+    }
+}
+

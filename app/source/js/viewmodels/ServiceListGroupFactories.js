@@ -31,6 +31,8 @@ var ClientBookedServicesListGroup = function(options) {
     ServiceListGroup.call(this, options);
 };
 
+ClientBookedServicesListGroup._inherits(ServiceListGroup);
+
 /**
  * @override
  */
@@ -47,8 +49,6 @@ ClientBookedServicesListGroup.prototype.listTitle = function(options) {
 ClientBookedServicesListGroup.prototype.newButtons = function() {
     return [];  // no new buttons when client books services
 };
-
-ClientBookedServicesListGroup._inherits(ServiceListGroup);
 
 /**
  * Factory creating array of services list group objects for client booking services.
@@ -84,6 +84,8 @@ var ProviderBookedServicesListGroup = function(options) {
     ServiceListGroup.call(this, options);
 };
 
+ProviderBookedServicesListGroup._inherits(ServiceListGroup);
+
 /**
  * @override
  */
@@ -92,8 +94,6 @@ ProviderBookedServicesListGroup.prototype.listTitle = function(options) {
 
     return 'Select From ' + pricingTypeLabel;
 };
-
-ProviderBookedServicesListGroup._inherits(ServiceListGroup);
 
 /**
  * Implements ServiceListGroup interface for client-specific services bookable
@@ -175,6 +175,8 @@ var ProviderManagedServicesListGroup = function(options) {
     ServiceListGroup.call(this, options);
 };
 
+ProviderManagedServicesListGroup._inherits(ServiceListGroup);
+
 /**
  * @override
  */
@@ -185,8 +187,6 @@ ProviderManagedServicesListGroup.prototype.listTitle = function(options) {
 
     return pricingTypeLabel + clientPostfix;
 };
-
-ProviderManagedServicesListGroup._inherits(ServiceListGroup);
 
 /**
  * Factory creating array of services list group objects for provider managing services.
@@ -200,6 +200,7 @@ ProviderManagedServicesListGroup._inherits(ServiceListGroup);
 Factories.providerManagedServices = function(services, pricingTypes, clientName, isClientSpecific) {
     var serviceListGroup = new ProviderManagedServicesListGroup({
             services: services,
+            clientName: clientName,
             pricingTypes: pricingTypes,
             defaultPricingTypes: pricingTypes, // show a pricing type even if it has no services
             isClientSpecific: isClientSpecific

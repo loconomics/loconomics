@@ -8,7 +8,8 @@
 'use strict';
 
 var loader = require('./loader'),
-    $ = require('jquery');
+    $ = require('jquery'),
+    ko = require('knockout');
 
 // Facebook API settings gathered from the current page
 // on first use:
@@ -21,32 +22,14 @@ var settings = {
 var apiStatus = {
     // We may start with a ready state if we found that the Facebook lib is already loaded when
     // initializing this, allowing some use cases, optimizations-preloads, or even native-binding-js case replicating the same api(with a facebook phonegap plugin)
-    ready: !!window.FB,
+    ready: ko.observable(!!window.FB),
     loading: false,
     // Private static collection of callbacks registered
     stack: []
 };
 
-/**
-    Register a callback to be executed when the
-    Facebook API is ready.
-    The callback receives as unique parameter
-    the Facebook API object ('FB')
-**/
-exports.ready = function facebookReady(readyCallback) {
-
-    if (apiStatus.ready) {
-        // Double-check the callback, because its optional
-        // (that's allow to use this function force the API pre-load)
-        if (typeof(readyCallback) === 'function')
-            readyCallback(window.FB);
-        // Quik return
-        return;
-    }
-
-    apiStatus.stack.push(readyCallback);
-    
-    if (!facebookReady.isLoading) {
+exports.load = function() {
+    if (!apiStatus.loading) {
         apiStatus.loading = true;
 
         // Get settings from page attributes
@@ -61,7 +44,7 @@ exports.ready = function facebookReady(readyCallback) {
                 window.FB.init({ appId: settings.appId, status: true, cookie: true, xfbml: false, version: 'v2.8' });
 
                 // Is ready
-                apiStatus.ready = true;
+                apiStatus.ready(true);
                 apiStatus.loading = false;
 
                 // Execute callbacks in the stack:
@@ -73,6 +56,35 @@ exports.ready = function facebookReady(readyCallback) {
             }
         });
     }
+};
+
+/**
+ * @returns true if the Facebook API is loaded, false otherwise
+ */
+exports.isReady = ko.pureComputed(function() {
+    return apiStatus.ready();
+});
+
+/**
+    Register a callback to be executed when the
+    Facebook API is ready.
+    The callback receives as unique parameter
+    the Facebook API object ('FB')
+**/
+exports.ready = function facebookReady(readyCallback) {
+
+    if (apiStatus.ready()) {
+        // Double-check the callback, because its optional
+        // (that's allow to use this function force the API pre-load)
+        if (typeof(readyCallback) === 'function')
+            readyCallback(window.FB);
+        // Quik return
+        return;
+    }
+
+    apiStatus.stack.push(readyCallback);
+
+    exports.load();
 };
 
 /**

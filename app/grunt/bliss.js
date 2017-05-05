@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     // Example: 1.1.0 -> 10100, 2.34.5 -> 23405
     var versionCode = appVersion.split('.').reverse().reduce(function(t, x, i) { return t + (x|0) * Math.pow(10, i * 2); }, 0);
 
-    return {
+    var tasks = {
         app: {
           files: {
             'build/app.html': ['source/html/app.js.html']
@@ -170,4 +170,45 @@ module.exports = function(grunt) {
             }
         }
     };
+
+    // Landing Pages
+    var getLandingPagesFiles = require('./shared/getLandingPagesFiles'),
+        landingPageTemplatesPatterns = ['templates/signup.html',
+                                        'templates/signup-field.html',
+                                        'templates/validated-password.html',
+                                        'modals/errorModal.html',
+                                        'templates/select-job-title.html'],
+        landingPageTemplatesFiles = grunt.file.expand({
+                cwd: includedDir,
+                filter: grunt.file.isFile
+            }, landingPageTemplatesPatterns);
+
+    tasks.landingPagesBuild = {
+        files: getLandingPagesFiles(grunt, 'build/welcome'),
+        options: {
+            context: {
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang,
+                includedFiles: landingPageTemplatesFiles,
+                dotVersion: '',
+                cordovajs: false,
+                siteUrl: 'https://dev.loconomics.com'
+            }
+        }
+    };
+    tasks.landingPagesWeb = {
+        files: getLandingPagesFiles(grunt, '../web/welcome'),
+        options: {
+            context: {
+                facebookAppID: facebookAppID,
+                facebookLang: facebookLang,
+                dotVersion: '.min.' + version,
+                includedFiles: landingPageTemplatesFiles,
+                cordovajs: false,
+                siteUrl: ''
+            }
+        }
+    };
+
+    return tasks;
 };

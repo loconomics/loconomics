@@ -1,0 +1,39 @@
+<!-- Activity User Profile -->
+<div data-activity="userProfile" class="Boxes-sm animated">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <h1 class="hidden-xs hidden-sm">Be your shiny self</h1>
+        <div class="row">
+            <div class="col-md-7 col-sm-reset">
+                <h2 class="SectionTitle">
+                    <span>Community profile</span>
+                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                </h2>  
+                <ul class="TilesList TilesList--openEnd">
+                    <li>
+                        <a class="InfoTile" href="/aboutMe">
+                            <div class="Tile-icon" aria-hidden="true">
+                                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
+                            </div>
+                            <div class="Tile-content">
+                                <p>About me</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/education">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-university" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div>Training and education</div>
+                            <em>List any relevant studies</em>
+                        </div>
+                    </a></li>
+                </ul>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'general'"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

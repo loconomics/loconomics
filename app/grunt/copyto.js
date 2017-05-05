@@ -79,5 +79,12 @@ module.exports = {
         src: '*.*',
         dest: './build/assets/fonts/',
         filter: 'isFile'
+    },
+    landingPages_assets: {
+        expand: true,
+        cwd: 'build/assets/',
+        src: ['js/welcome.min.js', 'css/welcome.min.css', 'images/**/*.*', 'fonts/**/*.*'],
+        dest: '../web/assets/',
+        filter: 'isFile'
     }
 };

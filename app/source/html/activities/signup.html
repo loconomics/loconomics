@@ -1,4 +1,6 @@
 <!-- Activity Signup -->
 <div data-activity="signup">
-    <div data-bind="template: {name: 'signup-template', data: $data}"></div>
+    <app-signup params="api: signup, onSignedUp: redirect, onSignUpError: focusWrongField">
+    </app-signup>
+    <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
 </div>
