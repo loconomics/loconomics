@@ -10,21 +10,27 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 // PRESET
 var data = [
     {//new PaymentPlan({
-        paymentPlanID: 'MonthlyLite',
-        name: 'Monthly Lite',
-        summary: '$14.95 charged once a month',
+        paymentPlanID: 'Free',
+        name: 'Free',
+        summary: '',
+        description: '<ul>Includes:<li>x</li><li>y</li><li>z</li><ul>'
+    },
+    {//new PaymentPlan({
+        paymentPlanID: 'OwnerGrowth',
+        name: 'Owner Growth',
+        summary: '$19 charged once a month',
+        description: '<ul>Includes:<li>x</li><li>y</li><li>z</li><ul>'
+    },
+    {//new PaymentPlan({
+        paymentPlanID: 'OwnerPro',
+        name: 'Owner Pro',
+        summary: '$29 charged once a month',
         description: 'Includes: ...'
     },
     {//new PaymentPlan({
-        paymentPlanID: 'MonthlyFull',
-        name: 'Monthly Full',
-        summary: '$29.95 charged once a month',
-        description: 'Includes: ...'
-    },
-    {//new PaymentPlan({
-        paymentPlanID: 'AnnualFull',
-        name: 'Annual Full',
-        summary: '$299.95 charged once a year (Save $59.90 with this option)',
+        paymentPlanID: 'OwnerProAnnual',
+        name: 'Owner Pro Annual',
+        summary: '$290 charged once a year (Save $58 with this option)',
         description: 'Includes: ...'
     }
 ];

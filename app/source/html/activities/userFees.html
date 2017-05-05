@@ -17,7 +17,7 @@
                 <div class="PaddedBox-xs Box-md bg-white" data-bind="visible: !isNew()">
                     <div class="PaddedBox-xs" data-bind="with: activePaymentPlan">
                         <p>
-                            <strong data-bind="text: name"></strong> - <span data-bind="text: summary">
+                            <strong data-bind="text: name"></strong> - <span data-bind="text: summary"></span>
                         </p>
                         <a class="btn btn-default btn-block" data-bind="click: $parent.changePlan">Change plan</a>
                     </div>
@@ -29,7 +29,7 @@
                         <div class="input-group">
                             <label class="form-control-static btn-block">
                                 <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
-                                <strong data-bind="text: itemLabel"></strong> - <span data-bind="text: itemSummary">
+                                <strong data-bind="text: itemLabel"></strong> - <span data-bind="text: itemSummary"></span>
                             </label>
                             <span class="input-group-btn">
                                 <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false"
@@ -51,7 +51,7 @@
                         } } --><!-- /ko -->
                         <div class="collapse container-fluid"
                             data-bind="attr: { id: 'userFees-info-' + plan.paymentPlanID() }">
-                            <span data-bind="text: plan.description"></span>
+                            <span data-bind="html: plan.description"></span>
                         </div>
                     </div>
                 </div>
