@@ -1,15 +1,9 @@
 <!-- Activity addressEditor -->
 <div data-activity="addressEditor" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
-    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
-        <div class="PageMenu-list">
-            <ul>
-                <li><a href="/">Get started</a></li>
-            </ul>
-        </div>
-    </div>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -24,34 +18,32 @@
                         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                     </h2>
                     <div data-bind="with: address()">
+                        <div data-bind="visible: isServiceLocation">
+                            <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked" data-bind="visible: !$parent.clientUserID()"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
+                        </div>
                         <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
                             <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                         </div>
-                        <div data-bind="visible: isServiceArea">
-                            <div class="form-group">
-                                <label for="addressEditorRadius">Service radius</label>
-                                <select class="form-control" id="addressEditorRadius" data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true">
-                                </select>
-                            </div>
+                        <div class="form-group" data-bind="visible: isServiceLocation">
+                            <p class="form-control-static">
+                                <span data-bind="visible: city() || stateProvinceCode()">
+                                    <span data-bind="text: city"></span>,
+                                    <span data-bind="text: stateProvinceCode"></span>
+                                </span>
+                                <!-- White space to reserve space -->
+                                &nbsp;
+                            </p>
                         </div>
-                        <div data-bind="visible: isServiceLocation">
-                            <div class="form-group">
-                                <p class="form-control-static">
-                                    <span data-bind="visible: city() || stateProvinceCode()">
-                                        <span data-bind="text: city"></span>, 
-                                        <span data-bind="text: stateProvinceCode"></span>
-                                    </span>
-                                    <!-- White space to reserve space -->
-                                    &nbsp;
-                                </p>
-                            </div>
-                            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
-                            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
-                            <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked" data-bind="visible: !$parent.clientUserID()"></app-unlabeled-input>
-                            <div class="form-group">
-                                <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
-                                <textarea rows="2" class="form-control" placeholder="Any special instructions? (e.g. intercom code, parking, etc.)" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
-                            </div>
+                        <div class="form-group" data-bind="visible: isServiceArea">
+                            <label for="addressEditorRadius">Service radius</label>
+                            <select class="form-control" id="addressEditorRadius" data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true">
+                            </select>
+                        </div>
+                        <div class="form-group" data-bind="visible: isServiceLocation">
+                            <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
+                            <textarea rows="2" class="form-control" placeholder="Any special instructions? (e.g. intercom code, parking, etc.)" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
                         </div>
                     </div>
                     <div class="LightForm-submitBar">
@@ -65,4 +57,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>

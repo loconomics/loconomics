@@ -9,9 +9,14 @@ var ko = require('knockout');
 var localforage = require('localforage');
 
 exports.create = function create(appModel) {
+    var NAVBAR_TITLE = 'Create your first listing';
 
     // Onboarding management and state, initially empty so no progress
     var api = new OnboardingProgress();
+
+    api.navbarTitle = function() {
+        return NAVBAR_TITLE;
+    };
 
     api.currentActivity = ko.observable('');
 
@@ -47,7 +52,7 @@ exports.create = function create(appModel) {
         var yep = this.inProgress();
         if (yep) {
             navBar.leftAction(NavAction.menuIn);
-            navBar.title('Get Started');
+            navBar.title(api.navbarTitle());
         }
         return yep;
     };
