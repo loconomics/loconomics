@@ -55,7 +55,7 @@
             <div class="ServiceProfessionalResult-actions">         
                 <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request to book</a> 
                 <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()" class="btn btn-primary">Book instantly</a> 
-                <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">See profile and reviews</a>
+                <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">See profile and reviews</a>
             </div>
           </li>
         </ul>
