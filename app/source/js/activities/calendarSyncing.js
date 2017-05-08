@@ -8,16 +8,16 @@ var Activity = require('../components/Activity'),
     ko = require('knockout');
 
 var A = Activity.extend(function CalendarSyncingActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
-    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling' , helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar('Calendar', {
+        backLink: 'calendar' , helpLink: this.viewModel.helpLink
     });
-    
+
     // Adding auto-select behavior to the export URL
     this.registerHandler({
         target: this.$activity.find('#calendarSync-icalExportUrl'),
@@ -26,7 +26,7 @@ var A = Activity.extend(function CalendarSyncingActivity() {
             $(this).select();
         }
     });
-    
+
     this.registerHandler({
         target: this.app.model.calendarSyncing,
         event: 'error',
@@ -44,7 +44,7 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     // Keep data updated:
     this.app.model.calendarSyncing.sync();
     // Discard any previous unsaved edit
@@ -70,7 +70,7 @@ function ViewModel(app) {
             syncVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.sync = syncVersion.version;
 
@@ -80,22 +80,22 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
+            this.isLoading() ?
+                'loading...' :
+                this.isSaving() ?
+                    'saving...' :
                     'Save'
         );
     }, calendarSyncing);
-    
+
     this.resetText = ko.pureComputed(function() {
         return (
-            this.isReseting() ? 
-                'reseting...' : 
+            this.isReseting() ?
+                'reseting...' :
                 'Reset Private URL'
         );
     }, calendarSyncing);
-    
+
     this.discard = function discard() {
         syncVersion.pull({ evenIfNewer: true });
     };
@@ -109,7 +109,7 @@ function ViewModel(app) {
             // catch error, managed on event
         });
     };
-    
+
     this.reset = function reset() {
         calendarSyncing.resetExportUrl();
     };

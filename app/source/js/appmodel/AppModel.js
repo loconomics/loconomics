@@ -99,7 +99,11 @@ AppModel.prototype.init = function init() {
             $('html').attr('data-site-url', config.siteUrl);
         }
         else {
-            config.siteUrl = $('html').attr('data-site-url');
+            // Need to default to empty, because in case the attribute
+            // don't exists, it will return undefined and used as a
+            // string when composing the final URL (something like
+            // 'undefined/api/..')
+            config.siteUrl = $('html').attr('data-site-url') || '';
         }
 
         this.config = config;

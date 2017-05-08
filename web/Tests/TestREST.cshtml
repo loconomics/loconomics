@@ -122,7 +122,7 @@
             "get": { }
         },
 
-        "Signup, detailed data required": {
+        "Signup": {
             "url": "/api/v1/en-US/auth/signup",
             "post": {
                  "email": "some user email",
@@ -136,16 +136,6 @@
                  "profileType": "service-professional",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
-                 "returnProfile": false,
-                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
-            }
-        },
-        "Quick Signup, simplified to require just email and password": {
-            "url": "/api/v1/en-US/auth/signup/quick",
-            "post": {
-                 "email": "some user email",
-                 "password": "",
-                 "profileType": "service-professional",
                  "returnProfile": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }

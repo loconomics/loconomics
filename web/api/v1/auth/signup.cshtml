@@ -1,4 +1,5 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Sign-up a user, getting logged if success and returns the same
     result as the Login method. If the user and password exists
     already and match, it just get logged (exception: if the user
@@ -6,14 +7,6 @@
     a freelance and get logged).
 
     TODO Coordinate with login about changes in things like old redirectUrl
-
-    - POST /quick:
-        - email:string
-        - password:string
-        - returnProfile:bool as in Login
-        - profileType:string Enumeration: 'service-professional', 'client'
-            NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
-                any other value or not value will create a 'client' profile.
 
     - POST:
         - email:string
@@ -39,7 +32,7 @@
     - return: same as Login, or 400 with validation errors.
 
     EXAMPLES {
-        "Signup, detailed data required": {
+        "Signup": {
             "url": "/api/v1/en-US/auth/signup",
             "post": {
                  "email": "some user email",
@@ -53,16 +46,6 @@
                  "profileType": "service-professional",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
-                 "returnProfile": false,
-                 "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
-            }
-        },
-        "Quick Signup, simplified to require just email and password": {
-            "url": "/api/v1/en-US/auth/signup/quick",
-            "post": {
-                 "email": "some user email",
-                 "password": "",
-                 "profileType": "service-professional",
                  "returnProfile": false,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
@@ -86,15 +69,61 @@
                 if (UrlData[0] == "facebook") {
                     return LcAuthHelper.FacebookSignup(this.WebPage);
                 }
-                else if (UrlData[0] == "quick") {
-                    return LcAuthHelper.QuickSignup(this.WebPage);
-                }
                 else {
                     throw new HttpException(404, "Not Found");
                 }
             }
             else {
- 	            return LcAuthHelper.DetailedSignup(this.WebPage);
+                var ret = LcAuthHelper.Signup(this.WebPage);
+
+                // Special parameters for professionals: the signup
+                // can do the task of POST:user-job-profile if
+                // the expected parameters are given, simplifing the
+                // onboarding that skips the 'add job title' step.
+                if (ret.profile.isServiceProfessional)
+                {
+                    var userJobTitleApi = new RestUserJobProfile();
+                    userJobTitleApi.WebPage = this.WebPage;
+                    int userID = ret.userID;
+                    var jobTitleID = Request["jobTitleID"].AsInt(0);
+                    var jobTitleName = userJobTitleApi.GetValidatedJobTitleName(Request.Form["jobTitleName"]);
+                    // If we have the required fields, we attempt to add the job title
+                    // to the just created user profile
+                    // We need a positive jobTitleID or a validated jobTitleName (it's null if was not valid
+                    // or empty)
+                    if (jobTitleID > 0 || jobTitleName != null)
+                    {
+                        // Throws exceptions if something wrong
+                        // All are about: job title ID don't exist or is forbidden, not allowed
+                        // create job title for the given name.
+                        // In that cases, throwing an error will stop sign-up but account already exists
+                        // so attempts after may fail and the problem is not easy to fix by the user,
+                        // is better to left the original onboarding to happening, leading user to 
+                        // the addJobTitle step that will throw detailed error messages if user
+                        // try the same input --is not the perfect usability that extra on that cases
+                        // but more reasonable than left the user thinking couldn't create the account
+                        // when is already set-up
+                        try
+                        {
+                            var userJobTitle = userJobTitleApi.Create(userID, jobTitleID, jobTitleName);
+                            // Everything fine, update Onboarding step to 
+                            // next after 'add job titles' (that is the first, after a zero-welcome step)
+                            ret.onboardingStep = "schedulingPreferences";
+                            // Set the selected/created jobTitleID (#374)
+                            ret.onboardingJobTitleID = userJobTitle.jobTitleID;
+                            // Additionally, update the step at the profile (it's value is used
+                            // at 'resuming onboarding' at the app start-up; this is related to 
+                            // the fix for #381)
+                            if (ret.profile != null)
+                            {
+                                ret.profile.onboardingStep = ret.onboardingStep;
+                            }
+                        }
+                        catch { }
+                    }
+                }
+
+                return ret;
             }
         }
     }

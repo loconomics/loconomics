@@ -41,6 +41,28 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 [Grunt](http://gruntjs.com/) as a task runner
 
+## Testing
+
+Our [Mocha](http://mochajs.org/) tests are in ``app/source/test/``.
+
+### Build and Run Unit Tests
+
+```bash
+grunt test
+```
+
+After the tests have been built, you can also run (and debug) them in the browser using the test harness file: ``app/source/test/test.html``
+
+### Frameworks
+
+- [Mocha](http://mochajs.org/) for unit tests
+- [Expect API](http://chaijs.com/api/bdd/) from [Chai](http://chaijs.com/) for assertions
+
+### Conventions
+
+1. Tests in ``source/test`` correspond to modules under ``source/js``.
+2. Use the same file name as the module you are testing, but change the suffix to ``.spec.js``.
+
 ## Database  
 We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
 

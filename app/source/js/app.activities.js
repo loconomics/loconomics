@@ -33,8 +33,6 @@ module.exports = {
     'account': require('./activities/account'),
     'inbox': require('./activities/inbox'),
     'conversation': require('./activities/conversation'),
-    'scheduling': require('./activities/scheduling'),
-    'jobtitles': require('./activities/jobtitles'),
     'help': require('./activities/help'),
     'feedbackForm': require('./activities/feedbackForm'),
     'contactForm': require('./activities/contactForm'),
@@ -81,5 +79,6 @@ module.exports = {
     'aboutMe': require('./activities/aboutMe'),
     'onboardingSuccess': require('./activities/onboardingSuccess'),
     'userFeePayments': require('./activities/userFeePayments'),
-    'ownerAcknowledgment': require('./activities/ownerAcknowledgment')
+    'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
+    'userProfile': require('./activities/userProfile')
 };

@@ -40,13 +40,12 @@ $gray = lighten(#000, 33.5%);
         padding: 0;
         > .btn-link {
             padding: $SectionTitle-topGap $container-padding-right $SectionTitle-bottomGap $container-padding-left;
-            width: 100%;
+            width: 50%;
             display: inline-block;
             color: $gray;
             border: none;
             line-height: $SectionTitle-fontSize;
             @media $mediaMinMd {
-              width: 50%;
               margin-top: 0px;
               background: $gray-lighter;
               border: none;
@@ -56,6 +55,7 @@ $gray = lighten(#000, 33.5%);
             }
         }
         > .btn-default {
+            
             @media $mediaMinMd {
               margin-top: 0px;
               border: none;

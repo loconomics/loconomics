@@ -75,8 +75,10 @@ function ValidatedPassword() {
     var scrollToField = function(target) {
         // only scroll to the target once and only if we are on a short display
         if($(window).height() < MINIMUM_HEIGHT_FOR_SCROLL && !hasScrolledToField) {
-            scrollToElement(target, { animation: { duration: SCROLL_ANIMATION_DURATION } });
             hasScrolledToField = true;
+            scrollToElement(target, {
+                animation: { duration: SCROLL_ANIMATION_DURATION }
+            });
         }
     };
 

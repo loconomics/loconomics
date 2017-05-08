@@ -1,14 +1,8 @@
 <div data-activity="paymentAccount" class="Boxes-sm animated">
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
-    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
-        <div class="PageMenu-list">
-            <ul>
-                <li><a href="/">Get started</a></li>
-            </ul>
-        </div>
-    </div>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -18,13 +12,20 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div data-bind="visible: isInOnboarding()" class="OnboardingStepTitle">Tell us how you'd like to be paid</div>
-                    <p data-bind="visible: isInOnboarding()" class="OnboardingTip PaddedBox-xs">Getting paid is the easy part. We've partnered with Braintree (a leading credit card merchant provider) to deposit payments directly into your bank account. Braintree's transaction fee (2.9% plus $0.30 transaction fee) is automatically subtracted from your payment. Easy, right? Just complete the information below.</p>
+                <div class="OnboardingValueProp">
+                    <div class="Icon-container">
+                        <span class="Tile-icon fa ion-cash" aria-hidden="true"></span>
+                    </div>
+                    <span class="Tile-content">
+                        <h2><span data-bind="visible: isInOnboarding()">Tell us how you'd like to be paid</span><span data-bind="visible: !isInOnboarding()">Payout preferences</span></h2>
+                        <p>Payments from clients who book you through the marketplace go directly into your bank account or to Venmo. There's a small transaction fee of 2.9% plus $0.30.</p>
+                    </span>
+                </div>
                 <h2 class="SectionTitle" data-bind="visible: !paymentAccount.status()">
-                    <span>Choose payout preference</span>
+                    <span>Choose a payout preference</span>
                 </h2>
                 <div class="container-fluid" data-bind="visible: paymentAccount.status()">
-                    <h2 class="SectionTitle">Merchant account status</h2> 
+                    <h2 class="SectionTitle">Merchant account status</h2>
                     <p data-bind="visible: paymentAccount.status() === 'active'" class="bg-success PaddedBox-xs">
                         You're all set up with Braintree. We'll deposit any payments due to you
                         <span data-bind="visible: paymentAccount.accountNumber">to your account ending in <span data-bind="text: paymentAccount.accountNumber"></span></span>
@@ -48,27 +49,26 @@
                 </div>
                 <div class="LightForm container-fluid" data-bind="with: paymentAccount, visible: formVisible">
 <!--                    <h2 class="SectionTitle">Your contact information</h2>-->
-                    <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $root.isLocked" data-bind="visible: !$parent.isInOnboarding()"></app-unlabeled-input>
-                    <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.isInOnboarding()">
+                    <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
+                    <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.simplifiedFormEnabled()">
                       <input type="number" class="form-control"
                              placeholder="Postal code" aria-label="Postal code"
                              data-bind="textInput: postalCode, disable: $root.isLocked,
                                         popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                     </div>
-                    <div class="form-group" data-bind="visible: !$parent.isInOnboarding()">
+                    <div class="form-group" data-bind="visible: !$parent.simplifiedFormEnabled()">
                         <p class="form-control-static">
                             <span data-bind="visible: city() || stateProvinceCode()">
-                                <span data-bind="text: city"></span>, 
+                                <span data-bind="text: city"></span>,
                                 <span data-bind="text: stateProvinceCode"></span>
                             </span>
                             <!-- White space to reserve space -->
                             &nbsp;
                         </p>
                     </div>
-<!--                    <app-unlabeled-input params="placeholder: 'SSN', value: ssn, disable: $root.isLocked"></app-unlabeled-input>-->
                     <p class="text-center" style="margin-top: 15px">
                         <button type="button" class="btn" data-bind="css: { 'btn-secondary': $parent.isBankAccount, 'btn-default': $parent.isVenmoAccount }, click: $parent.chooseBankAccount">Bank account</button>
                         <button type="button" class="btn" data-bind="css: { 'btn-secondary': $parent.isVenmoAccount, 'btn-default': $parent.isBankAccount }, click: $parent.chooseVenmoAccount">Venmo account</button>
@@ -94,6 +94,8 @@
                     </p>
                     <label class="form-label"><input type="checkbox" data-bind="checked: agree, disable: $root.isLocked" /> <span>I agree to the above terms of service</span></label>
 
+                </div>
+                <div class="LightForm container-fluid" data-bind="visible: formVisible() || isInOnboarding()">
                     <div class="LightForm-submitBar">
                         <div>
                             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: $root.isLocked, click: $root.save">Save</button>
@@ -106,4 +108,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>

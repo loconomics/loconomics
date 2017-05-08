@@ -1,0 +1,13 @@
+/**
+    Component app-signup
+    Styles for all instances of the component by it's element name
+*/
+app-signup {
+    // Hide the immediate children for prompt to prevent being displayed before
+    // the component is mounted
+    // This doesn't affects to visibility of the final element, because
+    // is placed at a deeper place (that's why is important the '>' here)
+    > .SignupLogin-prompt {
+        display: none;
+    }
+}

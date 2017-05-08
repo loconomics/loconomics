@@ -1,9 +1,10 @@
 <!-- licensesCertificationsForm activity -->
 <div data-activity="licensesCertificationsForm" class="Boxes-sm animated">
-    <app-inline-user-menu></app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container" data-bind="css: { 'is-loading': isLoading }">
-        <div class="row">   
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+        <div class="row">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/licensesCertifications/" data-bind="attr: {href: '/licensesCertifications/' + jobTitleID()}">
@@ -96,14 +97,14 @@
                             <div class="form-group">
                                 <div data-bind="visible: isNew">
                                     <label>Upload yours for us to verify:</label>
-                                    <p>Upload a photo or document of your license/certification, and we'll do our best to verify it.</p>
+                                    <p>Upload a photo, document, or screenshot of your license/certification, and we'll do our best to verify it.</p>
                                 </div>
                                 <div data-bind="visible: !isNew()">
                                     <label>Submit an update:</label>
                                     <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsForm-submittedImage" class="isolated">
                                         <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
                                     </div>
-                                    <p>Upload a photo or document of your updated license/certification.</p>
+                                    <p>Upload a photo, document, or screenshot of your updated license/certification.</p>
                                 </div>
                                 <button type="button" class="btn btn-default btn-block"
                                         style="margin: 0 10% 20px 10%; width: 80%;"

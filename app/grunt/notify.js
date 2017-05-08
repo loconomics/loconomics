@@ -42,5 +42,11 @@ module.exports = {
             title: 'Images copy',  // optional
             message: 'Images copied successfully.' //required
         }
+    },
+    landingPages: {
+        options: {
+            title: 'Landing Pages',  // optional
+            message: 'Landing Pages build successfully.' //required
+        }
     }
 };

@@ -25,7 +25,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
-    
+
     // On changing jobTitleID:
     this.registerHandler({
         target: this.viewModel.jobTitle,
@@ -94,7 +94,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
         // And go back
         this.app.shell.goBack(this.requestData);
     }.bind(this);
-    
+
     this.returnRequest = function returnRequest() {
         this.app.shell.goBack(this.requestData);
     }.bind(this);
@@ -137,7 +137,6 @@ A.prototype.leftActionText = function() {
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
     this.app.model.onboarding.updateNavBar(this.navBar) ||
-    //this.app.applyNavbarMustReturn(this.requestData) ||
     this.applyOwnNavbarRules();
 };
 
@@ -183,7 +182,7 @@ A.prototype.show = function show(options) {
 
     // Remember route to go back, from a request of 'mustReturn' or last requested
     this.mustReturnTo = this.requestData.route.query.mustReturn || this.mustReturnTo;
-        
+
     // Reset: avoiding errors because persisted data for different ID on loading
     // or outdated info forcing update
     this.viewModel.reset();
@@ -302,8 +301,8 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
+            this.isLoading() ?
+                'loading...' :
                 'Save and continue'
         );
     }, this);
@@ -311,7 +310,7 @@ function ViewModel(app) {
     this.onboardingNextReady = ko.computed(function() {
         var isin = app.model.onboarding.inProgress(),
             hasPricing = this.list().length > 0;
-        
+
         return isin && hasPricing;
     }, this);
 
@@ -333,21 +332,21 @@ function ViewModel(app) {
             return baseNewServiceURL(jobTitleID, pricingTypeID);
         }
     }.bind(this);
-    
+
     /**
         Ends the selection process, ready to collect selection
         and passing it to the requester activity.
         Works too to pass to the next onboarding step
     **/
     this.endSelection = function(data, event) {
-        
+
         if (app.model.onboarding.inProgress()) {
             // Ensure we keep the same jobTitleID in next steps as here:
             app.model.onboarding.selectedJobTitleID(this.jobTitleID());
             app.model.onboarding.goNext();
         }
         else {
-            // Run method injected by the activity to return a 
+            // Run method injected by the activity to return a
             // selected address:
             this.returnSelected(
                 this.selectedServices().map(function(pricing) {
@@ -360,7 +359,7 @@ function ViewModel(app) {
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
-    
+
     this.selectedServiceRequest = function(pricing) {
         return pricing.model.toPlainObject(true);
     };

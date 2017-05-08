@@ -1,25 +1,21 @@
 <!-- Activity welcome -->
 <div data-activity="welcome" class="Boxes-sm animated">
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
-    <div data-bind="visible: isInOnboarding()" class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
-        <div class="PageMenu-list">
-            <ul>
-                <li><a href="/">Get started</a></li>
-            </ul>
-        </div>
-    </div>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
         <div class="row">             
-            <div class="col-md-7 col-sm-reset">
+            <div class="col-md-12 col-sm-reset">
                 <div class="LeadContent">
                     <div data-bind="visible: isServiceProfessional()">
-                        <h2>Congrats, <span data-bind="text: userProfile.firstName"></span>!</h2>
-                        <p>You've just become a founding member of the Loconomics Cooperative. We're helping each other manage and grow our independent businesses. First things first: set up your profile!</p>
+                        <h2>Welcome<span data-bind="if: userProfile.firstName">, <span data-bind="text: userProfile.firstName"></span></span>!</h2>
+                        <p>We're excited to have you on board.</p>
+                        <p>You'll be invited to become a member-owner after creating your first listing.</p>
+                        <p>It'll take about 10 minutes.</p>
                         <br>
                         <button type="button" class="btn btn-block btn-secondary" data-bind="click: startOnboarding">Get started</button>
                     </div>
                     <div data-bind="visible: !isServiceProfessional()">
-                        <h2>Thank you, <span data-bind="text: userProfile.firstName"></span>!</h2>
+                        <h2>Thank you<span data-bind="if: userProfile.firstName">, <span data-bind="text: userProfile.firstName"></span></span>!</h2>
                         <p>We're currently growing our network of talented and cool service professionals in the Bay Area. We will keep you in the loop as we expand.</p>
                         <p>In the meantime, share our mission! If you know an independent businessperson who'd make a great Loconomics member-owner, let them know about us.</p>
                         <br/>
@@ -27,9 +23,6 @@
                         <a class="text-secondary btn btn-link btn-block" href="/" data-bind="click: clientOnboarding">Tour the app</a>
                     </div>
                 </div>
-            </div>
-            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-                <app-inline-side-menu params="vocElement: 'welcome', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
     </div>

@@ -6,14 +6,20 @@
 var OnboardingProgress = require('../viewmodels/OnboardingProgress');
 var NavAction = require('../viewmodels/NavAction');
 var ko = require('knockout');
+var localforage = require('localforage');
 
 exports.create = function create(appModel) {
-    
+    var NAVBAR_TITLE = 'Create your first listing';
+
     // Onboarding management and state, initially empty so no progress
     var api = new OnboardingProgress();
-    
+
+    api.navbarTitle = function() {
+        return NAVBAR_TITLE;
+    };
+
     api.currentActivity = ko.observable('');
-    
+
     // Requires initialization to receive and app instance
     api.init = function init(app) {
         api.app = app;
@@ -46,7 +52,7 @@ exports.create = function create(appModel) {
         var yep = this.inProgress();
         if (yep) {
             navBar.leftAction(NavAction.menuIn);
-            navBar.title('Get Started');
+            navBar.title(api.navbarTitle());
         }
         return yep;
     };
@@ -91,6 +97,45 @@ exports.create = function create(appModel) {
 
         return this.inProgress();
     };
-    
+
+    /// Workaround for #374:
+    /// Local copy of the onboarding selectedJobTitleID, returned by
+    /// login/signup API as onboardingJobTitleID, to be able to
+    /// resume onboarding with the correct jobTitle, fixing #374
+    /// NOTE: I think is a workaround that needs a better solution through a
+    /// refactor just to make the code more readable and clear, but still
+    /// works perfect for the case.
+    var LOCAL_JOBTITLEID_KEY = 'onboardingJobTitleID';
+    /**
+     * Store local copy of the ID to allow for resuming.
+     * @private
+     * @param {number} jobTitleID
+     * @returns {Promise}
+     */
+    var persistLocalJobTitleID = function(jobTitleID) {
+        return localforage.setItem(LOCAL_JOBTITLEID_KEY, jobTitleID);
+    };
+    /**
+     * Get local copy of the ID for resuming onboarding.
+     * @private
+     * @returns {Promise<number>}
+     */
+    var getLocalJobTitleID = function() {
+        return localforage.getItem(LOCAL_JOBTITLEID_KEY);
+    };
+    // At any point that selected job title ID is changed, we persist it
+    api.selectedJobTitleID.subscribe(persistLocalJobTitleID);
+    /**
+     * Request to recover the selectedJobTitleID value from local store.
+     * When this ends, the value is in place, ready to resume onboarding.
+     * @returns {Promise<int>} A copy of the jobTitleID
+     */
+    api.recoverLocalJobTitleID = function() {
+        return getLocalJobTitleID().then(function(id) {
+            api.selectedJobTitleID(id);
+            return id;
+        });
+    };
+
     return api;
 };
