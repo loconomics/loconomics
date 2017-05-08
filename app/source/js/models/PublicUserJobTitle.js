@@ -108,6 +108,13 @@ function PublicUserJobTitle(values) {
             return !service.isClientSpecific();
         });
     };
+
+    /**
+     * @returns true if there are any service attributes with this job title 
+     */
+    this.hasServiceAttributes = function() {
+        return !!(this.serviceAttributes() && this.serviceAttributes().hasAttributes());
+    };
 }
 
 module.exports = PublicUserJobTitle;

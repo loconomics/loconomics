@@ -6,7 +6,7 @@
     <div class="PageMenu">
         <div class="PageMenu-list hidden-xs">
             <ul>
-                <li><a href="#profile-overview">Overview</a></li>
+                <li data-bind="visible: hasServicesOverview"><a href="#profile-overview">Overview</a></li>
                 <li><a href="#profile-pricing">Pricing</a></li>
                 <li><a href="#profile-reviews">Reviews</a></li>
                 <li><a href="#profile-workphotos">Photos</a></li>
@@ -65,14 +65,21 @@
         <div class="page-wrapper border-top">
             <div class="container">
                 <div class="row">
-                    <!-- overview col-sm-8-->
                     <section class="col-xs-12">
-                        <div id="profile-overview" class="loco-infolight" data-bind="with: selectedJobTitle">
+                        <div id="profile-overview" class="loco-infolight" data-bind="visible: $root.hasServicesOverview, with: selectedJobTitle">
                             <h4 class="bold text-muted"><i class="icon ion-clipboard h2"></i> Overview of services</h4>
-                            <p data-bind="text: intro"></p>
+                            <p data-bind="text: intro, visible: intro().length > 0"></p>
                             <div data-bind="foreach: serviceAttributes().serviceAttributes">
                                 <div class="bold margin10t" data-bind="text: name"></div>
                                 <div data-bind="foreach: serviceAttributes" class="clearfix">
+                                    <div class="col-xs-6 col-md-4 pad5l pad5r">
+                                        <i class="icon ion-android-done"></i> <span data-bind="text: name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
+                                <div class="bold margin10t">Experience</div>
+                                <div class="clearfix">
                                     <div class="col-xs-6 col-md-4 pad5l pad5r">
                                         <i class="icon ion-android-done"></i> <span data-bind="text: name"></span>
                                     </div>
