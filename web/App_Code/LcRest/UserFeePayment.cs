@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace LcRest
 {
     public class UserFeePayment
     {
         #region Fields
+        public int userFeePaymentID;
         public int userID;
-        public DateTimeOffset? paymentDate;
-        public decimal paymentAmount;
-        public string paymentMethod;
-        public string paymentPlan;
         public string paymentTransactionID;
+        public string subscriptionID;
+        public DateTimeOffset paymentDate;
+        public decimal paymentAmount;
+        public string paymentPlan;
+        public string paymentMethod;
         public string paymentStatus;
+        public DateTimeOffset createdDate;
+        public DateTimeOffset modifiedDate;
         #endregion
 
         #region Instance
@@ -23,56 +26,57 @@ namespace LcRest
             if (record == null) return null;
             return new UserFeePayment
             {
+                userFeePaymentID = record.userFeePaymentID,
                 userID = record.userID,
+                paymentTransactionID = record.paymentTransactionID,
+                subscriptionID = record.subscriptionID,
                 paymentDate = record.paymentDate,
                 paymentAmount = record.paymentAmount,
-                paymentMethod = record.paymentMethod,
                 paymentPlan = record.paymentPlan,
-                paymentTransactionID = record.paymentTransactionID,
-                paymentStatus = record.paymentStatus
+                paymentMethod = record.paymentMethod,
+                paymentStatus = record.paymentStatus,
+                createdDate = record.createdDate,
+                modifiedDate = record.modifiedDate
             };
         }
         #endregion
 
         #region Fetch
-        const string sqlGetItem = @"
+        const string sqlSelect = @"
             SELECT
+                o.userFeePaymentID,
                 o.userID,
+                o.paymentTransactionID,
+                o.subscriptionID,
                 o.paymentDate,
                 o.paymentAmount,
-                o.paymentMethod,
                 o.paymentPlan,
-                o.paymentTransactionID,
-                o.paymentStatus
+                o.paymentMethod,
+                o.paymentStatus,
+                o.createdDate,
+                o.modifiedDate
             FROM    UserFeePayments As O
-            WHERE   O.userID = @0
-                     AND
-                    O.paymentDate = @1
         ";
-        const string sqlGetList = @"
-            SELECT
-                o.userID,
-                o.paymentDate,
-                o.paymentAmount,
-                o.paymentMethod,
-                o.paymentPlan,
-                o.paymentTransactionID,
-                o.paymentStatus
-            FROM    UserFeePayments As O
+        const string sqlGetItem = sqlSelect + @"
+            WHERE   O.userFeePaymentID = @0
+        ";
+        const string sqlGetByUser = sqlSelect + @"
             WHERE   O.userID = @0
         ";
-        public static UserFeePayment Get(int userID, DateTime paymentDate)
+
+        public static UserFeePayment Get(int userFeePaymentID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, userID, paymentDate));
+                return FromDB(db.QuerySingle(sqlGetItem, userFeePaymentID));
             }
         }
-        public static IEnumerable<UserFeePayment> GetList(int userID)
+
+        public static IEnumerable<UserFeePayment> GetByUser(int userID)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID).Select(FromDB);
+                return db.Query(sqlGetByUser, userID).Select(FromDB);
             }
         }
         #endregion
@@ -80,19 +84,25 @@ namespace LcRest
         #region Update
         const string sqlSet = @"
             UPDATE UserFeePayments SET
-                paymentAmount = @2,                
-                paymentMethod = @3,
-                paymentPlan = @4,
-                paymentTransactionID = @5,
-                paymentStatus = @6
+                paymentStatus = @8,
+                modifiedDate = SYSDATETIMEOFFSET()
             WHERE
-                UserID = @0
-                 AND
-                PaymentDate = @1
+                userFeePaymentID = @0
 
             IF @@rowcount = 0 BEGIN
-                INSERT INTO UserFeePayments VALUES
-                (@0, @1, @2, @3, @4, @5, @6)
+                INSERT INTO UserFeePayments (
+                    userID, paymentTransactionID,
+                    subscriptionID,
+                    paymentDate, paymentAmount,
+                    paymentPlan, paymentMethod, paymentStatus,
+                    createdDate, modifiedDate
+                ) VALUES (
+                    @1, @2,
+                    @3,
+                    @4, @5,
+                    @6, @7, @8,
+                    SYSDATETIMEOFFSET(), SYSDATETIMEOFFSET()
+                )
             END
         ";
         public static void Set(UserFeePayment data)
@@ -100,12 +110,14 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 db.Execute(sqlSet,
+                    data.userFeePaymentID,
                     data.userID,
+                    data.paymentTransactionID,
+                    data.subscriptionID,
                     data.paymentDate,
                     data.paymentAmount,
-                    data.paymentMethod,
                     data.paymentPlan,
-                    data.paymentTransactionID,
+                    data.paymentMethod,
                     data.paymentStatus
                 );
             }
