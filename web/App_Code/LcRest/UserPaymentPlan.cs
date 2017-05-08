@@ -32,7 +32,7 @@ namespace LcRest
         {
             if (record == null) return null;
 
-            SubscriptionPlan plan = SubscriptionPlan.MonthlyLite;
+            SubscriptionPlan plan = SubscriptionPlan.Free;
             if (!Enum.TryParse<SubscriptionPlan>(record.paymentPlan, true, out plan))
             {
                 throw new FormatException("Bad stored payment plan");

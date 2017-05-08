@@ -92,7 +92,7 @@
                 }
             }
 
-            LcEnum.SubscriptionPlan plan = LcEnum.SubscriptionPlan.MonthlyLite;
+            LcEnum.SubscriptionPlan plan = LcEnum.SubscriptionPlan.Free;
             if (!Enum.TryParse<LcEnum.SubscriptionPlan>(Request.Form["paymentPlan"], true, out plan))
             {
                 // Parse error, bad plan ID given
