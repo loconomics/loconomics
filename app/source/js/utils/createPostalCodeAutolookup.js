@@ -33,25 +33,38 @@ module.exports = function createPostalCodeAutolookup(options) {
     // Optional 'enabled' observable, true by default
     var enabled = ko.isObservable(options.enabled) ? options.enabled : ko.observable(true);
 
+    var updateAddressModel = function(addressObject, addressModel) {
+        if (addressModel.city) addressModel.city(addressObject.city);
+        if (addressModel.stateProvinceCode) addressModel.stateProvinceCode(addressObject.stateProvinceCode);
+        if (addressModel.stateProvinceName) addressModel.stateProvinceName(addressObject.stateProvinceName);
+    };
+
+    var emptyAddress = {
+            city: '',
+            stateProvinceCode: '',
+            stateProvinceName: ''
+        };
+
     // Closure that runs the (remote) look-up for a given postal code
     // and sets the error or address values at the observables on scope
     var lookup = function postalCodeLookup(address, postalCode) {
-        if (postalCode && !/^\s*$/.test(postalCode)) {
+        if (!postalCode) {
+            // Clear city when postal code is empty
+            updateAddressModel(emptyAddress, address);
+        }
+        else if (postalCode && !/^\s*$/.test(postalCode)) {
             // TODO Being able, here or at the appModel, to abort requests when a new one is needed because the code changed
             appModel.postalCodes.getItem(postalCode)
-            .then(function(info) {
-                if (info) {
-                    if (address.city) address.city(info.city);
-                    if (address.stateProvinceCode) address.stateProvinceCode(info.stateProvinceCode);
-                    if (address.stateProvinceName) address.stateProvinceName(info.stateProvinceName);
+            .then(function(addressObject) {
+                if (addressObject) {
+                    updateAddressModel(addressObject, address);
                     postalCodeError('');
                 }
             })
             .catch(function(err) {
                 //jshint maxcomplexity:10
-                if (address.city) address.city('');
-                if (address.stateProvinceCode) address.stateProvinceCode('');
-                if (address.stateProvinceName) address.stateProvinceName('');
+                updateAddressModel(emptyAddress, address);
+
                 // Expected errors, a single message, set
                 // on the observable
                 var msg = typeof(err) === 'string' ? err : null;
