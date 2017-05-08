@@ -30,12 +30,14 @@ public partial class LcPayment
         {
             switch (plan)
             {
-                case SubscriptionPlan.AnnualFull:
-                    return "Loconomics Annual Full Plan User Fees";
-                case SubscriptionPlan.MonthlyFull:
-                    return "Loconomics Monthly Full Plan User Fees";
-                case SubscriptionPlan.MonthlyLite:
-                    return "Loconomics Monthly Lite Plan User Fees";
+                case SubscriptionPlan.Free:
+                    return "Loconomics Free Plan";
+                case SubscriptionPlan.OwnerProAnnual:
+                    return "Loconomics Owner Pro Annual Plan User Fees";
+                case SubscriptionPlan.OwnerPro:
+                    return "Loconomics Owner Pro Plan User Fees";
+                case SubscriptionPlan.OwnerGrowth:
+                    return "Loconomics Owner Growth Plan User Fees";
                 default:
                     throw new ArgumentException("Plan value unsupported");
             }

@@ -9,7 +9,7 @@ namespace LcRest
     {
         #region Fields
         public int userID;
-        public DateTime? paymentDate;
+        public DateTimeOffset? paymentDate;
         public decimal paymentAmount;
         public string paymentMethod;
         public string paymentPlan;
