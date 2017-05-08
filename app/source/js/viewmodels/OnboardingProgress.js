@@ -105,7 +105,6 @@ OnboardingProgress.steps = {
         'welcome',
         'addJobTitles',
         'schedulingPreferences',
-        'servicesOverview',
         'serviceProfessionalService',
         'serviceAddresses',
         'bookingPolicies',
@@ -117,9 +116,6 @@ OnboardingProgress.steps = {
         welcome: {},
         addJobTitles: {},
         schedulingPreferences: {},
-        servicesOverview: {
-            jobTitleSpecific: true
-        },
         serviceProfessionalService: {
             jobTitleSpecific: true
         },
