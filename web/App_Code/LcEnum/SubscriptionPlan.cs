@@ -1,9 +1,10 @@
 ﻿namespace LcEnum
 {
-    public enum SubscriptionPlan
+    public enum SubscriptionPlan : short
     {
-        MonthlyLite,
-        MonthlyFull,
-        AnnualFull
+        Free = 0,
+        OwnerGrowth,
+        OwnerPro,
+        OwnerProAnnual
     }
 }
