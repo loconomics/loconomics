@@ -2,7 +2,7 @@
 <div data-activity="userFeePayments" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">   
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -13,36 +13,16 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h1 class="SectionTitle">Payment history</h1>  
-                <ul class="TilesList TilesList--openEnd">
-                    <li class="InfoTile">      
+                <h1 class="SectionTitle">Payment history</h1>
+                <ul class="TilesList TilesList--openEnd" data-bind="foreach: payments">
+                    <li class="InfoTile">
                         <div class="Tile-content">
-                            <div>3/19/2017 - Monthly plan - $29.95</div>
-                            <em>Visa ending in 3243 (MA4J6QYZ)</em>
-                        </div>
-                    </li>
-                    <li class="InfoTile">      
-                        <div class="Tile-content">
-                            <div>3/19/2017 - Monthly plan - $29.95</div>
-                            <em>Visa ending in 3243 (MA4J6QYZ)</em>
-                        </div>
-                    </li>
-                    <li class="InfoTile">      
-                        <div class="Tile-content">
-                            <div>3/19/2017 - Monthly plan - $29.95</div>
-                            <em>Visa ending in 3243 (MA4J6QYZ)</em>
-                        </div>
-                    </li>
-                    <li class="InfoTile">      
-                        <div class="Tile-content">
-                            <div>3/19/2017 - Monthly plan - $29.95</div>
-                            <em>Visa ending in 3243 (MA4J6QYZ)</em>
-                        </div>
-                    </li>
-                    <li class="InfoTile">      
-                        <div class="Tile-content">
-                            <div>3/19/2017 - Monthly plan - $29.95</div>
-                            <em>Visa ending in 3243 (MA4J6QYZ)</em>
+                            <div>
+                                <span data-bind="text: paymentDate, format: { type: 'datetime', format: 'L' }"></span> -
+                                <span data-bind="text: paymentPlan"></span> -
+                                <span data-bind="text: paymentMoney, format: { type: 'number', format: '$0,0.00' }"></span>
+                            </div>
+                            <em data-bind="text: paymentMethod"></em>
                         </div>
                     </li>
                 </ul>
