@@ -79,14 +79,18 @@ public static partial class LcPayment
 
         public CreditCardRequest ToRequest()
         {
-            return new CreditCardRequest
+            var request = new CreditCardRequest
             {
                 CardholderName = nameOnCard,
                 Number = cardNumber,
                 ExpirationMonth = expirationMonth,
                 ExpirationYear = expirationYear,
-                CVV = securityCode,
-                BillingAddress = new CreditCardAddressRequest
+                CVV = securityCode
+            };
+
+            if (billingAddress != null)
+            {
+                request.BillingAddress = new CreditCardAddressRequest
                 {
                     StreetAddress = billingAddress.AddressLine1,
                     ExtendedAddress = billingAddress.AddressLine2,
@@ -94,8 +98,10 @@ public static partial class LcPayment
                     Region = billingAddress.StateProvinceCode,
                     PostalCode = billingAddress.PostalCode,
                     CountryCodeAlpha2 = billingAddress.CountryCodeAlpha2
-                }
-            };
+                };
+            }
+
+            return request;
         }
 
         public string SaveInVault(string clientIdOnBraintree)
