@@ -11,8 +11,6 @@ var A = Activity.extend(function UpgradeActivity() {
 
     this.accessLevel = this.app.UserType.loggedUser;
     
-    var app = this.app;
-    
     this.navBar = new Activity.NavBar({
         title: null,
         leftAction: Activity.NavAction.menuIn,
