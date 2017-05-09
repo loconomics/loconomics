@@ -189,6 +189,14 @@ function ViewModel(app) {
         if (!u) return '';
         return '#!inbox/new/' + u.profile().userID();
     }, this);
+
+    this.hasServicesOverview = ko.pureComputed(function() {
+        var jobTitle = this.user() && this.user().selectedJobTitle(),
+            hasIntro = jobTitle && jobTitle.hasIntro(),
+            hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
+
+        return hasIntro || hasAttributes;
+    }, this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');

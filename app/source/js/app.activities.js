@@ -78,7 +78,12 @@ module.exports = {
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
     'onboardingSuccess': require('./activities/onboardingSuccess'),
+<<<<<<< HEAD
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'userProfile': require('./activities/userProfile')
+=======
+    'userProfile': require('./activities/userProfile'),
+    'upgrade': require('./activities/upgrade')
+>>>>>>> is385-Revise-/onboardingSuccess-to-include-Next-Steps
 };

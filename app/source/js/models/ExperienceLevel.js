@@ -17,4 +17,8 @@ function ExperienceLevel(values) {
     }, values);
 }
 
+ExperienceLevel.prototype.hasExperienceLevel = function() {
+    return this.experienceLevelID() > 0;
+};
+
 module.exports = ExperienceLevel;
