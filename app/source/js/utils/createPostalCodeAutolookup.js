@@ -20,15 +20,21 @@ var ko = require('knockout');
             about if the lookup must be performed or not. It's optional, being true by default (as ko.observable(true))
         postalCodeError:string An observable that the lookup process will update with the
             error message of validating the postal code, or set to null if was successfully.
+        isErrorMasked: (optional) observable returning true if the error message should be masked even though 
+            postal code fails validation
     }
 **/
 module.exports = function createPostalCodeAutolookup(options) {
+    //jshint maxcomplexity:12
     if (!options) throw 'Options required at postal code auto-lookup';
     if (!options.address) throw 'Address observable required (must have address-like observable fields with standard names)';
     if (!ko.isObservable(options.postalCodeError)) throw 'Postal Code Error observable required';
     if (!options.appModel) throw 'A reference to the App Model instance is required';
 
     var postalCodeError = options.postalCodeError;
+    var isErrorMasked = options.isErrorMasked || ko.observable(false);
+    var maskedPostalCodeError = ko.observable('');
+
     var appModel = options.appModel;
     // Optional 'enabled' observable, true by default
     var enabled = ko.isObservable(options.enabled) ? options.enabled : ko.observable(true);
@@ -58,7 +64,7 @@ module.exports = function createPostalCodeAutolookup(options) {
             .then(function(addressObject) {
                 if (addressObject) {
                     updateAddressModel(addressObject, address);
-                    postalCodeError('');
+                    maskedPostalCodeError('');
                 }
             })
             .catch(function(err) {
@@ -69,7 +75,7 @@ module.exports = function createPostalCodeAutolookup(options) {
                 // on the observable
                 var msg = typeof(err) === 'string' ? err : null;
                 if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                    postalCodeError(msg || err.responseJSON.errorMessage);
+                    maskedPostalCodeError(msg || err.responseJSON.errorMessage);
                 }
                 else {
                     // Log to console for debugging purposes, on regular use an error on the
@@ -95,4 +101,8 @@ module.exports = function createPostalCodeAutolookup(options) {
     })
     // Avoid excessive requests by setting a timeout since the latest change
     .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
+
+    ko.computed(function() {
+        postalCodeError(isErrorMasked() ? '' : maskedPostalCodeError());
+    });
 };
