@@ -68,7 +68,7 @@
                     <section class="col-xs-12">
                         <div id="profile-overview" class="loco-infolight" data-bind="visible: $root.hasServicesOverview, with: selectedJobTitle">
                             <h4 class="bold text-muted"><i class="icon ion-clipboard h2"></i> Overview of services</h4>
-                            <p data-bind="text: intro, visible: intro().length > 0"></p>
+                            <p data-bind="text: intro, visible: hasIntro"></p>
                             <div data-bind="foreach: serviceAttributes().serviceAttributes">
                                 <div class="bold margin10t" data-bind="text: name"></div>
                                 <div data-bind="foreach: serviceAttributes" class="clearfix">

@@ -192,10 +192,10 @@ function ViewModel(app) {
 
     this.hasServicesOverview = ko.pureComputed(function() {
         var jobTitle = this.user() && this.user().selectedJobTitle(),
-            intro = jobTitle && jobTitle.intro(),
+            hasIntro = jobTitle && jobTitle.hasIntro(),
             hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
 
-        return intro || hasAttributes;
+        return hasIntro || hasAttributes;
     }, this);
 }
 

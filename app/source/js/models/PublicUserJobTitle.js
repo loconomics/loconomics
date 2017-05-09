@@ -115,6 +115,13 @@ function PublicUserJobTitle(values) {
     this.hasServiceAttributes = function() {
         return !!(this.serviceAttributes() && this.serviceAttributes().hasAttributes());
     };
+
+    /**
+     * @returns true if there is any intro text
+     */
+    this.hasIntro = function() {
+        return !!this.intro();
+    };
 }
 
 module.exports = PublicUserJobTitle;
