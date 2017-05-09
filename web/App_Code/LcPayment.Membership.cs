@@ -26,18 +26,31 @@ public partial class LcPayment
 
         #region Subscription
 
+        /// <summary>
+        /// Returns the correct descriptor name for the given plan,
+        /// following gateway naming restrictions.
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <returns></returns>
 		public string GetSubscriptionPlanDescriptor(SubscriptionPlan plan)
         {
+            // IMPORTANT: Braintree restricts the naming possibilities
+            // as described at https://developers.braintreepayments.com/reference/request/transaction/sale/dotnet#descriptor.name
+            // Copied: Company name/DBA section must be either 3, 7 or 12 characters
+            // and the product descriptor can be up to 18, 14, or 9 characters respectively (with an * in between
+            // for a total descriptor name of 22 characters)
+            // NOTE: We choose 12 chars for 'Loconomics  ' (double white space in the end
+            // to match twelve) plus short plan name ('ProAnnual' fits exactly, 9)
             switch (plan)
             {
                 case SubscriptionPlan.Free:
-                    return "Loconomics Free Plan";
+                    throw new ArgumentException("A free plan don't need a paid subscription");
                 case SubscriptionPlan.OwnerProAnnual:
-                    return "Loconomics Owner Pro Annual Plan User Fees";
+                    return "Loconomics  *ProAnnual";
                 case SubscriptionPlan.OwnerPro:
-                    return "Loconomics Owner Pro Plan User Fees";
+                    return "Loconomics  *Pro";
                 case SubscriptionPlan.OwnerGrowth:
-                    return "Loconomics Owner Growth Plan User Fees";
+                    return "Loconomics  *Growth";
                 default:
                     throw new ArgumentException("Plan value unsupported");
             }
@@ -68,7 +81,7 @@ public partial class LcPayment
 
 			if (result.IsSuccess())
             {
-                return result.Subscription;
+                return result.Target;
             }
 			else
             {
