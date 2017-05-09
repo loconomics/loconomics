@@ -337,7 +337,7 @@ namespace LcRest
                 }
 
                 // The exception needs to be communicated anyway, so re-throw
-                throw ex;
+                throw new Exception("Failed subscription", ex);
             }
 
             return userPlan;
