@@ -80,7 +80,7 @@ public partial class LcPayment
             };
 
             var now = DateTimeOffset.Now;
-            var trialDuration = now > trialEndDate ? trialEndDate - now : TimeSpan.Zero;
+            var trialDuration = now > trialEndDate ? TimeSpan.Zero : trialEndDate - now;
             var trialDurationDays = trialDuration > TimeSpan.Zero ? (int)Math.Floor(trialDuration.TotalDays) : 0;
 
             var request = new SubscriptionRequest
