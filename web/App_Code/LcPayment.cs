@@ -21,10 +21,10 @@ public static partial class LcPayment
         BraintreeGateway gateway;
         if (ConfigurationManager.AppSettings["Braintree.InSandbox"].AsBool()) {
             //SandBox API keys for testing
-            gateway = new BraintreeGateway 
+            gateway = new BraintreeGateway
             {
                 Environment = Braintree.Environment.SANDBOX,
-                MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"], 
+                MerchantId = ConfigurationManager.AppSettings["Braintree.Sandbox.MerchantId"],
                 PublicKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PublicKey"],
                 PrivateKey = ConfigurationManager.AppSettings["Braintree.Sandbox.PrivateKey"]
             };
@@ -402,7 +402,7 @@ public static partial class LcPayment
     /// <returns></returns>
     public static Braintree.Customer GetBraintreeCustomer(int userID, BraintreeGateway gateway = null) {
         gateway = LcPayment.NewBraintreeGateway(gateway);
-        try{
+        try {
             return gateway.Customer.Find(GetCustomerId(userID));
         } catch (Braintree.Exceptions.NotFoundException ex) {
         }
@@ -411,24 +411,35 @@ public static partial class LcPayment
 
     /// <summary>
     /// Find or create Customer on Braintree
+    /// given our database userID that is converted to the ID format
+    /// for marketplace customers at Braintree.
     /// </summary>
     /// <param name="userID"></param>
     /// <returns></returns>
     public static Braintree.Customer GetOrCreateBraintreeCustomer(int userID)
     {
+        return GetOrCreateBraintreeCustomer(GetCustomerId(userID));
+    }
+
+    /// <summary>
+    /// Find or create Customer on Braintree
+    /// given the ID at Braintree/gateway.
+    /// </summary>
+    /// <param name="gatewayUserID"></param>
+    /// <returns></returns>
+    public static Braintree.Customer GetOrCreateBraintreeCustomer(string gatewayUserID)
+    {
         var gateway = NewBraintreeGateway();
-        
-        string customerIdOnBraintree = GetCustomerId(userID);
 
         try
         {
-            return gateway.Customer.Find(customerIdOnBraintree);
+            return gateway.Customer.Find(gatewayUserID);
         }
-        catch (Braintree.Exceptions.NotFoundException ex)
+        catch (Braintree.Exceptions.NotFoundException)
         {
             // Customer doens't exist, create it:
             var gcr = new CustomerRequest{
-                Id = customerIdOnBraintree
+                Id = gatewayUserID
             };
 
             var r = gateway.Customer.Create(gcr);
@@ -438,7 +449,7 @@ public static partial class LcPayment
             }
             else
             {
-                throw new Braintree.Exceptions.BraintreeException("Impossible to create customer #" + customerIdOnBraintree + ":: " + r.Message);
+                throw new Braintree.Exceptions.BraintreeException("Impossible to create customer #" + gatewayUserID + ":: " + r.Message);
             }
         }
     }

@@ -24,6 +24,22 @@ public partial class LcPayment
         public Membership() { }
         #endregion
 
+        #region IDs
+        /// <summary>
+        /// Get the payment gateway ID for a customer based in our userID
+        /// with a specific format to use for 'fee payments'; this
+        /// allow us to easy distinguish transactions of the user made
+        /// to pay membership/ownership fees and payments to other professionals
+        /// as a marketplace client (as of LcPayemnt.GetCustomerId)
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static string GetFeePaymentUserId(int userID)
+        {
+            return ASP.LcHelpers.Channel + "_fee_" + userID.ToString();
+        }
+        #endregion
+
         #region Subscription
 
         /// <summary>
@@ -32,7 +48,7 @@ public partial class LcPayment
         /// </summary>
         /// <param name="plan"></param>
         /// <returns></returns>
-		public string GetSubscriptionPlanDescriptor(SubscriptionPlan plan)
+        public string GetSubscriptionPlanDescriptor(SubscriptionPlan plan)
         {
             // IMPORTANT: Braintree restricts the naming possibilities
             // as described at https://developers.braintreepayments.com/reference/request/transaction/sale/dotnet#descriptor.name
@@ -56,7 +72,7 @@ public partial class LcPayment
             }
         }
 
-        public Subscription CreateSubscription(int userID, SubscriptionPlan plan, string paymentMethodToken, DateTimeOffset trialEndDate)
+        public Subscription CreateSubscription(SubscriptionPlan plan, string paymentMethodToken, DateTimeOffset trialEndDate)
         {
             var descriptor = new DescriptorRequest
             {

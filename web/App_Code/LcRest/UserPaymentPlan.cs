@@ -232,7 +232,7 @@ namespace LcRest
 
             // Find or create Customer on Braintree (for membership subscriptions, the member
             // is a customer of Loconomics).
-            var client = LcPayment.GetOrCreateBraintreeCustomer(memberUserID);
+            var client = LcPayment.GetOrCreateBraintreeCustomer(LcPayment.Membership.GetFeePaymentUserId(memberUserID));
 
             // Quick way for saved payment method that does not needs to be updated
             if (paymentData.IsSavedID())
@@ -307,7 +307,7 @@ namespace LcRest
 
                     // Create the subscription at the payment gateway
                     // It returns the subscription object with a correct ID on success, otherwise an exception is thrown
-                    var subscription = paymentPlan.CreateSubscription(userID, plan, paymentMethodToken, trialEndDate);
+                    var subscription = paymentPlan.CreateSubscription(plan, paymentMethodToken, trialEndDate);
                     generatedSubscriptionId = subscription.Id;
                     userPlan.subscriptionID = subscription.Id;
                     userPlan.paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
