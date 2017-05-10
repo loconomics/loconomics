@@ -69,7 +69,21 @@
             Validation.RequireField("paymentPlan", "Choose a plan");
 
             // For payment, we need either a paymentMethodID or the data
-            // 
+            // and that includes a billing address
+            var locale = LcRest.Locale.Current;
+            var address = new LcData.Address
+            {
+                AddressLine1 = Request["paymentMethod[billingAddress][addressLine1]"],
+                AddressLine2 = Request["paymentMethod[billingAddress][addressLine2]"],
+                PostalCode = Request["paymentMethod[billingAddress][postalCode]"],
+                CountryID = locale.countryID
+            };
+            var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
+            if (autoAddress != null)
+            {
+                address.StateProvinceCode = autoAddress.stateProvinceCode;
+                address.City = autoAddress.city;
+            }
             var paymentData = new LcPayment.InputPaymentMethod
             {
                 paymentMethodID = Request["paymentMethod[paymentMethodID]"],
@@ -77,7 +91,8 @@
                 nameOnCard = Request["paymentMethod[nameOnCard]"],
                 expirationMonth = Request["paymentMethod[expirationMonth]"],
                 expirationYear = Request["paymentMethod[expirationYear]"],
-                securityCode = Request["paymentMethod[securityCode]"]
+                securityCode = Request["paymentMethod[securityCode]"],
+                billingAddress = address
             };
 
             if (!paymentData.IsSavedID())
