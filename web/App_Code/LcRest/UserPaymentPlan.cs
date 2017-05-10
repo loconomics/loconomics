@@ -1,85 +1,172 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using LcEnum;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LcRest
 {
     public class UserPaymentPlan
     {
         #region Fields
+        public int userPaymentPlanID;
         public int userID;
-        public string paymentPlan;
+        public string subscriptionID;
+        [JsonConverter(typeof(StringEnumConverter))]
+        public SubscriptionPlan paymentPlan;
         public string paymentMethod;
-        public DateTime? paymentPlanLastChangedDate;
-        public DateTime? nextPaymentDueDate;
+        public DateTimeOffset paymentPlanLastChangedDate;
+        public DateTimeOffset? nextPaymentDueDate;
         public decimal? nextPaymentAmount;
-        public DateTime? lastPaymentDate;
-        public decimal? lastPaymentAmount;
-        public decimal? totalPastDueAmount;
+        public DateTimeOffset firstBillingDate;
+        public DateTimeOffset? subscriptionEndDate;
+        public string paymentMethodToken;
+        public DateTimeOffset? paymentExpiryDate;
+        public string planStatus;
+        public int daysPastDue;
         #endregion
 
         #region Instance
         public static UserPaymentPlan FromDB(dynamic record)
         {
             if (record == null) return null;
+
+            SubscriptionPlan plan = SubscriptionPlan.Free;
+            if (!Enum.TryParse<SubscriptionPlan>(record.paymentPlan, true, out plan))
+            {
+                throw new FormatException("Bad stored payment plan");
+            }
+
             return new UserPaymentPlan
             {
+                userPaymentPlanID = record.userPaymentPlanID,
                 userID = record.userID,
-
-                paymentPlan = record.paymentPlan,
+                subscriptionID = record.subscriptionID,
+                paymentPlan = plan,
                 paymentMethod = record.paymentMethod,
                 paymentPlanLastChangedDate = record.paymentPlanLastChangedDate,
                 nextPaymentDueDate = record.nextPaymentDueDate,
                 nextPaymentAmount = record.nextPaymentAmount,
-                lastPaymentDate = record.lastPaymentDate,
-                lastPaymentAmount = record.lastPaymentAmount,
-                totalPastDueAmount = record.totalPastDueAmount
+                firstBillingDate = record.firstBillingDate,
+                subscriptionEndDate = record.subscriptionEndDate,
+                paymentMethodToken = record.paymentMethodToken,
+                paymentExpiryDate = record.paymentExpiryDate,
+                planStatus = record.planStatus,
+                daysPastDue = record.daysPastDue
             };
         }
         #endregion
 
         #region Fetch
-        const string sqlGetItem = @"
+        const string sqlSelectAll = @"
             SELECT
+                o.userPaymentPlanID,
                 o.userID,
+                o.subscriptionID,
                 o.paymentPlan,
                 o.paymentMethod,
                 o.paymentPlanLastChangedDate,
                 o.nextPaymentDueDate,
                 o.nextPaymentAmount,
-                o.lastPaymentDate,
-                o.lastPaymentAmount,
-                o.totalPastDueAmount
-            FROM    UserPaymentPlan As O
-            WHERE   O.userID = @0
+                o.firstBillingDate,
+                o.subscriptionEndDate,
+                o.paymentMethodToken,
+                o.paymentExpiryDate,
+                o.planStatus,
+                o.daysPastDue
+            FROM    UserPaymentPlan As o
         ";
-        public static UserPaymentPlan Get(int userID)
+        const string sqlGetItem = sqlSelectAll + @"
+            WHERE   o.userPaymentPlanID = @0
+        ";
+        const string sqlGetByUser = sqlSelectAll + @"
+            WHERE   o.userID = @0
+        ";
+        const string sqlConditionOnlyActivePlans = @"
+            AND SubscriptionEndDate is null
+        ";
+
+        /// <summary>
+        /// Get the record by its ID
+        /// </summary>
+        /// <param name="userPaymentPlanID"></param>
+        /// <returns></returns>
+        public static UserPaymentPlan Get(int userPaymentPlanID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem));
+                return FromDB(db.QuerySingle(sqlGetItem, userPaymentPlanID));
+            }
+        }
+
+        /// <summary>
+        /// Get the full list of plans (active and history) for a given user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserPaymentPlan> GetByUser(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetByUser, userID).Select(FromDB);
+            }
+        }
+
+        /// <summary>
+        /// Get the current, active plan for a user, null if nothing found.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static UserPaymentPlan GetUserActivePlan(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetByUser + sqlConditionOnlyActivePlans, userID));
             }
         }
         #endregion
 
-        #region Update
+        #region Persist on DB
+        /// <summary>
+        /// Insert or Update SQL.
+        /// Insert allows to set all fields, while update is limited to a
+        /// set of them (non read-only fields).
+        /// </summary>
         const string sqlSet = @"
             UPDATE UserPaymentPlan SET
-                paymentPlan = @1,
-                paymentMethod = @2,
-                paymentPlanLastChangedDate = @3,
-                NextPaymentDueDate = @4,
-                NextPaymentAmount = @5,
-                LastPaymentDate = @6,
-                LastPaymentAmount = @7,
-                TotalPastDueAmount = @8
+                paymentMethod = @4,
+                paymentPlanLastChangedDate = @5,
+                NextPaymentDueDate = @6,
+                NextPaymentAmount = @7,
+                SubscriptionEndDate = @9,
+                paymentMethodToken = @10,
+                paymentExpiryDate = @11,
+                planStatus = @12,
+                daysPastDue = @13
             WHERE
-                UserID = @0
+                UserPaymentPlanID = @0
 
-            IF @@rowcount = 0 THEN BEGIN
-                INSERT INTO UserPaymentPlan VALUES
-                @0, @1, @2, @3, @4, @5, @6, @7, @8
+            IF @@rowcount = 0 BEGIN
+                INSERT INTO UserPaymentPlan (
+                    userID, subscriptionID,
+                    paymentPlan, paymentMethod, paymentPlanLastChangedDate,
+                    nextPaymentDueDate, nextPaymentAmount,
+                    firstBillingDate,
+                    subscriptionEndDate,
+                    paymentMethodToken, paymentExpiryDate,
+                    planStatus,
+                    daysPastDue
+                ) VALUES (
+                    @1, @2,
+                    @3, @4, @5,
+                    @6, @7,
+                    @8,
+                    @9,
+                    @10, @11,
+                    @12,
+                    @13
+                )
             END
         ";
         public static void Set(UserPaymentPlan data)
@@ -87,18 +174,180 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 db.Execute(sqlSet,
+                    data.userPaymentPlanID,
                     data.userID,
-                    data.paymentPlan,
+                    data.subscriptionID,
+                    data.paymentPlan.ToString(),
                     data.paymentMethod,
                     data.paymentPlanLastChangedDate,
                     data.nextPaymentDueDate,
                     data.nextPaymentAmount,
-                    data.lastPaymentDate,
-                    data.lastPaymentAmount,
-                    data.totalPastDueAmount
+                    data.firstBillingDate,
+                    data.subscriptionEndDate,
+                    data.paymentMethodToken,
+                    data.paymentExpiryDate,
+                    data.planStatus,
+                    data.daysPastDue
                 );
             }
         }
+        #endregion
+
+        #region Manage plan/subscription API
+        #region Internal DB utils
+        private static DateTimeOffset GetUserTrialEndDate(int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.QueryValue("SELECT TrialEndDate FROM users WHERE userID=@0", userID) ?? DateTimeOffset.MaxValue;
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Saves/updates the payment method for the member, at the remote gateway,
+        /// updates in place, and returns, the ID/token
+        /// </summary>
+        /// <returns>The saved payment method ID/token</returns>
+        /// <param name="paymentData"></param>
+        private static string CollectPaymentMethod(LcPayment.InputPaymentMethod paymentData, int memberUserID)
+        {
+            // On emulation, discard other steps, just generate
+            // a fake ID
+            if (LcPayment.TESTING_EMULATEBRAINTREE)
+            {
+                paymentData.paymentMethodID = LcPayment.CreateFakePaymentMethodId();
+                return paymentData.paymentMethodID;
+            }
+
+            // Standard way
+            var gateway = LcPayment.NewBraintreeGateway();
+
+            // The input paymentID must be one generated by Braintree, reset any (malicious?) attempt
+            // to provide a special temp ID generated by this method
+            if (paymentData.IsTemporaryID())
+            {
+                paymentData.paymentMethodID = null;
+            }
+
+            // Find or create Customer on Braintree (for membership subscriptions, the member
+            // is a customer of Loconomics).
+            var client = LcPayment.GetOrCreateBraintreeCustomer(memberUserID);
+
+            // Quick way for saved payment method that does not needs to be updated
+            if (paymentData.IsSavedID())
+            {
+                // Just double check payment exists to avoid mistake/malicious attempts:
+                if (!paymentData.ExistsOnVault())
+                {
+                    // Since we have not input data to save, we can only throw an error
+                    // invalidSavedPaymentMethod
+                    throw new ConstraintException("Chosen payment method has expired");
+                }
+            }
+            else
+            {
+                // Creates or updates a payment method with the given data
+
+                // Must we set an ID as temporary to prevent it appears as a saved payment method?
+                //paymentData.paymentMethodID = LcPayment.TempSavedCardPrefix + ASP.LcHelpers.Channel + "_paymentPlan";
+
+                // Save on Braintree secure Vault
+                // It updates the paymentMethodID if a new one was generated
+                var saveCardError = paymentData.SaveInVault(client.Id);
+                if (!String.IsNullOrEmpty(saveCardError))
+                {
+                    // paymentDataError
+                    throw new ConstraintException(saveCardError);
+                }
+            }
+
+            return paymentData.paymentMethodID;
+        }
+
+        public static UserPaymentPlan CreateSubscription(
+            int userID,
+            SubscriptionPlan plan,
+            LcPayment.InputPaymentMethod paymentMethod)
+        {
+            // Prepare payment method (in the remote gateway), get its ID
+            var paymentMethodToken = CollectPaymentMethod(paymentMethod, userID);
+
+            // Prepare initial object
+            var userPlan = new UserPaymentPlan()
+            {
+                userID = userID,
+                paymentPlan = plan,
+                subscriptionEndDate = null
+            };
+
+            // Create subscription at gateway and set details
+            // Wrapped in a try-catch to implement a transaction-like operation:
+            // if something fail after succesfully create the Braintree subscription, like not being
+            // able to save details on database, we need to 'rollback' the subscription, asking for removal
+            // to Braintree
+            string generatedSubscriptionId = null;
+            var paymentPlan = new LcPayment.Membership();
+            try
+            {
+                if (LcPayment.TESTING_EMULATEBRAINTREE)
+                {
+                    userPlan.subscriptionID = LcPayment.CreateFakeSubscriptionId();
+                    userPlan.paymentPlanLastChangedDate = DateTimeOffset.Now;
+                    userPlan.nextPaymentDueDate = DateTimeOffset.Now.Add(new TimeSpan(365, 0, 0, 0));
+                    userPlan.nextPaymentAmount = 99;
+                    userPlan.firstBillingDate = DateTimeOffset.Now;
+                    userPlan.planStatus = "ACTIVE";
+                    userPlan.daysPastDue = 0;
+                }
+                else
+                {
+                    // Start creating the subscription at the payment gateway
+                    var trialEndDate = GetUserTrialEndDate(userID);
+
+                    // Create the subscription at the payment gateway
+                    // It returns the subscription object with a correct ID on success, otherwise an exception is thrown
+                    var subscription = paymentPlan.CreateSubscription(userID, plan, paymentMethodToken, trialEndDate);
+                    generatedSubscriptionId = subscription.Id;
+                    userPlan.subscriptionID = subscription.Id;
+                    userPlan.paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
+                    userPlan.nextPaymentDueDate = subscription.NextBillingDate;
+                    userPlan.nextPaymentAmount = subscription.NextBillAmount;
+                    userPlan.firstBillingDate = subscription.FirstBillingDate.Value;
+                    userPlan.planStatus = subscription.Status.ToString();
+                    userPlan.daysPastDue = subscription.DaysPastDue ?? 0;
+                }
+
+                // Fill payment method info
+                var info = LcPayment.PaymentMethodInfo.Get(paymentMethodToken);
+                userPlan.paymentExpiryDate = info.ExpirationDate;
+                userPlan.paymentMethodToken = paymentMethodToken;
+                userPlan.paymentMethod = info.Description;
+
+                // Persist subscription on database
+                Set(userPlan);
+            }
+            catch (Exception ex)
+            {
+                // Rollback
+                if (generatedSubscriptionId != null)
+                {
+                    // Rollback subscription at Payment Gateway
+                    paymentPlan.CancelSubscription(generatedSubscriptionId);
+                }
+
+                // The exception needs to be communicated anyway, so re-throw
+                throw ex;
+            }
+
+            return userPlan;
+        }
+
+        /*
+           Reading payment subscription:
+           var subscriptionID = GetUserActivePlan(userID).subscriptionID;
+           LcPayment.Membership.GetUserSubscription(subscriptionID);
+        */
         #endregion
     }
 }

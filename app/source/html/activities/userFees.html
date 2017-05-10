@@ -2,7 +2,7 @@
 <div data-activity="userFees" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">   
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -13,11 +13,94 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                        <span>Owner user fees</span>
-                </h2>
-                <div class="LeadContent">
-                    <h1>Coming soon!</h1>
+                <h1 class="SectionTitle" data-bind="visible: !isNew()">Your plan</h1>
+                <div class="PaddedBox-xs Box-md bg-white" data-bind="visible: !isNew()">
+                    <div class="PaddedBox-xs" data-bind="with: activePaymentPlan">
+                        <p>
+                            <strong data-bind="text: name"></strong> - <span data-bind="text: summary"></span>
+                        </p>
+                        <a class="btn btn-default btn-block" data-bind="click: $parent.changePlan">Change plan</a>
+                    </div>
+                </div>
+
+                <h1 class="SectionTitle" data-bind="visible: isNew">Select a plan</h1>
+                <script type="text/html" id="userFees-item-tpl">
+                    <div class="radio">
+                        <div class="input-group">
+                            <label class="form-control-static btn-block">
+                                <input type="radio" data-bind="checked: checkedValue, value: itemValue, disable: disabled" />
+                                <strong data-bind="text: itemLabel"></strong> - <span data-bind="text: itemSummary"></span>
+                            </label>
+                            <span class="input-group-btn">
+                                <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false"
+                                    data-bind="attr: { 'data-target': '#userFees-info-' + itemValue(), 'data-controls': '#userFees-info-' + itemValue() }">
+                                    View details
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </script>
+                <div data-bind="visible: isNew">
+                    <div data-bind="foreach: { data: plans, as: 'plan' }" class="PaddedBox-xs Box-md bg-white">
+                        <!-- ko template: { name: 'userFees-item-tpl', data: {
+                            checkedValue: $parent.selectedPaymentPlanID,
+                            itemValue: plan.paymentPlanID,
+                            disabled: $parent.isLocked,
+                            itemLabel: plan.name,
+                            itemSummary: plan.summary
+                        } } --><!-- /ko -->
+                        <div class="collapse container-fluid"
+                            data-bind="attr: { id: 'userFees-info-' + plan.paymentPlanID() }">
+                            <span data-bind="html: plan.description"></span>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="SectionTitle" data-bind="visible: isNew">Enter payment info</h1>
+                <div data-bind="visible: isNew, with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
+                    <div class="form-group">
+                        <span class="input-group">
+                            <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
+                            <span class="input-group-addon" aria-hidden="true">
+                                <span class="fa ion ion-card fa-lg"></span>
+                            </span>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-7">
+                            <div class="form-group">
+                                <span class="input-group">
+                                    <span class="input-group-addon">Expiry</span>
+                                    <input type="text" class="form-control" data-bind="value: expirationMonthYear, disable: $parent.isLocked" placeholder="mm/yyyy">
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-5">
+                            <app-unlabeled-input params="placeholder: 'CCV', value: securityCode, disable: $parent.isLocked"></app-unlabeled-input>
+                        </div>
+                    </div>
+                    <div class="secure-form-warning">
+                        <span class="fa ion ion-ios-locked-outline fa-lg" aria-hidden="true"></span>
+                        <span>This is a secure 128 bit SSL encrypted form, and we're PCI compliant</span>
+                    </div>
+                </div>
+                <h1 class="SectionTitle" data-bind="visible: !isNew()">Credit card information</h1>
+                <ul class="TilesList TilesList--openEnd" data-bind="visible: !isNew(), with: activeUserPaymentPlan">
+                    <li class="InfoTile" href="/userFees">
+                        <div class="Tile-icon" aria-hidden="true">
+                            <span class="fa ion ion-card" aria-hidden="true"></span>
+                        </div>
+                        <div class="Tile-content">
+                            <div data-bind="text: paymentMethod"></div>
+                            <em>Expires <span data-bind="text: paymentExpiryDate, format: { type: 'datetime', format: 'MM/YYYY' }"></span></em>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="LightForm" data-bind="visible: isNew">
+                    <div class="LightForm-submitBar">
+                        <button type="button" class="btn btn-primary btn-block"
+                            data-bind="click: save, text: submitText, disable: isLocked">Save</button>
+                    </div>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
