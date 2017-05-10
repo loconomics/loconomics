@@ -64,7 +64,7 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetList, languageID, countryID, experienceLevelID));
+                return FromDB(db.QuerySingle(sqlGetItem, languageID, countryID, experienceLevelID));
             }
         }
         #endregion

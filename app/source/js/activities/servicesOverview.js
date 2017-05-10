@@ -17,8 +17,6 @@ var A = Activity.extend(function ServicesOverviewActivity() {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
     
-    this.defaultNavBar = this.navBar.model.toPlainObject(true);
-    
     // On changing jobTitleID:
     // - load job title name
     this.registerHandler({
@@ -88,14 +86,6 @@ var A = Activity.extend(function ServicesOverviewActivity() {
 
 exports.init = A.init;
 
-A.prototype.updateNavBarState = function updateNavBarState() {
-    
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
-        // Reset
-        this.navBar.model.updateWith(this.defaultNavBar, true);
-    }
-};
-
 A.prototype.show = function show(state) {
     // Reset
     this.viewModel.jobTitleID(null);
@@ -103,8 +93,6 @@ A.prototype.show = function show(state) {
     this.viewModel.serviceAttributes.proposedServiceAttributes({});
     
     Activity.prototype.show.call(this, state);
-    
-    this.updateNavBarState();
     
     var params = state && state.route && state.route.segments;
     var jid = params[0] |0;
@@ -121,7 +109,6 @@ var UserJobProfile = require('../viewmodels/UserJobProfile');
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201967766-describing-your-services-to-clients';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
     this.jobTitleID = ko.observable(0);
     
     this.isLoadingUserJobTitle = ko.observable(false);
@@ -170,13 +157,11 @@ function ViewModel(app) {
     
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
-                'Save and continue' :
-                this.isLoading() ? 
-                    'loading...' : 
-                    this.isSaving() ? 
-                        'saving...' : 
-                        'Save'
+            this.isLoading() ?
+                'loading...' :
+                this.isSaving() ?
+                    'saving...' :
+                    'Save'
         );
     }, this);
     
@@ -211,15 +196,8 @@ function ViewModel(app) {
 
                 // Cleanup
                 this.serviceAttributes.proposedServiceAttributes({});
-                
-                // Move forward:
-                if (app.model.onboarding.inProgress()) {
-                    // Ensure we keep the same jobTitleID in next steps as here:
-                    app.model.onboarding.selectedJobTitleID(this.jobTitleID());
-                    app.model.onboarding.goNext();
-                } else {
-                    app.successSave();
-                }
+
+                app.successSave();
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);

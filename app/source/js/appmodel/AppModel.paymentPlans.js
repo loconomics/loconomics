@@ -13,19 +13,19 @@ var data = [
         paymentPlanID: 'OwnerGrowth',
         name: 'Owner Growth',
         summary: '$19 charged once a month',
-        description: 'Includes:<ul class="TilesList TilesList--openEnd"><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-ios-glasses-outline text-secondary"></i><div class="Tile-content"><p>Learn new skills to grow your biz at our monthly workshops</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa fa-handshake-o text-secondary"></i><div class="Tile-content"><p>Meet & match with referral partners in the cooperative</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-ios-paper-outline text-secondary"></i><div class="Tile-content"><p>Expand your offerings with an extra marketplace listing</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-ios-cart-outline text-secondary"></i><div class="Tile-content"><p>Preferred listing placement in the marketplace</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-ios-color-filter-outline text-secondary"></i><div class="Tile-content"><p>Earn patronage & vote/run for our board of directors</p></div></li></ul>'
+        description: '<ul class="IconList"><div class="IconList-intro">Includes everything in Starter plus:</div><li><i class="fa ion-ios-glasses-outline"></i><p>Learn new skills to grow your biz at our monthly workshops</p></li><li><i class="fa fa-handshake-o"></i><p>Meet & match with referral partners in the cooperative</p></li><li><i class="fa ion-ios-paper-outline"></i><p>Expand your offerings with extra marketplace listings</p></li><li><i class="fa ion-ios-cart-outline"></i><p>Preferred listing placement in the marketplace</p></li><li><i class="fa ion-ios-color-filter-outline"></i><p>Earn patronage and vote/run for our board of directors</p></li></ul>'
     },
     {//new PaymentPlan({
         paymentPlanID: 'OwnerPro',
         name: 'Owner Pro',
         summary: '$39 charged once a month',
-        description: 'Includes everything in Owner Growth plus:<ul class="TilesList TilesList--openEnd"><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-android-calendar text-secondary"></i><div class="Tile-content"><p>Get organized with our scheduling software</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-ios-pricetags-outline text-secondary"></i><div class="Tile-content"><p>Attract more clients by adding scheduling to your website</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-ios-bolt-outline text-secondary"></i><div class="Tile-content"><p>Increase your income & allow clients to book you instantly</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa fa-vcard-o text-secondary"></i><div class="Tile-content"><p>Build loyalty with client-specific pricing</p></div></li><li class="ItemTile"><i class="Tile-marker hidden-xs fa fa-bank text-secondary"></i><div class="Tile-content"><p>Apply for a zero-interest loan through our partnership with Kiva Local</p></div></li></ul>'
+        description: '<ul class="IconList"><div class="IconList-intro">Includes everything in Owner Growth plus:</div><li><i class="fa ion-android-calendar"></i><p>Get organized with our scheduling software</p></li><li><i class="fa ion-ios-pricetags-outline"></i><p>Attract more clients by adding scheduling to your website</p></li><li><i class="fa ion-ios-bolt-outline"></i><p>Increase your income & allow clients to book you instantly</p></li><li><i class="fa fa-vcard-o"></i><p>Build loyalty with client-specific pricing</p></li><li><i class="fa fa-bank"></i><p>Apply for a zero-interest loan through our partnership with Kiva</p></li></ul>'
     },
     {//new PaymentPlan({
         paymentPlanID: 'OwnerProAnnual',
         name: 'Owner Pro Annual',
         summary: '$390 charged once a year (Save $78 with this option)',
-        description: 'Includes everything in Owner Growth & Pro plus:<ul class="TilesList TilesList--openEnd"><li class="ItemTile"><i class="Tile-marker hidden-xs fa ion-arrow-graph-up-right text-secondary"></i><div class="Tile-content"><p>Get on track with a half-day biz assessment from experts</p></div></li></ul>'
+        description: '<ul class="IconList"><div class="IconList-intro">Includes everything in Owner Growth & Pro plus:</div><li><i class="fa ion-arrow-graph-up-right"></i><p>Get on track with a half-day biz assessment from experts</p></li><li><i class="fa ion-social-usd-outline"></i><p>Save $78 with this option</p></li></ul>'
     }
 ];
 

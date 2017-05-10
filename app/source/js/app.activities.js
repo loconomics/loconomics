@@ -80,5 +80,6 @@ module.exports = {
     'onboardingSuccess': require('./activities/onboardingSuccess'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
-    'userProfile': require('./activities/userProfile')
+    'userProfile': require('./activities/userProfile'),
+    'upgrade': require('./activities/upgrade')
 };
