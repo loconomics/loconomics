@@ -15,7 +15,7 @@
         }
 
         @result RestBooking. See the /bookings API for details.
-    
+
     - POST /
         @params {
             TODO complete list
@@ -27,7 +27,7 @@
         }
 
         @result RestBooking. See the /bookings API for details.
-        
+
     EXAMPLES {
         "Client Booking: Create booking: Post to create booking and Get to request the initial data for a new booking": {
             "url": "/api/v1/en-US/me/client-booking",
@@ -63,7 +63,16 @@
                     "securityCode": "1565",
                     "savePayment": false
                 },
-                "specialRequests": "Some notes to the professional"
+                "specialRequests": "Some notes to the professional",
+                "paymentMethod": {
+                    "paymentMethodID": "TEST: previously saved method token",
+                    "cardNumber": "123443121234",
+                    "nameOnCard": "Me",
+                    "expirationMonth": "11",
+                    "expirationYear": "2018",
+                    "securityCode": "123",
+                    "savePayment": true
+                }
             }
         },
         "Client Booking: Update booking": {

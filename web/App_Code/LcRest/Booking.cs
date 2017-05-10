@@ -1573,11 +1573,6 @@ namespace LcRest
          *  A booking cancellation executes a RefundPayment based on cancellation policy, replacing step 2 or 3 of the process.
          *  A booking denial executes a RefundPayment with full refund, replacing step 2 or 3 of the process.
          **/
-        /// <summary>
-        /// The emulation allows to shortcut Braintree, for local dev environments where is
-        /// not possible even to use Braintree Sandbox
-        /// </summary>
-        private readonly bool TESTING_EMULATEBRAINTREE = ASP.LcHelpers.Channel == "localdev";
 
         /// <summary>
         /// It adds payment information to the current booking,
@@ -1612,7 +1607,7 @@ namespace LcRest
             try
             {
                 // The steps on emulation allows a quick view of what the overall process does and data being set.
-                if (TESTING_EMULATEBRAINTREE)
+                if (LcPayment.TESTING_EMULATEBRAINTREE)
                 {
                     paymentTransactionID = null;
                     cancellationPaymentTransactionID = null;
