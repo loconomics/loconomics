@@ -78,5 +78,6 @@ module.exports = {
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
     'aboutMe': require('./activities/aboutMe'),
     'onboardingSuccess': require('./activities/onboardingSuccess'),
-    'userProfile': require('./activities/userProfile')
+    'userProfile': require('./activities/userProfile'),
+    'upgrade': require('./activities/upgrade')
 };
