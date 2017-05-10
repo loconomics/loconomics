@@ -78,6 +78,11 @@
                             <app-unlabeled-input params="placeholder: 'CCV', value: securityCode, disable: $parent.isLocked"></app-unlabeled-input>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control"
+                            placeholder="Postal code" aria-label="Postal code"
+                            data-bind="textInput: billingAddress().postalCode, disable: $parent.isLocked">
+                    </div>
                     <div class="secure-form-warning">
                         <span class="fa ion ion-ios-locked-outline fa-lg" aria-hidden="true"></span>
                         <span>This is a secure 128 bit SSL encrypted form, and we're PCI compliant</span>

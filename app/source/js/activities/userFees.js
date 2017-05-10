@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var InputPaymentMethod = require('../models/InputPaymentMethod');
+var Address = require('../models/Address');
 
 var A = Activity.extend(function UserFeesActivity() {
 
@@ -42,6 +43,7 @@ function ViewModel(app) {
 
     this.selectedPaymentPlanID = ko.observable(null);
     this.paymentMethod = new InputPaymentMethod();
+    this.paymentMethod.billingAddress(new Address());
 
     this.reset = function() {
         this.selectedPaymentPlanID(null);
