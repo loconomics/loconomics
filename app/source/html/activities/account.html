@@ -55,14 +55,14 @@
                             </div>
                         </a>
                     </li>
-                    <li>
+                    <li data-bind="visible: !activeUserPaymentPlan.isNew()">
                         <a class="InfoTile" href="/userFees">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa fa-dollar" aria-hidden="true"></span>
                             </div>
                             <div class="Tile-content">
-                                <div>Next payment: $29.95</div>
-                                <em>On April 15th, 2017</em>
+                                <div>Next payment: <span data-bind="text: activeUserPaymentPlan.paymentMoney, format: { type: 'number', format: '$0,0.00' }"></span></div>
+                                <em>On <span data-bind="text: activeUserPaymentPlan.paymentDate, format: { type: 'datetime', format: 'MMMM Do, YYYY' }"></span></em>
                             </div>
                         </a>
                     </li>
