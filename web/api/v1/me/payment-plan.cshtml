@@ -1,0 +1,132 @@
+﻿@using WebMatrix.WebData;
+@*
+    Read, create and change the logged user payment plan (membership).
+
+    EXAMPLES {
+        "Payment plan (get active plan and create first one)": {
+            "url": "/api/v1/en-US/me/payment-plan",
+            "get": { },
+            "post": {
+                "paymentPlan": "MonthlyLite",
+                "paymentMethod": {
+                    "paymentMethodID": "TEST: previously saved method token",
+                    "cardNumber": "123443121234",
+                    "nameOnCard": "Me",
+                    "expirationMonth": "11",
+                    "expirationYear": "2018",
+                    "securityCode": "123"
+                }
+            }
+        },
+        "Payment plan: user history": {
+            "url": "/api/v1/en-US/me/payment-plan/history",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestPaymentPlan : RestWebPage
+    {
+        private dynamic GetActive()
+        {
+            return LcRest.UserPaymentPlan.GetUserActivePlan(WebSecurity.CurrentUserId);
+        }
+
+        public override dynamic Get()
+        {
+            if (UrlData.Count == 0) {
+                var active = GetActive();
+                if (active == null)
+                {
+                    //throw new HttpException(404, "Not found");
+                    // Return a placeholder
+                    return new LcRest.UserPaymentPlan
+                    {
+                        userID = WebSecurity.CurrentUserId
+                    };
+                }
+                else
+                {
+                    return active;
+                }
+            }
+            else if (UrlData.Count == 1 && UrlData[0] == "history")
+            {
+                return LcRest.UserPaymentPlan.GetByUser(WebSecurity.CurrentUserId);
+            }
+            throw new HttpException(404, "Not found");
+        }
+
+        public override dynamic Post()
+        {
+            if (UrlData.Count > 0) {
+                throw new HttpException(404, "Not found");
+            }
+
+            var userId = WebSecurity.CurrentUserId;
+
+            // Validation
+            Validation.RequireField("paymentPlan", "Choose a plan");
+
+            // For payment, we need either a paymentMethodID or the data
+            // and that includes a billing address
+            var locale = LcRest.Locale.Current;
+            var address = new LcData.Address
+            {
+                AddressLine1 = Request["paymentMethod[billingAddress][addressLine1]"],
+                AddressLine2 = Request["paymentMethod[billingAddress][addressLine2]"],
+                PostalCode = Request["paymentMethod[billingAddress][postalCode]"],
+                CountryID = locale.countryID
+            };
+            var autoAddress = LcRest.Address.GetPostalCodeData(address.PostalCode, address.CountryID, true);
+            if (autoAddress != null)
+            {
+                address.StateProvinceCode = autoAddress.stateProvinceCode;
+                address.City = autoAddress.city;
+            }
+            var paymentData = new LcPayment.InputPaymentMethod
+            {
+                paymentMethodID = Request["paymentMethod[paymentMethodID]"],
+                cardNumber = Request["paymentMethod[cardNumber]"],
+                nameOnCard = Request["paymentMethod[nameOnCard]"],
+                expirationMonth = Request["paymentMethod[expirationMonth]"],
+                expirationYear = Request["paymentMethod[expirationYear]"],
+                securityCode = Request["paymentMethod[securityCode]"],
+                billingAddress = address
+            };
+
+            if (!paymentData.IsSavedID())
+            {
+                var paymentErrors = paymentData.Validate();
+                if (paymentErrors != null)
+                {
+                    foreach (var paymentErr in paymentErrors)
+                    {
+                        ModelState.AddError(paymentErr.Key, paymentErr.Value);
+                    }
+                }
+            }
+
+            LcEnum.SubscriptionPlan plan = LcEnum.SubscriptionPlan.Free;
+            if (!Enum.TryParse<LcEnum.SubscriptionPlan>(Request.Form["paymentPlan"], true, out plan))
+            {
+                // Parse error, bad plan ID given
+                ModelState.AddError("paymentPlan", "Invalid payment plan");
+            }
+
+
+            if (!Validation.IsValid() || !ModelState.IsValid)
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+
+            LcRest.UserPaymentPlan.CreateSubscription(userId, plan, paymentData);
+
+            return GetActive();
+        }
+    }
+}
+@{   
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestPaymentPlan().JsonResponse(this);
+}

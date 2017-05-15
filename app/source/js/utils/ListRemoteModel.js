@@ -4,17 +4,18 @@
     with local copy and cache, where the list is managed will all the data,
     without paging/cursor, with indexed access to each item by its ID.
     Is good for lists that keep small in the time.
-    
+
     TODO IMPORTANT The getList method, reused as sync, is returning an observable rather
     than direct data. There are uses right now, double check if this chas any sense and update
     affected code.
-    
+
     TODO To implement single item update mode, not full list each time, by set-up or method
 **/
 'use strict';
 
 var ko = require('knockout'),
     IndexedListCache = require('./IndexedListCache');
+var jsPropertiesTools = require('./jsPropertiesTools');
 
 function required(val, msg) {
     if (val === null || typeof(val) === 'undefined') throw new Error(msg || 'Required parameter');
@@ -38,7 +39,7 @@ function ListRemoteModel(settings) {
         isSaving: ko.observable(false),
         isDeleting: ko.observable(false)
     };
-    
+
     // Items are managed as plain object by default, but as permanent, updated
     // model instances if the Model class was specified.
     // This adapter is passed to the cache constructor too keep the in-memory
@@ -62,13 +63,13 @@ function ListRemoteModel(settings) {
             return newItem;
         }
     }
-    
+
     var cache = new IndexedListCache({
         listTtl: settings.listTtl,
         itemIdField: settings.itemIdField,
         itemAdapter: itemAdapter
     });
-    
+
     this.clearCache = cache.clearCache;
 
     this.state.isLocked = ko.pureComputed(function() {
@@ -84,7 +85,7 @@ function ListRemoteModel(settings) {
     this.pushListToLocal = notImplemented;
     this.pushListToRemote = notImplemented;
     this.removeItemFromRemote = notImplemented;
-    
+
     /**
         Retrieves a plain array-objects from the cached list
     **/
@@ -102,9 +103,10 @@ function ListRemoteModel(settings) {
 
     /** API definition **/
     var api = this;
-    
+
     // Direct access to the observable cached list.
-    api.list = cache.list;
+    jsPropertiesTools.defineGetter(api, 'list', function() { return cache.list; });
+    jsPropertiesTools.defineSetter(api, 'list', function(list) { return cache.list = list; });
 
     // Currently, just a wrapper for getList.
     api.sync = function sync() {
@@ -189,7 +191,7 @@ function ListRemoteModel(settings) {
                     api.state.isLoading(false);
                     api.state.isSyncing(false);
                     cache.request = null;
-                    
+
                     return cache.list;
                 }.bind(this))
                 .catch(function(err) {
@@ -207,7 +209,7 @@ function ListRemoteModel(settings) {
             return Promise.resolve(cache.list);
         }
     };
-    
+
     api.getItem = function getItem(itemID) {
         // IMPORTANT: To simplify, load all the list (is a short list)
         // and look from its cached index
@@ -230,7 +232,7 @@ function ListRemoteModel(settings) {
             return cacheItem.item;
         });
     };
-    
+
     /**
         Generates and returns an observable inmediately,
         with the cached value or undefined,
@@ -257,7 +259,7 @@ function ListRemoteModel(settings) {
         // Return
         return obs;
     };
-    
+
     /**
         Similar to getObservableItem, it allows to get
         an observable to an item model synchronously that
@@ -284,7 +286,7 @@ function ListRemoteModel(settings) {
         var hasID = function(id) {
             return id !== null && typeof(id) !== 'undefined';
         };
-        
+
         // Create observable, with initial undefined value
         var obs = ko.observable(undefined);
 
@@ -297,10 +299,10 @@ function ListRemoteModel(settings) {
             so load/sync ending and error can be catched.
         **/
         obs.sync = function syncObservableItem(itemID) {
-            
+
             var idChanged = hasID(itemID) && itemID !== lastID;
             lastID = hasID(itemID) ? itemID : lastID;
-            
+
             // ASAP Get from cache if any and requested item changed
             if (idChanged) {
                 var cachedItem = cache.getItemCache(lastID);
@@ -315,7 +317,7 @@ function ListRemoteModel(settings) {
                 return itemModel;
             });
         };
-        
+
         /**
             Sets the observable value to a new item instance
         **/
@@ -366,11 +368,11 @@ function ListRemoteModel(settings) {
             throw err;
         });
     };
-    
+
     api.delItem = function delItem(itemID) {
-        
+
         api.state.isDeleting(true);
-        
+
         // Remove in remote first
         return this.removeItemFromRemote(itemID)
         .then(function(removedData) {
@@ -383,7 +385,7 @@ function ListRemoteModel(settings) {
             this.pushListToLocal(getPlainCachedList());
 
             api.state.isDeleting(false);
-            
+
             return removedData;
         }.bind(this))
         .catch(function(err) {
@@ -392,7 +394,7 @@ function ListRemoteModel(settings) {
             throw err;
         });
     };
-    
+
     /** Some Utils **/
 
     var ModelVersion = require('../utils/ModelVersion');
@@ -443,7 +445,7 @@ ListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSupport
 };
 
 ListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, baseUrl) {
-    
+
     this.fetchListFromRemote = function fetchListFromRemote() {
         return restClient.get(baseUrl);
     };

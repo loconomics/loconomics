@@ -1,0 +1,24 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get membership fee payments of the logged user.
+
+    EXAMPLES {
+        "User Fee Payments": {
+            "url": "/api/v1/en-US/me/fee-payments",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestFeePayments : RestWebPage
+    {
+        public override dynamic Get()
+        {
+ 	         return LcRest.UserFeePayment.GetByUser(WebSecurity.CurrentUserId);
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.User);
+    new RestFeePayments().JsonResponse(this);
+}

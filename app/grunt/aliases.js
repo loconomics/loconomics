@@ -16,7 +16,9 @@ module.exports = {
         'browserify:styleguidelibs',
         'browserify:libs',
         'browserify:app',
-        'uglify',//'newer:uglify'
+        'uglify:styleguidelibs',
+        'uglify:libs',
+        'uglify:app',
         'notify:browserify'
     ],
     'build-css': [

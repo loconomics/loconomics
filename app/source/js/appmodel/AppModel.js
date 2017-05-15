@@ -165,6 +165,10 @@ AppModel.prototype.loadModules = function loadModules() {
     this.clientAddresses = require('./AppModel.clientAddresses').create(this);
     this.cancellationPolicies = require('./AppModel.cancellationPolicies').create(this);
     this.help = require('./AppModel.help').create(this);
+    this.paymentPlans = require('./AppModel.paymentPlans').create(this);
+    this.userPaymentPlan = require('./AppModel.userPaymentPlan').create(this);
+    this.ownerAcknowledgment = require('./AppModel.ownerAcknowledgment').create(this);
+    this.userFeePayments = require('./AppModel.userFeePayments').create(this);
 
     this.emit('modulesLoaded');
 };
