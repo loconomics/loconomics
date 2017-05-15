@@ -21,7 +21,7 @@ var Booking = require('./Booking');
 module.exports = Booking;
 
 var PricingSummary = require('./PricingSummary.editable');
-var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
+var createPostalCodeAutolookup = require('../viewmodels/PostalCode');
 
 Booking.editable = function(obj) {
     // Get base instance

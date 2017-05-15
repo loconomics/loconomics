@@ -17,7 +17,7 @@
 var ko = require('knockout');
 var Address = require('../models/Address');
 var Activity = require('../components/Activity');
-var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
+var createPostalCodeAutolookup = require('../viewmodels/PostalCode');
 
 var A = Activity.extend(function AddressEditorActivity() {
 

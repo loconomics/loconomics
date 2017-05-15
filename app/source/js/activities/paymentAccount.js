@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
+var createPostalCodeAutolookup = require('../viewmodels/PostalCode');
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
