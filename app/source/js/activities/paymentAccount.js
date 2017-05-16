@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var createPostalCodeAutolookup = require('../viewmodels/PostalCode');
+var PostalCodeVM = require('../viewmodels/PostalCode');
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
@@ -148,7 +148,7 @@ function ViewModel(app) {
     };
 
     // On change to a valid code, do remote look-up
-    createPostalCodeAutolookup({
+    this.postalCodeVM = new PostalCodeVM({
         appModel: app.model,
         address: this.paymentAccount,
         postalCodeError: this.errorMessages.postalCode

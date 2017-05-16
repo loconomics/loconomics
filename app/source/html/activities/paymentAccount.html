@@ -56,7 +56,7 @@
                     <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.simplifiedFormEnabled()">
                       <input type="number" class="form-control"
                              placeholder="Postal code" aria-label="Postal code"
-                             data-bind="textInput: postalCode, disable: $root.isLocked,
+                             data-bind="textInput: postalCode, hasFocus: $root.postalCodeVM.hasFocus, disable: $root.isLocked,
                                         popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                     </div>
                     <div class="form-group" data-bind="visible: !$parent.simplifiedFormEnabled()">
