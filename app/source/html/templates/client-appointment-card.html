@@ -165,7 +165,7 @@
                         <div class="form-group" data-bind="css: { 'has-error': $parent.errorMessages.postalCode() }">
                             <input type="number" class="form-control"
                                  placeholder="Zip code" aria-label="Zip code"
-                                 data-bind="value: postalCode, disable: $parent.isLocked,
+                                 data-bind="textInput: postalCode, hasFocus: $parent.postalCodeVM.hasFocus, disable: $parent.isLocked,
                                             popover: { content: $parent.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                         </div>
                         <div class="form-group">

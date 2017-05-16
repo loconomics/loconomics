@@ -10,6 +10,7 @@ var EventDates = require('../models/EventDates');
 var PublicUser = require('../models/PublicUser');
 var ModelVersion = require('../utils/ModelVersion');
 var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
+var PostalCodeVM = require('../viewmodels/PostalCode');
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -60,6 +61,8 @@ function BaseClientBookingCardVM(app) {
     this.isSaving = ko.observable(false);
     this.isCancelMode = ko.observable(false);
 
+    this.postalCodeVM = ko.observable(null);
+
     ///
     /// URLs (constants, don't need reset)
     var siteUrl = (app.model.config.siteUrl || 'https://loconomics.com') + '/';
@@ -102,6 +105,8 @@ function BaseClientBookingCardVM(app) {
         this.isSaving(false);
         this.isCancelMode(false);
         this.progress.reset();
+
+        this.postalCodeVM(null);
         
         this.errorMessages.postalCode('');
     }.bind(this);
@@ -161,8 +166,15 @@ function BaseClientBookingCardVM(app) {
         // Expand edition capabilities of the booking version before being available for edition
         Booking.editable(version.version);
         version.version.connectToSelectableServicesView(this.serviceProfessionalServices);
+
         // Only on addresses being edited by the user, with the editor opened
-        version.version.connectPostalCodeLookup(app, this.addressEditorOpened, this.errorMessages.postalCode);
+        this.postalCodeVM(new PostalCodeVM({
+            appModel: app.model,
+            address: version.version.serviceAddress,
+            postalCodeError: this.errorMessages.postalCode,
+            enabled: this.addressEditorOpened
+        }));
+
         // Use the version as booking()
         this.editedVersion(version);
         // Start loading things that are needed right now
