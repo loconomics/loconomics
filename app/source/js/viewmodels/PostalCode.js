@@ -11,10 +11,11 @@ var ko = require('knockout');
 
 /**
     @param options {
-        address:object Reference to an object with observable properties for the address information. The object
+        address:object Reference with observable properties for the address information. The object
             don't need to be strictly an Address model, but any object with address-like properties, being all optional except postalCode.
             It can be too an observable with the object as value, if the value is null/empty the computation is not done (there is
             an 'enabled' observable as option to allow disabling temporarly the look-up without need to set a null here).
+            If address is not an observable, then the view model will not update with changes to the address.
         appModel:object Reference to the app.model instance, needed to access the appModel of postal codes
         enabled:bool An observable or computed that behave as a switch that allows external control
             about if the lookup must be performed or not. It's optional, being true by default (as ko.observable(true))
@@ -25,7 +26,7 @@ var ko = require('knockout');
 var PostalCode = function(options) {
     //jshint maxcomplexity:12
     if (!options) throw 'Options required at postal code auto-lookup';
-    if (!options.address) throw 'Address observable required (must have address-like observable fields with standard names)';
+    if (!options.address) throw 'Address required (must have address-like observable fields with standard names)';
     if (!ko.isObservable(options.postalCodeError)) throw 'Postal Code Error observable required';
     if (!options.appModel) throw 'A reference to the App Model instance is required';
 
@@ -44,6 +45,8 @@ var PostalCode = function(options) {
     var postalCodeError = options.postalCodeError;
     var isErrorMasked = ko.observable(false);
     var maskedPostalCodeError = ko.observable('');
+    var addressModel = ko.isObservable(options.address) ? options.address : ko.observable(options.address);
+    var isFieldFocused = false;
 
     var model = options.appModel.postalCodes;
     // Optional 'enabled' observable, true by default
@@ -83,15 +86,27 @@ var PostalCode = function(options) {
         }
     };
 
-    // When there is a new address, mask the error if postal code
-    // is empty.
-    options.address.subscribe(function() {
-        isErrorMasked(!options.address().postalCode());
-    });
+    var resetFocusTracking = function() {
+        isFieldFocused = false; // reset
 
-    // on blur, unmask the error
+        if(addressModel()) {
+            isErrorMasked(!addressModel().postalCode());
+        }
+    };
+
+    resetFocusTracking();
+
+    // When there is a new address, mask the error if postal code is empty.
+    addressModel.subscribe(resetFocusTracking);
+
+    // hasFocus can be false when template is initialized. It doesn't 
+    // indicate blur event. If field is focused, then hasFocus is false
+    // that indicates blur.
     ko.computed(function() {
-        if(!this.hasFocus()) {
+        if(this.hasFocus()) {
+            isFieldFocused = true;
+        }
+        else if(isFieldFocused) {
             isErrorMasked(false);
         }
     }, this);
@@ -105,7 +120,7 @@ var PostalCode = function(options) {
         if (!enabled()) return;
         // Get address, can be just an object or an observable that contains the 'address-like' object
         // If no value, just skipt the same as is when disabled
-        var address = ko.unwrap(options.address);
+        var address = ko.unwrap(addressModel);
         // IMPORTANT: Do NOT check too if the address has a postalCode field, since we WANT an error being throw
         // if the required postalCode does not exists
         if (!address) return;

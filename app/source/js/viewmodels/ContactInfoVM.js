@@ -1,5 +1,7 @@
 'use strict';
-var ko = require('knockout');
+var ko = require('knockout'),
+    PostalCodeVM = require('../viewmodels/PostalCode');
+
 module.exports = function ContactInfoVM(app) {
     
     this.user = app.model.userProfile.data;
@@ -88,6 +90,13 @@ module.exports = function ContactInfoVM(app) {
     
     // Actual data for the form:
     this.address = homeAddressVersion.version;
+
+    // On change to a valid code, do remote look-up
+    this.postalCodeVM = new PostalCodeVM({
+        appModel: app.model,
+        address: this.address, // assumption: address will never change
+        postalCodeError: this.errorMessages.postalCode
+    });
 
     // Control observables: special because must a mix
     // of the both remote models used in this viewmodel

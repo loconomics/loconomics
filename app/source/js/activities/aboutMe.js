@@ -5,7 +5,6 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var createPostalCodeAutolookup = require('../viewmodels/PostalCode');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -58,13 +57,6 @@ var A = Activity.extend(function AboutMeActivity() {
                 error: err
             });
         }.bind(this)
-    });
-
-    // On change to a valid code, do remote look-up
-    createPostalCodeAutolookup({
-        appModel: this.app.model,
-        address: this.viewModel.contactInfo.address,
-        postalCodeError: this.viewModel.contactInfo.errorMessages.postalCode
     });
 });
 
