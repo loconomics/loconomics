@@ -24,7 +24,7 @@
                             <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
                         </div>
                         <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: postalCode, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                            <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: postalCode, hasFocus: $root.postalCodeVM.hasFocus, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                         </div>
                         <div class="form-group" data-bind="visible: isServiceLocation">
                             <p class="form-control-static">

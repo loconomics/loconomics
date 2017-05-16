@@ -1,6 +1,6 @@
 /**
-    Utility reducing common boilerplate to perform look-up of well know address details
-    based on the postal code, and validating the code at the same time, for commo address data models
+    View model reducing common boilerplate to perform look-up of well know address details
+    based on the postal code, and validating the code at the same time, for common address data models
     that ever share the same naming for address fields.
     NOTE: using a rated computed that avoids excesive request being performed on typing changes.
     NOTE: it needs a reference to the app.model to perform the remote look-up using the common API.
@@ -20,62 +20,58 @@ var ko = require('knockout');
             about if the lookup must be performed or not. It's optional, being true by default (as ko.observable(true))
         postalCodeError:string An observable that the lookup process will update with the
             error message of validating the postal code, or set to null if was successfully.
-        isErrorMasked: (optional) observable returning true if the error message should be masked even though 
-            postal code fails validation
     }
 **/
-module.exports = function createPostalCodeAutolookup(options) {
+var PostalCode = function(options) {
     //jshint maxcomplexity:12
     if (!options) throw 'Options required at postal code auto-lookup';
     if (!options.address) throw 'Address observable required (must have address-like observable fields with standard names)';
     if (!ko.isObservable(options.postalCodeError)) throw 'Postal Code Error observable required';
     if (!options.appModel) throw 'A reference to the App Model instance is required';
 
+    /**
+     * Observable for whether or not postal code field has focus. Can be
+     * wired up with ko data-bind hasFocus on the postal code input field.
+     * 
+     * If this is tied to the postal code's hasFocus binding, then the 
+     * validation error message will be masked at strategic points of
+     * user interaction.
+     *
+     * @public
+     */
+    this.hasFocus = ko.observable(false);
+
     var postalCodeError = options.postalCodeError;
-    var isErrorMasked = options.isErrorMasked || ko.observable(false);
+    var isErrorMasked = ko.observable(false);
     var maskedPostalCodeError = ko.observable('');
 
-    var appModel = options.appModel;
+    var model = options.appModel.postalCodes;
     // Optional 'enabled' observable, true by default
     var enabled = ko.isObservable(options.enabled) ? options.enabled : ko.observable(true);
-
-    var updateAddressModel = function(addressObject, addressModel) {
-        if (addressModel.city) addressModel.city(addressObject.city);
-        if (addressModel.stateProvinceCode) addressModel.stateProvinceCode(addressObject.stateProvinceCode);
-        if (addressModel.stateProvinceName) addressModel.stateProvinceName(addressObject.stateProvinceName);
-    };
-
-    var emptyAddress = {
-            city: '',
-            stateProvinceCode: '',
-            stateProvinceName: ''
-        };
 
     // Closure that runs the (remote) look-up for a given postal code
     // and sets the error or address values at the observables on scope
     var lookup = function postalCodeLookup(address, postalCode) {
         if (!postalCode) {
             // Clear city when postal code is empty
-            updateAddressModel(emptyAddress, address);
+            model.updateAddressModel(model.emptyAddress, address);
         }
-        else if (postalCode && !/^\s*$/.test(postalCode)) {
-            // TODO Being able, here or at the appModel, to abort requests when a new one is needed because the code changed
-            appModel.postalCodes.getItem(postalCode)
+        else if (model.isValid(postalCode)) {
+            model.getItem(postalCode)
             .then(function(addressObject) {
                 if (addressObject) {
-                    updateAddressModel(addressObject, address);
+                    model.updateAddressModel(addressObject, address);
                     maskedPostalCodeError('');
                 }
             })
             .catch(function(err) {
                 //jshint maxcomplexity:10
-                updateAddressModel(emptyAddress, address);
+                model.updateAddressModel(model.emptyAddress, address);
 
                 // Expected errors, a single message, set
                 // on the observable
-                var msg = typeof(err) === 'string' ? err : null;
-                if (msg || err && err.responseJSON && err.responseJSON.errorMessage) {
-                    maskedPostalCodeError(msg || err.responseJSON.errorMessage);
+                if (err && err.responseJSON && err.responseJSON.errorMessage) {
+                    maskedPostalCodeError(err.responseJSON.errorMessage);
                 }
                 else {
                     // Log to console for debugging purposes, on regular use an error on the
@@ -86,6 +82,23 @@ module.exports = function createPostalCodeAutolookup(options) {
             });
         }
     };
+
+    // When there is a new address, mask the error if postal code
+    // is empty.
+    options.address.subscribe(function() {
+        isErrorMasked(!options.address().postalCode());
+    });
+
+    // on blur, unmask the error
+    ko.computed(function() {
+        if(!this.hasFocus()) {
+            isErrorMasked(false);
+        }
+    }, this);
+
+    ko.computed(function() {
+        postalCodeError(isErrorMasked() ? '' : maskedPostalCodeError());
+    });
 
     // It creates a rated computed that reacts to postalCode changes, requesting the look-up
     ko.computed(function() {
@@ -101,8 +114,6 @@ module.exports = function createPostalCodeAutolookup(options) {
     })
     // Avoid excessive requests by setting a timeout since the latest change
     .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
-
-    ko.computed(function() {
-        postalCodeError(isErrorMasked() ? '' : maskedPostalCodeError());
-    });
 };
+
+module.exports = PostalCode;

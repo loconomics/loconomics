@@ -17,7 +17,7 @@
 var ko = require('knockout');
 var Address = require('../models/Address');
 var Activity = require('../components/Activity');
-var createPostalCodeAutolookup = require('../viewmodels/PostalCode');
+var PostalCodeVM = require('../viewmodels/PostalCode');
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -29,13 +29,6 @@ var A = Activity.extend(function AddressEditorActivity() {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
     
-    // On change to a valid code, do remote look-up
-    createPostalCodeAutolookup({
-        appModel: this.app.model,
-        address: this.viewModel.address,
-        postalCodeError: this.viewModel.errorMessages.postalCode
-    });
-
     // On changing jobTitleID:
     // - load job title name
     this.registerHandler({
@@ -174,13 +167,13 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    
+    // jshint maxstatements:80
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.header = ko.observable('Edit location');
-    
+
     // List of possible error messages registered
     // by name
     this.errorMessages = {
@@ -200,6 +193,14 @@ function ViewModel(app) {
         }
         return null;
     }, this);
+
+    // On change to a valid code, do remote look-up
+    this.postalCodeVM = new PostalCodeVM({
+        appModel: app.model,
+        address: this.address,
+        postalCodeError: this.errorMessages.postalCode
+    });
+
     this.isLoading = app.model.serviceAddresses.state.isLoading;
     this.isSaving = app.model.serviceAddresses.state.isSaving;
     this.isDeleting = app.model.serviceAddresses.state.isDeleting;
