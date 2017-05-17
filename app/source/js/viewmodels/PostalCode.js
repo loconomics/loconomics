@@ -10,6 +10,9 @@
 var ko = require('knockout');
 
 /**
+    Additionally, to use the validation error masking behavior, you must bind the postal code field blur
+    event to onBlur in this object.
+
     @param options {
         address:object Reference with observable properties for the address information. The object
             don't need to be strictly an Address model, but any object with address-like properties, being all optional except postalCode.
@@ -30,23 +33,10 @@ var PostalCode = function(options) {
     if (!ko.isObservable(options.postalCodeError)) throw 'Postal Code Error observable required';
     if (!options.appModel) throw 'A reference to the App Model instance is required';
 
-    /**
-     * Observable for whether or not postal code field has focus. Can be
-     * wired up with ko data-bind hasFocus on the postal code input field.
-     * 
-     * If this is tied to the postal code's hasFocus binding, then the 
-     * validation error message will be masked at strategic points of
-     * user interaction.
-     *
-     * @public
-     */
-    this.hasFocus = ko.observable(false);
-
     var postalCodeError = options.postalCodeError;
     var isErrorMasked = ko.observable(false);
     var maskedPostalCodeError = ko.observable('');
     var addressModel = ko.isObservable(options.address) ? options.address : ko.observable(options.address);
-    var isFieldFocused = false;
 
     var model = options.appModel.postalCodes;
     // Optional 'enabled' observable, true by default
@@ -86,30 +76,26 @@ var PostalCode = function(options) {
         }
     };
 
-    var resetFocusTracking = function() {
-        isFieldFocused = false; // reset
-
+    var onAddressInitialized = function() {
         if(addressModel()) {
             isErrorMasked(!addressModel().postalCode());
         }
     };
 
-    resetFocusTracking();
+    onAddressInitialized();
 
-    // When there is a new address, mask the error if postal code is empty.
-    addressModel.subscribe(resetFocusTracking);
+    // When there is a new address or postal code, mask the error if postal code is empty.
+    addressModel.subscribe(onAddressInitialized);
 
-    // hasFocus can be false when template is initialized. It doesn't 
-    // indicate blur event. If field is focused, then hasFocus is false
-    // that indicates blur.
-    ko.computed(function() {
-        if(this.hasFocus()) {
-            isFieldFocused = true;
-        }
-        else if(isFieldFocused) {
-            isErrorMasked(false);
-        }
-    }, this);
+    /**
+     * Disable error masking when user shifts focus away from postal code field. This needs to be 
+     * bound to the postal code field in the template for proper error masking.
+     *
+     * @listens blur on postal code field
+     */
+    this.onBlur = function() {
+        isErrorMasked(false);
+    }.bind(this);
 
     ko.computed(function() {
         postalCodeError(isErrorMasked() ? '' : maskedPostalCodeError());
