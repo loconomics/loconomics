@@ -17,6 +17,7 @@
                         <span data-bind="text: header"></span>
                         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                     </h2>
+                    <h3 data-bind="text: subheader"></h3>
                     <div data-bind="with: address()">
                         <div data-bind="visible: isServiceLocation">
                             <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked" data-bind="visible: !$parent.clientUserID()"></app-unlabeled-input>

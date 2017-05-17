@@ -131,6 +131,8 @@ A.prototype.show = function show(options) {
                 this.viewModel.addressVersion(null);
                 this.viewModel.header('Unknown or deleted location');
             }
+
+            this.viewModel.subheader('');
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
@@ -150,11 +152,13 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
                 this.viewModel.header('Add a service area');
+                this.viewModel.subheader('');
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a service location');
+                this.viewModel.header('Add a place where you work');
+                this.viewModel.subheader('Clients will be able to book your offerings at this place');
                 break;
             case 'clientLocation':
                 // A service professional is adding a location to perform a service that belongs
@@ -163,11 +167,13 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a client location');
+                this.viewModel.subheader('');
                 break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a location');
+                this.viewModel.subheader('');
                 break;
         }
     }
@@ -180,6 +186,7 @@ function ViewModel(app) {
     this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.header = ko.observable('Edit location');
+    this.subheader = ko.observable('');
     
     // List of possible error messages registered
     // by name
