@@ -188,7 +188,7 @@ function BaseClientBookingCardVM(app) {
         }
 
     }.bind(this);
-    
+
     this.cancel = function cancel() {
         if (this.isLocked()) return;
         this.isCancelMode(false);
@@ -259,6 +259,10 @@ function BaseClientBookingCardVM(app) {
         // We use directly the booking address, but reset to prevent a previous
         // address details and ID from appear
         this.booking().serviceAddress(new Address());
+
+        // The postal code view model needs to know when the address form is loaded
+        this.postalCodeVM().onFormLoaded();
+
         // Display client service address form
         this.addressEditorOpened(true);
     }.bind(this);

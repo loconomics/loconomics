@@ -76,17 +76,6 @@ var PostalCode = function(options) {
         }
     };
 
-    var onAddressInitialized = function() {
-        if(addressModel()) {
-            isErrorMasked(!addressModel().postalCode());
-        }
-    };
-
-    onAddressInitialized();
-
-    // When there is a new address or postal code, mask the error if postal code is empty.
-    addressModel.subscribe(onAddressInitialized);
-
     /**
      * Disable error masking when user shifts focus away from postal code field. This needs to be 
      * bound to the postal code field in the template for proper error masking.
@@ -95,7 +84,23 @@ var PostalCode = function(options) {
      */
     this.onBlur = function() {
         isErrorMasked(false);
-    }.bind(this);
+    };
+
+    /**
+     * Call this when the form data is loaded, and again every time the form is re-rendered
+     * only if the form data in options.address isn't already loaded when this object is created.
+     *
+     * If there is data in the postal code field, it will show any validation errors. If 
+     * the field is empty, it will mask validation errors.
+     *
+     * @public
+     */
+    this.onFormLoaded = function() {
+        isErrorMasked(addressModel() && !addressModel().postalCode());
+    };
+
+    // Assume that the addressModel data is loaded; if it isn't, onFormLoaded needs to be called again
+    this.onFormLoaded();
 
     ko.computed(function() {
         postalCodeError(isErrorMasked() ? '' : maskedPostalCodeError());

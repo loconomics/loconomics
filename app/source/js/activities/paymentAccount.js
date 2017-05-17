@@ -154,6 +154,13 @@ function ViewModel(app) {
         postalCodeError: this.errorMessages.postalCode
     });
 
+    // Postal code VM needs to know when the form data has loaded
+    app.model.paymentAccount.isLoading.subscribe(function(isLoading) {
+        if(!isLoading) {
+            this.postalCodeVM.onFormLoaded();
+        }
+    }, this);
+
     this.formVisible = ko.observable(false);
     this.showForm = function() {
         this.formVisible(true);

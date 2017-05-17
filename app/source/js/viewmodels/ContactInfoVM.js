@@ -110,6 +110,11 @@ module.exports = function ContactInfoVM(app) {
         return userProfile.isSaving() || homeAddress.isSaving();
     }, this);
 
+    this.isLoading.subscribe(function(isLoading) {
+        if(!isLoading) {
+            this.postalCodeVM.onFormLoaded();
+        }
+    }, this);
     
     // Actions
 

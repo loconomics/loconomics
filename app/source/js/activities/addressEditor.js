@@ -124,6 +124,8 @@ A.prototype.show = function show(options) {
                 this.viewModel.addressVersion(null);
                 this.viewModel.header('Unknown or deleted location');
             }
+
+            this.viewModel.postalCodeVM.onFormLoaded();
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
@@ -137,6 +139,8 @@ A.prototype.show = function show(options) {
         this.viewModel.addressVersion(this.app.model.serviceAddresses.newItemVersion({
             jobTitleID: jobTitleID
         }));
+
+        this.viewModel.postalCodeVM.onFormLoaded();
 
         switch (serviceType) {
             case 'serviceArea':
