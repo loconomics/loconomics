@@ -126,8 +126,13 @@ A.prototype.show = function show(options) {
         .then(function (addressVersion) {
             if (addressVersion) {
                 this.viewModel.addressVersion(addressVersion);
-                this.viewModel.header('Edit location');
-            } else {
+
+                var address = addressVersion.original,
+                    header = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Place of work' : 'Edit location';
+
+                this.viewModel.header(header);
+            }
+            else {
                 this.viewModel.addressVersion(null);
                 this.viewModel.header('Unknown or deleted location');
             }
@@ -147,18 +152,19 @@ A.prototype.show = function show(options) {
             jobTitleID: jobTitleID
         }));
 
+        this.viewModel.subheader('');
+
         switch (serviceType) {
             case 'serviceArea':
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
                 this.viewModel.header('Add a service area');
-                this.viewModel.subheader('');
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a place where you work');
-                this.viewModel.subheader('Clients will be able to book your offerings at this place');
+                this.viewModel.subheader('Clients will be able to book your offerings at this location');
                 break;
             case 'clientLocation':
                 // A service professional is adding a location to perform a service that belongs
@@ -167,13 +173,11 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a client location');
-                this.viewModel.subheader('');
                 break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a location');
-                this.viewModel.subheader('');
                 break;
         }
     }
