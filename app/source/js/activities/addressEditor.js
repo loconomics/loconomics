@@ -158,13 +158,14 @@ A.prototype.show = function show(options) {
             case 'serviceArea':
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
-                this.viewModel.header('Add a service area');
+                this.viewModel.header('Add an area where you work');
+                this.viewModel.subheader('Clients will be able to book your offerings at locations within this area.');
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
                 this.viewModel.header('Add a place where you work');
-                this.viewModel.subheader('Clients will be able to book your offerings at this location');
+                this.viewModel.subheader('Clients will be able to book your offerings at this location.');
                 break;
             case 'clientLocation':
                 // A service professional is adding a location to perform a service that belongs

@@ -29,10 +29,7 @@
                         </div>
                         <div class="form-group" data-bind="visible: isServiceLocation">
                             <p class="form-control-static">
-                                <span data-bind="visible: city() || stateProvinceCode()">
-                                    <span data-bind="text: city"></span>,
-                                    <span data-bind="text: stateProvinceCode"></span>
-                                </span>
+                                <span data-bind="text: cityState() || 'City:'"></span>
                                 <!-- White space to reserve space -->
                                 &nbsp;
                             </p>
