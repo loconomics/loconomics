@@ -248,12 +248,12 @@ function ViewModel(app) {
     }, this);
 
     this.addLocationLabel = ko.pureComputed(function() {
-        return this.isInOnboarding() ? 'Add a place where clients will meet you' :
+        return this.isInOnboarding() ? 'Place clients come to see you' :
                                        'Add a service location';
     }, this);
 
     this.addAreaLabel = ko.pureComputed(function() {
-        return this.isInOnboarding() ? 'Add an area where you can go to clients' :
+        return this.isInOnboarding() ? 'Area where you go to clients' :
                                        'Add a service area/radius';
     }, this);
 
