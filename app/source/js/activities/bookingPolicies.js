@@ -33,7 +33,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'Unable to load listing details.',
                         error: err
                     });
                 }.bind(this));
@@ -49,7 +49,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'Unable to load policies.',
                         error: err
                     });
                 }.bind(this))
@@ -177,7 +177,7 @@ function ViewModel(app) {
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);
-                app.modals.showError({ title: 'Error saving your Booking Policies', error: err });
+                app.modals.showError({ title: 'Unable to save booking policies', error: err });
             }.bind(this));
         }
     }.bind(this);
