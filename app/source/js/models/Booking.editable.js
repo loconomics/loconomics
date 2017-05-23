@@ -21,7 +21,6 @@ var Booking = require('./Booking');
 module.exports = Booking;
 
 var PricingSummary = require('./PricingSummary.editable');
-var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 Booking.editable = function(obj) {
     // Get base instance
@@ -49,28 +48,6 @@ Booking.editable = function(obj) {
     booking.connectToSelectableServicesView = function(serviceProfessionalServices) {
         // Connect pricing:
         this.pricingSummary().connectToSelectableServicesView(serviceProfessionalServices);
-    };
-    
-    /**
-        Allow to enable server lookup for postalCode, that allows to validate it and return the city and stateProvince
-        info for the code automatically while user edits the booking serviceAddress
-        @param app:object Reference to the app instance, needed to access the appModel of postal codes
-        @param enabledObservable:bool An observable or computed that behave as a switch that allows external control
-        about if the lookup must be performed or not. It's required, so if the lookup wants to be permanentely enabled
-        just pass in a ko.observable(true).
-        @param errorMessageObservable:string An observable that the lookup process will update with the
-        error message of validating the postal code, or set to null if was successfully.
-        
-        NOTE: Based on code from addressEditor.js, but this a bit more generic.
-    **/
-    booking.connectPostalCodeLookup = function(app, enabledObservable, errorMessageObservable) {
-        // On change to a valid code, do remote look-up
-        createPostalCodeAutolookup({
-            appModel: app.model,
-            address: this.serviceAddress,
-            postalCodeError: errorMessageObservable,
-            enabled: enabledObservable
-        });
     };
 };
 

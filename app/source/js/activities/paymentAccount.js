@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
+var PostalCodeVM = require('../viewmodels/PostalCode');
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
@@ -148,11 +148,18 @@ function ViewModel(app) {
     };
 
     // On change to a valid code, do remote look-up
-    createPostalCodeAutolookup({
+    this.postalCodeVM = new PostalCodeVM({
         appModel: app.model,
         address: this.paymentAccount,
         postalCodeError: this.errorMessages.postalCode
     });
+
+    // Postal code VM needs to know when the form data has loaded
+    app.model.paymentAccount.isLoading.subscribe(function(isLoading) {
+        if(!isLoading) {
+            this.postalCodeVM.onFormLoaded();
+        }
+    }, this);
 
     this.formVisible = ko.observable(false);
     this.showForm = function() {
