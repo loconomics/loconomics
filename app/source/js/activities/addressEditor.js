@@ -119,12 +119,18 @@ A.prototype.show = function show(options) {
         .then(function (addressVersion) {
             if (addressVersion) {
                 this.viewModel.addressVersion(addressVersion);
-                this.viewModel.header('Edit location');
-            } else {
+
+                var address = addressVersion.original,
+                    header = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Place of work' : 'Edit location';
+
+                this.viewModel.header(header);
+            }
+            else {
                 this.viewModel.addressVersion(null);
                 this.viewModel.header('Unknown or deleted location');
             }
 
+            this.viewModel.subheader('');
             this.viewModel.postalCodeVM.onFormLoaded();
         }.bind(this))
         .catch(function (err) {
@@ -140,18 +146,21 @@ A.prototype.show = function show(options) {
             jobTitleID: jobTitleID
         }));
 
+        this.viewModel.subheader('');
         this.viewModel.postalCodeVM.onFormLoaded();
 
         switch (serviceType) {
             case 'serviceArea':
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
-                this.viewModel.header('Add a service area');
+                this.viewModel.header('Add an area where you work');
+                this.viewModel.subheader('Clients will be able to book your offerings at locations within this area.');
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a service location');
+                this.viewModel.header('Add a place where you work');
+                this.viewModel.subheader('Clients will be able to book your offerings at this location.');
                 break;
             case 'clientLocation':
                 // A service professional is adding a location to perform a service that belongs
@@ -177,7 +186,7 @@ function ViewModel(app) {
     this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.header = ko.observable('Edit location');
-
+    this.subheader = ko.observable('');
     // List of possible error messages registered
     // by name
     this.errorMessages = {

@@ -24,7 +24,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         target: this.app.model.weeklySchedule,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving your weekly schedule.' : 'Error loading your weekly schedule.';
+            var msg = err.task === 'save' ? 'Unable to save your weekly schedule.' : 'Unable to load your weekly schedule.';
             this.app.modals.showError({
                 title: msg,
                 error: err && err.task && err.error || err
@@ -36,7 +36,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         target: this.app.model.schedulingPreferences,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving scheduling preferences.' : 'Error loading scheduling preferences.';
+            var msg = err.task === 'save' ? 'Unable to save scheduling preferences.' : 'Unable to load scheduling preferences.';
             this.app.modals.showError({
                 title: msg,
                 error: err && err.task && err.error || err

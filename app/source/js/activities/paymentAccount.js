@@ -23,7 +23,7 @@ var A = Activity.extend(function PaymentAccountActivity() {
         target: this.app.model.paymentAccount,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving your payment account.' : 'Error loading your payment account.';
+            var msg = err.task === 'save' ? 'Unable to save your payment account.' : 'Unable to load your payment account.';
             this.app.modals.showError({
                 title: msg,
                 error: err && err.task && err.error || err
