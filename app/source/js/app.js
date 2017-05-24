@@ -75,6 +75,8 @@ var app = {
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
 
+    router: require('./app.routes'),
+
     modals: require('./app.modals'),
 
     /**
@@ -128,7 +130,8 @@ require('./app-navbar').extend(app);
 
 require('./app-components').registerAll(app);
 
-// This assumes the activity is initialized
+// This initializes the activity!
+/*
 app.getActivity = function getActivity(name) {
     var activity = this.activities[name];
     if (activity) {
@@ -138,7 +141,8 @@ app.getActivity = function getActivity(name) {
     }
     return null;
 };
-
+*/
+/*
 app.getActivityControllerByRoute = function getActivityControllerByRoute(route) {
     // From the route object, the important piece is route.name
     // that contains the activity name except if is the root
@@ -146,7 +150,7 @@ app.getActivityControllerByRoute = function getActivityControllerByRoute(route) 
 
     return this.getActivity(actName);
 };
-
+*/
 // accessControl setup: cannot be specified on Shell creation because
 // depends on the app instance
 app.shell.accessControl = require('./utils/accessControl')(app);
@@ -308,6 +312,7 @@ var appInit = function appInit() {
             return;
 
         // Connect the 'activities' controllers to their views
+// TODO: how will this fetch the activity on itemReady. domitemsmngr.switch doesn't have a reference
         var activity = app.getActivity(actName);
         // Trigger the 'show' logic of the activity controller:
         activity.show(state);
@@ -332,6 +337,7 @@ var appInit = function appInit() {
 
         // Connect the 'activities' controllers to their views
         var actName = $act.data('activity');
+// TODO: how will this fetch the activity on itemReady. domitemsmngr.switch doesn't have a reference
         var activity = app.getActivity(actName);
         // Trigger the 'hide' logic of the activity controller:
         if (activity.hide)

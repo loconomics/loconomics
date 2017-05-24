@@ -252,7 +252,10 @@ Shell.prototype.replace = function replace(state) {
     //console.log('shell replace', state.route);
 
     // Access control
-    var accessError = this.accessControl(state.route);
+    var router = require('../../app.routes');
+    var activity = router(state.route.url).activity;
+    var accessError = this.accessControl(state.route, activity);
+
     if (accessError) {
         // Prevent to go if already there, to don't enter and endless loop
         if (this.currentRoute.name !== this.forbiddenAccessName) {
@@ -261,11 +264,13 @@ Shell.prototype.replace = function replace(state) {
     }
 
     // Locating the container
-    var $cont = this.items.find(state.route.name);
+    var $cont = this.items.findTemplate(activity.templateSelector);
     var shell = this;
     var promise = null;
 
+/*
     if ($cont && $cont.length) {
+*/
         promise = new Promise(function(resolve, reject) {
             try {
 
@@ -280,6 +285,7 @@ Shell.prototype.replace = function replace(state) {
                 reject(ex);
             }
         });
+/*
     }
     else {
         if (this.loader) {
@@ -310,6 +316,7 @@ Shell.prototype.replace = function replace(state) {
             }.bind(this), 1);
         }
     }
+*/
     
     var thisShell = this;
     promise.catch(function(err) {

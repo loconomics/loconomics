@@ -14,7 +14,7 @@
     expression syntax.)
 
     Example:
-      var r = Route('/my/pages/:page');
+      var r = new Route('/my/pages/:page');
       r.match('/my/pages/7'); // { page: 7 }
       r.match('/will-not-match'); // false
 
@@ -80,4 +80,27 @@ RouteMatcher.prototype.match = function(url) {
     return firstMatch ? $.extend(this.defaults, firstMatch) : false;
 };
 
-module.exports = { RouteMatcher : RouteMatcher, Route : Route, RouteParser : RouteParser };
+var Router = function() {
+    this.routes = [];
+};
+
+Router.prototype.add = function(matcher, activity) {
+    this.routes.push({matcher: matcher, activity: activity});
+};
+
+Router.prototype.route = function(url) {
+    var firstMatch = null;
+
+    this.routes.some(function(route) {
+        var m = route.matcher.match(url);
+        if (m) {
+            firstMatch = { activity: route.activity, params: m};
+            return true;
+        }
+    });
+
+    return firstMatch || false;
+};
+
+
+module.exports = { RouteMatcher : RouteMatcher, Route : Route, RouteParser : RouteParser, Router : Router };

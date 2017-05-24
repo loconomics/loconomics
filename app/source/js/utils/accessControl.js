@@ -19,9 +19,7 @@
 
 module.exports = function createAccessControl(app) {
     
-    return function accessControl(route) {
-
-        var activity = app.getActivityControllerByRoute(route);
+    return function accessControl(route, activity) {
 
         var user = app.model.user();
         var currentType = user && user.userType();

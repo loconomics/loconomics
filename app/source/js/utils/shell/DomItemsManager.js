@@ -44,9 +44,14 @@ DomItemsManager.prototype.getAllItems = function getAllItems() {
     return this.$root.children('[' + this.idAttributeName + ']');
 };
 
+// TODO: find is still needed to grab the current item
 DomItemsManager.prototype.find = function find(containerName, root) {
     var $root = $(root || this.$root);
     return $root.children('[' + this.idAttributeName + '="' + escapeSelector(containerName) + '"]');
+};
+
+DomItemsManager.prototype.findTemplate = function(selector) {
+    return $('<div/>', {html: this.$root.children('script[' + this.idAttributeName + '="' + selector + '"]').get(0).html});
 };
 
 DomItemsManager.prototype.getActive = function getActive() {
@@ -223,6 +228,7 @@ DomItemsManager.prototype.init = function init() {
     // On ready, get the root element:
     this.$root = $(this.root || 'body');
 
+// TODO: the hidden mechanism doesn't make sense if they're all script tags
     this.getAllItems()
     .attr('hidden', 'hidden')
     // For browser that don't support attr

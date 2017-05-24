@@ -36,9 +36,11 @@
         <div class="SplashScreen">Loading...</div>
         @render('parts/AppNav.html')
         <div class="App-activities">
-            @for(var f=0; f < includedFiles.length; f++) {
-                @render(includedFiles[f])
-            }
+            <div id="activity-templates">
+                @for(var f=0; f < includedFiles.length; f++) {
+                    @render(includedFiles[f])
+                }
+            </div>
         </div>
 </body>
 </html>
