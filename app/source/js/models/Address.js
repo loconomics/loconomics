@@ -30,17 +30,18 @@ function Address(values) {
         updatedDate: null, // Autofilled by server
         kind: '' // Autofilled by server
     }, values);
-    
+
+    var joinList = function(list, separator) {
+        return list.filter(function(v) { return !!v; }).join(separator);
+    };
+
     this.singleLine = ko.computed(function() {
-        
-        var list = [
-            this.addressLine1(),
-            this.city(),
-            this.postalCode(),
-            this.stateProvinceCode()
-        ];
-        
-        return list.filter(function(v) { return !!v; }).join(', ');
+        return joinList([
+                this.addressLine1(),
+                this.city(),
+                this.postalCode(),
+                this.stateProvinceCode()
+            ], ', ');
     }, this);
 
     this.singleLineDetailed = ko.pureComputed(function() {
@@ -58,23 +59,28 @@ function Address(values) {
         r += (this.specialInstructions() ? ' (' + this.specialInstructions() + ')' : '');
         return r;
     }, this);
-    
+
     this.addressLine = ko.computed(function() {
-        var list = [
-            this.addressLine1(),
-            this.addressLine2()
-        ];        
-        return list.filter(function(v) { return !!v; }).join(', ');
+        return joinList([
+                this.addressLine1(),
+                this.addressLine2()
+            ], ', ');
+    }, this);
+
+    this.cityState = ko.computed(function() {
+        return joinList([
+                this.city(),
+                this.stateProvinceCode()
+            ], ', ');
     }, this);
     
     this.cityStateLine = ko.computed(function() {
-        var list = [
-            this.city(),
-            this.stateProvinceCode(),
-            this.postalCode()
-        ];
-        return list.filter(function(v) { return !!v; }).join(', ');
-    }, this);    
+        return joinList([
+                this.city(),
+                this.stateProvinceCode(),
+                this.postalCode()
+            ], ', ');
+    }, this);
     
     // TODO: needed? l10n? must be provided by server side?
     var countries = {

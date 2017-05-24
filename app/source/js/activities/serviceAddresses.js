@@ -162,12 +162,6 @@ A.prototype.applyOwnNavbarRules = function() {
 };
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    //jshint maxcomplexity:12
-
-    var itIs = this.viewModel.serviceAddresses.isSelectionMode();
-
-    this.viewModel.headerText(itIs ? 'Select or add a service location' : 'Locations');
-
     // Perform updates that apply this request:
     this.app.model.onboarding.updateNavBar(this.navBar) ||
     this.applyOwnNavbarRules();
@@ -219,13 +213,49 @@ var UserJobProfile = require('../viewmodels/UserJobProfile'),
     ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
+    // jshint maxstatements:70
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = app.model.onboarding.inProgress;
 
     this.serviceAddresses = new ServiceAddresses();
 
-    this.headerText = ko.observable('Locations');
+    this.headerText = ko.pureComputed(function() {
+        if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
+            return '';
+        }
+        else if (this.isInOnboarding()) {
+            return 'Locations for your listing';
+        }
+        else if(this.serviceAddresses.isSelectionMode()) {
+            return 'Choose a place for this booking';
+        }
+        else {
+            return 'Locations';
+        }
+    }, this);
+
+    this.addMoreHeaderText = ko.pureComputed(function() {
+        if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
+            return 'Add at least one for your listing';
+        }
+        else if (this.isInOnboarding()) {
+            return 'Want to add any more?';
+        }
+        else {
+            return '';
+        }
+    }, this);
+
+    this.addLocationLabel = ko.pureComputed(function() {
+        return this.isInOnboarding() ? 'Place clients come to see you' :
+                                       'Add a service location';
+    }, this);
+
+    this.addAreaLabel = ko.pureComputed(function() {
+        return this.isInOnboarding() ? 'Area where you go to clients' :
+                                       'Add a service area/radius';
+    }, this);
 
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
@@ -236,6 +266,10 @@ function ViewModel(app) {
     this.clientAddresses = new ServiceAddresses();
     // The list of client addresses is used only in selection mode
     this.clientAddresses.isSelectionMode(true);
+
+    this.showSupportingText = ko.pureComputed(function() {
+        return !(this.clientAddresses.hasAddresses() || this.serviceAddresses.isSelectionMode());
+    }, this);
 
     this.jobTitleName = ko.observable('Job Title');
     this.jobTitles = new UserJobProfile(app);

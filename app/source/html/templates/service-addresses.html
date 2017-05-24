@@ -1,16 +1,26 @@
 <!-- Knockout Template service-addresses -->
+<!-- service address template with closed list classes -->
 <script type="text/html" id="service-addresses-template">
-    <ul class="TilesList" data-bind="foreach: addresses">
-        <li><a class="ItemAddonTile" href="#" data-bind="click: $parent.selectAddress, css: { active: $parent.observerSelected($data) }">
-            <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
-            <div class="Tile-content">
-                <div data-bind="text: addressName() || 'Service Area'"></div>
-                <em data-bind="text: singleLine"></em>
-            </div>
-            <div class="Tile-addon" aria-hidden="true">
-                <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
-                      data-bind="css: { 'ion-ios-arrow-right': !$parent.isSelectionMode(), 'ion-ios-circle-filled': $parent.isSelectionMode() && $parent.observerSelected($data), 'ion-ios-circle-outline': $parent.isSelectionMode() && !$parent.observerSelected($data)() }"></span>
-            </div>
-        </a></li>
+    <ul class="TilesList" data-bind="foreach: {data: addresses, as: 'address'}">
+        <li data-bind="template: { name: 'service-addresses-list-item-template', data: { address: address, viewModel: $parent} }"></li>
     </ul>
+</script>
+<!-- service address template with open list classes -->
+<script type="text/html" id="service-addresses-open-list-template">
+    <ul class="TilesList TilesList--openEnd" data-bind="foreach: {data: addresses, as: 'address'}">
+        <li data-bind="template: { name: 'service-addresses-list-item-template', data: { address: address, viewModel: $parent} }"></li>
+    </ul>
+</script>
+<script type="text/html" id="service-addresses-list-item-template">
+    <a class="ItemAddonTile" href="#" data-bind="click: function(data, event) { viewModel.selectAddress(data.address, event) }, css: { active: viewModel.observerSelected(address) }">
+        <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
+        <div class="Tile-content" data-bind="with: address">
+            <div data-bind="text: addressName() || 'Service Area'"></div>
+            <em data-bind="text: singleLine"></em>
+        </div>
+        <div class="Tile-addon" aria-hidden="true">
+              <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
+                  data-bind="css: { 'ion-ios-arrow-right': !viewModel.isSelectionMode(), 'ion-ios-circle-filled': viewModel.isSelectionMode() && viewModel.observerSelected(address), 'ion-ios-circle-outline': viewModel.isSelectionMode() && !viewModel.observerSelected(address)() }"></span>
+        </div>
+    </a>
 </script>
