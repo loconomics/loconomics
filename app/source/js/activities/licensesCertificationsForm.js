@@ -219,7 +219,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
-                title: 'There was an error while saving.',
+                title: 'Unable to save.',
                 error: err
             });
         });
@@ -247,7 +247,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
-                title: 'There was an error while deleting.',
+                title: 'Unable to delete.',
                 error: err
             });
         });

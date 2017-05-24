@@ -187,7 +187,7 @@ function ViewModel(app) {
             this.searchText('');
             this.isSaving(false);
             app.modals.showError({
-                title: 'Impossible to add one or more job titles',
+                title: 'Unable to add one or more job titles',
                 error: error
             });
         }.bind(this));
