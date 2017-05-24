@@ -1,5 +1,5 @@
 /**
-    IconList components for display of owner plans
+    IconList components for display of lists with icons
 **/
 
 /**
@@ -22,10 +22,12 @@
         i {
             display: table-cell;
             width 40px;
-            color: $brand-secondary;
             font-size: 24px;
             text-align: center;
             vertical-align: middle;
+            &.fa {
+                font-size: 22px;
+            }
         }
 
         p {
@@ -49,11 +51,8 @@
 **/
 .IconListCard {
     list-style: none;
-    background-color: white;
     padding: 15px;
-    box-shadow: 0 1.5px 0 0 rgba(0,0,0,0.1);
     margin-top: 0;
-    margin-bottom: 10px;
 
     h2 {
         margin-top: 0px;

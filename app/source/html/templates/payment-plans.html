@@ -1,12 +1,18 @@
 <!-- Component Template payment-plans -->
 <script type="text/html" id="payment-plans-template">   
     <div class="col-md-3">
-        <div class="IconListCardHeading">
-            <h1>Starter</h1>
-            <h2>$0</h2>
-        </div>
-        <div class="IconListCard">
-          @render('parts/PaymentPlanFree.html')
+        <div class="PaymentPlan">
+            <div class="PaymentPlanHeading">
+                <h2>Always Free</h2>
+                
+                <h1 class="price">
+                    <span class="number">$0</span>
+                    
+                    <span class="month">/mo</span></h1>
+            </div>
+            <div class="IconListCard">
+              @render('parts/PaymentPlanFree.html')
+            </div>
         </div>
     </div>
     <div class="col-md-3">

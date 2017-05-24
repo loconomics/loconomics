@@ -59,7 +59,6 @@ exports.registerAll = function(app) {
     });
     
     /// payment-plans
-    
     ko.components.register('app-payment-plans', {
         template: { element: 'payment-plans-template' },
         viewModel: { instance: {} }
