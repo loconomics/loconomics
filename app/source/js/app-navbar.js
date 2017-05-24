@@ -72,6 +72,8 @@ exports.extend = function (app) {
         // Trigger event to force a component update
         $('.AppNav').trigger('contentChange');
     };
+
+// does this create a resource leak? subscribing without unsubscribing?
     var autoRefreshNav = function autoRefreshNav(action) {
         if (action) {
             action.text.subscribe(refreshNav);

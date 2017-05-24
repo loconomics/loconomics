@@ -128,6 +128,7 @@ require('./app-navbar').extend(app);
 
 require('./app-components').registerAll(app);
 
+// This assumes the activity is initialized
 app.getActivity = function getActivity(name) {
     var activity = this.activities[name];
     if (activity) {
@@ -300,6 +301,7 @@ var appInit = function appInit() {
 
         // Must be the same:
         var routeName = app.shell.currentRoute.name;
+// activity name is bound to data-activity attribute 
         var actName = $act.data('activity');
         // If not, some race condition, not the same page go out
         if (routeName !== actName)
