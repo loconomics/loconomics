@@ -1,0 +1,42 @@
+<!-- Component Template payment-plans -->
+<script type="text/html" id="payment-plans-template">   
+    <div class="col-md-3">
+        <div class="IconListCardHeading">
+            <h1>Starter</h1>
+            <h2>$0</h2>
+        </div>
+        <div class="IconListCard">
+          @render('parts/PaymentPlanFree.html')
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="IconListCardHeading">
+            <h1>Owner Growth</h1>
+            <h2>$19/month</h2>
+        </div>
+        <div class="IconListCard">
+            @render('parts/PaymentPlanGrowth.html')
+            <button type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="IconListCardHeading">
+            <h1>Owner Pro</h1>
+            <h2>$39/month</h2>
+        </div>
+        <div class="IconListCard">
+            @render('parts/PaymentPlanGrowth.html')
+            <button type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="IconListCardHeading">
+            <h1>Owner Pro Annual</h1>
+            <h2>$390/year</h2>
+        </div>
+        <div class="IconListCard">
+            @render('parts/PaymentPlanProAnnual.html')
+            <button type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+        </div>
+    </div>
+</script>
