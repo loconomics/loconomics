@@ -67,15 +67,13 @@ function preBootstrapWorkarounds() {
     App static class
 **/
 var app = {
-    shell: require('./app.shell'),
+    shell: require('./app.shell').init({ routes: require('./app.routes') }),
 
     // New app model, that starts with anonymous user
     model: new AppModel(),
 
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
-
-    router: require('./app.routes'),
 
     modals: require('./app.modals'),
 

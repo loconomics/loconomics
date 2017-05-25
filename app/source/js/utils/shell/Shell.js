@@ -84,6 +84,8 @@ function Shell(settings) {
     this.currentRoute = null;
     // Access to referrer/previous route
     this.referrerRoute = null;
+
+    this.routes = settings.routes;
 }
 
 // Shell inherits from EventEmitter
@@ -252,8 +254,7 @@ Shell.prototype.replace = function replace(state) {
     //console.log('shell replace', state.route);
 
     // Access control
-    var router = require('../../app.routes');
-    var activity = router(state.route.url).activity;
+    var activity = this.routes.route(state.route.url).activity;
     var accessError = this.accessControl(state.route, activity);
 
     if (accessError) {
