@@ -1,9 +1,6 @@
-DROP PROCEDURE [dbo].[DeleteUser]
-GO
-
+﻿/****** Object:  StoredProcedure [dbo].[DeleteUser]    Script Date: 5/24/2017 11:13:48 AM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
@@ -142,5 +139,6 @@ where userid = @UserId
 delete
 FROM            webpages_facebookcredentials
 where userid = @UserId
+
 
 GO
