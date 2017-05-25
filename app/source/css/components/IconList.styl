@@ -13,10 +13,10 @@
 **/
 .IconList {
     padding: 0;
-    margin: 0;
+    margin: 10px 0px;
 
     li {
-        height: 50px;
+        height: 55px;
         display: table;
 
         i {
@@ -26,7 +26,7 @@
             text-align: center;
             vertical-align: middle;
             &.fa {
-                font-size: 22px;
+                font-size: 20px;
             }
         }
 
@@ -43,8 +43,6 @@
 
     Scheme:
     .IconListCard (usually a div element)
-      h2
-      .IconListCard-intro (usually a p element)
       .IconList (ul or ol element)
         li
       .btn (a or button element)
@@ -53,34 +51,5 @@
     list-style: none;
     padding: 15px;
     margin-top: 0;
-
-    h2 {
-        margin-top: 0px;
-    }
-
-    .IconListCard-intro {
-        padding-top: 10px;
-        padding-bottom: 15px;
-        font-size: 16px;
-        font-weight: bold;
-        margin: 0;
-    }
 }
 
-
-/**
-    Heading style to place before an IconListCard
-    providing a highlighed title for the card
-
-    Scheme:
-    .IconListCardHeading
-    .IconListCard
-      .IconList
-**/
-.IconListCardHeading {
-    background-color: $brand-primary;
-    text-align: center;
-    color: white;
-    padding: 10px;
-    margin-top: 5px;
-}
