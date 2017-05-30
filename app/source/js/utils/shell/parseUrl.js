@@ -8,7 +8,7 @@
 var getUrlQuery = require('../getUrlQuery'),
     escapeRegExp = require('../escapeRegExp');
 
-function parseUrl(baseUrl, link) {
+function parseUrl(baseUrl, routes, link) {
 
     link = link || '';
 

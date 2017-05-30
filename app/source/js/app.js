@@ -128,27 +128,9 @@ require('./app-navbar').extend(app);
 
 require('./app-components').registerAll(app);
 
-// This initializes the activity!
-/*
-app.getActivity = function getActivity(name) {
-    var activity = this.activities[name];
-    if (activity) {
-        var $act = this.shell.items.find(name);
-        if ($act && $act.length)
-            return activity.init($act, this, name);
-    }
-    return null;
-};
-*/
-/*
-app.getActivityControllerByRoute = function getActivityControllerByRoute(route) {
-    // From the route object, the important piece is route.name
-    // that contains the activity name except if is the root
-    var actName = route.name || this.shell.indexName;
+var currentActivity = null,
+    previousActivity = null;
 
-    return this.getActivity(actName);
-};
-*/
 // accessControl setup: cannot be specified on Shell creation because
 // depends on the app instance
 app.shell.accessControl = require('./utils/accessControl')(app);
@@ -298,9 +280,7 @@ var appInit = function appInit() {
         });
     }
 
-    // When an activity is ready in the Shell:
-    app.shell.on(app.shell.events.itemReady, function($act, state) {
-
+    app.shell.on(app.shell.events.willOpen, function($activity, activityKlass) {
         // Must be the same:
         var routeName = app.shell.currentRoute.name;
 // activity name is bound to data-activity attribute 
@@ -309,6 +289,15 @@ var appInit = function appInit() {
         if (routeName !== actName)
             return;
 
+        previousActivity = currentActivity;
+        currentActivity = new activityKlass($activity, app);
+
+        // For debugging purposes, give access to current activity
+        app._currentActivity = currentActivity;
+    });
+
+    // When an activity is ready in the Shell:
+    app.shell.on(app.shell.events.itemReady, function($act, state) {
         // Connect the 'activities' controllers to their views
 // TODO: how will this fetch the activity on itemReady. domitemsmngr.switch doesn't have a reference
         var activity = app.getActivity(actName);
@@ -326,10 +315,8 @@ var appInit = function appInit() {
 
         // Update app navigation
         app.updateAppNav(activity, state);
-
-        // For debugging purposes, give access to current activity
-        app._currentActivity = activity;
     });
+
     // When an activity is hidden
     app.shell.on(app.shell.events.closed, function($act) {
 

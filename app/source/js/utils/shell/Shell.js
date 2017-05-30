@@ -33,7 +33,8 @@ function Shell(settings) {
     // But with useSingleHashForRouting=true, fragment URLs are routed even if do not include the hashbang
     this.useSingleHashForRouting = this.forceHashbang ? false : settings.useSingleHashForRouting || false;
     this.linkEvent = settings.linkEvent || 'click';
-    this.parseUrl = (settings.parseUrl || deps.parseUrl).bind(this, this.baseUrl);
+    this.routes = settings.routes;
+    this.parseUrl = (settings.parseUrl || deps.parseUrl).bind(this, this.baseUrl, settings.routes);
     this.absolutizeUrl = (settings.absolutizeUrl || deps.absolutizeUrl).bind(this, this.baseUrl);
 
     this.history = settings.history || window.history;
@@ -84,8 +85,6 @@ function Shell(settings) {
     this.currentRoute = null;
     // Access to referrer/previous route
     this.referrerRoute = null;
-
-    this.routes = settings.routes;
 }
 
 // Shell inherits from EventEmitter
@@ -242,6 +241,7 @@ Shell.prototype.pushState = function pushState(state, title, url) {
 };
 
 Shell.prototype.replace = function replace(state) {
+    this._replaceInProgress = true;
     
     state = this.getUpdatedState(state);
 
@@ -254,8 +254,8 @@ Shell.prototype.replace = function replace(state) {
     //console.log('shell replace', state.route);
 
     // Access control
-    var activity = this.routes.route(state.route.url).activity;
-    var accessError = this.accessControl(state.route, activity);
+    var activityKlass = this.routes.route(state.route.url).activity;
+    var accessError = this.accessControl(state.route, activityKlass);
 
     if (accessError) {
         // Prevent to go if already there, to don't enter and endless loop
@@ -265,7 +265,8 @@ Shell.prototype.replace = function replace(state) {
     }
 
     // Locating the container
-    var $cont = this.items.findTemplate(activity.templateSelector);
+    var $template = this.items.findTemplate(activityKlass.templateSelector),
+        $cont = this.items.inject(activityKlass.nodeName, $template.html());
     var shell = this;
     var promise = null;
 
@@ -274,10 +275,7 @@ Shell.prototype.replace = function replace(state) {
 */
         promise = new Promise(function(resolve, reject) {
             try {
-
-                var $oldCont = shell.items.getActive();
-                $oldCont = $oldCont.not($cont);
-                shell.items.switch($oldCont, $cont, shell, state);
+                shell.items.activate($cont, activityKlass, shell, state);
                 //console.log('shell replace after switch', state.route);
 
                 resolve(); //? resolve(act);

@@ -92,7 +92,7 @@ DomItemsManager.prototype.inject = function inject(name, html) {
 
     // Add to the document
     // (on the case of duplicated found, this will do nothing, no worry)
-    $c.appendTo(this.$root);
+    return $c.appendTo(this.$root);
 };
 
 /** 
@@ -106,7 +106,8 @@ DomItemsManager.prototype.inject = function inject(name, html) {
     It's designed to be able to manage transitions, but this default
     implementation is as simple as 'show the new and hide the old'.
 **/
-DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, state) {
+DomItemsManager.prototype.activate = function switchActiveItem($to, activityKlass, shell, state) {
+    var $from = this.getActive().not($to);
 
     var toName = state.route.name;
     //console.log('switch to', toName);
@@ -131,6 +132,8 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
             .css('z-index', '');
 
             shell.emit(shell.events.closed, $from, state);
+
+            $from.remove();
         }
         else {
             // Just unfocus to avoid keyboard problems
@@ -141,7 +144,7 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
     var toIsHidden = $to.is('[hidden]'); // !$to.is(':visible')
 
     if (toIsHidden) {
-        shell.emit(shell.events.willOpen, $to, state);
+        shell.emit(shell.events.willOpen, $to, activityKlass);
         // Put outside screen
         /* DONE ALREADY in the CSS class assigned to items
         $to.css({
@@ -162,7 +165,7 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
 
         // Its enough visible and in DOM to perform initialization tasks
         // that may involve layout information
-        shell.emit(shell.events.itemReady, $to, state);
+        shell.emit(shell.events.itemReady, $to, activityKlass, state);
         
         //console.log('SWITCH ready done, wait', toName);
 

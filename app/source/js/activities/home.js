@@ -105,7 +105,11 @@ var A = Activity.extend(function HomeActivity() {
     });
 });
 
-exports.init = A.init;
+A.nodeName = 'home';
+A.templateSelector = 'activity-template-home';
+A.accessLevel = require('../models/User').UserType.anonymous;
+
+exports = {init : A.init, klass: A};
 
 var DEFAULT_LOCATION = {
     lat: '37.788479',

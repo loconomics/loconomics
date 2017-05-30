@@ -8,14 +8,14 @@ var router = new Router();
 
 router.add(new RouteMatcher([
         new Route('about')
-    ]), require('./activities/about'));
+    ]), require('./activities/about').klass);
 
 router.add(new RouteMatcher([
         new Route('terms')
-    ]), require('./activities/terms'));
+    ]), require('./activities/terms').klass);
 
 router.add(new RouteMatcher([
-        new Route('*default') // matches no other route
-    ]), require('./activities/home'));
+        new Route('*default')
+    ]), require('./activities/home').klass);
 
 module.exports = router;

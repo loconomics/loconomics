@@ -270,7 +270,7 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
             }
         }
     });
-
+ 
     return action;
 };
 

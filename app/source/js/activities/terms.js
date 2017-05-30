@@ -27,7 +27,11 @@ var A = Activity.extend(function TermsActivity() {
     });
 });
 
-exports.init = A.init;
+A.nodeName = 'terms';
+A.templateSelector = 'activity-template-home';
+A.accessLevel = require('../models/User').UserType.anonymous;
+
+exports = {init : A.init, klass: A};
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);

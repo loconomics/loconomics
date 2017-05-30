@@ -27,7 +27,11 @@ var A = Activity.extend(function AboutActivity() {
     });
 });
 
-exports.init = A.init;
+A.nodeName = 'about';
+A.templateSelector = 'activity-template-about';
+A.accessLevel = require('../models/User').UserType.anonymous;
+
+exports = {init : A.init, klass: A};
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
