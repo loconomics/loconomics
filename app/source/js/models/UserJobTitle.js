@@ -28,7 +28,7 @@ function UserJobTitle(values) {
     
     this.model.defID(['userID', 'jobTitleID']);
 
-    this.requiredAlerts = ko.computed(function() {
+    this.requiredAlerts = ko.pureComputed(function() {
         return this.alerts().filter(function(profileAlert) {
             return profileAlert.isRequired();
         });

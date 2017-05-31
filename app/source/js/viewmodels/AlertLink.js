@@ -9,8 +9,7 @@
   */
 'use strict';
 
-var ko = require('knockout'),
-    RouteParser = require('../utils/Router').RouteParser;
+var RouteParser = require('../utils/Router').RouteParser;
 
 /**
  * Mapping of ProfileAlert alertName values to the properties specific to them used
@@ -82,14 +81,14 @@ var alertPresets = {
 var AlertLink = function(label, href) {
     this._label = label;
     this._href = href;
+};
 
-    this.href = ko.computed(function() {
-        return this._href;
-    }, this);
+AlertLink.prototype.href = function() {
+    return this._href;
+};
 
-    this.label = ko.computed(function() {
-        return this._label;
-    }, this);
+AlertLink.prototype.label = function() {
+    return this._label;
 };
 
 /**
