@@ -623,58 +623,6 @@
     </text>
 }
 @functions{
-    /*==== Page-controller Utilities ====*/
-    /// <summary>
-    /// Show the profile activation popup with 'ok' and 'next-step' buttons and progress information when need
-    /// (throught a JSON Code:6 result)
-    /// and returns true, if not returns false and other result type must be implemented.
-    /// Popup show specific buttons to go next-step (next alert) or continue in the same page,
-    /// with messages for alerts remaining or profile activated, all as detailed in #186
-    /// </summary>
-    /// <param name="beforePositionStatuses"></param>
-    /// <returns></returns>
-    public static bool UseProfileActivationPopup(
-        Dictionary<int, dynamic> beforePositionStatuses,
-        int userID,
-        string formSavedMessage = "Great work!",
-        string okButtonLabel = "OK")
-    {
-        var upa = LcData.UserInfo.CheckUserPositionActivation(userID, beforePositionStatuses);
-        // There is no positions information, maybe a customer?
-        if (upa == null)
-        {
-            return false;
-        }
-
-        var activationMessage = JoinNotEmptyStrings("<br/>", upa.Messages);
-
-        if (upa.Status != LcData.UserInfo.UserPositionActivation.Statuses.Complete)
-        {
-            var nextStepLabel = "";
-            switch (upa.Status)
-            {
-                case LcData.UserInfo.UserPositionActivation.Statuses.Enhance:
-                    nextStepLabel = "Enhance your profile";
-                    break;
-                case LcData.UserInfo.UserPositionActivation.Statuses.InProgress:
-                    nextStepLabel = "Next step";
-                    break;
-            }
-
-            ReturnJsonResult(6, new
-            {
-                SuccessMessage = formSavedMessage,
-                AdditionalMessage = activationMessage,
-                OkLabel = okButtonLabel,
-                GoLabel = nextStepLabel,
-                GoURL = upa.NextAlert == null ? "" : LcData.CreateAlertURL(upa.NextAlert)
-            });
-
-            return true;
-        }
-
-        return false;
-    }
     /*========= JSON =============*/
     public static void ReturnJson(object jsondata, bool endResponse = true)
     {
@@ -697,7 +645,7 @@
     public static void ReturnJsonResult(int code, object result, bool endResponse = true)
     {
         ReturnJson(new Dictionary<string, object>(){
-            { "Code", code }, { "Result", result } 
+            { "Code", code }, { "Result", result }
         }, endResponse);
     }
 
