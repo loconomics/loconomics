@@ -735,22 +735,6 @@ public static partial class LcData
     #endregion
 
     #region Alerts
-    public static string CreateAlertURL(dynamic alert)
-    {
-        string completeUrl = N.W(alert.AlertPageURL);
-        if (completeUrl != null)
-        {
-            if (alert.PositionSpecific)
-            {
-                completeUrl = completeUrl.Replace("@(PositionID)", alert.PositionID.ToString());
-            }
-            if (!completeUrl.StartsWith("javascript:"))
-            {
-                completeUrl = LcUrl.LangPath + completeUrl;
-            }
-        }
-        return completeUrl;
-    }
     public static dynamic GetActiveUserAlerts(int userID, int positionID = -1)
     {
         using (var db = Database.Open("sqlloco")) {
@@ -814,113 +798,6 @@ public static partial class LcData
                 required++;
         }
         return required;
-    }
-    public class UserAlertsNumbers
-    {
-        public int CountAlerts;
-        public int CountRequiredAlerts;
-        public int CountActiveAlerts;
-        public int CountRequiredActiveAlerts;
-        public int CountRequiredPassedAlerts;
-        public dynamic NextAlert;
-        public int AlertRank;
-        public dynamic RequiredNextAlert;
-        public int RequiredAlertRank;
-    }
-    public static Dictionary<int, UserAlertsNumbers> GetUserAlertsNumbers(int userID)
-    {
-        using (var db = Database.Open("sqlloco"))
-        {
-            // Get generic/all positions alerts counts
-            var counts = db.QuerySingle(@"
-                SELECT
-                    coalesce((SELECT count(*) FROM alert), 0) As Total
-                    ,coalesce((SELECT count(*) FROM alert WHERE Required = 1), 0) As TotalRequired
-            ", userID);
-            var countAlerts = counts.Total;
-            var countRequiredAlerts = counts.TotalRequired;
-
-            // Iterate for all active alerts
-            var posCounts = new Dictionary<int, UserAlertsNumbers>();
-            foreach (var a in GetActiveUserAlerts(userID))
-            {
-                dynamic posc = null;
-                if (!posCounts.ContainsKey(a.PositionID))
-                    posc = posCounts[a.PositionID] = new UserAlertsNumbers {
-                        CountAlerts = countAlerts,
-                        CountRequiredAlerts = countRequiredAlerts,
-                        CountActiveAlerts = 0,
-                        CountRequiredActiveAlerts = 0,
-                        CountRequiredPassedAlerts = 0,
-                        NextAlert = (dynamic)null,
-                        RequiredNextAlert = (dynamic)null,
-                        AlertRank = int.MaxValue,
-                        RequiredAlertRank = int.MaxValue
-                    };
-                else
-                    posc = posCounts[a.PositionID];
-
-                posc.CountActiveAlerts++;
-                if (a.Required)
-                    posc.CountRequiredActiveAlerts++;
-                if (a.DisplayRank < posc.AlertRank)
-                {
-                    posc.AlertRank = a.DisplayRank;
-                    posc.NextAlert = a;
-                }
-                if (a.Required && a.DisplayRank < posc.RequiredAlertRank)
-                {
-                    posc.RequiredAlertRank = a.DisplayRank;
-                    posc.RequiredNextAlert = a;
-                }
-            }
-
-            // Complete collection with positions that user has but there are not in 
-            // the previous list of active alerts because has not a position specific alert
-            // but we need it to complete the list and then being updated with the all-positions numbers.
-            foreach (var p in LcData.UserInfo.GetUserPos(userID))
-            {
-                if (!posCounts.ContainsKey(p.PositionID))
-                    posCounts.Add(p.PositionID, new UserAlertsNumbers {
-                        CountAlerts = countAlerts,
-                        CountRequiredAlerts = countRequiredAlerts,
-                        CountActiveAlerts = 0,
-                        CountRequiredActiveAlerts = 0,
-                        CountRequiredPassedAlerts = 0,
-                        NextAlert = (dynamic)null,
-                        RequiredNextAlert = (dynamic)null,
-                        AlertRank = int.MaxValue,
-                        RequiredAlertRank = int.MaxValue
-                    });
-            }
-
-            // Iterate all numbers per position for the last tasks, including
-            // add all-positions numbers (positionID:0) to every position.
-            var allPositions = posCounts.ContainsKey(0) ? posCounts[0] : null;
-            foreach (var p in posCounts)
-            {
-                // Combine all-positions alerts (positionID:0) with each specific position:
-                if (allPositions != null && p.Key > 0)
-                {
-                    p.Value.CountActiveAlerts += allPositions.CountActiveAlerts;
-                    p.Value.CountRequiredActiveAlerts += allPositions.CountRequiredActiveAlerts;
-                    if (p.Value.RequiredNextAlert == null)
-                        p.Value.RequiredNextAlert = allPositions.RequiredNextAlert;
-                    if (p.Value.NextAlert == null)
-                        p.Value.NextAlert = allPositions.NextAlert;
-                }
-
-                // Calculate passed alerts
-                p.Value.CountRequiredPassedAlerts = p.Value.CountRequiredAlerts - p.Value.CountRequiredActiveAlerts;
-
-                // Required alerts take precedence to other alerts, if there is one 
-                // and independently of Rank:
-                if (p.Value.RequiredNextAlert != null)
-                    p.Value.NextAlert = p.Value.RequiredNextAlert;
-            }
-
-            return posCounts;
-        }
     }
     #endregion
 
