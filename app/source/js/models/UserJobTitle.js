@@ -4,7 +4,9 @@
 **/
 'use strict';
 
-var Model = require('./Model');
+var ko = require('knockout'),
+    Model = require('./Model'),
+    ProfileAlert = require('./ProfileAlert');
 
 function UserJobTitle(values) {
     
@@ -20,10 +22,18 @@ function UserJobTitle(values) {
         bookMeButtonReady: false,
         collectPaymentAtBookMeButton: false,
         createdDate: null,
-        updatedDate: null
+        updatedDate: null,
+        alerts: { isArray: true, Model: ProfileAlert }
     }, values);
     
     this.model.defID(['userID', 'jobTitleID']);
+
+    this.requiredAlerts = ko.computed(function() {
+        return this.alerts().filter(function(profileAlert) {
+            return profileAlert.isRequired();
+        });
+
+    }, this);
 }
 
 module.exports = UserJobTitle;

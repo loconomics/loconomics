@@ -1,3 +1,5 @@
+'use strict';
+
 var ko = require('knockout'),
     createAlertLink = require('../../js/viewmodels/AlertLink'),
     ProfileAlert = require('../../js/models/ProfileAlert');

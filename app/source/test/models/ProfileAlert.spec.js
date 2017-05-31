@@ -1,3 +1,5 @@
+'use strict';
+
 var ProfileAlert = require('../../js/models/ProfileAlert');
 
 describe('models/ProfileAlert', function() {

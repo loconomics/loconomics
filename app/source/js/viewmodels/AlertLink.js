@@ -1,6 +1,6 @@
 /**
   * AlertLink objects are view models for buttons or links representing profile alerts
-  * 
+  *
   * Do not create AlertLink objects directly, but use the exported factory function
   * createAlertLink. Some AlertLink objects require additional objects beyond ProfileAlerts
   * to build their properties. See documentation for createAlertLink below.
@@ -19,12 +19,12 @@ var ko = require('knockout'),
  * @private
  **/
 var alertPresets = {
-        pricingdetails: { 
+        pricingdetails: {
             label: 'How much do your services cost?',
             route: new RouteParser('/servicesOverview/:jobTitleID')
         },
-        availability: { 
-            label: 'When are you available to work?', 
+        availability: {
+            label: 'When are you available to work?',
             route: new RouteParser('/schedulingPreferences')
         },
         personalinfo: {
@@ -76,7 +76,7 @@ var alertPresets = {
 
 /*
  * Creates an AlertLink. Do not initialize directly.
- * 
+ *
  * @class
  */
 var AlertLink = function(label, href) {
@@ -93,10 +93,10 @@ var AlertLink = function(label, href) {
 };
 
 /**
- * Factory function for creating AlertLink objects from ProfileAlerts. Some 
- * types of ProfileAlerts require additional information to build their properties. 
+ * Factory function for creating AlertLink objects from ProfileAlerts. Some
+ * types of ProfileAlerts require additional information to build their properties.
  * These are passed via options.
- * 
+ *
  * @param {Object} options object with additional data used to create AlertLinks.
  * @param {string} options.jobTitleID the job title ID pertinent to the corresponding profile alert
  **/
