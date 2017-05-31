@@ -48,6 +48,8 @@ Any proposed changes to the database should be made by placing a .sql file in th
 issue1076 - A1 - new customertransactiontype table.sql
 ```
 
+Changes to stored procedures or user defined functions should be reflected in the file corresponding to the object under ``/database/``. The update script should be added to the ``_DBUpdate`` folder just like any other database change. If the object already exists in the database, the update script should use the ``ALTER`` statement.
+
 ## Use of Github
 
 We use Github to track all development issues, project management, product roadmaps, and documentation. An [internal repository](https://github.com/joshdanielson/loconomics-internal) includes tasks related to the internal operations of Loconomics and is limited to Loconomics Staff.

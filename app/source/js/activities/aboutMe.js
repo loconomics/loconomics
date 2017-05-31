@@ -5,7 +5,6 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var createPostalCodeAutolookup = require('../utils/createPostalCodeAutolookup');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -28,7 +27,7 @@ var A = Activity.extend(function AboutMeActivity() {
         target: this.app.model.userProfile,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving contact data.' : 'Error loading contact data.';
+            var msg = err.task === 'save' ? 'Unable to save contact data.' : 'Unable to load contact data.';
             this.app.modals.showError({
                 title: msg,
                 error: err
@@ -40,7 +39,7 @@ var A = Activity.extend(function AboutMeActivity() {
         target: this.app.model.homeAddress,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving address details.' : 'Error loading address details.';
+            var msg = err.task === 'save' ? 'Unable to save address details.' : 'Unable to load address details.';
             this.app.modals.showError({
                 title: msg,
                 error: err
@@ -52,19 +51,12 @@ var A = Activity.extend(function AboutMeActivity() {
         target: this.app.model.marketplaceProfile,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Error saving your public data.' : 'Error loading your public data.';
+            var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';
             this.app.modals.showError({
                 title: msg,
                 error: err
             });
         }.bind(this)
-    });
-
-    // On change to a valid code, do remote look-up
-    createPostalCodeAutolookup({
-        appModel: this.app.model,
-        address: this.viewModel.contactInfo.address,
-        postalCodeError: this.viewModel.contactInfo.errorMessages.postalCode
     });
 });
 

@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 public static class LcRessources
 {
-    public const string ValidationSummaryTitle = "Please correct the errors and try again:";
+    public const string ValidationSummaryTitle = "Please fix these issues and try again:";
     public const string DataSaved = "Great work!";
     public const string OK = "OK";
     public const string ShortDataSaved = "Saved";

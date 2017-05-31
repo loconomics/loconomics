@@ -16,12 +16,6 @@ exports.create = function create(appModel) {
         cache = {};
     
     api.getItem = function getItem(postalCode) {
-        
-        postalCode = postalCode || '';
-        if (/^\s*$/.test(postalCode)) {
-            return Promise.reject('Postal Code Not Valid');
-        }
-        
         // Check cache
         if (cache.hasOwnProperty(postalCode)) {
             return Promise.resolve(cache[postalCode]);
@@ -41,6 +35,37 @@ exports.create = function create(appModel) {
     appModel.on('clearLocalData', function() {
         cache = {};
     });
-    
+
+    /**
+     * @static
+     * @param {string} postal code to validate
+     * @returns {Boolean} true if postal code is valid
+     */
+    api.isValid = function(postalCode) {
+        return !(/^\s*$/).test(postalCode);
+    };
+
+    /**
+     * @static
+     * @param {Object} address with city, stateProvinceCode and stateProvinceName fields
+     * @param {Object} address-like model that will be updated with values from addressObject
+     */
+    api.updateAddressModel = function(addressObject, addressModel) {
+        if (addressModel.city) addressModel.city(addressObject.city);
+        if (addressModel.stateProvinceCode) addressModel.stateProvinceCode(addressObject.stateProvinceCode);
+        if (addressModel.stateProvinceName) addressModel.stateProvinceName(addressObject.stateProvinceName);
+    };
+
+    /**
+     * An address object with empty fields.
+     *
+     * @constant
+     */
+    api.emptyAddress = {
+        city: '',
+        stateProvinceCode: '',
+        stateProvinceName: ''
+    };
+
     return api;
 };

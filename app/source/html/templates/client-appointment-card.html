@@ -159,43 +159,45 @@
                         </ul>
                     </div>
                 </div>
-                <div data-bind="visible: addressEditorOpened(), with: booking().serviceAddress">
-                    <h1 class="SectionTitle">Add your location details</h1>
-                    <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
-                        <div class="form-group" data-bind="css: { 'has-error': $parent.errorMessages.postalCode() }">
-                            <input type="number" class="form-control"
-                                 placeholder="Zip code" aria-label="Zip code"
-                                 data-bind="value: postalCode, disable: $parent.isLocked,
-                                            popover: { content: $parent.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-                        </div>
-                        <div class="form-group">
-                            <p class="form-control-static">
-                                <span data-bind="visible: city() || stateProvinceCode()">
-                                    <span data-bind="text: city"></span>, 
-                                    <span data-bind="text: stateProvinceCode"></span>
-                                </span>
-                                <!-- White space to reserve space -->
-                                &nbsp;
-                            </p>
-                        </div>
-                        <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
-                        <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon">Save as:</span>
-                                <input type="text" class="form-control" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="Location name">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
-                            <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
-                        </div>
-                    </div>
-                </div>
-            </div>            
+                <!-- ko if: addressEditorOpened() -->
+                  <div data-bind="with: booking().serviceAddress">
+                      <h1 class="SectionTitle">Add your location details</h1>
+                      <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
+                          <div class="form-group" data-bind="css: { 'has-error': $parent.errorMessages.postalCode() }">
+                              <input type="number" class="form-control"
+                                   placeholder="Zip code" aria-label="Zip code"
+                                   data-bind="textInput: postalCode, event: { blur: $parent.postalCodeVM().onBlur }, disable: $parent.isLocked,
+                                              popover: { content: $parent.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                          </div>
+                          <div class="form-group">
+                              <p class="form-control-static">
+                                  <span data-bind="visible: city() || stateProvinceCode()">
+                                      <span data-bind="text: city"></span>, 
+                                      <span data-bind="text: stateProvinceCode"></span>
+                                  </span>
+                                  <!-- White space to reserve space -->
+                                  &nbsp;
+                              </p>
+                          </div>
+                          <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
+                          <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
+                          <div class="form-group">
+                              <div class="input-group">
+                                  <span class="input-group-addon">Save as:</span>
+                                  <input type="text" class="form-control" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="Location name">
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
+                              <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
+                          </div>
+                          <div>
+                              <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
+                          </div>
+                      </div>
+                  </div>
+                <!-- /ko -->
+            </div>
             <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
                 <ul class="TilesList TilesList--openEnd">
                     <li data-bind="css: { 'Tile--success': booking().isCompleted() || booking().isConfirmed() || booking().isPerformed(), 'Tile--warning': booking().isRequest() || booking().isDispute(), 'Tile--danger': booking().isCancelled() || booking().isDenied() || booking().isIncomplete() || booking().isExpired()}" class="ItemTile">

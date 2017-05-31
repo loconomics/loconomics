@@ -37,19 +37,18 @@
           font-size: 15px;
         }
 
-          &:hover {
-             border-bottom: 4px solid white;
-             padding-bottom: 14px !important;
-           }
-             
-           &.active {
-             a {
-               border-bottom: 4px solid;
-               padding-bottom: 14px !important;
-               outline: none;
-             }  
-           } 
-      } 
+        hover() {
+          border-bottom: 4px solid white;
+          padding-bottom: 14px !important;
+        }
+
+        &:hover {
+          hover()
+        }
+        &.active {
+          hover()
+        }
+      }
     }
     
     @media $mediaMinXs {
