@@ -4,10 +4,11 @@
 'use strict';
 
 var Activity = require('../components/Activity'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    createAlertLink = require('../viewmodels/AlertLink');
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
-    
+
     Activity.apply(this, arguments);
     
     this.accessLevel = this.app.UserType.serviceProfessional;
@@ -164,6 +165,8 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    //jshint maxstatements: 40
+
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     
     this.jobTitleID = ko.observable(0);
@@ -357,5 +360,19 @@ function ViewModel(app) {
                 }
             });
         }
+    }.bind(this);
+
+    this.requiredAlertLinks = ko.pureComputed(function() {
+        var userJobTitle = this.userJobTitle(),
+            jobTitleID = userJobTitle && userJobTitle.jobTitleID(),
+            requiredAlerts = (userJobTitle && userJobTitle.requiredAlerts()) || [];
+
+        return requiredAlerts.map(function(profileAlert) {
+            return createAlertLink(profileAlert, { jobTitleID: jobTitleID });
+        });
+    }, this);
+
+    this.onAlertLinkClick = function(alertLink) {
+        app.shell.go(alertLink.href());
     }.bind(this);
 }

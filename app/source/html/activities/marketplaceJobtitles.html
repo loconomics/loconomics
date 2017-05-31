@@ -21,11 +21,23 @@
                     <span class="switchLine-label">
                         <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
                     </span>
-                    <div class="switchLine-switch" data-bind="visible: isToggleReady">
+                    <div class="switchLine-switch" data-bind="if: isToggleReady">
                         <label>
                             <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
                         </label>
                     </div>
+                </div>
+                <div data-bind="ifnot: isToggleReady">
+                    <ul class="TilesList TilesList--openEnd" data-bind="foreach: { data: requiredAlertLinks, as: 'alertLink' }">
+                        <li>
+                            <button class="LinkTile" type="button" data-bind="$parent.onAlertLinkClick">
+                                <div class="Tile-content">
+                                    <p data-bind="text: alertLink.label"></p>
+                                </div>
+                                <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
                 <div class="PaddedBox-xs" data-bind="visible: isActiveStatus">
                     <a class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;"
