@@ -19,7 +19,14 @@ public class RestUserJobProfile : RestWebPage
         // Item ID
         if (UrlData.Count == 1 && UrlData[0].IsInt())
         {
-            return GetItem(userId, UrlData[0].AsInt(0));
+            var item = LcRest.JobTitle.Get(userId, UrlData[0].AsInt(0));
+
+            if(item != null)
+            {
+                return item;
+            }
+
+            throw new HttpException(404, "Job Title not found.");
         }
         else if (UrlData.Count == 1)
         {
@@ -30,27 +37,7 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Not Found");
         }
 
-        return LcData.JobTitle.GetUserJobTitles(userId);
-    }
-
-    /// <summary>
-    /// Internal utility to get a record for a single job title
-    /// </summary>
-    /// <param name="itemID"></param>
-    /// <returns></returns>
-    private dynamic GetItem(int userID, int itemID)
-    {
-        if (itemID > 0)
-        {
-            var items = LcData.JobTitle.GetUserJobTitles(userID, itemID);
-            var item = items == null || items.Count == 0 ? null : items[0];
-            if (item != null)
-            {
-                return item;
-            }
-        }
-
-        throw new HttpException(404, "Job Title not found.");
+        return LcRest.JobTitle.GetList(userId);
     }
 
     private dynamic PerformAction()
@@ -79,7 +66,7 @@ public class RestUserJobProfile : RestWebPage
                 switch (UrlData[1].ToLower())
                 {
                     case "deactivate":
-                        done = LcData.JobTitle.DeactivateUserJobTitle(userID, jobTitleID);
+                        done = LcRest.JobTitle.Deactivate(userID, jobTitleID);
                         // It cannot be done if record not exists, notify:
                         if (!done)
                         {
@@ -88,19 +75,19 @@ public class RestUserJobProfile : RestWebPage
                         else
                         {
                             // Return an updated item
-                            return GetItem(userID, jobTitleID);
+                            return LcRest.JobTitle.Get(userID, jobTitleID);
                         }
 
                     case "reactivate":
 
                         // Double check if item exists
-                        if (GetItem(userID, jobTitleID) == null)
+                        if (LcRest.JobTitle.Get(userID, jobTitleID) == null)
                         {
                             throw new HttpException(404, "Not found");
                         }
                         else
                         {
-                            done = LcData.JobTitle.ReactivateUserJobTitle(userID, jobTitleID);
+                            done = LcRest.JobTitle.Reactivate(userID, jobTitleID);
 
                             if (!done)
                             {
@@ -116,7 +103,7 @@ public class RestUserJobProfile : RestWebPage
                             else
                             {
                                 // Return an updated item
-                                return GetItem(userID, jobTitleID);
+                                return LcRest.JobTitle.Get(userID, jobTitleID);
                             }
                         }
 
@@ -205,7 +192,7 @@ public class RestUserJobProfile : RestWebPage
             else
             {
                 //  Create a new job-title based on the given name #650
-                jobTitleID = LcData.JobTitle.CreateJobTitleByName(jobTitleName, LcRest.Locale.Current.languageID, LcRest.Locale.Current.countryID, userID);
+                jobTitleID = LcRest.JobTitle.CreateByName(jobTitleName, LcRest.Locale.Current.languageID, LcRest.Locale.Current.countryID, userID);
                 // Check well know custom error codes
                 if (jobTitleID == -1)
                 {
@@ -226,16 +213,15 @@ public class RestUserJobProfile : RestWebPage
             // Read data; It stops on not valid:
             var data = GetValidatedItemBodyInput();
 
-            LcData.JobTitle.InsertUserJobTitle(
-                userID,
-                jobTitleID,
-                data.policyID,
-                data.intro,
-                data.instantBooking,
-                data.collectPaymentAtBookMeButton,
-                LcRest.Locale.Current.languageID,
-                LcRest.Locale.Current.countryID
-            );
+            LcRest.JobTitle.Create(new LcRest.JobTitle
+            {
+                userID = userID,
+                jobTitleID = jobTitleID,
+                cancellationPolicyID = data.policyID,
+                intro = data.intro,
+                instantBooking = data.instantBooking,
+                collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton
+            });
 
             // If user is just a client, needs to become a professional
             var user = LcRest.UserProfile.Get(userID);
@@ -253,7 +239,7 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Job Title not found or disapproved");
         }
 
-        return GetItem(userID, jobTitleID);
+        return LcRest.JobTitle.Get(userID, jobTitleID);
     }
 
     /// <summary>
@@ -281,7 +267,7 @@ public class RestUserJobProfile : RestWebPage
         }
         int userID = WebSecurity.CurrentUserId;
         // Check that the item exists
-        if (GetItem(userID, itemID) == null)
+        if (LcRest.JobTitle.Get(userID, itemID) == null)
         {
             throw new HttpException(404, "Job Title not found");
         }
@@ -342,19 +328,18 @@ public class RestUserJobProfile : RestWebPage
         var data = GetValidatedItemBodyInput();
 
         // Updating
-        LcData.JobTitle.UpdateUserJobTitle(
-            userID,
-            jobTitleID,
-            data.policyID,
-            data.intro,
-            data.instantBooking,
-            data.collectPaymentAtBookMeButton,
-            LcRest.Locale.Current.languageID,
-            LcRest.Locale.Current.countryID
-        );
+        LcRest.JobTitle.Update(new LcRest.JobTitle
+        {
+            userID = userID,
+            jobTitleID = jobTitleID,
+            cancellationPolicyID = data.policyID,
+            intro = data.intro,
+            instantBooking = data.instantBooking,
+            collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton
+        });
 
         // Return the updated item
-        return GetItem(userID, itemID);
+        return LcRest.JobTitle.Get(userID, itemID);
     }
 
     /// <summary>
@@ -374,13 +359,13 @@ public class RestUserJobProfile : RestWebPage
         // Get item to be deleted.
         // It already throws 'not found' 
         // if doesn't exists
-        var item = GetItem(userID, itemID);
+        var item = LcRest.JobTitle.Get(userID, itemID);
 
         // Parameters
         var jobTitleID = itemID;
 
         // Delete
-        LcData.JobTitle.SoftDeleteUserJobTitle(userID, jobTitleID);
+        LcRest.JobTitle.Delete(userID, jobTitleID);
 
         // Return 'deleted' item (internal updated info cannot be fetched)
         return item;
