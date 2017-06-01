@@ -8,7 +8,7 @@
     
     switch (UrlData[0].ToLower()) {
         case "alerts":
-            data = LcData.GetActiveUserAlerts(userID);
+            data = LcRest.Alert.GetActive(userID);
             break;
         case "positions":
             data = LcData.UserInfo.GetUserPositionsStatuses(userID);

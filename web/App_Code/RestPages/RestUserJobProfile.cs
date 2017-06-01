@@ -97,7 +97,7 @@ public class RestUserJobProfile : RestWebPage
                                 // fullfilled to allow manual activation.
                                 // Notify about pending steps:
                                 var alertsMsg = "You must complete another {0} steps to activate this profile.";
-                                var alerts = LcData.GetActiveRequiredUserAlertsCount(userID, jobTitleID);
+                                var alerts = LcRest.Alert.GetActiveRequiredCount(userID, jobTitleID);
                                 throw new HttpException(400, String.Format(alertsMsg, alerts));
                             }
                             else

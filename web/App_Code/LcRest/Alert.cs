@@ -1,0 +1,88 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace LcRest
+{
+    /// <summary>
+    /// Alerts indicating steps for professionals and clients to complete
+    /// </summary>
+    public class Alert
+    {
+        public int alertID;
+        public string alertName;
+        public bool isRequired;
+        public int displayRank;
+
+        private static Alert FromDB(dynamic record)
+        {
+            if (record == null) return null;
+
+            return new Alert
+            {
+                alertID = record.AlertID,
+                alertName = record.AlertName,
+                isRequired = record.Required,
+                displayRank = record.DisplayRank
+            };
+        }
+
+        private const string sqlSelect = @"
+                SELECT  A.AlertID,
+                        A.AlertName,
+                        A.DisplayRank,
+                        A.Required
+                FROM    Alert As A
+                INNER JOIN UserAlert As UA ON A.AlertID = UA.AlertID
+                LEFT JOIN (
+                        Positions As P
+                         INNER JOIN
+                        UserProfilePositions As UP
+                          ON UP.PositionID = P.PositionID
+                             AND UP.Active = 1
+                             AND UP.StatusID > 0
+                             AND UP.LanguageID = P.LanguageID
+                             AND UP.CountryID = P.CountryID
+                        )
+                          ON P.PositionID = UA.PositionID
+                             AND P.LanguageID = A.LanguageID
+                             AND P.CountryID = A.CountryID
+                             AND UP.UserID = UA.UserID
+                WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
+                         AND A.LanguageID = @1 AND A.CountryID = @2
+                         AND (UA.PositionID = 0 OR P.PositionID is not null)
+                        -- Filtered optionally by position (-1 to not filter by position)
+                         AND (UA.PositionID = 0 OR @3 = -1 OR UA.PositionID = @3)
+                        -- Added dismissed feature #243: not show if is dismissed
+                        -- except for required ones, that cannot be dismissed
+                        AND (A.Required = 1 OR UA.Dismissed = 0)
+                ORDER BY A.DisplayRank, A.AlertName
+        ";
+
+        public static List<Alert> GetActive(int userID, int positionID = -1)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(
+                        sqlSelect, userID,
+                        LcData.GetCurrentLanguageID(),
+                        LcData.GetCurrentCountryID(),
+                        positionID)
+                .Select(FromDB)
+                .ToList();
+            }
+        }
+
+        public static int GetActiveRequiredCount(int userID, int positionID = -1)
+        {
+            int required = 0;
+            foreach (var alert in GetActive(userID, positionID))
+            {
+                if (alert.isRequired)
+                    required++;
+            }
+            return required;
+        }
+    }
+}
