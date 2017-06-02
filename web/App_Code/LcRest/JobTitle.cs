@@ -11,16 +11,34 @@ namespace LcRest
     /// </summary>
     public class JobTitle
     {
+        public enum ProfileStatus : short
+        {
+            Deleted = 0,
+            /// <summary>
+            /// Profile is publicly available
+            /// </summary>
+            On = 1,
+            /// <summary>
+            /// Profile is not publicly available, but _may_ be able to be automatically activated
+            /// </summary>
+            Incomplete = 2,
+            /// <summary>
+            /// Profile has been disabled by the user and _may_ be able to be manually activated
+            /// </summary>
+            Off = 3
+        }
+
         public int userID;
         public int jobTitleID;
         public string intro;
-        public int statusID;
+        public ProfileStatus statusID;
         public int? cancellationPolicyID;
         public bool instantBooking;
         public DateTime createdDate;
         public DateTime updatedDate;
         public bool bookMeButtonReady;
         public bool collectPaymentAtBookMeButton;
+        public List<LcRest.Alert> alerts;
 
         private static JobTitle FromDB(dynamic record)
         {
@@ -31,7 +49,7 @@ namespace LcRest
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
                 intro = record.intro,
-                statusID = record.statusID,
+                statusID = (ProfileStatus)record.statusID,
                 cancellationPolicyID = (int?)record.cancellationPolicyID,
                 instantBooking = record.instantBooking,
                 createdDate = record.createdDate,
@@ -69,15 +87,34 @@ namespace LcRest
                          AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
 
+        public void bindAlerts(Dictionary<int, List<LcRest.Alert>> alertsCollection)
+        {
+            alerts = alertsCollection.ContainsKey(jobTitleID) ? alertsCollection[jobTitleID] : new List<LcRest.Alert>();
+        }
+
+        private static List<JobTitle> BindAlerts(List<JobTitle> jobTitles, Dictionary<int, List<LcRest.Alert>> alerts)
+        {
+            jobTitles.ForEach(delegate (JobTitle jobTitle)
+            {
+                jobTitle.bindAlerts(alerts);
+            });
+
+            return jobTitles;
+        }
+
         public static JobTitle Get(int userID, int jobTitleID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlSelect,
+                var jobTitle = FromDB(db.QuerySingle(sqlSelect,
                                              userID,
                                              LcData.GetCurrentLanguageID(),
                                              LcData.GetCurrentCountryID(),
                                              jobTitleID));
+
+                jobTitle.bindAlerts(LcRest.Alert.IndexByPosition(LcRest.Alert.GetActive(userID, jobTitleID)));
+
+                return jobTitle;
             }
         }
 
@@ -87,13 +124,15 @@ namespace LcRest
 
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelect,
+                var jobTitles = db.Query(sqlSelect,
                                 userID,
                                 LcData.GetCurrentLanguageID(),
                                 LcData.GetCurrentCountryID(),
                                 jobTitleID)
                 .Select(FromDB)
                 .ToList();
+
+                return BindAlerts(jobTitles, LcRest.Alert.IndexByPosition(LcRest.Alert.GetActive(userID)));
             }
         }
 

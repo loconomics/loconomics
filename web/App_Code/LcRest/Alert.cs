@@ -15,6 +15,9 @@ namespace LcRest
         public bool isRequired;
         public int displayRank;
 
+        private bool isPositionSpecific;
+        private int? positionID;
+
         private static Alert FromDB(dynamic record)
         {
             if (record == null) return null;
@@ -24,7 +27,9 @@ namespace LcRest
                 alertID = record.AlertID,
                 alertName = record.AlertName,
                 isRequired = record.Required,
-                displayRank = record.DisplayRank
+                displayRank = record.DisplayRank,
+                isPositionSpecific = record.PositionSpecific,
+                positionID = record.PositionID
             };
         }
 
@@ -32,7 +37,9 @@ namespace LcRest
                 SELECT  A.AlertID,
                         A.AlertName,
                         A.DisplayRank,
-                        A.Required
+                        A.Required,
+                        A.PositionSpecific,
+                        P.PositionID
                 FROM    Alert As A
                 INNER JOIN UserAlert As UA ON A.AlertID = UA.AlertID
                 LEFT JOIN (
@@ -72,6 +79,47 @@ namespace LcRest
                 .Select(FromDB)
                 .ToList();
             }
+        }
+
+        /// <summary>
+        /// Split a list of alerts into separate lists based on position/job title.
+        /// </summary>
+        /// <param name="alerts">List of alerts</param>
+        /// <returns>Alerts separated by position/job title. The key is the positionID. Each
+        /// list of alerts will include alerts specific for that positionID and any alert
+        /// that is _not_ specific to a position.
+        /// </returns>
+        public static Dictionary<int, List<LcRest.Alert>> IndexByPosition(List<Alert> alerts)
+        {
+            var index = new Dictionary<int, List<LcRest.Alert>>();
+            var nonPositionSpecificAlerts = new List<Alert>();
+
+            alerts.ForEach(delegate(Alert alert)
+            {
+                if (!alert.isPositionSpecific)
+                {
+                    nonPositionSpecificAlerts.Add(alert);
+                }
+                else
+                {
+                    var positionID = alert.positionID.GetValueOrDefault();
+
+                    if (!index.ContainsKey(positionID))
+                    {
+                        index[positionID] = new List<Alert>();
+                    }
+
+                    index[positionID].Add(alert);
+                }
+            });
+
+            // for each position list, add non-position-specific alerts
+            index.Values.ToList().ForEach(delegate(List<Alert> alertsList) 
+            {
+                alertsList.AddRange(nonPositionSpecificAlerts);
+            });
+
+            return index;
         }
 
         public static int GetActiveRequiredCount(int userID, int positionID = -1)
