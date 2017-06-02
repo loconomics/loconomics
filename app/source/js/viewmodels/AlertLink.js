@@ -18,8 +18,8 @@ var RouteParser = require('../utils/Router').RouteParser;
  * @private
  **/
 var alertPresets = {
-        pricingdetails: {
-            label: 'How much do your services cost?',
+        positionservices: {
+            label: 'Add details to your listing',
             route: new RouteParser('/servicesOverview/:jobTitleID')
         },
         availability: {
@@ -31,19 +31,19 @@ var alertPresets = {
             route: new RouteParser('/aboutMe')
         },
         photo: {
-            label: 'Add your photo',
+            label: 'Add your profile photo',
             route: new RouteParser('/aboutMe')
         },
         payment: {
             label: 'How do you want to be paid?',
             route: new RouteParser('/paymentAccount')
         },
-        positionservices: {
-            label: 'What services do you provide?',
-            route: new RouteParser('/serviceProfessionalServices/:jobTitleID')
+        pricingdetails: {
+            label: 'Add at least one bookable offering',
+            route: new RouteParser('/serviceProfessionalService/:jobTitleID?mustReturn=marketplaceJobtitles/:jobTitleID')
         },
         publicbio: {
-            label: 'Write your bio!',
+            label: 'Add a personal bio to your listing',
             route: new RouteParser('/aboutMe')
         },
         professionallicense: {
@@ -51,11 +51,11 @@ var alertPresets = {
             route: new RouteParser('/licensesCertifications/:jobTitleID')
         },
         location: {
-            label: 'Where can you work?',
+            label: 'Where can your clients book you?',
             route: new RouteParser('/serviceAddresses/:jobTitleID')
         },
         'add-education': {
-            label: 'Add relevant education',
+            label: 'Add training or education to your listing',
             route: new RouteParser('/education')
         },
         verifyemail: {
@@ -63,7 +63,7 @@ var alertPresets = {
               route: new RouteParser('/verifications')
         },
         showcasework: {
-            label: 'Showcase your work',
+            label: 'Add photos of your work',
             route: new RouteParser('/workPhotos/:jobTitleID')
         },
         'required-professionallicense': {

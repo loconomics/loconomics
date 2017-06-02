@@ -13,7 +13,7 @@ function ProfileAlert(values) {
 
     this.model.defProperties({
         alertID: 0,
-        alertName: null,
+        alertName: '',
         displayRank: 9999,
         isRequired: false
     }, values);

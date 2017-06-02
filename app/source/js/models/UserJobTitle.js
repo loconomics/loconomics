@@ -32,7 +32,6 @@ function UserJobTitle(values) {
         return this.alerts().filter(function(profileAlert) {
             return profileAlert.isRequired();
         });
-
     }, this);
 }
 
