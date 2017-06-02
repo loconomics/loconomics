@@ -30,12 +30,12 @@
                 <div data-bind="ifnot: isToggleReady">
                     <ul class="TilesList TilesList--openEnd" data-bind="foreach: { data: requiredAlertLinks, as: 'alertLink' }">
                         <li>
-                            <button class="LinkTile" type="button" data-bind="$parent.onAlertLinkClick">
+                            <a class="LinkTile" data-bind="attr: { href: alertLink.href() }">
                                 <div class="Tile-content">
-                                    <p data-bind="text: alertLink.label"></p>
+                                    <p data-bind="text: alertLink.label()"></p>
                                 </div>
                                 <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
-                            </button>
+                            </a>
                         </li>
                     </ul>
                 </div>

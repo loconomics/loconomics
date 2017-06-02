@@ -371,8 +371,4 @@ function ViewModel(app) {
             return createAlertLink(profileAlert, { jobTitleID: jobTitleID });
         });
     }, this);
-
-    this.onAlertLinkClick = function(alertLink) {
-        app.shell.go(alertLink.href());
-    }.bind(this);
 }
