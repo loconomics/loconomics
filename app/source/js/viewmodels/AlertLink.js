@@ -23,7 +23,7 @@ var alertPresets = {
             route: new RouteParser('/servicesOverview/:jobTitleID')
         },
         availability: {
-            label: 'When are you available to work?',
+            label: 'When can you be booked?',
             route: new RouteParser('/schedulingPreferences')
         },
         personalinfo: {
@@ -39,11 +39,11 @@ var alertPresets = {
             route: new RouteParser('/paymentAccount')
         },
         pricingdetails: {
-            label: 'Add at least one bookable offering',
+            label: 'Create a bookable offering',
             route: new RouteParser('/serviceProfessionalService/:jobTitleID?mustReturn=marketplaceJobtitles/:jobTitleID')
         },
         publicbio: {
-            label: 'Add a personal bio to your listing',
+            label: 'Add a personal bio',
             route: new RouteParser('/aboutMe')
         },
         professionallicense: {
@@ -51,11 +51,11 @@ var alertPresets = {
             route: new RouteParser('/licensesCertifications/:jobTitleID')
         },
         location: {
-            label: 'Where can your clients book you?',
+            label: 'Where do you work?',
             route: new RouteParser('/serviceAddresses/:jobTitleID')
         },
         'add-education': {
-            label: 'Add training or education to your listing',
+            label: 'Add training or education',
             route: new RouteParser('/education')
         },
         verifyemail: {

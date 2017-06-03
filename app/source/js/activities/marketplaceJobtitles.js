@@ -268,7 +268,7 @@ function ViewModel(app) {
                 return 'This listing is inactive';
             //case UserJobTitle.status.incomplete:
             default:
-                return 'INCOMPLETE (There are steps left to activate)';
+                return 'INCOMPLETE';
         }
     }, this);
 
