@@ -58,6 +58,14 @@ exports.registerAll = function(app) {
         }
     });
 
+    /// payment-plans
+    ko.components.register('app-payment-plans', {
+        template: { element: 'payment-plans-template' },
+        viewModel: function() {
+            this.isServiceProfessional = app.model.userProfile.data.isServiceProfessional;
+        }
+    });
+
     /// inline-user-menu
     ko.components.register('app-inline-user-menu', {
         template: { element: 'inline-user-menu-template' },

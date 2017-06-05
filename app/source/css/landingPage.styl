@@ -20,7 +20,8 @@
 @import 'components/ActionSheet.styl'
 @import 'components/SignupLogin.styl'
 @import 'components/LargeNavBar.styl'
-@import 'components/LearnMorePage.styl'
+@import 'components/Press.styl'
+@import 'components/Testimonials.styl'
 
 @import '../../vendor/bootstrap/styl/mixins/image.styl'
 @import '../../vendor/bootstrap/styl/scaffolding.styl'
@@ -187,106 +188,6 @@
                     padding-right: 10px;
                 }
             }
-        }
-        .press {
-            background-color: #f5f5f5;
-            vertical-align: baseline;
-            text-align: center;
-            box-sizing: content-box;
-            padding-bottom: 75px;
-            
-        }
-        .pressLogo {
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center center;
-            display: inline-block;
-            height: 55px;
-            margin: 30px;
-            width: 300px;
-            @media $mediaMaxSm {
-                width: 200px;
-            }
-        }
-        .pressLogo-NYT {
-            background-image:
-              url('../images/nyt.png');
-        }
-        .pressLogo-FastCompany {
-            background-image:
-              url('../images/Fast_Company.png');
-        }
-        .pressLogo-EastBayExpress {
-            background-image:
-              url('../images/east-bay-express.png');
-        }
-        .pressLogo-SFChronicle {
-            background-image:
-              url('../images/sf-chron.png');
-        }
-        .pressLogo-FT {
-            background-image:
-              url('../images/ft.png');
-        }
-        .pressLogo-Shareable {
-            background-image:
-              url('../images/shareable.png');
-        }
-        .pressLogo-TheNation {
-            background-image:
-              url('../images/thenation.png');
-        }
-        #quote-carousel {
-            padding: 0 10px 30px 10px;
-            margin-top: 60px;
-        }
-        #quote-carousel .carousel-control {
-            background: none;
-            color: #CACACA;
-            font-size: 2.3em;
-            text-shadow: none;
-            margin-top: 30px;
-        }
-        #quote-carousel .carousel-indicators {
-            position: relative;
-            right: 50%;
-            top: auto;
-            bottom: 0px;
-            margin-top: 20px;
-            margin-right: -19px;
-        }
-        #quote-carousel .carousel-indicators li {
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            opacity: 0.4;
-            overflow: hidden;
-            transition: all .4s ease-in;
-            vertical-align: middle;
-        }
-        #quote-carousel .carousel-indicators .active {
-            width: 128px;
-            height: 128px;
-            opacity: 1;
-            transition: all .2s;
-        }
-        #quote-carousel .carousel-control {
-            @media $mediaMaxMd {
-                width: 10%;
-            }
-        }
-        .item blockquote {
-            border-left: none;
-            margin: 0;
-        }
-        .item blockquote p:before {
-            content: "\f10d";
-            font-family: 'Fontawesome';
-            float: left;
-            margin-right: 10px; 
         }
     }
 }
