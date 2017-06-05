@@ -86,6 +86,9 @@ namespace LcRest
         const string sqlConditionOnlyActivePlans = @"
             AND SubscriptionEndDate is null
         ";
+        const string sqlGetBySubscriptionID = sqlSelectAll + @"
+            WHERE   o.subscriptionID = @0
+        ";
 
         /// <summary>
         /// Get the record by its ID
@@ -97,6 +100,20 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(sqlGetItem, userPaymentPlanID));
+            }
+        }
+
+        /// <summary>
+        /// Get a record by the payment gateway 'subscriptionID', that is meant to be
+        /// unique.
+        /// </summary>
+        /// <param name="subscriptionID"></param>
+        /// <returns></returns>
+        public static UserPaymentPlan GetBySubscriptionID(string subscriptionID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetBySubscriptionID, subscriptionID));
             }
         }
 
@@ -348,6 +365,74 @@ namespace LcRest
            var subscriptionID = GetUserActivePlan(userID).subscriptionID;
            LcPayment.Membership.GetUserSubscription(subscriptionID);
         */
+        #endregion
+
+        #region Updates from Gateway
+        /// <summary>
+        /// Save updated data and status of a subscription from a notification
+        /// of the gateway.
+        /// </summary>
+        /// <param name="subscription"></param>
+        private static void UpdatedAtGateway(Braintree.Subscription subscription)
+        {
+            var userPlan = GetBySubscriptionID(subscription.Id);
+            if (userPlan == null)
+            {
+                throw new Exception("UserPaymentPlan subscription not found (" + subscription.Id + ")");
+            }
+
+            // Update record with information from the gateway
+            userPlan.paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
+            userPlan.nextPaymentDueDate = subscription.NextBillingDate;
+            userPlan.nextPaymentAmount = subscription.NextBillAmount;
+            userPlan.daysPastDue = subscription.DaysPastDue ?? 0;
+            // New status
+            userPlan.planStatus = subscription.Status.ToString();
+
+            Set(userPlan);
+        }
+
+        public static void CancelledAtGateway(Braintree.Subscription subscription)
+        {
+            if (subscription.Status != Braintree.SubscriptionStatus.CANCELED)
+            {
+                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
+            }
+            UpdatedAtGateway(subscription);
+        }
+        public static void ExpiredAtGateway(Braintree.Subscription subscription)
+        {
+            if (subscription.Status != Braintree.SubscriptionStatus.EXPIRED)
+            {
+                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
+            }
+            UpdatedAtGateway(subscription);
+        }
+        public static void TrialEndedAtGateway(Braintree.Subscription subscription)
+        {
+            if (subscription.Status != Braintree.SubscriptionStatus.ACTIVE)
+            {
+                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
+            }
+            UpdatedAtGateway(subscription);
+        }
+        public static void WentActiveAtGateway(Braintree.Subscription subscription)
+        {
+            if (subscription.Status != Braintree.SubscriptionStatus.ACTIVE)
+            {
+                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
+            }
+            UpdatedAtGateway(subscription);
+        }
+        public static void WentPastDueAtGateway(Braintree.Subscription subscription)
+        {
+            if (subscription.Status != Braintree.SubscriptionStatus.PAST_DUE)
+            {
+                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
+            }
+            UpdatedAtGateway(subscription);
+        }
+
         #endregion
     }
 }
