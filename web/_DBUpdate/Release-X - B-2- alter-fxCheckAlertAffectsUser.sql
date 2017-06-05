@@ -1,3 +1,16 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Iago Lorenzo Salgueiro
+-- Create date: 06/29/2012
+-- Description:	Returns 1 (as bit, means true)
+-- if that alert must be checked for
+-- that user, because the user type (IsCustomer,
+-- IsProvider) and the AlertTypeID (only
+-- providers alert, only customers, both)
+-- =============================================
 ALTER FUNCTION [dbo].[fxCheckAlertAffectsUser] (
 	@UserID int,
 	@AlertID int
