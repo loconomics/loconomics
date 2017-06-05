@@ -1,6 +1,5 @@
 INSERT INTO [alert]
    ([AlertID]
-   ,[AlertTypeID]
    ,[LanguageID]
    ,[CountryID]
    ,[AlertName]
@@ -23,7 +22,6 @@ INSERT INTO [alert]
    ,[bookMeButtonRequired])
 VALUES
    (@AlertID
-   ,@AlertTypeID
    ,@LanguageID
    ,@CountryID
    ,@AlertName
