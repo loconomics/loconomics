@@ -57,11 +57,13 @@ exports.registerAll = function(app) {
             }, this);
         }
     });
-    
+
     /// payment-plans
     ko.components.register('app-payment-plans', {
         template: { element: 'payment-plans-template' },
-        viewModel: { instance: {} }
+        viewModel: function() {
+            this.isServiceProfessional = app.model.userProfile.data.isServiceProfessional;
+        }
     });
 
     /// inline-user-menu
