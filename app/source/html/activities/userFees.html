@@ -55,8 +55,8 @@
                         </div>
                     </div>
                 </div>
-                <h1 class="SectionTitle" data-bind="visible: isNew">Enter payment info</h1>
-                <div data-bind="visible: isNew, with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
+                <h1 class="SectionTitle" data-bind="visible: isNew() && selectedPaymentPlanID()">Enter payment info</h1>
+                <div data-bind="visible: isNew() && selectedPaymentPlanID(), with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
                     <div class="form-group">
                         <span class="input-group">
                             <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
@@ -101,7 +101,7 @@
                     </li>
                 </ul>
 
-                <div class="LightForm" data-bind="visible: isNew">
+                <div class="LightForm" data-bind="visible: isNew() && selectedPaymentPlanID()">
                     <div class="LightForm-submitBar">
                         <button type="button" class="btn btn-primary btn-block"
                             data-bind="click: save, text: submitText, disable: isLocked">Save</button>

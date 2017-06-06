@@ -10,6 +10,12 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 // PRESET
 var data = [
     {//new PaymentPlan({
+        paymentPlanID: '',
+        name: 'Free',
+        summary: 'Always $0',
+        description: require('../../html/parts/PaymentPlanFree.html')
+    },
+    {//new PaymentPlan({
         paymentPlanID: 'OwnerGrowth',
         name: 'Owner Growth',
         summary: '$19 charged once a month',
