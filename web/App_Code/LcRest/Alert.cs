@@ -56,14 +56,12 @@ namespace LcRest
                              AND P.LanguageID = A.LanguageID
                              AND P.CountryID = A.CountryID
                              AND UP.UserID = UA.UserID
-                WHERE   UA.Active = 1 AND A.Active = 1 AND UA.UserID = @0
+                WHERE AND A.Active = 1 AND UA.UserID = @0
                          AND A.LanguageID = @1 AND A.CountryID = @2
                          AND (UA.PositionID = 0 OR P.PositionID is not null)
                         -- Filtered optionally by position (-1 to not filter by position)
                          AND (UA.PositionID = 0 OR @3 = -1 OR UA.PositionID = @3)
-                        -- Added dismissed feature #243: not show if is dismissed
-                        -- except for required ones, that cannot be dismissed
-                        AND (A.Required = 1 OR UA.Dismissed = 0)
+                        AND A.Required = 1
                 ORDER BY A.DisplayRank, A.AlertName
         ";
 
