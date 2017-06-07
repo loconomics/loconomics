@@ -110,4 +110,26 @@ describe('models/UserJobTitle', function() {
             expect(j.requiredAlerts().length).to.equal(2);
         });
     });
+
+    describe('isComplete', function() {
+        it('should be true if there are no required alerts and status is not incomplete', function() {
+            var optionalAlert = new ProfileAlert({ isRequired: false }),
+                j = new UserJobTitle({ alerts: [optionalAlert], statusID: UserJobTitle.status.off });
+
+            expect(j.isComplete()).to.be.equal(true);
+        });
+
+        it('should be false if status is incomplete', function() {
+            var j = new UserJobTitle({ statusID: UserJobTitle.status.incomplete });
+
+            expect(j.isComplete()).to.be.equal(false);
+        });
+
+        it('should be false if there are required alerts', function() {
+            var requiredAlert = new ProfileAlert({ isRequired: true }),
+                j = new UserJobTitle({ alerts: [requiredAlert], statusID: UserJobTitle.status.on });
+
+            expect(j.isComplete()).to.be.equal(false);
+        });
+    });
 });

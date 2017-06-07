@@ -222,10 +222,11 @@ function ViewModel(app) {
     };
     
     var UserJobTitle = require('../models/UserJobTitle');
+
     this.isToggleReady = ko.pureComputed(function() {
-        var j = this.userJobTitle();
-        return j && j.statusID() !== UserJobTitle.status.incomplete;
+        return this.userJobTitle() && this.userJobTitle().isComplete();
     }, this);
+
     this.isActiveStatus = ko.pureComputed({
         read: function() {
             var j = this.userJobTitle();

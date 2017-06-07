@@ -33,6 +33,13 @@ function UserJobTitle(values) {
             return profileAlert.isRequired();
         });
     }, this);
+
+    this.isComplete = ko.pureComputed(function() {
+        var statusComplete = this.statusID() === UserJobTitle.status.on || this.statusID() === UserJobTitle.status.off,
+            hasRequiredAlerts = this.requiredAlerts().length > 0;
+
+        return statusComplete && !hasRequiredAlerts;
+    }, this);
 }
 
 module.exports = UserJobTitle;
