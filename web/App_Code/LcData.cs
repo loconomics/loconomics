@@ -786,9 +786,6 @@ public static partial class LcData
                     getdate(),
                     getdate(), getdate(), 'sys'
                 )
-
-                -- Check Alert
-                EXEC TestAlertBackgroundCheck @0
             ", userId, backgroundCheckId);
             
             // Send email to loconomics

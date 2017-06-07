@@ -1,10 +1,10 @@
-﻿/****** Object:  StoredProcedure [dbo].[TestAllUserAlerts]    Script Date: 5/24/2017 11:13:48 AM ******/
+/****** Object:  StoredProcedure [dbo].[TestAllUserAlerts]    Script Date: 5/24/2017 11:13:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[TestAllUserAlerts] 
+ALTER PROCEDURE [dbo].[TestAllUserAlerts] 
 	@UserID int
 	,@PositionID int = 0
 AS
