@@ -36,18 +36,19 @@ function UserJobProfileViewModel(app) {
 
     function attachMarketplaceStatus(userJobtitle) {
         userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
-            var status = this.statusID();
+            var status = this.statusID(),
+                isComplete = this.isComplete();
             // L18N
-            if (status === UserJobTitle.status.on) {
-                return 'Marketplace profile: <strong class="text-success">ON</strong>';
+            if (isComplete && status === UserJobTitle.status.on) {
+                return 'Marketplace listing: <strong class="text-success">ON</strong>';
             }
-            else if (status === UserJobTitle.status.off) {
-                return 'Marketplace profile: <strong class="text-danger">OFF</strong>';
+            else if (isComplete && status === UserJobTitle.status.off) {
+                return 'Marketplace listing: <strong class="text-danger">OFF</strong>';
             }
             else {
                 // TODO: read number of steps left to activate from required alerts for the jobtitle
                 // '__count__ steps left to activate'
-                return '<span class="text-danger">There are steps left to activate</span>';
+                return '<span class="text-danger">Steps remaining to activate listing</span>';
             }
         }, userJobtitle);
     }
