@@ -41,12 +41,12 @@ function ViewModel(app) {
     this.plans = app.model.paymentPlans.list;
     this.activeUserPaymentPlan = app.model.userPaymentPlan.data;
 
-    this.selectedPaymentPlanID = ko.observable(null);
+    this.selectedPaymentPlanID = ko.observable('');
     this.paymentMethod = new InputPaymentMethod();
     this.paymentMethod.billingAddress(new Address());
 
     this.reset = function() {
-        this.selectedPaymentPlanID(null);
+        this.selectedPaymentPlanID('');
         this.paymentMethod.model.reset();
     }.bind(this);
 

@@ -9,7 +9,7 @@
                     <span class="month">/mo</span>
                 </h1>
             </div>
-            <div class="IconListCard">
+            <div class="PaymentPlanBenefits">
               @render('parts/PaymentPlanFree.html')
             </div>
         </div>
@@ -26,7 +26,7 @@
             </div>
             <div class="PaymentPlanBenefits">
               @render('parts/PaymentPlanGrowth.html')
-            <button type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+            <button data-bind="visible: isServiceProfessional()" type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
             </div>
             <div class="PaymentPlanBenefits">
               @render('parts/PaymentPlanPro.html')
-            <button type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+            <button data-bind="visible: isServiceProfessional()" type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
             </div>
         </div>
     </div>
@@ -56,7 +56,7 @@
             </div>
             <div class="PaymentPlanBenefits">
               @render('parts/PaymentPlanProAnnual.html')
-            <button type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+            <button data-bind="visible: isServiceProfessional()" type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
             </div>
         </div>
     </div>

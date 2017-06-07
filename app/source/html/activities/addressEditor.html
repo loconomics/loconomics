@@ -17,21 +17,19 @@
                         <span data-bind="text: header"></span>
                         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                     </h2>
+                    <p class="isolated text-muted" data-bind="text: subheader"></p>
                     <div data-bind="with: address()">
                         <div data-bind="visible: isServiceLocation">
-                            <app-unlabeled-input params="placeholder: 'Location name, e.g. ActivSpace Mission', value: addressName, disable: $root.isLocked" data-bind="visible: !$parent.clientUserID()"></app-unlabeled-input>
-                            <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
-                            <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Location name, e.g. building or business name', value: addressName, disable: $root.isLocked" data-bind="visible: !$parent.clientUserID()"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Street address', value: addressLine1, disable: $root.isLocked"></app-unlabeled-input>
+                            <app-unlabeled-input params="placeholder: 'Street address line 2 (optional)', value: addressLine2, disable: $root.isLocked"></app-unlabeled-input>
                         </div>
                         <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
                             <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                         </div>
                         <div class="form-group" data-bind="visible: isServiceLocation">
                             <p class="form-control-static">
-                                <span data-bind="visible: city() || stateProvinceCode()">
-                                    <span data-bind="text: city"></span>,
-                                    <span data-bind="text: stateProvinceCode"></span>
-                                </span>
+                                <span data-bind="text: cityState() || 'City:'"></span>
                                 <!-- White space to reserve space -->
                                 &nbsp;
                             </p>
@@ -43,7 +41,7 @@
                         </div>
                         <div class="form-group" data-bind="visible: isServiceLocation">
                             <label class="sr-only" for="addressEditorSpecialInstructions">Special instructions</label>
-                            <textarea rows="2" class="form-control" placeholder="Any special instructions? (e.g. intercom code, parking, etc.)" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
+                            <textarea rows="2" class="form-control" placeholder="Any special instructions for your clients, e.g. intercom code, parking? (optional)" id="addressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked"></textarea>
                         </div>
                     </div>
                     <div class="LightForm-submitBar">

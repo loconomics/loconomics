@@ -40,7 +40,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading the job title.',
+                        title: 'Unable to load listing details.',
                         error: err
                     });
                 }.bind(this));
@@ -53,7 +53,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'Unable to load submitted licenses and credentials.',
                         error: err
                     });
                 }.bind(this));
@@ -72,7 +72,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
-                        title: 'There was an error while loading.',
+                        title: 'Unable to load license requirements.',
                         error: err
                     });
                 }.bind(this));

@@ -105,7 +105,7 @@ A.prototype.show = function show(options) {
     var showLoadingError = function(error) {
         this.viewModel.isLoading(false);
         this.app.modals.showError({
-            title: 'Error loading data',
+            title: 'Unable to load service',
             error: error
         })
         .then(function() {
@@ -223,7 +223,7 @@ function ViewModel(app) {
             return prefix + pricingName + postfix;
         }
         else {
-            return 'Unknown service or was deleted';
+            return 'Unable to load service';
         }
 
     }, this);
@@ -299,7 +299,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
-                title: 'There was an error while saving.',
+                title: 'Unable to save the service.',
                 error: err
             });
         });
@@ -330,7 +330,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(err) {
             app.modals.showError({
-                title: 'There was an error while deleting.',
+                title: 'Unable to delete the service.',
                 error: err
             });
         });

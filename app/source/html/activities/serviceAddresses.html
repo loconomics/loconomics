@@ -11,39 +11,41 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div class="OnboardingValueProp"> 
+                <div class="OnboardingValueProp" data-bind="visible: showSupportingText">
                     <div class="Icon-container">
                         <span class="Tile-icon fa ion ion-ios-location-outline" aria-hidden="true"></span>
                     </div>
-                    <span class="Tile-content">
-                        <h2><span data-bind="visible: isInOnboarding()">Add <span data-bind="text: jobTitleName"></span> service areas/locations</span><span data-bind="visible: !isInOnboarding()"><span data-bind="text: jobTitleName"></span> service areas/locations</span></h2> 
+                    <div class="Tile-content">
+                        <h2>Where do you work as a <span data-bind="text: jobTitleName"></span>?</h2>
                         <p>Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
-                    </span>
+                    </div>
                 </div>
-                <h2 class="SectionTitle">
-                    <span data-bind="visible: headerText, text: headerText"></span>
-                </h2>
+                <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div id="addressesListView">
-                    <div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                    <!-- ko if: isInOnboarding --><div data-bind="template: { name: 'service-addresses-open-list-template', data: serviceAddresses }"></div><!-- /ko -->
+                    <!-- ko ifnot: isInOnboarding --><div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div><!-- /ko -->
                 </div>
+
+                <h2 class="SectionTitle" data-bind="visible: addMoreHeaderText, text: addMoreHeaderText"></h2>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
                     <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
-                        <div class="Tile-content text-muted">Add a service location</div>
+                        <div class="Tile-content text-muted" data-bind="text: addLocationLabel"></div>
                         <div class="Tile-icon text-muted">
                             <span class="fa ion ion-plus"></span>
                         </div>
                     </button>
                     <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !serviceAddresses.isSelectionMode()">
-                        <div class="Tile-content text-muted">Add a service area/radius</div>
+                        <div class="Tile-content text-muted" data-bind="text: addAreaLabel"></div>
                         <div class="Tile-icon text-muted">
                             <span class="fa ion ion-plus"></span>
                         </div>
                     </button>
                 </div>
+
                 <div data-bind="visible: clientAddresses.isSelectionMode() && clientAddresses.hasAddresses()">
                     <h2 class="SectionTitle">Select a client location</h2>
                     <div data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
@@ -56,6 +58,7 @@
                         </div>
                     </button>
                 </div>
+
                 <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
                 </div>
