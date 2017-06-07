@@ -8,6 +8,7 @@ module.exports = {
     'test': [
         'browserify:styleguidelibs',
         'browserify:libs',
+        'browserify:app',
         'browserify:tests',
         'mocha'
     ],
