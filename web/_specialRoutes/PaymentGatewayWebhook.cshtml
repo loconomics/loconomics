@@ -48,29 +48,33 @@
         }
 
         // Payment Plan Subscription updates
-        if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_CANCELED)
+        var planNotifications = new List<Braintree.WebhookKind>
         {
-            LcRest.UserPaymentPlan.CancelledAtGateway(notification.Subscription);
-        }
-        else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_EXPIRED)
+            Braintree.WebhookKind.SUBSCRIPTION_CANCELED,
+            Braintree.WebhookKind.SUBSCRIPTION_EXPIRED,
+            Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE,
+            Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE
+            // Trial ended notification is not relevant (status is active before and after
+            // and payment data the same; the actual relevant changes when that happens is
+            // the payment charge, detected with the '_CHARGED_' notifications)
+            //Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED
+        };
+        if (planNotifications.Contains(notification.Kind))
         {
-            LcRest.UserPaymentPlan.ExpiredAtGateway(notification.Subscription);
-        }
-        else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED)
-        {
-            LcRest.UserPaymentPlan.TrialEndedAtGateway(notification.Subscription);
-        }
-        else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE)
-        {
-            LcRest.UserPaymentPlan.WentActiveAtGateway(notification.Subscription);
-        }
-        else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE)
-        {
-            LcRest.UserPaymentPlan.WentPastDueAtGateway(notification.Subscription);
+            var userPlan = LcRest.UserPaymentPlan.GetBySubscriptionID(notification.Subscription.Id);
+            if (userPlan == null)
+            {
+                throw new Exception("UserPaymentPlan subscription not found (" + notification.Subscription.Id + ")");
+            }
+            else
+            {
+                userPlan.UpdatedAtGateway(notification.Subscription, notification.Kind);
+                LcRest.UserPaymentPlan.Set(userPlan);
+            }
         }
         else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_CHARGED_SUCCESSFULLY)
         {
-
+            
         }
         else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_CHARGED_UNSUCCESSFULLY)
         {

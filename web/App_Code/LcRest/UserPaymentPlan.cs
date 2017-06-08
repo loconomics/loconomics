@@ -373,66 +373,84 @@ namespace LcRest
         /// of the gateway.
         /// </summary>
         /// <param name="subscription"></param>
-        private static void UpdatedAtGateway(Braintree.Subscription subscription)
+        public void UpdatedAtGateway(Braintree.Subscription subscription, Braintree.WebhookKind notification)
         {
-            var userPlan = GetBySubscriptionID(subscription.Id);
-            if (userPlan == null)
+            if (subscriptionID != subscription.Id)
             {
-                throw new Exception("UserPaymentPlan subscription not found (" + subscription.Id + ")");
+                throw new Exception(String.Format("Subscription IDs don't match, record '{0}', input '{1}'", subscriptionID, subscription.Id));
             }
-
             // Update record with information from the gateway
-            userPlan.paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
-            userPlan.nextPaymentDueDate = subscription.NextBillingDate;
-            userPlan.nextPaymentAmount = subscription.NextBillAmount;
-            userPlan.daysPastDue = subscription.DaysPastDue ?? 0;
+            paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
+            nextPaymentDueDate = subscription.NextBillingDate;
+            nextPaymentAmount = subscription.NextBillAmount;
+            daysPastDue = subscription.DaysPastDue ?? 0;
             // New status
-            userPlan.planStatus = subscription.Status.ToString();
-
-            Set(userPlan);
-        }
-
-        public static void CancelledAtGateway(Braintree.Subscription subscription)
-        {
-            if (subscription.Status != Braintree.SubscriptionStatus.CANCELED)
+            planStatus = subscription.Status.ToString();
+            // Detect when a subscription ended
+            if (subscription.Status == Braintree.SubscriptionStatus.CANCELED ||
+                subscription.Status == Braintree.SubscriptionStatus.EXPIRED)
             {
-                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
+                subscriptionEndDate = subscription.BillingPeriodEndDate ?? DateTimeOffset.Now;
             }
-            UpdatedAtGateway(subscription);
-        }
-        public static void ExpiredAtGateway(Braintree.Subscription subscription)
-        {
-            if (subscription.Status != Braintree.SubscriptionStatus.EXPIRED)
-            {
-                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
-            }
-            UpdatedAtGateway(subscription);
-        }
-        public static void TrialEndedAtGateway(Braintree.Subscription subscription)
-        {
-            if (subscription.Status != Braintree.SubscriptionStatus.ACTIVE)
-            {
-                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
-            }
-            UpdatedAtGateway(subscription);
-        }
-        public static void WentActiveAtGateway(Braintree.Subscription subscription)
-        {
-            if (subscription.Status != Braintree.SubscriptionStatus.ACTIVE)
-            {
-                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
-            }
-            UpdatedAtGateway(subscription);
-        }
-        public static void WentPastDueAtGateway(Braintree.Subscription subscription)
-        {
-            if (subscription.Status != Braintree.SubscriptionStatus.PAST_DUE)
-            {
-                throw new Exception("Incorrect Subscription Status: " + subscription.Status);
-            }
-            UpdatedAtGateway(subscription);
         }
 
+        /// <summary>
+        /// Save updated data and status of a subscription from a change at the gateway.
+        /// A comparision between saved status and new one will detect the kind of notification
+        /// </summary>
+        /// <param name="subscription"></param>
+        public void UpdatedAtGateway(Braintree.Subscription subscription)
+        {
+            // Detect kind of change/notification
+            // Status livecycle at official docs: https://developers.braintreepayments.com/guides/recurring-billing/overview#subscription-statuses
+            // Cannot detect Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED here but is
+            // not important really, because the status of the subscrition is Active already in trial period;
+            // the important change (to update some data) is when the paymend was done (that happens at same
+            // time as the trial_ended for the first one, and one update for the same data and status is enought).
+            var kind = Braintree.WebhookKind.UNRECOGNIZED;
+            if (planStatus != subscription.Status.ToString())
+            {
+                // Status change, detect which one
+                // - Can change from Pending, Active or PastDue to Canceled
+                if (subscription.Status == Braintree.SubscriptionStatus.CANCELED)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_CANCELED;
+                }
+                // - Can change from Active to Canceled
+                else if (subscription.Status == Braintree.SubscriptionStatus.EXPIRED)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_EXPIRED;
+                }
+                // - Change change from Pending, PastDue
+                else if (subscription.Status == Braintree.SubscriptionStatus.ACTIVE)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE;
+                }
+                // - Change change from Pending, Active
+                else if (subscription.Status == Braintree.SubscriptionStatus.PAST_DUE)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE;
+                }
+                // - Impossible to have a change from 'other' status to Pending, is not allowed
+                //   in the Braintree subscription livecycle
+            }
+
+            UpdatedAtGateway(subscription, kind);
+        }
+        #endregion
+
+        #region Query by Plan/Subscription status
+        /// <summary>
+        /// Get active subscriptions with status Pending or Past_due
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserPaymentPlan> QueryByStatusPendingOrPastDue(LcDatabase db)
+        {
+            return db.Query(sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1)",
+                Braintree.SubscriptionStatus.PENDING.ToString(),
+                Braintree.SubscriptionStatus.PAST_DUE.ToString()).Select(FromDB);
+        }
         #endregion
     }
 }

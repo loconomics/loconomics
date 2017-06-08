@@ -641,6 +641,10 @@ public class ScheduleTask
 
         logger.Log("Elapsed time {0}, for {1} user calendars imported, {2} failed", DateTime.Now - partialElapsedTime, successCalendars, failedCalendars);
 
+        /*
+         * Membership tasks
+         */
+        Tasks.UserPaymentPlanSubscriptionUpdatesTask.Run(logger);
 
         /*
          * Task Ended
