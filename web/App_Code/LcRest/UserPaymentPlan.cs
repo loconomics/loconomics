@@ -441,15 +441,17 @@ namespace LcRest
 
         #region Query by Plan/Subscription status
         /// <summary>
-        /// Get active subscriptions with status Pending or Past_due
+        /// Get active subscriptions, all ones with a non final status (Active, Pending, Past_due)
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPaymentPlan> QueryByStatusPendingOrPastDue(LcDatabase db)
+        public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(LcDatabase db)
         {
-            return db.Query(sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1)",
+            return db.Query(sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)",
                 Braintree.SubscriptionStatus.PENDING.ToString(),
-                Braintree.SubscriptionStatus.PAST_DUE.ToString()).Select(FromDB);
+                Braintree.SubscriptionStatus.PAST_DUE.ToString(),
+                Braintree.SubscriptionStatus.ACTIVE.ToString())
+            .Select(FromDB);
         }
         #endregion
     }

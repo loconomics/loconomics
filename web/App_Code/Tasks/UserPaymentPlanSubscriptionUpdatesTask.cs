@@ -93,7 +93,7 @@ namespace Tasks
 
             using (var db = new LcDatabase())
             {
-                var list = LcRest.UserPaymentPlan.QueryByStatusPendingOrPastDue(db);
+                var list = LcRest.UserPaymentPlan.QueryActiveSubscriptions(db);
                 task.UpdateFromGateway(list, logger);
             }
 

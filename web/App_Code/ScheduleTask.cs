@@ -644,7 +644,16 @@ public class ScheduleTask
         /*
          * Membership tasks
          */
-        Tasks.UserPaymentPlanSubscriptionUpdatesTask.Run(logger);
+        // Note: the whole ScheduleTask is set-up to run every hour,
+        // since the subscriptions status is keep up to date by Webhooks already,
+        // and this task is just a fallback in case of communication error and can
+        // perform lot of request to Braintree, we force to reduce execution to once
+        // a week.
+        // Easily, we just check if we are at Midnight of Monday
+        if (DateTime.Now.Hour == 0 && DateTime.Now.DayOfWeek == DayOfWeek.Monday)
+        {
+            Tasks.UserPaymentPlanSubscriptionUpdatesTask.Run(logger);
+        }
 
         /*
          * Task Ended
