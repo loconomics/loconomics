@@ -50,10 +50,16 @@
         // Payment Plan Subscription updates
         var planNotifications = new List<Braintree.WebhookKind>
         {
+            // Status Changes
             Braintree.WebhookKind.SUBSCRIPTION_CANCELED,
             Braintree.WebhookKind.SUBSCRIPTION_EXPIRED,
             Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE,
-            Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE
+            Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE,
+            // Payment Changes: it can change the status (past_due on unsuccessfully,
+            // active on successfully if comes from past_due)
+            // and subscription data (NextBilling info).
+            Braintree.WebhookKind.SUBSCRIPTION_CHARGED_SUCCESSFULLY,
+            Braintree.WebhookKind.SUBSCRIPTION_CHARGED_UNSUCCESSFULLY
             // Trial ended notification is not relevant (status is active before and after
             // and payment data the same; the actual relevant changes when that happens is
             // the payment charge, detected with the '_CHARGED_' notifications)
@@ -71,14 +77,6 @@
                 userPlan.UpdatedAtGateway(notification.Subscription, notification.Kind);
                 LcRest.UserPaymentPlan.Set(userPlan);
             }
-        }
-        else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_CHARGED_SUCCESSFULLY)
-        {
-            
-        }
-        else if (notification.Kind == Braintree.WebhookKind.SUBSCRIPTION_CHARGED_UNSUCCESSFULLY)
-        {
-
         }
 
         // Other...
