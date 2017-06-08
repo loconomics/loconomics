@@ -128,7 +128,7 @@ function ViewModel(app) {
             dataVersion.pushSave()
             .then(function() {
                 // Move forward:
-                if (app.model.onboarding.inProgress()) {
+                if (this.isInOnboarding()) {
                     app.model.onboarding.goNext();
                 } else {
                     app.successSave();
@@ -141,6 +141,10 @@ function ViewModel(app) {
                 // catch error, managed on event
             }.bind(this));
         }
+    }.bind(this);
+
+    this.onSkip = function() {
+        app.model.onboarding.goNext();
     }.bind(this);
 
     this.errorMessages = {
