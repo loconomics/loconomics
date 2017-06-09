@@ -41,6 +41,20 @@ namespace LcRest
         public DateTime updatedDate;
 
         public int? ownerStatusID;
+        public LcEnum.OwnerStatus ownerStatus
+        {
+            get
+            {
+                if (ownerStatusID.HasValue)
+                {
+                    return (LcEnum.OwnerStatus)ownerStatusID;
+                }
+                else
+                {
+                    return LcEnum.OwnerStatus.unset;
+                }
+            }
+        }
         public DateTime? ownerAnniversaryDate;
 
         // Automatic field right now, but is better
@@ -278,5 +292,287 @@ namespace LcRest
         }
         #endregion
 
+        #region Membership
+        /* Notes: serialized values of SubscriptionStatus
+         * Braintree.SubscriptionStatus.STATUSES.Select(s => s.ToString());
+            string "Active"
+            string "Canceled"
+            string "Expired"
+            string "Past Due"
+            string "Pending"
+         */
+        /// <summary>
+        /// Run membership requirements checks and returns
+        /// the OwnerStatus that belongs the user based on that
+        /// (but is not saved and previous status is not checked).
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns>Status based on requirements</returns>
+        public static LcEnum.OwnerStatus CheckOwnerStatus(int userID)
+        {
+            // Check all requirements
+            if (MeetsListingRequirement(userID) &&
+                MeetsBookingsRequirement(userID) &&
+                MeetsAcknowledgmentRequirement(userID) &&
+                MeetsPaymentRequirement(userID))
+            {
+                // It's OK
+                if (IsUserFeePaymentPastDue(userID))
+                {
+                    // Status is different on 'past due' but still enabled
+                    return LcEnum.OwnerStatus.inDefault;
+                }
+                else
+                {
+                    return LcEnum.OwnerStatus.active;
+                }
+            }
+            else
+            {
+                // It failed
+                return LcEnum.OwnerStatus.inactive;
+            }
+        }
+
+        /// <summary>
+        /// Set the user OwnerStatus in database, only if different from current
+        /// one, and saving a status history entry.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="status"></param>
+        public static void SetOwnerStatus(int userID, LcEnum.OwnerStatus status)
+        {
+            var user = Get(userID);
+            if (user.ownerStatus != status)
+            {
+                // The update is allowed only if some checks against current status
+                // are met
+                var allowChange = false;
+
+                // If current status is Cancelled or Suspended, we only allow
+                // to change it to Active, InTrial or InDefault.
+                if ((
+                    user.ownerStatus == LcEnum.OwnerStatus.cancelled ||
+                    user.ownerStatus == LcEnum.OwnerStatus.suspended) && (
+                    status == LcEnum.OwnerStatus.active ||
+                    status == LcEnum.OwnerStatus.inTrial ||
+                    status == LcEnum.OwnerStatus.inDefault))
+                {
+                    allowChange = true;
+                }
+                // If current status is 'unset' (null on database --means never an owner before),
+                // is only allowed to change it to InTrial, Active.
+                else if (user.ownerStatus == LcEnum.OwnerStatus.unset && (
+                    status == LcEnum.OwnerStatus.active ||
+                    status == LcEnum.OwnerStatus.inTrial))
+                {
+                    allowChange = true;
+                }
+                // If current status is 'in trial', is only allowed to change it to Active
+                else if (user.ownerStatus == LcEnum.OwnerStatus.inTrial &&
+                    status == LcEnum.OwnerStatus.active)
+                {
+                    allowChange = true;
+                }
+                // If current status is 'active', is only allowed to change it to Inactive,
+                // In default, cancelled, suspended
+                else if (user.ownerStatus == LcEnum.OwnerStatus.active && (
+                    status == LcEnum.OwnerStatus.inactive ||
+                    status == LcEnum.OwnerStatus.inDefault ||
+                    status == LcEnum.OwnerStatus.cancelled ||
+                    status == LcEnum.OwnerStatus.suspended))
+                {
+                    allowChange = true;
+                }
+                // If current status is 'inactive', is only allowed to change it to active,
+                // cancelled, suspended
+                else if (user.ownerStatus == LcEnum.OwnerStatus.inactive && (
+                    status == LcEnum.OwnerStatus.active ||
+                    status == LcEnum.OwnerStatus.cancelled ||
+                    status == LcEnum.OwnerStatus.suspended))
+                {
+                    allowChange = true;
+                }
+                // If current status is 'in default -past due', is only allowed to change it
+                // to active, cancelled, suspended
+                else if (user.ownerStatus == LcEnum.OwnerStatus.inDefault && (
+                    status == LcEnum.OwnerStatus.active ||
+                    status == LcEnum.OwnerStatus.cancelled ||
+                    status == LcEnum.OwnerStatus.suspended))
+                {
+                    allowChange = true;
+                }
+
+                // Save on database, with a new entry at the status history
+                if (allowChange)
+                {
+                    using (var db = new LcDatabase())
+                    {
+                        var statusID = (status == LcEnum.OwnerStatus.unset ? null : (int?)status);
+                        db.Execute(@"
+                            BEGIN TRANSACTION
+
+                            INSERT INTO OwnerStatusHistory (
+                                UserID, OwnserStatusID, OwnserStatusChangedDate, OwnserStatusChangedBy
+                            ) VALUES (
+                                @0, @1, getdate(), 'sys'
+                            )
+
+                            UPDATE Users SET OwnerStatusID = @1
+                            WHERE UserID = @0
+
+                            COMMIT TRANSACTION
+                        ", userID, statusID);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks the membership requirements of the user and
+        /// if there is a status change is saved at database.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static LcEnum.OwnerStatus CheckAndSaveOwnerStatus(int userID)
+        {
+            var status = CheckOwnerStatus(userID);
+            SetOwnerStatus(userID, status);
+            return status;
+        }
+
+        #region Membership requirements checks
+        public static bool MeetsListingRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasListing bit = 0
+
+            -- Firts: ensure all account and listing requirements are tested
+            -- before we check listing status
+            EXEC TestAllUserAlerts @userID
+
+            -- Check Listing
+            IF EXISTS (
+				SELECT *
+				FROM userprofilepositions
+				WHERE UserID = @UserID
+					AND Active = 1
+					AND StatusID = 1 -- active and publicly visible
+			)
+			BEGIN
+				SET @hasListing = 1
+			END
+
+            SELECT @hasListing
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
+
+        public static bool MeetsBookingsRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasBookings bit = 0
+
+			IF 2 <= (
+				SELECT count(*)
+				FROM booking
+				WHERE ServiceProfessionalUserID = @UserID
+					AND ClientUserID <> @UserID
+					AND BookingStatusID = 8 -- completed
+			)
+			BEGIN
+				SET @hasBookings = 1
+			END
+
+            SELECT @hasBookings
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
+
+        public static bool MeetsPaymentRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasPaid bit = 0
+
+			IF EXISTS (
+				SELECT *
+				FROM UserPaymentPlan
+				WHERE UserID = @UserID
+					AND PlanStatus IN ('Active', 'Past Due')
+					-- extra check for 'current plan'
+					AND SubscriptionEndDate is null
+			)
+			BEGIN
+				SET @hasPaid = 1
+			END
+
+            SELECT @hasPaid
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
+
+        public static bool MeetsAcknowledgmentRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasAcknowledgment bit = 0
+
+			IF EXISTS (
+				SELECT *
+				FROM OwnerAcknowledgment
+				WHERE UserID = @UserID
+					AND DateAcknowledged is not null
+			)
+			BEGIN
+				SET @hasAcknowledgment = 1
+			END
+
+            SELECT @hasAcknowledgment
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
+
+        public static bool IsUserFeePaymentPastDue(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @itIs bit = 0
+
+			IF EXISTS (
+				SELECT *
+				FROM UserPaymentPlan
+				WHERE UserID = @UserID
+					AND PlanStatus like 'Past Due'
+					-- extra check for 'current plan'
+					AND SubscriptionEndDate is null
+			)
+			BEGIN
+				SET @itIs = 1
+			END
+
+            SELECT @itIs
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
+        #endregion
+        #endregion
     }
 }

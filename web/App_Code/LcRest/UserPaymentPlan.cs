@@ -206,6 +206,9 @@ namespace LcRest
                     data.planStatus,
                     data.daysPastDue
                 );
+
+                // Run Membership Checks to enable/disable member (OwnerStatus update)
+                UserProfile.CheckAndSaveOwnerStatus(data.userID);
             }
         }
         #endregion
