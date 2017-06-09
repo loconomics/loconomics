@@ -368,6 +368,36 @@ namespace LcRest
            var subscriptionID = GetUserActivePlan(userID).subscriptionID;
            LcPayment.Membership.GetUserSubscription(subscriptionID);
         */
+
+        /// <summary>
+        /// For the last payment plan of the user, gets the subscription status (planStatus)
+        /// parsed for the Braintree enumeration, with fallback to UNRECOGNIZED value if
+        /// no payment plan registered.
+        /// This checks for closed plans too (useful to know if last payment was cancelled or suspended).
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static Braintree.SubscriptionStatus GetLastPaymentPlanStatus(int userID)
+        {
+            var sql = @"
+			SELECT TOP 1 PlanStatus
+			FROM UserPaymentPlan
+			WHERE UserID = @0
+            ORDER BY UserPaymentPlanID DESC
+            ";
+            using (var db = new LcDatabase())
+            {
+                var status = (string)db.QueryValue(sql, userID);
+                if (status == null)
+                {
+                    return Braintree.SubscriptionStatus.UNRECOGNIZED;
+                }
+                else
+                {
+                    return Braintree.SubscriptionStatus.STATUSES.First(x => status == x.ToString());
+                }
+            }
+        }
         #endregion
 
         #region Updates from Gateway

@@ -330,7 +330,19 @@ namespace LcRest
             else
             {
                 // It failed
-                return LcEnum.OwnerStatus.inactive;
+                var status = UserPaymentPlan.GetLastPaymentPlanStatus(userID);
+                if (status == Braintree.SubscriptionStatus.CANCELED)
+                {
+                    return LcEnum.OwnerStatus.cancelled;
+                }
+                else if (status == Braintree.SubscriptionStatus.EXPIRED)
+                {
+                    return LcEnum.OwnerStatus.suspended;
+                }
+                else
+                {
+                    return LcEnum.OwnerStatus.inactive;
+                }
             }
         }
 
@@ -553,28 +565,8 @@ namespace LcRest
 
         public static bool IsUserFeePaymentPastDue(int userID)
         {
-            var sql = @"
-            DECLARE @UserID = @0
-            DECLARE @itIs bit = 0
-
-			IF EXISTS (
-				SELECT *
-				FROM UserPaymentPlan
-				WHERE UserID = @UserID
-					AND PlanStatus like 'Past Due'
-					-- extra check for 'current plan'
-					AND SubscriptionEndDate is null
-			)
-			BEGIN
-				SET @itIs = 1
-			END
-
-            SELECT @itIs
-            ";
-            using (var db = new LcDatabase())
-            {
-                return (bool)db.QueryValue(sql, userID);
-            }
+            var status = UserPaymentPlan.GetLastPaymentPlanStatus(userID);
+            return status == Braintree.SubscriptionStatus.PAST_DUE;
         }
         #endregion
         #endregion
