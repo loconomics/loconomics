@@ -31,12 +31,20 @@
         margin-right: auto;
         margin-left: auto;
 
-        .col:first-child {
-            padding-left: 0;
+        .btn-col:first-child {
+            @media $mediaMinSm {
+                padding-left: 0;
+            }
         }
 
-        .col:last-child {
-            padding-right: 0;
+        .btn-col:last-child {
+            @media $mediaMinSm {
+                padding-right: 0;
+            }
+        }
+
+        .btn-col + .btn-col {
+            margin-top: 5px;
         }
     }
     

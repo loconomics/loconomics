@@ -109,10 +109,10 @@
 
                 <div class="LightForm container-fluid" data-bind="visible: isInOnboarding()">
                     <div class="LightForm-submitBar row">
-                        <div class="col col-xs-6">
+                        <div class="btn-col col-xs-12 col-sm-6">
                             <button type="button" value="Skip" class="btn btn-default btn-block" data-bind="disable: $root.isLocked, click: $root.onSkip">Skip for now</button>
                         </div>
-                        <div class="col col-xs-6">
+                        <div class="btn-col col-xs-12 col-sm-6">
                             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: $root.isLocked, click: $root.save">Save</button>
                         </div>
                     </div>
