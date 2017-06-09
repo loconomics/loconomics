@@ -292,7 +292,7 @@ namespace LcRest
         }
         #endregion
 
-        #region Membership
+        #region Membership / OwnerStatus
         /* Notes: serialized values of SubscriptionStatus
          * Braintree.SubscriptionStatus.STATUSES.Select(s => s.ToString());
             string "Active"
@@ -335,6 +335,64 @@ namespace LcRest
         }
 
         /// <summary>
+        /// A change in the OwnerStatus is allowed following an strict flow.
+        /// This index defines what status changes are valid coming from a given status
+        /// From a status -> To status (each one in the list)
+        /// </summary>
+        private static Dictionary<LcEnum.OwnerStatus, HashSet<LcEnum.OwnerStatus>> 
+            AllowedOwnerStatusChanges = new Dictionary<LcEnum.OwnerStatus, HashSet<LcEnum.OwnerStatus>>
+        {
+            // If current status is 'unset' (null on database --means never an owner before),
+            // is only allowed to change it to InTrial, Active.
+            // From
+            { LcEnum.OwnerStatus.unset, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.inTrial,
+                LcEnum.OwnerStatus.active
+            } },
+            // From
+            { LcEnum.OwnerStatus.inTrial, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.active,
+                LcEnum.OwnerStatus.cancelled
+            } },
+            // From
+            { LcEnum.OwnerStatus.active, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.inactive,
+                LcEnum.OwnerStatus.inDefault, // AKA 'past due'
+                LcEnum.OwnerStatus.cancelled,
+                LcEnum.OwnerStatus.suspended
+            } },
+            // From
+            { LcEnum.OwnerStatus.cancelled, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.active,
+                LcEnum.OwnerStatus.inTrial
+            } },
+            // From
+            { LcEnum.OwnerStatus.suspended, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.active,
+                LcEnum.OwnerStatus.inTrial
+            } },
+            // From
+            { LcEnum.OwnerStatus.inactive, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.active,
+                LcEnum.OwnerStatus.cancelled,
+                LcEnum.OwnerStatus.suspended
+            } },
+            // From
+            { LcEnum.OwnerStatus.inDefault, new HashSet<LcEnum.OwnerStatus> {
+                // To
+                LcEnum.OwnerStatus.active,
+                LcEnum.OwnerStatus.cancelled,
+                LcEnum.OwnerStatus.suspended
+            } }
+        };
+
+        /// <summary>
         /// Set the user OwnerStatus in database, only if different from current
         /// one, and saving a status history entry.
         /// </summary>
@@ -345,63 +403,9 @@ namespace LcRest
             var user = Get(userID);
             if (user.ownerStatus != status)
             {
-                // The update is allowed only if some checks against current status
-                // are met
-                var allowChange = false;
-
-                // If current status is Cancelled or Suspended, we only allow
-                // to change it to Active, InTrial or InDefault.
-                if ((
-                    user.ownerStatus == LcEnum.OwnerStatus.cancelled ||
-                    user.ownerStatus == LcEnum.OwnerStatus.suspended) && (
-                    status == LcEnum.OwnerStatus.active ||
-                    status == LcEnum.OwnerStatus.inTrial ||
-                    status == LcEnum.OwnerStatus.inDefault))
-                {
-                    allowChange = true;
-                }
-                // If current status is 'unset' (null on database --means never an owner before),
-                // is only allowed to change it to InTrial, Active.
-                else if (user.ownerStatus == LcEnum.OwnerStatus.unset && (
-                    status == LcEnum.OwnerStatus.active ||
-                    status == LcEnum.OwnerStatus.inTrial))
-                {
-                    allowChange = true;
-                }
-                // If current status is 'in trial', is only allowed to change it to Active
-                else if (user.ownerStatus == LcEnum.OwnerStatus.inTrial &&
-                    status == LcEnum.OwnerStatus.active)
-                {
-                    allowChange = true;
-                }
-                // If current status is 'active', is only allowed to change it to Inactive,
-                // In default, cancelled, suspended
-                else if (user.ownerStatus == LcEnum.OwnerStatus.active && (
-                    status == LcEnum.OwnerStatus.inactive ||
-                    status == LcEnum.OwnerStatus.inDefault ||
-                    status == LcEnum.OwnerStatus.cancelled ||
-                    status == LcEnum.OwnerStatus.suspended))
-                {
-                    allowChange = true;
-                }
-                // If current status is 'inactive', is only allowed to change it to active,
-                // cancelled, suspended
-                else if (user.ownerStatus == LcEnum.OwnerStatus.inactive && (
-                    status == LcEnum.OwnerStatus.active ||
-                    status == LcEnum.OwnerStatus.cancelled ||
-                    status == LcEnum.OwnerStatus.suspended))
-                {
-                    allowChange = true;
-                }
-                // If current status is 'in default -past due', is only allowed to change it
-                // to active, cancelled, suspended
-                else if (user.ownerStatus == LcEnum.OwnerStatus.inDefault && (
-                    status == LcEnum.OwnerStatus.active ||
-                    status == LcEnum.OwnerStatus.cancelled ||
-                    status == LcEnum.OwnerStatus.suspended))
-                {
-                    allowChange = true;
-                }
+                // The update is allowed only if the 'status flow' is met
+                var validChanges = AllowedOwnerStatusChanges[user.ownerStatus];
+                var allowChange = validChanges.Contains(status);
 
                 // Save on database, with a new entry at the status history
                 if (allowChange)
