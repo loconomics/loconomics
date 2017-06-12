@@ -74,6 +74,13 @@ namespace Tasks
                             LcRest.UserPaymentPlan.Set(userPlan);
                             // Update items count
                             processed++;
+
+                            // Payments
+                            foreach (var transaction in subs.Transactions)
+                            {
+                                var payment = LcRest.UserFeePayment.FromSubscriptionTransaction(userPlan, transaction);
+                                LcRest.UserFeePayment.Set(payment);
+                            }
                         }
                     }
                 }

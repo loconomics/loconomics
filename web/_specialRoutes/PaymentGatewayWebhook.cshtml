@@ -76,6 +76,13 @@
             {
                 userPlan.UpdatedAtGateway(notification.Subscription, notification.Kind);
                 LcRest.UserPaymentPlan.Set(userPlan);
+
+                // Payments
+                foreach (var transaction in notification.Subscription.Transactions)
+                {
+                    var payment = LcRest.UserFeePayment.FromSubscriptionTransaction(userPlan, transaction);
+                    LcRest.UserFeePayment.Set(payment);
+                }
             }
         }
 
