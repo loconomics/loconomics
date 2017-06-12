@@ -312,7 +312,8 @@ namespace LcRest
         {
             // Check all requirements
             if (MeetsListingRequirement(userID) &&
-                MeetsBookingsRequirement(userID) &&
+                // Per comment at #334, disable for now (low entry barriers)
+                //MeetsBookingsRequirement(userID) &&
                 MeetsAcknowledgmentRequirement(userID) &&
                 MeetsPaymentRequirement(userID))
             {
