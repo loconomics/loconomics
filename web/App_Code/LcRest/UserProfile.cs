@@ -347,16 +347,16 @@ namespace LcRest
         private static Dictionary<LcEnum.OwnerStatus, HashSet<LcEnum.OwnerStatus>> 
             AllowedOwnerStatusChanges = new Dictionary<LcEnum.OwnerStatus, HashSet<LcEnum.OwnerStatus>>
         {
-            // If current status is 'unset' (null on database --means never an owner before),
+            // If current status is 'notYetAnOwner' (null or zero at database --means never an owner before),
             // is only allowed to change it to InTrial, Active.
             // From
             { LcEnum.OwnerStatus.notYetAnOwner, new HashSet<LcEnum.OwnerStatus> {
                 // To
-                LcEnum.OwnerStatus.inTrial,
+                LcEnum.OwnerStatus.trialEnded,
                 LcEnum.OwnerStatus.active
             } },
             // From
-            { LcEnum.OwnerStatus.inTrial, new HashSet<LcEnum.OwnerStatus> {
+            { LcEnum.OwnerStatus.trialEnded, new HashSet<LcEnum.OwnerStatus> {
                 // To
                 LcEnum.OwnerStatus.active,
                 LcEnum.OwnerStatus.cancelled
@@ -364,6 +364,7 @@ namespace LcRest
             // From
             { LcEnum.OwnerStatus.active, new HashSet<LcEnum.OwnerStatus> {
                 // To
+                LcEnum.OwnerStatus.trialEnded,
                 LcEnum.OwnerStatus.inactive,
                 LcEnum.OwnerStatus.cancelled,
                 LcEnum.OwnerStatus.suspended
@@ -371,14 +372,12 @@ namespace LcRest
             // From
             { LcEnum.OwnerStatus.cancelled, new HashSet<LcEnum.OwnerStatus> {
                 // To
-                LcEnum.OwnerStatus.active,
-                LcEnum.OwnerStatus.inTrial
+                LcEnum.OwnerStatus.active
             } },
             // From
             { LcEnum.OwnerStatus.suspended, new HashSet<LcEnum.OwnerStatus> {
                 // To
-                LcEnum.OwnerStatus.active,
-                LcEnum.OwnerStatus.inTrial
+                LcEnum.OwnerStatus.active
             } },
             // From
             { LcEnum.OwnerStatus.inactive, new HashSet<LcEnum.OwnerStatus> {
