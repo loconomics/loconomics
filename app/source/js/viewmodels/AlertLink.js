@@ -1,9 +1,9 @@
 /**
   * AlertLink objects are view models for buttons or links representing profile alerts
   *
-  * Do not create AlertLink objects directly, but use the exported factory function
-  * createAlertLink. Some AlertLink objects require additional objects beyond ProfileAlerts
-  * to build their properties. See documentation for createAlertLink below.
+  * Do not create AlertLink objects directly, but use the factory function fromProfileAlert.
+  * Some AlertLink objects require additional objects beyond ProfileAlerts to build
+  * their properties. See documentation for fromProfileAlert below.
   *
   * @module
   */
@@ -99,10 +99,10 @@ AlertLink.prototype.label = function() {
  * @param {Object} options object with additional data used to create AlertLinks.
  * @param {string} options.jobTitleID the job title ID pertinent to the corresponding profile alert
  **/
-var createAlertLink = function(profileAlert, options) {
+AlertLink.fromProfileAlert = function(profileAlert, options) {
     var preset = alertPresets[profileAlert.alertName()] || undefinedPreset;
 
     return new AlertLink(preset.label, preset.route.reverse({ jobTitleID: options.jobTitleID }));
 };
 
-module.exports = createAlertLink;
+module.exports = AlertLink;

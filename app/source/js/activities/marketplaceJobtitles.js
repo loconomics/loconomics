@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
-    createAlertLink = require('../viewmodels/AlertLink');
+    AlertLink = require('../viewmodels/AlertLink');
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
@@ -369,7 +369,7 @@ function ViewModel(app) {
             requiredAlerts = (userJobTitle && userJobTitle.requiredAlerts()) || [];
 
         return requiredAlerts.map(function(profileAlert) {
-            return createAlertLink(profileAlert, { jobTitleID: jobTitleID });
+            return AlertLink.fromProfileAlert(profileAlert, { jobTitleID: jobTitleID });
         });
     }, this);
 }
