@@ -87,7 +87,7 @@ namespace LcRest
                          AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
 
-        public void bindAlerts(Dictionary<int, List<LcRest.Alert>> alertsCollection)
+        private void BindAlerts(Dictionary<int, List<LcRest.Alert>> alertsCollection)
         {
             alerts = alertsCollection.ContainsKey(jobTitleID) ? alertsCollection[jobTitleID] : new List<LcRest.Alert>();
         }
@@ -96,7 +96,7 @@ namespace LcRest
         {
             jobTitles.ForEach(delegate (JobTitle jobTitle)
             {
-                jobTitle.bindAlerts(alerts);
+                jobTitle.BindAlerts(alerts);
             });
 
             return jobTitles;
@@ -112,7 +112,7 @@ namespace LcRest
                                              LcData.GetCurrentCountryID(),
                                              jobTitleID));
 
-                jobTitle.bindAlerts(LcRest.Alert.IndexByPosition(LcRest.Alert.GetActive(userID, jobTitleID)));
+                jobTitle.BindAlerts(LcRest.Alert.IndexByPosition(LcRest.Alert.GetActive(userID, jobTitleID)));
 
                 return jobTitle;
             }
