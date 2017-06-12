@@ -64,7 +64,7 @@ namespace LcRest
                 ORDER BY A.DisplayRank, A.AlertName
         ";
 
-        public static List<Alert> GetActive(int userID, int positionID = -1)
+        public static IEnumerable<Alert> GetActive(int userID, int positionID = -1)
         {
             using (var db = new LcDatabase())
             {
@@ -73,8 +73,7 @@ namespace LcRest
                         LcData.GetCurrentLanguageID(),
                         LcData.GetCurrentCountryID(),
                         positionID)
-                .Select(FromDB)
-                .ToList();
+                .Select(FromDB);
             }
         }
 
@@ -86,12 +85,13 @@ namespace LcRest
         /// list of alerts will include alerts specific for that positionID and any alert
         /// that is _not_ specific to a position.
         /// </returns>
-        public static Dictionary<int, List<LcRest.Alert>> IndexByPosition(List<Alert> alerts)
+        public static Dictionary<int, IEnumerable<Alert>> IndexByPosition(IEnumerable<Alert> alerts)
         {
-            var index = new Dictionary<int, List<LcRest.Alert>>();
+            var index = new Dictionary<int, IEnumerable<Alert>>();
             var nonPositionSpecificAlerts = new List<Alert>();
+            var indexLists = new List<List<Alert>>();
 
-            alerts.ForEach(delegate(Alert alert)
+            foreach (Alert alert in alerts)
             {
                 if (!alert.isPositionSpecific)
                 {
@@ -103,15 +103,17 @@ namespace LcRest
 
                     if (!index.ContainsKey(positionID))
                     {
-                        index[positionID] = new List<Alert>();
+                        var list = new List<Alert>();
+                        index[positionID] = list;
+                        indexLists.Add(list);
                     }
 
-                    index[positionID].Add(alert);
+                    ((List<Alert>)index[positionID]).Add(alert);
                 }
-            });
+            }
 
             // for each position list, add non-position-specific alerts
-            index.Values.ToList().ForEach(delegate(List<Alert> alertsList) 
+            indexLists.ForEach(delegate(List<Alert> alertsList)
             {
                 alertsList.AddRange(nonPositionSpecificAlerts);
             });

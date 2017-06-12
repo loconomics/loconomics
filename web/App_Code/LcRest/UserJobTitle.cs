@@ -65,17 +65,17 @@ namespace LcRest
             };
         }
 
-        private void BindAlerts(Dictionary<int, List<Alert>> alertsCollection)
+        private void BindAlerts(Dictionary<int, IEnumerable<Alert>> alertsCollection)
         {
-            alerts = alertsCollection.ContainsKey(jobTitleID) ? alertsCollection[jobTitleID] : new List<Alert>();
+            alerts = alertsCollection.ContainsKey(jobTitleID) ? alertsCollection[jobTitleID].ToList() : new List<Alert>();
         }
 
-        private static List<UserJobTitle> BindAlerts(List<UserJobTitle> userJobTitles, Dictionary<int, List<Alert>> alerts)
+        private static IEnumerable<UserJobTitle> BindAlerts(IEnumerable<UserJobTitle> userJobTitles, Dictionary<int, IEnumerable<Alert>> alerts)
         {
-            userJobTitles.ForEach(delegate (UserJobTitle userJobTitle)
+            foreach(UserJobTitle userJobTitle in userJobTitles)
             {
                 userJobTitle.BindAlerts(alerts);
-            });
+            }
 
             return userJobTitles;
         }
@@ -125,8 +125,7 @@ namespace LcRest
                                 LcData.GetCurrentLanguageID(),
                                 LcData.GetCurrentCountryID(),
                                 jobTitleID)
-                .Select(FromDB)
-                .ToList();
+                .Select(FromDB);
 
                 return BindAlerts(userJobTitles, Alert.IndexByPosition(Alert.GetActive(userID)));
             }
@@ -142,7 +141,7 @@ namespace LcRest
                                              LcData.GetCurrentCountryID(),
                                              jobTitleID));
 
-                userJobTitle.alerts = Alert.GetActive(userID, jobTitleID);
+                userJobTitle.alerts = Alert.GetActive(userID, jobTitleID).ToList();
 
                 return userJobTitle;
             }
