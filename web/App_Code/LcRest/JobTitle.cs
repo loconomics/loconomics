@@ -112,7 +112,7 @@ namespace LcRest
                                              LcData.GetCurrentCountryID(),
                                              jobTitleID));
 
-                jobTitle.BindAlerts(LcRest.Alert.IndexByPosition(LcRest.Alert.GetActive(userID, jobTitleID)));
+                jobTitle.alerts = LcRest.Alert.GetActive(userID, jobTitleID);
 
                 return jobTitle;
             }
