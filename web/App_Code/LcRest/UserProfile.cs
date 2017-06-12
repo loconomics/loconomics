@@ -413,13 +413,21 @@ namespace LcRest
                             BEGIN TRANSACTION
 
                             INSERT INTO OwnerStatusHistory (
-                                UserID, OwnserStatusID, OwnserStatusChangedDate, OwnserStatusChangedBy
+                                UserID, OwnerStatusID, OwnerStatusChangedDate, OwnerStatusChangedBy
                             ) VALUES (
                                 @0, @1, getdate(), 'sys'
                             )
 
                             UPDATE Users SET OwnerStatusID = @1
                             WHERE UserID = @0
+
+                            -- First time user enters 'active' status,
+                            -- set the anniversary date.
+                            -- Impl: we check if is active:2 and inside set date as current only if null
+                            IF @1 = 2 begin
+                                UPDATE Users SET OwnerAnniversaryDate = getdate()
+                                WHERE UserID = @0 AND OwnerAnniversaryDate is null
+                            END
 
                             COMMIT TRANSACTION
                         ", userID, statusID);
