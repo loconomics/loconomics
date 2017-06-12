@@ -318,15 +318,7 @@ namespace LcRest
                 MeetsPaymentRequirement(userID))
             {
                 // It's OK
-                if (IsUserFeePaymentPastDue(userID))
-                {
-                    // Status is different on 'past due' but still enabled
-                    return LcEnum.OwnerStatus.inDefault;
-                }
-                else
-                {
-                    return LcEnum.OwnerStatus.active;
-                }
+                return LcEnum.OwnerStatus.active;
             }
             else
             {
@@ -373,7 +365,6 @@ namespace LcRest
             { LcEnum.OwnerStatus.active, new HashSet<LcEnum.OwnerStatus> {
                 // To
                 LcEnum.OwnerStatus.inactive,
-                LcEnum.OwnerStatus.inDefault, // AKA 'past due'
                 LcEnum.OwnerStatus.cancelled,
                 LcEnum.OwnerStatus.suspended
             } },
@@ -391,13 +382,6 @@ namespace LcRest
             } },
             // From
             { LcEnum.OwnerStatus.inactive, new HashSet<LcEnum.OwnerStatus> {
-                // To
-                LcEnum.OwnerStatus.active,
-                LcEnum.OwnerStatus.cancelled,
-                LcEnum.OwnerStatus.suspended
-            } },
-            // From
-            { LcEnum.OwnerStatus.inDefault, new HashSet<LcEnum.OwnerStatus> {
                 // To
                 LcEnum.OwnerStatus.active,
                 LcEnum.OwnerStatus.cancelled,
@@ -562,12 +546,6 @@ namespace LcRest
             {
                 return (bool)db.QueryValue(sql, userID);
             }
-        }
-
-        public static bool IsUserFeePaymentPastDue(int userID)
-        {
-            var status = UserPaymentPlan.GetLastPaymentPlanStatus(userID);
-            return status == Braintree.SubscriptionStatus.PAST_DUE;
         }
         #endregion
         #endregion
