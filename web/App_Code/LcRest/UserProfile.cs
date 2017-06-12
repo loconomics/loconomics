@@ -51,7 +51,7 @@ namespace LcRest
                 }
                 else
                 {
-                    return LcEnum.OwnerStatus.unset;
+                    return LcEnum.OwnerStatus.notYetAnOwner;
                 }
             }
         }
@@ -358,7 +358,7 @@ namespace LcRest
             // If current status is 'unset' (null on database --means never an owner before),
             // is only allowed to change it to InTrial, Active.
             // From
-            { LcEnum.OwnerStatus.unset, new HashSet<LcEnum.OwnerStatus> {
+            { LcEnum.OwnerStatus.notYetAnOwner, new HashSet<LcEnum.OwnerStatus> {
                 // To
                 LcEnum.OwnerStatus.inTrial,
                 LcEnum.OwnerStatus.active
@@ -425,7 +425,7 @@ namespace LcRest
                 {
                     using (var db = new LcDatabase())
                     {
-                        var statusID = (status == LcEnum.OwnerStatus.unset ? null : (int?)status);
+                        var statusID = (status == LcEnum.OwnerStatus.notYetAnOwner ? null : (int?)status);
                         db.Execute(@"
                             BEGIN TRANSACTION
 

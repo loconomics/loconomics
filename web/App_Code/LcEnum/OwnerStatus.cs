@@ -7,7 +7,7 @@ namespace LcEnum
 {
     public enum OwnerStatus : short
     {
-        unset = 0,
+        notYetAnOwner = 0,
         inTrial = 1,
         active = 2,
         inactive = 3,
