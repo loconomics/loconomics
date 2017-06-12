@@ -38,7 +38,7 @@ namespace LcRest
         public DateTime updatedDate;
         public bool bookMeButtonReady;
         public bool collectPaymentAtBookMeButton;
-        public List<LcRest.Alert> alerts;
+        public List<Alert> alerts;
 
         private static JobTitle FromDB(dynamic record)
         {
@@ -87,12 +87,12 @@ namespace LcRest
                          AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
 
-        private void BindAlerts(Dictionary<int, List<LcRest.Alert>> alertsCollection)
+        private void BindAlerts(Dictionary<int, List<Alert>> alertsCollection)
         {
-            alerts = alertsCollection.ContainsKey(jobTitleID) ? alertsCollection[jobTitleID] : new List<LcRest.Alert>();
+            alerts = alertsCollection.ContainsKey(jobTitleID) ? alertsCollection[jobTitleID] : new List<Alert>();
         }
 
-        private static List<JobTitle> BindAlerts(List<JobTitle> jobTitles, Dictionary<int, List<LcRest.Alert>> alerts)
+        private static List<JobTitle> BindAlerts(List<JobTitle> jobTitles, Dictionary<int, List<Alert>> alerts)
         {
             jobTitles.ForEach(delegate (JobTitle jobTitle)
             {
@@ -112,7 +112,7 @@ namespace LcRest
                                              LcData.GetCurrentCountryID(),
                                              jobTitleID));
 
-                jobTitle.alerts = LcRest.Alert.GetActive(userID, jobTitleID);
+                jobTitle.alerts = Alert.GetActive(userID, jobTitleID);
 
                 return jobTitle;
             }
@@ -132,7 +132,7 @@ namespace LcRest
                 .Select(FromDB)
                 .ToList();
 
-                return BindAlerts(jobTitles, LcRest.Alert.IndexByPosition(LcRest.Alert.GetActive(userID)));
+                return BindAlerts(jobTitles, Alert.IndexByPosition(Alert.GetActive(userID)));
             }
         }
 
