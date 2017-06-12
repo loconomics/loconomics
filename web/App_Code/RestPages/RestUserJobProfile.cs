@@ -19,7 +19,7 @@ public class RestUserJobProfile : RestWebPage
         // Item ID
         if (UrlData.Count == 1 && UrlData[0].IsInt())
         {
-            var item = LcRest.JobTitle.Get(userId, UrlData[0].AsInt(0));
+            var item = LcRest.UserJobTitle.GetItem(userId, UrlData[0].AsInt(0));
 
             if(item != null)
             {
@@ -37,7 +37,7 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Not Found");
         }
 
-        return LcRest.JobTitle.GetList(userId);
+        return LcRest.UserJobTitle.GetByUser(userId);
     }
 
     private dynamic PerformAction()
@@ -66,7 +66,7 @@ public class RestUserJobProfile : RestWebPage
                 switch (UrlData[1].ToLower())
                 {
                     case "deactivate":
-                        done = LcRest.JobTitle.Deactivate(userID, jobTitleID);
+                        done = LcRest.UserJobTitle.Deactivate(userID, jobTitleID);
                         // It cannot be done if record not exists, notify:
                         if (!done)
                         {
@@ -75,19 +75,19 @@ public class RestUserJobProfile : RestWebPage
                         else
                         {
                             // Return an updated item
-                            return LcRest.JobTitle.Get(userID, jobTitleID);
+                            return LcRest.UserJobTitle.GetItem(userID, jobTitleID);
                         }
 
                     case "reactivate":
 
                         // Double check if item exists
-                        if (LcRest.JobTitle.Get(userID, jobTitleID) == null)
+                        if (LcRest.UserJobTitle.GetItem(userID, jobTitleID) == null)
                         {
                             throw new HttpException(404, "Not found");
                         }
                         else
                         {
-                            done = LcRest.JobTitle.Reactivate(userID, jobTitleID);
+                            done = LcRest.UserJobTitle.Reactivate(userID, jobTitleID);
 
                             if (!done)
                             {
@@ -103,7 +103,7 @@ public class RestUserJobProfile : RestWebPage
                             else
                             {
                                 // Return an updated item
-                                return LcRest.JobTitle.Get(userID, jobTitleID);
+                                return LcRest.UserJobTitle.GetItem(userID, jobTitleID);
                             }
                         }
 
@@ -213,7 +213,7 @@ public class RestUserJobProfile : RestWebPage
             // Read data; It stops on not valid:
             var data = GetValidatedItemBodyInput();
 
-            LcRest.JobTitle.Create(new LcRest.JobTitle
+            LcRest.UserJobTitle.Create(new LcRest.UserJobTitle
             {
                 userID = userID,
                 jobTitleID = jobTitleID,
@@ -239,7 +239,7 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Job Title not found or disapproved");
         }
 
-        return LcRest.JobTitle.Get(userID, jobTitleID);
+        return LcRest.UserJobTitle.GetItem(userID, jobTitleID);
     }
 
     /// <summary>
@@ -267,7 +267,7 @@ public class RestUserJobProfile : RestWebPage
         }
         int userID = WebSecurity.CurrentUserId;
         // Check that the item exists
-        if (LcRest.JobTitle.Get(userID, itemID) == null)
+        if (LcRest.UserJobTitle.GetItem(userID, itemID) == null)
         {
             throw new HttpException(404, "Job Title not found");
         }
@@ -328,7 +328,7 @@ public class RestUserJobProfile : RestWebPage
         var data = GetValidatedItemBodyInput();
 
         // Updating
-        LcRest.JobTitle.Update(new LcRest.JobTitle
+        LcRest.UserJobTitle.Update(new LcRest.UserJobTitle
         {
             userID = userID,
             jobTitleID = jobTitleID,
@@ -339,7 +339,7 @@ public class RestUserJobProfile : RestWebPage
         });
 
         // Return the updated item
-        return LcRest.JobTitle.Get(userID, itemID);
+        return LcRest.UserJobTitle.GetItem(userID, itemID);
     }
 
     /// <summary>
@@ -359,13 +359,13 @@ public class RestUserJobProfile : RestWebPage
         // Get item to be deleted.
         // It already throws 'not found' 
         // if doesn't exists
-        var item = LcRest.JobTitle.Get(userID, itemID);
+        var item = LcRest.UserJobTitle.GetItem(userID, itemID);
 
         // Parameters
         var jobTitleID = itemID;
 
         // Delete
-        LcRest.JobTitle.Delete(userID, jobTitleID);
+        LcRest.UserJobTitle.Delete(userID, jobTitleID);
 
         // Return 'deleted' item (internal updated info cannot be fetched)
         return item;
