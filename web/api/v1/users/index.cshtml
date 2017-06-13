@@ -58,9 +58,9 @@
 
             var locale = LcRest.Locale.Current;
 
-            var jobProfile = profile.isServiceProfessional ? LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID) : null;
+            var jobProfile = profile.isServiceProfessional ? LcRest.UserJobTitle.GetActiveByUser(userID) : null;
 
-            var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.PublicUserJobTitle>)jobProfile).Select(x =>
+            var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.IPublicUserJobTitle>)jobProfile).Select(x =>
             {
                 var full = includeFullJobTitleID == x.jobTitleID || includeFullJobTitleID == -1;
                 var servicesVisibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)

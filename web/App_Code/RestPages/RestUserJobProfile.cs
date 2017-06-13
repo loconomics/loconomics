@@ -19,7 +19,8 @@ public class RestUserJobProfile : RestWebPage
         // Item ID
         if (UrlData.Count == 1 && UrlData[0].IsInt())
         {
-            var item = LcRest.UserJobTitle.GetItem(userId, UrlData[0].AsInt(0));
+            var jobTitleID = UrlData[0].AsInt(0);
+            var item = LcRest.UserJobTitle.GetItem(userId, jobTitleID);
 
             if(item != null)
             {
@@ -37,7 +38,7 @@ public class RestUserJobProfile : RestWebPage
             throw new HttpException(404, "Not Found");
         }
 
-        return LcRest.UserJobTitle.GetByUser(userId);
+        return LcRest.UserJobTitle.GetAllByUser(userId);
     }
 
     private dynamic PerformAction()
