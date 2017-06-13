@@ -236,8 +236,6 @@ public static class LcAuth
                             
             // Add Facebook verification as confirmed
             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
-            // Test social media alert
-            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
         }
     }
 

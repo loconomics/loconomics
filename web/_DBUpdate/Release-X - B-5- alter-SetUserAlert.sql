@@ -1,4 +1,3 @@
-﻿/****** Object:  StoredProcedure [dbo].[SetUserAlert]    Script Date: 5/24/2017 11:13:48 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -12,7 +11,7 @@ GO
 --  a position), with current Date-Time.
 --  
 -- =============================================
-CREATE PROCEDURE [dbo].[SetUserAlert]
+ALTER PROCEDURE [dbo].[SetUserAlert]
 	@UserID int
 	,@PositionID int
 	,@AlertID int
