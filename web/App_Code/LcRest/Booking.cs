@@ -3051,30 +3051,5 @@ namespace LcRest
             }
         }
         #endregion
-
-        public static bool MeetsOwnershipRequirement(int userID)
-        {
-            var sql = @"
-            DECLARE @UserID = @0
-            DECLARE @hasBookings bit = 0
-
-			IF 2 <= (
-				SELECT count(*)
-				FROM booking
-				WHERE ServiceProfessionalUserID = @UserID
-					AND ClientUserID <> @UserID
-					AND BookingStatusID = 8 -- completed
-			)
-			BEGIN
-				SET @hasBookings = 1
-			END
-
-            SELECT @hasBookings
-            ";
-            using (var db = new LcDatabase())
-            {
-                return (bool)db.QueryValue(sql, userID);
-            }
-        }
     }
 }

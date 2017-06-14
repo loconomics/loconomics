@@ -112,8 +112,6 @@ namespace LcRest
         {
             // Check all requirements
             if (UserJobTitle.MeetsOwnershipRequirement(userID) &&
-                // Per comment at #334, disable for now (low entry barriers)
-                //Booking.MeetsOwnershipRequirement(userID) &&
                 OwnerAcknowledgment.MeetsOwnsershipRequirement(userID) &&
                 UserPaymentPlan.MeetsOwnsershipRequirement(userID))
             {
