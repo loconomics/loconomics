@@ -58,6 +58,17 @@ function UserJobProfileViewModel(app) {
         attachMarketplaceStatus(userJobtitle);
     }
 
+    var showLoadingError = function showLoadingError(err) {
+        app.modals.showError({
+            title: 'An error happening when loading your job profile.',
+            error: err
+        });
+
+        this.isLoading(false);
+        this.isSyncing(false);
+        this.thereIsError(true);
+    }.bind(this);
+
     this.userJobProfile = ko.observableArray([]);
     // Updated using the live list, for background updates
     app.model.userJobProfile.list.subscribe(function(list) {
@@ -90,17 +101,6 @@ function UserJobProfileViewModel(app) {
         // This function can be replaced by custom handling.
         // Stop events
         return false;
-    }.bind(this);
-
-    var showLoadingError = function showLoadingError(err) {
-        app.modals.showError({
-            title: 'An error happening when loading your job profile.',
-            error: err
-        });
-
-        this.isLoading(false);
-        this.isSyncing(false);
-        this.thereIsError(true);
     }.bind(this);
 
     // Loading and sync of data

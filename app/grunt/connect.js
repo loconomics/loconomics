@@ -9,7 +9,7 @@
 var RedirectType = {
     permanent: 301,
     temporary: 302
-}
+};
 /**
  * Perform an http redirect in a Connect/Express response
  * object, closing the response
