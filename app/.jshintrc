@@ -67,6 +67,7 @@
     "evil": false,
     // Whether ExpressionStatement should be allowed as Programs.
     "expr": true,
+    "esversion": 6,
     // Whether `for in` loops must filter with `hasOwnPrototype`.
     "forin": false,
     // Whether immediate invocations must be wrapped in parens, e.g.
