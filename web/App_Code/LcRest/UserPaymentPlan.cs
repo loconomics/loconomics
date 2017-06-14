@@ -487,5 +487,31 @@ namespace LcRest
             .Select(FromDB);
         }
         #endregion
+
+        public static bool MeetsOwnsershipRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasPaid bit = 0
+
+			IF EXISTS (
+				SELECT *
+				FROM UserPaymentPlan
+				WHERE UserID = @UserID
+					AND PlanStatus IN ('Active', 'Past Due')
+					-- extra check for 'current plan'
+					AND SubscriptionEndDate is null
+			)
+			BEGIN
+				SET @hasPaid = 1
+			END
+
+            SELECT @hasPaid
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
     }
 }
