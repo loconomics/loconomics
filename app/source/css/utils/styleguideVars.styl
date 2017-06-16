@@ -145,6 +145,16 @@ $grid-gap = round($grid-gutter-width / 2);
 // NOT using Bootstrap variable 'navbar-height' since is 50px, not the iOS size
 $app-navbar-height = 44px;
 $big-navbar-height = 62px;
+
+$app-message-bar-height = $app-navbar-height;
+$big-message-bar-height = $big-navbar-height;
+
+$app-navbar-message-bar-height = $app-navbar-height + $app-navbar-height;
+$big-navbar-message-bar-height = $big-navbar-height + $big-message-bar-height;
+
+$app-activity-z-index = 1;
+$app-message-bar-z-index = 1;
+
 // Media queries where each one of the navbars are used
 // (this allows to selectively choose on height or another
 $media-app-navbar = $mediaMaxMd;

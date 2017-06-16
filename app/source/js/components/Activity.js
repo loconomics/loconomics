@@ -60,6 +60,7 @@ Activity.prototype.show = function show(options) {
         // the use of components and templates, or any other data-bind
         // syntax, requires to be in a context with binding enabled:
         ko.applyBindings(this.viewModel || {}, this.$activity.get(0));
+
         this.__bindingDone = true;
     }
 
@@ -279,6 +280,30 @@ Activity.prototype.convertToCancelAction = function convertToCancelAction(action
     actionModel.model.updateWith(cancel);
     // DUDE: handler is cpied by updateWith?
     actionModel.handler(cancel.handler());
+};
+
+/**
+ * Activities need to accomodate extra space above them when message bars are visible.
+ * This function takes an observer indicating when a message bar is visible, and 
+ * sets a class on the current activity.
+ *
+ * To prevent leaking, also call disposeMessageBarObserver
+ * 
+ * @param {Observer} isVisibleObserver KO observer returning true when a message bar is visible, false otherwise
+ */
+Activity.prototype.registerMessageBarObserver = function(isVisibleObserver) {
+    this._messageBarSubscription = isVisibleObserver.subscribe(function(isVisible) {
+        this.$activity.toggleClass('has-message-bar', isVisible);
+    }, this);
+};
+
+/**
+ * Dispose the subscription to the observer registered in registerMessageBarObserver
+ */
+Activity.prototype.disposeMessageBarObserver = function() {
+    if(this._messageBarSubscription) {
+        this._messageBarSubscription.dispose();
+    }
 };
 
 /**
