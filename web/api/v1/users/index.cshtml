@@ -105,11 +105,13 @@
         /// <param name="callerUserID">ID of the caller</param>
         /// <param name="serviceProfessionalID">ID of the user with a job profile</param>
         /// <returns></returns>
-        private static IEnumerable<LcRest.IPublicUserJobTitle> GetJobProfile(int callerUserID, int serviceProfessionalID)
+        private static IEnumerable<LcRest.PublicUserJobTitle> GetJobProfile(int callerUserID, int serviceProfessionalID)
         {
             // If professional is fetching their own profile, show all job titles
-            return callerUserID == serviceProfessionalID ? LcRest.UserJobTitle.GetAllByUser(serviceProfessionalID) :
-                                                           LcRest.UserJobTitle.GetActiveByUser(serviceProfessionalID);
+            var jobTitles = callerUserID == serviceProfessionalID ? LcRest.UserJobTitle.GetAllByUser(serviceProfessionalID) :
+                                                                    LcRest.UserJobTitle.GetActiveByUser(serviceProfessionalID);
+
+            return LcRest.PublicUserJobTitle.FromUserJobTitles(jobTitles);
         }
     }
 }

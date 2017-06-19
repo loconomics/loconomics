@@ -10,7 +10,7 @@ namespace LcRest
     /// UserJobTitle record
     /// 
     /// </summary>
-    public class UserJobTitle : IPublicUserJobTitle
+    public class UserJobTitle
     {
         public enum ProfileStatus : short
         {

@@ -118,7 +118,7 @@ public static class LcEmailTemplate
         /// <summary>
         /// Making publicly available an internal property of booking.
         /// </summary>
-        public LcRest.IPublicUserJobTitle userJobTitle;
+        public LcRest.PublicUserJobTitle userJobTitle;
         public LcRest.CancellationPolicy cancellationPolicy;
 
         private LcRest.PublicUserProfile _serviceProfessional;
@@ -394,7 +394,7 @@ public static class LcEmailTemplate
             }
         }
 
-        public LcRest.IPublicUserJobTitle userJobTitle;
+        public LcRest.PublicUserJobTitle userJobTitle;
 
         public bool accountNeedsConfirmation
         {
@@ -515,7 +515,7 @@ public static class LcEmailTemplate
 
         if (jobTitleID.HasValue)
         {
-            a.userJobTitle = LcRest.UserJobTitle.GetItem(userID, jobTitleID.Value);
+            a.userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(userID, jobTitleID.Value));
         }
 
         return a;
