@@ -118,7 +118,7 @@ namespace LcRest
         public EventDates serviceDate;
         public EventDates alternativeDate1;
         public EventDates alternativeDate2;
-        internal IPublicUserJobTitle userJobTitle;
+        internal PublicUserJobTitle userJobTitle;
         #endregion
 
         #region Instances
@@ -867,7 +867,7 @@ namespace LcRest
 
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
             var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
-            userJobTitle = LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking);
+            userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking));
         }
 
         /// <summary>
