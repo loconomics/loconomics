@@ -9,6 +9,8 @@ var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
+var MessageBar = require('../components/MessageBar');
+var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 
 var A = Activity.extend(function ProfileActivity() {
     
@@ -24,6 +26,22 @@ var A = Activity.extend(function ProfileActivity() {
         target: $(window),
         handler: function() {
             this.viewModel.refreshTs(new Date());
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.selectedJobTitle,
+        handler: function(publicUserJobTitle) {
+            if(!this.messageBar) {
+                return;
+            }
+
+            if(publicUserJobTitle.isActive()) {
+                this.messageBar.hide();
+            }
+            else {
+                this.messageBar.show();
+            }
         }.bind(this)
     });
 });
@@ -70,6 +88,12 @@ A.prototype.loadData = function(userID, jobTitleID) {
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
+    this.messageBar = new MessageBar({
+        templateName: 'profile-message-bar-inactive-template',
+        viewModel: { jobTitle: this.viewModel.jobTitleSingularName }
+    });
+    this.registerMessageBarObserver(this.messageBar.isVisible);
+
     var params = options.route && options.route.segments;
     // Get requested userID or the current user profile
     var userID = (params[0] |0) || this.app.model.user().userID();
@@ -77,6 +101,13 @@ A.prototype.show = function show(options) {
     this.loadData(userID, jobTitleID);
     this.viewModel.reviews.reset(userID, jobTitleID);
     this.viewModel.refreshTs(new Date());
+};
+
+A.prototype.hide = function() {
+    Activity.prototype.hide.call(this);
+
+    this.disposeMessageBarObserver();
+    this.messageBar.dispose();
 };
 
 function ViewModel(app) {
@@ -126,7 +157,7 @@ function ViewModel(app) {
     this.viewAllPhotos = function() {
         this.isShowingAllPhotos(true);
     }.bind(this);
-    
+
     /// Addresses
     this.serviceAddresses = ko.pureComputed(function() {
         var u = this.user();
@@ -196,6 +227,14 @@ function ViewModel(app) {
             hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
 
         return hasIntro || hasAttributes;
+    }, this);
+
+    this.jobTitleSingularName = ko.pureComputed(function() {
+        return this.selectedJobTitle().jobTitleSingularName();
+    }, this);
+
+    this.selectedJobTitle = ko.pureComputed(function() {
+        return (this.user() && this.user().selectedJobTitle()) || new PublicUserJobTitle();
     }, this);
 }
 
