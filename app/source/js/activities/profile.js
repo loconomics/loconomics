@@ -90,7 +90,10 @@ A.prototype.show = function show(options) {
 
     this.messageBar = new MessageBar({
         templateName: 'profile-message-bar-inactive-template',
-        viewModel: { jobTitle: this.viewModel.jobTitleSingularName }
+        viewModel: {
+            editListing : this.viewModel.editListing,
+            jobTitle: this.viewModel.jobTitleSingularName
+        }
     });
     this.registerMessageBarObserver(this.messageBar.isVisible);
 
@@ -236,6 +239,10 @@ function ViewModel(app) {
     this.selectedJobTitle = ko.pureComputed(function() {
         return (this.user() && this.user().selectedJobTitle()) || new PublicUserJobTitle();
     }, this);
+
+    this.editListing = function() {
+        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
+    }.bind(this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');

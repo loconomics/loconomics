@@ -1,7 +1,10 @@
 <!-- Activity profile -->
 <div data-activity="profile" data-bind="css: { 'is-loading': isLoading }">
     <script type="text/html" id="profile-message-bar-inactive-template">
-        <p><span data-bind="text: jobTitle"></span> listing is inactive.</p>
+        <p class="small">
+            <span data-bind="text: jobTitle"></span> listing is inactive.
+            <a data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</a>
+        </p>
     </script>
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <!-- TODO: FROM JUVO, TO REFACTOR -->
