@@ -2,11 +2,9 @@
     caching and sharing data across activities and performing
     requests
 **/
-var ko = require('knockout'),
-    $ = require('jquery'),
-    Rest = require('../utils/Rest'),
-    localforage = require('localforage'),
-    EventEmitter = require('events').EventEmitter;
+var ko = require('knockout');
+var localforage = require('../data/drivers/localforage');
+var EventEmitter = require('events').EventEmitter;
 
 function AppModel() {
     EventEmitter.call(this);
@@ -46,9 +44,7 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
 
                 // use authorization key for each
                 // new Rest request
-                this.rest.extraHeaders = {
-                    Authorization: 'LC alu=' + credentials.userID + ',alk=' + credentials.authKey
-                };
+                this.rest.setAuthorization('LC alu=' + credentials.userID + ',alk=' + credentials.authKey);
                 // Load User Profile, from local with server fallback and server synchronization, silently
                 this.userProfile.load().then(resolve, resolveAnyway);
 
@@ -74,48 +70,20 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
 /** Initialize and wait for anything up **/
 AppModel.prototype.init = function init() {
 
-    // Local data
-    // TODO Investigate why automatic selection an IndexedDB are
-    // failing and we need to use the worse-performance localstorage back-end
-    localforage.config({
-        name: 'LoconomicsApp',
-        version: 0.1,
-        size : 4980736, // Size of database, in bytes. WebSQL-only for now.
-        storeName : 'keyvaluepairs',
-        description : 'Loconomics App',
-        driver: localforage.LOCALSTORAGE
-    });
-
     // First, get any saved local config
     // NOTE: for now, this is optional, to get a saved siteUrl rather than the
     // default one, if any.
-    return localforage.getItem('config')
-    .then(function(config) {
-        // Optional config
-        config = config || {};
+    var config = require('../data/config');
+    // compat:
+    this.config = config;
+    this.rest = require('../data/drivers/restClient');
 
-        if (config.siteUrl) {
-            // Update the html URL
-            $('html').attr('data-site-url', config.siteUrl);
-        }
-        else {
-            // Need to default to empty, because in case the attribute
-            // don't exists, it will return undefined and used as a
-            // string when composing the final URL (something like
-            // 'undefined/api/..')
-            config.siteUrl = $('html').attr('data-site-url') || '';
-        }
+    // With config loaded and REST ready, load all modules
+    this.loadModules();
 
-        this.config = config;
-        this.rest = new Rest(config.siteUrl + '/api/v1/en-US/');
-
-        // With config loaded and REST ready, load all modules
-        this.loadModules();
-
-        // Initialize: check the user has login data and needed
-        // cached data, return its promise
-        return this.loadLocalCredentials();
-    }.bind(this));
+    // Initialize: check the user has login data and needed
+    // cached data, return its promise
+    return this.loadLocalCredentials();
 };
 
 AppModel.prototype.loadModules = function loadModules() {

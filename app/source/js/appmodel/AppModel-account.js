@@ -19,7 +19,7 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.login = function login(username, password) {
 
         // Reset the extra headers to attempt the login
-        this.rest.extraHeaders = null;
+        this.rest.clearAuthorization();
 
         return this.rest.post('login', {
             username: username,
@@ -35,7 +35,7 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.facebookLogin = function facebookLogin(accessToken) {
 
         // Reset the extra headers to attempt the login
-        this.rest.extraHeaders = null;
+        this.rest.clearAuthorization();
 
         return this.rest.post('login/facebook', {
             accessToken: accessToken,
@@ -58,7 +58,7 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.logout = function logout() {
 
         // Local app close session
-        this.rest.extraHeaders = null;
+        this.rest.clearAuthorization();
         localforage.removeItem('credentials');
         localforage.removeItem('profile');
 
@@ -78,7 +78,7 @@ exports.plugIn = function (AppModel) {
     AppModel.prototype.signup = function signup(data) {
 
         // Reset the extra headers to attempt the signup
-        this.rest.extraHeaders = null;
+        this.rest.clearAuthorization();
 
         data.returnProfile = true;
 
@@ -145,9 +145,7 @@ function performLocalLogin(thisAppModel, username/*, password*/) {
 
             // use authorization key for each
             // new Rest request
-            thisAppModel.rest.extraHeaders = {
-                Authorization: 'LC alu=' + logged.userID + ',alk=' + logged.authKey
-            };
+            thisAppModel.rest.setAuthorization('LC alu=' + logged.userID + ',alk=' + logged.authKey);
 
             // async local save, don't wait
             localforage.setItem('credentials', {

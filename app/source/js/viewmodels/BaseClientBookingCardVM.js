@@ -25,9 +25,9 @@ var stepsLabels = {
 
 function BaseClientBookingCardVM(app) {
     //jshint maxstatements:100
-    
+
     this.app = app;
-    
+
     ///
     /// Data properties
     this.originalBooking = ko.observable(); // :Booking
@@ -65,7 +65,8 @@ function BaseClientBookingCardVM(app) {
 
     ///
     /// URLs (constants, don't need reset)
-    var siteUrl = (app.model.config.siteUrl || 'https://loconomics.com') + '/';
+    var config = require('../data/config');
+    var siteUrl = (config.siteUrl || 'https://loconomics.com') + '/';
     this.urlTos = ko.observable(siteUrl + '#!terms/terms-of-service?mustReturn=true');
     this.urlPp = ko.observable(siteUrl + '#!terms/privacy-policy?mustReturn=true');
     this.urlBcp = ko.observable(siteUrl + '#!terms/background-check-policy?mustReturn=true');
@@ -76,14 +77,14 @@ function BaseClientBookingCardVM(app) {
     this.errorMessages = {
         postalCode: ko.observable('')
     };
-    
-    
+
+
     ///
     /// Reset
     this.reset = function reset() {
         this.originalBooking(null);
         this.editedVersion(null);
-        
+
         this.serviceProfessionalServices.reset();
         this.serviceProfessionalServices.isSelectionMode(true);
         this.serviceProfessionalServices.preSelectedServices([]);
@@ -94,24 +95,24 @@ function BaseClientBookingCardVM(app) {
         this.clientAddresses.reset();
         this.clientAddresses.isSelectionMode(true);
         this.addressEditorOpened(false);
-        
+
         this.supportsGratuity(false);
         this.presetGratuity(0);
         this.gratuityAmount(0);
-        
+
         // NEVER RESET this.serviceStartDatePickerView IT'S A VW API
-        
+
         this.timeFieldToBeSelected('');
         this.isSaving(false);
         this.isCancelMode(false);
         this.progress.reset();
 
         this.postalCodeVM(null);
-        
+
         this.errorMessages.postalCode('');
     }.bind(this);
-    
-    /// 
+
+    ///
     /// Computed states
     this.isEditMode = ko.pureComputed(function() {
         return !!this.editedVersion();
@@ -150,12 +151,12 @@ function BaseClientBookingCardVM(app) {
 
     ///
     /// Computed observables and View Functions
-    
+
     ///
     /// Edit
     this.edit = function edit() {
         if (this.isLocked()) return;
-        
+
         if (this.canCancel()) {
             this.isCancelMode(true);
         }
@@ -201,12 +202,12 @@ function BaseClientBookingCardVM(app) {
         this.editedVersion(null);
         this.progress.reset();
     }.bind(this);
-    
+
     this.booking = ko.pureComputed(function() {
         var v = this.editedVersion();
         return v ? v.version : this.originalBooking();
     }, this);
-    
+
     /// Gratuity
     // TODO Complete support for gratuity, server-side
     this.gratuityPercentage = ko.pureComputed(function() {
@@ -217,7 +218,7 @@ function BaseClientBookingCardVM(app) {
             return preset;
     }, this);
 
-    
+
     // Sync: Automatic updates between dependent models:
     this.gratuityPercentage.subscribe(function(v) {
         if (this.booking()) this.booking().pricingSummary().gratuityPercentage(v);
@@ -225,7 +226,7 @@ function BaseClientBookingCardVM(app) {
     this.gratuityAmount.subscribe(function(v) {
         if (this.booking()) this.booking().pricingSummary().gratuityAmount(v);
     }, this);
-    
+
     this.hasServicesSelected = ko.pureComputed(function() {
         var s = this.serviceProfessionalServices.selectedServices();
         return s && s.length > 0 || false;
@@ -266,7 +267,7 @@ function BaseClientBookingCardVM(app) {
         // Display client service address form
         this.addressEditorOpened(true);
     }.bind(this);
-    
+
     ///
     /// Service Professional Info
     // IMPORTANT: RESET IS FORBIDDEN, since is updated with a change at booking().serviceProfessionalUserID
@@ -293,14 +294,14 @@ function BaseClientBookingCardVM(app) {
             app.modals.showError({ error: err });
         }.bind(this));
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     this.urlCp = ko.pureComputed(function() {
         var info = this.serviceProfessionalInfo();
         info = info && info.selectedJobTitle();
         var id = info && info.cancellationPolicyID() || '';
         return siteUrl + '#!cancellationPolicies/' + id + '?mustReturn=true';
     }, this);
-    
+
     ///
     /// Date time picker(s)
     /* It returns true if user can only choose one time, that is
@@ -349,7 +350,7 @@ function BaseClientBookingCardVM(app) {
     this.pickAlternativeDate2 = function() {
         this.timeFieldToBeSelected('alternativeDate2');
     }.bind(this);
-    
+
     this.hasSomeDateSelected = ko.pureComputed(function() {
         var b = this.booking();
         if (!b) return false;
@@ -359,7 +360,7 @@ function BaseClientBookingCardVM(app) {
             b.alternativeDate2() && b.alternativeDate2().startTime()
         );
     }, this);
-    
+
     this.isPhoneServiceOnly = ko.pureComputed(function() {
         if (this.isEditMode() && !this.serviceProfessionalServices.isLoading()) {
             return this.serviceProfessionalServices.selectedServices().every(function(service) {
@@ -370,8 +371,8 @@ function BaseClientBookingCardVM(app) {
             return !this.booking() || !this.booking().serviceAddress();
         }
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
-    
+
+
     ///
     /// Field Special requests (client notes to service professional)
     this.specialRequestsPlaceholder = ko.pureComputed(function() {
@@ -395,7 +396,7 @@ function BaseClientBookingCardVM(app) {
             // No error, do nothing just was dismissed
         });
     }.bind(this);
-    
+
     ///
     /// Progress management
     this.nextStep = function() {
@@ -425,7 +426,7 @@ function BaseClientBookingCardVM(app) {
     this.pickPayment = function() {
         this.progress.go('payment');
     }.bind(this);
-    
+
     /// Special steps preparation processes
     /// Run some logic every time an step is accessed
     ko.computed(function() {
@@ -439,13 +440,13 @@ function BaseClientBookingCardVM(app) {
                 break;
         }
     }, this);
-    
+
     ///
     /// Keeps the progress stepsList updated depending on the data
     ko.computed(function() {
         // Starting list, with fixed first steps:
         var list = ['services'];
-        
+
         if (this.originalBooking() && this.booking()) {
 
             if (!this.isPhoneServiceOnly())
@@ -493,7 +494,7 @@ BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
     this.isLoadingServiceAddresses(true);
     return this.app.model.users.getServiceAddresses(this.booking().serviceProfessionalUserID(), this.booking().jobTitleID())
     .then(function(list) {
-        // Save addresses: the serviceAddresses viewmodel will create separated lists for 
+        // Save addresses: the serviceAddresses viewmodel will create separated lists for
         // selectable (service location) addresses and service areas
         this.serviceAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(list));
         // Load user personal addresses too if the service professional has serviceArea
