@@ -97,7 +97,7 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     this.messageBar = new MessageBar({
-        templateName: 'profile-message-bar-inactive-template',
+        templateName: 'profile-message-bar-template',
         tone: MessageBar.tones.warning,
         viewModel: {
             editListing : this.viewModel.editListing,
