@@ -44,6 +44,7 @@ var load = function($messageBar, templateName, viewModel) {
  * @param {Object} options
  * @param options.templateName ID of a knockout template to be used as the message bar
  * @param options.viewModel viewModel for the knockout template
+ * @param {MessageBar.tones} options.tone for the message bar when visible
  * @constructor
  */
 var MessageBar = function(options) {
@@ -57,11 +58,50 @@ var MessageBar = function(options) {
 
     this._$messageBar = $('<div>', { 'class': 'MessageBar' });
 
+    this.setTone(options.tone || MessageBar.tones.neutral);
+
     load(this._$messageBar, templateName, this.viewModel);
 };
 
 /**
+ * Enumeration of tones for the message bar (represents classes 
+ * for different themes)
+ *
+ * @enum
+ */
+MessageBar.tones = {
+    neutral: { 'class': ''},
+    warning: { 'class': 'MessageBar--warning' },
+    success: { 'class': 'MessageBar--success' }
+};
+
+/**
+ *  Clears all tone classes from message bar
+ *
+ *  @param {jQuery} $messageBar from which to remove all tone classes
+ */
+var clearToneClasses = function($messageBar) {
+    Object.keys(MessageBar.tones).forEach(function(tone) {
+        $messageBar.removeClass(tone['class']);
+    });
+};
+
+/**
+ * Set the tone for the message bar
+ *
+ * @param {MessageBar.tones} tone
+ */
+MessageBar.prototype.setTone = function(tone) {
+    clearToneClasses(this._$messageBar);
+
+    this._$messageBar.addClass(tone['class']);
+};
+
+/**
  * Makes the message bar visible
+ *
+ * @param {Object} options
+ * @param {Object} options.severityLevel
  */
 MessageBar.prototype.show = function() {
     this._$messageBar.show();

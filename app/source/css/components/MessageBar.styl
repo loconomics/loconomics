@@ -5,7 +5,6 @@
   the height of the navigation bar. 
 */
 .AppMessageBarWrapper
-    background-color: pink
     left: 0
     overflow: visible
     position: absolute
@@ -17,10 +16,21 @@
         top: $big-navbar-height
 
     .MessageBar
+        background-color: $brand-primary-background
+        border-bottom-width: 1px
+        border-bottom-style: solid
+        border-color: $gray-light
         height: $app-message-bar-height
         width: 100%
 
+        &.MessageBar--success
+            background-color: $brand-success-background
+
+        &.MessageBar--warning
+            background-color: $brand-warning-background
+
         @media $media-big-navbar
+            border-width: 0
             height: $big-message-bar-height
 
         p
