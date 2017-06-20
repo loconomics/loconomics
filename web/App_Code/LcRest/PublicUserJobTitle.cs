@@ -36,17 +36,5 @@ namespace LcRest
                 jobTitlePluralName = userJobTitle.jobTitlePluralName
             };
         }
-
-        public static IEnumerable<PublicUserJobTitle> FromUserJobTitles(IEnumerable<UserJobTitle> userJobTitles)
-        {
-            var publicJobTitles = new List<PublicUserJobTitle>();
-
-            foreach(UserJobTitle userJobTitle in userJobTitles)
-            {
-                publicJobTitles.Add(FromUserJobTitle(userJobTitle));
-            }
-
-            return publicJobTitles;
-        }
     }
 }
