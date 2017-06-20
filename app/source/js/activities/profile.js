@@ -30,18 +30,26 @@ var A = Activity.extend(function ProfileActivity() {
     });
 
     this.registerHandler({
-        target: this.viewModel.selectedJobTitle,
-        handler: function(publicUserJobTitle) {
+        target: this.viewModel.listingIsActive,
+        handler: function(isActive) {
             if(!this.messageBar) {
                 return;
             }
 
-            if(publicUserJobTitle.isActive()) {
-                this.messageBar.hide();
+            var tone = isActive ? MessageBar.tones.success : MessageBar.tones.warning;
+
+            this.messageBar.setTone(tone);
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.isOwnProfile,
+        handler: function(isOwnProfile) {
+            if(!this.messageBar) {
+                return;
             }
-            else {
-                this.messageBar.show();
-            }
+
+            this.messageBar.setVisible(isOwnProfile);
         }.bind(this)
     });
 });
@@ -92,7 +100,8 @@ A.prototype.show = function show(options) {
         templateName: 'profile-message-bar-inactive-template',
         viewModel: {
             editListing : this.viewModel.editListing,
-            jobTitle: this.viewModel.jobTitleSingularName
+            jobTitle: this.viewModel.jobTitleSingularName,
+            isActive: this.viewModel.listingIsActive
         }
     });
     this.registerMessageBarObserver(this.messageBar.isVisible);
@@ -104,6 +113,7 @@ A.prototype.show = function show(options) {
     this.loadData(userID, jobTitleID);
     this.viewModel.reviews.reset(userID, jobTitleID);
     this.viewModel.refreshTs(new Date());
+    this.viewModel.userID(userID);
 };
 
 A.prototype.hide = function() {
@@ -114,8 +124,10 @@ A.prototype.hide = function() {
 };
 
 function ViewModel(app) {
+    //jshint maxstatements:40
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
+    this.userID = ko.observable(null);
     this.reviews = new ReviewsVM(app);
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
@@ -124,6 +136,7 @@ function ViewModel(app) {
 
     this.reset = function() {
         this.user(null);
+        this.userID(null);
     };
     
     /// Work Photos utils
@@ -243,6 +256,22 @@ function ViewModel(app) {
     this.editListing = function() {
         app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
     }.bind(this);
+
+    this.listingIsActive = ko.pureComputed(function() {
+        return this.selectedJobTitle().isActive();
+    }, this);
+
+    this.isOwnProfile = ko.pureComputed(function() {
+        var user = app.model.user(),
+            profileOwnerUserID = this.userID();
+
+        if(user.isAnonymous() || profileOwnerUserID === null) {
+            return false;
+        }
+        else {
+            return profileOwnerUserID == user.userID();
+        }
+    }, this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');

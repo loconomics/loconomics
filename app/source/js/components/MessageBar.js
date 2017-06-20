@@ -79,11 +79,12 @@ MessageBar.tones = {
  *  Clears all tone classes from message bar
  *
  *  @param {jQuery} $messageBar from which to remove all tone classes
+ *  @private
  */
 var clearToneClasses = function($messageBar) {
-    Object.keys(MessageBar.tones).forEach(function(tone) {
-        $messageBar.removeClass(tone['class']);
-    });
+    for(var tone in MessageBar.tones) {
+        $messageBar.removeClass((MessageBar.tones[tone])['class']);
+    }
 };
 
 /**
@@ -95,6 +96,15 @@ MessageBar.prototype.setTone = function(tone) {
     clearToneClasses(this._$messageBar);
 
     this._$messageBar.addClass(tone['class']);
+};
+
+/**
+ * Show/hide message bar via parameter
+ *
+ * @param {Boolean} isVisible set to true to show message bar, false to hide it
+ */
+MessageBar.prototype.setVisible = function(isVisible) {
+    isVisible ? this.show() : this.hide();
 };
 
 /**

@@ -2,7 +2,7 @@
 <div data-activity="profile" data-bind="css: { 'is-loading': isLoading }">
     <script type="text/html" id="profile-message-bar-inactive-template">
         <p class="small">
-            <span data-bind="text: jobTitle"></span> listing is inactive.
+            <span data-bind="text: jobTitle"></span> listing is <span data-bind="ifnot:isActive">inactive</span><span data-bind="if:isActive">active</span>.
             <a data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</a>
         </p>
     </script>
