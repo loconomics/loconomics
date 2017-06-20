@@ -56,7 +56,7 @@
 
             var locale = LcRest.Locale.Current;
 
-            return LcRest.PublicUserJobTitle.FromUserJobTitles(LcRest.UserJobTitle.GetActiveByUser(userID));
+            return LcRest.UserJobTitle.GetActiveByUser(userID).Select(LcRest.PublicUserJobTitle.FromUserJobTitle);
         }
         
         /// <summary>

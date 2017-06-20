@@ -112,7 +112,7 @@
             var jobTitles = callerUserID == serviceProfessionalID ? LcRest.UserJobTitle.GetAllByUser(serviceProfessionalID) :
                                                                     LcRest.UserJobTitle.GetActiveByUser(serviceProfessionalID);
 
-            return LcRest.PublicUserJobTitle.FromUserJobTitles(jobTitles);
+            return jobTitles.Select(LcRest.PublicUserJobTitle.FromUserJobTitle);
         }
     }
 }
