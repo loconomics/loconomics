@@ -136,26 +136,3 @@ AppModel.prototype.loadModules = function loadModules() {
 
     this.emit('modulesLoaded');
 };
-
-/**
-    Clear the local stored data, but with careful for the special
-    config data that is kept.
-**/
-AppModel.prototype.clearLocalData = function clearLocalData() {
-    // Get config
-    return localforage.getItem('config')
-    .then(function(config) {
-        // Clear all
-        localforage.clear();
-
-        if (config) {
-            // Set config again
-            localforage.setItem('config', config);
-        }
-
-        // Trigger notification, so other components
-        // can make further clean-up or try synchronizations,
-        // for example to clean-up in-memory cache.
-        this.emit('clearLocalData');
-    }.bind(this));
-};
