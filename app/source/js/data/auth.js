@@ -5,36 +5,15 @@
  */
 'use strict';
 
-var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 var getUrlQuery = require('../utils/getUrlQuery');
 var param = require('jquery').param;
-
-var EventEmitter = require('events').EventEmitter;
-exports.events = new EventEmitter();
-
-//TODO
-var user = {};//require user|session data module
-var userProfile = {};//require userProfile data module
-
-/**
-    Clear the local stored data, but with careful for the special
-    config data that is kept.
-**/
-var clearLocalData = function () {
-    // Clear local persisted storage
-    local.clear();
-
-    // Clear in-memory storage:
-    // memory cache is distributed on each module,
-    // we trigger an event to notify listening modules
-    // so can clean its memory or even make further tasks
-    exports.events.emit('clearLocalData');
-};
+var session = require('./session');
 
 /**
  * Remote response data for a succesfully logged user
- * @typedef {Object} LoggedData
+ * @typedef {Object} Credentials
+ * @property {string} username
  * @property {number} userID
  * @property {string} authKey Authentification key for future requests
  * @property {UserProfile} profile Basic profile information of the user
@@ -42,56 +21,22 @@ var clearLocalData = function () {
 
 /**
  * @callback LocalLoginCb
- * @param {LoggedData} Response data for login/signup
- * @returns {Promise<LoggedData>}
+ * @param {Credentials} Response data for login/signup
+ * @returns {Promise<Credentials>}
  */
 
 /**
  * Provides a function that expects the remote
- * response data from a login/signup
- * that, when called, will
- * clear the user session,
- * stores the login credentials
- * and set-up the new session
+ * credentials from a login/signup
+ * and open the new user session.
  * @private
  * @param {string} username
- * @param {string} password
- * @returns {LocalLoginCb}
+  * @returns {LocalLoginCb}
  */
-var performLocalLogin = function (username/*, password*/) {
-    return function(logged) {
-        // Remove any previous local data if any:
-        return clearLocalData()
-        .then(function() {
-
-            // use authorization key for each
-            // new Rest request
-            remote.setAuthorization('LC alu=' + logged.userID + ',alk=' + logged.authKey);
-
-            // async local save, don't wait
-            local.setItem('credentials', {
-                userID: logged.userID,
-                username: username,
-                authKey: logged.authKey
-            });
-
-            // Set user data
-            user().model.updateWith(logged.profile);
-            // IMPORTANT: Local name kept in sync with set-up at AppModel.userProfile
-            userProfile.saveLocal();
-
-            // Google Analytics
-            if (window.ga) {
-                if (window.cordova) {
-                    window.ga.setUserId(logged.userID);
-                }
-                else {
-                    window.ga('set', 'userId', logged.userID);
-                }
-            }
-
-            return logged;
-        });
+var performLocalLogin = function (username) {
+    return function (credentials) {
+        credentials.username = username;
+        return session.open(credentials);
     };
 };
 
@@ -112,7 +57,7 @@ exports.login = function (username, password) {
         username: username,
         password: password,
         returnProfile: true
-    }).then(performLocalLogin(username, password));
+    }).then(performLocalLogin(username));
 };
 
 /**
@@ -130,7 +75,7 @@ exports.facebookLogin = function (accessToken) {
         accessToken: accessToken,
         returnProfile: true
     }).then(function(logged) {
-        return performLocalLogin(logged.profile.email, null)(logged);
+        return performLocalLogin(logged.profile.email)(logged);
     }.bind(this));
 };
 
@@ -146,18 +91,10 @@ exports.facebookLogin = function (accessToken) {
  * @returns {Promise}
  */
 exports.logout = function logout() {
-    // Local app close session
-    remote.clearAuthorization();
-    local.removeItem('credentials');
-    local.removeItem('profile');
-
-    // Local data clean-up!
-    clearLocalData();
-
     // Don't need to wait the result of the REST operation
     remote.post('auth/logout');
 
-    return Promise.resolve();
+    return session.close();
 };
 
 /**
@@ -200,7 +137,7 @@ exports.signup = function (data) {
     // we do the same as there to get the user logged
     // on the app on sign-up success.
     return remote.post('auth/signup?' + param(utm), data)
-    .then(performLocalLogin(data.email, data.password));
+    .then(performLocalLogin(data.email));
 };
 
 /**

@@ -2,8 +2,6 @@
     caching and sharing data across activities and performing
     requests
 **/
-var ko = require('knockout');
-var localforage = require('../data/drivers/localforage');
 var EventEmitter = require('events').EventEmitter;
 
 function AppModel() {
@@ -14,56 +12,6 @@ function AppModel() {
 AppModel._inherits(EventEmitter);
 
 module.exports = AppModel;
-
-/**
-    Load credentials from the local storage, without error if there is nothing
-    saved. It loads profile data too.
-**/
-AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
-    return new Promise(function(resolve) { // Never rejects: , reject) {
-
-        // Callback to just resolve without error (passing in the error
-        // to the 'resolve' will make the process to fail),
-        // since we don't need to create an error for the
-        // app init, if there is not enough saved information
-        // the app has code to request a login.
-        var resolveAnyway = function(doesnMatter){
-            console.warning('App Model Init err', doesnMatter);
-            resolve();
-        };
-
-        // If there are credentials saved
-        localforage.getItem('credentials').then(function(credentials) {
-
-            if (credentials &&
-                credentials.userID &&
-                credentials.username &&
-                credentials.authKey) {
-
-                // use authorization key for each
-                // new Rest request
-                this.rest.setAuthorization('LC alu=' + credentials.userID + ',alk=' + credentials.authKey);
-                // Load User Profile, from local with server fallback and server synchronization, silently
-                this.userProfile.load().then(resolve, resolveAnyway);
-
-                // Google Analytics
-                if (window.ga) {
-                    if (window.cordova) {
-                        window.ga.setUserId(credentials.userID);
-                    }
-                    else {
-                        window.ga('set', 'userId', credentials.userID);
-                    }
-                }
-            }
-            else {
-                // End successfully. Not loggin is not an error,
-                // is just the first app start-up
-                resolve();
-            }
-        }.bind(this), resolveAnyway);
-    }.bind(this));
-};
 
 /** Initialize and wait for anything up **/
 AppModel.prototype.init = function init() {
@@ -79,19 +27,12 @@ AppModel.prototype.init = function init() {
 
     // Initialize: check the user has login data and needed
     // cached data, return its promise
-    return this.loadLocalCredentials();
+    var session = require('../data/session');
+    return session.loadLocalCredentials();
 };
 
 AppModel.prototype.loadModules = function loadModules() {
     //jshint maxstatements: 80
-
-    this.userProfile = require('./AppModel.userProfile').create(this);
-    // NOTE: Alias for the user data
-    // TODO:TOREVIEW if continue to makes sense to keep this 'user()' alias, document
-    // where is used and why is preferred to the canonical way.
-    this.user = ko.computed(function() {
-        return this.userProfile.data;
-    }, this);
 
     this.onboarding = require('./AppModel.onboarding').create(this);
 

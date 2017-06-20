@@ -4,19 +4,29 @@
  * restoring a session from saved credentials,
  * set-up of a new session and
  * closing a session performing clean up tasks
+ * @module data/session
  */
 'use strict';
 
-var User = require('../models/User');
 var ko = require('knockout');
+var local = require('./drivers/localforage');
+var remote = require('./drivers/restClient');
 
-// TODO about user observable: Is an Alias for the user data
-// from UserProfile, needs review/refactor
-// if continue to makes sense to keep as an observable or
-// permanet self-updated Model instance (it's already keep
-// untouched the instance) or plain data with a more explicit
-// subscribe mechanism for updates.
-var userInstance = User.newAnonymous();
+// TODO: Refactor to make 'session' independent of 'userProfile' module.
+// Explanation: The userProfile and session modules are very tight right
+// now because of the `user` property:
+// - is an alias (rather than it's
+// own instance and default -see commit ecd33a765-, ideally
+// kept updated from userProfile 'data-change' events)
+// - at the `restore` method, userProfile is call to ask
+// for data from local and request remote update
+// This forces us to include userProfile and linked utilites
+// like RemoteModel even on bundles like the public pages one where
+// they are not needed. Even the relationship between boths
+// can be more clear.
+// Additionally, user may not need to be an observable but a constant
+// instance.
+var userProfile = require('./userProfile');
 
 /**
  * Provides the basic user profile data, like
@@ -26,8 +36,57 @@ var userInstance = User.newAnonymous();
  * methods and remote syncing of the data.
  */
 exports.user = ko.pureComputed(function() {
-    return userInstance;
+    return userProfile.data;
 });
+
+// Events emitted by the session
+var EventEmitter = require('events').EventEmitter;
+exports.events = new EventEmitter();
+
+/**
+    Clear the local stored data, but with careful for the special
+    config data that is kept.
+    @private
+**/
+var clearLocalData = function () {
+    // Clear all local persisted storage
+    return local.clear()
+    .then(function() {
+        // Clear in-memory storage:
+        // memory cache is distributed on each module,
+        // we trigger an event to notify listening modules
+        // so can clean its memory or even make further tasks
+        exports.events.emit('clearLocalData');
+    });
+};
+
+/**
+ * Set-ups the remote driver with the authorization
+ * credentials so the user is identified in each
+ * new request.
+ * @param {Credentials} credentials
+ */
+var setupRemoteCredentials = function(credentials) {
+    // use authorization key for each
+    // new remote request
+    remote.setAuthorization('LC alu=' + credentials.userID + ',alk=' + credentials.authKey);
+};
+
+/**
+ * Set-ups Google Analytics library, if loaded,
+ * with the credentials so identifies the user.
+ * @param {Credentials} credentials
+ */
+var setupGoogleAnalytics = function(credentials) {
+    if (window.ga) {
+        if (window.cordova) {
+            window.ga.setUserId(credentials.userID);
+        }
+        else {
+            window.ga('set', 'userId', credentials.userID);
+        }
+    }
+};
 
 /**
  * Restores the user session from
@@ -36,20 +95,76 @@ exports.user = ko.pureComputed(function() {
  * Expected to be call at app start-up,
  * will prevent execution if a session is
  * running.
+ * @returns {Promise}
  */
 exports.restore = function() {
+    return new Promise(function(resolve) { // Never rejects: , reject) {
 
+        // Callback to just resolve without error (passing in the error
+        // to the 'resolve' will make the process to fail),
+        // since we don't need to create an error for the
+        // app init, if there is not enough saved information
+        // the app has code to request a login.
+        var resolveAnyway = function(doesnMatter){
+            console.warning('session.restore error', doesnMatter);
+            resolve();
+        };
+
+        // If there are credentials saved
+        local.getItem('credentials').then(function(credentials) {
+
+            if (credentials &&
+                credentials.userID &&
+                credentials.username &&
+                credentials.authKey) {
+
+                setupRemoteCredentials(credentials);
+                setupGoogleAnalytics(credentials);
+                // Load User Profile, from local with server fallback and server synchronization, silently
+                userProfile.load().then(resolve, resolveAnyway);
+            }
+            else {
+                // End successfully. Not loggin is not an error,
+                // is just the first app start-up
+                resolve();
+            }
+        }.bind(this), resolveAnyway);
+    }.bind(this));
 };
 
 /**
  * Opens the user session for
- * the given settings, that includes
- * valid IDs and token from remote connection.
- * Automatically closes previous session.
+ * the given credentials to the remote endpoint.
+ * It clears the user session,
+ * stores the login credentials
+ * and set-up the new session.
  * This is the next-step after a remote login
+ * @param {Credentials} loginData Response data from an auth login/signup
+ * describing the user credentials and profile
+ * @returns {Promise<Credentials>}
  */
-exports.open = function() {
+exports.open = function(credentials) {
+    // Remove any previous local data if any:
+    return clearLocalData()
+    .then(function() {
+        setupRemoteCredentials(credentials);
 
+        // async local save, don't wait
+        local.setItem('credentials', {
+            userID: credentials.userID,
+            username: credentials.username,
+            authKey: credentials.authKey
+        });
+
+        // Set user data
+        exports.user().model.updateWith(credentials.profile);
+        // IMPORTANT: Local name kept in sync with set-up at userProfile module
+        userProfile.saveLocal();
+
+        setupGoogleAnalytics(credentials);
+
+        return credentials;
+    });
 };
 
 /**
@@ -57,7 +172,14 @@ exports.open = function() {
  * clean-ing up user data from memory
  * and local store.
  * This is the next-step after a remote logout
+ * @returns {Promise}
  */
 exports.close = function() {
+    // Local app close session
+    remote.clearAuthorization();
+    local.removeItem('credentials');
+    local.removeItem('profile');
 
+    // Local data clean-up!
+    clearLocalData();
 };

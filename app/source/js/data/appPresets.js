@@ -2,6 +2,7 @@
  * Offers access to the app preset configuration options, read-only.
  * Is NOT meant for user settings or variable options.
  * Options are read on first use only (do not re-read from source beyond that)
+ * @module data/appPresets
  */
 'use strict';
 
