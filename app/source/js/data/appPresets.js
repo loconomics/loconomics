@@ -37,6 +37,7 @@ function getSiteUrl() {
     // Local Storage config takes precedence
     var siteUrl = '';
 
+    // It allows to be set in localStorage for development purposes
     if (localStorage.siteUrl) {
         siteUrl = localStorage.siteUrl;
         // Overwrite preset attribute
@@ -53,13 +54,23 @@ migrateConfig();
 var siteUrl = getSiteUrl();
 
 /**
- * Config object to be exported
+ * Object to be exported
+ * with read-only properties
  */
-var config = {
-    // It allows to be set in localStorage for development purposes
+
+module.exports = {
+    /**
+     * Gives the site URL, that is preset to non empty
+     * if is different than the current environment URL
+     * (empty on website server, non empty on
+     * native app, file protocol, dev environment).
+     * Used to create links to remote site or perform
+     * REST API requests.
+     * When empty string, is expected to be used as is
+     * since works fine as relative URL.
+     * @member {string}
+     */
     get siteUrl() {
         return siteUrl;
     }
 };
-
-module.exports = config;
