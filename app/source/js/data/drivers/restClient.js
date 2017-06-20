@@ -7,12 +7,12 @@
 
 var API_BASE_URL = '/api/v1/en-US/';
 var Rest = require('../../utils/Rest');
-var config = require('../config');
+var presets = require('../appPresets');
 
 /**
  * Exposed rest client
  */
-var rest = new Rest(config.siteUrl + API_BASE_URL);
+var rest = new Rest(presets.siteUrl + API_BASE_URL);
 
 module.exports = rest;
 

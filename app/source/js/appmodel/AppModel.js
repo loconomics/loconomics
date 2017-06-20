@@ -70,10 +70,8 @@ AppModel.prototype.loadLocalCredentials = function loadLocalCredentials() {
 /** Initialize and wait for anything up **/
 AppModel.prototype.init = function init() {
 
-    // First, get any saved local config
-    // NOTE: for now, this is optional, to get a saved siteUrl rather than the
-    // default one, if any.
-    var config = require('../data/config');
+    // First, get any saved local config presets (used before as appModel.config)
+    var config = require('../data/appPresets');
     // compat:
     this.config = config;
     this.rest = require('../data/drivers/restClient');

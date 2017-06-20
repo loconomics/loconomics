@@ -65,7 +65,7 @@ function BaseClientBookingCardVM(app) {
 
     ///
     /// URLs (constants, don't need reset)
-    var config = require('../data/config');
+    var config = require('../data/appPresets');
     var siteUrl = (config.siteUrl || 'https://loconomics.com') + '/';
     this.urlTos = ko.observable(siteUrl + '#!terms/terms-of-service?mustReturn=true');
     this.urlPp = ko.observable(siteUrl + '#!terms/privacy-policy?mustReturn=true');
