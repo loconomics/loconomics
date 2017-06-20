@@ -293,7 +293,7 @@ Activity.prototype.convertToCancelAction = function convertToCancelAction(action
  */
 Activity.prototype.registerMessageBarObserver = function(isVisibleObserver) {
     this._messageBarSubscription = isVisibleObserver.subscribe(function(isVisible) {
-        this.$activity.toggleClass('has-message-bar', isVisible);
+        this.$activity.toggleClass('Activity--hasMessageBar', isVisible);
     }, this);
 };
 
