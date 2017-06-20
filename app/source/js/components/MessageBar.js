@@ -109,9 +109,6 @@ MessageBar.prototype.setVisible = function(isVisible) {
 
 /**
  * Makes the message bar visible
- *
- * @param {Object} options
- * @param {Object} options.severityLevel
  */
 MessageBar.prototype.show = function() {
     this._$messageBar.show();
