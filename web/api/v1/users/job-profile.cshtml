@@ -56,7 +56,7 @@
 
             var locale = LcRest.Locale.Current;
 
-            return LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID);
+            return LcRest.UserJobTitle.GetActiveByUser(userID).Select(LcRest.PublicUserJobTitle.FromUserJobTitle);
         }
         
         /// <summary>
@@ -66,10 +66,9 @@
         /// <returns></returns>
         private dynamic GetItem(int userID, int itemID)
         {
-            var locale = LcRest.Locale.Current;
             if (itemID > 0)
             {
-                var item = LcRest.PublicUserJobTitle.Get(userID, locale.languageID, locale.countryID, itemID);  
+                var item = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(), itemID));
                 if (item != null) {
                     return item;
                 }

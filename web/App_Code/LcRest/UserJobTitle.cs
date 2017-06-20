@@ -30,20 +30,31 @@ namespace LcRest
         }
 
         #region Fields
-        public int userID;
-        public int jobTitleID;
+        public int userID { get; set; }
+        public int jobTitleID { get; set; }
 
-        public string intro;
+        public string intro { get; set; }
         public ProfileStatus statusID;
-        public int cancellationPolicyID;
-        public bool instantBooking;
+        
+        public int cancellationPolicyID { get; set; }
+        public bool instantBooking { get; set; }
         public bool bookMeButtonReady;
         public bool collectPaymentAtBookMeButton;
-        public List<Alert> alerts;
+
+        public string jobTitleSingularName { get; set; }
+        public string jobTitlePluralName { get; set; }
+
+        public List<Alert> alerts { get; set; }
 
         public DateTime createdDate;
         public DateTime updatedDate;
         #endregion
+
+        public UserJobTitle()
+        {
+            cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
+            alerts = new List<Alert>();
+        }
 
         public static UserJobTitle FromDB(dynamic record)
         {
@@ -59,6 +70,9 @@ namespace LcRest
                 instantBooking = record.instantBooking,
                 bookMeButtonReady = record.bookMeButtonReady,
                 collectPaymentAtBookMeButton = record.collectPaymentAtBookMeButton,
+
+                jobTitleSingularName = record.jobTitleSingularName,
+                jobTitlePluralName = record.jobTitlePluralName,
 
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
@@ -85,7 +99,7 @@ namespace LcRest
         /// <summary>
         /// Get list by user or explicit job title if a value different than -1 is given
         /// </summary>
-        private const string sqlGet = @"
+        private const string sqlSelect = @"
             SELECT
                 u.UserID As userID,
                 u.PositionID As jobTitleID,
@@ -96,7 +110,9 @@ namespace LcRest
                 u.CreateDate As createdDate,
                 u.UpdatedDate As updatedDate,
                 u.bookMeButtonReady As bookMeButtonReady,
-                u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton
+                u.collectPaymentAtBookMeButton As collectPaymentAtBookMeButton,
+                positions.PositionSingular As jobTitleSingularName,
+                positions.PositionPlural As jobTitlePluralName
             FROM
                 userprofilepositions as u
                     INNER JOIN
@@ -105,46 +121,93 @@ namespace LcRest
                 u.UserID = @0
                     AND u.LanguageID = @1
                     AND u.CountryID = @2
-                    AND u.Active = 1
-                    AND u.StatusID > 0
-                    AND (@3 = -1 OR @3 = u.PositionID)
+                    AND u.Active = 1                   
                     -- Double check for approved positions
                     AND positions.Active = 1
                     AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
+        
+        private const string sqlAndJobTitleID = " AND (@3 = -1 OR @3 = u.PositionID) "; 
+        private const string sqlAndActiveOrInactiveProfiles = " AND u.StatusID > 0 ";
+        private const string sqlAndActiveProfiles = " AND u.StatusID = 1 ";
+        private const string sqlAndBookMeButtonReady = " AND bookMeButtonReady = 1";
+
+        private const string sqlGetActiveItem = sqlSelect + sqlAndActiveProfiles + sqlAndJobTitleID;
+        private const string sqlGetActiveOrInactiveItem = sqlSelect + sqlAndActiveOrInactiveProfiles + sqlAndJobTitleID;
         #endregion
 
-        public static IEnumerable<UserJobTitle> GetByUser(int userID)
+        /// <summary>
+        ///  Return a user job title in the current locale, even if the user job title is not
+        ///  active.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="jobTitleID"></param>
+        public static UserJobTitle GetItem(int userID, int jobTitleID)
         {
-            const int jobTitleID = -1;
+            return GetItem(userID, LcData.GetCurrentCountryID(), LcData.GetCurrentLanguageID(), jobTitleID, true, false);
+        }
+
+        /// <summary>
+        /// Return a user job title based on userID and jobTitleID
+        /// </summary>
+        /// <param name="userID">userID of the professional</param>
+        /// <param name="languageID"></param>
+        /// <param name="countryID"></param>
+        /// <param name="jobTitleID">jobTitleID of the user job title</param>
+        /// <param name="includeDeactivatedProfile">if true, will include all non-deleted user job titles. If false, will only include those which are publicly active</param>
+        /// <param name="bookMeButtonRequired"></param>
+        /// <returns></returns>
+        public static UserJobTitle GetItem(int userID, int languageID, int countryID, int jobTitleID = -1, bool includeDeactivatedProfile = false, bool bookMeButtonRequired = false)
+        {
+            var sql = includeDeactivatedProfile ? sqlGetActiveOrInactiveItem : sqlGetActiveItem;
+
+            if (bookMeButtonRequired)
+            {
+                sql += sqlAndBookMeButtonReady;
+            }
 
             using (var db = new LcDatabase())
             {
-                var userJobTitles = db.Query(sqlGet,
-                                userID,
-                                LcData.GetCurrentLanguageID(),
-                                LcData.GetCurrentCountryID(),
-                                jobTitleID)
-                .Select(FromDB);
+                var userJobTitle = FromDB(db.QuerySingle(sql, userID, languageID, countryID, jobTitleID));
+                
+                if(userJobTitle != null)
+                {
+                    userJobTitle.alerts = Alert.GetActive(userID, jobTitleID).ToList();
+                }                
+
+                return userJobTitle;
+            }
+        }
+
+        private static IEnumerable<UserJobTitle> GetListByUser(string sql, int userID)
+        {
+            using (var db = new LcDatabase())
+            {
+                var userJobTitles = db.Query(sql, userID, LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID())
+                                    .Select(FromDB);
 
                 return BindAlerts(userJobTitles, Alert.IndexByPosition(Alert.GetActive(userID)));
             }
         }
 
-        public static UserJobTitle GetItem(int userID, int jobTitleID)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserJobTitle> GetAllByUser(int userID)
         {
-            using (var db = new LcDatabase())
-            {
-                var userJobTitle = FromDB(db.QuerySingle(sqlGet,
-                                             userID,
-                                             LcData.GetCurrentLanguageID(),
-                                             LcData.GetCurrentCountryID(),
-                                             jobTitleID));
+            return GetListByUser(sqlSelect + sqlAndActiveOrInactiveProfiles, userID);
+        }
 
-                userJobTitle.alerts = Alert.GetActive(userID, jobTitleID).ToList();
-
-                return userJobTitle;
-            }
+        /// <summary>
+        /// Get all publicly active user job titles for a given user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserJobTitle> GetActiveByUser(int userID)
+        {
+            return GetListByUser(sqlSelect + sqlAndActiveProfiles, userID);
         }
         #endregion
 
