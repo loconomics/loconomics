@@ -98,12 +98,14 @@ A.prototype.show = function show(options) {
 
     this.messageBar = new MessageBar({
         templateName: 'profile-message-bar-inactive-template',
+        tone: MessageBar.tones.warning,
         viewModel: {
             editListing : this.viewModel.editListing,
             jobTitle: this.viewModel.jobTitleSingularName,
             isActive: this.viewModel.listingIsActive
         }
     });
+    this.messageBar.setVisible(this.viewModel.isOwnProfile());
     this.registerMessageBarObserver(this.messageBar.isVisible);
 
     var params = options.route && options.route.segments;
