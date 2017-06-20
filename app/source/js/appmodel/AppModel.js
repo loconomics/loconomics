@@ -15,8 +15,6 @@ AppModel._inherits(EventEmitter);
 
 module.exports = AppModel;
 
-require('./AppModel-account').plugIn(AppModel);
-
 /**
     Load credentials from the local storage, without error if there is nothing
     saved. It loads profile data too.

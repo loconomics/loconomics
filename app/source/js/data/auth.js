@@ -1,15 +1,12 @@
 /**
-    AppModel extension,
-    focused on the Account related APIs:
-    - login
-    - logout
-    - signup
-**/
+ * Provides user authentication through
+ * the REST API
+ */
 'use strict';
 
-var localforage = require('localforage');
+var localforage = require('./drivers/localforage');
 var getUrlQuery = require('../utils/getUrlQuery');
-var $ = require('jquery');
+var param = require('jquery').param;
 
 exports.plugIn = function (AppModel) {
     /**
@@ -98,7 +95,7 @@ exports.plugIn = function (AppModel) {
         // The result is the same as in a login, and
         // we do the same as there to get the user logged
         // on the app on sign-up success.
-        return this.rest.post('signup?' + $.param(utm), data)
+        return this.rest.post('signup?' + param(utm), data)
         .then(performLocalLogin(this, data.email, data.password));
     };
 
