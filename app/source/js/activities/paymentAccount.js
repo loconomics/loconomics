@@ -133,7 +133,7 @@ function ViewModel(app) {
                 } else {
                     app.successSave();
                 }
-            })
+            }.bind(this))
             .catch(function() {
                 // Show all fields, letting user to fix error in previously
                 // hidden fields.
