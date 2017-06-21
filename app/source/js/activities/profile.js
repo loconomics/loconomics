@@ -9,6 +9,8 @@ var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
+var MessageBar = require('../components/MessageBar');
+var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 
 var A = Activity.extend(function ProfileActivity() {
     
@@ -24,6 +26,30 @@ var A = Activity.extend(function ProfileActivity() {
         target: $(window),
         handler: function() {
             this.viewModel.refreshTs(new Date());
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.listingIsActive,
+        handler: function(isActive) {
+            if(!this.messageBar) {
+                return;
+            }
+
+            var tone = isActive ? MessageBar.tones.success : MessageBar.tones.warning;
+
+            this.messageBar.setTone(tone);
+        }.bind(this)
+    });
+
+    this.registerHandler({
+        target: this.viewModel.isOwnProfile,
+        handler: function(isOwnProfile) {
+            if(!this.messageBar) {
+                return;
+            }
+
+            this.messageBar.setVisible(isOwnProfile);
         }.bind(this)
     });
 });
@@ -70,6 +96,18 @@ A.prototype.loadData = function(userID, jobTitleID) {
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
+    this.messageBar = new MessageBar({
+        templateName: 'profile-message-bar-template',
+        tone: MessageBar.tones.warning,
+        viewModel: {
+            editListing : this.viewModel.editListing,
+            jobTitle: this.viewModel.jobTitleSingularName,
+            isActive: this.viewModel.listingIsActive
+        }
+    });
+    this.messageBar.setVisible(this.viewModel.isOwnProfile());
+    this.registerMessageBarObserver(this.messageBar.isVisible);
+
     var params = options.route && options.route.segments;
     // Get requested userID or the current user profile
     var userID = (params[0] |0) || this.app.model.user().userID();
@@ -77,11 +115,21 @@ A.prototype.show = function show(options) {
     this.loadData(userID, jobTitleID);
     this.viewModel.reviews.reset(userID, jobTitleID);
     this.viewModel.refreshTs(new Date());
+    this.viewModel.userID(userID);
+};
+
+A.prototype.hide = function() {
+    Activity.prototype.hide.call(this);
+
+    this.disposeMessageBarObserver();
+    this.messageBar.dispose();
 };
 
 function ViewModel(app) {
+    //jshint maxstatements:40
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
+    this.userID = ko.observable(null);
     this.reviews = new ReviewsVM(app);
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
@@ -90,6 +138,7 @@ function ViewModel(app) {
 
     this.reset = function() {
         this.user(null);
+        this.userID(null);
     };
     
     /// Work Photos utils
@@ -126,7 +175,7 @@ function ViewModel(app) {
     this.viewAllPhotos = function() {
         this.isShowingAllPhotos(true);
     }.bind(this);
-    
+
     /// Addresses
     this.serviceAddresses = ko.pureComputed(function() {
         var u = this.user();
@@ -196,6 +245,34 @@ function ViewModel(app) {
             hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
 
         return hasIntro || hasAttributes;
+    }, this);
+
+    this.jobTitleSingularName = ko.pureComputed(function() {
+        return this.selectedJobTitle().jobTitleSingularName();
+    }, this);
+
+    this.selectedJobTitle = ko.pureComputed(function() {
+        return (this.user() && this.user().selectedJobTitle()) || new PublicUserJobTitle();
+    }, this);
+
+    this.editListing = function() {
+        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
+    }.bind(this);
+
+    this.listingIsActive = ko.pureComputed(function() {
+        return this.selectedJobTitle().isActive();
+    }, this);
+
+    this.isOwnProfile = ko.pureComputed(function() {
+        var user = app.model.user(),
+            profileOwnerUserID = this.userID();
+
+        if(user.isAnonymous() || profileOwnerUserID === null) {
+            return false;
+        }
+        else {
+            return profileOwnerUserID == user.userID();
+        }
     }, this);
 }
 

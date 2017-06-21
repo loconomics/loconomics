@@ -88,20 +88,36 @@
                     </div>
                     <app-unlabeled-input params="placeholder: 'Date of birth (mm/dd/yyyy)', value: birthDate, disable: $root.isLocked"></app-unlabeled-input>
 
-                    <h2 class="SectionTitle">Agree to the terms of service</h2>
-                    <p>
-                        Loconomics Cooperative, Inc. (Loconomics) uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a class="text-secondary" href="https://www.braintreepayments.com/legal/payment-services-agreement" target="_blank">https://www.braintreepayments.com/legal/payment-services-agreement</a>, and the applicable bank agreement available at <a class="text-secondary" href="https://www.braintreepayments.com/legal/bank-agreement" target="_blank">https://www.braintreepayments.com/legal/bank-agreement</a>. If you have questions regarding the agreements, please contact Braintree at 877.434.2894.
-                    </p>
-                    <label class="form-label"><input type="checkbox" data-bind="checked: agree, disable: $root.isLocked" /> <span>I agree to the above terms of service</span></label>
+                    <div id="paymentAccount-terms">
+                        <label class="form-label" for="paymentAccount-terms-agreement">
+                            <input id="paymentAccount-terms-agreement" type="checkbox" data-bind="checked: agree, disable: $root.isLocked" />
+                            <span>I agree to the Braintree terms of service.</span>
+                        </label>
+                        <a class="btn btn-link text-secondary" data-toggle="collapse" aria-expanded="false" data-target="#paymentAccount-terms-text" data-controls="#paymentAccount-terms-text">(Show terms of service)</a>
 
+                        <p id="paymentAccount-terms-text" class="collapse container-fluid">
+                                                Loconomics Cooperative, Inc. (Loconomics) uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at <a class="text-secondary" href="https://www.braintreepayments.com/legal/payment-services-agreement" target="_blank">https://www.braintreepayments.com/legal/payment-services-agreement</a>, and the applicable bank agreement available at <a class="text-secondary" href="https://www.braintreepayments.com/legal/bank-agreement" target="_blank">https://www.braintreepayments.com/legal/bank-agreement</a>. If you have questions regarding the agreements, please contact Braintree at 877.434.2894.
+                        </p>
+                    </div>
                 </div>
-                <div class="LightForm container-fluid" data-bind="visible: formVisible() || isInOnboarding()">
+
+                <div class="LightForm container-fluid" data-bind="visible: formVisible() && !isInOnboarding()">
                     <div class="LightForm-submitBar">
-                        <div>
+                        <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: $root.isLocked, click: $root.save">Save</button>
+                    </div>
+                </div>
+
+                <div class="LightForm container-fluid" data-bind="visible: isInOnboarding()">
+                    <div class="LightForm-submitBar row">
+                        <div class="btn-col col-xs-12 col-sm-6">
+                            <button type="button" value="Skip" class="btn btn-default btn-block" data-bind="disable: $root.isLocked, click: $root.onSkip">Skip for now</button>
+                        </div>
+                        <div class="btn-col col-xs-12 col-sm-6">
                             <button type="submit" value="Save" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: $root.isLocked, click: $root.save">Save</button>
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>

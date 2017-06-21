@@ -1,0 +1,41 @@
+/*
+  Common app-wide message bar fixed below the navigation.
+
+  It is outside the activity element. Its top position depends on 
+  the height of the navigation bar. 
+*/
+.AppMessageBarWrapper
+    left: 0
+    overflow: visible
+    position: absolute
+    right: 0
+    top: $app-navbar-height
+    z-index: $app-message-bar-z-index
+
+    @media $media-big-navbar
+        top: $big-navbar-height
+
+    .MessageBar
+        background-color: $brand-primary-background
+        border-bottom-width: 1px
+        border-bottom-style: solid
+        border-color: $gray-light
+        height: $app-message-bar-height
+        width: 100%
+
+        &.MessageBar--success
+            background-color: $brand-success-background
+
+        &.MessageBar--warning
+            background-color: $brand-warning-background
+
+        @media $media-big-navbar
+            border-width: 0
+            height: $big-message-bar-height
+
+        p
+            text-align: center
+            line-height: $app-message-bar-height
+
+            @media $media-big-navbar
+                line-height: $big-message-bar-height
