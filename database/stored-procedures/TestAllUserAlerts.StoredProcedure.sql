@@ -9,17 +9,13 @@ CREATE PROCEDURE [dbo].[TestAllUserAlerts]
 	,@PositionID int = 0
 AS
 BEGIN
-	
-	
+
 	SET NOCOUNT ON;
     EXEC TestAlertPersonalInfo				@UserID
     EXEC TestAlertPhoto						@UserID
     EXEC TestAlertPayment					@UserID
-	
 	EXEC TestAlertAvailability				@UserID
-	EXEC TestAlertSocialMediaVerification	@UserID
-	EXEC TestAlertBackgroundCheck			@UserID
-	EXEC TestAlertBasicInfoVerification		@UserID	
+
 	EXEC TestAlertVerifyEmail				@UserID
 	EXEC TestAlertPublicBio					@UserID
 	EXEC TestAlertEducation					@UserID
@@ -41,7 +37,6 @@ BEGIN
 			
 			EXEC TestAlertPricingDetails		@UserID, @PositionID
 			EXEC TestAlertPositionServices		@UserID, @PositionID
-			EXEC TestAlertReferenceRequests		@UserID, @PositionID
 			EXEC TestAlertProfessionalLicense	@UserID, @PositionID
 			EXEC TestAlertLocation				@UserID, @PositionID
 			EXEC TestAlertShowcaseWork			@UserID, @PositionID
@@ -53,7 +48,6 @@ BEGIN
     END ELSE BEGIN
 		EXEC TestAlertPricingDetails		@UserID, @PositionID
 		EXEC TestAlertPositionServices		@UserID, @PositionID
-		EXEC TestAlertReferenceRequests		@UserID, @PositionID
 		EXEC TestAlertProfessionalLicense	@UserID, @PositionID
 		EXEC TestAlertLocation				@UserID, @PositionID
 		EXEC TestAlertShowcaseWork			@UserID, @PositionID

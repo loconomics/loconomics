@@ -18,6 +18,7 @@
         - includeFullJobTitleID:int (Optional) Set a jobTitleID to get it's object under jobProfile expanded with
             all the public data related: services, serviceAddresses, serviceAttributes, workPhotos (as usually displayed in the profile page)
             A special value of 0 or nothing will include nothing, while the special value -1 means 'all job titles'.
+            If the API caller is the owner of the profile, all job titles are returned.
         @returns {
             profile: {}, // like /users/{userID}/profile
             rating: {}, // like /users/{userID}/rating
@@ -58,9 +59,9 @@
 
             var locale = LcRest.Locale.Current;
 
-            var jobProfile = profile.isServiceProfessional ? LcRest.PublicUserJobTitle.GetList(userID, locale.languageID, locale.countryID) : null;
+            var jobProfile = profile.isServiceProfessional ? GetJobProfile(WebSecurity.CurrentUserId, userID) : null;
 
-            var extendedJobProfile = jobProfile == null ? null : ((IEnumerable<LcRest.PublicUserJobTitle>)jobProfile).Select(x =>
+            var extendedJobProfile = jobProfile == null ? null : jobProfile.Select(x =>
             {
                 var full = includeFullJobTitleID == x.jobTitleID || includeFullJobTitleID == -1;
                 var servicesVisibility = WebSecurity.IsAuthenticated ? LcRest.ServiceProfessionalService.Visibility.BookableByClient(WebSecurity.CurrentUserId)
@@ -93,6 +94,24 @@
                 stats = LcRest.PublicUserStats.Get(userID),
                 education = LcRest.Education.GetList(userID)
             };
+        }
+
+        /// <summary>
+        /// Fetches list of public user job titles for the service professional. 
+        /// 
+        /// If the ID of the caller matches the service professional, then it will
+        /// return all job titles, even those that aren't publicly active.
+        /// </summary>
+        /// <param name="callerUserID">ID of the caller</param>
+        /// <param name="serviceProfessionalID">ID of the user with a job profile</param>
+        /// <returns></returns>
+        private static IEnumerable<LcRest.PublicUserJobTitle> GetJobProfile(int callerUserID, int serviceProfessionalID)
+        {
+            // If professional is fetching their own profile, show all job titles
+            var jobTitles = callerUserID == serviceProfessionalID ? LcRest.UserJobTitle.GetAllByUser(serviceProfessionalID) :
+                                                                    LcRest.UserJobTitle.GetActiveByUser(serviceProfessionalID);
+
+            return jobTitles.Select(LcRest.PublicUserJobTitle.FromUserJobTitle);
         }
     }
 }

@@ -17,16 +17,34 @@
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div class="switchLine">
-                    <span class="switchLine-label">
+                <div class="switchLine" data-bind="visible: isToggleReady">
+                    <div class="switchLine-label">
                         <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
-                    </span>
-                    <div class="switchLine-switch" data-bind="visible: isToggleReady">
+                    </div>
+                    <div class="switchLine-switch">
                         <label>
                             <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
                         </label>
                     </div>
                 </div>
+                <!-- ko ifnot: isToggleReady -->
+                <div class="LeadTile LeadTile--joined" data-bind="">
+                    <p><strong class="text-danger" data-bind="text: statusLabel"></strong></p>
+                    <div>Please finish these steps to activate your listing:</div>
+                </div>
+                <div>
+                    <ol class="TilesList TilesList--openEnd TilesList--numbered" data-bind="foreach: { data: requiredAlertLinks, as: 'alertLink' }">
+                        <li>
+                            <a class="CompactLinkTile" data-bind="attr: { href: alertLink.href() }">
+                                <div class="Tile-content">
+                                    <p data-bind="text: ($index() + 1) + '. ' + alertLink.label()"></p>
+                                </div>
+                                <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+                <!-- /ko -->
                 <div class="PaddedBox-xs" data-bind="visible: isActiveStatus">
                     <a class="btn btn-default btn-block" style="margin: 0 10% 20px 10%; width: 80%;"
                        href="/profile" data-bind="attr: { href: '/profile/' + userID() + '/' + jobTitleID() }">Preview <span data-bind="text: jobTitleName"></span> listing</a>

@@ -16,16 +16,15 @@ CREATE PROCEDURE [dbo].[SetUserAlert]
 	@UserID int
 	,@PositionID int
 	,@AlertID int
-	,@Active bit
+	,@IsActive bit
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-    IF @Active = 1 BEGIN
+    IF @IsActive = 1 BEGIN
 		UPDATE UserAlert WITH (Serializable) SET
-			Active = 1,
 			UpdatedDate = getdate(),
 			ModifiedBy = 'sys'
 		WHERE
@@ -38,10 +37,10 @@ BEGIN
 		IF @@RowCount = 0
 			INSERT INTO UserAlert (
 				UserID, PositionID, AlertID, CreatedDate, UpdatedDate,
-				ModifiedBy, Active
+				ModifiedBy
 			) VALUES (
 				@UserID, @PositionID, @AlertID, getdate(), getdate(),
-				'sys', 1
+				'sys'
 			)
 
     END ELSE BEGIN

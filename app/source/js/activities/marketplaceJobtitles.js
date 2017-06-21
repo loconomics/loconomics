@@ -4,10 +4,11 @@
 'use strict';
 
 var Activity = require('../components/Activity'),
-    ko = require('knockout');
+    ko = require('knockout'),
+    AlertLink = require('../viewmodels/AlertLink');
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
-    
+
     Activity.apply(this, arguments);
     
     this.accessLevel = this.app.UserType.serviceProfessional;
@@ -164,6 +165,8 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
+    //jshint maxstatements: 40
+
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     
     this.jobTitleID = ko.observable(0);
@@ -219,10 +222,11 @@ function ViewModel(app) {
     };
     
     var UserJobTitle = require('../models/UserJobTitle');
+
     this.isToggleReady = ko.pureComputed(function() {
-        var j = this.userJobTitle();
-        return j && j.statusID() !== UserJobTitle.status.incomplete;
+        return this.userJobTitle() && this.userJobTitle().isComplete();
     }, this);
+
     this.isActiveStatus = ko.pureComputed({
         read: function() {
             var j = this.userJobTitle();
@@ -265,7 +269,7 @@ function ViewModel(app) {
                 return 'This listing is inactive';
             //case UserJobTitle.status.incomplete:
             default:
-                return 'INCOMPLETE (There are steps left to activate)';
+                return 'Steps Remaining';
         }
     }, this);
 
@@ -358,4 +362,14 @@ function ViewModel(app) {
             });
         }
     }.bind(this);
+
+    this.requiredAlertLinks = ko.pureComputed(function() {
+        var userJobTitle = this.userJobTitle(),
+            jobTitleID = userJobTitle && userJobTitle.jobTitleID(),
+            requiredAlerts = (userJobTitle && userJobTitle.requiredAlerts()) || [];
+
+        return requiredAlerts.map(function(profileAlert) {
+            return AlertLink.fromProfileAlert(profileAlert, { jobTitleID: jobTitleID });
+        });
+    }, this);
 }

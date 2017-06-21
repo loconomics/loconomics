@@ -29,6 +29,7 @@
             margin: 0 auto;
             padding: 0.4em $grid-gap;
             text-align: center
+            clear: both;
 
             @media $mediaMaxXs {
                 font-size: $sectionTitleFontSizeSmall;
@@ -67,7 +68,7 @@
                 rgba(0, 152, 154, 0.1),
                 rgba(0, 152, 154, 0.1)
               ),
-              url('../images/Stocksy_txp67b81859qys000_Small_546856.jpg');
+              url('../images/Stocksy_txpa4f3500ae7T100_Small_1204339.jpg');
 
             .coop-title {
                 color: White;
@@ -149,7 +150,7 @@
             // icons
             i {
                 background: $brand-primary;
-                font-size: floor($iconsSize / 1.60);
+                font-size: floor($iconsSize / 1.95);
                 border-radius: 100%;
                 width: $iconsSize;
                 line-height: $iconsSize;
@@ -158,107 +159,18 @@
 
         }
 
-        // Benefits of ownership in Loconomics
-        .coop-benefits {
-            $boxSize = 340px;
-            $boxMargin = 1.5%;
-
-            background: $brand-secondary;
-            text-align: center;
-            padding-top: 40px;
-
-            down-arrow($arrowSize, 0, none, $brand-secondary, center);
-
-            ul {
-                color: $gray;
-                text-align: center;
-                margin: 0 auto;
-                padding-bottom: 10px;
-                // 3 boxes limit: UPDATE on each size or margin change
-                max-width: 1200px;
-
-                li {
-                    background: White;
-                    //float: left;
-                    display: inline-block;
-                    width: $boxSize;
-                    margin: $boxMargin;
-                    padding: 16px;
-                    vertical-align: middle;
-
-                    // On small sizes 2 columns does not fits so
-                    // (using XS/mobile now -- is close enough to the actual needed size)
-                    // it automatically gets 1 column but needs to manage size so it
-                    // shrinks automatically for smaller screens using current fixed size
-                    // as maximum size (to don't let to appear too wide on sizes in the middle
-                    // of the breakpoint and card size).
-                    // Margin is auto for centering and added gap on list container
-                    @media $mediaMaxXs {
-                        width: auto;
-                        display: block;
-                        max-width: $boxSize;
-                        margin: $grid-gap auto;
-                    }
-
-                    a {
-                        color: $brand-secondary;
-                        font-weight: bold;
-                    }
-
-                    h2 {
-                        font-size: 38px;
-                        font-weight: bold;
-                        color: $brand-secondary;
-                        margin: 0;
-                        text-align: center;
-                    }
-
-                    .Icon-bookNow {
-                        display: inline-block;
-                        width: 100px;
-                        height: 37px;
-                        color: $brand-secondary;
-                        background-size: 100px 37px;
-                        background-image: url('../images/book-now.png');
-                        background-image:
-                          linear-gradient(transparent, transparent),
-                          url('../images/book-now.svg');
-
-                    }
-
-                    h3 {
-                        font-size: 15px;
-                        font-weight: bold;
-                    }
-                }
-
-                // Setting margin for small screens since the items margin is auto there
-                @media $mediaMaxXs {
-                    margin: 0 $grid-gap;
-                }
-
-                // icons
-                i {
-                    color: $brand-secondary;
-                    font-size: 3em;
-                    display: block;
-                }
-            }
-        }
-
-
         // How the Cooperative Works section
         .coop-ownership {
             text-align: center;
-            color: $gray;
-            background: White;
-            down-arrow($arrowSize, 0, none, White, center);
+            color: white;
+            background: $brand-secondary;
+            down-arrow($arrowSize, 0, none, $brand-secondary, center);
             padding-top: 40px;
 
             $iconsSize = 90px;
 
             .coop-section-title {
-              color: $gray-dark;
+              color: white;
             }
 
             ul {
@@ -296,112 +208,25 @@
 
             // icons
             i {
-                background: white;
-                border: 2px solid $brand-secondary;
+                background: $brand-secondary;
+                border: 2px solid white;
                 font-size: floor($iconsSize / 1.60);
                 border-radius: 50%;
                 width: $iconsSize;
                 height: $iconsSize;
                 line-height: $iconsSize;
-                color: $brand-secondary;
+                color: white;
             }
 
         }
 
         .coop-pricing {
-            $boxSize = 300px;
-            $boxMargin = 1.5%;
-
-            background: $gray-background;
+            background: white;
             text-align: center;
             padding-top: 40px;
 
             h2 {
                 color: $gray;
-            }
-
-            ul {
-                color: $gray;
-                text-align: center;
-                margin: 0 auto;
-                padding-bottom: 10px;
-                // 4 boxes limit: UPDATE on each size or margin change
-                max-width: 1200px;
-
-                li {
-                    // background photo setup (will have an image per category)
-                    background: White no-repeat top center / contain;
-                    background-size: 240px auto;
-                    display: inline-block;
-                    width: $boxSize;
-                    height: 240px;
-                    margin: $boxMargin;
-                    vertical-align: middle;
-                    box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
-
-                    /* DISABLED, background does not looks good, and not so needed
-                    // For a small size where only one card fits the space (~pixels)
-                    // use an automatic width so the card does not looks with lot of
-                    // margin space and fits on sizes smaller than original card size,
-                    // but keeping a maximum size so it does not looks too wide.
-                    // On the beggining, the XS breakpoint was used, but was too wide
-                    // and lot of devices still hold two columns easily, so custom breakpoint
-                    // for the current design and $boxSize and $boxMargin
-                    // Margin is auto for centering and added gap on list container
-                    //@media $mediaMaxXs {
-                    @media (max-width: 520px) {
-                        width: auto;
-                        display: block;
-                        max-width: 340px;
-                        margin: $grid-gap auto;
-                        // Don't allow the background to lost alignment with the icon
-                        // NOTE: side-effect, image lost aspect rate
-                        background-size: 100% 157px;
-                    }
-                    */
-
-                    h3 {
-                      font-size: 36px;
-                      color: white;
-                      background-color: $brand-primary;
-                      padding: 25px 0px;
-                      -webkit-margin-before: 0;
-                      -webkit-margin-after: 0;
-                      margin: 0px;
-                    }
-
-                    h1 {
-                        font-size: 56px;
-                        font-weight: bold;
-                        color: $gray-dark;
-                    }
-
-                    p {
-                        margin: 0px 0px 30px;
-                        color: $gray-dark;
-                        font-size: 16px;
-                    }
-
-                  @media $mediaMaxXs {
-                    max-width: 280px;
-                    margin: 15px auto;
-                  }
-                }
-
-                .coop-or {
-                  display: block;
-                  margin: 20px 30px;
-                  text-align: center;
-                  @media $mediaMinMd {
-                    display: inline-block;
-                  }
-                }
-
-                // Setting margin for small screens since the items margin is auto there
-                //@media $mediaMaxXs {
-//                @media (max-width: 520px) {
-//                    margin: 0 $grid-gap;
-//                }
             }
         }
 
@@ -514,15 +339,17 @@
                 }
             }
             .SignupLogin {
+                margin-left: 10px;
+                margin-right: 10px;
                 .LeadContent {
-                    background: transparent;
+                    background: white;
                     padding-bottom: 32px;
                     border: none;
-                    color: white;
+                    color: $gray;
                     margin-bottom: 30px;
                     .btn-default {
-                        color: white;
-                        border-color: white;
+                        color: $gray;
+                        border-color: $gray;
                     }
                     .form-control-feedback {
                         font-size: 26px;

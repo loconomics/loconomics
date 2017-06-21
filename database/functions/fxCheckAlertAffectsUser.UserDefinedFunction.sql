@@ -18,7 +18,6 @@ CREATE FUNCTION [dbo].[fxCheckAlertAffectsUser] (
 ) RETURNS Bit
 AS BEGIN
 	DECLARE @IsProvider bit, @IsCustomer bit
-	DECLARE @AlertTypeID int
 	SELECT @IsProvider = IsProvider FROM Users WHERE UserID = @UserID
 	SELECT @IsCustomer = IsCustomer FROM Users WHERE UserID = @UserID
 	

@@ -53,8 +53,6 @@ BEGIN
 						  (UA.PositionID = 0 OR UA.PositionID = @PositionID)
 							AND
 						  A.Required = 1
-							AND
-						  UA.Active = 1
 				) = 0 THEN 1 
 				ELSE 2 
 				END,
@@ -78,8 +76,6 @@ BEGIN
 					  (UA.PositionID = 0 OR UA.PositionID = @PositionID)
 						AND
 					  A.bookMeButtonRequired = 1
-						AND
-					  UA.Active = 1
 			) = 0 THEN 1 
 			ELSE 0 
 			END,

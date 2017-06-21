@@ -5,6 +5,7 @@
 
 @import 'SelectJobTitle.styl';
 @import 'Signup.styl';
+@import '../utils/select-unstyled.styl';
 
 .SignupLogin {
     // Workaround for a layout problem at webkit mobile (both iOS Safari and Chrome for Android) where
@@ -125,7 +126,7 @@
         }
     }
     select {
-        -webkit-appearance: none;
+        @extend .select-unstyled
     }
 
     .is-valid {

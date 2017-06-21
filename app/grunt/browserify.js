@@ -7,7 +7,16 @@ module.exports = function(/*grunt*/) {
     /**
         Browserify config
     **/
-	var bconfig = {};
+	var bconfig = {
+        options: {
+            transform: [['stringify', {
+                appliesTo: { includeExtensions: ['.html'] },
+                minify: true,
+                minifyAppliesTo: { includeExtensions: ['.html'] },
+                minifyOptions: require('./htmlmin.settings')
+            }]]
+        }
+    };
 
     /**
         Styleguide Libs
