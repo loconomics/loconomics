@@ -10,23 +10,24 @@ var Activity = require('../components/Activity'),
     Appointment = require('../models/Appointment'),
     UserJobTitle = require('../models/UserJobTitle');
 var PublicUser = require('../models/PublicUser');
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function DashboardActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    
+
     // Getting elements
     //this.$nextBooking = this.$activity.find('#dashboardNextBooking');
     //this.$upcomingBookings = this.$activity.find('#dashboardUpcomingBookings');
     //this.$inbox = this.$activity.find('#dashboardInbox');
     //this.$performance = this.$activity.find('#dashboardPerformance');
     //this.$getMore = this.$activity.find('#dashboardGetMore');
-    
+
     this.prepareShowErrorFor = function prepareShowErrorFor(title) {
         return function(err) {
             this.app.modals.showError({
@@ -35,7 +36,7 @@ var A = Activity.extend(function DashboardActivity() {
             });
         }.bind(this);
     }.bind(this);
-    
+
     var app = this.app;
     this.getUserData = function(userID, jobTitleID) {
         return app.model.users.getUser(userID)
@@ -44,7 +45,7 @@ var A = Activity.extend(function DashboardActivity() {
             return new PublicUser(info);
         }.bind(this));
     };
-    
+
     // TestingData
     setSomeTestingData(this.viewModel);
 });
@@ -53,12 +54,12 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     // Update data
-    if (this.app.model.user().isServiceProfessional()) {
+    if (user.isServiceProfessional()) {
         this.syncUpcomingBookings();
     }
-    if (this.app.model.user().isClient()) {
+    if (user.isClient()) {
         this.syncUpcomingAppointments();
     }
     this.syncMessages();
@@ -74,7 +75,7 @@ A.prototype.syncMessages = function syncMessages() {
         v.inbox.isSyncing(true);
     else
         v.inbox.isLoading(true);
-    
+
     this.app.model.messaging.getList()
     .then(function(threads) {
         v.inbox.messages(threads().map(MessageView.fromThread.bind(null, app)));
@@ -110,7 +111,7 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
         else {
             v.nextBooking(null);
         }
-        
+
     }.bind(this))
     .catch(this.prepareShowErrorFor('Error loading upcoming bookings'))
     .then(function() {
@@ -152,7 +153,7 @@ A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
 
 A.prototype.syncGetMore = function syncGetMore() {
     // Professional only alerts/to-dos
-    if (this.app.model.user().isServiceProfessional()) {
+    if (user.isServiceProfessional()) {
         // Check the 'profile' alert
         this.app.model.userJobProfile.syncList()
         .then(function(list) {
@@ -177,27 +178,27 @@ function ViewModel(app) {
     this.upcomingBookings = new UpcomingBookingsSummary();
     this.upcomingBookings.isLoading = ko.observable(false);
     this.upcomingBookings.isSyncing = ko.observable(false);
-    
+
     this.upcomingAppointments = new UpcomingAppointmentsSummary();
     this.upcomingAppointments.isLoading = ko.observable(false);
     this.upcomingAppointments.isSyncing = ko.observable(false);
-    
+
     this.nextAppointmentServiceProfessionalInfo = ko.observable(null);
 
     this.nextBooking = ko.observable(null);
-    
+
     this.inbox = new MailFolder({
         topNumber: 4
     });
     this.inbox.isLoading = ko.observable(false);
     this.inbox.isSyncing = ko.observable(false);
-    
+
     this.performance = new PerformanceSummary();
-    
+
     this.getMore = new GetMore();
-    
+
     this.user = app.model.userProfile.data;
-    
+
     this.getMapUrlFor = function(address) {
         var lat = ko.unwrap(address.latitude);
         var lng = ko.unwrap(address.longitude);
@@ -205,7 +206,7 @@ function ViewModel(app) {
         var place = address.singleLine ? address.singleLine() : '';
         return 'https://www.google.com/maps/?q=' + encodeURIComponent(lat) + ',' + encodeURIComponent(lng) + '&near=' + encodeURIComponent(place) + '&z=16';
     };
-    
+
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getUrlTo = function(name) {
@@ -220,11 +221,11 @@ function ViewModel(app) {
 
 /** TESTING DATA **/
 function setSomeTestingData(viewModel) {
-    
+
     //viewModel.performance.earnings.currentAmount(2400);
     //viewModel.performance.earnings.nextAmount(6200.54);
     //viewModel.performance.timeBooked.percent(0.93);
-    
+
     var moreData = {};
     if (viewModel.user.isServiceProfessional()) {
         moreData = {

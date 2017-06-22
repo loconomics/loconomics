@@ -10,6 +10,8 @@ var getUrlQuery = require('../utils/getUrlQuery');
 var param = require('jquery').param;
 var session = require('./session');
 
+var userProfile = require('./userProfile');
+
 /**
  * @callback LocalLoginCb
  * @param {Credentials} credentials Response data from login/signup
@@ -26,7 +28,18 @@ var session = require('./session');
  */
 var performLocalLogin = function (username) {
     return function (credentials) {
+        if (credentials.profile) {
+            // Set user data (credentials includes an optional profile copy for
+            // convenience, but is not saved in the credentials store
+            // but at userProfile)
+            userProfile.data.model.updateWith(credentials.profile);
+            // IMPORTANT: Local name kept in sync with set-up at userProfile module
+            userProfile.saveLocal();
+        }
+        // Complete the credentials object adding the username (needed for
+        // session and stored credentials)
         credentials.username = username;
+        // Starts the user session
         return session.open(credentials);
     };
 };

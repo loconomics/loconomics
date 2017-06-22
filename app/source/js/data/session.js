@@ -1,14 +1,13 @@
 /**
- * Manages the user session in the app,
- * includes the profile basic data (name,...),
- * restoring a session from saved credentials,
+ * Manages the user session state with
+ * credentials as basic data and notifications.
+ * Allows to restore a session from saved credentials,
  * set-up of a new session and
  * closing a session performing clean up tasks
  * @module data/session
  */
 'use strict';
 
-var ko = require('knockout');
 var local = require('./drivers/localforage');
 var credentialsStore = require('./credentials');
 var SingleEvent = require('../utils/SingleEvent');
@@ -39,41 +38,6 @@ exports.on = {
     restored: restoredEvent.subscriber,
     closed: closedEvent.subscriber
 };
-
-// TODO: Refactor to make 'session' independent of 'userProfile' module.
-// Explanation: The userProfile and session modules are very tight right
-// now because of the `user` property:
-// - is an alias (rather than it's
-// own instance and default -see commit ecd33a765-, ideally
-// kept updated from userProfile 'data-change' events)
-// - at the `restore` method, userProfile is call to ask
-// for data from local and request remote update
-// This forces us to include userProfile and linked utilites
-// like RemoteModel even on bundles like the public pages one where
-// they are not needed. Even the relationship between boths
-// can be more clear.
-// Additionally, user may not need to be an observable but a constant
-// instance.
-var userProfile = require('./userProfile');
-var profile = {
-    loadLocalProfile: function() {
-        return userProfile.load();
-    },
-    saveLocalProfile: function() {
-        return userProfile.saveLocal();
-    }
-};
-
-/**
- * Provides the basic user profile data, like
- * name, photo, type of user.
- * It contains data for anonymous user by default,
- * to be updated internally by the session management
- * methods and remote syncing of the data.
- */
-exports.user = ko.pureComputed(function() {
-    return userProfile.data;
-});
 
 // Events emitted by the session
 var EventEmitter = require('events').EventEmitter;
@@ -128,16 +92,6 @@ exports.restore = function() {
     return credentialsStore.get()
     .then(function(credentials) {
         setupGoogleAnalytics(credentials);
-        // Load User Profile, from local with server fallback and server synchronization, silently
-        return profile.loadLocalProfile()
-        .then(function() {
-            return credentials;
-        }, function() {
-            // At catch loadLocalProfile error, continue as success:
-            return credentials;
-        });
-    })
-    .then(function(credentials) {
         // Track session as opened
         isSessionOpened = true;
         restoredEvent.emit(credentials);
@@ -145,8 +99,9 @@ exports.restore = function() {
     })
     .catch(function() {
         // No need to trigger errors (nothing to restore,
-        // local credentials corrupted,
-        // remote not available)
+        // or local credentials corrupted, anyway will
+        // require a new user login keeping current session
+        // as closed/anonymous)
     });
 };
 
@@ -167,13 +122,6 @@ exports.open = function(credentials) {
     .then(function() {
         // async local save, don't wait
         credentialsStore.set(credentials);
-
-        // Set user data (credentials includes a profile copy for
-        // convenience, but is not saved in the credentials store since
-        // it has it's own dedicated store-module userProfile already)
-        exports.user().model.updateWith(credentials.profile);
-        // IMPORTANT: Local name kept in sync with set-up at userProfile module
-        profile.saveLocalProfile();
 
         setupGoogleAnalytics(credentials);
 

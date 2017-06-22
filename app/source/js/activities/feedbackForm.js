@@ -5,15 +5,16 @@
 
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function FeedbackFormActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
-    
+
     this.accessLevel = null;
-    
+
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Back', {
         helpLink: this.viewModel.helpLinkProfessionals
     });
@@ -28,7 +29,7 @@ var A = Activity.extend(function FeedbackFormActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
+
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
@@ -39,7 +40,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
-    
+
     this.updateNavBarState();
 
     var params = this.requestData.route.segments || [];
@@ -47,7 +48,7 @@ A.prototype.show = function show(options) {
         elementID = VocElementEnum[elementName] |0;
 
     this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
-    
+
     if (!elementName) {
         console.log('Feedback Ideas: Accessing feedback without specify an element, using General (0)');
     }
@@ -60,8 +61,8 @@ A.prototype.show = function show(options) {
 
 var ko = require('knockout');
 function ViewModel(app) {
- 
-    this.isInOnboarding = app.model.onboarding.inProgress; 
+
+    this.isInOnboarding = app.model.onboarding.inProgress;
     this.user = app.model.userProfile.data;
     this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
@@ -79,14 +80,14 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         return this.isSending() ? 'Sending..' : 'Send';
     }, this);
-    
+
     this.isValid = ko.pureComputed(function() {
         var m = this.message();
         return m && !/^\s*$/.test(m);
     }, this);
 
     this.anonymousButtonUrl = ko.pureComputed(function() {
-        if (!app.model.user().isAnonymous()) return '';
+        if (!user.isAnonymous()) return '';
 
         var subject = encodeURIComponent('Feedback');
         var body = encodeURIComponent(this.message());
@@ -96,7 +97,7 @@ function ViewModel(app) {
 
     this.send = function send() {
         // Check is valid, and do nothing if not
-        if (!this.isValid() || app.model.user().isAnonymous()) {
+        if (!this.isValid() || user.isAnonymous()) {
             return;
         }
         this.isSending(true);

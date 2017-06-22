@@ -5,6 +5,7 @@
 
 var ko = require('knockout'),
     Activity = require('../components/Activity');
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function VerificationsActivity() {
 
@@ -13,11 +14,11 @@ var A = Activity.extend(function VerificationsActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    
+
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
-    
+
     // Setup special links behavior to add/perform specific verifications
     this.registerHandler({
         target: this.$activity,
@@ -45,7 +46,7 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     this.app.model.userVerifications.getList()
     .then(function(list) {
         this.viewModel.userVerifications(list());
@@ -57,7 +58,7 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201967776-adding-verifications-to-your-profile';
-    
+
     this.isSyncing = app.model.userVerifications.state.isSyncing;
     this.isLoading = app.model.userVerifications.state.isLoading;
     this.isSaving = app.model.userVerifications.state.isSaving;
@@ -67,7 +68,7 @@ function ViewModel(app) {
     this.emailInfo = ko.observable('Please click on "Verify my account" in the e-mail we sent you to verify your address. <a class="btn btn-link btn-block"  href="#resendEmailConfirmation">Click here to resend.</a>');
     this.facebookInfo = ko.pureComputed(function() {
         var tpl = 'Letting potential __kind__ know you have a trusted online presence helps them know you\'re real. <a class="btn btn-link btn-block" href="#connectWithFacebook">Click here to connect your account.</a>';
-        return tpl.replace(/__kind__/, app.model.user().isServiceProfessional() ? 'clients' : 'service professionals');
+        return tpl.replace(/__kind__/, user.isServiceProfessional() ? 'clients' : 'service professionals');
     });
 }
 
@@ -76,7 +77,7 @@ var UserVerification = require('../models/UserVerification'),
     Verification = require('../models/Verification');
 
 function testdata() {
-    
+
     var verA = new Verification({
             name: 'Email'
         }),

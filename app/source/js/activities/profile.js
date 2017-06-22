@@ -1,6 +1,6 @@
 /**
     Provile activity
-    
+
     Visualizes the public profile of a user, or current user
 **/
 'use strict';
@@ -9,16 +9,17 @@ var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function ProfileActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    
+
     this.registerHandler({
         event: 'layoutUpdate',
         target: $(window),
@@ -72,7 +73,7 @@ A.prototype.show = function show(options) {
 
     var params = options.route && options.route.segments;
     // Get requested userID or the current user profile
-    var userID = (params[0] |0) || this.app.model.user().userID();
+    var userID = (params[0] |0) || user.userID();
     var jobTitleID = params[1] |0;
     this.loadData(userID, jobTitleID);
     this.viewModel.reviews.reset(userID, jobTitleID);
@@ -91,7 +92,7 @@ function ViewModel(app) {
     this.reset = function() {
         this.user(null);
     };
-    
+
     /// Work Photos utils
     var DEFAULT_WORKPHOTOS_LIMIT = 2;
     this.isShowingAllPhotos = ko.observable(false);
@@ -126,14 +127,14 @@ function ViewModel(app) {
     this.viewAllPhotos = function() {
         this.isShowingAllPhotos(true);
     }.bind(this);
-    
+
     /// Addresses
     this.serviceAddresses = ko.pureComputed(function() {
         var u = this.user();
         var adds = u && u.selectedJobTitle() && u.selectedJobTitle().serviceAddresses();
         return adds || [];
     }, this);
-    
+
     this.changeJobTitle = function(jobTitle, event) {
         this.user().selectedJobTitleID(jobTitle.jobTitleID());
         this.reviews.reset(undefined, jobTitle.jobTitleID());
@@ -145,7 +146,7 @@ function ViewModel(app) {
         var url = event.target.getAttribute('href');
         app.shell.pushState(null, null, url);
     }.bind(this);
-    
+
     /// Social links
     this.getEmailLink = ko.pureComputed(function() {
         var u = this.user();
@@ -178,7 +179,7 @@ function ViewModel(app) {
         var photo = encodeURIComponent(u.profile().photoUrl());
         return 'http://pinterest.com/pin/create/button/?url=' + url + '&media=' + photo + '&description=' + encodeURIComponent(u.profile().fullName() + ': ' + url);
     }, this);
-    
+
     this.getBookLink = ko.pureComputed(function() {
         var u = this.user();
         if (!u) return '';
@@ -271,7 +272,7 @@ function ReviewsVM(app) {
         currentXhr = task.xhr;
         return task;
     }.bind(this);
-    
+
     this.loadOlder = function loadOlderReviews() {
         var l = this.list();
         var last = l[l.length - 1];

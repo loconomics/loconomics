@@ -7,13 +7,14 @@ var ko = require('knockout'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 var Activity = require('../components/Activity');
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function DatetimePickerActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
-    this.viewModel = new ViewModel();    
+    this.viewModel = new ViewModel();
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('');
     // Make navBar available at viewModel, needed for dekstop navigation
@@ -23,9 +24,9 @@ var A = Activity.extend(function DatetimePickerActivity() {
 
     // Return the selected date-time
     ko.computed(function() {
-    
+
         var datetime = this.viewModel.component() && this.viewModel.component().selectedDatetime();
-        
+
         if (datetime) {
             // Pass the selected datetime in the info
             this.requestData.selectedDatetime = datetime;
@@ -34,7 +35,7 @@ var A = Activity.extend(function DatetimePickerActivity() {
             this.app.shell.goBack(this.requestData);
         }
     }, this);
-    
+
     this.returnRequest = function returnRequest() {
         this.app.shell.goBack(this.requestData);
     }.bind(this);
@@ -43,7 +44,7 @@ var A = Activity.extend(function DatetimePickerActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
+
     var header = this.requestData.headerText;
     this.viewModel.headerText(header || 'Select date and time');
 
@@ -56,7 +57,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         this.navBar.title('');
         this.navBar.leftAction().text(this.requestData.navTitle || '');
     }
-    
+
     if (this.requestData.cancelLink) {
         this.convertToCancelAction(this.navBar.leftAction(), this.requestData.cancelLink);
     }
@@ -74,18 +75,18 @@ A.prototype.show = function show(state) {
     // Reset
     if (this.viewModel.component())
         this.viewModel.component().reset();
-    
+
     Activity.prototype.show.call(this, state);
-    
+
     // Parameters: pass a required duration
     this.viewModel.component().requiredDurationMinutes(this.requestData.requiredDuration |0 || 15);
     this.viewModel.component().includeEndTime(!!this.requestData.includeEndTime);
 
     // Preselect userID and a date, or current date
-    this.viewModel.component().userID(this.app.model.user().userID());
+    this.viewModel.component().userID(user.userID());
     var selDate = getDateWithoutTime(this.requestData.selectedDatetime);
     this.viewModel.component().selectedDate(selDate);
-    
+
     this.updateNavBarState();
 };
 

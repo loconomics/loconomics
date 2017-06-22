@@ -11,6 +11,7 @@ var PublicUser = require('../models/PublicUser');
 var ModelVersion = require('../utils/ModelVersion');
 var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 var PostalCodeVM = require('../viewmodels/PostalCode');
+var user = require('../data/userProfile').data;
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -144,10 +145,7 @@ function BaseClientBookingCardVM(app) {
             this.originalBooking().canBeDeclinedByClient()
         );
     }, this);
-    this.isAnonymous = ko.pureComputed(function() {
-        var u = app.model.user();
-        return u && u.isAnonymous();
-    });
+    this.isAnonymous = user.isAnonymous;
 
     ///
     /// Computed observables and View Functions

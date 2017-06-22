@@ -22,6 +22,8 @@ var rem = new RemoteModel({
     }
 });
 
+module.exports = rem;
+
 var session = require('./session');
 session.events.on('clearLocalData', function() {
     rem.clearCache();
@@ -44,5 +46,3 @@ rem.saveOnboardingStep = function (stepReference) {
         local.setItem(rem.localStorageName, rem.data.model.toPlainObject());
     });
 };
-
-module.exports = rem;
