@@ -97,6 +97,7 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     this.messageBar = new MessageBar({
+        $container: this.$activity,
         templateName: 'profile-message-bar-template',
         tone: MessageBar.tones.warning,
         viewModel: {
@@ -106,7 +107,6 @@ A.prototype.show = function show(options) {
         }
     });
     this.messageBar.setVisible(this.viewModel.isOwnProfile());
-    this.registerMessageBarObserver(this.messageBar.isVisible);
 
     var params = options.route && options.route.segments;
     // Get requested userID or the current user profile
@@ -121,7 +121,6 @@ A.prototype.show = function show(options) {
 A.prototype.hide = function() {
     Activity.prototype.hide.call(this);
 
-    this.disposeMessageBarObserver();
     this.messageBar.dispose();
 };
 

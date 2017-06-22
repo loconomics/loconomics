@@ -283,30 +283,6 @@ Activity.prototype.convertToCancelAction = function convertToCancelAction(action
 };
 
 /**
- * Activities need to accomodate extra space above them when message bars are visible.
- * This function takes an observer indicating when a message bar is visible, and 
- * sets a class on the current activity.
- *
- * To prevent leaking, also call disposeMessageBarObserver
- * 
- * @param {Observer} isVisibleObserver KO observer returning true when a message bar is visible, false otherwise
- */
-Activity.prototype.registerMessageBarObserver = function(isVisibleObserver) {
-    this._messageBarSubscription = isVisibleObserver.subscribe(function(isVisible) {
-        this.$activity.toggleClass('Activity--hasMessageBar', isVisible);
-    }, this);
-};
-
-/**
- * Dispose the subscription to the observer registered in registerMessageBarObserver
- */
-Activity.prototype.disposeMessageBarObserver = function() {
-    if(this._messageBarSubscription) {
-        this._messageBarSubscription.dispose();
-    }
-};
-
-/**
     Singleton helper.
     With the name parameter, a named instance can be created allowing
     several instances per class not being purely 'singleton', more like

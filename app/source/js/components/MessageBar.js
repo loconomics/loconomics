@@ -19,20 +19,19 @@
 var ko = require('knockout'),
     $ = require('jquery');
 
-var containerSelector = '.AppMessageBarWrapper';
-
 /**
  * Finds and injects template object. Binds the view model to the template.
  * 
  * @private
  */
-var load = function($messageBar, templateName, viewModel) {
-    var $container = $(containerSelector),
-        $template = $('#' + templateName);
+var load = function($container, $messageBarSpacer, $messageBar, templateName, viewModel) {
+    var $template = $('#' + templateName);
 
     $messageBar.html($template.html());
 
-    $container.append($messageBar);
+    $('body').append($messageBar);
+
+    $container.prepend($messageBarSpacer);
 
     ko.applyBindings(viewModel, $messageBar.get(0));
 };
@@ -45,6 +44,7 @@ var load = function($messageBar, templateName, viewModel) {
  * @param options.templateName ID of a knockout template to be used as the message bar
  * @param options.viewModel viewModel for the knockout template
  * @param {MessageBar.tones} options.tone for the message bar when visible
+ * TODO: add container (required!)
  * @constructor
  */
 var MessageBar = function(options) {
@@ -54,13 +54,16 @@ var MessageBar = function(options) {
 
     this.viewModel = options.viewModel || {};
 
+// TODO: I think isVisible can go away now
     this.isVisible = ko.observable(false);
 
+    this._$messageBarSpacer = $('<div>', { 'class': 'MessageBarSpacer' });
     this._$messageBar = $('<div>', { 'class': 'MessageBar' });
+    this._$components = $(this._$messageBarSpacer, this._$messageBar);
 
     this.setTone(options.tone || MessageBar.tones.neutral);
 
-    load(this._$messageBar, templateName, this.viewModel);
+    load(options.$container, this._$messageBarSpacer, this._$messageBar, templateName, this.viewModel);
 };
 
 /**
@@ -111,7 +114,7 @@ MessageBar.prototype.setVisible = function(isVisible) {
  * Makes the message bar visible
  */
 MessageBar.prototype.show = function() {
-    this._$messageBar.show();
+    this._$components.show();
 
     this.isVisible(true);
 };
@@ -120,7 +123,7 @@ MessageBar.prototype.show = function() {
  * Hides the message bar
  */
 MessageBar.prototype.hide = function() {
-    this._$messageBar.hide();
+    this._$components.hide();
 
     this.isVisible(false);
 };
@@ -132,7 +135,7 @@ MessageBar.prototype.hide = function() {
 MessageBar.prototype.dispose = function() {
     this.hide();
 
-    this._$messageBar.remove();
+    this._$components.remove();
 };
 
 module.exports = MessageBar;
