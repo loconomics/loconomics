@@ -28,6 +28,16 @@ var setAuthorization = function(authKey) {
 };
 
 /**
+ * Formats an authentication key string for requests (authKey)
+ * given a Credentials object
+ * @param {Credentials} credentials
+ * @returns {string}
+ */
+var authKeyFromCredentials = function(credentials) {
+    return 'LC alu=' + credentials.userID + ',alk=' + credentials.authKey;
+};
+
+/**
  * Clear the authorization value for all future requests
  */
 rest.clearAuthorization = function() {
@@ -45,13 +55,23 @@ session.on.closed.subscribe(function() {
 });
 
 /**
- * When opening a session,
- * set-ups the client with the authorization
+ * Handler for new session notifications (open, restore).
+ * It set-ups the client with the authorization
  * credentials so the user is identified in each
  * new request.
  * @param {Credentials} credentials
  */
-session.on.opened.subscribe(function(credentials) {
+var newSessionHandler = function(credentials) {
     // use authorization key for each new request
-    setAuthorization('LC alu=' + credentials.userID + ',alk=' + credentials.authKey);
-});
+    setAuthorization(authKeyFromCredentials(credentials));
+};
+/**
+ * When opening a session, set-ups authorization
+ * @param {Credentials} credentials
+ */
+session.on.opened.subscribe(newSessionHandler);
+/**
+ * When opening a session, set-ups authorization
+ * @param {Credentials} credentials
+ */
+session.on.restored.subscribe(newSessionHandler);

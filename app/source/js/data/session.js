@@ -20,11 +20,15 @@ var SingleEvent = require('../utils/SingleEvent');
 var isSessionOpened = false;
 
 /**
- * Event triggered by a session just being opened/restored
- * (restore is just a special way to open a session).
+ * Event triggered by a session just being opened.
  * @private {SingleEvent}
  */
 var openedEvent = new SingleEvent(exports);
+/**
+ * Event triggered by a session just being restored.
+ * @private {SingleEvent}
+ */
+var restoredEvent = new SingleEvent(exports);
 /**
  * Event triggered by a session just closed
  */
@@ -32,6 +36,7 @@ var closedEvent = new SingleEvent(exports);
 
 exports.on = {
     opened: openedEvent.subscriber,
+    restored: restoredEvent.subscriber,
     closed: closedEvent.subscriber
 };
 
@@ -56,9 +61,6 @@ var profile = {
     },
     saveLocalProfile: function() {
         return userProfile.saveLocal();
-    },
-    removeLocalProfile: function() {
-        return local.removeItem('profile');
     }
 };
 
@@ -111,7 +113,7 @@ var setupGoogleAnalytics = function(credentials) {
 };
 
 /**
- * Opens a session by restoring the user
+ * Tries to open a session by restoring the user
  * locally saved credentials (if any,
  * no error if nothing).
  * Expected to be call at app start-up,
@@ -120,7 +122,7 @@ var setupGoogleAnalytics = function(credentials) {
  * @returns {Promise<Credentials>}
  */
 exports.restore = function() {
-    if (isSessionOpened) return Promise.resolve();
+    if (isSessionOpened) return Promise.resolve(null);
 
     // If there are credentials saved
     return credentialsStore.get()
@@ -138,7 +140,7 @@ exports.restore = function() {
     .then(function(credentials) {
         // Track session as opened
         isSessionOpened = true;
-        openedEvent.emit(credentials);
+        restoredEvent.emit(credentials);
         return credentials;
     })
     .catch(function() {
@@ -192,7 +194,6 @@ exports.open = function(credentials) {
 exports.close = function() {
     return Promise.all([
         credentialsStore.clear(),
-        profile.removeLocalProfile(),
         // Local data clean-up!
         clearLocalData()
     ]).
