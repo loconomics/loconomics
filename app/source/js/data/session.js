@@ -10,7 +10,30 @@
 
 var ko = require('knockout');
 var local = require('./drivers/localforage');
-var remote = require('./drivers/restClient');
+var credentialsStore = require('./credentials');
+var SingleEvent = require('../utils/SingleEvent');
+
+/**
+ * Tracks internally if a session is opened (through open/restore),
+ * @private {boolean}
+ */
+var isSessionOpened = false;
+
+/**
+ * Event triggered by a session just being opened/restored
+ * (restore is just a special way to open a session).
+ * @private {SingleEvent}
+ */
+var openedEvent = new SingleEvent(exports);
+/**
+ * Event triggered by a session just closed
+ */
+var closedEvent = new SingleEvent(exports);
+
+exports.on = {
+    opened: openedEvent.subscriber,
+    closed: closedEvent.subscriber
+};
 
 // TODO: Refactor to make 'session' independent of 'userProfile' module.
 // Explanation: The userProfile and session modules are very tight right
@@ -27,6 +50,17 @@ var remote = require('./drivers/restClient');
 // Additionally, user may not need to be an observable but a constant
 // instance.
 var userProfile = require('./userProfile');
+var profile = {
+    loadLocalProfile: function() {
+        return userProfile.load();
+    },
+    saveLocalProfile: function() {
+        return userProfile.saveLocal();
+    },
+    removeLocalProfile: function() {
+        return local.removeItem('profile');
+    }
+};
 
 /**
  * Provides the basic user profile data, like
@@ -61,18 +95,6 @@ var clearLocalData = function () {
 };
 
 /**
- * Set-ups the remote driver with the authorization
- * credentials so the user is identified in each
- * new request.
- * @param {Credentials} credentials
- */
-var setupRemoteCredentials = function(credentials) {
-    // use authorization key for each
-    // new remote request
-    remote.setAuthorization('LC alu=' + credentials.userID + ',alk=' + credentials.authKey);
-};
-
-/**
  * Set-ups Google Analytics library, if loaded,
  * with the credentials so identifies the user.
  * @param {Credentials} credentials
@@ -89,47 +111,41 @@ var setupGoogleAnalytics = function(credentials) {
 };
 
 /**
- * Restores the user session from
+ * Opens a session by restoring the user
  * locally saved credentials (if any,
  * no error if nothing).
  * Expected to be call at app start-up,
  * will prevent execution if a session is
  * running.
- * @returns {Promise}
+ * @returns {Promise<Credentials>}
  */
 exports.restore = function() {
-    return new Promise(function(resolve) { // Never rejects: , reject) {
+    if (isSessionOpened) return Promise.resolve();
 
-        // Callback to just resolve without error (passing in the error
-        // to the 'resolve' will make the process to fail),
-        // since we don't need to create an error for the
-        // app init, if there is not enough saved information
-        // the app has code to request a login.
-        var resolveAnyway = function(doesnMatter){
-            console.warning('session.restore error', doesnMatter);
-            resolve();
-        };
-
-        // If there are credentials saved
-        local.getItem('credentials').then(function(credentials) {
-
-            if (credentials &&
-                credentials.userID &&
-                credentials.username &&
-                credentials.authKey) {
-
-                setupRemoteCredentials(credentials);
-                setupGoogleAnalytics(credentials);
-                // Load User Profile, from local with server fallback and server synchronization, silently
-                userProfile.load().then(resolve, resolveAnyway);
-            }
-            else {
-                // End successfully. Not loggin is not an error,
-                // is just the first app start-up
-                resolve();
-            }
-        }.bind(this), resolveAnyway);
-    }.bind(this));
+    // If there are credentials saved
+    return credentialsStore.get()
+    .then(function(credentials) {
+        setupGoogleAnalytics(credentials);
+        // Load User Profile, from local with server fallback and server synchronization, silently
+        return profile.loadLocalProfile()
+        .then(function() {
+            return credentials;
+        }, function() {
+            // At catch loadLocalProfile error, continue as success:
+            return credentials;
+        });
+    })
+    .then(function(credentials) {
+        // Track session as opened
+        isSessionOpened = true;
+        openedEvent.emit(credentials);
+        return credentials;
+    })
+    .catch(function() {
+        // No need to trigger errors (nothing to restore,
+        // local credentials corrupted,
+        // remote not available)
+    });
 };
 
 /**
@@ -147,22 +163,21 @@ exports.open = function(credentials) {
     // Remove any previous local data if any:
     return clearLocalData()
     .then(function() {
-        setupRemoteCredentials(credentials);
-
         // async local save, don't wait
-        local.setItem('credentials', {
-            userID: credentials.userID,
-            username: credentials.username,
-            authKey: credentials.authKey
-        });
+        credentialsStore.set(credentials);
 
-        // Set user data
+        // Set user data (credentials includes a profile copy for
+        // convenience, but is not saved in the credentials store since
+        // it has it's own dedicated store-module userProfile already)
         exports.user().model.updateWith(credentials.profile);
         // IMPORTANT: Local name kept in sync with set-up at userProfile module
-        userProfile.saveLocal();
+        profile.saveLocalProfile();
 
         setupGoogleAnalytics(credentials);
 
+        // Track session as opened
+        isSessionOpened = true;
+        openedEvent.emit(credentials);
         return credentials;
     });
 };
@@ -175,11 +190,15 @@ exports.open = function(credentials) {
  * @returns {Promise}
  */
 exports.close = function() {
-    // Local app close session
-    remote.clearAuthorization();
-    local.removeItem('credentials');
-    local.removeItem('profile');
-
-    // Local data clean-up!
-    clearLocalData();
+    return Promise.all([
+        credentialsStore.clear(),
+        profile.removeLocalProfile(),
+        // Local data clean-up!
+        clearLocalData()
+    ]).
+    then(function() {
+        // Track session as closed
+        isSessionOpened = false;
+        closedEvent.emit();
+    });
 };

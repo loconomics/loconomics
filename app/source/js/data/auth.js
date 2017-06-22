@@ -11,17 +11,8 @@ var param = require('jquery').param;
 var session = require('./session');
 
 /**
- * Remote response data for a succesfully logged user
- * @typedef {Object} Credentials
- * @property {string} username
- * @property {number} userID
- * @property {string} authKey Authentification key for future requests
- * @property {UserProfile} profile Basic profile information of the user
- */
-
-/**
  * @callback LocalLoginCb
- * @param {Credentials} Response data for login/signup
+ * @param {Credentials} credentials Response data from login/signup
  * @returns {Promise<Credentials>}
  */
 

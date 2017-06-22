@@ -13,7 +13,6 @@ var remote = require('./drivers/restClient');
 var rem = new RemoteModel({
     data: User.newAnonymous(),
     ttl: { minutes: 1 },
-    // IMPORTANT: Keep the name in sync with set-up at AppModel-account
     localStorageName: 'profile',
     fetch: function fetch() {
         return remote.get('me/profile');
