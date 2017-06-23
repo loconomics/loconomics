@@ -10,14 +10,14 @@ var Activity = require('../components/Activity'),
     Appointment = require('../models/Appointment'),
     UserJobTitle = require('../models/UserJobTitle');
 var PublicUser = require('../models/PublicUser');
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function DashboardActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
 
@@ -173,7 +173,7 @@ var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
     GetMore = require('../models/GetMore'),
     UpcomingAppointmentsSummary = require('../models/UpcomingAppointmentsSummary');
 
-function ViewModel(app) {
+function ViewModel() {
 
     this.upcomingBookings = new UpcomingBookingsSummary();
     this.upcomingBookings.isLoading = ko.observable(false);
@@ -197,7 +197,7 @@ function ViewModel(app) {
 
     this.getMore = new GetMore();
 
-    this.user = app.model.userProfile.data;
+    this.user = user;
 
     this.getMapUrlFor = function(address) {
         var lat = ko.unwrap(address.latitude);

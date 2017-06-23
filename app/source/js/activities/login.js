@@ -6,7 +6,7 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity'),
     ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function LoginActivity() {
 

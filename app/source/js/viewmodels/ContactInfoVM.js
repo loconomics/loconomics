@@ -1,23 +1,25 @@
 'use strict';
 var ko = require('knockout'),
     PostalCodeVM = require('../viewmodels/PostalCode');
+var userProfile = require('../data/userProfile');
+var user = userProfile.getData();
 
 module.exports = function ContactInfoVM(app) {
-    
-    this.user = app.model.userProfile.data;
+
+    this.user = user;
 
     this.headerText = ko.pureComputed(function() {
         return app.model.onboarding.inProgress() ?
             'How can we reach you?' :
             'Contact information';
     });
-    
+
     // List of possible error messages registered
     // by name
     this.errorMessages = {
         postalCode: ko.observable('')
     };
-    
+
     // User Profile
     var userProfile = app.model.userProfile;
     var profileVersion = userProfile.newVersion();
@@ -34,10 +36,10 @@ module.exports = function ContactInfoVM(app) {
             profileVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.profile = profileVersion.version;
-    
+
     // TODO l10n
     this.months = ko.observableArray([
         { id: 1, name: 'January'},
@@ -65,12 +67,12 @@ module.exports = function ContactInfoVM(app) {
         },
         owner: this
     });
-    
+
     this.monthDays = ko.observableArray([]);
     for (var iday = 1; iday <= 31; iday++) {
         this.monthDays.push(iday);
     }
-    
+
     // Home Address
     var homeAddress = app.model.homeAddress;
     var homeAddressVersion = homeAddress.newVersion();
@@ -87,7 +89,7 @@ module.exports = function ContactInfoVM(app) {
             homeAddressVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.address = homeAddressVersion.version;
 
@@ -115,16 +117,16 @@ module.exports = function ContactInfoVM(app) {
             this.postalCodeVM.onFormLoaded();
         }
     }, this);
-    
+
     // Actions
 
     this.discard = function discard() {
         profileVersion.pull({ evenIfNewer: true });
         homeAddressVersion.pull({ evenIfNewer: true });
     }.bind(this);
-    
+
     this.sync = function sync() {
-        app.model.userProfile.sync();
+        userProfile.sync();
         app.model.homeAddress.sync();
     };
 

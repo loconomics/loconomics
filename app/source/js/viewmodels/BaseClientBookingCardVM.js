@@ -11,7 +11,7 @@ var PublicUser = require('../models/PublicUser');
 var ModelVersion = require('../utils/ModelVersion');
 var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 var PostalCodeVM = require('../viewmodels/PostalCode');
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 // L18N
 // List of all possible steps by name providing the language for the UI

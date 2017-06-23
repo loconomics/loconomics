@@ -7,8 +7,9 @@ var OnboardingProgress = require('../viewmodels/OnboardingProgress');
 var NavAction = require('../viewmodels/NavAction');
 var ko = require('knockout');
 var localforage = require('localforage');
+var userProfile = require('../data/userProfile');
 
-exports.create = function create(appModel) {
+exports.create = function create(/*appModel*/) {
     var NAVBAR_TITLE = 'Create your first listing';
 
     // Onboarding management and state, initially empty so no progress
@@ -68,7 +69,7 @@ exports.create = function create(appModel) {
 
         if(this.isAtCurrentStep()) {
             this.incrementStep();
-            appModel.userProfile.saveOnboardingStep(this.stepName());
+            userProfile.saveOnboardingStep(this.stepName());
 
             url = this.isFinished() ? '/onboardingSuccess' : this.stepUrl();
         }

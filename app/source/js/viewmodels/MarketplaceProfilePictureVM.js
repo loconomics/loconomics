@@ -10,13 +10,14 @@ var $ = require('jquery');
 var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
 var MarketplaceProfileVM = require('./MarketplaceProfileVM');
+var user = require('../data/userProfile').getData();
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30
     // Base class:
     MarketplaceProfileVM.call(this, app);
 
-    this.user = app.model.userProfile.data;
+    this.user = user;
     this.photoUploadUrl = app.model.rest.baseUrl + 'me/profile-picture';
     this.photoEditRestUrl = 'me/profile-picture/edit';
     this.photoUploadFieldName = 'profilePicture';

@@ -16,7 +16,7 @@
 // UserType enumeration is bit based, so several
 // users can has access in a single property
 //var UserType = require('../models/User').UserType;
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 module.exports = function createAccessControl(app) {
 

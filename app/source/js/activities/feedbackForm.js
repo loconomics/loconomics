@@ -5,7 +5,8 @@
 
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
-var user = require('../data/userProfile').data;
+var userProfile = require('../data/userProfile');
+var user = userProfile.getData();
 
 var A = Activity.extend(function FeedbackFormActivity() {
 
@@ -63,7 +64,7 @@ var ko = require('knockout');
 function ViewModel(app) {
 
     this.isInOnboarding = app.model.onboarding.inProgress;
-    this.user = app.model.userProfile.data;
+    this.user = user;
     this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';
     this.helpLink = ko.pureComputed(function() {
@@ -72,7 +73,7 @@ function ViewModel(app) {
     this.message = ko.observable('');
     this.becomeCollaborator = ko.observable(false);
     // Get reference to know if is already a collaborator
-    this.isCollaborator = app.model.userProfile.data.isCollaborator;
+    this.isCollaborator = user.isCollaborator;
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
     this.emailSubject = ko.observable('');
@@ -113,7 +114,7 @@ function ViewModel(app) {
                 this.isCollaborator(true);
                 // But ask the profile to update, by request a 'save' even if
                 // will not save the flag but will get it updated from database and will cache it
-                app.model.userProfile.save();
+                userProfile.save();
             }
             // Success
             app.successSave({

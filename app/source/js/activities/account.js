@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function AccountActivity() {
 
@@ -25,6 +26,6 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(app) {
-    this.isServiceProfessional = app.model.userProfile.data.isServiceProfessional;
+    this.isServiceProfessional = user.isServiceProfessional;
     this.activeUserPaymentPlan = app.model.userPaymentPlan.data;
 }

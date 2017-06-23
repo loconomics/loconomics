@@ -13,6 +13,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     propTools = require('./utils/jsPropertiesTools'),
     getObservable = require('./utils/getObservable');
+var user = require('./data/userProfile').getData();
 
 exports.registerAll = function(app) {
     //jshint maxstatements:100
@@ -62,7 +63,7 @@ exports.registerAll = function(app) {
     ko.components.register('app-payment-plans', {
         template: { element: 'payment-plans-template' },
         viewModel: function() {
-            this.isServiceProfessional = app.model.userProfile.data.isServiceProfessional;
+            this.isServiceProfessional = user.isServiceProfessional;
         }
     });
 

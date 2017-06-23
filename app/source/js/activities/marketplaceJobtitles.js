@@ -6,11 +6,12 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
     AlertLink = require('../viewmodels/AlertLink');
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
     Activity.apply(this, arguments);
-    
+
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Your listings', {
@@ -42,7 +43,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
-                
+
                 /* NOTE: job title comes in the previous userJobProfile call, so is no need to duplicate the task
                 ////////////
                 // Job Title
@@ -59,7 +60,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));*/
-                
+
                 ////////////
                 // Addresses
                 this.app.model.serviceAddresses.getList(jobTitleID)
@@ -75,7 +76,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
-                
+
                 ////////////
                 // Pricing/Services
                 this.app.model.serviceProfessionalServices.getList(jobTitleID)
@@ -91,7 +92,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                         error: err
                     });
                 }.bind(this));
-                
+
                 ////////////
                 // Work Photos
                 this.app.model.workPhotos.getList(jobTitleID)
@@ -154,11 +155,11 @@ A.prototype.show = function show(state) {
 
     // Parameters
     var params = state && state.route && state.route.segments || {};
-    
+
     // Set the job title
     var jobID = params[0] |0;
     this.viewModel.jobTitleID(jobID);
-    
+
     //Get the return nav text
     var returnText = state && state.route && state.route.query.returnText || 'Back';
     this.viewModel.returnText(decodeURIComponent(returnText));
@@ -168,19 +169,17 @@ function ViewModel(app) {
     //jshint maxstatements: 40
 
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
-    
+
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
-    this.returnText = ko.observable('Back'); 
-    //this.jobTitleName = ko.observable('Job Title'); 
+    this.returnText = ko.observable('Back');
+    //this.jobTitleName = ko.observable('Job Title');
     this.jobTitleName = ko.pureComputed(function() {
         return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
     }, this);
-    this.userID = ko.pureComputed(function() {
-        return app.model.userProfile.data.userID();
-    }, this);    
-    
+    this.userID = user.userID;
+
     this.addresses = ko.observable([]);
     this.pricing = ko.observable([]);
 
@@ -190,17 +189,17 @@ function ViewModel(app) {
             app.model.serviceAddresses.state.isLoading() ||
             app.model.serviceProfessionalServices.state.isLoading()
         );
-        
+
     }, this);
-    
+
     this.addressesCount = ko.pureComputed(function() {
-        
+
         // TODO l10n.
         // Use i18next plural localization support rather than this manual.
         var count = this.addresses().length,
             one = '1 location',
             more = ' locations';
-        
+
         if (count === 1)
             return one;
         else
@@ -208,7 +207,7 @@ function ViewModel(app) {
             return count + more;
 
     }, this);
-    
+
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getJobUrlTo = function(name) {
@@ -220,7 +219,7 @@ function ViewModel(app) {
             );
         }, this);
     };
-    
+
     var UserJobTitle = require('../models/UserJobTitle');
 
     this.isToggleReady = ko.pureComputed(function() {
@@ -259,7 +258,7 @@ function ViewModel(app) {
         },
         owner: this
     });
-    
+
     this.statusLabel = ko.pureComputed(function() {
         var statusID = this.userJobTitle() && this.userJobTitle().statusID();
         switch (statusID) {
@@ -284,14 +283,14 @@ function ViewModel(app) {
             app.model.serviceAddresses.state.isLoading() ||
             app.model.serviceProfessionalServices.state.isLoading()
         );
-        
+
     }, this);
- 
+
     this.licensesCertificationsSummary = ko.pureComputed(function() {
         var lc = this.submittedUserLicensesCertifications();
         //jshint maxcomplexity:8
         if (lc && lc.length) {
-            var verified = 0, 
+            var verified = 0,
                 other = 0,
                 pending = 0;
             lc.forEach(function(l) {
@@ -314,7 +313,7 @@ function ViewModel(app) {
             return 'None verified';
         }
     }, this);
-    
+
     this.workPhotosSummary = ko.pureComputed(function() {
         var wp = this.workPhotos();
         // L18N
@@ -325,15 +324,15 @@ function ViewModel(app) {
         else
             return 'No images';
     }, this);
-    
+
     this.pricingCount = ko.pureComputed(function() {
-        
+
         // TODO l10n.
         // Use i18next plural localization support rather than this manual.
         var count = this.pricing().length,
             one = '1 offering',
             more = ' offerings';
-        
+
         if (count === 1)
             return one;
         else
@@ -341,7 +340,7 @@ function ViewModel(app) {
             return count + more;
 
     }, this);
-    
+
     this.deleteJobTitle = function() {
         var jid = this.jobTitleID();
         var jname = this.jobTitleName();

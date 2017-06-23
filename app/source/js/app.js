@@ -177,6 +177,9 @@ app.successSave = function successSave(settings) {
 var appInit = function appInit() {
     /*jshint maxstatements:70,maxcomplexity:16 */
 
+    var userProfile = require('./data/userProfile');
+    var user = userProfile.getData();
+
     attachFastClick(document.body);
 
     // NOTE: Put any jQuery-UI used components here and document their use in the
@@ -478,15 +481,13 @@ var appInit = function appInit() {
     var connectUserNavbar = function() {
         // Connect username in navbar, and type flags
         ko.computed(function() {
-            var u = app.model.userProfile.data,
-                n = u.firstName();
-            app.navBarBinding.userName(n || 'Me');
-            app.navBarBinding.isServiceProfessional(u.isServiceProfessional());
-            app.navBarBinding.isClient(u.isClient());
+            app.navBarBinding.userName(user.firstName() || 'Me');
+            app.navBarBinding.isServiceProfessional(user.isServiceProfessional());
+            app.navBarBinding.isClient(user.isClient());
         });
         // Connect photoUrl in navbar: there are two sources, keep with more recent
         ko.computed(function() {
-            var p = app.model.userProfile.data.photoUrl();
+            var p = user.photoUrl();
             if (p) {
                 app.navBarBinding.photoUrl(p);
             }
@@ -516,7 +517,7 @@ var appInit = function appInit() {
         // (the app must be able to start up without remote connection), while
         // - remote data is not needed at all; if user is logged, the required
         // data is ever locally stored
-        return app.model.userProfile.loadFromLocal()
+        return userProfile.loadFromLocal()
         .then(function(userProfile) {
             // Set-up onboarding and current step, if any
             app.model.onboarding.init(app);

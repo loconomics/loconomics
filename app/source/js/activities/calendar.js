@@ -8,6 +8,7 @@ var $ = require('jquery'),
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
+var user = require('../data/userProfile').getData();
 
 var Activity = require('../components/Activity');
 
@@ -148,7 +149,7 @@ A.prototype.show = function show(options) {
     this.viewModel.previousDate = null;
     this.viewModel.currentDate(date);
     // Force a refresh of tags
-    this.tagAvailability(date, this.app.model.userProfile.data.userID(), true);
+    this.tagAvailability(date, user.userID(), true);
 };
 
 var Appointment = require('../models/Appointment'),

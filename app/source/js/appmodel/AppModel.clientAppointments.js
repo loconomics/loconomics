@@ -8,6 +8,7 @@ var ko = require('knockout');
 var CacheControl = require('../utils/CacheControl');
 var localforage = require('localforage');
 var moment = require('moment');
+var user = require('../data/userProfile').getData();
 
 exports.create = function create(appModel) {
 
@@ -46,13 +47,13 @@ exports.create = function create(appModel) {
     }
 
     function isClientBooking(booking) {
-        return appModel.userProfile.data.userID() === booking.clientUserID();
+        return user.userID() === booking.clientUserID();
     }
     function sortBookingByDateComparator(a, b) {
         var c = a.serviceDate().startTime() > b.serviceDate().startTime();
         return c ? 1 : -1;
     }
-    
+
     var remoteRequest = null;
     function getFromRemote(options) {
         if (remoteRequest) return remoteRequest;
@@ -100,17 +101,17 @@ exports.create = function create(appModel) {
     var api = {};
 
     api.sync = syncData;
-    
+
     api.list = cache.data;
-    
+
     api.clearCache = function() {
         cache.data([]);
         cache.reset();
     };
-    
+
     appModel.on('clearLocalData', function() {
         api.clearCache();
     });
-    
+
     return api;
 };

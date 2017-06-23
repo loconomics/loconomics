@@ -42,7 +42,7 @@ A.prototype.show = function show(options) {
 };
 
 var ko = require('knockout');
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 function ViewModel(app) {
 

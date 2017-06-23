@@ -7,7 +7,7 @@ var ko = require('knockout'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 var Activity = require('../components/Activity');
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function DatetimePickerActivity() {
 

@@ -7,6 +7,7 @@ var Activity = require('../components/Activity'),
     UserJobProfileViewModel = require('../viewmodels/UserJobProfile'),
     ko = require('knockout'),
     moment = require('moment');
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function MarketplaceProfileActivity() {
 
@@ -62,7 +63,7 @@ function ViewModel(app) {
         return moment(lastDate).format('L');
     }, jobVm);
 
-    jobVm.user = app.model.userProfile.data;
+    jobVm.user = user;
 
     jobVm.marketplaceProfileUrl = ko.computed(function() {
         var example = 'www.loconomics.com/YOURNAME';

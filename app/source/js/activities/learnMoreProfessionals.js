@@ -11,7 +11,7 @@ var snapPoints = require('../utils/snapPoints');
 var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
-var user = require('../data/userProfile').data;
+var user = require('../data/userProfile').getData();
 
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
@@ -179,7 +179,7 @@ function ViewModel(app) {
         // For anonymous users, we just
         // let the link to scroll down to sign-up form (hash link must be in place)
         // setting up the jobTitleID value in the signup data
-        if (app.model.userProfile.data.isAnonymous()) {
+        if (user.isAnonymous()) {
             this.setSignupJobTitle(jobTitle.jobTitleID());
         }
         else {
@@ -196,7 +196,7 @@ function ViewModel(app) {
         // let the link to scroll down to sign-up form (hash link must be in place)
         // settingup the jobTitleName value in the signup data
         // (and reset any previous ID just in case)
-        if (app.model.userProfile.data.isAnonymous()) {
+        if (user.isAnonymous()) {
             this.setSignupJobTitle(null, jobTitleName);
         }
         else {
