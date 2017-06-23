@@ -28,7 +28,7 @@ AppModel.prototype.init = function init() {
     // Initialize: check the user has login data and needed
     // cached data, return its promise
     var session = require('../data/session');
-    return session.loadLocalCredentials();
+    return session.restore();
 };
 
 AppModel.prototype.loadModules = function loadModules() {
