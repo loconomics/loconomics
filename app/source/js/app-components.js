@@ -12,7 +12,8 @@
 var ko = require('knockout'),
     $ = require('jquery'),
     propTools = require('./utils/jsPropertiesTools'),
-    getObservable = require('./utils/getObservable');
+    getObservable = require('./utils/getObservable'),
+    MessageBar = require('./components/MessageBar');
 
 exports.registerAll = function(app) {
     //jshint maxstatements:100
@@ -591,6 +592,15 @@ exports.registerAll = function(app) {
                 }
 
                 return vm;
+            }
+        }
+    });
+
+    ko.components.register('app-message-bar', {
+        template: MessageBar.template,
+        viewModel: {
+            createViewModel: function(params, componentInfo) {
+                return new MessageBar(params, componentInfo.element);
             }
         }
     });

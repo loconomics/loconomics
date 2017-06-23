@@ -28,30 +28,6 @@ var A = Activity.extend(function ProfileActivity() {
             this.viewModel.refreshTs(new Date());
         }.bind(this)
     });
-
-    this.registerHandler({
-        target: this.viewModel.listingIsActive,
-        handler: function(isActive) {
-            if(!this.messageBar) {
-                return;
-            }
-
-            var tone = isActive ? MessageBar.tones.success : MessageBar.tones.warning;
-
-            this.messageBar.setTone(tone);
-        }.bind(this)
-    });
-
-    this.registerHandler({
-        target: this.viewModel.isOwnProfile,
-        handler: function(isOwnProfile) {
-            if(!this.messageBar) {
-                return;
-            }
-
-            this.messageBar.setVisible(isOwnProfile);
-        }.bind(this)
-    });
 });
 
 exports.init = A.init;
@@ -96,18 +72,6 @@ A.prototype.loadData = function(userID, jobTitleID) {
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
-    this.messageBar = new MessageBar({
-        $container: this.$activity,
-        templateName: 'profile-message-bar-template',
-        tone: MessageBar.tones.warning,
-        viewModel: {
-            editListing : this.viewModel.editListing,
-            jobTitle: this.viewModel.jobTitleSingularName,
-            isActive: this.viewModel.listingIsActive
-        }
-    });
-    this.messageBar.setVisible(this.viewModel.isOwnProfile());
-
     var params = options.route && options.route.segments;
     // Get requested userID or the current user profile
     var userID = (params[0] |0) || this.app.model.user().userID();
@@ -116,13 +80,15 @@ A.prototype.show = function show(options) {
     this.viewModel.reviews.reset(userID, jobTitleID);
     this.viewModel.refreshTs(new Date());
     this.viewModel.userID(userID);
+    this.viewModel.showMessageBar(true);
 };
 
 A.prototype.hide = function() {
     Activity.prototype.hide.call(this);
 
-    this.messageBar.dispose();
+    this.viewModel.showMessageBar(false);
 };
+
 
 function ViewModel(app) {
     //jshint maxstatements:40
@@ -130,6 +96,8 @@ function ViewModel(app) {
     this.user = ko.observable(null);
     this.userID = ko.observable(null);
     this.reviews = new ReviewsVM(app);
+    this.showMessageBar = ko.observable(false);
+
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
     // just to notify app-address-map elements
@@ -138,6 +106,7 @@ function ViewModel(app) {
     this.reset = function() {
         this.user(null);
         this.userID(null);
+        this.showMessageBar(false);
     };
     
     /// Work Photos utils
@@ -272,6 +241,14 @@ function ViewModel(app) {
         else {
             return profileOwnerUserID == user.userID();
         }
+    }, this);
+
+    this.isMessageBarVisible = ko.pureComputed(function() {
+        return this.isOwnProfile() && this.showMessageBar();
+    }, this);
+
+    this.messageBarTone = ko.pureComputed(function() {
+        return this.listingIsActive() ? MessageBar.tones.success : MessageBar.tones.warning;
     }, this);
 }
 
