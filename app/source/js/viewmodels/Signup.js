@@ -10,6 +10,7 @@ var ko = require('knockout'),
     Field = require('./Field'),
     fb = require('../utils/facebookUtils'),
     countriesOptions = require('./CountriesOptions');
+var auth = require('../data/auth');
 
 /**
  * Enum with valid values for profile type.
@@ -224,7 +225,7 @@ else
             jobTitleName: this.jobTitleName()
         };
 
-        return app.model.signup(plainData)
+        return auth.signup(plainData)
             .then(function(signupData) {
 
                 // The reset includes already a call

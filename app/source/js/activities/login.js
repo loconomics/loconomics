@@ -7,6 +7,7 @@ var ko = require('knockout'),
     Activity = require('../components/Activity'),
     ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
 var user = require('../data/userProfile').data;
+var auth = require('../data/auth');
 
 var A = Activity.extend(function LoginActivity() {
 
@@ -153,7 +154,7 @@ function ViewModel(app) {
         }
         this.isWorking(true);
 
-        app.model.login(
+        auth.login(
             this.username(),
             this.password()
         ).then(function(/*loginData*/) {
@@ -184,7 +185,7 @@ function ViewModel(app) {
 
     this.requestReset = function requestReset() {
         this.isWorking(true);
-        app.model.resetPassword({ username: this.username() }).then(function(result) {
+        auth.resetPassword({ username: this.username() }).then(function(result) {
             this.requestResetMessage(result.message);
             this.isWorking(false);
             this.goConfirm();
@@ -209,7 +210,7 @@ function ViewModel(app) {
 
         this.isWorking(true);
 
-        app.model.confirmResetPassword({
+        auth.confirmResetPassword({
             password: this.validatedPassword.password(),
             token: this.resetToken()
         }).then(function(result) {
@@ -235,7 +236,7 @@ function ViewModel(app) {
         .then(function (result) {
             var accessToken = result.authResponse && result.authResponse.accessToken || result.auth && result.auth.accessToken;
             this.isWorking(true);
-            return app.model.facebookLogin(accessToken)
+            return auth.facebookLogin(accessToken)
             .then(function(/*loginData*/) {
                 // Is implicit at reset: this.isWorking(false);
                 this.reset();
