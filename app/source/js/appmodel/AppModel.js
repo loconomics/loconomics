@@ -2,14 +2,7 @@
     caching and sharing data across activities and performing
     requests
 **/
-var EventEmitter = require('events').EventEmitter;
-
-function AppModel() {
-    EventEmitter.call(this);
-    this.setMaxListeners(50);
-}
-
-AppModel._inherits(EventEmitter);
+function AppModel() { }
 
 module.exports = AppModel;
 
@@ -28,8 +21,6 @@ AppModel.prototype.init = function init() {
 
 AppModel.prototype.loadModules = function loadModules() {
     //jshint maxstatements: 80
-
-    this.onboarding = require('./AppModel.onboarding').create(this);
 
     this.schedulingPreferences = require('./AppModel.schedulingPreferences').create(this);
     this.calendarSyncing = require('./AppModel.calendarSyncing').create(this);
@@ -69,6 +60,4 @@ AppModel.prototype.loadModules = function loadModules() {
     this.userPaymentPlan = require('./AppModel.userPaymentPlan').create(this);
     this.ownerAcknowledgment = require('./AppModel.ownerAcknowledgment').create(this);
     this.userFeePayments = require('./AppModel.userFeePayments').create(this);
-
-    this.emit('modulesLoaded');
 };

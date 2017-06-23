@@ -18,6 +18,7 @@ require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var AppModel = require('./appmodel/AppModel');
+var onboarding = require('./data/onboarding');
 
 // Register the special locale
 require('./locales/en-US-LC');
@@ -106,7 +107,7 @@ var app = {
 
                 goDashboard._going = true;
 
-                if(!this.model.onboarding.goIfEnabled()) {
+                if(!onboarding.goIfEnabled()) {
                     this.shell.go('/dashboard');
                 }
 
@@ -523,15 +524,15 @@ var appInit = function appInit() {
         return userProfile.loadFromLocal()
         .then(function(userProfile) {
             // Set-up onboarding and current step, if any
-            app.model.onboarding.init(app);
-            app.model.onboarding.setStep(userProfile && userProfile.onboardingStep || null);
+            onboarding.init(app);
+            onboarding.setStep(userProfile && userProfile.onboardingStep || null);
 
             // Workaround #374: because the onboarding selectedJobTitleID is not stored
             // on server or at local profile, we need an speciallized method. This ensures
             // that the value is set in place when the async task ends, no further action is required.
             // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
             // is recommended
-            return app.model.onboarding.recoverLocalJobTitleID();
+            return onboarding.recoverLocalJobTitleID();
         })
         .then(function() {
             // Now we are ready with values in place
@@ -549,7 +550,7 @@ var appInit = function appInit() {
                 fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
 
             if (!fromItSelf) {
-                app.model.onboarding.goIfEnabled();
+                onboarding.goIfEnabled();
             }
         });
     };
