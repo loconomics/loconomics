@@ -48,6 +48,7 @@ function ViewModel(app) {
 
     this.isInOnboarding = app.model.onboarding.inProgress;
     this.user = user;
+    this.isServiceProfessional = user.isServiceProfessional;
     this.helpLinkProfessionals = '/help/relatedArticles/201211855-getting-started';
     this.helpLinkClients = '/help/relatedArticles/201313875-getting-started';
     this.helpLink = ko.pureComputed(function() {
@@ -66,6 +67,4 @@ function ViewModel(app) {
         // We left the link behind to go wherever is linking (to add here an app.model.shell.go('/')
         // can conflict)
     };
-    this.userProfile = user;
-    this.isServiceProfessional = user.isServiceProfessional;
 }
