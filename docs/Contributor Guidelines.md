@@ -61,14 +61,14 @@ Please review [Understanding the Github Flow](https://guides.github.com/introduc
 Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch. 
 
 #### New branches
-If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
+If you are working on a specific Github issue, please create a new branch named is123-short-descriptor if one doesn't already exist and merge master into it periodically. When you're finished, create a pull request for that branch and ask [@iagosrl](mailto:iagosrl@gmail.com) to review.
 
 #### Pull requests
-We prefer you to create a Github issue for a specific task to tackle with it's own branch named issueXX. However, pull requests are fine if you want to make general updates or suggest a change.
+We prefer you to create a Github issue for a specific task to tackle with it's own branch (see above). However, direct pull requests are fine if you want to make general updates or suggest a change.
 
 ### Bugs
 Before reporting a bug:
-* Please have a look in [Known Bugs](https://github.com/loconomics/loconomics/milestones) and the current release folder to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
+* Please have a look at issues tagged as bugs ([Bug S1](https://github.com/loconomics/loconomics/labels/Bug%3A%20S1), [Bug S2](https://github.com/loconomics/loconomics/labels/Bug%3A%20S2), [Bug S3](https://github.com/loconomics/loconomics/labels/Bug%3A%20S3), [Bug S4](https://github.com/loconomics/loconomics/labels/Bug%3A%20S4)) to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
 
 The first thing we do with a bug report is to confirm that we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
 
