@@ -5,7 +5,8 @@
 
 var Activity = require('../components/Activity');
 var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
-var user = require('../data/userProfile').getData();
+var userProfile = require('../data/userProfile');
+var user = userProfile.data;
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -170,7 +171,7 @@ function ViewModel(app) {
                 }
             }.bind(this);
             if (becomingProfessional) {
-                return app.model.userProfile
+                return userProfile
                 .load({ forceRemoteUpdate: true })
                 .then(function() {
                     // Start onboarding

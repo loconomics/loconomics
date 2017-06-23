@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var userProfile = require('../data/userProfile');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -24,7 +25,7 @@ var A = Activity.extend(function AboutMeActivity() {
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
 
     this.registerHandler({
-        target: this.app.model.userProfile,
+        target: userProfile,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save contact data.' : 'Unable to load contact data.';

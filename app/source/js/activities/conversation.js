@@ -29,7 +29,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
     if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
         // Reset
-        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        var nav = user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);
     }
 };
@@ -78,7 +78,7 @@ function ViewModel(app) {
     this.helpLinkProfessionals = '/help/relatedArticles/201966986-sending-and-receiving-messages';
     this.helpLinkClients = '/help/relatedArticles/201966996-sending-and-receiving-messages';
     this.helpLink = ko.pureComputed(function() {
-        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+        return user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
 
     this.isLoading = app.model.messaging.state.isLoading;
@@ -96,22 +96,6 @@ function ViewModel(app) {
                 m && (m.subject() || '').replace(/^\s+|\s+$/g, '') || 'Conversation without subject'
         );
     }, this);
-    // User Profile
-    var userProfile = app.model.userProfile;
-    var profileVersion = userProfile.newVersion();
-    profileVersion.isObsolete.subscribe(function(itIs) {
-        if (itIs) {
-            // new version from server while editing
-            // FUTURE: warn about a new remote version asking
-            // confirmation to load them or discard and overwrite them;
-            // the same is need on save(), and on server response
-            // with a 509:Conflict status (its body must contain the
-            // server version).
-            // Right now, just overwrite current changes with
-            // remote ones:
-            profileVersion.pull({ evenIfNewer: true });
-        }
-    });
 
     // If the last message reference a booking, is
     // accessed with:

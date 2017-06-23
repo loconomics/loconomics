@@ -21,7 +21,6 @@ module.exports = function ContactInfoVM(app) {
     };
 
     // User Profile
-    var userProfile = app.model.userProfile;
     var profileVersion = userProfile.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
