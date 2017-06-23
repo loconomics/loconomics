@@ -8,7 +8,7 @@
   * bar when it is hidden.
   *
   * When a message bar component is initialized and rendered, the view model will 
-  * move the component DOM element to be directly under the <body> element. This is
+  * move the message bar DOM element to be directly under the <body> element. This is
   * due to constraints in the layout styles for the navigation bar and activities.
   * 
   * Customize the content of the message bar by including markup in the 
@@ -40,34 +40,33 @@ var $ = require('jquery'),
  *
  * @constructor
  */
-var MessageBar = function(params, element) {
+var MessageBar = function(params, element, templateNodes) {
     this._$component = $(element);
-    this._$originalParent = this._$component.parent();
-    this._$messageBar = $('.MessageBar', this._$component);
-    this._$messageBarSpacer = $('<div>', { "class" : 'MessageBarSpacer' });
+    this._$messageBarSpacer = $('.MessageBarSpacer', this._$component);
+    this._$messageBar = $('<div>', { 'class' : 'MessageBar', 'html': '<!-- ko template: { nodes: templateNodes, data: params } --><!-- /ko -->' });
     this._$parts = this._$messageBarSpacer.add(this._$messageBar);
 
+    this.templateNodes = templateNodes;
+
     this.params = params;
+    this.params.visible = this.params.visible || ko.observable(true);
+    this.params.tone = this.params.tone || ko.observable(MessageBar.tones.neutral);
+
     this._subscriptions = [];
 
-    this.params.visible = this.params.visible || ko.observable(true);
     this._subscriptions.push(this.params.visible.subscribe(this.setVisible, this));
     this.setVisible(this.params.visible());
 
-    this.params.tone = this.params.tone || ko.observable(MessageBar.tones.neutral);
     this._subscriptions.push(this.params.tone.subscribe(this.setTone, this));
     this.setTone(this.params.tone());
 
-    // to fix position within the viewport, the message bar must be outside the activity
-    $('body').append(this._$component);
-
-    // To avoid modifying the activity style or class, insert a spacer in place of
-    // the message bar component. This will push activity content down far enough
-    // to create visual space for the message bar.
-    this._$originalParent.prepend(this._$messageBarSpacer);
+    // The template nodes are added to the message bar. The message bar is removed from
+    // the component element, so we must explicitly bind the message bar to this 
+    // view model
+    ko.applyBindings(this, this._$messageBar.get(0));
 };
 
-MessageBar.template = '<div class="MessageBar"><!-- ko template: { nodes: $componentTemplateNodes, data: params } --><!-- /ko --></div>';
+MessageBar.template = '<div class="MessageBarSpacer"></div>';
 
 /**
  * Enumeration of tones for the message bar (represents classes 
@@ -102,10 +101,7 @@ MessageBar.prototype.dispose = function() {
     });
 
     // We created this element. Remove it.
-    this._$messageBarSpacer.remove();
-
-    // Put the component back under the original parent
-    this._$originalParent.prepend(this._$component);
+    this._$messageBar.remove();
 };
 
 /**
@@ -125,7 +121,27 @@ MessageBar.prototype.setTone = function(tone) {
  * @param {Boolean} isVisible set to true to show message bar, false to hide it
  */
 MessageBar.prototype.setVisible = function(isVisible) {
-    isVisible ? this._$parts.show() : this._$parts.hide();
+    isVisible ? this.show() : this.hide();
+};
+
+/**
+ * Show message bar.
+ */
+MessageBar.prototype.show = function() {
+    // Message bar is under body so it can be positioned correctly
+    $('body').append(this._$messageBar);
+
+    this._$parts.show();
+};
+
+/**
+ * Hide message bar.
+ */
+MessageBar.prototype.hide = function() {
+    this._$parts.hide();
+
+    // Keep the DOM tidy by moving the message bar back into the component
+    this._$component.append(this._$messageBar);
 };
 
 module.exports = MessageBar;

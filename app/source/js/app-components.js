@@ -600,7 +600,7 @@ exports.registerAll = function(app) {
         template: MessageBar.template,
         viewModel: {
             createViewModel: function(params, componentInfo) {
-                return new MessageBar(params, componentInfo.element);
+                return new MessageBar(params, componentInfo.element, componentInfo.templateNodes);
             }
         }
     });
