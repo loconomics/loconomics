@@ -10,7 +10,7 @@ var $ = require('jquery');
 var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
 var MarketplaceProfileVM = require('./MarketplaceProfileVM');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30

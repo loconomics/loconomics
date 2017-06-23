@@ -5,7 +5,7 @@
 
 var SearchResults = require('../models/SearchResults');
 var ko = require('knockout');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var DEFAULT_LOCATION = {
     lat: '37.788479',

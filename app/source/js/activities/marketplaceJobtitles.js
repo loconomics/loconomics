@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     ko = require('knockout'),
     AlertLink = require('../viewmodels/AlertLink');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 

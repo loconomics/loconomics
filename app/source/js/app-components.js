@@ -13,7 +13,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     propTools = require('./utils/jsPropertiesTools'),
     getObservable = require('./utils/getObservable');
-var user = require('./data/userProfile').getData();
+var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
     //jshint maxstatements:100

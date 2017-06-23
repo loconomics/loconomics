@@ -8,7 +8,7 @@ var ko = require('knockout');
 var CacheControl = require('../utils/CacheControl');
 var localforage = require('localforage');
 var moment = require('moment');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 exports.create = function create(appModel) {
 

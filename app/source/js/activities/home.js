@@ -13,7 +13,7 @@ var
 
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function HomeActivity() {
 

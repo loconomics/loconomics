@@ -10,7 +10,7 @@ var Activity = require('../components/Activity'),
     Appointment = require('../models/Appointment'),
     UserJobTitle = require('../models/UserJobTitle');
 var PublicUser = require('../models/PublicUser');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function DashboardActivity() {
 

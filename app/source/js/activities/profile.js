@@ -9,7 +9,7 @@ var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function ProfileActivity() {
 

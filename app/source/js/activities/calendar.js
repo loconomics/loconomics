@@ -8,7 +8,7 @@ var $ = require('jquery'),
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var Activity = require('../components/Activity');
 

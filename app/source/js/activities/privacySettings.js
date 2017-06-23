@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function PrivacySettingsActivity() {
 

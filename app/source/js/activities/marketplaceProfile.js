@@ -7,7 +7,7 @@ var Activity = require('../components/Activity'),
     UserJobProfileViewModel = require('../viewmodels/UserJobProfile'),
     ko = require('knockout'),
     moment = require('moment');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 var A = Activity.extend(function MarketplaceProfileActivity() {
 

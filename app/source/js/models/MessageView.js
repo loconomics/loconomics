@@ -10,7 +10,7 @@ var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment');
 var PublicUserProfile = require('./PublicUserProfile');
-var user = require('../data/userProfile').getData();
+var user = require('../data/userProfile').data;
 
 function MessageView(values, app) {
 
