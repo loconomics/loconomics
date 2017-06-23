@@ -24,15 +24,6 @@ Activity() {
     @media $media-big-navbar {
         top: $big-navbar-height;
     }
-
-    // bump the activity down further if there's a visible app message bar
-    &.Activity--hasMessageBar {
-        top: $app-navbar-message-bar-height;
-
-        @media $media-big-navbar {
-            top: $big-navbar-message-bar-height;
-        }
-    }
 }
 
 .Activity,

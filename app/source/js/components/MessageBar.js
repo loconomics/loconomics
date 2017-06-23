@@ -1,67 +1,72 @@
 /**
   * Message bar object for adding a fixed message below the main navigation
   *
-  * Each message bar object injects a template into the app-wide common message
-  * bar container element. It also removes that message bar element from the DOM
-  * when the object is disposed (see dispose()).
+  * Do not initialize this component directly. Use the app-message-bar component
+  * instead.
   *
-  * Typically an activity will use one message bar at a time. 
-  * 
-  * They are designed to be shown and hidden, but once a message bar is disposed
-  * it should not be used again. Rather, it should be replaced by a new message bar
-  * object.
+  * If the activity and its template are not disposed, then it should hide the message
+  * bar when it is hidden.
   *
-  * Each message bar has a viewModel property used to bind values to the 
-  * template.
+  * When a message bar component is initialized and rendered, the view model will 
+  * move the message bar DOM element to be directly under the <body> element. This is
+  * due to constraints in the layout styles for the navigation bar and activities.
   * 
+  * Customize the content of the message bar by including markup in the 
+  * <app-message-bar> tag. Named items in the params attribute on the 
+  * component tag will be passed through to the template markup included in the 
+  * component. For example: 
+  *
+  * <app-message-bar param="arbitraryParam: someObservable">
+  *     <p data-bind="text: arbitraryParam"></p>
+  * </app-message-bar>
+  *
+  * There are well-known params to set options on the message bar. See the constructor
+  * docs below.
+  *
   * @class
   */
-var ko = require('knockout'),
-    $ = require('jquery');
-
-var containerSelector = '.AppMessageBarWrapper';
+var $ = require('jquery'),
+    ko = require('knockout');
 
 /**
- * Finds and injects template object. Binds the view model to the template.
+ * Initialized by knockout components.
+ *
+ * Params included in the component tag are passed through to any template inside the 
+ * component markup. There are well-known params to include as observables:
  * 
- * @private
- */
-var load = function($messageBar, templateName, viewModel) {
-    var $container = $(containerSelector),
-        $template = $('#' + templateName);
-
-    $messageBar.html($template.html());
-
-    $container.append($messageBar);
-
-    ko.applyBindings(viewModel, $messageBar.get(0));
-};
-
-/**
- * Creates a message bar and loads its template into the DOM, in the app-wide common
- * message bar container.
- * 
- * @param {Object} options
- * @param options.templateName ID of a knockout template to be used as the message bar
- * @param options.viewModel viewModel for the knockout template
- * @param {MessageBar.tones} options.tone for the message bar when visible
+ * @param {Object} params
+ * @param {Knockout Observer Boolean} params.visible the message bar will be visible when this observable is true, hidden otherwise. If this is not included, the message bar will always be visible
+ * @param {Knockout Observer MessageBar.tones} params.tone for the message bar when visible
+ *
  * @constructor
  */
-var MessageBar = function(options) {
-    $.extend(options, {});
+var MessageBar = function(params, element, templateNodes) {
+    this._$component = $(element);
+    this._$messageBarSpacer = $('.MessageBarSpacer', this._$component);
+    this._$messageBar = $('<div>', { 'class' : 'MessageBar', 'html': '<!-- ko template: { nodes: templateNodes, data: params } --><!-- /ko -->' });
+    this._$parts = this._$messageBarSpacer.add(this._$messageBar);
 
-    var templateName = options.templateName || '';
+    this.templateNodes = templateNodes;
 
-    this.viewModel = options.viewModel || {};
+    this.params = params;
+    this.params.visible = this.params.visible || ko.observable(true);
+    this.params.tone = this.params.tone || ko.observable(MessageBar.tones.neutral);
 
-    this.isVisible = ko.observable(false);
+    this._subscriptions = [];
 
-    this._$messageBar = $('<div>', { 'class': 'MessageBar' });
+    this._subscriptions.push(this.params.visible.subscribe(this.setVisible, this));
+    this.setVisible(this.params.visible());
 
-    this.setTone(options.tone || MessageBar.tones.neutral);
+    this._subscriptions.push(this.params.tone.subscribe(this.setTone, this));
+    this.setTone(this.params.tone());
 
-    load(this._$messageBar, templateName, this.viewModel);
+    // The template nodes are added to the message bar. The message bar is removed from
+    // the component element, so we must explicitly bind the message bar to this 
+    // view model
+    ko.applyBindings(this, this._$messageBar.get(0));
 };
+
+MessageBar.template = '<div class="MessageBarSpacer"></div>';
 
 /**
  * Enumeration of tones for the message bar (represents classes 
@@ -88,6 +93,18 @@ var clearToneClasses = function($messageBar) {
 };
 
 /**
+ * Dispose function called by knockout
+ */
+MessageBar.prototype.dispose = function() {
+    this._subscriptions.forEach(function(subscription) {
+        subscription.dispose();
+    });
+
+    // We created this element. Remove it.
+    this._$messageBar.remove();
+};
+
+/**
  * Set the tone for the message bar
  *
  * @param {MessageBar.tones} tone
@@ -108,31 +125,23 @@ MessageBar.prototype.setVisible = function(isVisible) {
 };
 
 /**
- * Makes the message bar visible
+ * Show message bar.
  */
 MessageBar.prototype.show = function() {
-    this._$messageBar.show();
+    // Message bar is under body so it can be positioned correctly
+    $('body').append(this._$messageBar);
 
-    this.isVisible(true);
+    this._$parts.show();
 };
 
 /**
- * Hides the message bar
+ * Hide message bar.
  */
 MessageBar.prototype.hide = function() {
-    this._$messageBar.hide();
+    this._$parts.hide();
 
-    this.isVisible(false);
-};
-
-/**
- * Hides the message bar and removes it from the DOM. Once this 
- * method is called on a message bar, it shouldn't be used again.
- */
-MessageBar.prototype.dispose = function() {
-    this.hide();
-
-    this._$messageBar.remove();
+    // Keep the DOM tidy by moving the message bar back into the component
+    this._$component.append(this._$messageBar);
 };
 
 module.exports = MessageBar;

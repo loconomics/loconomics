@@ -1,41 +1,53 @@
 /*
-  Common app-wide message bar fixed below the navigation.
+  Message bar component. Fixed message above the activity, but below navigation.
 
-  It is outside the activity element. Its top position depends on 
-  the height of the navigation bar. 
+  Used with app-message-bar component.
 */
-.AppMessageBarWrapper
+
+$app-message-bar-height = $app-navbar-height
+$big-message-bar-height = $big-navbar-height
+
+/*
+  Spacer included at the top of an activity. Pushes content down the height
+  of the MessageBar, but doesn't require Activity element to be modified.
+*/
+.MessageBarSpacer
+    height: $app-message-bar-height
+
+    @media $media-big-navbar
+        height: $big-message-bar-height
+
+/*
+  Due to absolute position of Activity and nav bar, this must be a child of 
+  body the element and is absolutely positioned just below the nav.
+*/
+.MessageBar
+    background-color: $brand-primary-background
+    border-bottom-width: 1px
+    border-bottom-style: solid
+    border-color: $gray-light
+    height: $app-message-bar-height
     left: 0
-    overflow: visible
     position: absolute
     right: 0
     top: $app-navbar-height
+    width: 100%
     z-index: $app-message-bar-z-index
 
     @media $media-big-navbar
+        border-width: 0
+        height: $big-message-bar-height
         top: $big-navbar-height
 
-    .MessageBar
-        background-color: $brand-primary-background
-        border-bottom-width: 1px
-        border-bottom-style: solid
-        border-color: $gray-light
-        height: $app-message-bar-height
-        width: 100%
+    &.MessageBar--success
+        background-color: $brand-success-background
 
-        &.MessageBar--success
-            background-color: $brand-success-background
+    &.MessageBar--warning
+        background-color: $brand-warning-background
 
-        &.MessageBar--warning
-            background-color: $brand-warning-background
+    p
+        text-align: center
+        line-height: $app-message-bar-height
 
         @media $media-big-navbar
-            border-width: 0
-            height: $big-message-bar-height
-
-        p
-            text-align: center
-            line-height: $app-message-bar-height
-
-            @media $media-big-navbar
-                line-height: $big-message-bar-height
+            line-height: $big-message-bar-height
