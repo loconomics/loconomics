@@ -178,7 +178,7 @@ var appInit = function appInit() {
     /*jshint maxstatements:70,maxcomplexity:16 */
 
     var userProfile = require('./data/userProfile');
-    var user = userProfile.getData();
+    var user = userProfile.data;
 
     attachFastClick(document.body);
 
@@ -517,6 +517,9 @@ var appInit = function appInit() {
         // (the app must be able to start up without remote connection), while
         // - remote data is not needed at all; if user is logged, the required
         // data is ever locally stored
+        // TODO Maybe this can be removed, if in the init sequence the userProfile.sync
+        // is run before of this (but ever after session.restore) with care to manage
+        // when there is no a local profile.
         return userProfile.loadFromLocal()
         .then(function(userProfile) {
             // Set-up onboarding and current step, if any
@@ -563,11 +566,27 @@ var appInit = function appInit() {
         }
     };
 
-    app.model.init()
+    /**
+     * Request a remote update of user main data
+     * if is logged.
+     */
+    var requestUserProfileSync = function() {
+        if (!user.isAnonymous()) {
+            userProfile.sync();
+        }
+    };
+
+    // Try to restore a user session ('remember login')
+    var session = require('./data/session');
+    // DEPRECATED: this app.model.init will soon being replaced
+    app.model.init().
+    then(session.restore)
+    //session.restore()
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
     .then(setupOnboarding)
     .then(setAppAsReady)
+    .then(requestUserProfileSync)
     .catch(alertError);
 
     // DEBUG

@@ -24,11 +24,6 @@ AppModel.prototype.init = function init() {
 
     // With config loaded and REST ready, load all modules
     this.loadModules();
-
-    // Initialize: check the user has login data and needed
-    // cached data, return its promise
-    var session = require('../data/session');
-    return session.restore();
 };
 
 AppModel.prototype.loadModules = function loadModules() {

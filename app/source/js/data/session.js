@@ -85,7 +85,7 @@ var setupGoogleAnalytics = function(credentials) {
  * Expected to be call at app start-up,
  * will prevent execution if a session is
  * running.
- * @returns {Promise<Credentials>}
+ * @returns {Promise<Credentials>} Null if no saved credentials
  */
 exports.restore = function() {
     if (isSessionOpened) return Promise.resolve(null);
@@ -104,6 +104,9 @@ exports.restore = function() {
         // or local credentials corrupted, anyway will
         // require a new user login keeping current session
         // as closed/anonymous)
+
+        // Notice no credentials:
+        return null;
     });
 };
 
