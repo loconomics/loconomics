@@ -1,10 +1,10 @@
 /**
     It offers access to calendar elements (appointments) and availability
-    
+
     Appointments is an abstraction around calendar events
     that behave as bookings or as events (where bookings are built
     on top of an event instance --a booking record must have ever a serviceDateID event).
-    
+
     With this appModel, the APIs to manage events&bookings are combined to offer related
     records easier in Appointments objects.
 **/
@@ -14,6 +14,7 @@ var Appointment = require('../models/Appointment'),
     DateAvailability = require('../models/DateAvailability'),
     DateCache = require('../utils/DateCache'),
     EventEmitter = require('events').EventEmitter;
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -22,27 +23,27 @@ exports.create = function create(appModel) {
         this.setMaxListeners(30);
     }
     Api._inherits(EventEmitter);
-    
+
     var api = new Api();
-    
+
     var cache = new DateCache({
         Model: DateAvailability,
         ttl: { minutes: 10 }
     });
-    
+
     api.clearCache = function clearCache() {
         cache.clear();
         this.emit('clearCache');
     };
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 
     /**
         Get a generic calendar appointment object, made of events and/or bookings,
         depending on the given ID in the ids object.
-        
+
         TODO: gets single apt from the DateCache
     **/
     api.getAppointment = function getAppointment(ids) {
@@ -65,24 +66,24 @@ exports.create = function create(appModel) {
             return Promise.reject('Unrecognized ID');
         }
     };
-    
+
     api.setAppointment = function setAppointment(apt, allowBookUnavailableTime) {
-        
+
         // TODO: Saving apt must invalidate the cache and force date
-        // availability computation with UI update, when start time or start end changes 
+        // availability computation with UI update, when start time or start end changes
         // (ever when inserting apt), for the previous date and the new one (if date changed)
         // and only date availability computation if date is the same but time changed.
         // And triggers "this.emit('clearCache');" passing as parameter the dates array that needs refresh
-        
+
         // If is a booking
         if (apt.sourceBooking()) {
             return appModel.bookings.setServiceProfessionalBooking(apt, allowBookUnavailableTime)
             .then(function(booking) {
-                
+
                 // TODO: clearCache, enhance by discarding only the cache for the previous
                 // and new date
                 api.clearCache();
-                
+
                 // We need the event information too
                 return appModel.calendarEvents.getEvent(booking.serviceDateID())
                 .then(function(event) {
@@ -100,7 +101,7 @@ exports.create = function create(appModel) {
             return Promise.reject(new Error('Unrecognized appointment object'));
         }
     };
-    
+
     /**
         Get a list of generic calendar appointment objects, made of events and/or bookings
         by Date, from the remote source directly.
@@ -125,7 +126,7 @@ exports.create = function create(appModel) {
             return apts;
         });
     };
-    
+
     /**
         Fetch appointments and schedule information for the date from remote
         in a convenient object to use with the DateAvailability model.
@@ -151,7 +152,7 @@ exports.create = function create(appModel) {
             return dateInfo;
         });
     };
-    
+
     /**
         Get the appointments and availability for the given date.
         It has cache control, if there is a valid copy is returned

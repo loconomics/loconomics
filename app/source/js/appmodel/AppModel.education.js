@@ -4,9 +4,10 @@
 
 var UserEducation = require('../models/UserEducation');
 var ListRemoteModel = require('../utils/ListRemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
-    
+
     var api = new ListRemoteModel({
         listTtl: { minutes: 1 },
         itemIdField: 'educationID',
@@ -17,8 +18,8 @@ exports.create = function create(appModel) {
 
     api.addRestSupport(appModel.rest, 'me/education');
     //api.addMockedRemote(testdata());
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

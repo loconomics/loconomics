@@ -1,6 +1,6 @@
 /**
     It uses the server-side availability API.
-    
+
     TODO: implement a cache that saves by full local Date rather
     than independent date-ranges; that way, full month queries are filtered
     and splited in per date caches, and further queries for a single date
@@ -12,17 +12,18 @@
 var CacheControl = require('../utils/CacheControl'),
     moment = require('moment'),
     EventEmitter = require('events').EventEmitter;
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
-    
+
     function Api() {
         EventEmitter.call(this);
         this.setMaxListeners(30);
     }
     Api._inherits(EventEmitter);
-    
+
     var api = new Api();
-    
+
     var cache = {
         times: {/*
             "userID": {
@@ -40,13 +41,13 @@ exports.create = function create(appModel) {
         cache.times = {};
         this.emit('clearCache');
     };
-    
+
     api.clearUserCache = function clearUserCache(userID) {
         delete cache.times[userID];
         this.emit('clearCache', { userID: userID });
     };
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 
@@ -76,7 +77,7 @@ exports.create = function create(appModel) {
         }
         return c;
     }
-    
+
     function getTimesFromCache(userID, queryKey) {
         var userC = cache.times[userID];
         var c = userC && userC[queryKey];

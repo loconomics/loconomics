@@ -13,10 +13,6 @@ exports.create = function create(appModel) {
 
     var api = {};
 
-    //appModel.on('clearLocalData', function() {
-    //    api.clearCache();
-    //});
-
     /**
         Get the user index/summary information. That includes
         an object with different properties that matches the results

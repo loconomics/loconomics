@@ -9,6 +9,7 @@ var UserJobTitle = require('../models/UserJobTitle'),
     localforage = require('localforage'),
     ko = require('knockout'),
     $ = require('jquery');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -27,7 +28,7 @@ exports.create = function create(appModel) {
                 jobTitleID: { model: object, cache: CacheControl }
             */}
         };
-    
+
     // Observable list
     api.list = ko.observableArray([]);
     // NOTE: Basic implementation, to enhance
@@ -37,14 +38,14 @@ exports.create = function create(appModel) {
             return list;
         });
     };
-    
+
     api.clearCache = function clearCache() {
         cache.userJobProfile.cache.latest = null;
         cache.userJobProfile.list = [];
         cache.userJobTitles = {};
     };
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 
@@ -73,10 +74,10 @@ exports.create = function create(appModel) {
 
         // Update cache state
         cache.userJobProfile.cache.latest = new Date();
-        
+
         return cache.userJobProfile.list;
     }
-    
+
     /**
         Get the full jobProfile from local copy, throwing a Promise reject exception if nothing
     **/
@@ -91,17 +92,17 @@ exports.create = function create(appModel) {
             return null;
         });
     }
-    
+
     function deleteUserJobTitleFromCache(jobTitleID) {
         // Delete from index
         delete cache.userJobTitles[jobTitleID];
-        
+
         // Remove from profile list: do from observable, that modifies plain cache
         // and notify observers too
         api.list.remove(function(j) { return j.jobTitleID() === jobTitleID; });
         cache.userJobProfile.cache.touch();
     }
-    
+
     /**
         Set a raw userJobProfile record (from server) and set it in the
         cache, creating or updating the model (so all the time the same model instance
@@ -127,7 +128,7 @@ exports.create = function create(appModel) {
         else {
             c.cache = new CacheControl({ ttl: defaultTtl });
         }
-        
+
         // If there is a profile list, add or update:
         var fullList =  cache.userJobProfile.list;
         if (fullList) {
@@ -145,11 +146,11 @@ exports.create = function create(appModel) {
                 fullList.push(c.model);
             }
         }
-        
+
         // Return the model, updated or just created
         return c.model;
     }
-    
+
     /**
         Get the content from the cache, for full profile
         and save it in local storage
@@ -163,7 +164,7 @@ exports.create = function create(appModel) {
         });
         localforage.setItem('userJobProfile', plain);
     }*/
-    
+
     // Private, fetch from remote
     var fetchUserJobProfile = function () {
         // Third and last, remote loading
@@ -174,14 +175,14 @@ exports.create = function create(appModel) {
             return mapToUserJobProfile(raw);
         });
     };
-    
+
     var saveCacheToLocal = function() {
         var raw = cache.userJobProfile.list.map(function(j) {
             return j.model.toPlainObject(true);
         });
         localforage.setItem('userJobProfile', raw);
     };
-    
+
     /**
         Public API
         Get the complete list of UserJobTitle for
@@ -212,26 +213,26 @@ exports.create = function create(appModel) {
             return Promise.resolve(cache.userJobProfile.list);
         }
     };
-    
+
     // Private, fetch from remote
     var fetchUserJobTitle = function(jobTitleID) {
         return appModel.rest.get('me/user-job-profile/' + jobTitleID)
         .then(function(raw) {
             // Save to cache and get model
             var m = setGetUserJobTitleToCache(raw);
-            
+
             // TODO implement cache saving for single job-titles, currently
             // it needs to save the profile cache, that may not exists if
             // the first request is for a single job title.
             // Next lines are to save full profile, not valid here.
             // Save in local
             //saveCacheInLocal();
-            
+
             // Return model
             return m;
         });
     };
-    
+
     var pushNewUserJobTitle = function(values) {
         // Create job title in remote
         return appModel.rest.post('me/user-job-profile', $.extend({
@@ -244,19 +245,19 @@ exports.create = function create(appModel) {
         .then(function(raw) {
             // Save to cache and get model
             var m = setGetUserJobTitleToCache(raw);
-            
+
             // TODO implement cache saving for single job-titles, currently
             // it needs to save the profile cache, that may not exists if
             // the first request is for a single job title.
             // Next lines are to save full profile, not valid here.
             // Save in local
             //saveCacheInLocal();
-            
+
             // Return model
             return m;
         });
     };
-    
+
     /**
         Public API
         Get a UserJobTitle record for the given
@@ -265,7 +266,7 @@ exports.create = function create(appModel) {
     api.getUserJobTitle = function (jobTitleID) {
         // Quick error
         if (!jobTitleID) return Promise.reject('Job Title ID required');
-        
+
         // If no cache or must revalidate, go remote
         if (!cache.userJobTitles[jobTitleID] ||
             cache.userJobTitles[jobTitleID].cache.mustRevalidate()) {
@@ -292,7 +293,7 @@ exports.create = function create(appModel) {
             }
         }
     };
-    
+
     /**
         Push changes to remote. StatusID can NOT be modified with this API, use specific
         deactivate/reactivate methods
@@ -302,23 +303,23 @@ exports.create = function create(appModel) {
         .then(function(raw) {
             // Save to cache and get model
             var m = setGetUserJobTitleToCache(raw);
-            
+
             // TODO implement cache saving for single job-titles, currently
             // it needs to save the profile cache, that may not exists if
             // the first request is for a single job title.
             // Next lines are to save full profile, not valid here.
             // Save in local
             //saveCacheInLocal();
-            
+
             // Return model
             return m;
         });
     };
-    
+
     api.createUserJobTitle = function (values) {
         return pushNewUserJobTitle(values);
     };
-    
+
     api.deactivateUserJobTitle = function(jobTitleID) {
         return appModel.rest.post('me/user-job-profile/' + (jobTitleID|0) + '/deactivate')
         .then(function(raw) {
@@ -327,7 +328,7 @@ exports.create = function create(appModel) {
             return m;
         });
     };
-    
+
     api.reactivateUserJobTitle = function(jobTitleID) {
         return appModel.rest.post('me/user-job-profile/' + (jobTitleID|0) + '/reactivate')
         .then(function(raw) {
@@ -336,7 +337,7 @@ exports.create = function create(appModel) {
             return m;
         });
     };
-    
+
     api.deleteUserJobTitle = function(jobTitleID) {
         var found = api.list().filter(function(j) {
             if (j.jobTitleID() === jobTitleID)
@@ -358,7 +359,7 @@ exports.create = function create(appModel) {
             throw err;
         });
     };
-    
+
     /*************************/
     /** ADITIONAL UTILITIES **/
     api.getUserJobTitleAndJobTitle = function getUserJobTitleAndJobTitle(jobTitleID) {
@@ -370,7 +371,7 @@ exports.create = function create(appModel) {
                     name: 'Not Found',
                     message:
                         // LJDI:
-                        "We don't have a record of this job title" + 
+                        "We don't have a record of this job title" +
                         'It may have been recently deleted.'
                 };
             }
@@ -391,7 +392,7 @@ exports.create = function create(appModel) {
                     message: 'The job title does not exist.'
                 };
             }
-        
+
             return {
                 jobTitleID: jobTitleID,
                 userJobTitle: all[0],
@@ -408,6 +409,6 @@ exports.create = function create(appModel) {
             }));
         });
     };
-    
+
     return api;
 };

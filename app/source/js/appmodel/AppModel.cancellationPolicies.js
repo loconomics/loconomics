@@ -6,6 +6,7 @@
 
 var CancellationPolicy = require('../models/CancellationPolicy');
 var ListRemoteModel = require('../utils/ListRemoteModel');
+var session = require('../data/session');
 
 // PRESET
 var data = [
@@ -35,8 +36,8 @@ var data = [
     })
 ];
 
-exports.create = function create(appModel) {
-    
+exports.create = function create() {
+
     var api = new ListRemoteModel({
         // Types does not changes usually, so big ttl
         listTtl: { days: 1 },
@@ -45,12 +46,12 @@ exports.create = function create(appModel) {
     });
 
     //api.addLocalforageSupport('cancellation-policies');
-    //api.addRestSupport(appModel.rest, 'cancellation-policies');
-    
-    appModel.on('clearLocalData', function() {
+    //api.addRestSupport(remote, 'cancellation-policies');
+
+    session.on.cacheCleaningRequested.subscribe(function() {
     //    api.clearCache();
     });
-    
+
     // Replace cached list with preset data
     api.list(data);
 

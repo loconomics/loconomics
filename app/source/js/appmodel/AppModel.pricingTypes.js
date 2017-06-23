@@ -3,11 +3,11 @@
 'use strict';
 
 var PricingType = require('../models/PricingType');
-
+var session = require('../data/session');
 var ListRemoteModel = require('../utils/ListRemoteModel');
 
 exports.create = function create(appModel) {
-    
+
     var api = new ListRemoteModel({
         // Types does not changes usually, so big ttl
         listTtl: { days: 1 },
@@ -17,8 +17,8 @@ exports.create = function create(appModel) {
 
     api.addLocalforageSupport('pricing-types');
     api.addRestSupport(appModel.rest, 'pricing-types');
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

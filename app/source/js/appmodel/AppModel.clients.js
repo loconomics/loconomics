@@ -3,11 +3,11 @@
 'use strict';
 
 var Client = require('../models/Client');
-
+var session = require('../data/session');
 var ListRemoteModel = require('../utils/ListRemoteModel');
 
 exports.create = function create(appModel) {
-    
+
     var api = new ListRemoteModel({
         listTtl: { minutes: 1 },
         itemIdField: 'clientUserID',
@@ -16,11 +16,11 @@ exports.create = function create(appModel) {
 
     api.addLocalforageSupport('clients');
     api.addRestSupport(appModel.rest, 'me/clients');
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
-    
+
     /**
         Public search of users, possible clients by well
         know fields, with full value match.
@@ -37,10 +37,10 @@ exports.create = function create(appModel) {
                 console.error('Error aborting request', abortErr);
             }
         }
-        
+
         var request = appModel.rest.get('me/clients/public-search', search);
         publicSearchRequest = request.xhr;
-        
+
         // Catch 'abort' to avoid communicate a fake error in the promise; the
         // promise will just solve as success with empty array.
         request = request.catch(function(err) {

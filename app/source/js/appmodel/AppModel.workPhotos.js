@@ -7,6 +7,7 @@ var WorkPhoto = require('../models/WorkPhoto'),
     photoTools = require('../utils/photoTools'),
     extend = require('jquery').extend;
 var $ = require('jquery');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -18,14 +19,14 @@ exports.create = function create(appModel) {
         itemIdField: 'workPhotoID',
         Model: WorkPhoto
     });
-    
+
     api.addLocalforageSupport('workPhotos');
     api.addRestSupport(appModel.rest, baseUrl);
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
-    
+
     // Here we have the special case of upload files, that needs use different component than just
     // ajax/rest client.
     // We replace default:
@@ -51,7 +52,7 @@ exports.create = function create(appModel) {
         if (!data.localTempFilePath) {
             return pushWithoutFile(data);
         }
-        else {        
+        else {
             // Upload with FileTransfer
             var uploadSettings = {
                 fileKey: photoUploadFieldName,
@@ -104,6 +105,6 @@ exports.create = function create(appModel) {
             return webUploadFile(data, options);
         }
     }.bind(api);
-    
+
     return api;
 };

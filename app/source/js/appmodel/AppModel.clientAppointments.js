@@ -9,6 +9,7 @@ var CacheControl = require('../utils/CacheControl');
 var localforage = require('localforage');
 var moment = require('moment');
 var user = require('../data/userProfile').data;
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -109,7 +110,7 @@ exports.create = function create(appModel) {
         cache.reset();
     };
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

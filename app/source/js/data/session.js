@@ -32,20 +32,22 @@ var restoredEvent = new SingleEvent(exports);
  * Event triggered by a session just closed
  */
 var closedEvent = new SingleEvent(exports);
+/**
+ * Event triggered by a session just closed
+ */
+var cacheCleaningRequestedEvent = new SingleEvent(exports);
 
 exports.on = {
     opened: openedEvent.subscriber,
     restored: restoredEvent.subscriber,
-    closed: closedEvent.subscriber
+    closed: closedEvent.subscriber,
+    cacheCleaningRequested: cacheCleaningRequestedEvent.subscriber
 };
 
-// Events emitted by the session
-var EventEmitter = require('events').EventEmitter;
-exports.events = new EventEmitter();
-
 /**
-    Clear the local stored data, but with careful for the special
-    config data that is kept.
+    Clear the local stored data and
+    request cache cleaning to data modules
+    (task delegated through an event)
     @private
 **/
 var clearLocalData = function () {
@@ -56,7 +58,7 @@ var clearLocalData = function () {
         // memory cache is distributed on each module,
         // we trigger an event to notify listening modules
         // so can clean its memory or even make further tasks
-        exports.events.emit('clearLocalData');
+        cacheCleaningRequestedEvent.emit();
     });
 };
 

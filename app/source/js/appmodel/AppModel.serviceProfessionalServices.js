@@ -4,6 +4,7 @@
 
 var ServiceProfessionalService = require('../models/ServiceProfessionalService'),
     GroupListRemoteModel = require('../utils/GroupListRemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -19,8 +20,8 @@ exports.create = function create(appModel) {
 
     api.addLocalforageSupport('service-professional-services/');
     api.addRestSupport(appModel.rest, restUrlPrefix);
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

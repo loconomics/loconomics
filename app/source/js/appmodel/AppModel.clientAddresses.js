@@ -7,6 +7,7 @@
 
 var Address = require('../models/Address'),
     GroupListRemoteModel = require('../utils/GroupListRemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -21,7 +22,7 @@ exports.create = function create(appModel) {
     api.addLocalforageSupport('addresses/clients/');
     api.addRestSupport(appModel.rest, 'me/addresses/clients/');
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

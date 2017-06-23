@@ -5,6 +5,7 @@
 var UserPaymentPlan = require('../models/UserPaymentPlan');
 var RemoteModel = require('../utils/RemoteModel');
 var localforage = require('localforage');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
     var rem = new RemoteModel({
@@ -19,7 +20,7 @@ exports.create = function create(appModel) {
         }
     });
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         rem.clearCache();
     });
 

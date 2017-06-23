@@ -4,6 +4,7 @@
 **/
 'use strict';
 var ko = require('knockout');
+var session = require('../data/session');
 
 var articlesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/en-us/articles.json?label_names=';
 var categoriesUrl = 'https://loconomics.zendesk.com/api/v2/help_center/en-us/categories.json';
@@ -51,7 +52,7 @@ function getRemoteSections() {
 
 var CacheControl = require('../utils/CacheControl');
 
-exports.create = function create(appModel) {
+exports.create = function create() {
     /// The in-memory cache
     var ttl = { days: 1 };
     var cache = {
@@ -81,19 +82,19 @@ exports.create = function create(appModel) {
             return cacheItem;
         }
     };
-    
+
     /// The exposed API
     var api = {};
     api.clearCache = function() {
         cache.clear();
     };
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
-    
+
     // Collections
-    
+
     var HelpCategory = require('../models/HelpCategory');
     api.isLoadingCategories = ko.observable(false);
     api.getCategories = function() {
@@ -115,7 +116,7 @@ exports.create = function create(appModel) {
             return Promise.resolve(cache.categories.data);
         }
     };
-    
+
     var HelpSection = require('../models/HelpSection');
     api.isLoadingSections = ko.observable(false);
     api.getSections = function() {
@@ -137,13 +138,13 @@ exports.create = function create(appModel) {
             return Promise.resolve(cache.sections.data);
         }
     };
-    
+
     var HelpArticle = require('../models/HelpArticle');
     api.isLoadingArticles = ko.observable(false);
     api.getArticles = function(labels) {
         labels = labels || '';
         var cached = cache.getArticlesCache(labels);
-        
+
         if (cached.mustRevalidate()) {
             api.isLoadingArticles(true);
             return getRemoteArticles(labels).then(function(data) {
@@ -161,7 +162,7 @@ exports.create = function create(appModel) {
             return Promise.resolve(cached.data);
         }
     };
-    
+
     // Items
     // TODO Implement a cache for found by ID? Or create cache for all once data is loaded?
     api.findByIdAt = function(id, atList) {
@@ -190,7 +191,7 @@ exports.create = function create(appModel) {
             return api.findByIdAt(id, list);
         });
     };
-    
+
     api.getArticlesBySection = function(sectionID) {
         return api.getArticles().then(function(list) {
             return list.filter(function(item) {
@@ -198,7 +199,7 @@ exports.create = function create(appModel) {
             });
         });
     };
-    
+
     api.getSectionsByCategory = function(categoryID) {
         return api.getSections().then(function(list) {
             return list.filter(function(item) {

@@ -3,7 +3,7 @@
 'use strict';
 
 var Address = require('../models/Address');
-
+var session = require('../data/session');
 var RemoteModel = require('../utils/RemoteModel');
 
 exports.create = function create(appModel) {
@@ -18,10 +18,10 @@ exports.create = function create(appModel) {
             return appModel.rest.put('me/addresses/home', this.data.model.toPlainObject());
         }
     });
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         rem.clearCache();
     });
-    
+
     return rem;
 };

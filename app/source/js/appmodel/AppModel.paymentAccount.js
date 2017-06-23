@@ -4,6 +4,7 @@
 
 var PaymentAccount = require('../models/PaymentAccount');
 var RemoteModel = require('../utils/RemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
     var rem = new RemoteModel({
@@ -17,10 +18,10 @@ exports.create = function create(appModel) {
             return appModel.rest.put('me/payment-account', this.data.model.toPlainObject());
         }
     });
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         rem.clearCache();
     });
-    
+
     return rem;
 };

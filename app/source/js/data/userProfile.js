@@ -25,7 +25,7 @@ var rem = new RemoteModel({
 module.exports = rem;
 
 var session = require('./session');
-session.events.on('clearLocalData', function() {
+session.on.cacheCleaningRequested.subscribe(function() {
     rem.clearCache();
 });
 

@@ -7,6 +7,7 @@ var UserLicenseCertification = require('../models/UserLicenseCertification'),
     photoTools = require('../utils/photoTools'),
     extend = require('jquery').extend;
 var $ = require('jquery');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -18,14 +19,14 @@ exports.create = function create(appModel) {
         itemIdField: 'userLicenseCertificationID',
         Model: UserLicenseCertification
     });
-    
+
     api.addLocalforageSupport('userLicensesCertifications/');
     api.addRestSupport(appModel.rest, baseUrl);
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
-    
+
     // Here we have the special case of upload files, that needs use different component than just
     // ajax/rest client.
     // We replace default:
@@ -85,7 +86,7 @@ exports.create = function create(appModel) {
             return Promise.resolve(fd.submit());
         }
     };
-    
+
     api.pushItemToRemote = function pushToRemote(data) {
         // Standard ID and URL code
         var groupID = data[this.settings.groupIdField];
@@ -94,7 +95,7 @@ exports.create = function create(appModel) {
             method: itemID ? 'put' : 'post',
             url: appModel.rest.baseUrl + baseUrl + groupID + (itemID ? '/' + itemID : '')
         };
-        
+
         var after = function(serverData) {
             api._pushItemToCache(serverData);
             return serverData;
@@ -107,6 +108,6 @@ exports.create = function create(appModel) {
             return webUploadFile(data, options).then(after);
         }
     }.bind(api);
-    
+
     return api;
 };

@@ -1,26 +1,27 @@
 /** Postal Code.
 
-    Access the API to validate and retrieve information for a 
+    Access the API to validate and retrieve information for a
     given postal code.
-    
+
     It just offers a 'get postal code info' method returning
     a plain object from the REST endpoint.
-    
+
     Creates an in-memory cache for frequently used postal codes
 **/
 'use strict';
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
     var api = {},
         cache = {};
-    
+
     api.getItem = function getItem(postalCode) {
         // Check cache
         if (cache.hasOwnProperty(postalCode)) {
             return Promise.resolve(cache[postalCode]);
         }
-        
+
         return appModel.rest.get('postal-codes/' + postalCode)
         .then(function(info) {
             // Save cache
@@ -32,7 +33,7 @@ exports.create = function create(appModel) {
         });
     };
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         cache = {};
     });
 

@@ -6,6 +6,7 @@
 
 var PaymentPlan = require('../models/PaymentPlan');
 var ListRemoteModel = require('../utils/ListRemoteModel');
+var session = require('../data/session');
 
 // PRESET
 var data = [
@@ -35,7 +36,7 @@ var data = [
     }
 ];
 
-exports.create = function create(appModel) {
+exports.create = function create() {
 
     var api = new ListRemoteModel({
         // Types does not changes usually, so big ttl
@@ -47,7 +48,7 @@ exports.create = function create(appModel) {
     //api.addLocalforageSupport('cancellation-policies');
     //api.addRestSupport(appModel.rest, 'cancellation-policies');
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
     //    api.clearCache();
     });
 

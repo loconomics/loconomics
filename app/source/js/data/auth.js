@@ -9,7 +9,6 @@ var remote = require('./drivers/restClient');
 var getUrlQuery = require('../utils/getUrlQuery');
 var param = require('jquery').param;
 var session = require('./session');
-
 var userProfile = require('./userProfile');
 
 /**

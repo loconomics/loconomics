@@ -3,11 +3,11 @@
 'use strict';
 
 var LicenseCertification = require('../models/LicenseCertification');
-
+var session = require('../data/session');
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
 
 exports.create = function create(appModel) {
-    
+
     var api = new GroupRemoteModel({
         // Types does not changes usually, so big ttl
         ttl: { month: 1 },
@@ -17,8 +17,8 @@ exports.create = function create(appModel) {
 
     api.addLocalforageSupport('license-certification/');
     api.addRestSupport(appModel.rest, 'license-certification/');
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

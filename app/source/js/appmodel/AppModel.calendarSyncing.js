@@ -5,6 +5,7 @@
 var ko = require('knockout'),
     CalendarSyncing = require('../models/CalendarSyncing'),
     RemoteModel = require('../utils/RemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
     var rem = new RemoteModel({
@@ -18,11 +19,11 @@ exports.create = function create(appModel) {
             return appModel.rest.put('me/calendar-syncing', this.data.model.toPlainObject());
         }
     });
-    
+
     // Extending with the special API method 'resetExportUrl'
     rem.isReseting = ko.observable(false);
     rem.resetExportUrl = function resetExportUrl() {
-        
+
         rem.isReseting(true);
 
         return appModel.rest.post('me/calendar-syncing/reset-export-url')
@@ -34,8 +35,8 @@ exports.create = function create(appModel) {
             return updatedSyncSettings;
         });
     };
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         rem.clearCache();
     });
 

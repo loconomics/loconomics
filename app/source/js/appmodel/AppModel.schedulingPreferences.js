@@ -3,7 +3,7 @@
 'use strict';
 
 var SchedulingPreferences = require('../models/SchedulingPreferences');
-
+var session = require('../data/session');
 var RemoteModel = require('../utils/RemoteModel');
 
 exports.create = function create(appModel) {
@@ -24,10 +24,10 @@ exports.create = function create(appModel) {
             });
         }
     });
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         rem.clearCache();
     });
-    
+
     return rem;
 };

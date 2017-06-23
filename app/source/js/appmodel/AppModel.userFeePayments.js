@@ -7,6 +7,7 @@
 
 var UserFeePayment = require('../models/UserFeePayment');
 var ListRemoteModel = require('../utils/ListRemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -19,7 +20,7 @@ exports.create = function create(appModel) {
     api.addLocalforageSupport('user-fee-payments');
     api.addRestSupport(appModel.rest, 'me/fee-payments');
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

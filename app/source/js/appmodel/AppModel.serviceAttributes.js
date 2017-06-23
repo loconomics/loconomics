@@ -3,7 +3,7 @@
 'use strict';
 
 var UserJobTitleServiceAttributes = require('../models/UserJobTitleServiceAttributes');
-
+var session = require('../data/session');
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
 
 exports.create = function create(appModel) {
@@ -12,13 +12,13 @@ exports.create = function create(appModel) {
         itemIdField: 'jobTitleID',
         Model: UserJobTitleServiceAttributes
     });
-    
+
     api.addLocalforageSupport('service-attributes/');
-    api.addRestSupport(appModel.rest, 'me/service-attributes/');    
-    
-    appModel.on('clearLocalData', function() {
+    api.addRestSupport(appModel.rest, 'me/service-attributes/');
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
-    
+
     return api;
 };

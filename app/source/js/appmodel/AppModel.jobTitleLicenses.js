@@ -3,7 +3,7 @@
 'use strict';
 
 var JobTitleLicense = require('../models/JobTitleLicense');
-
+var session = require('../data/session');
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
 
 exports.create = function create(appModel) {
@@ -12,13 +12,13 @@ exports.create = function create(appModel) {
         itemIdField: 'jobTitleID',
         Model: JobTitleLicense
     });
-    
+
     api.addLocalforageSupport('job-title-licenses/');
-    api.addRestSupport(appModel.rest, 'me/job-title-licenses/');    
-    
-    appModel.on('clearLocalData', function() {
+    api.addRestSupport(appModel.rest, 'me/job-title-licenses/');
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
-    
+
     return api;
 };

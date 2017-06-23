@@ -9,6 +9,7 @@
 
 var UserVerification = require('../models/UserVerification'),
     ListRemoteModel = require('../utils/ListRemoteModel');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -20,8 +21,8 @@ exports.create = function create(appModel) {
 
     api.addLocalforageSupport('user-verifications');
     api.addRestSupport(appModel.rest, 'me/verifications');
-    
-    appModel.on('clearLocalData', function() {
+
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 

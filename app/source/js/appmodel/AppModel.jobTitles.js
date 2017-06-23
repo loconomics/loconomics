@@ -6,6 +6,7 @@ var localforage = require('localforage'),
     JobTitle = require('../models/JobTitle'),
     ko = require('knockout');
 var CacheControl = require('../utils/CacheControl');
+var session = require('../data/session');
 
 exports.create = function create(appModel) {
 
@@ -17,7 +18,7 @@ exports.create = function create(appModel) {
         cache = {
             jobTitles: {}
         };
-    
+
     var getCacheItem = function(id) {
         var c = cache.jobTitles[id];
         if (!c) {
@@ -27,14 +28,14 @@ exports.create = function create(appModel) {
         }
         return c;
     };
-    
+
     var setCacheItem = function(id, rawData) {
         var c = getCacheItem(id);
         if (c.data)
             c.data.model.updateWith(rawData, true);
         else
             c.data = new JobTitle(rawData);
-        
+
         c.touch();
         return c;
     };
@@ -43,7 +44,7 @@ exports.create = function create(appModel) {
         cache.jobTitles = {};
     };
 
-    appModel.on('clearLocalData', function() {
+    session.on.cacheCleaningRequested.subscribe(function() {
         api.clearCache();
     });
 
