@@ -1,16 +1,26 @@
 /*
-  TODO: new description
+  Message bar component. Fixed message above the activity, but below navigation.
+
+  Used with app-message-bar component.
 */
 
 $app-message-bar-height = $app-navbar-height
 $big-message-bar-height = $big-navbar-height
 
+/*
+  Spacer included at the top of an activity. Pushes content down the height
+  of the MessageBar, but doesn't require Activity element to be modified.
+*/
 .MessageBarSpacer
     height: $app-message-bar-height
 
     @media $media-big-navbar
         height: $big-message-bar-height
 
+/*
+  Due to absolute position of Activity and nav bar, this must be a child of 
+  body the element and is absolutely positioned just below the nav.
+*/
 .MessageBar
     background-color: $brand-primary-background
     border-bottom-width: 1px
