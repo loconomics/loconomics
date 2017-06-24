@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var PostalCodeVM = require('../viewmodels/PostalCode');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
@@ -36,7 +37,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         this.navBar.model.updateWith(this.defaultNavBar, true);
     }
@@ -56,7 +57,7 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201967096-accepting-and-receiving-payments';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     /**
      * Sets if the form must reduce the number of fields.
@@ -96,7 +97,7 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
                 this.isLoading() ?
                     'loading...' :
@@ -121,15 +122,15 @@ function ViewModel(app) {
         if (this.isInOnboarding() &&
             dataVersion.version.status() &&
             !this.formVisible()) {
-            app.model.onboarding.goNext();
+            onboarding.goNext();
         }
         else {
             // Save
             dataVersion.pushSave()
             .then(function() {
                 // Move forward:
-                if (app.model.onboarding.inProgress()) {
-                    app.model.onboarding.goNext();
+                if (onboarding.inProgress()) {
+                    onboarding.goNext();
                 } else {
                     app.successSave();
                 }

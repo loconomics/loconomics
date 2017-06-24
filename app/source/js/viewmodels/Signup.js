@@ -11,6 +11,7 @@ var ko = require('knockout'),
     fb = require('../utils/facebookUtils'),
     countriesOptions = require('./CountriesOptions');
 var auth = require('../data/auth');
+var onboarding = require('../data/onboarding');
 
 /**
  * Enum with valid values for profile type.
@@ -234,9 +235,9 @@ else
                 // locked if a handler attacked choose to not reset the form
 
                 // Start onboarding
-                if (app.model.onboarding) {
-                    app.model.onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
-                    app.model.onboarding.setStep(signupData.onboardingStep);
+                if (onboarding) {
+                    onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
+                    onboarding.setStep(signupData.onboardingStep);
                 }
 
                 // Emit event before resetting data (to prevent some

@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var user = require('../data/userProfile').data;
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function PrivacySettingsActivity() {
 
@@ -41,7 +42,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);

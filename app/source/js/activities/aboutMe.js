@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var userProfile = require('../data/userProfile');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -65,7 +66,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);
@@ -95,7 +96,7 @@ function ViewModel(app) {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.contactInfo = new ContactInfoVM(app);
     this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
@@ -106,7 +107,7 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
             this.isLoading() ?
                 'loading...' :
@@ -119,8 +120,8 @@ function ViewModel(app) {
     this.save = function() {
         Promise.all(vms.map(function(vm) { return vm.save(); }))
         .then(function() {
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
+            if (onboarding.inProgress()) {
+                onboarding.goNext();
             }
             else {
                 app.successSave();

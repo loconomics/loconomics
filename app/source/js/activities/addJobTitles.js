@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -26,7 +27,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     referrer = referrer && referrer.url || '/scheduling';
     var link = this.requestData.cancelLink || referrer;
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         this.convertToCancelAction(this.navBar.leftAction(), link);
     }
 };
@@ -67,7 +68,7 @@ function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201211055-adding-job-profiles';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
@@ -106,7 +107,7 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
                 this.isSaving() ?
                     'Saving...' :
@@ -162,9 +163,9 @@ function ViewModel(app) {
                 // Reset UI list
                 this.searchText('');
                 this.jobTitles.removeAll();
-                if (app.model.onboarding.inProgress()) {
-                    app.model.onboarding.selectedJobTitleID(firstJobID);
-                    app.model.onboarding.goNext();
+                if (onboarding.inProgress()) {
+                    onboarding.selectedJobTitleID(firstJobID);
+                    onboarding.goNext();
                 }
                 else {
                     app.successSave();
@@ -175,8 +176,8 @@ function ViewModel(app) {
                 .load({ forceRemoteUpdate: true })
                 .then(function() {
                     // Start onboarding
-                    if (app.model.onboarding) {
-                        app.model.onboarding.skipToAddJobTitles();
+                    if (onboarding) {
+                        onboarding.skipToAddJobTitles();
                     }
                     onEnd();
                 });

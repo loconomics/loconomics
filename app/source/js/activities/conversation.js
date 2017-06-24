@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function ConversationActivity() {
 
@@ -27,7 +28,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);

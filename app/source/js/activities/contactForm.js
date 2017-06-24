@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function ContactFormActivity() {
 
@@ -46,7 +47,7 @@ var user = require('../data/userProfile').data;
 
 function ViewModel(app) {
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
     this.message = ko.observable('');
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);

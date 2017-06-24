@@ -1,6 +1,6 @@
 /**
     ServiceProfessionalServiceEditor activity
-    
+
     TODO: ModelVersion is NOT being used, so no getting updates if server updates
     the data after load (data load is requested but get first from cache). Use
     version and get sync'ed data when ready, and additionally notification to
@@ -38,7 +38,7 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
             this.app.shell.goBack(this.requestData);
         }
-        else if (this.app.model.onboarding.inProgress()) {
+        else if (onboarding.inProgress()) {
             this.app.shell.goBack();
         }
         else {
@@ -52,12 +52,12 @@ exports.init = A.init;
 A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/serviceProfessionalService/' + this.viewModel.jobTitleID();
-    
+
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10    
+    //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
 
     // Reset
@@ -82,9 +82,9 @@ A.prototype.show = function show(options) {
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
-    
+
     this.updateNavBarState();
-    
+
     /**
         The pricing record needs some special set-up after creation/loading and before
         being presented to the user, because special value-rules.
@@ -101,7 +101,7 @@ A.prototype.show = function show(options) {
             c.pricing.refreshNoPriceRate();
         }
     }.bind(this);
-    
+
     var showLoadingError = function(error) {
         this.viewModel.isLoading(false);
         this.app.modals.showError({
@@ -185,7 +185,7 @@ function ViewModel(app) {
     /*jshint maxstatements: 35*/
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.isLoading = ko.observable(false);
     // managed manually instead of
@@ -197,7 +197,7 @@ function ViewModel(app) {
     this.serviceProfessionalServiceID = ko.observable(0);
     // L10N
     this.moneySymbol = ko.observable('$');
-    
+
     this.pricingType = ko.observable(new PricingType());
 
     this.serviceProfessionalServiceVersion = ko.observable(null);
@@ -227,12 +227,12 @@ function ViewModel(app) {
         }
 
     }, this);
-    
+
     // Quicker access in form, under a 'with'
     this.current = ko.pureComputed(function() {
         var t = this.pricingType(),
             p = this.serviceProfessionalService();
-        
+
         if (t && p) {
             return {
                 type: t,
@@ -249,11 +249,11 @@ function ViewModel(app) {
     }, this);
 
     this.wasRemoved = ko.observable(false);
-    
+
     this.isLocked = ko.computed(function() {
         return this.isDeleting() || app.model.serviceProfessionalServices.state.isLocked();
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         var p = this.serviceProfessionalService();
         return p && !p.updatedDate();
@@ -262,10 +262,10 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         var v = this.serviceProfessionalServiceVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         'Save changes' :
                         'Saved'
@@ -276,24 +276,24 @@ function ViewModel(app) {
         var v = this.serviceProfessionalServiceVersion();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
-                'Deleting...' : 
+            this.isDeleting() ?
+                'Deleting...' :
                 'Delete'
         );
     }, this);
 
     this.save = function() {
-        
+
         app.model.serviceProfessionalServices.setItem(this.serviceProfessionalService().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.serviceProfessionalService().model.updateWith(serverData);
             // Push version so it appears as saved
             this.serviceProfessionalServiceVersion().push({ evenIfObsolete: true });
-            
+
             // After save logic provided by the activity, injected in the view:
             this.onSave(serverData);
         }.bind(this))
@@ -305,7 +305,7 @@ function ViewModel(app) {
         });
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
         // TODO Better l10n or replace by a new preset field on pricingType.deleteLabel
         var p = this.pricingType();

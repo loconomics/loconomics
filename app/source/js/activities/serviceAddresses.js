@@ -6,6 +6,7 @@
 var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -163,7 +164,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    this.app.model.onboarding.updateNavBar(this.navBar) ||
+    onboarding.updateNavBar(this.navBar) ||
     this.applyOwnNavbarRules();
 };
 
@@ -216,7 +217,7 @@ function ViewModel(app) {
     // jshint maxstatements:70
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.serviceAddresses = new ServiceAddresses();
 
@@ -290,10 +291,10 @@ function ViewModel(app) {
     }, this);
 
     this.goNext = function() {
-        if (app.model.onboarding.inProgress()) {
+        if (onboarding.inProgress()) {
             // Ensure we keep the same jobTitleID in next steps as here:
-            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
-            app.model.onboarding.goNext();
+            onboarding.selectedJobTitleID(this.jobTitleID());
+            onboarding.goNext();
         }
     }.bind(this);
 
@@ -356,7 +357,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.onboardingNextReady = ko.computed(function() {
-        var isin = app.model.onboarding.inProgress(),
+        var isin = onboarding.inProgress(),
             hasItems = this.serviceAddresses.sourceAddresses().length > 0;
 
         return isin && hasItems;

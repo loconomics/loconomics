@@ -4,13 +4,14 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function HelpActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
-    this.accessLevel = null;    
+    this.accessLevel = null;
 
     this.navBar = Activity.createSubsectionNavBar('Back');
 
@@ -28,7 +29,7 @@ var A = Activity.extend(function HelpActivity() {
         Promise.all([
             this.app.model.help.getArticles(),
             this.app.model.help.getCategories(),
-            this.app.model.help.getSections()            
+            this.app.model.help.getSections()
         ])
         .then(function(res) {
             this.viewModel.articles(res[0]);
@@ -124,13 +125,13 @@ A.prototype.show = function show(state) {
 var ko = require('knockout');
 
 function ViewModel(app) {
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
     this.articles = ko.observableArray([]);
     this.searchText = ko.observable('');
     this.isLoading = ko.observable(false);
     this.params = ko.observable(''); // sections/2342342342-stuff-i-do
-    this.viewType = ko.observable(''); 
-    
+    this.viewType = ko.observable('');
+
     this.tailId = ko.observable('');
 
     this.categories = ko.observableArray([]);
@@ -171,7 +172,7 @@ function ViewModel(app) {
             return sectionIsSelected;
         });
         return result.length ? result:null;
-        
+
     }, this);
 
     this.filteredArticles = ko.pureComputed(function() {

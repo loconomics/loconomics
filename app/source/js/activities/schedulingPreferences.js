@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
 
@@ -49,7 +50,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         this.navBar.model.updateWith(this.defaultNavBar, true);
     }
@@ -81,7 +82,7 @@ function ViewModel(app) {
     this.goBackLink = ko.observable('');
     this.goBackLabel = ko.observable('');
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.schedulingPreferences = new SchedulingPreferencesVM(app);
     this.weeklySchedule = new WeeklyScheduleVM(app);
@@ -97,8 +98,8 @@ function ViewModel(app) {
             app.model.userJobProfile.clearCache();
             app.model.userJobProfile.syncList();
             // Move forward:
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
+            if (onboarding.inProgress()) {
+                onboarding.goNext();
             } else {
                 app.successSave();
             }
@@ -125,7 +126,7 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
                 this.isLoading() ?
                     'loading...' :

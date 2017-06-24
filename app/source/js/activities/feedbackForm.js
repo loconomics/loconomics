@@ -7,6 +7,7 @@ var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
 var userProfile = require('../data/userProfile');
 var user = userProfile.getData();
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function FeedbackFormActivity() {
 
@@ -31,7 +32,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);
@@ -63,7 +64,7 @@ A.prototype.show = function show(options) {
 var ko = require('knockout');
 function ViewModel(app) {
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
     this.user = user;
     this.helpLinkProfessionals = '/help/relatedArticles/201960863-providing-feedback-to-us';
     this.helpLinkClients = '/help/relatedArticles/202894686-providing-feedback-to-us';

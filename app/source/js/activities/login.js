@@ -8,6 +8,7 @@ var ko = require('knockout'),
     ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
 var user = require('../data/userProfile').data;
 var auth = require('../data/auth');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function LoginActivity() {
 
@@ -162,9 +163,9 @@ function ViewModel(app) {
             this.reset();
             this.isWorking(false);
 
-            app.model.onboarding.setStep(user.onboardingStep());
+            onboarding.setStep(user.onboardingStep());
 
-            if (app.model.onboarding.goIfEnabled())
+            if (onboarding.goIfEnabled())
                 return;
             else if (this.redirectUrl())
                 app.shell.go(this.redirectUrl());

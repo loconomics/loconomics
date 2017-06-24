@@ -3,13 +3,14 @@ var ko = require('knockout'),
     PostalCodeVM = require('../viewmodels/PostalCode');
 var userProfile = require('../data/userProfile');
 var user = userProfile.getData();
+var onboarding = require('../data/onboarding');
 
 module.exports = function ContactInfoVM(app) {
 
     this.user = user;
 
     this.headerText = ko.pureComputed(function() {
-        return app.model.onboarding.inProgress() ?
+        return onboarding.inProgress() ?
             'How can we reach you?' :
             'Contact information';
     });

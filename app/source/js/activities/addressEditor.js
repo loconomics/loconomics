@@ -1,6 +1,6 @@
 /**
     AddressEditor activity
-    
+
     TODO: ModelVersion is NOT being used, so no getting updates if server updates
     the data after load (data load is requested but get first from cache). Use
     version and get sync'ed data when ready, and additionally notification to
@@ -18,6 +18,7 @@ var ko = require('knockout');
 var Address = require('../models/Address');
 var Activity = require('../components/Activity');
 var PostalCodeVM = require('../viewmodels/PostalCode');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -28,7 +29,7 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Locations', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
-    
+
     // On changing jobTitleID:
     // - load job title name
     this.registerHandler({
@@ -53,7 +54,7 @@ var A = Activity.extend(function AddressEditorActivity() {
             }
         }.bind(this)
     });
-    
+
     // Special treatment of the save operation
     this.viewModel.onSave = function(addressID) {
         if (this.requestData.returnNewAsSelected === true) {
@@ -69,7 +70,7 @@ var A = Activity.extend(function AddressEditorActivity() {
 
             this.app.shell.goBack(this.requestData);
         }
-        else if (this.app.model.onboarding.inProgress()) {
+        else if (onboarding.inProgress()) {
             this.app.shell.goBack();
         }
         else {
@@ -83,18 +84,18 @@ exports.init = A.init;
 A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/serviceAddresses/' + this.viewModel.jobTitleID();
-    
+
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:12
     Activity.prototype.show.call(this, options);
-    
+
     // Reset
     this.viewModel.wasRemoved(false);
-    
-    // Params    
+
+    // Params
     var params = options && options.route && options.route.segments || [];
 
     var kind = params[0] || '',
@@ -106,7 +107,7 @@ A.prototype.show = function show(options) {
         serviceType = params[2] || '';
     // Special type: clientLocation
     var clientUserID = serviceType === 'clientLocation' ? params[3] : null;
-    
+
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.addressID(addressID);
     this.viewModel.clientUserID(clientUserID);
@@ -183,7 +184,7 @@ function ViewModel(app) {
     // jshint maxstatements:80
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.header = ko.observable('Edit location');
     this.subheader = ko.observable('');
@@ -192,11 +193,11 @@ function ViewModel(app) {
     this.errorMessages = {
         postalCode: ko.observable('')
     };
-    
+
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
     this.clientUserID = ko.observable(0);
-    this.jobTitleName = ko.observable('Job Title'); 
+    this.jobTitleName = ko.observable('Job Title');
 
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {
@@ -219,11 +220,11 @@ function ViewModel(app) {
     this.isDeleting = app.model.serviceAddresses.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
-    
+
     this.isLocked = ko.computed(function() {
         return this.isDeleting() || app.model.serviceAddresses.state.isLocked();
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         var add = this.address();
         return !add || !add.updatedDate();
@@ -232,10 +233,10 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         var v = this.addressVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         'Save changes' :
                         'Saved'
@@ -246,11 +247,11 @@ function ViewModel(app) {
         var v = this.addressVersion();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
-                'Deleting...' : 
+            this.isDeleting() ?
+                'Deleting...' :
                 'Delete'
         );
     }, this);
@@ -286,7 +287,7 @@ function ViewModel(app) {
         }
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
         app.modals.confirm({
             title: 'Delete location',
@@ -314,7 +315,7 @@ function ViewModel(app) {
             });
         });
     }.bind(this);
-    
+
     /**
         Typed value binding rather than html binding allow to avoid
         problems because the data in html are string values while
