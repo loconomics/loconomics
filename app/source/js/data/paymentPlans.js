@@ -1,12 +1,19 @@
-/** Payment Plans available for membership subscriptions
-
-    TODO: Implement REST SERVICE, right now it uses preset data
-**/
+/**
+ * Access to the list of payment plans available
+ * for membership subscriptions.
+ *
+ * It's a hardcoded list with a built-in html template
+ * for each plan description.
+ *
+ * TODO: Implement REST SERVICE; how html-descriptions will be
+ * managed?
+ */
+// TODO store-jsdocs
 'use strict';
 
 var PaymentPlan = require('../models/PaymentPlan');
 var ListRemoteModel = require('../utils/ListRemoteModel');
-var session = require('../data/session');
+var session = require('./session');
 
 // PRESET
 var data = [
@@ -36,29 +43,24 @@ var data = [
     }
 ];
 
-exports.create = function create() {
+module.exports = new ListRemoteModel({
+    // Types does not changes usually, so big ttl
+    listTtl: { days: 1 },
+    itemIdField: 'paymentPlanID',
+    Model: PaymentPlan
+});
 
-    var api = new ListRemoteModel({
-        // Types does not changes usually, so big ttl
-        listTtl: { days: 1 },
-        itemIdField: 'paymentPlanID',
-        Model: PaymentPlan
-    });
+//exports.addLocalforageSupport('cancellation-policies');
+//exports.addRestSupport(appModel.rest, 'cancellation-policies');
 
-    //api.addLocalforageSupport('cancellation-policies');
-    //api.addRestSupport(appModel.rest, 'cancellation-policies');
+session.on.cacheCleaningRequested.subscribe(function() {
+//    exports.clearCache();
+});
 
-    session.on.cacheCleaningRequested.subscribe(function() {
-    //    api.clearCache();
-    });
+// Replace cached list with preset data
+exports.list = data;
 
-    // Replace cached list with preset data
-    api.list = data;
-
-    // Replace getList to just return the preset (avoid internal remote fetch)
-    api.getList = function() {
-        return Promise.resolve(api.list());
-    };
-
-    return api;
+// Replace getList to just return the preset (avoid internal remote fetch)
+exports.getList = function() {
+    return Promise.resolve(exports.list());
 };

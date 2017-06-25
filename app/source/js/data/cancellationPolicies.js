@@ -1,12 +1,14 @@
-/** Cancellation Policies
-
-    TODO: Implement REST SERVICE, right now it uses preset data
-**/
+/**
+ * Access to the list of cancellation policies available,
+ * local and remote.
+ */
+// TODO: Implement REST SERVICE, right now it uses preset data
+// TODO store-jsdocs
 'use strict';
 
 var CancellationPolicy = require('../models/CancellationPolicy');
 var ListRemoteModel = require('../utils/ListRemoteModel');
-var session = require('../data/session');
+var session = require('./session');
 
 // PRESET
 var data = [
@@ -36,29 +38,24 @@ var data = [
     })
 ];
 
-exports.create = function create() {
+module.exports = new ListRemoteModel({
+    // Types does not changes usually, so big ttl
+    listTtl: { days: 1 },
+    itemIdField: 'cancellationPolicyID',
+    Model: CancellationPolicy
+});
 
-    var api = new ListRemoteModel({
-        // Types does not changes usually, so big ttl
-        listTtl: { days: 1 },
-        itemIdField: 'cancellationPolicyID',
-        Model: CancellationPolicy
-    });
+//exports.addLocalforageSupport('cancellation-policies');
+//exports.addRestSupport(remote, 'cancellation-policies');
 
-    //api.addLocalforageSupport('cancellation-policies');
-    //api.addRestSupport(remote, 'cancellation-policies');
+session.on.cacheCleaningRequested.subscribe(function() {
+//    api.clearCache();
+});
 
-    session.on.cacheCleaningRequested.subscribe(function() {
-    //    api.clearCache();
-    });
+// Replace cached list with preset data
+exports.list(data);
 
-    // Replace cached list with preset data
-    api.list(data);
-
-    // Replace getList to just return the preset
-    api.getList = function() {
-        return Promise.resolve(data);
-    };
-
-    return api;
+// Replace getList to just return the preset
+exports.getList = function() {
+    return Promise.resolve(data);
 };

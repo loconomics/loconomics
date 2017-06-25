@@ -1,72 +1,65 @@
-/** Postal Code.
-
-    Access the API to validate and retrieve information for a
-    given postal code.
-
-    It just offers a 'get postal code info' method returning
-    a plain object from the REST endpoint.
-
-    Creates an in-memory cache for frequently used postal codes
-**/
+/**
+ * Provides validation and context information
+ * for postal codes, using the remote API.
+ * Creates an in-memory cache for frequently used postal codes.
+ *
+ */
+// TODO jsdocs
 'use strict';
-var session = require('../data/session');
 
-exports.create = function create(appModel) {
+var session = require('./session');
+var remote = require('./drivers/restClient');
 
-    var api = {},
-        cache = {};
+var cache = {};
 
-    api.getItem = function getItem(postalCode) {
-        // Check cache
-        if (cache.hasOwnProperty(postalCode)) {
-            return Promise.resolve(cache[postalCode]);
+exports.getItem = function getItem(postalCode) {
+    // Check cache
+    if (cache.hasOwnProperty(postalCode)) {
+        return Promise.resolve(cache[postalCode]);
+    }
+
+    return remote.get('postal-codes/' + postalCode)
+    .then(function(info) {
+        // Save cache
+        if (info) {
+            cache[postalCode] = info;
         }
-
-        return appModel.rest.get('postal-codes/' + postalCode)
-        .then(function(info) {
-            // Save cache
-            if (info) {
-                cache[postalCode] = info;
-            }
-            // return
-            return info;
-        });
-    };
-
-    session.on.cacheCleaningRequested.subscribe(function() {
-        cache = {};
+        // return
+        return info;
     });
+};
 
-    /**
-     * @static
-     * @param {string} postal code to validate
-     * @returns {Boolean} true if postal code is valid
-     */
-    api.isValid = function(postalCode) {
-        return !(/^\s*$/).test(postalCode);
-    };
+session.on.cacheCleaningRequested.subscribe(function() {
+    cache = {};
+});
 
-    /**
-     * @static
-     * @param {Object} address with city, stateProvinceCode and stateProvinceName fields
-     * @param {Object} address-like model that will be updated with values from addressObject
-     */
-    api.updateAddressModel = function(addressObject, addressModel) {
-        if (addressModel.city) addressModel.city(addressObject.city);
-        if (addressModel.stateProvinceCode) addressModel.stateProvinceCode(addressObject.stateProvinceCode);
-        if (addressModel.stateProvinceName) addressModel.stateProvinceName(addressObject.stateProvinceName);
-    };
+/**
+ * @static
+ * @param {string} postalCode postal code to validate
+ * @returns {Boolean} true if postal code is valid
+ */
+exports.isValid = function(postalCode) {
+    return !(/^\s*$/).test(postalCode);
+};
 
-    /**
-     * An address object with empty fields.
-     *
-     * @constant
-     */
-    api.emptyAddress = {
-        city: '',
-        stateProvinceCode: '',
-        stateProvinceName: ''
-    };
+/**
+ * @static
+ * @param {Object} addressObject address with city, stateProvinceCode and stateProvinceName fields
+ * @param {Object} addressModel address-like model that will be updated with values from addressObject
+ */
+exports.updateAddressModel = function(addressObject, addressModel) {
+    if (addressModel.city) addressModel.city(addressObject.city);
+    if (addressModel.stateProvinceCode) addressModel.stateProvinceCode(addressObject.stateProvinceCode);
+    if (addressModel.stateProvinceName) addressModel.stateProvinceName(addressObject.stateProvinceName);
+};
 
-    return api;
+/**
+ * An address object with empty fields.
+ *
+ * @constant
+ */
+exports.emptyAddress = {
+    city: '',
+    stateProvinceCode: '',
+    stateProvinceName: ''
 };

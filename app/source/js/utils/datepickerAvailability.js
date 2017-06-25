@@ -1,7 +1,7 @@
 /**
     Allow attach availability loading and displaying capabilities
     to a datepicker component as part of an activity.
-    
+
     It attaches handlers so it loads and update availability whenever
     the displayed month change, but it returns a method to do it
     on demand, like in the first load after choose a 'current date'
@@ -19,13 +19,13 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
     // displayed month
     var prevMonth = null;
     var prevUserID = null;
-    
+
     // Listen to cache changes in order to force a data load (to avoid invalid
     // availability being displayed after an apt was modified)
-    app.model.availability.on('clearCache', function() {
+    app.model.availability.cacheCleaningRequested.subscribe(function() {
         prevMonth = null;
     });
-    
+
     /**
         It tags, if the month changed, the calendar with the Date Availability.
         The refresh param forces the process even if the same month than previously tagged/rendered
@@ -36,7 +36,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
         if (!userID || month === prevMonth && prevUserID === userID && !refresh) return;
         prevMonth = month;
         prevUserID = userID;
-        
+
         // We need to know the range of dates being displayed on the
         // monthly calendar, from the first week day of first month week
         // to 6 full weeks.
@@ -46,7 +46,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
         // Switch loading flag
         if (isLoading)
             isLoading(true);
-        
+
         // Request the data
         app.model.availability.times(userID, start, end)
         .then(function(result) {
@@ -54,7 +54,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             if (month !== $datepicker.datepicker('getViewDate').getMonth()) return;
 
             var byDate = createTimeSlots.splitListInLocalDates(result.times);
-            
+
             // We have a list or ranges per date (iso string key)
             // Iterate every day element, and use its date avail from the result
             daysElements.each(function() {
@@ -104,13 +104,13 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
                 isLoading(false);
         }.bind(this));
     };
-    
+
     // Handler to auto load/update availability for displayed day
     $datepicker.on('viewDateChanged', function(e, d) {
         if (d.viewMode === 'days') {
             tagAvailability(d.viewDate, prevUserID);
         }
     });
-    
+
     return tagAvailability;
 };

@@ -1,24 +1,24 @@
-/** Logged user service attributes
-**/
+/**
+ * Access to the service attributes available by job title,
+ * local and remote.
+ */
+// TODO store-jsdocs
 'use strict';
 
 var JobTitleServiceAttributes = require('../models/JobTitleServiceAttributes');
-var session = require('../data/session');
+var session = require('./session');
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
+var remote = require('./drivers/restClient');
 
-exports.create = function create(appModel) {
-    var api = new GroupRemoteModel({
-        ttl: { hours: 1 },
-        itemIdField: 'jobTitleID',
-        Model: JobTitleServiceAttributes
-    });
+module.exports = new GroupRemoteModel({
+    ttl: { hours: 1 },
+    itemIdField: 'jobTitleID',
+    Model: JobTitleServiceAttributes
+});
 
-    api.addLocalforageSupport('job-title-service-attributes/');
-    api.addRestSupport(appModel.rest, 'job-title-service-attributes/');
+exports.addLocalforageSupport('job-title-service-attributes/');
+exports.addRestSupport(remote, 'job-title-service-attributes/');
 
-    session.on.cacheCleaningRequested.subscribe(function() {
-        api.clearCache();
-    });
-
-    return api;
-};
+session.on.cacheCleaningRequested.subscribe(function() {
+    exports.clearCache();
+});

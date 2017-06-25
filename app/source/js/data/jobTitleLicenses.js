@@ -1,24 +1,24 @@
-/** job title licenses applicable to a given user
-**/
+/**
+ * Management of the user licenses by job title,
+ * local and remote.
+ */
+// TODO store-jsdocs
 'use strict';
 
 var JobTitleLicense = require('../models/JobTitleLicense');
-var session = require('../data/session');
+var session = require('./session');
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
+var remote = require('./drivers/restClient');
 
-exports.create = function create(appModel) {
-    var api = new GroupRemoteModel({
-        ttl: { minutes: 1 },
-        itemIdField: 'jobTitleID',
-        Model: JobTitleLicense
-    });
+module.exports = new GroupRemoteModel({
+    ttl: { minutes: 1 },
+    itemIdField: 'jobTitleID',
+    Model: JobTitleLicense
+});
 
-    api.addLocalforageSupport('job-title-licenses/');
-    api.addRestSupport(appModel.rest, 'me/job-title-licenses/');
+exports.addLocalforageSupport('job-title-licenses/');
+exports.addRestSupport(remote, 'me/job-title-licenses/');
 
-    session.on.cacheCleaningRequested.subscribe(function() {
-        api.clearCache();
-    });
-
-    return api;
-};
+session.on.cacheCleaningRequested.subscribe(function() {
+    exports.clearCache();
+});

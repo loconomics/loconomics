@@ -1,8 +1,8 @@
 /**
  * Management of the basic user profile data,
  * local and remote.
- * @module data/userProfile
  */
+// TODO store-jsdocs
 'use strict';
 
 var User = require('../models/User');
@@ -10,7 +10,7 @@ var RemoteModel = require('../utils/RemoteModel');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 
-var rem = new RemoteModel({
+module.exports = new RemoteModel({
     data: User.newAnonymous(),
     ttl: { minutes: 1 },
     localStorageName: 'profile',
@@ -22,19 +22,17 @@ var rem = new RemoteModel({
     }
 });
 
-module.exports = rem;
-
 var session = require('./session');
 session.on.cacheCleaningRequested.subscribe(function() {
-    rem.clearCache();
+    exports.clearCache();
 });
 
-rem.saveOnboardingStep = function (stepReference) {
+exports.saveOnboardingStep = function (stepReference) {
     if (typeof(stepReference) === 'undefined') {
-        stepReference = rem.data.onboardingStep();
+        stepReference = exports.data.onboardingStep();
     }
     else {
-        rem.data.onboardingStep(stepReference);
+        exports.data.onboardingStep(stepReference);
     }
 
     return remote.put('me/profile/tracking', {
@@ -43,6 +41,6 @@ rem.saveOnboardingStep = function (stepReference) {
     .then(function() {
         // If success, save persistent local copy of the data to ensure the
         // new onboardingStep is saved
-        local.setItem(rem.localStorageName, rem.data.model.toPlainObject());
+        local.setItem(exports.localStorageName, exports.data.model.toPlainObject());
     });
 };
