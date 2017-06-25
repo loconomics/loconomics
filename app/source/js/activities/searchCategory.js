@@ -3,9 +3,10 @@
 **/
 'use strict';
 
-var 
+var
     ko = require('knockout'),
     Activity = require('../components/Activity');
+var search = require('../data/search');
 
 var A = Activity.extend(function SearchCategoryActivity() {
 
@@ -35,17 +36,17 @@ A.prototype.show = function show(options) {
 //    if (tab.length) tab.tab('show');
 };
 
-function ViewModel(appModel) {
+function ViewModel() {
     this.isLoading = ko.observable(false);
     this.isCategoryLoading = ko.observable(false);
     //create an observable variable to hold the search term
-    this.categoryID = ko.observable(); 
+    this.categoryID = ko.observable();
     //create an observable variable to hold the search term
-    this.origLat = ko.observable(); 
+    this.origLat = ko.observable();
     //create an observable variable to hold the search term
-    this.origLong = ko.observable(); 
+    this.origLong = ko.observable();
     //create an observable variable to hold the search term
-    this.searchDistance = ko.observable(); 
+    this.searchDistance = ko.observable();
     //create an object named ServiceProfessionalSearchResult to hold the search results returned from the API
     this.jobTitleSearchResult = ko.observableArray();
     this.categorySearchResult = ko.observable();
@@ -54,17 +55,13 @@ function ViewModel(appModel) {
         var id = this.categoryID();
         return id ? 'CategoryBackground-' + id : '';
     }, this); //add this so that the context is the current one (special ko syntax)
-    
+
     // PRIVATE load functions, that use parameters we will internally ensure are the same values
     // as the observables we have for them
     var loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
         this.isCategoryLoading(true);
-        //Call the get rest API method for api/v1/en-US/search/categories/by-categoryID
-        return appModel.rest.get('search/categories/' + categoryID, {
-            origLat: origLat, 
-            origLong: origLong,
-            searchDistance: searchDistance
-        })
+
+        return search.getCategory(categoryID, origLat, origLong, searchDistance)
         .then(function(data) {
             this.categorySearchResult(data);
             this.isCategoryLoading(false);
@@ -75,13 +72,8 @@ function ViewModel(appModel) {
     }.bind(this);
     var loadData = function(categoryID, origLat, origLong, searchDistance) {
         this.isLoading(true);
-        //Call the get rest API method for api/v1/en-US/search/job-titles/by-category
-        return appModel.rest.get('search/job-titles/by-category', {
-            categoryID: categoryID, 
-            origLat: origLat, 
-            origLong: origLong,
-            searchDistance: searchDistance
-        })
+
+        return search.jobTitlesByCategory(categoryID, origLat, origLong, searchDistance)
         .then(function(list) {
             this.jobTitleSearchResult(list);
             this.isLoading(false);

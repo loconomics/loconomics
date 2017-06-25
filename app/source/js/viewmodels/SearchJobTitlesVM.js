@@ -6,38 +6,30 @@
 var SearchResults = require('../models/SearchResults');
 var ko = require('knockout');
 var user = require('../data/userProfile').data;
-
-var DEFAULT_LOCATION = {
-    lat: '37.788479',
-    lng: '-122.40297199999998',
-    searchDistance: 30,
-    city: 'San Francisco, CA USA'
-};
+var search = require('../data/search');
 
 module.exports = function SearchJobTitlesVM(app) {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();
     // Coordinates
-    this.lat = ko.observable(DEFAULT_LOCATION.lat);
-    this.lng = ko.observable(DEFAULT_LOCATION.lng);
+    this.lat = ko.observable(search.DEFAULT_LOCATION.lat);
+    this.lng = ko.observable(search.DEFAULT_LOCATION.lng);
     this.city = ko.observable();
-    this.searchDistance = ko.observable(DEFAULT_LOCATION.searchDistance);
+    this.searchDistance = ko.observable(search.DEFAULT_LOCATION.searchDistance);
     //create an object named SearchResults to hold the search results returned from the API
     this.searchResults = new SearchResults();
 
-    var latestRequest = null;
     this.loadData = function(searchTerm, lat, lng) {
-        if (latestRequest) latestRequest.xhr.abort();
         this.isLoading(true);
-        //Call the get rest API method for api/v1/en-US/search
-        latestRequest = app.model.rest.get('search', {
+
+        return search.byTerm('search', {
             searchTerm: searchTerm,
-            origLat: lat || DEFAULT_LOCATION.lat,
-            origLong: lng || DEFAULT_LOCATION.lng,
-            searchDistance: DEFAULT_LOCATION.searchDistance
-        });
-        return latestRequest.then(function(searchResults) {
+            origLat: lat || search.DEFAULT_LOCATION.lat,
+            origLong: lng || search.DEFAULT_LOCATION.lng,
+            searchDistance: search.DEFAULT_LOCATION.searchDistance
+        })
+        .then(function(searchResults) {
             if(searchResults){
                 //update searchResults object with all the data from the API
                 this.searchResults.model.updateWith(searchResults, true);

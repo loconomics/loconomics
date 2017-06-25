@@ -173,7 +173,7 @@ function ViewModel(appModel) {
     this.loadData = function(searchTerm, lat, lng) {
         this.isLoading(true);
 
-        return search.search(searchTerm, lat, lng)
+        return search.byTerm(searchTerm, lat, lng)
         .then(function(searchResults) {
             if(searchResults){
                 //update searchResults object with all the data from the API
