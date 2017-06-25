@@ -5,12 +5,14 @@
     REMEMBER: Even if the profile photo URL comes at a GET request to the marketplace profile REST API,
     the ability to upload a new photo exist at a different end-point in the API.
 **/
+// TODO Move file-upload request code into a driver / data module
 'use strict';
 var $ = require('jquery');
 var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
 var MarketplaceProfileVM = require('./MarketplaceProfileVM');
 var user = require('../data/userProfile').data;
+var remote = require('./drivers/restClient');
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30
@@ -18,7 +20,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
     MarketplaceProfileVM.call(this, app);
 
     this.user = user;
-    this.photoUploadUrl = app.model.rest.baseUrl + 'me/profile-picture';
+    this.photoUploadUrl = remote.baseUrl + 'me/profile-picture';
     this.photoEditRestUrl = 'me/profile-picture/edit';
     this.photoUploadFieldName = 'profilePicture';
     this.localPhotoData = ko.observable();
@@ -170,7 +172,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
         var r = this.rotationAngle();
         if (r === 0) return Promise.resolve(null);
 
-        return app.model.rest.post(this.photoEditRestUrl, {
+        return remote.post(this.photoEditRestUrl, {
             rotationAngle: r
         });
     }.bind(this);
@@ -181,7 +183,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
             fileKey: this.photoUploadFieldName,
             mimeType: 'image/jpeg',
             httpMethod: 'PUT',
-            headers: $.extend(true, {}, app.model.rest.extraHeaders),
+            headers: $.extend(true, {}, remote.extraHeaders),
             params: {
                 rotationAngle: this.rotationAngle()
             }
@@ -193,7 +195,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
         var fd = this.localPhotoData();
         if (!fd) return editRemotePhoto();
         // NOTE: If URL needs update before upload: fd.url = ..;
-        fd.headers = $.extend(true, {}, app.model.rest.extraHeaders);
+        fd.headers = $.extend(true, {}, remote.extraHeaders);
         fd.formData = [{
             name: 'rotationAngle',
             value: this.rotationAngle()

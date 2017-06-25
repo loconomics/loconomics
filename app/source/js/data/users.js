@@ -36,7 +36,7 @@ profile.addRestSupport(remote, 'users/', '/profile');
 profile.addLocalforageSupport('userProfiles/');
 exports.getProfile = function(userID) {
     return profile.getItem(userID);
-    //return appModel.rest.get('users/' + (userID |0) + '/profile');
+    //return remote.get('users/' + (userID |0) + '/profile');
 };
 
 exports.getJobProfile = function(userID) {

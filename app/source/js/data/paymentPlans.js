@@ -51,7 +51,7 @@ module.exports = new ListRemoteModel({
 });
 
 //exports.addLocalforageSupport('cancellation-policies');
-//exports.addRestSupport(appModel.rest, 'cancellation-policies');
+//exports.addRestSupport(remote, 'cancellation-policies');
 
 session.on.cacheCleaningRequested.subscribe(function() {
 //    exports.clearCache();
