@@ -17,7 +17,6 @@ require('./utils/Function.prototype.name-polyfill');
 require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var AppModel = require('./appmodel/AppModel');
 var onboarding = require('./data/onboarding');
 
 // Register the special locale
@@ -69,9 +68,6 @@ function preBootstrapWorkarounds() {
 **/
 var app = {
     shell: require('./app.shell'),
-
-    // New app model, that starts with anonymous user
-    model: new AppModel(),
 
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
@@ -407,13 +403,6 @@ var appInit = function appInit() {
         }
     });
 
-    // Catch uncatch model errors
-    app.model.on('error', function(err) {
-        app.modals.showError({
-            error: err
-        });
-    });
-
     // Additional form elements attribute and behavior: data-autoselect=true
     // sets to automatically select the text content of an input text control
     // when gets the focus
@@ -432,7 +421,7 @@ var appInit = function appInit() {
     require('./utils/toggleActionSheet').on();
 
     // Supporting sub-domain/channels, set the site-url same like baseUrl
-    // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
+    // that was computed at the shell already, so the data drivers can read it for correct endpoint calls.
     if (app.shell.baseUrl) {
         $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
     }
@@ -474,6 +463,7 @@ var appInit = function appInit() {
         });
     }
 
+    var marketplaceProfile = require('./data/marketplaceProfile');
     /**
      * Set-up, after app.model initialization,
      * some observables with user data with the global navbar
@@ -494,7 +484,7 @@ var appInit = function appInit() {
             }
         });
         ko.computed(function() {
-            var p = app.model.marketplaceProfile.data.photoUrl();
+            var p = marketplaceProfile.data.photoUrl();
             if (p) {
                 app.navBarBinding.photoUrl(p);
             }
@@ -502,7 +492,7 @@ var appInit = function appInit() {
     };
 
     /**
-     * Initializes the onboarding appModel, getting locally stored user
+     * Initializes the onboarding data module, getting locally stored user
      * data if is a logged user, and resume the onboarding process
      * when required
      */
@@ -579,10 +569,7 @@ var appInit = function appInit() {
 
     // Try to restore a user session ('remember login')
     var session = require('./data/session');
-    // DEPRECATED: this app.model.init will soon being replaced
-    app.model.init().
-    then(session.restore)
-    //session.restore()
+    session.restore()
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
     .then(setupOnboarding)
