@@ -10,7 +10,7 @@ var RemoteModel = require('../utils/RemoteModel');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 
-module.exports = new RemoteModel({
+var api = new RemoteModel({
     data: User.newAnonymous(),
     ttl: { minutes: 1 },
     localStorageName: 'profile',
@@ -21,18 +21,19 @@ module.exports = new RemoteModel({
         return remote.put('me/profile', this.data.model.toPlainObject());
     }
 });
+module.exports = api;
 
 var session = require('./session');
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
-exports.saveOnboardingStep = function (stepReference) {
+api.saveOnboardingStep = function (stepReference) {
     if (typeof(stepReference) === 'undefined') {
-        stepReference = exports.data.onboardingStep();
+        stepReference = api.data.onboardingStep();
     }
     else {
-        exports.data.onboardingStep(stepReference);
+        api.data.onboardingStep(stepReference);
     }
 
     return remote.put('me/profile/tracking', {
@@ -41,6 +42,6 @@ exports.saveOnboardingStep = function (stepReference) {
     .then(function() {
         // If success, save persistent local copy of the data to ensure the
         // new onboardingStep is saved
-        local.setItem(exports.localStorageName, exports.data.model.toPlainObject());
+        local.setItem(api.localStorageName, api.data.model.toPlainObject());
     });
 };

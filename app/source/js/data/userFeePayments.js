@@ -13,15 +13,16 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     listTtl: { minutes: 10 },
     itemIdField: 'userFeePaymentID',
     Model: UserFeePayment
 });
+module.exports = api;
 
-exports.addLocalforageSupport('user-fee-payments');
-exports.addRestSupport(remote, 'me/fee-payments');
+api.addLocalforageSupport('user-fee-payments');
+api.addRestSupport(remote, 'me/fee-payments');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

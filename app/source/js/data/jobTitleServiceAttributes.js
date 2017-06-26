@@ -10,15 +10,16 @@ var session = require('./session');
 var GroupRemoteModel = require('../utils/GroupRemoteModel');
 var remote = require('./drivers/restClient');
 
-module.exports = new GroupRemoteModel({
+var api = new GroupRemoteModel({
     ttl: { hours: 1 },
     itemIdField: 'jobTitleID',
     Model: JobTitleServiceAttributes
 });
+module.exports = api;
 
-exports.addLocalforageSupport('job-title-service-attributes/');
-exports.addRestSupport(remote, 'job-title-service-attributes/');
+api.addLocalforageSupport('job-title-service-attributes/');
+api.addRestSupport(remote, 'job-title-service-attributes/');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

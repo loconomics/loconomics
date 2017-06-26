@@ -13,21 +13,22 @@ var local = require('./drivers/localforage');
 var NAVBAR_TITLE = 'Create your first listing';
 
 // Onboarding management and state, initially empty so no progress
-module.exports = new OnboardingProgress();
+var api = new OnboardingProgress();
+module.exports = api;
 
-exports.navbarTitle = function() {
+api.navbarTitle = function() {
     return NAVBAR_TITLE;
 };
 
-exports.currentActivity = ko.observable('');
+api.currentActivity = ko.observable('');
 
 // Requires initialization to receive and app instance
 // TODO: Rething to refactor this; will require decoupling app.shell
-exports.init = function init(app) {
-    exports.app = app;
-    exports.currentActivity(app.shell.currentRoute.name);
+api.init = function init(app) {
+    api.app = app;
+    api.currentActivity(app.shell.currentRoute.name);
     app.shell.on(app.shell.events.itemReady, function() {
-        exports.currentActivity(app.shell.currentRoute.name);
+        api.currentActivity(app.shell.currentRoute.name);
     });
 };
 
@@ -35,7 +36,7 @@ exports.init = function init(app) {
 
 // Set the correct onboarding progress and step given a step name
 // (usually from database)
-exports.setStep = function(stepName) {
+api.setStep = function(stepName) {
     if (this.setStepByName(stepName)) {
         return true;
     }
@@ -45,27 +46,27 @@ exports.setStep = function(stepName) {
     return false;
 };
 
-exports.skipToAddJobTitles = function() {
+api.skipToAddJobTitles = function() {
     this.setStep(OnboardingProgress.steps.names[1]);
 };
 
 // Update the given navbar with the current onboarding information (only if in progress)
-exports.updateNavBar = function(navBar) {
+api.updateNavBar = function(navBar) {
     var yep = this.inProgress();
     if (yep) {
         navBar.leftAction(NavAction.menuIn);
-        navBar.title(exports.navbarTitle());
+        navBar.title(api.navbarTitle());
     }
     return yep;
 };
 
-exports.goCurrentStep = function() {
+api.goCurrentStep = function() {
     // Go current step of onboarding, and if no one, go to dashboard
     var url = this.inProgress() ? this.stepUrl() : 'dashboard';
     this.app.shell.go(url);
 };
 
-exports.goNext = function goNext() {
+api.goNext = function goNext() {
     var url;
 
     if(this.isAtCurrentStep()) {
@@ -75,26 +76,26 @@ exports.goNext = function goNext() {
         url = this.isFinished() ? '/onboardingSuccess' : this.stepUrl();
     }
     else {
-        url = this.stepAfter(exports.currentActivity()).stepUrl();
+        url = this.stepAfter(api.currentActivity()).stepUrl();
     }
 
     // replaceState flag is true, preventing browser back button to move between onboarding steps
     this.app.shell.go(url, null, true);
 };
 
-exports.isAtCurrentStep = ko.pureComputed(function() {
+api.isAtCurrentStep = ko.pureComputed(function() {
     return this.currentActivity() === this.stepName();
-}, exports);
+}, api);
 
 /**
     Check if onboarding is enabled on the user profile
     and redirects to the current step, or do nothing.
 **/
-exports.goIfEnabled = function() {
-    if (this.inProgress() && !exports.isAtCurrentStep()) {
+api.goIfEnabled = function() {
+    if (this.inProgress() && !api.isAtCurrentStep()) {
         // Go to the step URL if we are NOT already there, by checking name to
         // not overwrite additional details, like a jobTitleID at the URL
-        exports.app.shell.go(exports.stepUrl());
+        api.app.shell.go(api.stepUrl());
     }
 
     return this.inProgress();
@@ -126,15 +127,15 @@ var getLocalJobTitleID = function() {
     return local.getItem(LOCAL_JOBTITLEID_KEY);
 };
 // At any point that selected job title ID is changed, we persist it
-exports.selectedJobTitleID.subscribe(persistLocalJobTitleID);
+api.selectedJobTitleID.subscribe(persistLocalJobTitleID);
 /**
  * Request to recover the selectedJobTitleID value from local store.
  * When this ends, the value is in place, ready to resume onboarding.
  * @returns {Promise<int>} A copy of the jobTitleID
  */
-exports.recoverLocalJobTitleID = function() {
+api.recoverLocalJobTitleID = function() {
     return getLocalJobTitleID().then(function(id) {
-        exports.selectedJobTitleID(id);
+        api.selectedJobTitleID(id);
         return id;
     });
 };

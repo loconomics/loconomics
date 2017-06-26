@@ -38,24 +38,25 @@ var data = [
     })
 ];
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     // Types does not changes usually, so big ttl
     listTtl: { days: 1 },
     itemIdField: 'cancellationPolicyID',
     Model: CancellationPolicy
 });
+module.exports = api;
 
-//exports.addLocalforageSupport('cancellation-policies');
-//exports.addRestSupport(remote, 'cancellation-policies');
+//api.addLocalforageSupport('cancellation-policies');
+//api.addRestSupport(remote, 'cancellation-policies');
 
 session.on.cacheCleaningRequested.subscribe(function() {
 //    api.clearCache();
 });
 
 // Replace cached list with preset data
-exports.list(data);
+api.list(data);
 
 // Replace getList to just return the preset
-exports.getList = function() {
+api.getList = function() {
     return Promise.resolve(data);
 };

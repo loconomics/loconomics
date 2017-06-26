@@ -92,8 +92,7 @@ A.prototype.syncMessages = function syncMessages() {
 };
 
 A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
-    var v = this.viewModel,
-        app = this.app;
+    var v = this.viewModel;
 
     if (v.upcomingBookings.items().length) {
         v.upcomingBookings.isSyncing(true);

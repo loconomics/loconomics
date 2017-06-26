@@ -16,15 +16,16 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     listTtl: { minutes: 10 },
     itemIdField: 'verificationID',
     Model: UserVerification
 });
+module.exports = api;
 
-exports.addLocalforageSupport('user-verifications');
-exports.addRestSupport(remote, 'me/verifications');
+api.addLocalforageSupport('user-verifications');
+api.addRestSupport(remote, 'me/verifications');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

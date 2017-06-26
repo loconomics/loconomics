@@ -11,7 +11,7 @@ var RemoteModel = require('../utils/RemoteModel');
 var remote = require('./drivers/restClient');
 var calendar = require('./calendar');
 
-module.exports = new RemoteModel({
+var api = new RemoteModel({
     data: new SchedulingPreferences(),
     ttl: { minutes: 1 },
     localStorageName: 'schedulingPreferences',
@@ -28,7 +28,8 @@ module.exports = new RemoteModel({
         });
     }
 });
+module.exports = api;
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

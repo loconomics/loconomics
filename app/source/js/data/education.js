@@ -10,19 +10,20 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     listTtl: { minutes: 1 },
     itemIdField: 'educationID',
     Model: UserEducation
 });
+module.exports = api;
 
-exports.addLocalforageSupport('education');
+api.addLocalforageSupport('education');
 
-exports.addRestSupport(remote, 'me/education');
+api.addRestSupport(remote, 'me/education');
 //api.addMockedRemote(testdata());
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
 /*

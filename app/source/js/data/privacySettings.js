@@ -10,7 +10,7 @@ var session = require('./session');
 var RemoteModel = require('../utils/RemoteModel');
 var remote = require('./drivers/restClient');
 
-module.exports = new RemoteModel({
+var api = new RemoteModel({
     data: new PrivacySettings(),
     ttl: { minutes: 1 },
     localStorageName: 'privacySettings',
@@ -21,7 +21,8 @@ module.exports = new RemoteModel({
         return remote.put('me/privacy-settings', this.data.model.toPlainObject());
     }
 });
+module.exports = api;
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

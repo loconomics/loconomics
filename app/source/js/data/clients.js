@@ -11,17 +11,18 @@ var session = require('./session');
 var ListRemoteModel = require('../utils/ListRemoteModel');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     listTtl: { minutes: 1 },
     itemIdField: 'clientUserID',
     Model: Client
 });
+module.exports = api;
 
-exports.addLocalforageSupport('clients');
-exports.addRestSupport(remote, 'me/clients');
+api.addLocalforageSupport('clients');
+api.addRestSupport(remote, 'me/clients');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
 /**
@@ -29,7 +30,7 @@ session.on.cacheCleaningRequested.subscribe(function() {
     know fields, with full value match.
 **/
 var publicSearchRequest = null;
-exports.publicSearch = function publicSearch(search) {
+api.publicSearch = function publicSearch(search) {
 
     // Only one request at a time
     if (publicSearchRequest &&

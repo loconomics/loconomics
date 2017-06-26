@@ -10,22 +10,23 @@ var session = require('./session');
 var ListRemoteModel = require('../utils/ListRemoteModel');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     // Types does not changes usually, so big ttl
     listTtl: { days: 1 },
     itemIdField: 'pricingTypeID',
     Model: PricingType
 });
+module.exports = api;
 
-exports.addLocalforageSupport('pricing-types');
-exports.addRestSupport(remote, 'pricing-types');
+api.addLocalforageSupport('pricing-types');
+api.addRestSupport(remote, 'pricing-types');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
-exports.getListByIDs = function(pricingTypeIDs) {
-    return exports.getList()
+api.getListByIDs = function(pricingTypeIDs) {
+    return api.getList()
     .then(function(pricingTypes) {
         return pricingTypes().filter(function(pricingType) {
             return pricingTypeIDs.indexOf(pricingType.pricingTypeID()) > -1;

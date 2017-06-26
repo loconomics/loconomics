@@ -43,24 +43,25 @@ var data = [
     }
 ];
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     // Types does not changes usually, so big ttl
     listTtl: { days: 1 },
     itemIdField: 'paymentPlanID',
     Model: PaymentPlan
 });
+module.exports = api;
 
-//exports.addLocalforageSupport('cancellation-policies');
-//exports.addRestSupport(remote, 'cancellation-policies');
+//api.addLocalforageSupport('cancellation-policies');
+//api.addRestSupport(remote, 'cancellation-policies');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-//    exports.clearCache();
+//    api.clearCache();
 });
 
 // Replace cached list with preset data
-exports.list = data;
+api.list = data;
 
 // Replace getList to just return the preset (avoid internal remote fetch)
-exports.getList = function() {
-    return Promise.resolve(exports.list());
+api.getList = function() {
+    return Promise.resolve(api.list());
 };

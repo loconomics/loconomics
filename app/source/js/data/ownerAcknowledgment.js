@@ -11,7 +11,7 @@ var session = require('./session');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 
-module.exports = new RemoteModel({
+var api = new RemoteModel({
     data: new OwnerAcknowledgment(),
     ttl: { minutes: 1 },
     localStorageName: 'ownerAcknowledgment',
@@ -22,7 +22,7 @@ module.exports = new RemoteModel({
             // a record and is fine.
             if (err && err.status === 404) {
                 // Empty data
-                exports.data.model.reset();
+                api.data.model.reset();
             }
             else {
                 // Re-throw any other error
@@ -34,25 +34,26 @@ module.exports = new RemoteModel({
         throw { name: 'Raw update of payment plan is not supported; use specialized methods' };
     }
 });
+module.exports = api;
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
 /**
  * @param {Object} data
  */
-exports.acknowledge = function acknowledge(data) {
-    exports.isSaving(true);
+api.acknowledge = function acknowledge(data) {
+    api.isSaving(true);
     return remote.post('me/owner-acknowledgment', data)
     .then(function(serverData) {
-        exports.data.model.updateWith(serverData, true);
+        api.data.model.updateWith(serverData, true);
         // If success, save persistent local copy of the data
-        local.setItem(exports.localStorageName, serverData);
-        exports.isSaving(false);
+        local.setItem(api.localStorageName, serverData);
+        api.isSaving(false);
     })
     .catch(function(err) {
-        exports.isSaving(false);
+        api.isSaving(false);
         throw err;
     });
 };

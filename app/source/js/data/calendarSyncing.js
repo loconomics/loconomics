@@ -11,7 +11,7 @@ var RemoteModel = require('../utils/RemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
-module.exports = new RemoteModel({
+var api = new RemoteModel({
     data: new CalendarSyncing(),
     ttl: { minutes: 1 },
     localStorageName: 'calendarSyncing',
@@ -22,23 +22,24 @@ module.exports = new RemoteModel({
         return remote.put('me/calendar-syncing', this.data.model.toPlainObject());
     }
 });
+module.exports = api;
 
 // Extending with the special API method 'resetExportUrl'
-exports.isReseting = ko.observable(false);
-exports.resetExportUrl = function resetExportUrl() {
+api.isReseting = ko.observable(false);
+api.resetExportUrl = function resetExportUrl() {
 
-    exports.isReseting(true);
+    api.isReseting(true);
 
     return remote.post('me/calendar-syncing/reset-export-url')
     .then(function(updatedSyncSettings) {
         // Updating the cached data
-        exports.data.model.updateWith(updatedSyncSettings);
-        exports.isReseting(false);
+        api.data.model.updateWith(updatedSyncSettings);
+        api.isReseting(false);
 
         return updatedSyncSettings;
     });
 };
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

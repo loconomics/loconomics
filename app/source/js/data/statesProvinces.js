@@ -10,16 +10,17 @@ var session = require('./session');
 var ListRemoteModel = require('../utils/ListRemoteModel');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     // The data does not changes usually, so very big ttl
     listTtl: { years: 1 },
     itemIdField: 'code',
     Model: StateProvince
 });
+module.exports= api;
 
-exports.addLocalforageSupport('states-provinces');
-exports.addRestSupport(remote, 'states-provinces');
+api.addLocalforageSupport('states-provinces');
+api.addRestSupport(remote, 'states-provinces');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });

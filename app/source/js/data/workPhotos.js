@@ -15,25 +15,26 @@ var session = require('./session');
 var remote = require('./drivers/restClient');
 
 var baseUrl = 'me/work-photos/';
-module.exports = new GroupListRemoteModel({
+var api = new GroupListRemoteModel({
     // Conservative cache, just 1 minute
     listTtl: { minutes: 1 },
     groupIdField: 'jobTitleID',
     itemIdField: 'workPhotoID',
     Model: WorkPhoto
 });
+module.exports = api;
 
-exports.addLocalforageSupport('workPhotos');
-exports.addRestSupport(remote, baseUrl);
+api.addLocalforageSupport('workPhotos');
+api.addRestSupport(remote, baseUrl);
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
 // Here we have the special case of upload files, that needs use different component than just
 // ajax/rest client.
 // We replace default:
-var pushJustBasicDataToRemote = exports.pushItemToRemote.bind(exports);
+var pushJustBasicDataToRemote = api.pushItemToRemote.bind(api);
 // With a file-uploader logic
 var photoUploadFieldName = 'photo';
 var pushWithoutFile = function(data) {
@@ -66,7 +67,7 @@ var nativeUploadFile = function pushToRemote(data, options) {
         };
         return photoTools.uploadLocalFileJson(data.localTempFilePath, options.url, uploadSettings);
     }
-}.bind(exports);
+}.bind(api);
 // Support for Web upload (via input[type=file] and jquery.uploader)
 var webUploadFile = function(data, options) {
     if (!data.localTempFileData) {
@@ -92,7 +93,7 @@ var webUploadFile = function(data, options) {
         return Promise.resolve(fd.submit());
     }
 };
-exports.pushItemToRemote = function(data) {
+api.pushItemToRemote = function(data) {
     // Standard ID and URL code
     var groupID = data[this.settings.groupIdField];
     var itemID = data[this.settings.itemIdField];
@@ -107,4 +108,4 @@ exports.pushItemToRemote = function(data) {
     else {
         return webUploadFile(data, options);
     }
-}.bind(exports);
+}.bind(api);

@@ -13,10 +13,8 @@ var session = require('./session');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 
-module.exports = {
-    state:  {
-        isLoading: ko.observable(false)
-    }
+exports.state = {
+    isLoading: ko.observable(false)
 };
 
 var cache = {

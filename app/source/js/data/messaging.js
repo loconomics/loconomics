@@ -18,17 +18,18 @@ var ListRemoteModel = require('../utils/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
-module.exports = new ListRemoteModel({
+var api = new ListRemoteModel({
     listTtl: { minutes: 1 },
     itemIdField: 'threadID',
     Model: Thread
 });
+module.exports = api;
 
-exports.addLocalforageSupport('messaging');
-exports.addRestSupport(remote, 'me/messaging');
+api.addLocalforageSupport('messaging');
+api.addRestSupport(remote, 'me/messaging');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
 
 // Basic support is fetching all threads with the latest message of each one.
@@ -63,22 +64,22 @@ var fetchThreadRemote = function(threadID) {
     });
 };
 var markAsEndedAndFollowUp = function(any) {
-    exports.state.isSyncing(false);
-    exports.state.isLoading(false);
+    api.state.isSyncing(false);
+    api.state.isLoading(false);
     return any;
 };
-exports.getItem = function getItem(threadID) {
+api.getItem = function getItem(threadID) {
     var cached = fullThreadsCache[threadID];
     if (cached && cached.thread) {
         if (cached.control.mustRevalidate()) {
-            exports.state.isSyncing(true);
+            api.state.isSyncing(true);
             return fetchThreadRemote(threadID)
             .then(markAsEndedAndFollowUp, markAsEndedAndFollowUp);
         }
         else
             return Promise.resolve(cached.thread);
     } else {
-        exports.state.isLoading(true);
+        api.state.isLoading(true);
         return fetchThreadRemote(threadID)
         .then(markAsEndedAndFollowUp, markAsEndedAndFollowUp);
     }

@@ -12,17 +12,18 @@ var GroupListRemoteModel = require('../utils/GroupListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
-module.exports = new GroupListRemoteModel({
+var api = new GroupListRemoteModel({
     // Conservative cache, just 1 minute
     listTtl: { minutes: 1 },
     groupIdField: 'userID',
     itemIdField: 'addressID',
     Model: Address
 });
+module.exports = api;
 
-exports.addLocalforageSupport('addresses/clients/');
-exports.addRestSupport(remote, 'me/addresses/clients/');
+api.addLocalforageSupport('addresses/clients/');
+api.addRestSupport(remote, 'me/addresses/clients/');
 
 session.on.cacheCleaningRequested.subscribe(function() {
-    exports.clearCache();
+    api.clearCache();
 });
