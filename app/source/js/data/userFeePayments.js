@@ -9,7 +9,7 @@
 'use strict';
 
 var UserFeePayment = require('../models/UserFeePayment');
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var ListRemoteModel = require('./helpers/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 

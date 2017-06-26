@@ -8,7 +8,7 @@
 'use strict';
 
 var PaymentAccount = require('../models/PaymentAccount');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 

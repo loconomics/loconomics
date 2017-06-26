@@ -16,7 +16,7 @@ function required(val, msg) {
 
 function GroupListRemoteModel(settings) {
     /*jshint maxstatements:28*/
-    
+
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
     settings.groupIdField = required(settings.groupIdField, 'groupIdField is required');
@@ -38,7 +38,7 @@ function GroupListRemoteModel(settings) {
         groupIdField: settings.groupIdField,
         itemIdField: settings.itemIdField
     });
-    
+
     this.clearCache = cache.clearCache;
 
     this.state.isLocked = ko.pureComputed(function() {
@@ -130,7 +130,7 @@ function GroupListRemoteModel(settings) {
             return Promise.resolve(cacheEntry.list);
         }
     };
-    
+
     api.getItem = function getItem(groupID, itemID) {
         // IMPORTANT: To simplify, load all the list (is a short list)
         // and look from its cached index
@@ -153,7 +153,7 @@ function GroupListRemoteModel(settings) {
             return cacheItem.item;
         });
     };
-    
+
     /**
         Internal API exposed only for use at subclasses.
         It adds an item to the memory cache and local storage given plain server data;
@@ -202,11 +202,11 @@ function GroupListRemoteModel(settings) {
             throw err;
         });
     };
-    
+
     api.delItem = function delItem(groupID, itemID) {
-        
+
         api.state.isDeleting(true);
-        
+
         // Remove in remote first
         return this.removeItemFromRemote(groupID, itemID)
         .then(function(removedData) {
@@ -217,9 +217,9 @@ function GroupListRemoteModel(settings) {
             // since we have the cache list updated, use that
             // full list to save local
             this.pushGroupToLocal(groupID, cache.getGroupCache(groupID).list);
-            
+
             api.state.isDeleting(false);
-            
+
             return removedData;
         }.bind(this))
         .catch(function(err) {
@@ -228,9 +228,9 @@ function GroupListRemoteModel(settings) {
             throw err;
         });
     };
-    
+
     /** Some Utils **/
-    
+
     api.asModel = function asModel(object) {
         var Model = this.settings.Model;
         // if is an array, return a list of models
@@ -243,22 +243,22 @@ function GroupListRemoteModel(settings) {
             return new Model(object);
         }
     };
-    
+
     api.getItemModel = function getItemModel(groupID, itemID) {
         return api.getItem(groupID, itemID)
         .then(function(data) {
             return data ? api.asModel(data) : null;
         });
     };
-    
-    var ModelVersion = require('../utils/ModelVersion');
+
+    var ModelVersion = require('../../utils/ModelVersion');
     api.getItemVersion = function getItemVersion(groupID, itemID) {
         return api.getItemModel(groupID, itemID)
         .then(function(model) {
             return model ? new ModelVersion(model) : null;
         });
     };
-    
+
     api.newItemVersion = function newItemVersion(values) {
         // New original and version for the model
         var version = new ModelVersion(new this.settings.Model(values));
@@ -272,7 +272,7 @@ function GroupListRemoteModel(settings) {
 module.exports = GroupListRemoteModel;
 
 GroupListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSupport(baseName) {
-    var localforage = require('localforage');
+    var localforage = require('../drivers/localforage');
 
     this.fetchGroupFromLocal = function fetchFromLocal(groupID) {
         return localforage.getItem(baseName + groupID);
@@ -288,7 +288,7 @@ GroupListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSu
 };
 
 GroupListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, baseUrl) {
-    
+
     this.fetchGroupFromRemote = function fetchFromRemote(groupID) {
         return restClient.get(baseUrl + groupID);
     };

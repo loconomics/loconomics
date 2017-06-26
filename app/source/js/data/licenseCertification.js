@@ -7,7 +7,7 @@
 
 var LicenseCertification = require('../models/LicenseCertification');
 var session = require('./session');
-var GroupRemoteModel = require('../utils/GroupRemoteModel');
+var GroupRemoteModel = require('./helpers/GroupRemoteModel');
 var remote = require('./drivers/restClient');
 
 var api = new GroupRemoteModel({

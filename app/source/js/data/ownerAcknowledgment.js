@@ -6,7 +6,7 @@
 'use strict';
 
 var OwnerAcknowledgment = require('../models/OwnerAcknowledgment');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var session = require('./session');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');

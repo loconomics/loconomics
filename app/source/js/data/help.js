@@ -56,7 +56,7 @@ function getRemoteSections() {
     });
 }
 
-var CacheControl = require('../utils/CacheControl');
+var CacheControl = require('./helpers/CacheControl');
 
 /// The in-memory cache
 var ttl = { days: 1 };

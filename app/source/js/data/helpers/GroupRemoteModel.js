@@ -17,7 +17,7 @@ function required(val, msg) {
 }
 
 function GroupRemoteModel(settings) {
-    
+
     settings = settings || {};
     settings.ttl = required(settings.ttl, 'ttl is required');
     settings.itemIdField = required(settings.itemIdField, 'itemIdField is required');
@@ -50,7 +50,7 @@ function GroupRemoteModel(settings) {
             c.data.model.updateWith(rawData, true);
         else
             c.data = new settings.Model(rawData);
-        
+
         c.touch();
         return c;
     };
@@ -154,10 +154,10 @@ function GroupRemoteModel(settings) {
         @param data:object Plain object
     **/
     api.setItem = function setItem(data) {
-        
+
         // Get plain data if is model
         data = data && data.model && data.model.toPlainObject(true) || data;
-        
+
         api.state.isSaving(true);
         // Send to remote first
         return this.pushItemToRemote(data[settings.itemIdField], data)
@@ -187,11 +187,11 @@ function GroupRemoteModel(settings) {
             throw err;
         });
     };
-    
+
     api.delItem = function delItem(itemID) {
-        
+
         api.state.isDeleting(true);
-        
+
         // Remove in remote first
         return this.removeItemFromRemote(itemID)
         .then(function(removedData) {
@@ -201,7 +201,7 @@ function GroupRemoteModel(settings) {
             this.removeItemFromLocal(itemID);
 
             api.state.isDeleting(false);
-            
+
             return removedData;
         }.bind(this))
         .catch(function(err) {
@@ -210,16 +210,16 @@ function GroupRemoteModel(settings) {
             throw err;
         });
     };
-    
+
     /** Some Utils **/
-    var ModelVersion = require('../utils/ModelVersion');
+    var ModelVersion = require('../../utils/ModelVersion');
     /**
         Gets immediately an object based on ModelVersion
         with the original and version being the cached version
         if any or an empty Model (instance without data).
         If there is no data, it triggers a load automatically
         setting its state flag isLoading to true until ends.
-        If there are data but is obsolete, it triggers a 
+        If there are data but is obsolete, it triggers a
         load automatically settings its state  flag isSyncing
         to true until ends.
         It adds a load method to trigger loading of the original
@@ -230,11 +230,11 @@ function GroupRemoteModel(settings) {
         (isSaving is flagged); returns Promise.
     **/
     api.getItemVersion = function getItemVersion(itemID) {
-        
+
         var cached = cache[itemID],
             initialModel = cached && cached.data || new settings.Model(),
             version = new ModelVersion(initialModel);
-        
+
         // Extend with state flags
         version.state = {
             isLoading: ko.observable(false),
@@ -261,7 +261,7 @@ function GroupRemoteModel(settings) {
                 version.state.isLoading(false);
             });
         }
-        
+
         version.load = function load(newItemID, forceRemoteLoad) {
             version.state.isSyncing(true);
             // Use the new itemID, OR use the one at the original model.
@@ -287,12 +287,12 @@ function GroupRemoteModel(settings) {
                 throw err;
             });
         };
-        
+
         version.reset = function reset() {
             version.original.model.reset();
             version.version.model.reset();
         };
-        
+
         version.save = function save() {
             version.state.isSaving(true);
             return api.setItem(version.version)
@@ -314,7 +314,7 @@ function GroupRemoteModel(settings) {
 
         return version;
     };
-    
+
     api.newItemVersion = function newItemVersion(values) {
         var version = api.getItemVersion();
         // Initial data
@@ -330,7 +330,7 @@ function GroupRemoteModel(settings) {
 module.exports = GroupRemoteModel;
 
 GroupRemoteModel.prototype.addLocalforageSupport = function addLocalforageSupport(baseName) {
-    var localforage = require('localforage');
+    var localforage = require('../drivers/localforage');
 
     this.fetchItemFromLocal = function fetchFromLocal(itemID) {
         return localforage.getItem(baseName + itemID);

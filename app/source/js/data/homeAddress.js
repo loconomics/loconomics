@@ -7,7 +7,7 @@
 
 var Address = require('../models/Address');
 var session = require('./session');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var remote = require('./drivers/restClient');
 
 var api = new RemoteModel({

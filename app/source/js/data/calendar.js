@@ -38,7 +38,7 @@
 
 var Appointment = require('../models/Appointment');
 var DateAvailability = require('../models/DateAvailability');
-var DateCache = require('../utils/DateCache');
+var DateCache = require('./helpers/DateCache');
 var session = require('./session');
 var SingleEvent = require('../utils/SingleEvent');
 var calendarEvents = require('./calendarEvents');

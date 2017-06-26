@@ -7,7 +7,7 @@
 'use strict';
 
 var UserLicenseCertification = require('../models/UserLicenseCertification');
-var GroupListRemoteModel = require('../utils/GroupListRemoteModel');
+var GroupListRemoteModel = require('./helpers/GroupListRemoteModel');
 var photoTools = require('../utils/photoTools');
 var $ = require('jquery');
 var extend = $.extend;

@@ -13,8 +13,8 @@
 'use strict';
 
 var Thread = require('../models/Thread');
-var CacheControl = require('../utils/CacheControl');
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var CacheControl = require('./helpers/CacheControl');
+var ListRemoteModel = require('./helpers/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 

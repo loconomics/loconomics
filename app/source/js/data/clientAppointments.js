@@ -8,7 +8,7 @@
 
 var Booking = require('../models/Booking');
 var ko = require('knockout');
-var CacheControl = require('../utils/CacheControl');
+var CacheControl = require('./helpers/CacheControl');
 var moment = require('moment');
 var user = require('./userProfile').data;
 var session = require('./session');

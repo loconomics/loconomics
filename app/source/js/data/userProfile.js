@@ -6,7 +6,7 @@
 'use strict';
 
 var User = require('../models/User');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 

@@ -7,7 +7,7 @@
 'use strict';
 
 var ServiceProfessionalService = require('../models/ServiceProfessionalService');
-var GroupListRemoteModel = require('../utils/GroupListRemoteModel');
+var GroupListRemoteModel = require('./helpers/GroupListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 

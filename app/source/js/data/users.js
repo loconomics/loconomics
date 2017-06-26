@@ -6,7 +6,7 @@
 // TODO jsdocs
 'use strict';
 
-var GroupRemoteModel = require('../utils/GroupRemoteModel');
+var GroupRemoteModel = require('./helpers/GroupRemoteModel');
 var PublicUserProfile = require('../models/PublicUserProfile');
 var remote = require('./drivers/restClient');
 

@@ -7,7 +7,7 @@
 'use strict';
 
 var UserJobTitle = require('../models/UserJobTitle');
-var CacheControl = require('../utils/CacheControl');
+var CacheControl = require('./helpers/CacheControl');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 var ko = require('knockout');

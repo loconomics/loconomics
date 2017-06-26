@@ -7,7 +7,7 @@
 
 var ko = require('knockout');
 var CalendarSyncing = require('../models/CalendarSyncing');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 

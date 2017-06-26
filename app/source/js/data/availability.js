@@ -13,7 +13,7 @@
 // TODO store-jsdocs
 'use strict';
 
-var CacheControl = require('../utils/CacheControl');
+var CacheControl = require('./helpers/CacheControl');
 var moment = require('moment');
 var session = require('./session');
 var remote = require('./drivers/restClient');

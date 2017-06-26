@@ -7,7 +7,7 @@
 'use strict';
 
 var WorkPhoto = require('../models/WorkPhoto');
-var GroupListRemoteModel = require('../utils/GroupListRemoteModel');
+var GroupListRemoteModel = require('./helpers/GroupListRemoteModel');
 var photoTools = require('../utils/photoTools');
 var extend = require('jquery').extend;
 var $ = require('jquery');

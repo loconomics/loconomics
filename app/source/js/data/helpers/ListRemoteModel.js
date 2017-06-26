@@ -13,9 +13,9 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    IndexedListCache = require('./IndexedListCache');
-var jsPropertiesTools = require('./jsPropertiesTools');
+var ko = require('knockout');
+var IndexedListCache = require('./IndexedListCache');
+var jsPropertiesTools = require('../../utils/jsPropertiesTools');
 
 function required(val, msg) {
     if (val === null || typeof(val) === 'undefined') throw new Error(msg || 'Required parameter');
@@ -397,7 +397,7 @@ function ListRemoteModel(settings) {
 
     /** Some Utils **/
 
-    var ModelVersion = require('../utils/ModelVersion');
+    var ModelVersion = require('../../utils/ModelVersion');
     /**
         It creates a new ModelVersion for the requested item ID
         after load the item.
@@ -434,7 +434,7 @@ function ListRemoteModel(settings) {
 module.exports = ListRemoteModel;
 
 ListRemoteModel.prototype.addLocalforageSupport = function addLocalforageSupport(baseName) {
-    var localforage = require('localforage');
+    var localforage = require('../drivers/localforage');
 
     this.fetchListFromLocal = function fetchListFromLocal() {
         return localforage.getItem(baseName);

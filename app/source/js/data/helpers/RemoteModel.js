@@ -19,10 +19,10 @@
 **/
 'use strict';
 
-var ModelVersion = require('../utils/ModelVersion'),
-    CacheControl = require('../utils/CacheControl'),
+var ModelVersion = require('../../utils/ModelVersion'),
+    CacheControl = require('./CacheControl'),
     ko = require('knockout'),
-    localforage = require('localforage'),
+    localforage = require('../drivers/localforage'),
     EventEmitter = require('events').EventEmitter;
 
 function RemoteModel(options) {

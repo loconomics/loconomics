@@ -7,7 +7,7 @@
 
 var SchedulingPreferences = require('../models/SchedulingPreferences');
 var session = require('./session');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var remote = require('./drivers/restClient');
 var calendar = require('./calendar');
 

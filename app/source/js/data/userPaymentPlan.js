@@ -6,7 +6,7 @@
 'use strict';
 
 var UserPaymentPlan = require('../models/UserPaymentPlan');
-var RemoteModel = require('../utils/RemoteModel');
+var RemoteModel = require('./helpers/RemoteModel');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');
 var session = require('./session');

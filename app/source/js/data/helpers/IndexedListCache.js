@@ -2,20 +2,20 @@
     IndexedListCache manages a in-memory cache for a list
     of objects, with indexed access to items
     and cache control.
-    
+
     Settings object as unique parameter:
     listTtl: ttl type constructor. TimeToLife for each group list cache.
     FUTURE: itemTtl: ttl type constructor. TimeToLife for each item cache.
     ttl: ttl type constructor. TimeToLife to use for list and item cache if there is no a more explicit one
     itemIdField: string Name of the field used to uniquely identify each item
     Model: constructor of type Model.
-    
+
     Note: 'ttl type constructor' can be a number of milliseconds or a value to pass to moment.duration constructor (momentjs module).
 **/
 'use strict';
 
 var CacheControl = require('./CacheControl'),
-    jsPropertiesTools = require('./jsPropertiesTools'),
+    jsPropertiesTools = require('../../utils/jsPropertiesTools'),
     ko = require('knockout');
 
 function createItemIndexEntry(list, itemIndex) {
@@ -29,7 +29,7 @@ function createItemIndexEntry(list, itemIndex) {
 
 function createIndex(list, byField) {
     var index = {};
-    
+
     list.forEach(function(item, itemIndex) {
         index[ko.unwrap(item[byField])] = createItemIndexEntry(list, itemIndex);
     });
@@ -45,12 +45,12 @@ function required(val, msg) {
 /**
     An item adapter receives the old and the new item data and returns
     the item to hold in the list. The returning object can be a reference
-    to the same existent object (oldItem) that gets updated with the 
+    to the same existent object (oldItem) that gets updated with the
     new values (newItem), or just the newItem or any conversion over the
     raw newItem data.
     This allows to perform changes, add properties, or keep references,
     like creating observables, Models.
-    
+
     This default implementation just returns the newItem.
 **/
 function defaultItemAdapter(oldItem, newItem) {
@@ -58,7 +58,7 @@ function defaultItemAdapter(oldItem, newItem) {
 }
 
 function IndexedListCache(settings) {
-    
+
     settings = settings || {};
     settings.ttl = settings.ttl || 0;
     settings.listTtl = settings.listTtl || settings.ttl || 0;
@@ -82,7 +82,7 @@ function IndexedListCache(settings) {
             ..
         */}
     };
-    
+
     this.clearCache = function clearCache() {
         cache.control.latest = null;
         cache.list([]);
@@ -104,7 +104,7 @@ function IndexedListCache(settings) {
         var oldItem = getItemCache(ko.unwrap(newItem[settings.itemIdField]));
         return settings.itemAdapter(oldItem, newItem);
     }
-    
+
     // Adapt the each element in the list with the itemAdapter,
     // passing an old reference and the new item on each, and ensuring
     // to return ever an array, even if empty.
@@ -160,7 +160,7 @@ function IndexedListCache(settings) {
             });
         }
     }
-    
+
     this.delItemCache = delItemCache;
 }
 

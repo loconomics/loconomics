@@ -8,7 +8,7 @@
 
 var Client = require('../models/Client');
 var session = require('./session');
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var ListRemoteModel = require('./helpers/ListRemoteModel');
 var remote = require('./drivers/restClient');
 
 var api = new ListRemoteModel({

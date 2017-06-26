@@ -6,7 +6,7 @@
 'use strict';
 
 var Address = require('../models/Address');
-var GroupListRemoteModel = require('../utils/GroupListRemoteModel');
+var GroupListRemoteModel = require('./helpers/GroupListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 

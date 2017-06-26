@@ -8,7 +8,7 @@
 
 var JobTitle = require('../models/JobTitle');
 var ko = require('knockout');
-var CacheControl = require('../utils/CacheControl');
+var CacheControl = require('./helpers/CacheControl');
 var session = require('./session');
 var local = require('./drivers/localforage');
 var remote = require('./drivers/restClient');

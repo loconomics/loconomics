@@ -7,7 +7,7 @@
 'use strict';
 
 var CancellationPolicy = require('../models/CancellationPolicy');
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var ListRemoteModel = require('./helpers/ListRemoteModel');
 var session = require('./session');
 
 // PRESET

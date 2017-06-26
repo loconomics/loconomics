@@ -12,7 +12,7 @@
 'use strict';
 
 var PaymentPlan = require('../models/PaymentPlan');
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var ListRemoteModel = require('./helpers/ListRemoteModel');
 var session = require('./session');
 
 // PRESET

@@ -6,7 +6,7 @@
 'use strict';
 
 var UserEducation = require('../models/UserEducation');
-var ListRemoteModel = require('../utils/ListRemoteModel');
+var ListRemoteModel = require('./helpers/ListRemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 
