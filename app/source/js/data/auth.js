@@ -27,19 +27,26 @@ var userProfile = require('./userProfile');
  */
 var performLocalLogin = function (username) {
     return function (credentials) {
-        if (credentials.profile) {
-            // Set user data (credentials includes an optional profile copy for
-            // convenience, but is not saved in the credentials store
-            // but at userProfile)
-            userProfile.data.model.updateWith(credentials.profile);
-            // IMPORTANT: Local name kept in sync with set-up at userProfile module
-            userProfile.saveLocal();
-        }
         // Complete the credentials object adding the username (needed for
         // session and stored credentials)
         credentials.username = username;
         // Starts the user session
-        return session.open(credentials);
+        return session.open(credentials)
+        .then(function(credentials) {
+            // If it includes profile data, save it
+            if (credentials.profile) {
+                // Set user data (credentials includes an optional profile copy for
+                // convenience, but is not saved in the credentials store
+                // but at userProfile)
+                userProfile.data.model.updateWith(credentials.profile);
+                // IMPORTANT: Local name kept in sync with set-up at userProfile module
+                userProfile.saveLocal();
+            }
+            else {
+                // No profile included, request it (without wait for it)
+                userProfile.sync();
+            }
+        });
     };
 };
 

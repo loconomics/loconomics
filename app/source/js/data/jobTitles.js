@@ -1,6 +1,6 @@
 /**
  * Access to the list of job titles available,
- * including related information like alloted pricing types,
+ * including related information like allowed pricing types,
  * local and remote.
  */
 // TODO store-jsdocs
