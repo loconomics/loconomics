@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var userProfile = require('../data/userProfile');
-var user = userProfile.getData();
+var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function WelcomeActivity() {

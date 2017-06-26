@@ -6,7 +6,7 @@
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
 var userProfile = require('../data/userProfile');
-var user = userProfile.getData();
+var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var feedback = require('../data/feedback');
 

@@ -2,7 +2,7 @@
 var ko = require('knockout'),
     PostalCodeVM = require('../viewmodels/PostalCode');
 var userProfile = require('../data/userProfile');
-var user = userProfile.getData();
+var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var homeAddress = require('../data/homeAddress');
 
