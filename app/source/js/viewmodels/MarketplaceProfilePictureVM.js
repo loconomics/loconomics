@@ -12,7 +12,7 @@ var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
 var MarketplaceProfileVM = require('./MarketplaceProfileVM');
 var user = require('../data/userProfile').data;
-var remote = require('./drivers/restClient');
+var remote = require('../data/drivers/restClient');
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30

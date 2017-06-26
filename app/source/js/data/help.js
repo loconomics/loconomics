@@ -9,7 +9,7 @@
 // TODO jsdocs
 'use strict';
 var ko = require('knockout');
-var session = require('../session');
+var session = require('./session');
 // TODO Replace direct jquery.ajax call with a specialized Rest instance
 // under ./drivers, like 'zendeskRestClient'?
 var $ = require('jquery');
