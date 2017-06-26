@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
 var onboarding = require('../data/onboarding');
+var messaging = require('../data/messaging');
 
 var A = Activity.extend(function ConversationActivity() {
 
@@ -82,12 +83,12 @@ function ViewModel(app) {
         return user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
 
-    this.isLoading = app.model.messaging.state.isLoading;
-    this.isSyncing = app.model.messaging.state.isSyncing;
-    this.isSaving = app.model.messaging.state.isSaving;
+    this.isLoading = messaging.state.isLoading;
+    this.isSyncing = messaging.state.isSyncing;
+    this.isSaving = messaging.state.isSaving;
 
     this.threadID = ko.observable(null);
-    this.thread = app.model.messaging.createWildcardItem();
+    this.thread = messaging.createWildcardItem();
 
     this.subject = ko.pureComputed(function() {
         var m = this.thread();

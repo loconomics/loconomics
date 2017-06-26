@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var user = require('../data/userProfile').data;
 var onboarding = require('../data/onboarding');
+var privacySettings = require('../data/privacySettings');
 
 var A = Activity.extend(function PrivacySettingsActivity() {
 
@@ -26,7 +27,7 @@ var A = Activity.extend(function PrivacySettingsActivity() {
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
 
     this.registerHandler({
-        target: this.app.model.privacySettings,
+        target: privacySettings,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving privacy settings.' : 'Error loading privacy settings.';
@@ -53,7 +54,7 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Keep data updated:
-    this.app.model.privacySettings.sync();
+    privacySettings.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 
@@ -67,8 +68,6 @@ function ViewModel(app) {
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
-
-    var privacySettings = app.model.privacySettings;
 
     var settingsVersion = privacySettings.newVersion();
     settingsVersion.isObsolete.subscribe(function(itIs) {

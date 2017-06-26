@@ -7,6 +7,9 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var userLicensesCertifications = require('../data/userLicensesCertifications');
+var jobTitleLicenses = require('../data/jobTitleLicenses');
 
 var A = Activity.extend(function LicensesCertificationsActivity() {
 
@@ -33,7 +36,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 ////////////
                 // Job Title
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
 
                 // Fill in job title name
@@ -47,10 +50,10 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 }.bind(this));
 
                 // Get data for the Job title ID
-                this.app.model.userLicensesCertifications.getList(jobTitleID)
+                userLicensesCertifications.getList(jobTitleID)
                 .then(function(list) {
                     // Save for use in the view
-                    this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+                    this.viewModel.submittedUserLicensesCertifications(userLicensesCertifications.asModel(list));
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -60,7 +63,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 }.bind(this));
 
                 // Get required licenses for the Job title ID - an object, not a list
-                this.app.model.jobTitleLicenses.getItem(jobTitleID)
+                jobTitleLicenses.getItem(jobTitleID)
                 .then(function(item) {
                     // Save for use in the view
                     this.viewModel.jobTitleApplicableLicences(item);
@@ -136,8 +139,8 @@ function ViewModel(app) {
     this.jobTitleApplicableLicences = ko.observable(null);
     this.jobTitleName = ko.observable('Job Title');
 
-    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
-    this.isLoading = app.model.userLicensesCertifications.state.isLoading();
+    this.isSyncing = userLicensesCertifications.state.isSyncing();
+    this.isLoading = userLicensesCertifications.state.isLoading();
 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/licensesCertifications');

@@ -13,6 +13,11 @@ var ko = require('knockout'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
     Route = require('../utils/Router').Route;
 
+var onboarding = require('../data/onboarding');
+var clients = require('../data/clients');
+var pricingTypes = require('../data/pricingTypes');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
     Activity.apply(this, arguments);
@@ -120,7 +125,7 @@ A.prototype.show = function show(options) {
         var clientID = service.clientID();
 
         if(clientID) {
-            return this.app.model.clients.getItem(clientID)
+            return clients.getItem(clientID)
             .then(function(client) {
                 this.viewModel.client(client);
             }.bind(this));
@@ -133,11 +138,11 @@ A.prototype.show = function show(options) {
 
     if (pricingTypeID) {
         // Load the pricing Type
-        this.app.model.pricingTypes.getItem(pricingTypeID)
+        pricingTypes.getItem(pricingTypeID)
         .then(function(type) {
             this.viewModel.pricingType(type);
             // New pricing
-            var serviceVersion = this.app.model.serviceProfessionalServices.newItemVersion({
+            var serviceVersion = serviceProfessionalServices.newItemVersion({
                 jobTitleID: jobTitleID,
                 pricingTypeID: pricingTypeID,
                 visibleToClientID: clientID
@@ -154,14 +159,14 @@ A.prototype.show = function show(options) {
     }
     else if (serviceProfessionalServiceID) {
         // Get the pricing
-        this.app.model.serviceProfessionalServices.getItemVersion(jobTitleID, serviceProfessionalServiceID)
+        serviceProfessionalServices.getItemVersion(jobTitleID, serviceProfessionalServiceID)
         .then(function (serviceProfessionalServiceVersion) {
             if (!serviceProfessionalServiceVersion) {
                 throw new Error('Unable to load service');
             }
             // Load the pricing type before put the version
             // returns to let the 'catch' to get any error
-            return this.app.model.pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
+            return pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
             .then(function(type) {
                 this.viewModel.pricingType(type);
                 this.viewModel.serviceProfessionalServiceVersion(serviceProfessionalServiceVersion);
@@ -189,10 +194,10 @@ function ViewModel(app) {
 
     this.isLoading = ko.observable(false);
     // managed manually instead of
-    //app.model.serviceProfessionalServices.state.isLoading;
-    this.isSaving = app.model.serviceProfessionalServices.state.isSaving;
-    this.isSyncing = app.model.serviceProfessionalServices.state.isSyncing;
-    this.isDeleting = app.model.serviceProfessionalServices.state.isDeleting;
+    //serviceProfessionalServices.state.isLoading;
+    this.isSaving = serviceProfessionalServices.state.isSaving;
+    this.isSyncing = serviceProfessionalServices.state.isSyncing;
+    this.isDeleting = serviceProfessionalServices.state.isDeleting;
     this.jobTitleID = ko.observable(0);
     this.serviceProfessionalServiceID = ko.observable(0);
     // L10N
@@ -251,7 +256,7 @@ function ViewModel(app) {
     this.wasRemoved = ko.observable(false);
 
     this.isLocked = ko.computed(function() {
-        return this.isDeleting() || app.model.serviceProfessionalServices.state.isLocked();
+        return this.isDeleting() || serviceProfessionalServices.state.isLocked();
     }, this);
 
     this.isNew = ko.pureComputed(function() {
@@ -287,7 +292,7 @@ function ViewModel(app) {
 
     this.save = function() {
 
-        app.model.serviceProfessionalServices.setItem(this.serviceProfessionalService().model.toPlainObject())
+        serviceProfessionalServices.setItem(this.serviceProfessionalService().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.serviceProfessionalService().model.updateWith(serverData);
@@ -322,7 +327,7 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.serviceProfessionalServices.delItem(this.jobTitleID(), this.serviceProfessionalServiceID())
+        serviceProfessionalServices.delItem(this.jobTitleID(), this.serviceProfessionalServiceID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location

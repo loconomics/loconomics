@@ -10,6 +10,7 @@ var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
+var users = require('../data/users');
 
 var A = Activity.extend(function ProfileActivity() {
 
@@ -35,7 +36,7 @@ A.prototype.loadData = function(userID, jobTitleID) {
     this.viewModel.reset();
     if (userID) {
         this.viewModel.isLoading(true);
-        this.app.model.users.getUser(userID, { includeFullJobTitleID: -1 })
+        users.getUser(userID, { includeFullJobTitleID: -1 })
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
@@ -224,7 +225,7 @@ function ReviewsVM(app) {
         options = options || {};
         if (this.isLoading() || this.endReached() || !this.userID()) return;
         this.isLoading(true);
-        var task = app.model.users.getReviews(this.userID(), this.jobTitleID(), options)
+        var task = users.getReviews(this.userID(), this.jobTitleID(), options)
         .then(function(newData) {
             //jshint maxcomplexity:8
             if (newData && newData.length) {

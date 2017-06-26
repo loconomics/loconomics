@@ -5,11 +5,12 @@
 
 var Activity = require('../components/Activity'),
     ko = require('knockout');
+var education = require('../data/education');
 
 var A = Activity.extend(function EducationFormActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Education', {
@@ -22,30 +23,30 @@ exports.init = A.init;
 A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/education/';
-    
+
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     // Reset
     this.viewModel.version(null);
 
     // Params
     var params = state && state.route && state.route.segments || [];
-    
+
     this.viewModel.educationID(params[0] |0);
-    
+
     this.updateNavBarState();
-    
+
     if (this.viewModel.educationID() === 0) {
         // NEW one
-        this.viewModel.version(this.app.model.education.newItem());
+        this.viewModel.version(education.newItem());
     }
     else {
         // LOAD
-        this.app.model.education.createItemVersion(this.viewModel.educationID())
+        education.createItemVersion(this.viewModel.educationID())
         .then(function (educationVersion) {
             if (educationVersion) {
                 this.viewModel.version(educationVersion);
@@ -70,14 +71,14 @@ function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201960833-adding-education-to-your-profile';
 
     this.educationID = ko.observable(0);
-    this.isLoading = app.model.education.state.isLoading;
-    this.isSaving = app.model.education.state.isSaving;
-    this.isSyncing = app.model.education.state.isSyncing;
-    this.isDeleting = app.model.education.state.isDeleting;
+    this.isLoading = education.state.isLoading;
+    this.isSaving = education.state.isSaving;
+    this.isSyncing = education.state.isSyncing;
+    this.isDeleting = education.state.isDeleting;
     this.isLocked = ko.computed(function() {
-        return this.isDeleting() || app.model.education.state.isLocked();
+        return this.isDeleting() || education.state.isLocked();
     }, this);
-    
+
     this.version = ko.observable(null);
     this.item = ko.pureComputed(function() {
         var v = this.version();
@@ -86,7 +87,7 @@ function ViewModel(app) {
         }
         return null;
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         var p = this.item();
         return p && !p.updatedDate();
@@ -95,10 +96,10 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         var v = this.version();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         'Save changes' :
                         'Saved'
@@ -109,17 +110,17 @@ function ViewModel(app) {
         var v = this.version();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
-                'Deleting...' : 
+            this.isDeleting() ?
+                'Deleting...' :
                 'Delete'
         );
     }, this);
 
     this.save = function() {
-        app.model.education.setItem(this.item().model.toPlainObject())
+        education.setItem(this.item().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
@@ -136,7 +137,7 @@ function ViewModel(app) {
         });
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
         // L18N
         app.modals.confirm({
@@ -151,7 +152,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.education.delItem(this.educationID())
+        education.delItem(this.educationID())
         .then(function() {
             // Go out
             // TODO: custom message??
@@ -164,7 +165,7 @@ function ViewModel(app) {
             });
         });
     }.bind(this);
-    
+
     this.yearsOptions = ko.computed(function() {
         var l = [];
         for (var i = new Date().getFullYear(); i > 1900; i--) {

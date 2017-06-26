@@ -7,6 +7,12 @@ var Activity = require('../components/Activity'),
     ko = require('knockout'),
     AlertLink = require('../viewmodels/AlertLink');
 var user = require('../data/userProfile').data;
+var userJobProfile = require('../data/userJobProfile');
+var serviceAddresses = require('../data/serviceAddresses');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var workPhotos = require('../data/workPhotos');
+var userLicensesCertifications = require('../data/userLicensesCertifications');
+var jobTitleLicenses = require('../data/jobTitleLicenses');
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
@@ -30,8 +36,8 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                 ////////////
                 // User Job Title
                 // Get data for the Job Title and User Profile
-                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
-                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //jobTitles.getJobTitle(jobTitleID)
                 .then(function(job) {
                     // Fill the job title record
                     this.viewModel.jobTitle(job.jobTitle);
@@ -48,7 +54,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                 ////////////
                 // Job Title
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
 
                     // Fill in job title name
@@ -63,10 +69,10 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
                 ////////////
                 // Addresses
-                this.app.model.serviceAddresses.getList(jobTitleID)
+                serviceAddresses.getList(jobTitleID)
                 .then(function(list) {
 
-                    list = this.app.model.serviceAddresses.asModel(list);
+                    list = serviceAddresses.asModel(list);
                     this.viewModel.addresses(list);
 
                 }.bind(this))
@@ -79,10 +85,10 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
                 ////////////
                 // Pricing/Services
-                this.app.model.serviceProfessionalServices.getList(jobTitleID)
+                serviceProfessionalServices.getList(jobTitleID)
                 .then(function(list) {
 
-                    list = this.app.model.serviceProfessionalServices.asModel(list);
+                    list = serviceProfessionalServices.asModel(list);
                     this.viewModel.pricing(list);
 
                 }.bind(this))
@@ -95,9 +101,9 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
                 ////////////
                 // Work Photos
-                this.app.model.workPhotos.getList(jobTitleID)
+                workPhotos.getList(jobTitleID)
                 .then(function(list) {
-                    list = this.app.model.workPhotos.asModel(list);
+                    list = workPhotos.asModel(list);
                     this.viewModel.workPhotos(list);
 
                 }.bind(this))
@@ -109,10 +115,10 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                 }.bind(this));
                 ////////////
                 // Submitted Licenses
-                this.app.model.userLicensesCertifications.getList(jobTitleID)
+                userLicensesCertifications.getList(jobTitleID)
                 .then(function(list) {
                     // Save for use in the view
-                    this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+                    this.viewModel.submittedUserLicensesCertifications(userLicensesCertifications.asModel(list));
                 }.bind(this))
                 .catch(function (err) {
                     this.app.modals.showError({
@@ -121,7 +127,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     });
                 }.bind(this));
                 // Get required licenses for the Job title ID - an object, not a list
-                this.app.model.jobTitleLicenses.getItem(jobTitleID)
+                jobTitleLicenses.getItem(jobTitleID)
                 .then(function(item) {
                     // Save for use in the view
                     this.viewModel.jobTitleApplicableLicences(item);
@@ -186,8 +192,8 @@ function ViewModel(app) {
     // Computed since it can check several externa loadings
     this.isLoading = ko.pureComputed(function() {
         return (
-            app.model.serviceAddresses.state.isLoading() ||
-            app.model.serviceProfessionalServices.state.isLoading()
+            serviceAddresses.state.isLoading() ||
+            serviceProfessionalServices.state.isLoading()
         );
 
     }, this);
@@ -236,7 +242,7 @@ function ViewModel(app) {
             if (v === true && status === UserJobTitle.status.off) {
                 this.userJobTitle().statusID(UserJobTitle.status.on);
                 // Push change to back-end
-                app.model.userJobProfile.reactivateUserJobTitle(this.jobTitleID())
+                userJobProfile.reactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error enabling your listing', error: err });
                 });
@@ -244,7 +250,7 @@ function ViewModel(app) {
             else if (v === false && status === UserJobTitle.status.on) {
                 this.userJobTitle().statusID(UserJobTitle.status.off);
                 // Push change to back-end
-                app.model.userJobProfile.deactivateUserJobTitle(this.jobTitleID())
+                userJobProfile.deactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
                     app.modals.showError({ title: 'Error disabling your listing', error: err });
                 });
@@ -280,8 +286,8 @@ function ViewModel(app) {
     // Computed since it can check several externa loadings
     this.isLoading = ko.pureComputed(function() {
         return (
-            app.model.serviceAddresses.state.isLoading() ||
-            app.model.serviceProfessionalServices.state.isLoading()
+            serviceAddresses.state.isLoading() ||
+            serviceProfessionalServices.state.isLoading()
         );
 
     }, this);
@@ -352,7 +358,7 @@ function ViewModel(app) {
                 no: 'Keep'
             }).then(function() {
                 app.shell.goBack();
-                return app.model.userJobProfile.deleteUserJobTitle(jid);
+                return userJobProfile.deleteUserJobTitle(jid);
             })
             .catch(function(err) {
                 if (err) {

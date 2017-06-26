@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
+var userPaymentPlan = require('../data/userPaymentPlan');
 
 var A = Activity.extend(function AccountActivity() {
 
@@ -22,10 +23,10 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Load active plan, if any
-    this.app.model.userPaymentPlan.sync();
+    userPaymentPlan.sync();
 };
 
 function ViewModel(app) {
     this.isServiceProfessional = user.isServiceProfessional;
-    this.activeUserPaymentPlan = app.model.userPaymentPlan.data;
+    this.activeUserPaymentPlan = userPaymentPlan.data;
 }

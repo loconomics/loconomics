@@ -11,6 +11,10 @@ var Activity = require('../components/Activity'),
     UserJobTitle = require('../models/UserJobTitle');
 var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
+var bookings = require('../data/bookings');
+var users = require('../data/users');
+var messaging = require('../data/messaging');
+var userJobProfile = require('../data/userJobProfile');
 
 var A = Activity.extend(function DashboardActivity() {
 
@@ -37,9 +41,8 @@ var A = Activity.extend(function DashboardActivity() {
         }.bind(this);
     }.bind(this);
 
-    var app = this.app;
     this.getUserData = function(userID, jobTitleID) {
-        return app.model.users.getUser(userID)
+        return users.getUser(userID)
         .then(function(info) {
             info.selectedJobTitleID = jobTitleID;
             return new PublicUser(info);
@@ -76,7 +79,7 @@ A.prototype.syncMessages = function syncMessages() {
     else
         v.inbox.isLoading(true);
 
-    this.app.model.messaging.getList()
+    messaging.getList()
     .then(function(threads) {
         v.inbox.messages(threads().map(MessageView.fromThread.bind(null, app)));
     })
@@ -90,8 +93,7 @@ A.prototype.syncMessages = function syncMessages() {
 
 A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
     var v = this.viewModel,
-        app = this.app,
-        appModel = this.app.model;
+        app = this.app;
 
     if (v.upcomingBookings.items().length) {
         v.upcomingBookings.isSyncing(true);
@@ -99,7 +101,7 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
     else {
         v.upcomingBookings.isLoading(true);
     }
-    appModel.bookings.getUpcomingBookings()
+    bookings.getUpcomingBookings()
     .then(function(upcoming) {
 
         v.upcomingBookings.model.updateWith(upcoming, true);
@@ -122,8 +124,7 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
 };
 
 A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
-    var v = this.viewModel,
-        appModel = this.app.model;
+    var v = this.viewModel;
 
     if (v.upcomingAppointments.items().length) {
         v.upcomingAppointments.isSyncing(true);
@@ -131,7 +132,7 @@ A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
     else {
         v.upcomingAppointments.isLoading(true);
     }
-    appModel.bookings.getUpcomingAppointments()
+    bookings.getUpcomingAppointments()
     .then(function(upcoming) {
         v.upcomingAppointments.model.updateWith(upcoming, true);
 
@@ -155,7 +156,7 @@ A.prototype.syncGetMore = function syncGetMore() {
     // Professional only alerts/to-dos
     if (user.isServiceProfessional()) {
         // Check the 'profile' alert
-        this.app.model.userJobProfile.syncList()
+        userJobProfile.syncList()
         .then(function(list) {
             var yep = list.some(function(job) {
                 if (job.statusID() !== UserJobTitle.status.on)

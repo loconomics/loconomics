@@ -12,6 +12,8 @@ var ModelVersion = require('../utils/ModelVersion');
 var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 var PostalCodeVM = require('../viewmodels/PostalCode');
 var user = require('../data/userProfile').data;
+var users = require('../data/users');
+var serviceAddresses = require('../data/serviceAddresses');
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -168,7 +170,6 @@ function BaseClientBookingCardVM(app) {
 
         // Only on addresses being edited by the user, with the editor opened
         this.postalCodeVM(new PostalCodeVM({
-            appModel: app.model,
             address: version.version.serviceAddress,
             postalCodeError: this.errorMessages.postalCode,
             enabled: this.addressEditorOpened
@@ -281,7 +282,7 @@ function BaseClientBookingCardVM(app) {
 
         this.isLoadingServiceProfessionalInfo(true);
 
-        app.model.users.getUser(userID)
+        users.getUser(userID)
         .then(function(info) {
             info.selectedJobTitleID = this.booking().jobTitleID();
             this.serviceProfessionalInfo().model.updateWith(info, true);
@@ -475,7 +476,7 @@ BaseClientBookingCardVM.prototype.loadServices = function() {
     if (this.serviceProfessionalServices.serviceProfessionalID() !== spid ||
         this.serviceProfessionalServices.jobTitleID() !== jid) {
 
-        var servicesPromise = this.app.model.users.getServiceProfessionalServices(spid, jid);
+        var servicesPromise = users.getServiceProfessionalServices(spid, jid);
 
         return this.serviceProfessionalServices.loadData(spid, jid, servicesPromise);
     }
@@ -490,16 +491,16 @@ BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
     // Load remote addresses for provider and jobtitle, reset first
     this.serviceAddresses.sourceAddresses([]);
     this.isLoadingServiceAddresses(true);
-    return this.app.model.users.getServiceAddresses(this.booking().serviceProfessionalUserID(), this.booking().jobTitleID())
+    return users.getServiceAddresses(this.booking().serviceProfessionalUserID(), this.booking().jobTitleID())
     .then(function(list) {
         // Save addresses: the serviceAddresses viewmodel will create separated lists for
         // selectable (service location) addresses and service areas
-        this.serviceAddresses.sourceAddresses(this.app.model.serviceAddresses.asModel(list));
+        this.serviceAddresses.sourceAddresses(serviceAddresses.asModel(list));
         // Load user personal addresses too if the service professional has serviceArea
         if (this.serviceAddresses.serviceAreas().length &&
             !this.isAnonymous()) {
             // jobTitleID:0 for client service addresses.
-            return this.app.model.serviceAddresses.getList(0);
+            return serviceAddresses.getList(0);
         }
         // No client addresses (result for the next 'then'):
         return null;
@@ -511,7 +512,7 @@ BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
                 // (comes as 'false' from REST service since they are currently user client addresses
                 // not actual 'service' addresses, even they comes from 'service' API).
                 a.isServiceLocation = true;
-                return this.app.model.serviceAddresses.asModel(a);
+                return serviceAddresses.asModel(a);
             }.bind(this)));
         }
         // All finished

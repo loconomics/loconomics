@@ -14,7 +14,7 @@ var A = Activity.extend(function SearchCategoryActivity() {
 
     this.accessLevel = null;
     //pass in the app model so the view model can use it
-    this.viewModel = new ViewModel(this.app.model);
+    this.viewModel = new ViewModel();
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);

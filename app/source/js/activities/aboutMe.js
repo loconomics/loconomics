@@ -7,6 +7,8 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var userProfile = require('../data/userProfile');
 var onboarding = require('../data/onboarding');
+var homeAddress = require('../data/homeAddress');
+var marketplaceProfile = require('../data/marketplaceProfile');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -38,7 +40,7 @@ var A = Activity.extend(function AboutMeActivity() {
     });
 
     this.registerHandler({
-        target: this.app.model.homeAddress,
+        target: homeAddress,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save address details.' : 'Unable to load address details.';
@@ -50,7 +52,7 @@ var A = Activity.extend(function AboutMeActivity() {
     });
 
     this.registerHandler({
-        target: this.app.model.marketplaceProfile,
+        target: marketplaceProfile,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';

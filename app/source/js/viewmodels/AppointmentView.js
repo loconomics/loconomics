@@ -6,6 +6,9 @@
 'use strict';
 
 var ko = require('knockout');
+var clients = require('../data/clients');
+var serviceAddresses = require('../data/serviceAddresses');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 
 module.exports = function AppointmentView(appointment, app) {
     if (appointment._isAppointmentView) return appointment;
@@ -17,7 +20,7 @@ module.exports = function AppointmentView(appointment, app) {
 
         var cid = this.clientUserID();
         if (cid) {
-            return app.model.clients.getObservableItem(cid, true)();
+            return clients.getObservableItem(cid, true)();
         }
         return null;
     }, appointment)
@@ -28,7 +31,7 @@ module.exports = function AppointmentView(appointment, app) {
         var aid = add && add.addressID(),
             jid = this.jobTitleID();
         if (aid && jid) {
-            app.model.serviceAddresses.getItem(jid, aid).then(function(serverAddress) {
+            serviceAddresses.getItem(jid, aid).then(function(serverAddress) {
                 if (serverAddress.addressID === aid)
                     add.model.updateWith(serverAddress, true);
             });
@@ -81,7 +84,7 @@ module.exports = function AppointmentView(appointment, app) {
         }
         var tasks = pricing.map(function(service){
             var id = service.serviceProfessionalServiceID();
-            return app.model.serviceProfessionalServices.getItem(jid, id);
+            return serviceProfessionalServices.getItem(jid, id);
         });
         return Promise.all(tasks).then(function(services) {
             return services.reduce(function(prev, service) {
@@ -121,13 +124,13 @@ module.exports = function AppointmentView(appointment, app) {
 };
 
 function pricingSummaryDetailView(pricingSummaryDetail, jobTitleID, app) {
-    var observable = ko.observable(app.model.serviceProfessionalServices.asModel()), // default empty object
+    var observable = ko.observable(serviceProfessionalServices.asModel()), // default empty object
         serviceID = pricingSummaryDetail.serviceProfessionalServiceID();
 
     pricingSummaryDetail.serviceProfessionalService = observable;
 
-    app.model.serviceProfessionalServices.getItem(jobTitleID, serviceID).then(function(service) {
-        var serviceModel = app.model.serviceProfessionalServices.asModel(service);
+    serviceProfessionalServices.getItem(jobTitleID, serviceID).then(function(service) {
+        var serviceModel = serviceProfessionalServices.asModel(service);
         observable(serviceModel);
     });
 

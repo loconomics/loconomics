@@ -7,6 +7,9 @@ var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var serviceAddresses = require('../data/serviceAddresses');
+var clientAddresses = require('../data/clientAddresses');
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -31,7 +34,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         handler: function(jobTitleID) {
             if (jobTitleID) {
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
@@ -42,10 +45,10 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                     this.viewModel.jobTitleName(jobTitle.singularName());
 
                     // Get addresses
-                    return this.app.model.serviceAddresses.getList(jobTitleID);
+                    return serviceAddresses.getList(jobTitleID);
                 }.bind(this))
                 .then(function(list) {
-                    list = this.app.model.serviceAddresses.asModel(list);
+                    list = serviceAddresses.asModel(list);
                     this.viewModel.serviceAddresses.sourceAddresses(list);
                     if (this.requestData.selectedAddressID) {
                         this.viewModel.serviceAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
@@ -87,9 +90,9 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         target: this.viewModel.clientUserID,
         handler: function(clientUserID) {
             if (clientUserID) {
-                this.app.model.clientAddresses.getList(clientUserID)
+                clientAddresses.getList(clientUserID)
                 .then(function(list) {
-                    list = this.app.model.clientAddresses.asModel(list);
+                    list = this.clientAddresses.asModel(list);
                     this.viewModel.clientAddresses.sourceAddresses(list);
                     if (this.requestData.selectedAddressID) {
                         this.viewModel.clientAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
@@ -282,11 +285,11 @@ function ViewModel(app) {
         return false;
     }.bind(this);
 
-    this.isSyncing = app.model.serviceAddresses.state.isSyncing();
+    this.isSyncing = serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
-        var add = app.model.serviceAddresses.state.isLoading();
+        var add = serviceAddresses.state.isLoading();
         var jobs = this.jobTitles.isLoading();
-        var cli = app.model.clientAddresses.state.isLoading();
+        var cli = clientAddresses.state.isLoading();
         return add || jobs || cli;
     }, this);
 

@@ -4,6 +4,7 @@ var ko = require('knockout'),
 var userProfile = require('../data/userProfile');
 var user = userProfile.getData();
 var onboarding = require('../data/onboarding');
+var homeAddress = require('../data/homeAddress');
 
 module.exports = function ContactInfoVM(app) {
 
@@ -74,7 +75,6 @@ module.exports = function ContactInfoVM(app) {
     }
 
     // Home Address
-    var homeAddress = app.model.homeAddress;
     var homeAddressVersion = homeAddress.newVersion();
     homeAddressVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
@@ -95,7 +95,6 @@ module.exports = function ContactInfoVM(app) {
 
     // On change to a valid code, do remote look-up
     this.postalCodeVM = new PostalCodeVM({
-        appModel: app.model,
         address: this.address, // assumption: address will never change
         postalCodeError: this.errorMessages.postalCode
     });
@@ -127,7 +126,7 @@ module.exports = function ContactInfoVM(app) {
 
     this.sync = function sync() {
         userProfile.sync();
-        app.model.homeAddress.sync();
+        homeAddress.sync();
     };
 
     this.save = function save() {

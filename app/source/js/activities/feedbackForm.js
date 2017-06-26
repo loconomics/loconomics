@@ -8,6 +8,7 @@ var Activity = require('../components/Activity'),
 var userProfile = require('../data/userProfile');
 var user = userProfile.getData();
 var onboarding = require('../data/onboarding');
+var feedback = require('../data/feedback');
 
 var A = Activity.extend(function FeedbackFormActivity() {
 
@@ -103,7 +104,7 @@ function ViewModel(app) {
             return;
         }
         this.isSending(true);
-        app.model.feedback.postIdea({
+        feedback.postIdea({
             message: this.message(),
             becomeCollaborator: this.becomeCollaborator(),
             vocElementID: this.vocElementID()

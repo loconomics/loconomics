@@ -23,7 +23,7 @@ var A = Activity.extend(function HomeActivity() {
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
-    this.viewModel = new ViewModel(this.app.model);
+    this.viewModel = new ViewModel();
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
     this.$header = $('.AppNav');
@@ -158,7 +158,7 @@ A.prototype.show = function show(state) {
 };
 
 
-function ViewModel(appModel) {
+function ViewModel() {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();

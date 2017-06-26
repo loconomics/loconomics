@@ -79,6 +79,7 @@ exports.registerAll = function(app) {
     });
 
     /// inline-side-menu
+    var help = require('./data/help');
     ko.components.register('app-inline-side-menu', {
         template: { element: 'inline-side-menu-template' },
         viewModel: function(params) { //{ instance: app.navBarBinding }
@@ -123,14 +124,14 @@ exports.registerAll = function(app) {
                     var id = idFromLink(link);
                     if (id) {
                         // By ID
-                        //return app.model.help.getCategory(id).then(category2Item);
-                        return app.model.help.getSectionsByCategory(id).then(function(d) {
+                        //return help.getCategory(id).then(category2Item);
+                        return help.getSectionsByCategory(id).then(function(d) {
                             return d.map(section2Item);
                         });
                     }
                     else {
                         // All categories
-                        return app.model.help.getCategories().then(function(d) {
+                        return help.getCategories().then(function(d) {
                             return d.map(category2Item);
                         });
                     }
@@ -139,14 +140,14 @@ exports.registerAll = function(app) {
                     var id = idFromLink(link);
                     if (id) {
                         // By ID
-                        //return app.model.help.getSection(id).then(section2Item);
-                        return app.model.help.getArticlesBySection(id).then(function(d) {
+                        //return help.getSection(id).then(section2Item);
+                        return help.getArticlesBySection(id).then(function(d) {
                             return d.map(article2Item);
                         });
                     }
                     else {
                         // All categories
-                        return app.model.help.getSections().then(function(d) {
+                        return help.getSections().then(function(d) {
                             return d.map(section2Item);
                         });
                     }
@@ -155,11 +156,11 @@ exports.registerAll = function(app) {
                     var id = idFromLink(link);
                     if (id) {
                         // By ID
-                        return app.model.help.getArticle(id).then(article2Item);
+                        return help.getArticle(id).then(article2Item);
                     }
                     else {
                         // All categories
-                        return app.model.help.getArticles().then(function(d) {
+                        return help.getArticles().then(function(d) {
                             return d.map(article2Item);
                         });
                     }

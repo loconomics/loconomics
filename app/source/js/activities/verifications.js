@@ -6,13 +6,14 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
+var userVerifications = require('../data/userVerifications');
 
 var A = Activity.extend(function VerificationsActivity() {
 
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
     // Defaults settings for navBar.
 
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
@@ -47,7 +48,7 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
-    this.app.model.userVerifications.getList()
+    userVerifications.getList()
     .then(function(list) {
         this.viewModel.userVerifications(list());
     }.bind(this))
@@ -56,12 +57,12 @@ A.prototype.show = function show(options) {
     }.bind(this));
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.helpLink = '/help/relatedArticles/201967776-adding-verifications-to-your-profile';
 
-    this.isSyncing = app.model.userVerifications.state.isSyncing;
-    this.isLoading = app.model.userVerifications.state.isLoading;
-    this.isSaving = app.model.userVerifications.state.isSaving;
+    this.isSyncing = userVerifications.state.isSyncing;
+    this.isLoading = userVerifications.state.isLoading;
+    this.isSaving = userVerifications.state.isSaving;
 
     this.userVerifications = ko.observableArray();
 

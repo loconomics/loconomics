@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var education = require('../data/education');
 
 var A = Activity.extend(function EducationActivity() {
 
@@ -21,9 +22,9 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     // Request a sync and catch any error
-    this.app.model.education.sync()
+    education.sync()
     .catch(function (err) {
         this.app.modals.showError({
             title: 'Error loading education information',
@@ -32,11 +33,11 @@ A.prototype.show = function show(options) {
     }.bind(this));
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.helpLink = '/help/relatedArticles/201960833-adding-education-to-your-profile';
 
-    this.isLoading = app.model.education.state.isLoading;
-    this.isSyncing = app.model.education.state.isSyncing;
+    this.isLoading = education.state.isLoading;
+    this.isSyncing = education.state.isSyncing;
 
-    this.list = app.model.education.list;
+    this.list = education.list;
 }

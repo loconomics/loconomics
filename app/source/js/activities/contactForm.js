@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
 var onboarding = require('../data/onboarding');
+var feedback = require('../data/feedback');
 
 var A = Activity.extend(function ContactFormActivity() {
 
@@ -81,7 +82,7 @@ function ViewModel(app) {
         if (this.emailSubject()) {
             msg = this.emailSubject() + ': ' + msg;
         }
-        app.model.feedback.postSupport({
+        feedback.postSupport({
             message: msg,
             vocElementID: this.vocElementID()
         })

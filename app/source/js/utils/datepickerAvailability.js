@@ -11,6 +11,7 @@
 var $ = require('jquery'),
     moment = require('moment'),
     createTimeSlots = require('./createTimeSlots');
+var availability = require('../data/availability');
 
 exports.create = function createDatepickerAvailability(app, $datepicker, isLoading) {
     // Cache DOM elements
@@ -22,7 +23,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
 
     // Listen to cache changes in order to force a data load (to avoid invalid
     // availability being displayed after an apt was modified)
-    app.model.availability.cacheCleaningRequested.subscribe(function() {
+    availability.cacheCleaningRequested.subscribe(function() {
         prevMonth = null;
     });
 
@@ -48,7 +49,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             isLoading(true);
 
         // Request the data
-        app.model.availability.times(userID, start, end)
+        availability.times(userID, start, end)
         .then(function(result) {
             // We are still in the same showed month? (loading is async, so could have changed)
             if (month !== $datepicker.datepicker('getViewDate').getMonth()) return;

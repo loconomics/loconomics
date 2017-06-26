@@ -11,6 +11,7 @@ var ko = require('knockout'),
     moment = require('moment');
 var PublicUserProfile = require('./PublicUserProfile');
 var user = require('../data/userProfile').data;
+var users = require('../data/users');
 
 function MessageView(values, app) {
 
@@ -66,7 +67,7 @@ function MessageView(values, app) {
                 return user;
             else {
                 var publicUser = new PublicUserProfile();
-                app.model.users.getProfile(userID).then(function(d) { publicUser.model.updateWith(d, true); });
+                users.getProfile(userID).then(function(d) { publicUser.model.updateWith(d, true); });
                 return publicUser;
             }
         }

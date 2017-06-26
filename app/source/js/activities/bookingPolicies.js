@@ -6,6 +6,11 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var userJobProfile = require('../data/userJobProfile');
+var cancellationPolicies = require('../data/cancellationPolicies');
+var userJobProfile = require('../data/userJobProfile');
+var cancellationPolicies = require('../data/cancellationPolicies');
 
 var A = Activity.extend(function BookingPoliciesActivity() {
 
@@ -27,7 +32,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
         handler: function(jobTitleID) {
             if (jobTitleID) {
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
                     // Fill in job title name
                     this.viewModel.jobTitleName(jobTitle.singularName());
@@ -41,7 +46,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
 
                 this.viewModel.isLoading(true);
                 // Get data for the Job title ID
-                this.app.model.userJobProfile.getUserJobTitle(jobTitleID)
+                userJobProfile.getUserJobTitle(jobTitleID)
                 .then(function(userJobTitle) {
                     // Save for use in the view
                     this.viewModel.userJobTitle(userJobTitle);
@@ -104,7 +109,7 @@ A.prototype.show = function show(state) {
     this.viewModel.jobTitleID(jid);
 
     // Request to sync policies, just in case there are remote changes
-    this.app.model.cancellationPolicies.sync();
+    cancellationPolicies.sync();
     if (!jid) {
         // Load titles to display for selection
         this.viewModel.jobTitles.sync();
@@ -164,7 +169,7 @@ function ViewModel(app) {
             plain.cancellationPolicyID = this.selectedCancellationPolicyID();
             plain.instantBooking = this.instantBooking();
 
-            app.model.userJobProfile.setUserJobTitle(plain)
+            userJobProfile.setUserJobTitle(plain)
             .then(function() {
                 this.isSaving(false);
                 // Move forward:
@@ -183,6 +188,6 @@ function ViewModel(app) {
         }
     }.bind(this);
 
-    this.policies = app.model.cancellationPolicies.list;
+    this.policies = cancellationPolicies.list;
 }
 

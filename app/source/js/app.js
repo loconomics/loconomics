@@ -465,7 +465,7 @@ var appInit = function appInit() {
 
     var marketplaceProfile = require('./data/marketplaceProfile');
     /**
-     * Set-up, after app.model initialization,
+     * Set-up
      * some observables with user data with the global navbar
      * that needs to display the name, photo and type of user
      */

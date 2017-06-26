@@ -15,7 +15,7 @@ var A = Activity.extend(function SearchJobTitleActivity() {
 
     this.accessLevel = null;
     //pass in the app model so the view model can use it
-    this.viewModel = new ViewModel(this.app.model);
+    this.viewModel = new ViewModel();
     this.navBar = Activity.createSubsectionNavBar('Back');
 
 });

@@ -7,7 +7,8 @@ var InputPaymentMethod = require('../models/InputPaymentMethod');
 var SignupVM = require('../viewmodels/Signup');
 var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
-
+var bookings = require('../data/bookings');
+var availability = require('../data/availability');
 
 // Functions to manage the lastBooking info, for save/restore state feature
 // IMPORTANT: initially used localforage, but this is cleared on a logout/login,
@@ -41,7 +42,7 @@ function NewClientBookingCardVM(app) {
     //jshint maxstatements:40
     // Base Class:
     BaseClientBookingCardVM.call(this, app);
-    
+
     ///
     /// Data properties
     this.newDataReady = ko.observable(false);
@@ -55,7 +56,7 @@ function NewClientBookingCardVM(app) {
     this.isLoadingNewBooking = ko.observable(false);
     this.isRestoring = ko.observable(false);
     this.isDone = ko.observable(false);
-    
+
     ///
     /// States
     var baseIsLoading = this.isLoading;
@@ -65,7 +66,7 @@ function NewClientBookingCardVM(app) {
             baseIsLoading()
         );
     }, this);
-    
+
     ///
     /// Reset
     var baseReset = this.reset;
@@ -74,17 +75,17 @@ function NewClientBookingCardVM(app) {
 
         this.newDataReady(false);
         this.bookCode(null);
-        
+
         this.promotionalCode('');
         this.paymentMethod(null);
         this.makeRepeatBooking(false);
-        
+
         this.signupVM.reset();
 
         this.isSaving(false);
         this.isDone(false);
     }.bind(this);
-    
+
     ///
     /// Save and Restore State
     this.saveState = function saveState() {
@@ -96,42 +97,42 @@ function NewClientBookingCardVM(app) {
         // be checked against the list of available services (could have changed,
         // most times because of first-time only services).
         if (!this.booking()) return Promise.resolve();
-        
+
         // Base and identification data:
         var s = {
             serviceProfessionalUserID: this.booking().serviceProfessionalUserID(),
             jobTitleID: this.booking().jobTitleID(),
             bookCode: this.bookCode()
         };
-        
+
         var services = this.serviceProfessionalServices.selectedServices();
         s.services = services.map(function(serv) {
             return serv.serviceProfessionalServiceID();
         });
-        
+
         s.presetGratuity = this.presetGratuity();
         s.gratuityAmount = this.gratuityAmount();
         s.promotionalCode = this.promotionalCode();
-        
+
         var add = this.booking().serviceAddress();
         s.serviceAddress = add && add.model.toPlainObject(true) || null;
-        
+
         s.serviceDate = this.booking().serviceDate();
         s.serviceDate = s.serviceDate ? s.serviceDate.model.toPlainObject() : null;
         s.alternativeDate1 = this.booking().alternativeDate1();
         s.alternativeDate1 = s.alternativeDate1 ? s.alternativeDate1.model.toPlainObject() : null;
         s.alternativeDate2 = this.booking().alternativeDate2();
         s.alternativeDate2 = s.alternativeDate2 ? s.alternativeDate2.model.toPlainObject() : null;
-        
+
         s.specialRequests = this.booking().specialRequests();
-        
+
         var pm = this.paymentMethod();
         s.paymentMethod = pm ? pm.model.toPlainObject(true) : null;
 
         return saveLastBooking(s);
 
     }.bind(this);
-    
+
     /**
         Restore the last booking state from local storage,
         but only if it matches the identification data for the
@@ -145,10 +146,10 @@ function NewClientBookingCardVM(app) {
                 this.isRestoring(false);
                 return;
             }
-            
+
             // Once is used, delete (is not last anymore)
             clearLastBooking();
-                
+
             var spuid = this.booking().serviceProfessionalUserID();
             var jid = this.booking().jobTitleID();
             if (s.serviceProfessionalUserID === spuid &&
@@ -181,9 +182,9 @@ function NewClientBookingCardVM(app) {
                         if (isIn) return;
                         // No more than once:
                         addressSubscription.dispose();
-                        
+
                         this.isRestoring(true);
-                        
+
                         if (s.serviceAddress.addressID) {
                             // Search in lists
                             var foundAddress;
@@ -208,17 +209,17 @@ function NewClientBookingCardVM(app) {
                             this.booking().serviceAddress(new Address(s.serviceAddress));
                             this.addressEditorOpened(true);
                         }
-                        
+
                         this.isRestoring(false);
                     }.bind(this));
                 }
-                
+
                 this.booking().serviceDate(s.serviceDate ? new EventDates(s.serviceDate) : null);
                 this.booking().alternativeDate1(s.alternativeDate1 ? new EventDates(s.alternativeDate1) : null);
                 this.booking().alternativeDate2(s.alternativeDate2 ? new EventDates(s.alternativeDate2) : null);
-                
+
                 this.booking().specialRequests(s.specialRequests);
-                
+
                 var pm = s.paymentMethod;
                 if (pm && this.paymentMethod()) {
                     this.paymentMethod().model.updateWith(pm, true);
@@ -231,15 +232,15 @@ function NewClientBookingCardVM(app) {
             this.isRestoring(false);
         }.bind(this));
     }.bind(this);
-    
-    
+
+
     this.confirmBtnText = ko.pureComputed(function() {
         return (
             this.isSaving() ? 'Confirming...' :
             this.isAnonymous() ? 'Sign up and confirm' : 'Confirm'
         );
     }, this);
-    
+
     // Displayed text when there is a payment card
     this.paymentMethodDisplay = ko.pureComputed(function() {
         var n = this.booking().paymentLastFourCardNumberDigits();
@@ -254,16 +255,16 @@ function NewClientBookingCardVM(app) {
         }
     }, this);
 
-    
+
     ///
     /// New Booking data
     this.initBooking = function(serviceProfessionalID, jobTitleID, bookCode) {
         this.reset();
         this.bookCode(bookCode);
-        
+
         this.isLoadingNewBooking(true);
-        
-        app.model.bookings.getNewClientBooking({
+
+        bookings.getNewClientBooking({
             serviceProfessionalUserID: serviceProfessionalID,
             jobTitleID: jobTitleID,
             bookCode: bookCode
@@ -282,7 +283,7 @@ function NewClientBookingCardVM(app) {
             this.newDataReady(true);
             // Enter edit mode
             this.edit();
-            
+
             // Reset progress to none and trigger next so Load logic gets executed
             this.progress.reset();
             this.nextStep();
@@ -292,20 +293,20 @@ function NewClientBookingCardVM(app) {
             app.modals.showError({ error: err });
         }.bind(this));
     }.bind(this);
-    
+
     ///
     /// UI
     this.bookingHeader = ko.pureComputed(function() {
         var v = this.booking() && this.booking().instantBooking();
         return v === true ? 'Your instant booking' : v === false ? 'Your booking request' : '';
     }, this);
-    
+
     ///
     /// Save
     this.save = function() {
         // Final step, confirm and save booking
         this.isSaving(true);
-        
+
         // Prepare tasks (callbacks)
         // save promise:
         var saveIt = function() {
@@ -313,7 +314,7 @@ function NewClientBookingCardVM(app) {
                 promotionalCode: this.promotionalCode(),
                 bookCode: this.bookCode()
             };
-            return app.model.bookings.requestClientBooking(this.booking(), requestOptions, this.paymentMethod());    
+            return bookings.requestClientBooking(this.booking(), requestOptions, this.paymentMethod());
         }.bind(this);
         // success promise:
         var success = function(serverBooking) {
@@ -324,7 +325,7 @@ function NewClientBookingCardVM(app) {
 
             // Forget availability cache for this professional, since is not needed
             // and any new booking with it needs a refresh to avoid problems. See #905
-            app.model.availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
+            availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
             this.isDone(true);
 
             app.modals.showNotification({
@@ -354,7 +355,7 @@ function NewClientBookingCardVM(app) {
             .catch(onerror);
         }
     }.bind(this);
-    
+
     this.goLogin = function(d, e) {
         app.shell.go('/login', { redirectUrl: app.shell.currentRoute.url });
         if (e) {

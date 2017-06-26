@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
+var help = require('../data/help');
 
 var A = Activity.extend(function HelpActivity() {
 
@@ -27,9 +28,9 @@ var A = Activity.extend(function HelpActivity() {
         this.viewModel.isLoading(true);
 
         Promise.all([
-            this.app.model.help.getArticles(),
-            this.app.model.help.getCategories(),
-            this.app.model.help.getSections()
+            help.getArticles(),
+            help.getCategories(),
+            help.getSections()
         ])
         .then(function(res) {
             this.viewModel.articles(res[0]);
@@ -145,15 +146,15 @@ function ViewModel(app) {
     this.selectedSectionId = ko.observable(0);
 
     this.fullArticleData = ko.pureComputed(function() {
-        return app.model.help.findByIdAt(this.selectedArticleId(), this.articles());
+        return help.findByIdAt(this.selectedArticleId(), this.articles());
     }, this);
 
     this.selectedSection = ko.pureComputed(function(){
-        return app.model.help.findByIdAt(this.selectedSectionId(), this.sections());
+        return help.findByIdAt(this.selectedSectionId(), this.sections());
     }, this);
 
     this.selectedCategory = ko.pureComputed(function(){
-        return app.model.help.findByIdAt(this.selectedCategoryId(), this.categories());
+        return help.findByIdAt(this.selectedCategoryId(), this.categories());
     }, this);
 
     this.filteredSectionArticles = ko.pureComputed(function() {

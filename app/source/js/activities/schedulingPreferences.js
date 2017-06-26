@@ -6,6 +6,9 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var onboarding = require('../data/onboarding');
+var weeklySchedule = require('../data/weeklySchedule');
+var schedulingPreferences = require('../data/schedulingPreferences');
+var userJobProfile = require('../data/userJobProfile');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
 
@@ -22,7 +25,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
     this.registerHandler({
-        target: this.app.model.weeklySchedule,
+        target: weeklySchedule,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your weekly schedule.' : 'Unable to load your weekly schedule.';
@@ -34,7 +37,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
     });
 
     this.registerHandler({
-        target: this.app.model.schedulingPreferences,
+        target: schedulingPreferences,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save scheduling preferences.' : 'Unable to load scheduling preferences.';
@@ -68,8 +71,8 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
 
     // Keep data updated:
-    this.app.model.schedulingPreferences.sync();
-    this.app.model.weeklySchedule.sync();
+    schedulingPreferences.sync();
+    weeklySchedule.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };
@@ -95,8 +98,8 @@ function ViewModel(app) {
         .then(function() {
             // A weekly schedule change may change the status of userJobTitles and bookMeButtonReady, so
             // force a refresh of that data
-            app.model.userJobProfile.clearCache();
-            app.model.userJobProfile.syncList();
+            userJobProfile.clearCache();
+            userJobProfile.syncList();
             // Move forward:
             if (onboarding.inProgress()) {
                 onboarding.goNext();
@@ -139,8 +142,6 @@ function ViewModel(app) {
 
 function SchedulingPreferencesVM(app) {
 
-    var schedulingPreferences = app.model.schedulingPreferences;
-
     var prefsVersion = schedulingPreferences.newVersion();
     prefsVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
@@ -175,8 +176,6 @@ function SchedulingPreferencesVM(app) {
 var timeZoneList = require('../utils/timeZoneList');
 
 function WeeklyScheduleVM(app) {
-
-    var weeklySchedule = app.model.weeklySchedule;
 
     var scheduleVersion = weeklySchedule.newVersion();
     scheduleVersion.isObsolete.subscribe(function(itIs) {

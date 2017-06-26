@@ -8,6 +8,9 @@ var Activity = require('../components/Activity'),
     photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
 var onboarding = require('../data/onboarding');
+var userLicensesCertifications = require('../data/userLicensesCertifications');
+var licenseCertification = require('../data/licenseCertification');
+var jobTitleLicenses = require('../data/jobTitleLicenses');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
@@ -101,7 +104,7 @@ A.prototype.show = function show(state) {
         UserLicenseCertification = require('../models/UserLicenseCertification');
 
     if (!this.viewModel.isNew()) {
-        this.app.model.userLicensesCertifications
+        userLicensesCertifications
         .getItem(this.viewModel.jobTitleID(), this.viewModel.userLicenseCertificationID())
         .then(function(data) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
@@ -118,7 +121,7 @@ A.prototype.show = function show(state) {
         }.bind(this));
     }
     else {
-        this.app.model.licenseCertification
+        licenseCertification
         .getItem(this.viewModel.licenseCertificationID())
         .then(function(data) {
             var item = new UserLicenseCertification({
@@ -151,15 +154,15 @@ function ViewModel(app) {
     this.jobTitleNamePlural = ko.observable();
     this.isLoading = ko.pureComputed(function() {
         return (
-            app.model.userLicensesCertifications.state.isLoading()
+            userLicensesCertifications.state.isLoading()
         );
     }, this);
-    this.isSaving = app.model.userLicensesCertifications.state.isSaving;
-    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing;
-    this.isDeleting = app.model.userLicensesCertifications.state.isDeleting;
+    this.isSaving = userLicensesCertifications.state.isSaving;
+    this.isSyncing = userLicensesCertifications.state.isSyncing;
+    this.isDeleting = userLicensesCertifications.state.isDeleting;
     this.isLocked = ko.pureComputed(function() {
         return (
-            app.model.userLicensesCertifications.state.isLocked()
+            userLicensesCertifications.state.isLocked()
         );
     }, this);
     this.isReady = ko.pureComputed(function() {
@@ -200,15 +203,15 @@ function ViewModel(app) {
 
     this.save = function() {
         var data = this.item().model.toPlainObject(true);
-        app.model.userLicensesCertifications.setItem(data)
+        userLicensesCertifications.setItem(data)
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
             // Push version so it appears as saved
             this.version().push({ evenIfObsolete: true });
             // Cache of licenses info for the user and job title is dirty, clean up so is updated later
-            app.model.jobTitleLicenses.clearCache();
-            app.model.userLicensesCertifications.clearCache();
+            jobTitleLicenses.clearCache();
+            userLicensesCertifications.clearCache();
             // Go out
 
             if (onboarding.inProgress()) {
@@ -241,7 +244,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
+        userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
         .then(function() {
             // Go out
             app.shell.goBack();

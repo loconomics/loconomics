@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
+var paymentAccount = require('../data/paymentAccount');
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
@@ -21,7 +22,7 @@ var A = Activity.extend(function PaymentAccountActivity() {
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
     this.registerHandler({
-        target: this.app.model.paymentAccount,
+        target: paymentAccount,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your payment account.' : 'Unable to load your payment account.';
@@ -51,7 +52,7 @@ A.prototype.show = function show(state) {
     // Discard any previous unsaved edit
     this.viewModel.discard();
     // Keep data updated:
-    this.app.model.paymentAccount.sync();
+    paymentAccount.sync();
 };
 
 function ViewModel(app) {
@@ -71,7 +72,6 @@ function ViewModel(app) {
         this.simplifiedFormEnabled(itIs);
     }.bind(this));
 
-    var paymentAccount = app.model.paymentAccount;
     this.errorMessages = paymentAccount.errorMessages;
 
     var dataVersion = paymentAccount.newVersion();
@@ -150,13 +150,12 @@ function ViewModel(app) {
 
     // On change to a valid code, do remote look-up
     this.postalCodeVM = new PostalCodeVM({
-        appModel: app.model,
         address: this.paymentAccount,
         postalCodeError: this.errorMessages.postalCode
     });
 
     // Postal code VM needs to know when the form data has loaded
-    app.model.paymentAccount.isLoading.subscribe(function(isLoading) {
+    paymentAccount.isLoading.subscribe(function(isLoading) {
         if(!isLoading) {
             this.postalCodeVM.onFormLoaded();
         }

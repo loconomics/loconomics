@@ -10,6 +10,7 @@
 
 var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
+var bookings = require('../data/bookings');
 
 var A = Activity.extend(function ViewBookingActivity() {
 
@@ -25,7 +26,7 @@ A.prototype.show = function show(state) {
 
     var bookingID = state && state.route.segments && state.route.segments[0];
     var currentUserID = user.userID();
-    this.app.model.bookings.getBooking(bookingID)
+    bookings.getBooking(bookingID)
     .then(function(booking) {
         if (booking.serviceProfessionalUserID() === currentUserID) {
             this.app.shell.go('/appointment/' + booking.serviceDateID(), null, true);

@@ -19,6 +19,8 @@ var Address = require('../models/Address');
 var Activity = require('../components/Activity');
 var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var serviceAddresses = require('../data/serviceAddresses');
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -37,7 +39,7 @@ var A = Activity.extend(function AddressEditorActivity() {
         handler: function(jobTitleID) {
             if (jobTitleID) {
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
                     // Fill in job title name
                     this.viewModel.jobTitleName(jobTitle.singularName());
@@ -116,7 +118,7 @@ A.prototype.show = function show(options) {
 
     if (addressID) {
         // Get the address
-        this.app.model.serviceAddresses.getItemVersion(jobTitleID, addressID)
+        serviceAddresses.getItemVersion(jobTitleID, addressID)
         .then(function (addressVersion) {
             if (addressVersion) {
                 this.viewModel.addressVersion(addressVersion);
@@ -143,7 +145,7 @@ A.prototype.show = function show(options) {
     }
     else {
         // New address
-        this.viewModel.addressVersion(this.app.model.serviceAddresses.newItemVersion({
+        this.viewModel.addressVersion(serviceAddresses.newItemVersion({
             jobTitleID: jobTitleID
         }));
 
@@ -210,19 +212,18 @@ function ViewModel(app) {
 
     // On change to a valid code, do remote look-up
     this.postalCodeVM = new PostalCodeVM({
-        appModel: app.model,
         address: this.address,
         postalCodeError: this.errorMessages.postalCode
     });
 
-    this.isLoading = app.model.serviceAddresses.state.isLoading;
-    this.isSaving = app.model.serviceAddresses.state.isSaving;
-    this.isDeleting = app.model.serviceAddresses.state.isDeleting;
+    this.isLoading = serviceAddresses.state.isLoading;
+    this.isSaving = serviceAddresses.state.isSaving;
+    this.isDeleting = serviceAddresses.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
 
     this.isLocked = ko.computed(function() {
-        return this.isDeleting() || app.model.serviceAddresses.state.isLocked();
+        return this.isDeleting() || serviceAddresses.state.isLocked();
     }, this);
 
     this.isNew = ko.pureComputed(function() {
@@ -268,7 +269,7 @@ function ViewModel(app) {
         else {
             // Normal use: save the user (serviceProfessional) address and provide the generated
             // addressID to the onSave method.
-            app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
+            serviceAddresses.setItem(this.address().model.toPlainObject())
             .then(function(serverData) {
                 // Update version with server data.
                 this.address().model.updateWith(serverData);
@@ -302,7 +303,7 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.serviceAddresses.delItem(this.jobTitleID(), this.addressID())
+        serviceAddresses.delItem(this.jobTitleID(), this.addressID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location

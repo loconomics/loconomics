@@ -59,13 +59,13 @@ function ViewModel() {
         onboarding.goNext();
     };
     this.clientOnboarding = function clientOnboarding() {
-        // IMPORTANT: right now, there is not an onboarding for client, and the onboarding appmodel
+        // IMPORTANT: right now, there is not an onboarding for client, and the onboarding data module
         // takes care of steps only for professionals, so clients has a single onboarding step, this
         // 'welcome' activity. Because of that, once the client choose to 'start' here we just
         // remove the onboarding step to prevent show them this welcome again every time it enters again.
         onboarding.stepNumber(-1);
         userProfile.saveOnboardingStep(null);
-        // We left the link behind to go wherever is linking (to add here an app.model.shell.go('/')
+        // We left the link behind to go wherever is linking (to add here an app.shell.go('/')
         // can conflict)
     };
 }

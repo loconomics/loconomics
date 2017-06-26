@@ -8,6 +8,7 @@ var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
+var userJobProfile = require('../data/userJobProfile');
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -152,7 +153,7 @@ function ViewModel(app) {
         var firstJobID = this.jobTitles()[0].value;
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
-            return app.model.userJobProfile.createUserJobTitle({
+            return userJobProfile.createUserJobTitle({
                 jobTitleID: jobTitle.value,
                 jobTitleName: jobTitle.label
             });

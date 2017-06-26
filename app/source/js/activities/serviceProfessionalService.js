@@ -11,6 +11,8 @@ var ko = require('knockout'),
     Route = require('../utils/Router').Route,
     serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 var onboarding = require('../data/onboarding');
+var clients = require('../data/clients');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -68,7 +70,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
             viewModel.client(null);
 
             if(clientID) {
-                app.model.clients.getItem(clientID)
+                clients.getItem(clientID)
                 .then(function(client) {
                     viewModel.client(client);
                 })
@@ -252,17 +254,16 @@ function ViewModel(app) {
     this.loadServicesData = function() {
         var clientID = this.clientID(),
             jobTitleID = this.jobTitleID(),
-            model = app.model.serviceProfessionalServices,
             services = null;
 
         if(this.isSelectionMode()) {
-            services = model.getServicesBookableByProvider(clientID, jobTitleID);
+            services = serviceProfessionalServices.getServicesBookableByProvider(clientID, jobTitleID);
         }
         else if (clientID) {
-            services = model.getClientSpecificServicesForJobTitle(clientID, jobTitleID);
+            services = serviceProfessionalServices.getClientSpecificServicesForJobTitle(clientID, jobTitleID);
         }
         else {
-            services = model.getList(jobTitleID);
+            services = serviceProfessionalServices.getList(jobTitleID);
         }
 
         return this.loadData(null, jobTitleID, services);
