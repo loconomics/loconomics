@@ -108,7 +108,7 @@ A.prototype.syncUpcomingBookings = function syncUpcomingBookings() {
         var b = v.upcomingBookings.nextBooking();
 
         if (b) {
-            v.nextBooking(new AppointmentView(Appointment.fromBooking(b), app));
+            v.nextBooking(new AppointmentView(Appointment.fromBooking(b)));
         }
         else {
             v.nextBooking(null);

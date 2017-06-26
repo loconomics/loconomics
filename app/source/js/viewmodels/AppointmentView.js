@@ -10,7 +10,7 @@ var clients = require('../data/clients');
 var serviceAddresses = require('../data/serviceAddresses');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 
-module.exports = function AppointmentView(appointment, app) {
+module.exports = function AppointmentView(appointment) {
     if (appointment._isAppointmentView) return appointment;
     appointment._isAppointmentView = true;
 
@@ -57,7 +57,7 @@ module.exports = function AppointmentView(appointment, app) {
             details = this.pricing();
 
         return details.map(function(det) {
-            return pricingSummaryDetailView(det, jid, app);
+            return pricingSummaryDetailView(det, jid);
         });
     }, appointment)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
@@ -123,7 +123,7 @@ module.exports = function AppointmentView(appointment, app) {
     return appointment;
 };
 
-function pricingSummaryDetailView(pricingSummaryDetail, jobTitleID, app) {
+function pricingSummaryDetailView(pricingSummaryDetail, jobTitleID) {
     var observable = ko.observable(serviceProfessionalServices.asModel()), // default empty object
         serviceID = pricingSummaryDetail.serviceProfessionalServiceID();
 

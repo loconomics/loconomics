@@ -12,7 +12,7 @@ var A = Activity.extend(function AccountActivity() {
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
     this.navBar = Activity.createSectionNavBar('Account');
 });
 
@@ -26,7 +26,7 @@ A.prototype.show = function show(state) {
     userPaymentPlan.sync();
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.isServiceProfessional = user.isServiceProfessional;
     this.activeUserPaymentPlan = userPaymentPlan.data;
 }

@@ -8,7 +8,7 @@ var ko = require('knockout');
 var user = require('../data/userProfile').data;
 var search = require('../data/search');
 
-module.exports = function SearchJobTitlesVM(app) {
+module.exports = function SearchJobTitlesVM() {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();

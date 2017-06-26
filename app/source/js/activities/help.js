@@ -11,7 +11,7 @@ var A = Activity.extend(function HelpActivity() {
 
     Activity.apply(this, arguments);
 
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
     this.accessLevel = null;
 
     this.navBar = Activity.createSubsectionNavBar('Back');
@@ -125,7 +125,7 @@ A.prototype.show = function show(state) {
 
 var ko = require('knockout');
 
-function ViewModel(app) {
+function ViewModel() {
     this.isInOnboarding = onboarding.inProgress;
     this.articles = ko.observableArray([]);
     this.searchText = ko.observable('');

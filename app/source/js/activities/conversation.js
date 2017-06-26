@@ -12,7 +12,7 @@ var A = Activity.extend(function ConversationActivity() {
 
     Activity.apply(this, arguments);
 
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
 
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Inbox', {
         backLink: '/inbox' , helpLink: this.viewModel.helpLinkProfessionals
@@ -74,7 +74,7 @@ A.prototype.show = function show(state) {
 
 var ko = require('knockout');
 
-function ViewModel(app) {
+function ViewModel() {
 
     this.user = user;
     this.helpLinkProfessionals = '/help/relatedArticles/201966986-sending-and-receiving-messages';

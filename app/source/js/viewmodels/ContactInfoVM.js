@@ -6,7 +6,7 @@ var user = userProfile.getData();
 var onboarding = require('../data/onboarding');
 var homeAddress = require('../data/homeAddress');
 
-module.exports = function ContactInfoVM(app) {
+module.exports = function ContactInfoVM() {
 
     this.user = user;
 

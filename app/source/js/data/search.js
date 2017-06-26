@@ -118,6 +118,6 @@ exports.serviceProfessionalsByJobTitle = function(jobTitleID, lat, lng, searchDi
         origLat: lat,
         origLong: lng,
         searchDistance: searchDistance
-    })
+    });
     return latestRequest;
 };

@@ -12,7 +12,7 @@ var A = Activity.extend(function CmsActivity() {
 
     Activity.apply(this, arguments);
 
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
 
     this.accessLevel = this.app.UserType.loggedUser;
 
@@ -36,7 +36,7 @@ A.prototype.show = function show(state) {
 
 var numeral = require('numeral');
 
-function ViewModel(app) {
+function ViewModel() {
 
     this.clients = clients.list;
 

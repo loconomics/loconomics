@@ -124,16 +124,16 @@ var HelpSection = require('../models/HelpSection');
 exports.isLoadingSections = ko.observable(false);
 exports.getSections = function() {
     if (cache.sections.mustRevalidate()) {
-        api.isLoadingSections(true);
+        exports.isLoadingSections(true);
         return getRemoteSections().then(function(data) {
             cache.sections.data = data.map(function(a) {
                 return new HelpSection(a);
             });
             cache.sections.latest = new Date();
-            api.isLoadingSections(false);
+            exports.isLoadingSections(false);
             return cache.sections.data;
         }, function(err) {
-            api.isLoadingSections(false);
+            exports.isLoadingSections(false);
             throw err;
         });
     }

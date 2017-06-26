@@ -87,8 +87,8 @@ function ViewModel(app) {
 
     this.isInOnboarding = onboarding.inProgress;
 
-    this.schedulingPreferences = new SchedulingPreferencesVM(app);
-    this.weeklySchedule = new WeeklyScheduleVM(app);
+    this.schedulingPreferences = new SchedulingPreferencesVM();
+    this.weeklySchedule = new WeeklyScheduleVM();
 
     this.save = function save() {
         return Promise.all([
@@ -140,7 +140,7 @@ function ViewModel(app) {
     }, this);
 }
 
-function SchedulingPreferencesVM(app) {
+function SchedulingPreferencesVM() {
 
     var prefsVersion = schedulingPreferences.newVersion();
     prefsVersion.isObsolete.subscribe(function(itIs) {
@@ -175,7 +175,7 @@ function SchedulingPreferencesVM(app) {
 
 var timeZoneList = require('../utils/timeZoneList');
 
-function WeeklyScheduleVM(app) {
+function WeeklyScheduleVM() {
 
     var scheduleVersion = weeklySchedule.newVersion();
     scheduleVersion.isObsolete.subscribe(function(itIs) {

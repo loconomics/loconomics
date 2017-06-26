@@ -82,9 +82,9 @@ exports.goNext = function goNext() {
     this.app.shell.go(url, null, true);
 };
 
-exports.isAtCurrentStep = ko.computed(function() {
-    return exports.currentActivity() === exports.stepName();
-});
+exports.isAtCurrentStep = ko.pureComputed(function() {
+    return this.currentActivity() === this.stepName();
+}, exports);
 
 /**
     Check if onboarding is enabled on the user profile

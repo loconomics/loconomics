@@ -84,7 +84,7 @@ A.prototype.show = function show(options) {
 function ViewModel(app) {
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
-    this.reviews = new ReviewsVM(app);
+    this.reviews = new ReviewsVM();
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
     // just to notify app-address-map elements
@@ -202,7 +202,7 @@ function ViewModel(app) {
 }
 
 var PublicUserReview = require('../models/PublicUserReview');
-function ReviewsVM(app) {
+function ReviewsVM() {
     this.userID = ko.observable(null);
     this.jobTitleID = ko.observable(null);
     this.list = ko.observableArray([]);
