@@ -867,7 +867,7 @@ namespace LcRest
 
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
             var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
-            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking);
+            userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking));
         }
 
         /// <summary>

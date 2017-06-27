@@ -12,7 +12,9 @@
 var ko = require('knockout'),
     $ = require('jquery'),
     propTools = require('./utils/jsPropertiesTools'),
-    getObservable = require('./utils/getObservable');
+    getObservable = require('./utils/getObservable'),
+    MessageBar = require('./components/MessageBar');
+
 var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
@@ -41,6 +43,7 @@ exports.registerAll = function(app) {
             this.value = getObservable(params.value);
             this.placeholder = getObservable(params.placeholder);
             this.disable = getObservable(params.disable);
+            this.showRemaining = getObservable(false);
 
             var userAttr = getObservable(params.attr);
             this.attr = ko.pureComputed(function() {
@@ -56,6 +59,16 @@ exports.registerAll = function(app) {
             this.type = ko.computed(function() {
                 return type() || 'text';
             }, this);
+
+            this.charRemaining = ko.pureComputed(function() {
+                if (this.value()) {
+                    return userAttr().maxlength - this.value().length;
+                }
+                else
+                    return userAttr().maxlength;
+            }, this);
+
+            this.showRemaining(typeof userAttr() != 'undefined' && typeof userAttr().maxlength != 'undefined');
         }
     });
 
@@ -593,6 +606,15 @@ exports.registerAll = function(app) {
                 }
 
                 return vm;
+            }
+        }
+    });
+
+    ko.components.register('app-message-bar', {
+        template: MessageBar.template,
+        viewModel: {
+            createViewModel: function(params, componentInfo) {
+                return new MessageBar(params, componentInfo.element, componentInfo.templateNodes);
             }
         }
     });

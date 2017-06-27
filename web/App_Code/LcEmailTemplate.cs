@@ -515,9 +515,7 @@ public static class LcEmailTemplate
 
         if (jobTitleID.HasValue)
         {
-            var languageID = LcData.GetCurrentLanguageID();
-            var countryID = LcData.GetCurrentCountryID();
-            a.userJobTitle = LcRest.PublicUserJobTitle.Get(userID, languageID, countryID, jobTitleID.Value, true);
+            a.userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(userID, jobTitleID.Value));
         }
 
         return a;

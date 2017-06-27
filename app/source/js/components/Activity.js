@@ -60,6 +60,7 @@ Activity.prototype.show = function show(options) {
         // the use of components and templates, or any other data-bind
         // syntax, requires to be in a context with binding enabled:
         ko.applyBindings(this.viewModel || {}, this.$activity.get(0));
+
         this.__bindingDone = true;
     }
 

@@ -11,6 +11,8 @@ var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
+var MessageBar = require('../components/MessageBar');
+var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 
 var A = Activity.extend(function ProfileActivity() {
 
@@ -79,12 +81,25 @@ A.prototype.show = function show(options) {
     this.loadData(userID, jobTitleID);
     this.viewModel.reviews.reset(userID, jobTitleID);
     this.viewModel.refreshTs(new Date());
+    this.viewModel.userID(userID);
+    this.viewModel.showMessageBar(true);
 };
 
+A.prototype.hide = function() {
+    Activity.prototype.hide.call(this);
+
+    this.viewModel.showMessageBar(false);
+};
+
+
 function ViewModel(app) {
+    //jshint maxstatements:40
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
+    this.userID = ko.observable(null);
     this.reviews = new ReviewsVM();
+    this.showMessageBar = ko.observable(false);
+
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
     // just to notify app-address-map elements
@@ -92,6 +107,8 @@ function ViewModel(app) {
 
     this.reset = function() {
         this.user(null);
+        this.userID(null);
+        this.showMessageBar(false);
     };
 
     /// Work Photos utils
@@ -198,6 +215,42 @@ function ViewModel(app) {
             hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
 
         return hasIntro || hasAttributes;
+    }, this);
+
+    this.jobTitleSingularName = ko.pureComputed(function() {
+        return this.selectedJobTitle().jobTitleSingularName();
+    }, this);
+
+    this.selectedJobTitle = ko.pureComputed(function() {
+        return (this.user() && this.user().selectedJobTitle()) || new PublicUserJobTitle();
+    }, this);
+
+    this.editListing = function() {
+        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
+    }.bind(this);
+
+    this.listingIsActive = ko.pureComputed(function() {
+        return this.selectedJobTitle().isActive();
+    }, this);
+
+    this.isOwnProfile = ko.pureComputed(function() {
+        var user = app.model.user(),
+            profileOwnerUserID = this.userID();
+
+        if(user.isAnonymous() || profileOwnerUserID === null) {
+            return false;
+        }
+        else {
+            return profileOwnerUserID == user.userID();
+        }
+    }, this);
+
+    this.isMessageBarVisible = ko.pureComputed(function() {
+        return this.isOwnProfile() && this.showMessageBar();
+    }, this);
+
+    this.messageBarTone = ko.pureComputed(function() {
+        return this.listingIsActive() ? MessageBar.tones.success : MessageBar.tones.warning;
     }, this);
 }
 

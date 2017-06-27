@@ -30,6 +30,22 @@
         margin-bottom: 25px;
         margin-right: auto;
         margin-left: auto;
+
+        .btn-col {
+            margin-bottom: 5px;
+        }
+
+        .btn-col:first-child {
+            @media $mediaMinSm {
+                padding-left: 0;
+            }
+        }
+
+        .btn-col:last-child {
+            @media $mediaMinSm {
+                padding-right: 0;
+            }
+        }
     }
     
     // Container for a one line button/link that triggers a tool.

@@ -134,7 +134,7 @@ function ViewModel(app) {
                 } else {
                     app.successSave();
                 }
-            })
+            }.bind(this))
             .catch(function() {
                 // Show all fields, letting user to fix error in previously
                 // hidden fields.
@@ -142,6 +142,10 @@ function ViewModel(app) {
                 // catch error, managed on event
             }.bind(this));
         }
+    }.bind(this);
+
+    this.onSkip = function() {
+        app.model.onboarding.goNext();
     }.bind(this);
 
     this.errorMessages = {

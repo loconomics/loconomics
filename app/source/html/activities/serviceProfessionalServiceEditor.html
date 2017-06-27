@@ -3,7 +3,7 @@
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -20,7 +20,7 @@
                         <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
                     </div>
                     <div data-bind="with: current">
-                        <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName()"></app-unlabeled-input>
+                        <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName(), attr: {maxlength: 50}"></app-unlabeled-input>
                         <div class="form-inline isolated">
                             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
                                 <label for="serviceProfessionalServiceEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
@@ -113,7 +113,7 @@
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
                         <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
-                    </div>       
+                    </div>
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
@@ -121,4 +121,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
