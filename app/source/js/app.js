@@ -495,35 +495,26 @@ var appInit = function appInit() {
      * Initializes the onboarding data module, getting locally stored user
      * data if is a logged user, and resume the onboarding process
      * when required
+     * IMPORTANT: preloadUserProfile must be called before this,
+     * that will update the global 'user' with the onboardingStep we need here.
      */
     var setupOnboarding = function() {
-        // Get a copy from local storage, if any, of the user profile.
-        // This is needed to detect and resume an onboarding, like happens
-        // if a user closes and go back to the app/site, or when coming
-        // from a signup redirect like in a landing page (#381)
-        // NOTE: the usual methods (load, getData) are not used since may
-        // trigger a remote load, and even wait for it, with very bad side effects:
-        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
-        // - worse performance, waiting for a remote request in order to start
-        // (the app must be able to start up without remote connection), while
-        // - remote data is not needed at all; if user is logged, the required
-        // data is ever locally stored
-        // TODO Maybe this can be removed, if in the init sequence the userProfile.sync
-        // is run before of this (but ever after session.restore) with care to manage
-        // when there is no a local profile.
-        return userProfile.loadFromLocal()
-        .then(function(userProfile) {
+
+        try {
             // Set-up onboarding and current step, if any
             onboarding.init(app);
-            onboarding.setStep(userProfile && userProfile.onboardingStep || null);
+            onboarding.setStep(user.onboardingStep() || null);
+        }
+        catch(ex) {
+            return Promise.reject(ex);
+        }
 
-            // Workaround #374: because the onboarding selectedJobTitleID is not stored
-            // on server or at local profile, we need an speciallized method. This ensures
-            // that the value is set in place when the async task ends, no further action is required.
-            // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
-            // is recommended
-            return onboarding.recoverLocalJobTitleID();
-        })
+        // Workaround #374: because the onboarding selectedJobTitleID is not stored
+        // on server or at local profile, we need an speciallized method. This ensures
+        // that the value is set in place when the async task ends, no further action is required.
+        // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
+        // is recommended (see #396)
+        return onboarding.recoverLocalJobTitleID()
         .then(function() {
             // Now we are ready with values in place
             // Resume onboarding
@@ -558,23 +549,45 @@ var appInit = function appInit() {
     };
 
     /**
-     * Request a remote update of user main data
-     * if is logged.
+     * Loads the user profile from local storage if any,
+     * filling in the shared copy of the data (userProfile.data),
+     * and request a remote sync (in case is logged user).
+     *
+     * IMPORTANT Needs to be executed after session.restore and before
+     * tasks like 'shell.run' (or accessControl checks will fail)
+     * and 'onboarding' (or will not be able to resume from locally stored
+     * onboarding step)
      */
-    var requestUserProfileSync = function() {
-        if (!user.isAnonymous()) {
-            userProfile.sync();
-        }
+    var preloadUserProfile = function() {
+        // REQUIRED FOR ONBOARDING DETAILS:
+        // This is needed to detect and resume an onboarding, like happens
+        // if a user closes and go back to the app/site, or when coming
+        // from a signup redirect like in a landing page (#381)
+        // NOTE: the usual methods (load, getData) are not used since may
+        // trigger a remote load, and even wait for it, with very bad side effects:
+        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
+        // - worse performance, waiting for a remote request in order to start
+        // (the app must be able to start up without remote connection), while
+        // - remote data is not needed at all; if user is logged, the required
+        // data is ever locally stored
+        return userProfile.loadFromLocal()
+        .then(function() {
+            // we have a global reference to 'user' in place that
+            // got updated with loadFromLocal
+            if (!user.isAnonymous()) {
+                userProfile.sync();
+            }
+        });
     };
 
     // Try to restore a user session ('remember login')
     var session = require('./data/session');
     session.restore()
+    .then(preloadUserProfile)
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
     .then(setupOnboarding)
     .then(setAppAsReady)
-    .then(requestUserProfileSync)
     .catch(alertError);
 
     // DEBUG
