@@ -105,9 +105,9 @@ describe('utils/SingleEvent', function() {
             });
         });
 
-        describe('cancel', function() {
+        describe('dispose', function() {
             it('should returns the subscription', function() {
-                var cancelledSubscription = subscriptionA.cancel();
+                var cancelledSubscription = subscriptionA.dispose();
 
                 expect(cancelledSubscription).to.equal(subscriptionA);
             });
@@ -170,7 +170,7 @@ describe('utils/SingleEvent', function() {
         it('should allow to unsubscribe', function() {
             // reset flag
             touched = false;
-            subscription.cancel();
+            subscription.dispose();
             event.emit();
 
             expect(touched).to.be.false;

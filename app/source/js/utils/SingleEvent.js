@@ -36,8 +36,9 @@
  * @typedef {Object} Subscription
  * @property {number} id Internal identifier
  * @property {function} handler Reference to the handler subscribed
- * @property {function<Subscription>} cancel Allows to cancel the subscription (unsubscribe)
- * AKA: unsubscribe, dispose
+ * @property {function<Subscription>} dispose Cancels the subscription,
+ * getting removed from the internal stack, and returns it.
+ * AKA: unsubscribe, cancel
  */
 
 /**
@@ -62,7 +63,7 @@ function SingleEvent(context) {
     var subscriptions = [];
 
     /**
-     * Tracks the amount of subscriptions cancelled.
+     * Tracks the amount of subscriptions disposed/cancelled.
      * That means, the number of holes in the subscriptions array
      * that must be discarded from the total length.
      */
@@ -132,7 +133,7 @@ function SingleEvent(context) {
             get handler() {
                 return handler;
             },
-            cancel: function () {
+            dispose: function () {
                 return ev.unsubscribe(id);
             }
         };
