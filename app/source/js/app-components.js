@@ -41,7 +41,6 @@ exports.registerAll = function(app) {
             this.placeholder = getObservable(params.placeholder);
             this.disable = getObservable(params.disable);
             this.showRemaining = getObservable(false);
-            this.maxlength = getObservable(params.maxlength);
 
             var userAttr = getObservable(params.attr);
             this.attr = ko.pureComputed(function() {
@@ -59,16 +58,14 @@ exports.registerAll = function(app) {
             }, this);
 
             this.charRemaining = ko.pureComputed(function() {
-                if(this.maxlength()!= 'undefined') {
-                    if (this.value()) {
-                        return userAttr().maxlength - this.value().length;
-                    }
-                    else
-                        return userAttr().maxlength;
+                if (this.value()) {
+                    return userAttr().maxlength - this.value().length;
                 }
+                else
+                    return userAttr().maxlength;
             }, this);
 
-            this.showRemaining(this.maxlength());
+            this.showRemaining(typeof userAttr() != 'undefined' && typeof userAttr().maxlength != 'undefined');
         }
     });
 

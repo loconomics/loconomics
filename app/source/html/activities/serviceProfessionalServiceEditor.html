@@ -20,7 +20,7 @@
                         <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
                     </div>
                     <div data-bind="with: current">
-                        <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName(), attr: {maxlength: 50}, maxlength: true"></app-unlabeled-input>
+                        <app-unlabeled-input params="placeholder: type.namePlaceHolder, value: pricing.name, disable: $root.isLocked() || !!type.fixedName(), attr: {maxlength: 50}"></app-unlabeled-input>
                         <div class="form-inline isolated">
                             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
                                 <label for="serviceProfessionalServiceEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
