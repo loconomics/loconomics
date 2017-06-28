@@ -46,7 +46,7 @@ api.getItem = function(jobTitleID, serviceID) {
             });
 };
 
-var baseSetItem = api.setItem.bind(exports);
+var baseSetItem = api.setItem.bind(api);
 
 // GroupListRemoteModel cache only works for one services API call: ...-services/{jobTitleID}
 // Updates to service objects may change which calls they are returned by. Rather

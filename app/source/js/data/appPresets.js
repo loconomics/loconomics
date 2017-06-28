@@ -36,18 +36,7 @@ function migrateConfig() {
  */
 function getSiteUrl() {
     // Local Storage config takes precedence
-    var siteUrl = '';
-
-    // It allows to be set in localStorage for development purposes
-    if (localStorage.siteUrl) {
-        siteUrl = localStorage.siteUrl;
-        // Overwrite preset attribute
-        document.documentElement.setAttribute('data-site-url', siteUrl);
-    }
-    else {
-        siteUrl = document.documentElement.getAttribute('data-site-url') || '';
-    }
-    return siteUrl;
+    return 'http://dev.loconomics.com';
 }
 
 /// Init tasks and retrieve values
