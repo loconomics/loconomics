@@ -234,8 +234,7 @@ function ViewModel(app) {
     }, this);
 
     this.isOwnProfile = ko.pureComputed(function() {
-        var user = app.model.user(),
-            profileOwnerUserID = this.userID();
+        var profileOwnerUserID = this.userID();
 
         if(user.isAnonymous() || profileOwnerUserID === null) {
             return false;
