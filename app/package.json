@@ -91,16 +91,23 @@
     "load-image.meta": "./vendor/js.loadImage/js/load-image-meta.js"
   },
   "browserify-shim": {
-    "bootstrap": { "depends": [ "jquery" ] },
-    "bootstrap-carousel": { "depends": [ "jquery", "bootstrap" ] },
-    "bootstrap-switch": { "depends": ["jquery", "bootstrap" ] },
+    "jquery": "$",
+    "bootstrap": { "depends": [ "jquery:$" ] },
+    "bootstrap-carousel": { "depends": [ "jquery:$", "bootstrap" ] },
+    "bootstrap-switch": { "depends": ["jquery:$", "bootstrap" ] },
     "fastclick": { "exports": "FastClick" },
-    "jquery": { "exports": "jQuery" },
-    "jquery.ajaxQueue": { "depends": [ "jquery" ] },
-    "jquery.fileupload": { "depends": [ "jquery", "jquery-ui/widget" ] },
+    "jquery.ajaxQueue": { "depends": [ "jquery:$" ] },
+    "jquery.fileupload": { "depends": [ "jquery:$", "jquery-ui/widget" ] },
     "jquery.fileupload-process": { "depends": [ "jquery.fileupload" ] },
+    "jquery.ui.touch-punch": { "depends": [ "jquery:$" ] },
+    "jquery-mobile": { "depends": [ "jquery:$" ] },
+    "load-image": { "exports": "loadImage", "depends": [ "jquery:$" ] },
+    "load-image.ios": { "depends": [ "load-image" ] },
+    "load-image.meta": { "depends": [ "load-image" ] },
     "jquery.fileupload-image": {
         "depends": [
+            "jquery:$",
+            "jquery-ui/widget",
             "jquery.fileupload",
             "jquery.fileupload-process",
             "load-image",
@@ -108,11 +115,6 @@
             "load-image.meta",
             "blueimp-canvas-to-blob"
         ]
-    },
-    "jquery.ui.touch-punch": { "depends": [ "jquery" ] },
-    "jquery-mobile": { "depends": [ "jquery" ] },
-    "load-image": { "exports": "loadImage", "depends": [ "jquery" ] },
-    "load-image.ios": { "depends": [ "load-image" ] },
-    "load-image.meta": { "depends": [ "load-image" ] }
+    }
   }
 }

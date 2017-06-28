@@ -2,8 +2,6 @@
 
 module.exports = function(/*grunt*/) {
 
-    var getPublicModulesFrom = require('./shared/getPublicModulesFrom');
-
     /**
         Browserify config
     **/
@@ -19,33 +17,22 @@ module.exports = function(/*grunt*/) {
     };
 
     /**
-        Styleguide Libs
+        App bundle
     **/
-    bconfig.styleguidelibs = {
-        'src': [],
-        'dest': './build/assets/js/styleguidelibs.js',
+    bconfig.app = {
+        'src': [
+            './source/js/app.js'
+        ],
+        'dest': './build/assets/js/app.js',
         'options': {
+            // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
+            'debug': false,
             'require': [
                 'jquery',
                 'bootstrap',
                 'bootstrap-switch',
-                'jquery.ajaxQueue'
-            ]
-        }
-    };
+                'jquery.ajaxQueue',
 
-    var styleguidelibsModules = getPublicModulesFrom(bconfig.styleguidelibs);
-
-    /**
-        Libs bundle
-    **/
-    bconfig.libs = {
-        'src': [],
-        'dest': './build/assets/js/libs.js',
-        'options': {
-            'debug': false,
-            'external': styleguidelibsModules,
-            'require': [
                 'moment',
                 'numeral',
                 'knockout',
@@ -76,71 +63,6 @@ module.exports = function(/*grunt*/) {
                 'jquery.fileupload-process',
                 'jquery.fileupload-image'
             ]
-        }
-    };
-
-    var libsModules = getPublicModulesFrom(bconfig.libs);
-
-    /**
-        App bundle
-    **/
-    bconfig.app = {
-        'src': [
-            './source/js/app.js'
-        ],
-        'dest': './build/assets/js/app.js',
-        'options': {
-            // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
-            'debug': true,
-            // Modules from other bundles
-            'external': Array.prototype.concat(
-                styleguidelibsModules,
-                libsModules
-            )
-        }
-    };
-
-    /**
-     * Landing pages bundle
-     */
-    bconfig.landingPages = {
-        'src': [
-            './source/js/landingPage.js'
-        ],
-        'dest': './build/assets/js/welcome.js',
-        'options': {
-            // Enable debug eve when compiling script.js, the min.js will delete debug info for production use:
-            'debug': true,
-            // Modules from other bundles
-            'external': Array.prototype.concat(
-                styleguidelibsModules,
-                libsModules
-            ),
-            'shim': {
-                'bootstrap-carousel': {
-                    path: './vendor/bootstrap-source/js/carousel.js',
-                    exports: null,
-                    depends: { 'jquery': 'jquery' }
-                }
-            }
-        }
-    };
-
-    /**
-        Tests bundle
-    **/
-    bconfig.tests = {
-        'src': [
-            './source/test/**/*.js'
-        ],
-        'dest': './build/assets/js/tests.js',
-        'options': {
-            'debug': true,
-            // Modules from other bundles
-            'external': Array.prototype.concat(
-                styleguidelibsModules,
-                libsModules
-            )
         }
     };
 
