@@ -140,8 +140,12 @@ MessageBar.prototype.show = function() {
 MessageBar.prototype.hide = function() {
     this._$parts.hide();
 
-    // Keep the DOM tidy by moving the message bar back into the component
-    this._$component.append(this._$messageBar);
+    // Keep the DOM tidy by temporarily removing the message bar from the DOM
+    // If we insert _$messageBar back into the DOM under the component element,
+    // then ko will try to reapply bindings to the contents of the message bar
+    // when any of the param observables change. This raises an exception because
+    // MessageBar _already_ applied bindings manually in the constructor above.
+    this._$messageBar.detach();
 };
 
 module.exports = MessageBar;
