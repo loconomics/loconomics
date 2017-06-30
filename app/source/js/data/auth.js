@@ -46,6 +46,7 @@ var performLocalLogin = function (username) {
                 // No profile included, request it (without wait for it)
                 userProfile.sync();
             }
+            return credentials;
         });
     };
 };
