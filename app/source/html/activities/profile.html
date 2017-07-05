@@ -1,5 +1,11 @@
 <!-- Activity profile -->
 <div data-activity="profile" data-bind="css: { 'is-loading': isLoading }">
+    <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone">
+        <p class="small">
+            <span data-bind="text: jobTitle"></span> listing is <span data-bind="ifnot:isActive">inactive.</span><span data-bind="if:isActive">active.</span>
+            <a data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</a>
+        </p>
+    </app-message-bar>
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <!-- TODO: FROM JUVO, TO REFACTOR -->
     <!-- profile internal menu -->

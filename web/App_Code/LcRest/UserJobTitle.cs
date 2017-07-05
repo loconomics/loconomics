@@ -50,6 +50,13 @@ namespace LcRest
         public DateTime updatedDate;
         #endregion
 
+        public bool isActive {
+            get
+            {
+                return this.statusID == ProfileStatus.On;
+            }
+        }
+
         public UserJobTitle()
         {
             cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;

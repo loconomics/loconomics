@@ -33,6 +33,7 @@ function PublicUserJobTitle(values) {
         intro: null,
         cancellationPolicyID: 0,
         instantBooking: false,
+        isActive: false,
         jobTitleSingularName: '',
         jobTitlePluralName: '',
 

@@ -193,6 +193,55 @@
                 }
             }
         }
+
+        // How the Cooperative Works section
+        .landingpage-hiw {
+            text-align: center;
+            color: white;
+            background: $brand-secondary;
+            padding-top: 40px;
+            $iconsSize = 90px;
+            .landingpage-title {
+              color: white;
+              text-align: center;
+            }
+            ul {
+                margin-top: ($iconsSize / 2) + 18px;
+                margin-bottom: 0;
+                padding-bottom: ($iconsSize / 2);
+
+                @media (max-width: 520px) {
+                    margin-top: 0px;
+                }
+                > li {
+                  margin-top: (0 - $iconsSize / 2);
+                  @media (max-width: 520px) {
+                    margin-top: 30px;
+                  }
+                  @media $mediaMaxXs {
+                      margin-top: 0px;
+                  }
+                }
+            }
+            @media (max-width: 520px) {
+                    margin: 0 $grid-gap;
+            }
+            h3 {
+                font-weight: bold;
+                font-size: 22px;
+            }
+            // icons
+            i {
+                background: $brand-secondary;
+                border: 2px solid white;
+                font-size: floor($iconsSize / 1.60);
+                border-radius: 50%;
+                width: $iconsSize;
+                height: $iconsSize;
+                line-height: $iconsSize;
+                color: white;
+            }
+        }
     }
 }
 
