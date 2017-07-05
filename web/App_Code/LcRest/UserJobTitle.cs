@@ -389,5 +389,35 @@ namespace LcRest
                 }
             }
         }
+
+        public static bool MeetsOwnershipRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasListing bit = 0
+
+            -- Firts: ensure all account and listing requirements are tested
+            -- before we check listing status
+            EXEC TestAllUserAlerts @userID
+
+            -- Check Listing
+            IF EXISTS (
+				SELECT *
+				FROM userprofilepositions
+				WHERE UserID = @UserID
+					AND Active = 1
+					AND StatusID = 1 -- active and publicly visible
+			)
+			BEGIN
+				SET @hasListing = 1
+			END
+
+            SELECT @hasListing
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
     }
 }

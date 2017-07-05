@@ -40,8 +40,21 @@ namespace LcRest
         public DateTime createdDate;
         public DateTime updatedDate;
 
-        public int? ownerStatusID;
-        public DateTime? ownerAnniversaryDate;
+        internal Owner owner;
+        public int ownerStatusID
+        {
+            get
+            {
+                return owner.statusID;
+            }
+        }
+        public DateTime? ownerAnniversaryDate
+        {
+            get
+            {
+                return owner.ownerAnniversaryDate;
+            }
+        }
 
         // Automatic field right now, but is better
         // to communicate it than to expect the App or API client
@@ -84,8 +97,11 @@ namespace LcRest
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
 
-                ownerStatusID = record.ownerStatusID,
-                ownerAnniversaryDate = record.ownerAnniversaryDate
+                owner = new Owner
+                {
+                    statusID = record.ownerStatusID ?? (int)Owner.DefaultOwnerStatus,
+                    ownerAnniversaryDate = record.ownerAnniversaryDate
+                }
             };
         }
 
@@ -278,5 +294,20 @@ namespace LcRest
         }
         #endregion
 
+        #region Membership / OwnerStatus
+        /// <summary>
+        /// Checks the membership requirements of the user and
+        /// if there is a status change is saved at database.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static LcEnum.OwnerStatus CheckAndSaveOwnerStatus(int userID)
+        {
+            var owner = Get(userID).owner;
+            owner.status = Owner.GetExpectedOwnerStatus(userID);
+            Owner.Set(owner);
+            return owner.status;
+        }
+        #endregion
     }
 }

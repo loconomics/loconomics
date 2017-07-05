@@ -1,7 +1,7 @@
 ﻿@{
     var response = "";
     var gw = LcPayment.NewBraintreeGateway();
-    
+
     if (!IsPost) {
         var challenge = Request["bt_challenge"];
         if (!String.IsNullOrWhiteSpace(challenge)) {
@@ -11,7 +11,7 @@
         var signature = Request["bt_signature"];
         var payload = Request["bt_payload"];
         var notification = gw.WebhookNotification.Parse(signature, payload);
-        
+
         // Detecting the channel (from the ID) and the domain on wich this page is executing
         // to stop processing on the case they don't match.
         // Since we have 4 channels and only 2 at Braintree -sandbox and production-, Braintree production
@@ -36,7 +36,7 @@
 
         // Doing the action that fits better:
         //
-        
+
         // Marketplace Merchant Accounts
         if (notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_APPROVED ||
             notification.Kind == Braintree.WebhookKind.SUB_MERCHANT_ACCOUNT_DECLINED) {
@@ -46,7 +46,46 @@
             var providerID = LcUtils.ExtractInt(notification.MerchantAccount.Id, 0);
             LcMessaging.SendMerchantAccountNotification(providerID);
         }
-        
+
+        // Payment Plan Subscription updates
+        var planNotifications = new List<Braintree.WebhookKind>
+        {
+            // Status Changes
+            Braintree.WebhookKind.SUBSCRIPTION_CANCELED,
+            Braintree.WebhookKind.SUBSCRIPTION_EXPIRED,
+            Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE,
+            Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE,
+            // Payment Changes: it can change the status (past_due on unsuccessfully,
+            // active on successfully if comes from past_due)
+            // and subscription data (NextBilling info).
+            Braintree.WebhookKind.SUBSCRIPTION_CHARGED_SUCCESSFULLY,
+            Braintree.WebhookKind.SUBSCRIPTION_CHARGED_UNSUCCESSFULLY
+            // Trial ended notification is not relevant (status is active before and after
+            // and payment data the same; the actual relevant changes when that happens is
+            // the payment charge, detected with the '_CHARGED_' notifications)
+            //Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED
+        };
+        if (planNotifications.Contains(notification.Kind))
+        {
+            var userPlan = LcRest.UserPaymentPlan.GetBySubscriptionID(notification.Subscription.Id);
+            if (userPlan == null)
+            {
+                throw new Exception("UserPaymentPlan subscription not found (" + notification.Subscription.Id + ")");
+            }
+            else
+            {
+                userPlan.UpdatedAtGateway(notification.Subscription, notification.Kind);
+                LcRest.UserPaymentPlan.Set(userPlan);
+
+                // Payments
+                foreach (var transaction in notification.Subscription.Transactions)
+                {
+                    var payment = LcRest.UserFeePayment.FromSubscriptionTransaction(userPlan, transaction);
+                    LcRest.UserFeePayment.Set(payment);
+                }
+            }
+        }
+
         // Other...
     }
 }
