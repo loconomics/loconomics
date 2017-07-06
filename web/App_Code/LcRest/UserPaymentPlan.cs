@@ -207,8 +207,29 @@ namespace LcRest
                     data.daysPastDue
                 );
 
-                // Run Membership Checks to enable/disable member (OwnerStatus update)
-                UserProfile.CheckAndSaveOwnerStatus(data.userID);
+                try
+                {
+                    // Run Membership Checks to enable/disable member (OwnerStatus update)
+                    UserProfile.CheckAndSaveOwnerStatus(data.userID);
+                }
+                catch (Exception ex)
+                {
+                    // An error checking status must NOT prevent us from saving/creating
+                    // the payment-plan, but we must notify staff so we can take manual action
+                    // to fix the error and run the check again for this user
+                    try
+                    {
+                        LcLogger.LogAspnetError(ex);
+                        LcMessaging.NotifyError("UserPaymentPlan.Set->UserProfile.CheckAndSaveOwnerStatus::userID=" + data.userID,
+                            System.Web.HttpContext.Current.Request.RawUrl,
+                            ex.ToString());
+                    }
+                    catch
+                    {
+                        // Prevent cancel paymentplan creation/update because of email or log failing. Really strange
+                        // and webhook-scheduleTask for subscriptions would attempt again this.
+                    }
+                }
             }
         }
         #endregion
