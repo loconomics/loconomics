@@ -393,12 +393,12 @@ namespace LcRest
         public static bool MeetsOwnershipRequirement(int userID)
         {
             var sql = @"
-            DECLARE @UserID = @0
+            DECLARE @UserID int = @0
             DECLARE @hasListing bit = 0
 
             -- Firts: ensure all account and listing requirements are tested
             -- before we check listing status
-            EXEC TestAllUserAlerts @userID
+            EXEC TestAllUserAlerts @UserID
 
             -- Check Listing
             IF EXISTS (
