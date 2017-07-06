@@ -48,7 +48,7 @@
                 </div>
                 <div class="container-fluid LightForm" data-bind="visible: !acknowledgment.isSigned()">
                     <div class="form-group">
-                        <label>Type your full name as acknowlegment</label>
+                        <label>Type your full name as acknowledgment</label>
                         <input type="text" class="form-control" data-bind="textInput: ownerFullName" placeholder="First and last name"/>
                     </div>
                     <div class="LightForm-submitBar">
@@ -57,7 +57,7 @@
                 </div>
                 <div class="container-fluid LightForm" data-bind="visible: acknowledgment.isSigned">
                     <div class="form-group">
-                        <label>You submitted your acknowlegment of this disclosure on:</label>
+                        <label>You submitted your acknowledgment of this disclosure on:</label>
                         <p>
                             <span data-bind="text: acknowledgment.dateAcknowledged, format: { type: 'datetime', format: 'MMMM Do, YYYY [at] h:mm a' }"></span>
                             from IP Address: <span data-bind="text: acknowledgment.acknowledgedFromIP"></span>
