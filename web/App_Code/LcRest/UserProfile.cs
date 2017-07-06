@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -40,7 +41,8 @@ namespace LcRest
         public DateTime createdDate;
         public DateTime updatedDate;
 
-        internal Owner owner;
+        [JsonIgnore]
+        public Owner owner;
         public int ownerStatusID
         {
             get
@@ -99,6 +101,7 @@ namespace LcRest
 
                 owner = new Owner
                 {
+                    userID = record.userID,
                     statusID = record.ownerStatusID ?? (int)Owner.DefaultOwnerStatus,
                     ownerAnniversaryDate = record.ownerAnniversaryDate
                 }
