@@ -22,6 +22,8 @@ var A = Activity.extend(function AboutMeActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+    // Share navBar with desktop nav through viewModel
+    this.viewModel.navBar = this.navBar;
 
     this.registerHandler({
         target: this.app.model.userProfile,
