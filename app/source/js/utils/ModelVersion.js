@@ -1,5 +1,15 @@
 /**
- * @deprecated Looks for alternative approach.
+ * Utility that allows to keep an original model untouched
+ * while editing a version, helping synchronize both
+ * when desired by push/pull/sync-ing.
+ *
+ * Its the usual way to work on forms, where an in memory
+ * model can be used but in a copy so changes doesn't affects
+ * other uses of the in-memory model (and avoids remote syncing)
+ * until the copy want to be persisted by pushing it, or being
+ * discarded or refreshed with a remotely updated original model.
+ *
+ * @todo Looks for alternative approach, deprecate this and open migration issues.
  * It adds unneeded complexity, we must use a more simple approach as
  * create a copy of the data (once loaded) to work with, and after that
  * push/save the changes using the specific data API. The additional
@@ -8,17 +18,6 @@
  * property dataTimestamp or a flag in the form viewmodel.
  * Data modules are using this for some methods, must be refactored and too some
  * activities and viewmodels.
- *
- *
- *  Utility that allows to keep an original model untouched
- *  while editing a version, helping synchronize both
- *  when desired by push/pull/sync-ing.
- *
- *  Its the usual way to work on forms, where an in memory
- *  model can be used but in a copy so changes doesn't affects
- *  other uses of the in-memory model (and avoids remote syncing)
- *  until the copy want to be persisted by pushing it, or being
- *  discarded or refreshed with a remotely updated original model.
  */
 'use strict';
 
