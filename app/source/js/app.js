@@ -18,6 +18,7 @@ require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');
+require('./data/googleAnalytics');
 
 // Register the special locale
 require('./locales/en-US-LC');

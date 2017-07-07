@@ -63,22 +63,6 @@ var clearLocalData = function () {
 };
 
 /**
- * Set-ups Google Analytics library, if loaded,
- * with the credentials so identifies the user.
- * @param {Credentials} credentials
- */
-var setupGoogleAnalytics = function(credentials) {
-    if (window.ga) {
-        if (window.cordova) {
-            window.ga.setUserId(credentials.userID);
-        }
-        else {
-            window.ga('set', 'userId', credentials.userID);
-        }
-    }
-};
-
-/**
  * Tries to open a session by restoring the user
  * locally saved credentials (if any,
  * no error if nothing).
@@ -93,7 +77,6 @@ exports.restore = function() {
     // If there are credentials saved
     return credentialsStore.get()
     .then(function(credentials) {
-        setupGoogleAnalytics(credentials);
         // Track session as opened
         isSessionOpened = true;
         restoredEvent.emit(credentials);
@@ -127,8 +110,6 @@ exports.open = function(credentials) {
     .then(function() {
         // async local save, don't wait
         credentialsStore.set(credentials);
-
-        setupGoogleAnalytics(credentials);
 
         // Track session as opened
         isSessionOpened = true;
