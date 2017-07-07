@@ -18,7 +18,7 @@ require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');
-require('./data/googleAnalytics');
+var ga = require('./data/googleAnalytics');
 
 // Register the special locale
 require('./locales/en-US-LC');
@@ -428,41 +428,7 @@ var appInit = function appInit() {
     }
 
     // Set-up Google Analytics
-    if (window.ga) {
-        var gaTrackerId = 'UA-72265353-4';
-        var appId = $('html').data('app-id');
-        var appName = $('html').data('app-name');
-        var appVersion = $('html').data('app-version');
-        // We want to track exactly the different platforms where
-        // we run: web, android, ios (from cordova device property)
-        // and we use the version field for that
-        appVersion = (window.device && window.device.platform || 'web') + '-' + appVersion;
-
-        if (window.cordova) {
-            window.ga.startTrackerWithId(gaTrackerId);
-            window.ga.setAppVersion(appVersion);
-            // app Id and Names seems to be automatic at native
-            window.ga.trackView('index');
-        }
-        else {
-            window.ga('create', gaTrackerId, 'auto');
-            window.ga('set', 'appVersion', appVersion);
-            window.ga('set', 'appName', appName);
-            window.ga('set', 'appId', appId);
-            window.ga('send', 'screenview', { screenName: 'index' });
-        }
-        app.shell.on(app.shell.events.itemReady, function($act, state) {
-            var view = state.route.name;
-            //var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
-            //url = url.replace(/^#!/, '');
-            if (window.cordova) {
-                window.ga.trackView(view);
-            }
-            else {
-                window.ga('send', 'screenview', { screenName: view });
-            }
-        });
-    }
+    ga.setup();
 
     var marketplaceProfile = require('./data/marketplaceProfile');
     /**
