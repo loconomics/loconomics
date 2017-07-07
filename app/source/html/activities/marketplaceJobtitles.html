@@ -2,7 +2,7 @@
 <div data-activity="marketplaceJobtitles" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">   
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -13,7 +13,7 @@
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
                     <span data-bind="text: jobTitleName"></span>&nbsp;listing status
-                </h2>                        
+                </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
@@ -51,7 +51,7 @@
                 </div>
                 <h2 class="SectionTitle">
                     <span>About your&nbsp;<span data-bind="text: jobTitleName"></span>&nbsp;services</span>
-                </h2>                        
+                </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
@@ -69,7 +69,7 @@
                         <a class="InfoTile" href="/serviceProfessionalService" data-bind="attr: { href: getJobUrlTo('serviceProfessionalService') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-pricetags-outline" aria-hidden="true"></span>
-                            </div>                
+                            </div>
                             <div class="Tile-content">
                                 <div>Offerings</div>
                                 <em data-bind="text: pricingCount"></em>
@@ -80,7 +80,7 @@
                         <a class="InfoTile" href="/serviceAddresses" data-bind="attr: { href: getJobUrlTo('serviceAddresses') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-location-outline" aria-hidden="true"></span>
-                            </div>                
+                            </div>
                             <div class="Tile-content">
                                 <div>Service locations</div>
                                 <em data-bind="text: addressesCount"></em>
@@ -93,7 +93,7 @@
                                 <span class="fa ion ion-ios-close" aria-hidden="true"></span>
                             </div>
                             <div class="Tile-content">
-                                <p>Booking policies</p>
+                                <p>Booking and Cancellation Policies</p>
                             </div>
                         </a>
                     </li>
@@ -112,7 +112,7 @@
                         <a class="InfoTile" href="/workPhotos" data-bind="attr: { href: getJobUrlTo('workPhotos') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-camera-outline" aria-hidden="true"></span>
-                            </div>                
+                            </div>
                             <div class="Tile-content">
                                 <div>Photos of your <span data-bind="text: jobTitleName"></span> services</div>
                                 <em data-bind="text: workPhotosSummary"></em>
@@ -123,7 +123,7 @@
                         <a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
-                            </div>                
+                            </div>
                             <div class="Tile-content">
                                 <p>Add scheduling to your website</p>
                             </div>
@@ -147,4 +147,4 @@
             </div>
         </div>
     </div>
-</div>   
+</div>
