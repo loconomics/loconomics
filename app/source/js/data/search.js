@@ -20,8 +20,6 @@ exports.DEFAULT_LOCATION = {
     city: 'San Francisco, CA USA'
 };
 
-var latestRequest = null;
-
 /**
  * Search for service professionals, job titles and categories
  * at the marketplace, by term and location
@@ -33,15 +31,17 @@ var latestRequest = null;
  * data of a model/SearchResult
  */
 exports.byTerm = function(searchTerm, lat, lng, searchDistance) {
-    if (latestRequest) latestRequest.xhr.abort();
+    if (exports.byTerm.latestRequest) {
+        exports.byTerm.latestRequest.xhr.abort();
+    }
 
-    latestRequest = remote.get('search', {
+    exports.byTerm.latestRequest = remote.get('search', {
         searchTerm: searchTerm,
         origLat: lat || exports.DEFAULT_LOCATION.lat,
         origLong: lng || exports.DEFAULT_LOCATION.lng,
         searchDistance: searchDistance || exports.DEFAULT_LOCATION.searchDistance
     });
-    return latestRequest;
+    return exports.byTerm.latestRequest;
 };
 
 /**
@@ -53,14 +53,16 @@ exports.byTerm = function(searchTerm, lat, lng, searchDistance) {
  * @returns {Promise<CategorySearchResult>}
  */
 exports.getCategory = function(categoryID, lat, lng, searchDistance) {
-    if (latestRequest) latestRequest.xhr.abort();
+    if (exports.getCategory.latestRequest) {
+        exports.getCategory.latestRequest.xhr.abort();
+    }
 
-    latestRequest = remote.get('search/categories/' + categoryID, {
+    exports.getCategory.latestRequest = remote.get('search/categories/' + categoryID, {
         origLat: lat,
         origLong: lng,
         searchDistance: searchDistance
     });
-    return latestRequest;
+    return exports.getCategory.latestRequest;
 };
 
 /**
@@ -72,15 +74,17 @@ exports.getCategory = function(categoryID, lat, lng, searchDistance) {
  * @returns {Promise<Array<JobTitleSearchResult>>}
  */
 exports.jobTitlesByCategory = function(categoryID, lat, lng, searchDistance) {
-    if (latestRequest) latestRequest.xhr.abort();
+    if (exports.jobTitlesByCategory.latestRequest) {
+        exports.jobTitlesByCategory.latestRequest.xhr.abort();
+    }
 
-    latestRequest = remote.get('search/job-titles/by-category', {
+    exports.jobTitlesByCategory.latestRequest = remote.get('search/job-titles/by-category', {
         categoryID: categoryID,
         origLat: lat,
         origLong: lng,
         searchDistance: searchDistance
     });
-    return latestRequest;
+    return exports.jobTitlesByCategory.latestRequest;
 };
 
 /**
@@ -92,14 +96,16 @@ exports.jobTitlesByCategory = function(categoryID, lat, lng, searchDistance) {
  * @returns {Promise<JobTitleSearchResult>}
  */
 exports.getJobTitle = function(jobTitleID, lat, lng, searchDistance) {
-    if (latestRequest) latestRequest.xhr.abort();
+    if (exports.getJobTitle.latestRequest) {
+        exports.getJobTitle.latestRequest.xhr.abort();
+    }
 
-    latestRequest = remote.get('search/job-titles/' + jobTitleID, {
+    exports.getJobTitle.latestRequest = remote.get('search/job-titles/' + jobTitleID, {
         origLat: lat,
         origLong: lng,
         searchDistance: searchDistance
     });
-    return latestRequest;
+    return exports.getJobTitle.latestRequest;
 };
 
 /**
@@ -111,13 +117,15 @@ exports.getJobTitle = function(jobTitleID, lat, lng, searchDistance) {
  * @returns {Promise<Array<ServiceProfessionalSearchResult>>}
  */
 exports.serviceProfessionalsByJobTitle = function(jobTitleID, lat, lng, searchDistance) {
-    if (latestRequest) latestRequest.xhr.abort();
+    if (exports.serviceProfessionalsByJobTitle.latestRequest) {
+        exports.serviceProfessionalsByJobTitle.latestRequest.xhr.abort();
+    }
 
-    latestRequest = remote.get('search/service-professionals/by-job-title', {
+    exports.serviceProfessionalsByJobTitle.latestRequest =remote.get('search/service-professionals/by-job-title', {
         jobTitleID: jobTitleID,
         origLat: lat,
         origLong: lng,
         searchDistance: searchDistance
     });
-    return latestRequest;
+    return exports.serviceProfessionalsByJobTitle.latestRequest;
 };
