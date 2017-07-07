@@ -13,11 +13,13 @@ var A = Activity.extend(function VerificationsActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    
+
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
-    
+    // Share navBar with desktop nav through viewModel
+    this.viewModel.navBar = this.navBar;
+
     // Setup special links behavior to add/perform specific verifications
     this.registerHandler({
         target: this.$activity,
@@ -45,7 +47,7 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     this.app.model.userVerifications.getList()
     .then(function(list) {
         this.viewModel.userVerifications(list());
@@ -57,7 +59,7 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201967776-adding-verifications-to-your-profile';
-    
+
     this.isSyncing = app.model.userVerifications.state.isSyncing;
     this.isLoading = app.model.userVerifications.state.isLoading;
     this.isSaving = app.model.userVerifications.state.isSaving;
@@ -76,7 +78,7 @@ var UserVerification = require('../models/UserVerification'),
     Verification = require('../models/Verification');
 
 function testdata() {
-    
+
     var verA = new Verification({
             name: 'Email'
         }),

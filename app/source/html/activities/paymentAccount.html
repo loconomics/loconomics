@@ -6,7 +6,10 @@
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/account"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Account</a>
+                        <a href="/account" data-bind="attr: { href: navBar.leftAction().link }">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                            <span data-bind="text: navBar.leftAction().text"></span>
+                        </a>
                     </li>
                 </ul>
             </div>

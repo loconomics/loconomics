@@ -17,7 +17,6 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         backLink: '/calendar',
         helpLink: this.viewModel.helpLink
     });
-
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
     this.registerHandler({

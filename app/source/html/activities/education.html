@@ -2,12 +2,13 @@
 <div data-activity="education" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/userProfile">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> Profile
+                        <a href="/userProfile" data-bind="attr: { href: navBar.leftAction().link }">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                            <span data-bind="text: navBar.leftAction().text"></span>
                         </a>
                     </li>
                 </ul>
@@ -39,7 +40,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="CompactLinkTile">  
+                    <div class="CompactLinkTile">
                         <a href="/educationForm">
                             <div class="Tile-content text-muted">Add certificate or degree</div>
                             <div class="Tile-icon text-muted">
@@ -54,4 +55,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
