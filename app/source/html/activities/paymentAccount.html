@@ -55,7 +55,7 @@
                     <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
                     <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.simplifiedFormEnabled()">
                       <input type="number" class="form-control"
-                             placeholder="Postal code" aria-label="Postal code"
+                             placeholder="Postal code" aria-label="Postal code" min="0"
                              data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $root.isLocked,
                                         popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                     </div>
