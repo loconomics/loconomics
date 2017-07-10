@@ -16,17 +16,6 @@ require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
 
-//require('jquery.fileupload-image');
-//////
-require('jquery.fileupload');
-require('jquery.fileupload-process');
-require('load-image');
-require('load-image.ios');
-require('load-image.meta');
-require('blueimp-canvas-to-blob');
-////////
-
-
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var AppModel = require('./appmodel/AppModel');
 

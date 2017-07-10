@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = function(/*grunt*/) {
-
     /**
         Browserify config
     **/
+<<<<<<< HEAD
 	var bconfig = {
         options: {
             transform: [['stringify', {
@@ -16,6 +16,9 @@ module.exports = function(/*grunt*/) {
         }
     };
 
+=======
+    var bconfig = {};
+>>>>>>> Workaround to load jquery.fileupload-image.js with latest Browserify. Now everything seems to be working with up-to-date versions #360
     /**
         App bundle
     **/
