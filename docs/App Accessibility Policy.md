@@ -1,5 +1,5 @@
 # App Accessibility Policy
-Loconomics Cooperative, Inc. is committed to ensuring accessibility of its website and intranet to people with disabilities. New and updated web content produced by our organization will meet [WCAG](https://www.w3.org/TR/WCAG/) [2.0 Guidelines](https://www.w3.org/TR/WCAG20/#guidelines), [Conformance Level AA](https://www.w3.org/TR/WCAG20/#conformance-reqs), by September 1st, 2017.
+Loconomics Cooperative, Inc. is committed to ensuring accessibility of its website and intranet to people with disabilities. New and updated web content produced by our organization will meet [WCAG](https://www.w3.org/TR/WCAG/) [2.0 Guidelines](https://www.w3.org/TR/WCAG20/#guidelines), [Conformance Level AA](https://www.w3.org/TR/WCAG20/#conformance-reqs), by September 1st, 2017. By meeting this conformance level, we also will comply with Section 508. 
 
 Existing web content produced by our organization will meet our standard by September 1st, 2017.
 
@@ -41,3 +41,7 @@ Outlined below are the guidelines with w3.org links to the description of, how t
 - [Conformance Claims (Optional)](https://www.w3.org/TR/WCAG20/#conformance-claims)
 - [Statement of Partial Conformance - Third Party Content](https://www.w3.org/TR/WCAG20/#conformance-partial)
 - [Statement of Partial Conformance - Language](https://www.w3.org/TR/WCAG20/#conformance-partial-lang)
+
+## [Comparison Table of WCAG 2.0 to Existing Section 508 Standards](https://www.access-board.gov/guidelines-and-standards/communications-and-it/about-the-ict-refresh/background/comparison-table-of-wcag2-to-existing-508-standards)
+
+
