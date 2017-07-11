@@ -44,4 +44,29 @@ Outlined below are the guidelines with w3.org links to the description of, how t
 
 ## [Comparison Table of WCAG 2.0 to Existing Section 508 Standards](https://www.access-board.gov/guidelines-and-standards/communications-and-it/about-the-ict-refresh/background/comparison-table-of-wcag2-to-existing-508-standards)
 
+## Tools for Testing 
+### WCAG 2.0
+The tools listed here are not the ones used in a Section 508 audit so may or may not catch all that's required. 
+
+Tool | Function | Purpose
+----- | ---------- | ---------
+[Web Puppeteer](https://github.com/google/puppeteer) | A testing framework for testing web applications with JavaScript | Web testing
+[Accessibility Developer Tools](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en) | Google Chrome extension for doing audits | Web testing
+
+### Section 508 
+The six tools listed in this table, when used together, provide the ability to perform comprehensive Section 508 testing for software and web applications and web content. They all require Windows to run.
+
+Review the table to become familiar with each tool's function and purpose. [Installation Instructions](https://section508testing.net/pluginfile.php/532/mod_scorm/content/12/content/common/resources/Tools_Installation_Guide.pdf).
+
+Tool | Function | Purpose
+----- | ---------- | ---------
+Inspect | Reveals the Name, Role, State, and Value of software elements | Software testing 
+Java | Ferret Reveals the Name, Role, State, and Value of Java software elements | Software testing 
+Web Accessibility Toolbar (WAT) 2012 | Aids in the manual inspection of accessibility-related elements on web pages | Web testing 
+ARIA Markup Favelet | Highlights all ARIA code on a page | Web testing 
+Frames Favelet | Marks up frames and iframes on a page with name/title | Web testing 
+Named Anchor Bookmarklet | Highlights a skip link's target (anchor) on a page | Web testing 
+
+
+
 
