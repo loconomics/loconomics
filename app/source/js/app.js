@@ -2,6 +2,8 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
+// Make jquery reference global, still needed by shimed plugins (jquery-mobile)
+window.$ = window.jQuery = $;
 require('jquery-mobile');
 require('./utils/jquery.multiline');
 var ko = require('knockout');

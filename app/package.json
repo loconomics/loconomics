@@ -23,6 +23,8 @@
   "devDependencies": {
     "bliss": "~1.0.1",
     "blueimp-canvas-to-blob": "^2.2.0",
+    "blueimp-file-upload": "^9.18.0",
+    "blueimp-load-image": "^2.12.2",
     "browserify": "^14.4.0",
     "browserify-shim": "~3.8.14",
     "browsernizr": "~1.0.2",
@@ -51,6 +53,7 @@
     "grunt-text-replace": "^0.4.0",
     "grunt-zip": "~0.16.2",
     "is_js": "~0.7.3",
+    "jquery": "^3.2.1",
     "jquery-ui": "~1.10.5",
     "jshint": "^2.9.4",
     "knockout": "~3.3.0",
@@ -72,40 +75,55 @@
     "time-grunt": "~1.0.0"
   },
   "browserify": {
-      "transform": [ "browserify-shim" ]
+    "transform": [
+      "browserify-shim"
+    ]
   },
   "browser": {
     "bootstrap": "./vendor/bootstrap/js/bootstrap.js",
     "bootstrap-carousel": "./vendor/bootstrap-source/js/carousel.js",
     "bootstrap-switch": "./vendor/bootstrap-switch/js/bootstrap-switch.js",
     "fastclick": "./vendor/fastclick-forked/fastclick.js",
-    "jquery": "./vendor/jquery/jquery-2.1.4.js",
     "jquery.ajaxQueue": "./vendor/caoglish/jquery.ajaxQueue.js",
-    "jquery.fileupload": "./vendor/jquery.fileupload/js/jquery.fileupload.js",
-    "jquery.fileupload-process": "./vendor/jquery.fileupload/js/jquery.fileupload-process.js",
     "jquery.ui.touch-punch": "./vendor/touch-punch/jquery.ui.touch-punch.min",
     "jquery-mobile": "./vendor/jquerymobile/jquery.mobile.custom.js",
-    "load-image": "./vendor/js.loadImage/js/load-image.js",
-    "load-image.ios": "./vendor/js.loadImage/js/load-image-ios.js",
-    "load-image.meta": "./vendor/js.loadImage/js/load-image-meta.js",
-    "jquery.fileupload-image-original": "./vendor/jquery.fileupload/js/jquery.fileupload-image.js",
-    "jquery.fileupload-image": "./source/js/jquery.fileupload-image.js"
+    "jquery.fileupload-image": "blueimp-file-upload/js/jquery.fileupload-image"
   },
   "browserify-shim": {
-    "jquery": { "exports": "jQuery" },
-    "bootstrap": { "depends": [ "jquery" ] },
-    "bootstrap-carousel": { "depends": [ "jquery", "bootstrap" ] },
-    "bootstrap-switch": { "depends": ["jquery", "bootstrap" ] },
-    "fastclick": { "exports": "FastClick" },
-    "jquery.ajaxQueue": { "depends": [ "jquery" ] },
-    "jquery-ui/widget": { "depends": [ "jquery" ]},
-    "blueimp-canvas-to-blob": { "depends": [ "jquery" ]},
-    "jquery.fileupload": { "depends": [ "jquery", "jquery-ui/widget" ] },
-    "jquery.fileupload-process": { "depends": [ "jquery.fileupload" ] },
-    "jquery.ui.touch-punch": { "depends": [ "jquery" ] },
-    "jquery-mobile": { "depends": [ "jquery" ] },
-    "load-image": { "exports": "loadImage", "depends": [ "jquery" ] },
-    "load-image.ios": { "depends": [ "load-image" ] },
-    "load-image.meta": { "depends": [ "load-image" ] }
+    "bootstrap": {
+      "depends": [
+        "jquery"
+      ]
+    },
+    "bootstrap-carousel": {
+      "depends": [
+        "jquery",
+        "bootstrap"
+      ]
+    },
+    "bootstrap-switch": {
+      "depends": [
+        "jquery",
+        "bootstrap"
+      ]
+    },
+    "fastclick": {
+      "exports": "FastClick"
+    },
+    "jquery.ajaxQueue": {
+      "depends": [
+        "jquery"
+      ]
+    },
+    "jquery.ui.touch-punch": {
+      "depends": [
+        "jquery"
+      ]
+    },
+    "jquery-mobile": {
+      "depends": [
+        "jquery"
+      ]
+    }
   }
 }

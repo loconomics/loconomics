@@ -58,13 +58,7 @@ module.exports = function(/*grunt*/) {
                 'geocomplete',
                 'jquery-mobile',
                 'fastclick',
-                'jquery.ui.touch-punch',
-                'jquery.fileupload',
-                'load-image',
-                'load-image.meta',
-                'load-image.ios',
-                'jquery.fileupload-process',
-                'jquery.fileupload-image'
+                'jquery.ui.touch-punch'
             ]
         }
     };
