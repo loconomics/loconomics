@@ -43,6 +43,7 @@ Outlined below are the guidelines with w3.org links to the description of, how t
 - [Statement of Partial Conformance - Language](https://www.w3.org/TR/WCAG20/#conformance-partial-lang)
 
 ## [Comparison Table of WCAG 2.0 to Existing Section 508 Standards](https://www.access-board.gov/guidelines-and-standards/communications-and-it/about-the-ict-refresh/background/comparison-table-of-wcag2-to-existing-508-standards)
+There are 38 Level A and AA Success Criteria.  Of these, 22 are phrased differently but equivalent in substance to current 508 requirements.  Content that meets the current 508 requirements would not have to be changed to meet the corresponding success criteria.  Sixteen success criteria are new and content that meets the current 508 requirements might not meet these success criteria.
 
 ## Tools for Testing 
 ### WCAG 2.0
@@ -67,6 +68,6 @@ ARIA Markup Favelet | Highlights all ARIA code on a page | Web testing
 Frames Favelet | Marks up frames and iframes on a page with name/title | Web testing 
 Named Anchor Bookmarklet | Highlights a skip link's target (anchor) on a page | Web testing 
 
-
+#### [Links to Section 508 training lessons](https://section508testing.net/pluginfile.php/561/mod_scorm/content/7/content/common/resources/resources.html)
 
 
