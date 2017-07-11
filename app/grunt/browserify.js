@@ -20,5 +20,32 @@ module.exports = function(/*grunt*/) {
         }
     };
 
+    /**
+     * Landing pages bundle
+     */
+    bconfig.landingPages = {
+        'src': [
+            './source/js/landingPage.js'
+        ],
+        'dest': './build/assets/js/welcome.js',
+        'options': {
+            // Enable debug eve when compiling script.js, the min.js will delete debug info for production use:
+            'debug': false
+        }
+    };
+
+    /**
+        Tests bundle
+    **/
+    bconfig.tests = {
+        'src': [
+            './source/test/**/*.js'
+        ],
+        'dest': './build/assets/js/tests.js',
+        'options': {
+            'debug': false
+        }
+    };
+
     return bconfig;
 };
