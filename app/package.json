@@ -31,7 +31,6 @@
     "chai": "^3.5.0",
     "detect_swipe": "^2.1.4",
     "es6-promise": "~2.0.1",
-    "events": "~1.0.2",
     "geocomplete": "^1.6.5",
     "google-libphonenumber": "^2.0.0",
     "grunt": "~0.4.2",
@@ -87,7 +86,12 @@
     "fastclick": "./vendor/fastclick-forked/fastclick.js",
     "jquery.ajaxQueue": "./vendor/caoglish/jquery.ajaxQueue.js",
     "jquery.ui.touch-punch": "./vendor/touch-punch/jquery.ui.touch-punch.min",
-    "jquery.fileupload-image": "blueimp-file-upload/js/jquery.fileupload-image"
+    "jquery.fileupload-image": "blueimp-file-upload/js/jquery.fileupload-image",
+    "custom-modernizr": "./source/js/custom-modernizr.js",
+    "ko/formatBinding": "./vendor/iagosrl/ko/formatBinding",
+    "ko/domElementBinding": "./vendor/iagosrl/ko/domElementBinding",
+    "layoutUpdateEvent": "./vendor/iagosrl/layoutUpdateEvent",
+    "iagosrl/throttle": "./vendor/iagosrl/throttle"
   },
   "browserify-shim": {
     "bootstrap": {
