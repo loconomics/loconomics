@@ -76,9 +76,11 @@
   },
   "browserify": {
     "transform": [
-      "browserify-shim"
+      "browserify-shim",
+      "stringify"
     ]
   },
+  "stringify": "./grunt/stringify.settings.js",
   "browser": {
     "bootstrap": "./vendor/bootstrap/js/bootstrap.js",
     "bootstrap-carousel": "./vendor/bootstrap-source/js/carousel.js",
