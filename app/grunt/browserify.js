@@ -56,7 +56,6 @@ module.exports = function(/*grunt*/) {
                 './vendor/iagosrl/throttle:iagosrl/throttle',
                 'knockout-sortable',
                 'geocomplete',
-                'jquery-mobile',
                 'fastclick',
                 'jquery.ui.touch-punch'
             ]

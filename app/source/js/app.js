@@ -2,9 +2,9 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
-// Make jquery reference global, still needed by shimed plugins (jquery-mobile)
+// Make jquery reference global, may still be needed by some shimed plugins
 window.$ = window.jQuery = $;
-require('jquery-mobile');
+require('detect_swipe');
 require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
@@ -197,7 +197,6 @@ var appInit = function appInit() {
     // may require adjustments on other scripts that listen to it.
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
-    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
     layoutUpdateEvent.on();
 
     // Keyboard plugin events are not compatible with jQuery events, but needed to

@@ -29,6 +29,7 @@
     "browserify-shim": "~3.8.14",
     "browsernizr": "~1.0.2",
     "chai": "^3.5.0",
+    "detect_swipe": "^2.1.4",
     "es6-promise": "~2.0.1",
     "events": "~1.0.2",
     "geocomplete": "^1.6.5",
@@ -86,7 +87,6 @@
     "fastclick": "./vendor/fastclick-forked/fastclick.js",
     "jquery.ajaxQueue": "./vendor/caoglish/jquery.ajaxQueue.js",
     "jquery.ui.touch-punch": "./vendor/touch-punch/jquery.ui.touch-punch.min",
-    "jquery-mobile": "./vendor/jquerymobile/jquery.mobile.custom.js",
     "jquery.fileupload-image": "blueimp-file-upload/js/jquery.fileupload-image"
   },
   "browserify-shim": {
@@ -116,11 +116,6 @@
       ]
     },
     "jquery.ui.touch-punch": {
-      "depends": [
-        "jquery"
-      ]
-    },
-    "jquery-mobile": {
       "depends": [
         "jquery"
       ]
