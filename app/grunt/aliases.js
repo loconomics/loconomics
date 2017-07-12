@@ -6,8 +6,6 @@ module.exports = {
         'test'
     ],
     'test': [
-        'browserify:styleguidelibs',
-        'browserify:libs',
         'browserify:app',
         'exorcise:app',
         'browserify:tests',
@@ -16,12 +14,8 @@ module.exports = {
     ],
     'build-js': [
         'jshint',//'newer:jshint',
-        'browserify:styleguidelibs',
-        'browserify:libs',
         'browserify:app',
         'exorcise:app',
-        'uglify:styleguidelibs',
-        'uglify:libs',
         'uglify:app',
         'notify:browserify'
     ],

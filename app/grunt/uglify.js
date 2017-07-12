@@ -46,24 +46,10 @@ var conservativeOptions = {
 };
 
 module.exports = {
-    'libs': {
-        // Disabled conservative settings, enable if some bugs happens using minified files.
-        //'options': { compress: false, mangle: false },
-        'files': {
-            './build/assets/js/libs.min.js': ['<%= browserify.libs.dest %>']
-        }
-    },
     'app': {
         'options': conservativeOptions,
         'files': {
             './build/assets/js/app.min.js': ['<%= browserify.app.dest %>']
-        }
-    },
-    'styleguidelibs': {
-        // Disabled conservative settings, enable if some bugs happens using minified files.
-        //'options': { compress: false, mangle: false },
-        'files': {
-            './build/assets/js/styleguidelibs.min.js': ['<%= browserify.styleguidelibs.dest %>']
         }
     },
     'landingPages': {
