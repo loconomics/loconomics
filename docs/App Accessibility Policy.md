@@ -53,6 +53,7 @@ Tool | Function | Purpose
 ----- | ---------- | ---------
 [Web Puppeteer](https://github.com/google/puppeteer) | A testing framework for testing web applications with JavaScript | Web testing
 [Accessibility Developer Tools](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en) | Google Chrome extension for doing audits | Web testing
+[Contrast Ratio Checker](https://chrome.google.com/webstore/detail/contrast-ratio-checker/kmicfegjejpginnockfnjpdgeffebdcf/related?hl=en) | Web testing
 
 ### Section 508 
 The six tools listed in this table, when used together, provide the ability to perform comprehensive Section 508 testing for software and web applications and web content. They all require Windows to run.
