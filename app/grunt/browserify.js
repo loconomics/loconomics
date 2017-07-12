@@ -15,8 +15,9 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/app.js',
         'options': {
-            // Enable debug evern when compiling script.js, the min.js will delete debug info for production use:
-            'debug': false
+            'browserifyOptions': {
+                'debug': true
+            }
         }
     };
 
@@ -29,8 +30,9 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/welcome.js',
         'options': {
-            // Enable debug eve when compiling script.js, the min.js will delete debug info for production use:
-            'debug': false
+            'browserifyOptions': {
+                'debug': true
+            }
         }
     };
 
@@ -43,7 +45,9 @@ module.exports = function(/*grunt*/) {
         ],
         'dest': './build/assets/js/tests.js',
         'options': {
-            'debug': false
+            'browserifyOptions': {
+                'debug': true
+            }
         }
     };
 

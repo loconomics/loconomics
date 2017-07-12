@@ -9,7 +9,9 @@ module.exports = {
         'browserify:styleguidelibs',
         'browserify:libs',
         'browserify:app',
+        'exorcise:app',
         'browserify:tests',
+        'exorcise:tests',
         'mocha'
     ],
     'build-js': [
@@ -17,6 +19,7 @@ module.exports = {
         'browserify:styleguidelibs',
         'browserify:libs',
         'browserify:app',
+        'exorcise:app',
         'uglify:styleguidelibs',
         'uglify:libs',
         'uglify:app',
@@ -134,6 +137,7 @@ module.exports = {
         'bliss:landingPagesBuild',
         'htmlmin:landingPagesBuild',
         'browserify:landingPages',
+        'exorcise:landingPages',
         'uglify:landingPages'
     ],
     'publish-landingPages': [
