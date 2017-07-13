@@ -46,16 +46,12 @@ var conservativeOptions = {
 };
 
 module.exports = {
-    'app': {
+    'appCommon': {
         'options': conservativeOptions,
         'files': {
-            './build/assets/js/app.min.js': ['<%= browserify.app.dest %>']
-        }
-    },
-    'landingPages': {
-        'options': conservativeOptions,
-        'files': {
-            './build/assets/js/welcome.min.js': ['<%= browserify.landingPages.dest %>']
+            './build/assets/js/common.min.js': ['./build/assets/js/common.js'],
+            './build/assets/js/app.min.js': ['./build/assets/js/app.js'],
+            './build/assets/js/welcome.min.js': ['./build/assets/js/welcome.js']
         }
     }
 };

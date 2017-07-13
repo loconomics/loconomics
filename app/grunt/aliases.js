@@ -6,17 +6,17 @@ module.exports = {
         'test'
     ],
     'test': [
-        'browserify:app',
-        'exorcise:app',
+        'browserify:appCommon',
+        'exorcise:appCommon',
         'browserify:tests',
         'exorcise:tests',
         'mocha'
     ],
     'build-js': [
         'jshint',//'newer:jshint',
-        'browserify:app',
-        'exorcise:app',
-        'uglify:app',
+        'browserify:appCommon',
+        'exorcise:appCommon',
+        'uglify:appCommon',
         'notify:browserify'
     ],
     'build-css': [
@@ -86,7 +86,7 @@ module.exports = {
     //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
     'build-dev': [
-        'browserify',
+        'browserify:appCommon',
         'stylus:app',
         'bliss:appDebug',
         'notify:build'
@@ -130,9 +130,9 @@ module.exports = {
         'replace:html_bad_chars',
         'bliss:landingPagesBuild',
         'htmlmin:landingPagesBuild',
-        'browserify:landingPages',
-        'exorcise:landingPages',
-        'uglify:landingPages'
+        'browserify:appCommon',
+        'exorcise:appCommon',
+        'uglify:appCommon'
     ],
     'publish-landingPages': [
         'bliss:landingPagesWeb',

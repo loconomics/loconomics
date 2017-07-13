@@ -7,9 +7,9 @@ module.exports = function(/*grunt*/) {
 	var bconfig = {};
 
     /**
-        App bundle
+        Common bundles, with common, app, landingPage
     **/
-    bconfig.app = {
+    bconfig.appCommon = {
         files: {
             './build/assets/js/common.js': [
                 './source/js/app.js',
@@ -33,21 +33,6 @@ module.exports = function(/*grunt*/) {
                     }
                 ]
             ]
-        }
-    };
-
-    /**
-     * Landing pages bundle
-     */
-    bconfig.landingPages = {
-        'src': [
-            './source/js/landingPage.js'
-        ],
-        'dest': './build/assets/js/welcome.js',
-        'options': {
-            'browserifyOptions': {
-                'debug': true
-            }
         }
     };
 

@@ -6,16 +6,10 @@
 'use strict';
 
 module.exports = {
-    app: {
+    appCommon: {
         files: {
-            './build/assets/js/app.js.map': ['./build/assets/js/app.js']
-        },
-        options: {
-            strict: true
-        }
-    },
-    landingPages: {
-        files: {
+            './build/assets/js/common.js.map': ['./build/assets/js/common.js'],
+            './build/assets/js/app.js.map': ['./build/assets/js/app.js'],
             './build/assets/js/welcome.js.map': ['./build/assets/js/welcome.js']
         },
         options: {
