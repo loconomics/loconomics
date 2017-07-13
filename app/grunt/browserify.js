@@ -4,10 +4,65 @@ module.exports = function(/*grunt*/) {
     /**
         Browserify config
     **/
-	var bconfig = {};
+    var bconfig = {};
 
     /**
-        Common bundles, with common, app, landingPage
+     * A list of factors promises that fulfills when files were written.
+     * Each factor is a bundle splitted from the original one
+     * (out of 'common.js')
+     */
+    var factorsPromises = [];
+    /**
+     * Create a Promise that fulfills when the factorized file was wrote
+     * to disk.
+     * @param {string} path Full file path
+     * @param {Stream} factor Factor pipeline, a 'labeled-stream-splicer'
+     * class that implements a Stream with 'end' event.
+     * @returns {Promise}
+     */
+    var factorToPromise = function(path, factor) {
+        factorsPromises.push(new Promise(function(resolve, error) {
+            // Listen to 'end' event (not to 'finish') that guarantees
+            // that was processed, written to disk and file closed.
+            factor.on('end', resolve);
+            factor.on('error', error);
+        }));
+    };
+    /**
+     * Callback for grunt-browserify pre-processing.
+     * Will register promises for all the factorization process
+     * @param {Browserify} b
+     */
+    var preBundle = function(b) {
+        // Reset current 'factors' being processed.
+        factorsPromises = [];
+        b.removeListener('factor.pipeline', factorToPromise);
+        b.on('factor.pipeline', factorToPromise);
+    };
+    /**
+     * Callback for grunt-browserify post-processing.
+     * Will ensure that all factorization processes have completed
+     * before let the process to continue.
+     * IMPORTANT: This is very important becaus by default, the Grunt task will
+     * continue and close the running process without wait for completion,
+     * resulting in corrupted/incompleted files being written.
+     * @param {Error} err An error
+     * @param {(String|Buffer)} src Source of the generated bundle
+     * @param {Function} next Call when done to let the process to continue
+     */
+    var postBundle = function(err, src, next) {
+        Promise.all(factorsPromises).then(function() {
+            next(err, src);
+        })
+        .catch(function(factorsErr) {
+            console.error('Browserify: failed bundle factorization');
+            next(factorsErr, src);
+        });
+    };
+
+    /**
+        Generates the [app, landingPage] bundles,
+        extracting the common parts out.
     **/
     bconfig.appCommon = {
         files: {
@@ -32,7 +87,9 @@ module.exports = function(/*grunt*/) {
                         ]
                     }
                 ]
-            ]
+            ],
+            preBundleCB: preBundle,
+            postBundleCB: postBundle
         }
     };
 
