@@ -60,15 +60,40 @@ module.exports = function(/*grunt*/) {
         });
     };
 
+    // Constants defining the source and destination paths for the
+    // files involved in the appCommon set-up
+    /**
+     * Destination for the common modules file.
+     * It's the main target for the Browserify task.
+     */
+    var COMMON_DEST = './build/assets/js/common.js';
+    /**
+     * Source of the App bundle
+     */
+    var APP_SOURCE = './source/js/app.js';
+    /**
+     * Destination of the App bundle
+     */
+    var APP_DEST = './build/assets/js/app.js';
+    /**
+     * Source of the Landing Page bundle
+     */
+    var LANDING_PAGE_SOURCE = './source/js/landingPage.js';
+    /**
+     * Destination of the Landing Page bundle.
+     * Renamed as 'welcome' for the result file.
+     */
+    var LANDING_PAGE_DEST = './build/assets/js/welcome.js';
+
     /**
         Generates the [app, landingPage] bundles,
         extracting the common parts out.
     **/
     bconfig.appCommon = {
         files: {
-            './build/assets/js/common.js': [
-                './source/js/app.js',
-                './source/js/landingPage.js'
+            [COMMON_DEST]: [
+                APP_SOURCE,
+                LANDING_PAGE_SOURCE
             ]
         },
         options: {
@@ -77,13 +102,12 @@ module.exports = function(/*grunt*/) {
             },
             plugin: [
                 [
+                    // Output take strictkly the same order than listed
+                    // source files, so they match the expected name-content
                     'factor-bundle', {
-                        // Output take strictkly the same order than listed
-                        // source files, so they match the expected name-content
-                        o: [
-                            './build/assets/js/app.js',
-                            // landingPage renamed as 'welcome' in the result
-                            './build/assets/js/welcome.js'
+                        output: [
+                            APP_DEST,
+                            LANDING_PAGE_DEST
                         ]
                     }
                 ]
