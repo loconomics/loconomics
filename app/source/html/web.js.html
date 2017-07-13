@@ -33,10 +33,12 @@
         @if(debug) {
         <link href="assets/css/libs.@(cssVersion).css" rel="stylesheet">
         <link href="assets/css/app.@(cssVersion).css" rel="stylesheet">
+        <script src="assets/js/common.@(jsVersion).js?"></script>
         <script src="assets/js/app.@(jsVersion).js"></script>
         } else {
         <link href="assets/css/libs.min.@(cssVersion).css" rel="stylesheet">
         <link href="assets/css/app.min.@(cssVersion).css" rel="stylesheet">
+        <script src="assets/js/common.min.@(jsVersion).js"></script>
         <script src="assets/js/app.min.@(jsVersion).js"></script>
         }
     </head>

@@ -31,6 +31,7 @@
     "chai": "^3.5.0",
     "detect_swipe": "^2.1.4",
     "es6-promise": "~2.0.1",
+    "factor-bundle": "^2.5.0",
     "geocomplete": "^1.6.5",
     "google-libphonenumber": "^2.0.0",
     "grunt": "~0.4.2",
