@@ -73,7 +73,7 @@
     "numeral": "~1.5.3",
     "route-parser": "0.0.5",
     "stringify": "^5.1.0",
-    "stylus": "~0.49.0",
+    "stylus": "~0.54.5",
     "time-grunt": "1.x"
   },
   "browserify": {

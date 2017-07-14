@@ -51,8 +51,8 @@ createBoxesSize($media, $name, $mediaMax) {
 
 createBoxesOnlySize($media, $name, $mediaMax) {
     $mediaOnly = $media + ' and ' + $mediaMax
-    
-    @media $mediaOnly {
+
+    @media ($mediaOnly) {
         .Boxes-{$name}-only {
             Boxes()
         }
