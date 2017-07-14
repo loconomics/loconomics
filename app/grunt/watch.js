@@ -1,14 +1,18 @@
 'use strict';
 
 module.exports = {
-    grunt: {
+
+    // Watchs changes in project set-up files, as package.json and Grunt tasks
+    setupChange: {
         files: [
+            './package.json',
             'Gruntfile.js',
             'grunt/**/*.js',
         ],
         tasks: [
             'jshint:grunt', //'newer:jshint:grunt',
             'build',
+            'setupChangeBuild'
         ]
     },
 
@@ -16,9 +20,8 @@ module.exports = {
         files: ['<%= jshint.app.src %>'],
         tasks: [
             'jshint:app',//'newer:jshint',
-            'browserify:app',
-            'notify:browserify',
-            'uglify:app' //'newer:uglify'
+            //'browserify:appCommon',
+            //'notify:browserify'
         ]
     },
 
@@ -52,11 +55,6 @@ module.exports = {
     configJson: {
         files: ['./source/cordova-config.js.json'],
         tasks: ['bliss:cordovaConfigJson']
-    },
-
-    package: {
-        files: ['./package.json'],
-        tasks: ['build']
     },
 
     landingPages: {

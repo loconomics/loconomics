@@ -116,9 +116,19 @@ module.exports = {
         'copyto:webapp_assets',
         'notify:build'
     ],
+    'watch-appCommonJs': [
+        'browserify:watchAppCommon',
+        'watch:js',
+        'watch:setupChange'
+    ],
     'atwork': [
         'connect:atbuild',
-        'watch'
+        'watch-appCommonJs',
+        'watch:css',
+        'watch:images',
+        'watch:html',
+        'watch:configXml',
+        'watch:configJson'
     ],
     'atwork-landingPages': [
         'connect:atbuild',
