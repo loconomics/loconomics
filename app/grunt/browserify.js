@@ -1,7 +1,7 @@
 'use strict';
 var merge = require('deepmerge');
 
-module.exports = function(/*grunt*/) {
+module.exports = function(grunt) {
     /**
         Browserify config
     **/
@@ -23,6 +23,7 @@ module.exports = function(/*grunt*/) {
      */
     var factorToPromise = function(path, factor) {
         factorsPromises.push(new Promise(function(resolve, error) {
+            grunt.verbose.writeln('New Promise for factor', path);
             // Listen to 'end' event (not to 'finish') that guarantees
             // that was processed, written to disk and file closed.
             factor.on('end', resolve);
@@ -37,8 +38,22 @@ module.exports = function(/*grunt*/) {
     var preBundle = function(b) {
         // Reset current 'factors' being processed.
         factorsPromises = [];
+        // Listen each factor added
         b.removeListener('factor.pipeline', factorToPromise);
         b.on('factor.pipeline', factorToPromise);
+        // Listen errors when initially creating the main/full bundle
+        // (syntax errors, not found modules; all before content is splitted).
+        b.on('bundle', function(output) {
+            output.on('error', function(err) {
+                grunt.verbose.error().error(err);
+                grunt.fail.warn('Browserify bundle error: ' + err.toString());
+            });
+        });
+        b.on('error', function(err) {
+            // Something went wrong.
+            grunt.verbose.error().error(err);
+            grunt.fail.warn('Something went wrong: ' + err.toString());
+        });
     };
     /**
      * Callback for grunt-browserify post-processing.
@@ -53,10 +68,12 @@ module.exports = function(/*grunt*/) {
      */
     var postBundle = function(err, src, next) {
         Promise.all(factorsPromises).then(function() {
+            grunt.log.ok('Browserify factor-bundle completed with', factorsPromises.length, 'bundles');
             next(err, src);
         })
         .catch(function(factorsErr) {
-            console.error('Browserify: failed bundle factorization');
+            grunt.verbose.error().error(factorsErr);
+            grunt.fail.warn('Browserify factor-bundle failed:' + factorsErr.toString());
             next(factorsErr, src);
         });
     };
