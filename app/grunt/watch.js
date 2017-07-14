@@ -12,8 +12,11 @@ module.exports = {
         tasks: [
             'jshint:grunt', //'newer:jshint:grunt',
             'build',
-            'setupChangeBuild'
-        ]
+            'notify:setupChangeBuild'
+        ],
+        options: {
+            reload: true
+        }
     },
 
     js: {

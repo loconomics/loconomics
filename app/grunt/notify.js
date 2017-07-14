@@ -15,7 +15,7 @@ module.exports = {
     setupChangeBuild: {
         options: {
             title: 'Build after setup change',
-            message: 'Success! If watchify/atwork is running, may need a manual restart.'
+            message: 'Success! Watchify/atwork is being reloaded to apply new set-up.'
         }
     },
     browserify: {
