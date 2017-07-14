@@ -51,6 +51,7 @@
     "grunt-exorcise": "^2.1.1",
     "grunt-mkdir": "1.x",
     "grunt-mocha": "^1.0.4",
+    "grunt-newer": "^1.3.0",
     "grunt-notify": "~0.4.5",
     "grunt-parallel": "^0.5.1",
     "grunt-text-replace": "^0.4.0",

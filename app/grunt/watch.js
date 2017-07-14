@@ -10,7 +10,7 @@ module.exports = {
             'grunt/**/*.js',
         ],
         tasks: [
-            'jshint:grunt', //'newer:jshint:grunt',
+            'newer:jshint:grunt',
             'build',
             'notify:setupChangeBuild'
         ],
@@ -22,9 +22,7 @@ module.exports = {
     js: {
         files: ['<%= jshint.app.src %>'],
         tasks: [
-            'jshint:app',//'newer:jshint',
-            //'browserify:appCommon',
-            //'notify:browserify'
+            'newer:jshint:app'
         ]
     },
 
