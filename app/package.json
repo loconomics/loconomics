@@ -29,6 +29,7 @@
     "browserify-shim": "~3.8.14",
     "browsernizr": "~1.0.2",
     "chai": "^3.5.0",
+    "deepmerge": "^1.5.0",
     "detect_swipe": "^2.1.4",
     "es6-promise": "~2.0.1",
     "factor-bundle": "^2.5.0",

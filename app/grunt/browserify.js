@@ -1,4 +1,5 @@
 'use strict';
+var merge = require('deepmerge');
 
 module.exports = function(/*grunt*/) {
     /**
@@ -116,6 +117,13 @@ module.exports = function(/*grunt*/) {
             postBundleCB: postBundle
         }
     };
+
+    bconfig.watchAppCommon = merge(bconfig.appCommon, {
+        options: {
+            watch: true,
+            keepAlive: true
+        }
+    });
 
     /**
         Tests bundle
