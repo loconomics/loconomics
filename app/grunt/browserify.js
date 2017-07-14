@@ -120,7 +120,8 @@ module.exports = function(/*grunt*/) {
 
     bconfig.watchAppCommon = merge(bconfig.appCommon, {
         options: {
-            watch: true
+            watch: true,
+            keepAlive: true
         }
     });
 

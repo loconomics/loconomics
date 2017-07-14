@@ -15,7 +15,7 @@ module.exports = {
     setupChangeBuild: {
         options: {
             title: 'Build after setup change',
-            message: 'Success! Watchify/atwork is being reloaded to apply new set-up.'
+            message: 'Success! Auto-reload Grunt task may not work on parallelized tasks (like atwork).'
         }
     },
     browserify: {
