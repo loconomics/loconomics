@@ -36,7 +36,7 @@
     "geocomplete": "^1.6.5",
     "google-libphonenumber": "^2.0.0",
     "grunt": "^1.0.1",
-    "grunt-bliss": "0.0.2",
+    "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-clean": "1.x",
     "grunt-contrib-concat": "1.x",

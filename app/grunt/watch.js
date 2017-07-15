@@ -30,7 +30,7 @@ module.exports = {
         files: ['./source/css/**/*.styl', './source/css/**/*.css', 'Gruntfile.js'],
         tasks: [
             'stylus:app',
-            'cssmin:app',//'newer:cssmin:app'
+            'cssmin:app',
             'notify:css'
         ]
     },
