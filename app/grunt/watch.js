@@ -66,7 +66,10 @@ TARGETS.APP = {
 
     html: {
         files: ['./source/html/app.js.html', './source/html/**/*.html', './source/html/modals/*.html'],
-        tasks: ['build-html']
+        tasks: [
+            'build-html',
+            'notify:html'
+        ]
     },
 
     configXml: {

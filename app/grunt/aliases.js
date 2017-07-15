@@ -13,23 +13,20 @@ module.exports = {
         'mocha'
     ],
     'build-js': [
-        'jshint',//'newer:jshint',
+        'jshint',
         'browserify:appCommon',
         'exorcise:appCommon',
-        'uglify:appCommon',
-        'notify:browserify'
+        'uglify:appCommon'
     ],
     'build-css': [
         'concat:css-libs',
         'stylus:app',
-        'cssmin:libs',//'newer:cssmin'
-        'cssmin:app',//'newer:cssmin'
-        'notify:css'
+        'cssmin:libs',
+        'cssmin:app'
     ],
     'build-images': [
         'copyto:images',
-        'copyto:jqueryuiimages',
-        'notify:images'
+        'copyto:jqueryuiimages'
     ],
     'build-fonts': [
         'copyto:bootstrap-fonts',
@@ -40,10 +37,8 @@ module.exports = {
         'replace:html_bad_chars',
         //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
-        'bliss:appDebug',
-        'notify:html'
+        'bliss:appDebug'
     ],
-
 
     'prepare-phonegapcli-live': [
         'copyto:phonegap',
@@ -88,8 +83,7 @@ module.exports = {
     'build-dev': [
         'browserify:appCommon',
         'stylus:app',
-        'bliss:appDebug',
-        'notify:build'
+        'bliss:appDebug'
     ],
     'build': [
         'build-js',
@@ -98,13 +92,11 @@ module.exports = {
         'build-html',
         'build-images',
         'build-fonts',
-        'notify:build'
     ],
     'build-webapp-html': [
         'bliss:webapp',
         'htmlmin:webapp',
-        'copyto:webapp_assets',
-        'notify:html'
+        'copyto:webapp_assets'
     ],
     'build-webapp': [
         'build-js',
@@ -113,8 +105,7 @@ module.exports = {
         'build-webapp-html',
         'build-images',
         'build-fonts',
-        'copyto:webapp_assets',
-        'notify:build'
+        'copyto:webapp_assets'
     ],
     'atwork': [
         'connect:atbuild',
