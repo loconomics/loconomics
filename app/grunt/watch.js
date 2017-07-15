@@ -145,10 +145,17 @@ module.exports = function(grunt) {
     var targetName = (grunt.option('target') || DEFAULT_TARGET).toUpperCase();
     var target = TARGETS[targetName];
 
-    // A reminder when calling this from another task/alias like 'atwork'
-    grunt.log.warn('Will be ready when a \'Waiting...\' line appear below');
-    // Let know that target is correctly set
-    grunt.log.writeln('TARGET', targetName, 'exists:', !!target);
+    var inAtwork = grunt.cli.tasks.indexOf('atwork') > -1;
+    var inWatch = grunt.cli.tasks.indexOf('watch') > -1;
+    if (inAtwork) {
+        // A reminder when calling this from atwork, because start-up is slow
+        // caused by watchify initial build.
+        grunt.log.warn('Will be ready when a \'Waiting...\' line appear below');
+    }
+    if (inAtwork || inWatch) {
+        // Let know that target is correctly set
+        grunt.log.writeln('Watch target', targetName, 'exists:', !!target);
+    }
 
     if (target) {
         return target;
