@@ -118,11 +118,8 @@ module.exports = {
     ],
     'atwork': [
         'connect:atbuild',
-        'parallel:atwork-watch'
-    ],
-    'atwork-landingPages': [
-        'connect:atbuild',
-        'watch:landingPages'
+        'browserify:watchAppCommon',
+        'watch'
     ],
     'build-landingPages': [
         'stylus:landingPages',
@@ -130,12 +127,13 @@ module.exports = {
         'replace:html_bad_chars',
         'bliss:landingPagesBuild',
         'htmlmin:landingPagesBuild',
+        'copyto:images',
         'browserify:appCommon',
-        'exorcise:appCommon',
-        'uglify:appCommon'
+        'exorcise:appCommon'
     ],
     'publish-landingPages': [
         'bliss:landingPagesWeb',
+        'uglify:appCommon',
         'htmlmin:landingPagesWeb',
         'copyto:landingPages_assets'
     ]

@@ -15,7 +15,7 @@ module.exports = {
     setupChangeBuild: {
         options: {
             title: 'Build after setup change',
-            message: 'Success! Auto-reload Grunt task may not work on parallelized tasks (like atwork).'
+            message: 'Success! Auto-reload would happens now.'
         }
     },
     browserify: {
