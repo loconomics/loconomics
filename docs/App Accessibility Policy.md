@@ -51,6 +51,7 @@ The tools listed here are not the ones used in a Section 508 audit so may or may
 
 Tool | Function | Purpose
 ----- | ---------- | ---------
+[WAVE Browser Exentions](http://wave.webaim.org/extension/) | Google Chrome and Firefox extensions to audits - Preferred | Web testing
 [Web Puppeteer](https://github.com/google/puppeteer) | A testing framework for testing web applications with JavaScript | Web testing
 [Accessibility Developer Tools](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en) | Google Chrome extension for doing audits | Web testing
 [Contrast Ratio Checker](https://chrome.google.com/webstore/detail/contrast-ratio-checker/kmicfegjejpginnockfnjpdgeffebdcf/related?hl=en) | Google Chrome extension for checking contrast ratios | Web testing
