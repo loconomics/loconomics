@@ -24,7 +24,7 @@
                         <div class="form-inline isolated">
                             <div class="form-group" data-bind="visible: type.numberOfSessionsLabel">
                                 <label for="serviceProfessionalServiceEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
-                                <input id="serviceProfessionalServiceEditor-numberOfSessions" class="form-control" type="number" data-bind="textInput: pricing.numberOfSessions, disable: $root.isLocked" />
+                                <input id="serviceProfessionalServiceEditor-numberOfSessions" class="form-control" type="number" min="1" data-bind="textInput: pricing.numberOfSessions, disable: $root.isLocked" />
                             </div>
                         </div>
                         <div class="form-inline isolated">
@@ -32,7 +32,7 @@
                                 <label for="serviceProfessionalServiceEditor-price" class="control-label" data-bind="text: type.priceLabel"></label>
                                 <div class="input-group">
                                     <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
-                                    <input id="serviceProfessionalServiceEditor-price" type="number" class="form-control" data-bind="textInput: pricing.price, disable: $root.isLocked" />
+                                    <input id="serviceProfessionalServiceEditor-price" type="number" class="form-control" min="0" step=".01" data-bind="textInput: pricing.price, disable: $root.isLocked" />
                                 </div>
                             </div>
                         </div>
@@ -48,14 +48,14 @@
                                 <span class="col-xs-12 col-sm-5 form-group">
                                     <label for="serviceProfessionalServiceEditor-durationHours" class="control-label sr-only">Hours</label>
                                     <div class="input-group">
-                                        <input id="serviceProfessionalServiceEditor-durationHours" type="number" class="form-control" data-bind="textInput: pricing.durationHoursPart, disable: $root.isLocked" />
+                                        <input id="serviceProfessionalServiceEditor-durationHours" type="number" class="form-control" min="0" data-bind="textInput: pricing.durationHoursPart, disable: $root.isLocked" />
                                         <span class="input-group-addon">hours</span>
                                     </div>
                                 </span>
                                 <span class="col-xs-12 col-sm-offset-1 col-sm-5 form-group">
                                     <label for="serviceProfessionalServiceEditor-durationMinutes" class="control-label sr-only">Minutes</label>
                                     <div class="input-group">
-                                        <input id="serviceProfessionalServiceEditor-durationMinutes" type="number" class="form-control" data-bind="textInput: pricing.durationMinutesPart, disable: $root.isLocked" />
+                                        <input id="serviceProfessionalServiceEditor-durationMinutes" type="number" class="form-control" min="0" data-bind="textInput: pricing.durationMinutesPart, disable: $root.isLocked" />
                                         <span class="input-group-addon">minutes</span>
                                     </div>
                                 </span>
@@ -82,7 +82,7 @@
                             <div class="form-group col-xs-12 col-sm-5">
                                 <div class="input-group">
                                     <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
-                                    <input id="serviceProfessionalServiceEditor-priceRateQuantity" class="form-control" data-bind="textInput: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" type="number" />
+                                    <input id="serviceProfessionalServiceEditor-priceRateQuantity" class="form-control" min="0" step=".01" data-bind="textInput: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" type="number" />
                                 </div>
                             </div>
                             <div class="form-group col-xs-12 col-sm-5" data-bind="visible: type.priceRateUnitLabel">
