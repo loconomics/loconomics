@@ -51,7 +51,6 @@ TARGETS.APP = {
         files: ['./source/css/**/*.styl', './source/css/**/*.css'],
         tasks: [
             'stylus:app',
-            'newer:cssmin:app',
             'notify:css'
         ]
     },
@@ -116,7 +115,6 @@ TARGETS.LANDING_PAGES = {
         files: ['./source/css/**/*.styl', './source/css/**/*.css'],
         tasks: [
             'stylus:landingPages',
-            'newer:cssmin:landingPages',
             'notify:landingPages'
         ]
     },
