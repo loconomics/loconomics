@@ -1,7 +1,7 @@
 /**
  * Manages the user session state with
- * credentials as basic data and notifications.
- * Allows to restore a session from saved credentials,
+ * the stored user auth key and events.
+ * Allows to restore a session from saved authorization,
  * set-up of a new session and
  * closing a session performing clean up tasks
  * @module data/session
@@ -9,7 +9,7 @@
 'use strict';
 
 var local = require('./drivers/localforage');
-var credentialsStore = require('./credentials');
+var userAuthKeyStore = require('./userAuthKey');
 var SingleEvent = require('../utils/SingleEvent');
 
 /**
@@ -64,57 +64,57 @@ var clearLocalData = function () {
 
 /**
  * Tries to open a session by restoring the user
- * locally saved credentials (if any,
+ * locally saved user auth key (if any,
  * no error if nothing).
  * Expected to be call at app start-up,
  * will prevent execution if a session is
  * running.
- * @returns {Promise<Credentials>} Null if no saved credentials
+ * @returns {Promise<UserAuthKey>} Null if no saved data
  */
 exports.restore = function() {
     if (isSessionOpened) return Promise.resolve(null);
 
-    // If there are credentials saved
-    return credentialsStore.get()
-    .then(function(credentials) {
+    // If there are data saved
+    return userAuthKeyStore.get()
+    .then(function(userAuthKey) {
         // Track session as opened
         isSessionOpened = true;
-        restoredEvent.emit(credentials);
-        return credentials;
+        restoredEvent.emit(userAuthKey);
+        return userAuthKey;
     })
     .catch(function() {
         // No need to trigger errors (nothing to restore,
-        // or local credentials corrupted, anyway will
+        // or local userAuthKey corrupted, anyway will
         // require a new user login keeping current session
         // as closed/anonymous)
 
-        // Notice no credentials:
+        // Notice no userAuthKey:
         return null;
     });
 };
 
 /**
  * Opens the user session for
- * the given credentials to the remote endpoint.
+ * the given user auth key data to the remote endpoint.
  * It clears the user session,
- * stores the login credentials
+ * stores the login authorization
  * and set-up the new session.
  * This is the next-step after a remote login
- * @param {Credentials} loginData Response data from an auth login/signup
- * describing the user credentials and profile
- * @returns {Promise<Credentials>}
+ * @param {UserAuthKey} loginData Response data from an auth login/signup
+ * describing the user authorization and profile
+ * @returns {Promise<UserAuthKey>}
  */
-exports.open = function(credentials) {
+exports.open = function(userAuthKey) {
     // Remove any previous local data if any:
     return clearLocalData()
     .then(function() {
         // async local save, don't wait
-        credentialsStore.set(credentials);
+        userAuthKeyStore.set(userAuthKey);
 
         // Track session as opened
         isSessionOpened = true;
-        openedEvent.emit(credentials);
-        return credentials;
+        openedEvent.emit(userAuthKey);
+        return userAuthKey;
     });
 };
 
@@ -127,7 +127,7 @@ exports.open = function(credentials) {
  */
 exports.close = function() {
     return Promise.all([
-        credentialsStore.clear(),
+        userAuthKeyStore.clear(),
         // Local data clean-up!
         clearLocalData()
     ]).

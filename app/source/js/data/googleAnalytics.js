@@ -14,16 +14,16 @@ var $ = require('jquery');
 /**
  * Set-ups Google Analytics library, if loaded,
  * with the credentials so identifies the user.
- * @param {Credentials} credentials
+ * @param {UserAuthKey} userAuthKey
  * @private
  */
-var setUser = function(credentials) {
+var setUser = function(userAuthKey) {
     if (window.ga) {
         if (window.cordova) {
-            window.ga.setUserId(credentials.userID);
+            window.ga.setUserId(userAuthKey.userID);
         }
         else {
-            window.ga('set', 'userId', credentials.userID);
+            window.ga('set', 'userId', userAuthKey.userID);
         }
     }
 };
