@@ -7,9 +7,10 @@ var $ = require('jquery'),
     ko = require('knockout'),
     Activity = require('../components/Activity'),
     textSearch = require('../utils/textSearch');
+var clients = require('../data/clients');
 
 var A = Activity.extend(function ClientsActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.serviceProfessional;
@@ -20,12 +21,12 @@ var A = Activity.extend(function ClientsActivity() {
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
-    
+
     // Getting elements
     this.$index = this.$activity.find('#clientsIndex');
     this.$listView = this.$activity.find('#clientsListView');
 
-    // Handler to go back with the selected client when 
+    // Handler to go back with the selected client when
     // there is one selected and requestData is for
     // 'select mode'
     this.registerHandler({
@@ -47,7 +48,7 @@ var A = Activity.extend(function ClientsActivity() {
             }
         }.bind(this)
     });
-    
+
     this.returnRequest = function returnRequest() {
         this.app.shell.goBack(this.requestData);
     }.bind(this);
@@ -57,9 +58,9 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     //jshint maxcomplexity:8
-    
+
     var itIs = this.viewModel.isSelectionMode();
-    
+
     this.viewModel.headerText(itIs ? 'Select a client' : 'My clients');
 
     if (this.requestData.title) {
@@ -80,7 +81,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
         if (this.requestData.navTitle)
             this.navBar.leftAction().text(this.requestData.navTitle);
     }
-    
+
     if (itIs && !this.requestData.cancelLink) {
         // Uses a custom handler so it returns keeping the given state:
         this.navBar.leftAction().handler(this.returnRequest);
@@ -92,19 +93,19 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     // On every show, search gets reseted
     this.viewModel.searchText('');
     this.viewModel.selectedClient(null);
     this.viewModel.requestData = this.requestData;
-    
+
     // Check if it comes from a clientEditor that
-    // received the flag 'returnNewAsSelected' and a 
+    // received the flag 'returnNewAsSelected' and a
     // clientID: we were in selection mode->creating client->must
     // return the just created client to the previous page
     if (state.returnNewAsSelected === true &&
         state.clientID) {
-        
+
         // perform an activity change but allow the current
         // to stop first
         setTimeout(function() {
@@ -113,18 +114,18 @@ A.prototype.show = function show(state) {
             // And go back
             this.app.shell.goBack(this.requestData);
         }.bind(this), 1);
-        
+
         // avoid the rest operations
         return;
     }
-    
+
     // Set selection:
     this.viewModel.isSelectionMode(state.selectClient === true);
 
     this.updateNavBarState();
-    
+
     // Keep data updated:
-    this.app.model.clients.sync()
+    clients.sync()
     .catch(function(err) {
         this.app.modals.showError({
             title: 'Error loading the clients list',
@@ -143,13 +144,13 @@ function ViewModel(app) {
     this.isSelectionMode = ko.observable(false);
 
     // Full list of clients
-    this.clients = app.model.clients.list;
-    this.isLoading = app.model.clients.state.isLoading;
-    this.isSyncing = app.model.clients.state.isSyncing;
-    
+    this.clients = clients.list;
+    this.isLoading = clients.state.isLoading;
+    this.isSyncing = clients.state.isSyncing;
+
     // Search text, used to filter 'clients'
     this.searchText = ko.observable('');
-    
+
     // Utility to get a filtered list of clients based on search and deleted property
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
@@ -173,7 +174,7 @@ function ViewModel(app) {
     this.filteredClients = ko.computed(function() {
         return this.getFilteredList();
     }, this);
-    
+
     // Grouped list of filtered clients
     this.groupedClients = ko.computed(function(){
 
@@ -188,7 +189,7 @@ function ViewModel(app) {
             else
                 return -1;
         });
-        
+
         var groups = [],
             latestGroup = null,
             latestLetter = null;
@@ -211,24 +212,24 @@ function ViewModel(app) {
         return groups;
 
     }, this);
-    
-    
+
+
     /// Public search
     this.publicSearchResults = ko.observableArray([]);
     this.publicSearchRunning = ko.observable(null);
     // When filering has no results:
-    ko.computed(function() {    
+    ko.computed(function() {
         var filtered = this.filteredClients(),
             searchText = this.searchText(),
             request = null;
 
         // If there is search text and no results from local filtering
         if (filtered.length === 0 && searchText) {
-            
+
             // Remove previous results
             this.publicSearchResults([]);
-            
-            request = app.model.clients.publicSearch({
+
+            request = clients.publicSearch({
                 fullName: searchText,
                 email: searchText,
                 phone: searchText
@@ -265,7 +266,7 @@ function ViewModel(app) {
     }, this)
     // Avoid excessive request by setting a timeout since the latest change
     .extend({ rateLimit: { timeout: 400, method: 'notifyWhenChangesStop' } });
-    
+
     /**
         Add a client from the public/remote search results
     **/
@@ -280,7 +281,7 @@ function ViewModel(app) {
         event.preventDefault();
         event.stopImmediatePropagation();
     }.bind(this);
-    
+
     /**
         Call the activity to add a new client, passing the current
         search text so can be used as initial name/email/phone
@@ -288,7 +289,7 @@ function ViewModel(app) {
     this.addNew = function(data, event) {
         event.preventDefault();
         event.stopImmediatePropagation();
-        
+
         var request = $.extend({}, this.requestData, {
             newForSearchText: this.searchText(),
             returnNewAsSelected: this.isSelectionMode()
@@ -297,9 +298,9 @@ function ViewModel(app) {
     }.bind(this);
 
     /// Selections
-    
+
     this.selectedClient = ko.observable(null);
-    
+
     this.selectClient = function(selectedClient, event) {
         event.preventDefault();
         event.stopImmediatePropagation();

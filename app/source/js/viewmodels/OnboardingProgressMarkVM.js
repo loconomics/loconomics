@@ -3,9 +3,10 @@
 **/
 'use strict';
 var ko = require('knockout');
+var onboarding = require('../data/onboarding');
 
-module.exports = function OnboardingProgressMarkVM(app) {
-    var o = app.model.onboarding;
+module.exports = function OnboardingProgressMarkVM() {
+    var o = onboarding;
     this.progressText = o.progressText;
     var getClassNames = function(i) {
         var n = o.stepNumber();

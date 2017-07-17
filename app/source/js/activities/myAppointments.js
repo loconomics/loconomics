@@ -6,6 +6,7 @@
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 var UpcomingAppointmentsSummary = require('../models/UpcomingAppointmentsSummary');
+var bookings = require('../data/bookings');
 
 var A = Activity.extend(function MyAppointmentsActivity() {
 
@@ -14,7 +15,7 @@ var A = Activity.extend(function MyAppointmentsActivity() {
     this.viewModel = new ViewModel();
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSectionNavBar('My appointments');
-    
+
     this.prepareShowErrorFor = function prepareShowErrorFor(title) {
         return function(err) {
             this.app.modals.showError({
@@ -29,13 +30,12 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     this.syncUpcomingAppointments();
 };
 
 A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
-    var v = this.viewModel,
-        appModel = this.app.model;
+    var v = this.viewModel;
 
     if (v.upcomingAppointments.items().length) {
         v.upcomingAppointments.isSyncing(true);
@@ -43,7 +43,7 @@ A.prototype.syncUpcomingAppointments = function syncUpcomingAppointments() {
     else {
         v.upcomingAppointments.isLoading(true);
     }
-    appModel.bookings.getUpcomingAppointments()
+    bookings.getUpcomingAppointments()
     .then(function(upcoming) {
         v.upcomingAppointments.model.updateWith(upcoming, true);
     })
@@ -59,13 +59,13 @@ function ViewModel() {
     this.upcomingAppointments = new UpcomingAppointmentsSummary();
     this.upcomingAppointments.isLoading = ko.observable(false);
     this.upcomingAppointments.isSyncing = ko.observable(false);
-    
+
     // TODO pastAppointments
     this.pastAppointments = {
         pastAppointments: ko.observable(false),
         count: ko.observable(0)
     };
-    
+
     // Retrieves a computed that will link to the given named activity adding the current
     // jobTitleID and a mustReturn URL to point this page so its remember the back route
     this.getUrlTo = function(name) {

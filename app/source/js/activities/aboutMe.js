@@ -5,6 +5,10 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var userProfile = require('../data/userProfile');
+var onboarding = require('../data/onboarding');
+var homeAddress = require('../data/homeAddress');
+var marketplaceProfile = require('../data/marketplaceProfile');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -26,7 +30,7 @@ var A = Activity.extend(function AboutMeActivity() {
     this.viewModel.navBar = this.navBar;
 
     this.registerHandler({
-        target: this.app.model.userProfile,
+        target: userProfile,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save contact data.' : 'Unable to load contact data.';
@@ -38,7 +42,7 @@ var A = Activity.extend(function AboutMeActivity() {
     });
 
     this.registerHandler({
-        target: this.app.model.homeAddress,
+        target: homeAddress,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save address details.' : 'Unable to load address details.';
@@ -50,7 +54,7 @@ var A = Activity.extend(function AboutMeActivity() {
     });
 
     this.registerHandler({
-        target: this.app.model.marketplaceProfile,
+        target: marketplaceProfile,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';
@@ -66,7 +70,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);
@@ -96,7 +100,7 @@ function ViewModel(app) {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.contactInfo = new ContactInfoVM(app);
     this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
@@ -107,7 +111,7 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
             this.isLoading() ?
                 'loading...' :
@@ -120,8 +124,8 @@ function ViewModel(app) {
     this.save = function() {
         Promise.all(vms.map(function(vm) { return vm.save(); }))
         .then(function() {
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
+            if (onboarding.inProgress()) {
+                onboarding.goNext();
             }
             else {
                 app.successSave();

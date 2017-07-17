@@ -3,6 +3,8 @@
 **/
 'use strict';
 
-module.exports = function OnboardingProgressBarVM(app) {
-    this.isInOnboarding = app.model.onboarding.inProgress;
+var onboarding = require('../data/onboarding');
+
+module.exports = function OnboardingProgressBarVM() {
+    this.isInOnboarding = onboarding.inProgress;
 };

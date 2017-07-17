@@ -1,6 +1,6 @@
 /**
     Provile activity
-    
+
     Visualizes the public profile of a user, or current user
 **/
 'use strict';
@@ -9,18 +9,20 @@ var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
+var user = require('../data/userProfile').data;
+var users = require('../data/users');
 var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 
 var A = Activity.extend(function ProfileActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    
+
     this.registerHandler({
         event: 'layoutUpdate',
         target: $(window),
@@ -36,7 +38,7 @@ A.prototype.loadData = function(userID, jobTitleID) {
     this.viewModel.reset();
     if (userID) {
         this.viewModel.isLoading(true);
-        this.app.model.users.getUser(userID, { includeFullJobTitleID: -1 })
+        users.getUser(userID, { includeFullJobTitleID: -1 })
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
@@ -74,7 +76,7 @@ A.prototype.show = function show(options) {
 
     var params = options.route && options.route.segments;
     // Get requested userID or the current user profile
-    var userID = (params[0] |0) || this.app.model.user().userID();
+    var userID = (params[0] |0) || user.userID();
     var jobTitleID = params[1] |0;
     this.loadData(userID, jobTitleID);
     this.viewModel.reviews.reset(userID, jobTitleID);
@@ -95,7 +97,7 @@ function ViewModel(app) {
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
     this.userID = ko.observable(null);
-    this.reviews = new ReviewsVM(app);
+    this.reviews = new ReviewsVM();
     this.showMessageBar = ko.observable(false);
 
     // Just a timestamp to notice that a request to refresh UI happens
@@ -108,7 +110,7 @@ function ViewModel(app) {
         this.userID(null);
         this.showMessageBar(false);
     };
-    
+
     /// Work Photos utils
     var DEFAULT_WORKPHOTOS_LIMIT = 2;
     this.isShowingAllPhotos = ko.observable(false);
@@ -150,7 +152,7 @@ function ViewModel(app) {
         var adds = u && u.selectedJobTitle() && u.selectedJobTitle().serviceAddresses();
         return adds || [];
     }, this);
-    
+
     this.changeJobTitle = function(jobTitle, event) {
         this.user().selectedJobTitleID(jobTitle.jobTitleID());
         this.reviews.reset(undefined, jobTitle.jobTitleID());
@@ -162,7 +164,7 @@ function ViewModel(app) {
         var url = event.target.getAttribute('href');
         app.shell.pushState(null, null, url);
     }.bind(this);
-    
+
     /// Social links
     this.getEmailLink = ko.pureComputed(function() {
         var u = this.user();
@@ -195,7 +197,7 @@ function ViewModel(app) {
         var photo = encodeURIComponent(u.profile().photoUrl());
         return 'http://pinterest.com/pin/create/button/?url=' + url + '&media=' + photo + '&description=' + encodeURIComponent(u.profile().fullName() + ': ' + url);
     }, this);
-    
+
     this.getBookLink = ko.pureComputed(function() {
         var u = this.user();
         if (!u) return '';
@@ -232,8 +234,7 @@ function ViewModel(app) {
     }, this);
 
     this.isOwnProfile = ko.pureComputed(function() {
-        var user = app.model.user(),
-            profileOwnerUserID = this.userID();
+        var profileOwnerUserID = this.userID();
 
         if(user.isAnonymous() || profileOwnerUserID === null) {
             return false;
@@ -253,7 +254,7 @@ function ViewModel(app) {
 }
 
 var PublicUserReview = require('../models/PublicUserReview');
-function ReviewsVM(app) {
+function ReviewsVM() {
     this.userID = ko.observable(null);
     this.jobTitleID = ko.observable(null);
     this.list = ko.observableArray([]);
@@ -276,7 +277,7 @@ function ReviewsVM(app) {
         options = options || {};
         if (this.isLoading() || this.endReached() || !this.userID()) return;
         this.isLoading(true);
-        var task = app.model.users.getReviews(this.userID(), this.jobTitleID(), options)
+        var task = users.getReviews(this.userID(), this.jobTitleID(), options)
         .then(function(newData) {
             //jshint maxcomplexity:8
             if (newData && newData.length) {
@@ -324,7 +325,7 @@ function ReviewsVM(app) {
         currentXhr = task.xhr;
         return task;
     }.bind(this);
-    
+
     this.loadOlder = function loadOlderReviews() {
         var l = this.list();
         var last = l[l.length - 1];

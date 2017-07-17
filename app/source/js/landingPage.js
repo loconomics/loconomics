@@ -19,7 +19,6 @@ require('./utils/Function.prototype.name-polyfill');
 require('es6-promise').polyfill();
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var AppModel = require('./appmodel/AppModel');
 
 // Register the special locale
 require('./locales/en-US-LC');
@@ -30,8 +29,6 @@ var attachFastClick = require('fastclick').attach;
     App static class
 **/
 var app = {
-    // New app model, that starts with anonymous user
-    model: new AppModel(),
     modals: require('./app.modals'),
 };
 
@@ -101,11 +98,8 @@ var appInit = function appInit() {
             error: err
         });
     };
-    // Catch uncatch model errors
-    app.model.on('error', alertError);
 
-    app.model.init()
-    .then(function() {
+    var launchPage = function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
 
@@ -114,7 +108,13 @@ var appInit = function appInit() {
         require('./activities/landingPage')
         .init($act, app)
         .show({ route: {} });
-    }, alertError);
+    };
+
+    // Try to restore a user session ('remember login')
+    var session = require('./data/session');
+    session.restore()
+    .then(launchPage)
+    .catch(alertError);
 
     // DEBUG
     window.app = app;

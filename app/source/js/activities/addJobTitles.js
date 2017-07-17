@@ -5,9 +5,13 @@
 
 var Activity = require('../components/Activity');
 var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
+var userProfile = require('../data/userProfile');
+var user = userProfile.data;
+var onboarding = require('../data/onboarding');
+var userJobProfile = require('../data/userJobProfile');
 
 var A = Activity.extend(function AddJobTitlesActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
@@ -23,8 +27,8 @@ A.prototype.updateNavBarState = function updateNavBarState() {
     var referrer = this.app.shell.referrerRoute;
     referrer = referrer && referrer.url || '/scheduling';
     var link = this.requestData.cancelLink || referrer;
-    
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+
+    if (!onboarding.updateNavBar(this.navBar)) {
         this.convertToCancelAction(this.navBar.leftAction(), link);
     }
 };
@@ -32,14 +36,14 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
-    
+
     // Allow to preset an incoming value
     var s = options.route.query.s;
 
     // Reset
     this.viewModel.searchText(s);
     this.viewModel.jobTitles.removeAll();
-    
+
     this.updateNavBarState();
 
     // Allow auto add the search text as new proposed job-title
@@ -62,15 +66,15 @@ A.prototype.show = function show(options) {
 
 var ko = require('knockout');
 function ViewModel(app) {
-    
+
     this.helpLink = '/help/relatedArticles/201211055-adding-job-profiles';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.isSaving = ko.observable(false);
     this.isLocked = this.isSaving;
     this.jobTitles = ko.observableArray([]);
-    
+
     this.addItem = function(item) {
         var foundIndex = this.findItem(item);
         if (foundIndex === -1) {
@@ -85,7 +89,7 @@ function ViewModel(app) {
             });
         }
     };
-    
+
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
     this.search().onClickJobTitle = function(jobTitle) {
@@ -101,17 +105,17 @@ function ViewModel(app) {
     }.bind(this);
     this.search().customResultsButtonText('Add');
     this.searchText = this.search().searchTerm;
-    
+
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
-                this.isSaving() ? 
-                    'Saving...' : 
+                this.isSaving() ?
+                    'Saving...' :
                     'Save'
         );
     }, this);
-    
+
     this.unsavedChanges = ko.pureComputed(function() {
         return !!this.jobTitles().length;
     }, this);
@@ -132,24 +136,24 @@ function ViewModel(app) {
         });
         return foundIndex;
     };
-    
+
     this.remove = function remove(jobTitle) {
         var removeIndex = this.findItem(jobTitle);
         if (removeIndex > -1) {
             this.jobTitles.splice(removeIndex, 1);
         }
     }.bind(this);
-    
+
     this.save = function save() {
         if (this.jobTitles().length === 0) return;
         this.isSaving(true);
 
         // We need to do different stuff if user is not a proffesional when requesting this
-        var becomingProfessional = !app.model.userProfile.data.isServiceProfessional();
+        var becomingProfessional = !user.isServiceProfessional();
         var firstJobID = this.jobTitles()[0].value;
 
         Promise.all(this.jobTitles().map(function(jobTitle) {
-            return app.model.userJobProfile.createUserJobTitle({
+            return userJobProfile.createUserJobTitle({
                 jobTitleID: jobTitle.value,
                 jobTitleName: jobTitle.label
             });
@@ -160,21 +164,21 @@ function ViewModel(app) {
                 // Reset UI list
                 this.searchText('');
                 this.jobTitles.removeAll();
-                if (app.model.onboarding.inProgress()) {
-                    app.model.onboarding.selectedJobTitleID(firstJobID);
-                    app.model.onboarding.goNext();
+                if (onboarding.inProgress()) {
+                    onboarding.selectedJobTitleID(firstJobID);
+                    onboarding.goNext();
                 }
                 else {
                     app.successSave();
                 }
             }.bind(this);
             if (becomingProfessional) {
-                return app.model.userProfile
+                return userProfile
                 .load({ forceRemoteUpdate: true })
                 .then(function() {
                     // Start onboarding
-                    if (app.model.onboarding) {
-                        app.model.onboarding.skipToAddJobTitles();
+                    if (onboarding) {
+                        onboarding.skipToAddJobTitles();
                     }
                     onEnd();
                 });

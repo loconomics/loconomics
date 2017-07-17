@@ -10,41 +10,43 @@ var ko = require('knockout'),
     Model = require('./Model'),
     moment = require('moment');
 var PublicUserProfile = require('./PublicUserProfile');
+var user = require('../data/userProfile').data;
+var users = require('../data/users');
 
 function MessageView(values, app) {
-    
+
     Model(this);
 
     this.model.defProperties({
         id: 0,
         createdDate: null,
         updatedDate: null,
-        
+
         subject: '',
         content: null,
         link: '#',
-        
+
         tag: '',
         classNames: '',
-        
+
         sourceThread: null,
         sourceMessage: null
 
     }, values);
-    
+
     // Smart visualization of date and time
     this.displayedDate = ko.pureComputed(function() {
-        
+
         return moment(this.createdDate()).locale('en-US-LC').calendar();
-        
+
     }, this);
-    
+
     this.displayedTime = ko.pureComputed(function() {
-        
+
         return moment(this.createdDate()).locale('en-US-LC').format('LT');
 
     }, this);
-    
+
     this.quickDateTime = ko.pureComputed(function() {
         var date = this.createdDate();
 
@@ -58,15 +60,15 @@ function MessageView(values, app) {
             return m.fromNow();
         }
     }, this);
-    
+
     var getUserData = function(userID) {
         if (userID) {
-            if (userID === app.model.userProfile.data.userID())
-                return app.model.userProfile.data;
-            else {
-                var user = new PublicUserProfile();
-                app.model.users.getProfile(userID).then(function(d) { user.model.updateWith(d, true); });
+            if (userID === user.userID())
                 return user;
+            else {
+                var publicUser = new PublicUserProfile();
+                users.getProfile(userID).then(function(d) { publicUser.model.updateWith(d, true); });
+                return publicUser;
             }
         }
         // Message from the System
@@ -75,7 +77,7 @@ function MessageView(values, app) {
             lastName: 'Cooperative Inc.'
         });
     };
-    
+
     this.client = ko.pureComputed(function() {
         //jshint maxcomplexity:8
         var t = this.sourceThread();
@@ -83,7 +85,7 @@ function MessageView(values, app) {
         return getUserData(t.clientUserID());
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     this.serviceProfessional = ko.pureComputed(function() {
         //jshint maxcomplexity:8
         var t = this.sourceThread();
@@ -91,7 +93,7 @@ function MessageView(values, app) {
         return getUserData(t.serviceProfessionalUserID());
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
-    
+
     this.sender = ko.pureComputed(function() {
         //jshint maxcomplexity:8
         var m = this.sourceMessage();
@@ -110,10 +112,10 @@ module.exports = MessageView;
     more detailed MessageView
 **/
 MessageView.fromThread = function(app, thread) {
-    
+
     var msg = thread.messages();
     msg = msg && msg[0] || null;
-    
+
     var tag, classNames;
     if (msg) {
         // TODO: more different tag/classes depending on booking state as per design
@@ -132,7 +134,7 @@ MessageView.fromThread = function(app, thread) {
         // Problem if msg is null, since almost one message must exists on every thread
         console.error('Thread is empty', thread);
     }
-    
+
     return new MessageView({
         sourceThread: thread,
         sourceMessage: msg,

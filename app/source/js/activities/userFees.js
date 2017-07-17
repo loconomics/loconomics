@@ -7,6 +7,8 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var InputPaymentMethod = require('../models/InputPaymentMethod');
 var Address = require('../models/Address');
+var paymentPlans = require('../data/paymentPlans');
+var userPaymentPlan = require('../data/userPaymentPlan');
 
 var A = Activity.extend(function UserFeesActivity() {
 
@@ -29,17 +31,17 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Request to sync plans, just in case there are remote changes
-    this.app.model.paymentPlans.sync();
+    paymentPlans.sync();
     // Load active plan, if any
-    this.app.model.userPaymentPlan.sync();
+    userPaymentPlan.sync();
 };
 
 function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201964153-how-owner-user-fees-work';
 
-    this.plans = app.model.paymentPlans.list;
-    this.activeUserPaymentPlan = app.model.userPaymentPlan.data;
+    this.plans = paymentPlans.list;
+    this.activeUserPaymentPlan = userPaymentPlan.data;
 
     this.selectedPaymentPlanID = ko.observable('');
     this.paymentMethod = new InputPaymentMethod();
@@ -51,7 +53,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.isLoading = ko.pureComputed(function() {
-        return app.model.paymentPlans.state.isLoading() || app.model.userPaymentPlan.isLoading();
+        return paymentPlans.state.isLoading() || userPaymentPlan.isLoading();
     });
     this.isSaving = ko.observable(false);
     this.isLocked = ko.pureComputed(function() {
@@ -63,7 +65,7 @@ function ViewModel(app) {
     this.activePaymentPlan = ko.pureComputed(function(){
         var id = this.activeUserPaymentPlan.paymentPlan();
         if (id) {
-            return app.model.paymentPlans.getObservableItem(id)();
+            return paymentPlans.getObservableItem(id)();
         }
         else {
             return null;
@@ -86,7 +88,7 @@ function ViewModel(app) {
             paymentMethod: this.paymentMethod.model.toPlainObject(true)
         };
 
-        app.model.userPaymentPlan.createSubscription(plain)
+        userPaymentPlan.createSubscription(plain)
         .then(function() {
             this.isSaving(false);
             app.modals.showNotification({ title: 'Payment plan saved', message: 'Thank you' })

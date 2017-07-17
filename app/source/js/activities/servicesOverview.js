@@ -5,6 +5,10 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var jobTitles = require('../data/jobTitles');
+var userJobProfile = require('../data/userJobProfile');
+var serviceAttributes = require('../data/serviceAttributes');
+var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
 var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
 var DEFAULT_BACK_TEXT = 'Back';
 
@@ -31,7 +35,7 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                 ////////////
                 // Job Title
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
 
                     // Fill in job title name
@@ -49,7 +53,7 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                 // Services data
                 this.viewModel.isLoadingUserJobTitle(true);
                 Promise.all([
-                    this.app.model.userJobProfile.getUserJobTitle(jobTitleID),
+                    userJobProfile.getUserJobTitle(jobTitleID),
                     this.viewModel.serviceAttributesControl.load(jobTitleID),
                     this.viewModel.jobTitleServiceAttributesControl.load(jobTitleID)
                 ])
@@ -151,9 +155,9 @@ function ViewModel(app) {
     // in memory without press 'save'
     this.intro = ko.observable(null);
 
-    this.serviceAttributesControl = app.model.serviceAttributes.newItemVersion();
+    this.serviceAttributesControl = serviceAttributes.newItemVersion();
     this.serviceAttributes = this.serviceAttributesControl.version;
-    this.jobTitleServiceAttributesControl = app.model.jobTitleServiceAttributes.newItemVersion();
+    this.jobTitleServiceAttributesControl = jobTitleServiceAttributes.newItemVersion();
     this.jobTitleServiceAttributes = this.jobTitleServiceAttributesControl.original;
 
     this.isLoading = ko.pureComputed(function() {
@@ -197,7 +201,7 @@ function ViewModel(app) {
 
             Promise.all([
                 this.serviceAttributesControl.save(),
-                app.model.userJobProfile.setUserJobTitle(plain)
+                userJobProfile.setUserJobTitle(plain)
             ])
             .then(function() {
                 this.isSaving(false);

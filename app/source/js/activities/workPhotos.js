@@ -10,6 +10,7 @@ var ko = require('knockout'),
 var WorkPhoto = require('../models/WorkPhoto'),
     photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
+var workPhotos = require('../data/workPhotos');
 
 var A = Activity.extend(function WorkPhotosActivity() {
 
@@ -95,10 +96,10 @@ A.prototype.show = function show(options) {
     this.viewModel.jobTitleID(jobTitleID);
     if (jobTitleID) {
         // Get data for the Job title ID
-        this.app.model.workPhotos.getList(jobTitleID)
+        workPhotos.getList(jobTitleID)
         .then(function(list) {
             // Save for use in the view
-            this.viewModel.list(this.app.model.workPhotos.asModel(list));
+            this.viewModel.list(workPhotos.asModel(list));
         }.bind(this))
         .catch(function (err) {
             this.app.modals.showError({
@@ -121,7 +122,7 @@ function ViewModel(app) {
 
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
 
-    this.state = app.model.workPhotos.state;
+    this.state = workPhotos.state;
 
     this.saveBtnText = ko.pureComputed(function() {
         return this.state.isSaving() ? 'Saving..' : this.state.isLoading() ? 'Loading..' : this.state.isDeleting() ? 'Deleting..' : 'Save';
@@ -219,7 +220,7 @@ function ViewModel(app) {
     var remoteDeleteFlaggedItems = function() {
         return this.removedItems().reduce(function(cur, next) {
             return cur.then(function() {
-                return app.model.workPhotos.delItem(next.jobTitleID(), next.workPhotoID());
+                return workPhotos.delItem(next.jobTitleID(), next.workPhotoID());
             });
         }, Promise.resolve());
     }.bind(this);
@@ -228,7 +229,7 @@ function ViewModel(app) {
     var uploadAllItems = function() {
         return this.list().reduce(function(cur, next) {
             return cur.then(function() {
-                return app.model.workPhotos.setItem(next.model.toPlainObject(true));
+                return workPhotos.setItem(next.model.toPlainObject(true));
             });
         }, Promise.resolve());
     }.bind(this);

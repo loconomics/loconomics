@@ -22,16 +22,16 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
 };
 
 function ViewModel(/*app*/) {
-    
-    //this.isSyncing = app.model.backgroundCheck.state.isSyncing;
+
+    //this.isSyncing = backgroundCheck.state.isSyncing;
     this.isSyncing = ko.observable(false);
     this.isLoading = ko.observable(false);
     this.isSaving = ko.observable(false);
-    
+
     this.list = ko.observableArray(testdata());
 }
 
@@ -46,7 +46,7 @@ Verification.status = {
 };
 
 function testdata() {
-    
+
     var verA = new BackgroundCheck({
             name: 'Database Search'
         }),
@@ -89,7 +89,7 @@ var Model = require('../models/Model');
 // TODO Incomplete Model for UI mockup
 function UserBackgroundCheck(values) {
     Model(this);
-    
+
     this.model.defProperties({
         statusID: 0,
         lastVerifiedDate: null,
@@ -97,7 +97,7 @@ function UserBackgroundCheck(values) {
             Model: BackgroundCheck
         }
     }, values);
-    
+
     // Same as in UserVerifications
     this.statusText = ko.pureComputed(function() {
         // L18N
@@ -110,7 +110,7 @@ function UserBackgroundCheck(values) {
         var statusCode = enumGetName(this.statusID(), Verification.status);
         return statusTextsenUS['verification.status.' + statusCode];
     }, this);
-    
+
     /**
         Check if verification has a given status by name
     **/
@@ -121,7 +121,7 @@ function UserBackgroundCheck(values) {
 }
 function BackgroundCheck(values) {
     Model(this);
-    
+
     this.model.defProperties({
         name: ''
     }, values);
@@ -138,4 +138,3 @@ function enumGetName(value, enumList) {
     });
     return found;
 }
-                               

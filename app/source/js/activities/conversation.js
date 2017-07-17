@@ -4,12 +4,15 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var user = require('../data/userProfile').data;
+var onboarding = require('../data/onboarding');
+var messaging = require('../data/messaging');
 
 var A = Activity.extend(function ConversationActivity() {
 
     Activity.apply(this, arguments);
 
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
 
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Inbox', {
         backLink: '/inbox' , helpLink: this.viewModel.helpLinkProfessionals
@@ -26,9 +29,9 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
-        var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
+        var nav = user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);
     }
 };
@@ -71,21 +74,21 @@ A.prototype.show = function show(state) {
 
 var ko = require('knockout');
 
-function ViewModel(app) {
+function ViewModel() {
 
-    this.user = app.model.userProfile.data;
+    this.user = user;
     this.helpLinkProfessionals = '/help/relatedArticles/201966986-sending-and-receiving-messages';
     this.helpLinkClients = '/help/relatedArticles/201966996-sending-and-receiving-messages';
     this.helpLink = ko.pureComputed(function() {
-        return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
+        return user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
 
-    this.isLoading = app.model.messaging.state.isLoading;
-    this.isSyncing = app.model.messaging.state.isSyncing;
-    this.isSaving = app.model.messaging.state.isSaving;
+    this.isLoading = messaging.state.isLoading;
+    this.isSyncing = messaging.state.isSyncing;
+    this.isSaving = messaging.state.isSaving;
 
     this.threadID = ko.observable(null);
-    this.thread = app.model.messaging.createWildcardItem();
+    this.thread = messaging.createWildcardItem();
 
     this.subject = ko.pureComputed(function() {
         var m = this.thread();
@@ -95,22 +98,6 @@ function ViewModel(app) {
                 m && (m.subject() || '').replace(/^\s+|\s+$/g, '') || 'Conversation without subject'
         );
     }, this);
-    // User Profile
-    var userProfile = app.model.userProfile;
-    var profileVersion = userProfile.newVersion();
-    profileVersion.isObsolete.subscribe(function(itIs) {
-        if (itIs) {
-            // new version from server while editing
-            // FUTURE: warn about a new remote version asking
-            // confirmation to load them or discard and overwrite them;
-            // the same is need on save(), and on server response
-            // with a 509:Conflict status (its body must contain the
-            // server version).
-            // Right now, just overwrite current changes with
-            // remote ones:
-            profileVersion.pull({ evenIfNewer: true });
-        }
-    });
 
     // If the last message reference a booking, is
     // accessed with:

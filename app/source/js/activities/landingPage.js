@@ -7,16 +7,17 @@
 
 var Activity = require('../components/Activity'),
     SignupVM = require('../viewmodels/Signup');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function LandingPageActivity() {
     Activity.apply(this, arguments);
 
-    this.viewModel = new ViewModel(this.app);
+    this.viewModel = new ViewModel();
 });
 
 exports.init = A.init;
 
-function ViewModel(app) {
+function ViewModel() {
     /**
      * Navigate to onboarding or dashboard.
      * It's a simplified and adapted version of app.goDashboard that
@@ -29,7 +30,7 @@ function ViewModel(app) {
         // Default URL to home
         var url = '/';
         // Try getting onboarding URL
-        var onboardingUrl = app.model.onboarding.stepUrl();
+        var onboardingUrl = onboarding.stepUrl();
         if(onboardingUrl) {
             url = '/#!' + onboardingUrl;
         }

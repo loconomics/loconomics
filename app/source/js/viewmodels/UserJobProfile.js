@@ -7,6 +7,8 @@
 
 var ko = require('knockout'),
     UserJobTitle = require('../models/UserJobTitle');
+var jobTitles = require('../data/jobTitles');
+var userJobProfile = require('../data/userJobProfile');
 
 function UserJobProfileViewModel(app) {
 
@@ -15,7 +17,7 @@ function UserJobProfileViewModel(app) {
     // Load and save job title info
     var jobTitlesIndex = {};
     function syncJobTitle(jobTitleID) {
-        return app.model.jobTitles.getJobTitle(jobTitleID)
+        return jobTitles.getJobTitle(jobTitleID)
         .then(function(jobTitle) {
             jobTitlesIndex[jobTitleID] = jobTitle;
 
@@ -71,7 +73,7 @@ function UserJobProfileViewModel(app) {
 
     this.userJobProfile = ko.observableArray([]);
     // Updated using the live list, for background updates
-    app.model.userJobProfile.list.subscribe(function(list) {
+    userJobProfile.list.subscribe(function(list) {
         // We need the job titles info before end
         Promise.all(list.map(function(userJobTitle) {
             return syncJobTitle(userJobTitle.jobTitleID());
@@ -116,7 +118,7 @@ function UserJobProfileViewModel(app) {
         }
 
         // Keep data updated:
-        app.model.userJobProfile.syncList()
+        userJobProfile.syncList()
         .catch(showLoadingError);
 
     }.bind(this);
