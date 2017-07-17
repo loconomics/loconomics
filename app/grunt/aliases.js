@@ -7,15 +7,12 @@ module.exports = {
     ],
     'test': [
         'browserify:appCommon',
-        'exorcise:appCommon',
         'browserify:tests',
-        'exorcise:tests',
         'mocha'
     ],
     'build-js': [
         'jshint',
         'browserify:appCommon',
-        'exorcise:appCommon',
         'uglify:appCommon'
     ],
     'build-css': [
@@ -119,8 +116,7 @@ module.exports = {
         'bliss:landingPagesBuild',
         'htmlmin:landingPagesBuild',
         'copyto:images',
-        'browserify:appCommon',
-        'exorcise:appCommon'
+        'browserify:appCommon'
     ],
     'publish-landingPages': [
         'bliss:landingPagesWeb',

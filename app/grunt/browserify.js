@@ -2,6 +2,10 @@
 var merge = require('deepmerge');
 var notify = require('grunt-notify/lib/notify-lib');
 var notifySettings = require('./notify.js');
+// Using exorcist to extract source-maps from files.
+// We use the API directly rather than the 'grunt-exorcise'
+// (used in the past, removed when commiting this comment)
+// because is the only way to make it works with watch[ify] option.
 var exorcist = require('exorcist');
 
 module.exports = function(grunt) {
@@ -74,7 +78,7 @@ module.exports = function(grunt) {
             factor.on('end', resolve);
             factor.on('error', error);
 
-            // Exorcise integration
+            // Exorcist integration
             var mapFile = '';
             var normalizedPath = path.replace(/\\/g, '/');
             if (normalizedPath.indexOf(APP_SOURCE.substr(2)) > 0) {
@@ -108,7 +112,7 @@ module.exports = function(grunt) {
                 grunt.fail.warn('Browserify bundle error: ' + err.toString());
             });
 
-            // Exorcise integration
+            // Exorcist integration
             b.pipeline.get('wrap').push(exorcist(COMMON_DEST_MAP));
         });
         b.on('error', function(err) {
@@ -180,17 +184,37 @@ module.exports = function(grunt) {
         }
     });
 
+    /// TESTS
+    /**
+     * Source of the App bundle
+     */
+    var TESTS_SOURCE = './source/test/**/*.js';
+    /**
+     * Destination of the App bundle
+     */
+    var TESTS_DEST = './build/assets/js/tests.js';
+    /**
+     * Destintation for the App bundle source-map file.
+     */
+    var TESTS_DEST_MAP = TESTS_DEST + '.map';
+
     /**
         Tests bundle
     **/
     bconfig.tests = {
         'src': [
-            './source/test/**/*.js'
+            TESTS_SOURCE
         ],
-        'dest': './build/assets/js/tests.js',
+        'dest': TESTS_DEST,
         'options': {
             'browserifyOptions': {
                 'debug': true
+            },
+            preBundleCB: function(b) {
+                b.on('bundle', function() {
+                    // Exorcist integration
+                    b.pipeline.get('wrap').push(exorcist(TESTS_DEST_MAP));
+                });
             }
         }
     };
