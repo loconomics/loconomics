@@ -1,11 +1,17 @@
 'use strict';
 var merge = require('deepmerge');
+var notify = require('grunt-notify/lib/notify-lib');
+var notifySettings = require('./notify.js');
 
 module.exports = function(grunt) {
     /**
         Browserify config
     **/
     var bconfig = {};
+
+    var sendRebuildNotification = function() {
+        notify(notifySettings.browserify.options);
+    };
 
     /**
      * A list of factors promises that fulfills when files were written.
@@ -69,6 +75,7 @@ module.exports = function(grunt) {
     var postBundle = function(err, src, next) {
         Promise.all(factorsPromises).then(function() {
             grunt.log.ok('Browserify factor-bundle completed with', factorsPromises.length, 'bundles');
+            sendRebuildNotification();
             next(err, src);
         })
         .catch(function(factorsErr) {
