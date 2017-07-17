@@ -20,7 +20,7 @@
         <meta name="format-detection" content="telephone=no" />
 
         <title>Loconomics Cooperative</title>
-        
+
         <!-- Google Analytics -->
         <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -33,15 +33,13 @@
         @if(debug) {
         <link href="assets/css/libs.@(cssVersion).css" rel="stylesheet">
         <link href="assets/css/app.@(cssVersion).css" rel="stylesheet">
-        <script src="assets/js/styleguidelibs.@(cssVersion).js"></script>
-        <script src="assets/js/libs.@(cssVersion).js"></script>
-        <script src="assets/js/app.@(cssVersion).js"></script>
+        <script src="assets/js/common.@(jsVersion).js?"></script>
+        <script src="assets/js/app.@(jsVersion).js"></script>
         } else {
         <link href="assets/css/libs.min.@(cssVersion).css" rel="stylesheet">
         <link href="assets/css/app.min.@(cssVersion).css" rel="stylesheet">
-        <script src="assets/js/styleguidelibs.min.@(cssVersion).js"></script>
-        <script src="assets/js/libs.min.@(cssVersion).js"></script>
-        <script src="assets/js/app.min.@(cssVersion).js"></script>
+        <script src="assets/js/common.min.@(jsVersion).js"></script>
+        <script src="assets/js/app.min.@(jsVersion).js"></script>
         }
     </head>
     <body>

@@ -25,7 +25,7 @@ module.exports = {
     webapp_assets: {
         expand: true,
         cwd: 'build/assets/',
-        src: ['js/{app,libs,styleguidelibs}.min.js', 'css/{app,libs}.min.css', 'images/**/*.*', 'fonts/**/*.*'],
+        src: ['js/{app,common}.min.js', 'css/{app,libs}.min.css', 'images/**/*.*', 'fonts/**/*.*'],
         dest: '../web/assets/',
         filter: 'isFile'
     },
