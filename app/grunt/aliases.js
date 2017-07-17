@@ -16,6 +16,7 @@ module.exports = {
         'uglify:appCommon'
     ],
     'build-css': [
+        'prepare-bootstrap-variables',
         'concat:css-libs',
         'stylus:app',
         'cssmin:libs',
@@ -83,25 +84,18 @@ module.exports = {
         'bliss:appDebug'
     ],
     'build': [
-        'build-js',
-        'prepare-bootstrap-variables',
-        'build-css',
-        'build-html',
-        'build-images',
-        'build-fonts',
+        'parallel:build-app'
     ],
     'build-webapp-html': [
         'bliss:webapp',
-        'htmlmin:webapp',
+        'htmlmin:webapp'
+    ],
+    'build-webapp-html-copy': [
+        'build-webapp-html',
         'copyto:webapp_assets'
     ],
     'build-webapp': [
-        'build-js',
-        'prepare-bootstrap-variables',
-        'build-css',
-        'build-webapp-html',
-        'build-images',
-        'build-fonts',
+        'parallel:build-webapp',
         'copyto:webapp_assets'
     ],
     'atwork': [
