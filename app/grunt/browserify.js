@@ -2,13 +2,52 @@
 var merge = require('deepmerge');
 var notify = require('grunt-notify/lib/notify-lib');
 var notifySettings = require('./notify.js');
+var exorcist = require('exorcist');
 
 module.exports = function(grunt) {
     /**
-        Browserify config
-    **/
+     Browserify config
+     **/
     var bconfig = {};
 
+    // Constants defining the source and destination paths for the
+    // files involved in the appCommon set-up
+    /**
+     * Destination for the common modules file.
+     * It's the main target for the Browserify task.
+     */
+    var COMMON_DEST = './build/assets/js/common.js';
+    /**
+     * Destintation for the common modules source-map file.
+     */
+    var COMMON_DEST_MAP = COMMON_DEST + '.map';
+    /**
+     * Source of the App bundle
+     */
+    var APP_SOURCE = './source/js/app.js';
+    /**
+     * Destination of the App bundle
+     */
+    var APP_DEST = './build/assets/js/app.js';
+    /**
+     * Destintation for the App bundle source-map file.
+     */
+    var APP_DEST_MAP = APP_DEST + '.map';
+    /**
+     * Source of the Landing Page bundle
+     */
+    var LANDING_PAGE_SOURCE = './source/js/landingPage.js';
+    /**
+     * Destination of the Landing Page bundle.
+     * Renamed as 'welcome' for the result file.
+     */
+    var LANDING_PAGE_DEST = './build/assets/js/welcome.js';
+    /**
+     * Destintation for the Landing Page bundle source-map file.
+     */
+    var LANDING_PAGE_DEST_MAP = LANDING_PAGE_DEST + '.map';
+
+    // Utility to send a desktop notification
     var sendRebuildNotification = function() {
         notify(notifySettings.browserify.options);
     };
@@ -34,6 +73,20 @@ module.exports = function(grunt) {
             // that was processed, written to disk and file closed.
             factor.on('end', resolve);
             factor.on('error', error);
+
+            // Exorcise integration
+            var mapFile = '';
+            var normalizedPath = path.replace(/\\/g, '/');
+            if (normalizedPath.indexOf(APP_SOURCE.substr(2)) > 0) {
+                mapFile = APP_DEST_MAP;
+            }
+            else if (normalizedPath.indexOf(LANDING_PAGE_SOURCE.substr(2)) > 0) {
+                mapFile = LANDING_PAGE_DEST_MAP;
+            }
+            else {
+                grunt.fail.warn('At browserify: unknow factorized path: ' + path);
+            }
+            factor.get('wrap').push(exorcist(mapFile));
         }));
     };
     /**
@@ -54,6 +107,9 @@ module.exports = function(grunt) {
                 grunt.verbose.error().error(err);
                 grunt.fail.warn('Browserify bundle error: ' + err.toString());
             });
+
+            // Exorcise integration
+            b.pipeline.get('wrap').push(exorcist(COMMON_DEST_MAP));
         });
         b.on('error', function(err) {
             // Something went wrong.
@@ -85,30 +141,6 @@ module.exports = function(grunt) {
         });
     };
 
-    // Constants defining the source and destination paths for the
-    // files involved in the appCommon set-up
-    /**
-     * Destination for the common modules file.
-     * It's the main target for the Browserify task.
-     */
-    var COMMON_DEST = './build/assets/js/common.js';
-    /**
-     * Source of the App bundle
-     */
-    var APP_SOURCE = './source/js/app.js';
-    /**
-     * Destination of the App bundle
-     */
-    var APP_DEST = './build/assets/js/app.js';
-    /**
-     * Source of the Landing Page bundle
-     */
-    var LANDING_PAGE_SOURCE = './source/js/landingPage.js';
-    /**
-     * Destination of the Landing Page bundle.
-     * Renamed as 'welcome' for the result file.
-     */
-    var LANDING_PAGE_DEST = './build/assets/js/welcome.js';
 
     /**
         Generates the [app, landingPage] bundles,
