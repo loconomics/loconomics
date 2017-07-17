@@ -7,10 +7,11 @@ namespace LcEnum
 {
     public enum OwnerStatus : short
     {
-        inTrial = 1,
+        notYetAnOwner = 0,
+        trialEnded = 1,
         active = 2,
         inactive = 3,
-        inDefault = 4,
+        // Note about the gap: value 4 was initially 'inDefault' but removed
         cancelled = 5,
         suspended = 6
     }

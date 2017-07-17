@@ -24,27 +24,27 @@ var alertPresets = {
         },
         availability: {
             label: 'When can you be booked?',
-            route: new RouteParser('/schedulingPreferences')
+            route: new RouteParser('/schedulingPreferences?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         personalinfo: {
             label: 'How do we reach you?',
-            route: new RouteParser('/aboutMe')
+            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/aboutMe')
+            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/paymentAccount')
+            route: new RouteParser('/paymentAccount?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         pricingdetails: {
             label: 'Create a bookable offering',
-            route: new RouteParser('/serviceProfessionalService/:jobTitleID?mustReturn=marketplaceJobtitles/:jobTitleID')
+            route: new RouteParser('/serviceProfessionalService/:jobTitleID')
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/aboutMe')
+            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         professionallicense: {
             label: 'Verify your professional license or certification',
@@ -56,11 +56,11 @@ var alertPresets = {
         },
         'add-education': {
             label: 'Add training or education',
-            route: new RouteParser('/education')
+            route: new RouteParser('/education?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         verifyemail: {
               label: 'Verify your account (check your e-mail)',
-              route: new RouteParser('/verifications')
+              route: new RouteParser('/verifications?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         showcasework: {
             label: 'Add photos of your work',

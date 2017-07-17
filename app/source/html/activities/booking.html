@@ -35,7 +35,7 @@
                             </div>
                             <div class="isolated inset" data-bind="visible: presetGratuity() === 'custom'">
                                 <span>$</span>
-                                <input type="number" name="custom-gratuity" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
+                                <input type="number" name="custom-gratuity" min="0" step=".01" data-bind="textInput: gratuityAmount" class="form-control NumberField NumberField--xs NumberField--center">
                             </div>
                             <p class="isolated"><small>You'll have until 1 hour after your app't ends to adjust</small></p>
                         </div>
@@ -125,7 +125,7 @@
                             <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
                                 <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
                                     <input type="number" class="form-control"
-                                         placeholder="Zip code" aria-label="Zip code"
+                                         placeholder="Zip code" aria-label="Zip code" min="0"
                                          data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM().onBlur }, disable: $parent.isLocked,
                                                     popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                                 </div>

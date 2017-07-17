@@ -10,6 +10,8 @@ var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
+var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_TEXT = 'Back';
 
 var A = Activity.extend(function LicensesCertificationsActivity() {
 
@@ -19,8 +21,8 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
 
-    this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar(DEFAULT_BACK_TEXT, {
+        backLink: DEFAULT_BACK_LINK, helpLink: this.viewModel.helpLink
     });
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
@@ -38,9 +40,9 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 // Get data for the Job title ID
                 jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
-
-                // Fill in job title name
-                this.viewModel.jobTitleName(jobTitle.singularName());
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                    this.updateNavBarState();
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
@@ -95,17 +97,37 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 this.viewModel.jobTitleName('Job Title');
                 this.viewModel.submittedUserLicensesCertifications([]);
                 this.viewModel.jobTitleApplicableLicences(null);
+                this.updateNavBarState();
             }
         }.bind(this)
     });
 });
 exports.init = A.init;
 
-A.prototype.updateNavBarState = function updateNavBarState() {
+A.prototype.useJobTitleInNavBar = function() {
+    // First, reset
+    this.navBar.model.updateWith(this.defaultNavBar, true);
 
-    if (!onboarding.updateNavBar(this.navBar)) {
-        // Reset
-        this.navBar.model.updateWith(this.defaultNavBar, true);
+    // Apply job title name and link
+    var text = this.viewModel.jobTitleName() || DEFAULT_BACK_TEXT;
+    var id = this.viewModel.jobTitleID();
+    var link = id ? DEFAULT_BACK_LINK + '/' + id : DEFAULT_BACK_LINK;
+    // Use job title name and ID for back link
+    this.navBar.leftAction().model.updateWith({
+        text: text,
+        link: link
+    });
+};
+
+A.prototype.updateNavBarState = function updateNavBarState() {
+    // Onboarding takes precence, then mustReturn, then default
+    // navbar with jobtitle
+    var done = onboarding.updateNavBar(this.navBar);
+    if (!done) {
+        done = this.app.applyNavbarMustReturn(this.requestData);
+    }
+    if (!done) {
+        this.useJobTitleInNavBar();
     }
 };
 

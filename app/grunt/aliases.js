@@ -6,33 +6,25 @@ module.exports = {
         'test'
     ],
     'test': [
-        'browserify:styleguidelibs',
-        'browserify:libs',
-        'browserify:app',
+        'browserify:appCommon',
         'browserify:tests',
         'mocha'
     ],
     'build-js': [
-        'jshint',//'newer:jshint',
-        'browserify:styleguidelibs',
-        'browserify:libs',
-        'browserify:app',
-        'uglify:styleguidelibs',
-        'uglify:libs',
-        'uglify:app',
-        'notify:browserify'
+        'jshint',
+        'browserify:appCommon',
+        'uglify:appCommon'
     ],
     'build-css': [
+        'prepare-bootstrap-variables',
         'concat:css-libs',
         'stylus:app',
-        'cssmin:libs',//'newer:cssmin'
-        'cssmin:app',//'newer:cssmin'
-        'notify:css'
+        'cssmin:libs',
+        'cssmin:app'
     ],
     'build-images': [
         'copyto:images',
-        'copyto:jqueryuiimages',
-        'notify:images'
+        'copyto:jqueryuiimages'
     ],
     'build-fonts': [
         'copyto:bootstrap-fonts',
@@ -43,10 +35,8 @@ module.exports = {
         'replace:html_bad_chars',
         //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
-        'bliss:appDebug',
-        'notify:html'
+        'bliss:appDebug'
     ],
-
 
     'prepare-phonegapcli-live': [
         'copyto:phonegap',
@@ -89,43 +79,29 @@ module.exports = {
     //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
     'build-dev': [
-        'browserify',
+        'browserify:appCommon',
         'stylus:app',
-        'bliss:appDebug',
-        'notify:build'
+        'bliss:appDebug'
     ],
     'build': [
-        'build-js',
-        'prepare-bootstrap-variables',
-        'build-css',
-        'build-html',
-        'build-images',
-        'build-fonts',
-        'notify:build'
+        'parallel:build-app'
     ],
     'build-webapp-html': [
         'bliss:webapp',
-        'htmlmin:webapp',
-        'copyto:webapp_assets',
-        'notify:html'
+        'htmlmin:webapp'
+    ],
+    'build-webapp-html-copy': [
+        'build-webapp-html',
+        'copyto:webapp_assets'
     ],
     'build-webapp': [
-        'build-js',
-        'prepare-bootstrap-variables',
-        'build-css',
-        'build-webapp-html',
-        'build-images',
-        'build-fonts',
-        'copyto:webapp_assets',
-        'notify:build'
+        'parallel:build-webapp',
+        'copyto:webapp_assets'
     ],
     'atwork': [
         'connect:atbuild',
+        'browserify:watchAppCommon',
         'watch'
-    ],
-    'atwork-landingPages': [
-        'connect:atbuild',
-        'watch:landingPages'
     ],
     'build-landingPages': [
         'stylus:landingPages',
@@ -133,11 +109,12 @@ module.exports = {
         'replace:html_bad_chars',
         'bliss:landingPagesBuild',
         'htmlmin:landingPagesBuild',
-        'browserify:landingPages',
-        'uglify:landingPages'
+        'copyto:images',
+        'browserify:appCommon'
     ],
     'publish-landingPages': [
         'bliss:landingPagesWeb',
+        'uglify:appCommon',
         'htmlmin:landingPagesWeb',
         'copyto:landingPages_assets'
     ]

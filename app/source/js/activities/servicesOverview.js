@@ -9,6 +9,8 @@ var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
+var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_TEXT = 'Back';
 
 var A = Activity.extend(function ServicesOverviewActivity() {
 
@@ -17,8 +19,9 @@ var A = Activity.extend(function ServicesOverviewActivity() {
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
 
-    this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar(DEFAULT_BACK_TEXT, {
+        backLink: DEFAULT_BACK_LINK,
+        helpLink: this.viewModel.helpLink
     });
 
     // On changing jobTitleID:
@@ -37,6 +40,7 @@ var A = Activity.extend(function ServicesOverviewActivity() {
 
                     // Fill in job title name
                     this.viewModel.jobTitleName(jobTitle.singularName());
+                    this.updateNavBarState();
                 }.bind(this))
                 .catch(function(err) {
                     this.app.modals.showError({
@@ -83,12 +87,30 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                 this.viewModel.jobTitleName('Job Title');
                 this.viewModel.serviceAttributesControl.reset();
                 this.viewModel.jobTitleServiceAttributesControl.reset();
+                this.updateNavBarState();
             }
         }.bind(this)
     });
 });
 
 exports.init = A.init;
+
+A.prototype.updateNavBarState = function updateNavBarState() {
+    // Must mustReturn logic takes precendence
+    // NOTE: is applied globally by app.js too, but async task may
+    // end replacing it:
+    var done = this.app.applyNavbarMustReturn(this.requestData);
+    if (!done) {
+        var text = this.viewModel.jobTitleName() || DEFAULT_BACK_TEXT;
+        var id = this.viewModel.jobTitleID();
+        var link = id ? DEFAULT_BACK_LINK + '/' + id : DEFAULT_BACK_LINK;
+        // Use job title name and ID for back link
+        this.navBar.leftAction().model.updateWith({
+            text: text,
+            link: link
+        });
+    }
+};
 
 A.prototype.show = function show(state) {
     // Reset

@@ -18,6 +18,8 @@ var A = Activity.extend(function PaymentAccountActivity() {
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account' , helpLink: this.viewModel.helpLink
     });
+    // Share navBar with desktop nav through viewModel
+    this.viewModel.navBar = this.navBar;
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 

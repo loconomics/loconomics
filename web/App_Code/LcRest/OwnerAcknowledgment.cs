@@ -136,5 +136,29 @@ namespace LcRest
             acknowledgedFromIP = insideClusterIP ?? forwardedClientIP ?? directClientIP;
         }
         #endregion
+
+        public static bool MeetsOwnsershipRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasAcknowledgment bit = 0
+
+			IF EXISTS (
+				SELECT *
+				FROM OwnerAcknowledgment
+				WHERE UserID = @UserID
+					AND DateAcknowledged is not null
+			)
+			BEGIN
+				SET @hasAcknowledgment = 1
+			END
+
+            SELECT @hasAcknowledgment
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
     }
 }

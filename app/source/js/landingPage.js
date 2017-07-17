@@ -47,7 +47,6 @@ var appInit = function appInit() {
     // may require adjustments on other scripts that listen to it.
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
-    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
     layoutUpdateEvent.on();
 
     // Bootstrap

@@ -15,18 +15,15 @@
             Can receive text messages
         </label>
     </div>
-    <h2 class="SectionTitle">Your address (for our records)</h2>
+    <h2 class="SectionTitle">Your mailing address (for our records)</h2>
     <app-unlabeled-input params="placeholder: 'Street address line 1', value: address.addressLine1, disable: isLocked"></app-unlabeled-input>
     <app-unlabeled-input params="placeholder: 'Street address line 2', value: address.addressLine2, disable: isLocked"></app-unlabeled-input>
     <div class="form-group" data-bind="css: { 'has-error': errorMessages.postalCode() }">
-        <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" data-bind="textInput: address.postalCode, event: { blur: postalCodeVM.onBlur }, disable: isLocked, popover: { content: errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+        <input type="number" class="form-control" placeholder="Zip code" aria-label="Zip code" min="0" data-bind="textInput: address.postalCode, event: { blur: postalCodeVM.onBlur }, disable: isLocked, popover: { content: errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
     </div>
     <div class="form-group">
         <p class="form-control-static">
-            <span data-bind="visible: address.city() || address.stateProvinceCode()">
-                <span data-bind="text: address.city"></span>, 
-                <span data-bind="text: address.stateProvinceCode"></span>
-            </span>
+            <span data-bind="text: address.cityState() || 'City:'"></span>
             <!-- White space to reserve vertical space -->
             &nbsp;
         </p>

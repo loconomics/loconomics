@@ -49,17 +49,20 @@ namespace LcRest
 
         #region Update
         const string sqlSet = @"
-            INSERT INTO OwnerStatusHistory VALUES
-            @0, @1, @2, @3
+            INSERT INTO OwnerStatusHistory (
+                UserID, OwnerStatusID, OwnerStatusChangedDate, OwnerStatusChangedBy
+            ) VALUES (
+                @0, @1, @2, @3
+            )
         ";
-        public static void Set(OwnerStatusHistory data)
+        public static void Set(OwnerStatusHistory data, LcDatabase database = null)
         {
-            using (var db = new LcDatabase())
+            using (var db = new LcDatabase(database))
             {
                 db.Execute(sqlSet,
                     data.userID,
-                    data.ownerStatusChangedDate,
                     data.ownerStatusID,
+                    data.ownerStatusChangedDate,
                     data.ownerStatusChangedBy
                 );
             }

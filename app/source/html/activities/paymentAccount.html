@@ -6,7 +6,10 @@
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/account"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Account</a>
+                        <a href="/account" data-bind="attr: { href: navBar.leftAction().link }">
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+                            <span data-bind="text: navBar.leftAction().text"></span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -55,7 +58,7 @@
                     <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $root.isLocked" data-bind="visible: !$parent.simplifiedFormEnabled()"></app-unlabeled-input>
                     <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }, visible: !$parent.simplifiedFormEnabled()">
                       <input type="number" class="form-control"
-                             placeholder="Postal code" aria-label="Postal code"
+                             placeholder="Postal code" aria-label="Postal code" min="0"
                              data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $root.isLocked,
                                         popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
                     </div>

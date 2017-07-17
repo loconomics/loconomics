@@ -13,6 +13,7 @@ var ko = require('knockout'),
 var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -22,7 +23,8 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling', helpLink: this.viewModel.helpLink
+        backLink: DEFAULT_BACK_LINK,
+        helpLink: this.viewModel.helpLink
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
@@ -120,7 +122,7 @@ A.prototype.applyOwnNavbarRules = function() {
 A.prototype.newLeftAction = function() {
     var leftAction = {},
         jid = this.viewModel.jobTitleID(),
-        url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling'),
+        url = this.mustReturnTo || (DEFAULT_BACK_LINK  + (jid ? '/' + jid : '')),
         handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
 
     leftAction.link = url;
@@ -134,7 +136,7 @@ A.prototype.leftActionText = function() {
     var clientName = this.viewModel.client() && this.viewModel.clientFullName(),
         jobTitle = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName();
 
-    return this.requestData.navTitle || clientName || jobTitle || 'Scheduler';
+    return this.requestData.navTitle || clientName || jobTitle || 'Back';
 };
 
 A.prototype.updateNavBarState = function updateNavBarState() {
