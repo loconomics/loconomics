@@ -66,7 +66,7 @@ TARGETS.APP = {
     html: {
         files: ['./source/html/app.js.html', './source/html/**/*.html', './source/html/modals/*.html'],
         tasks: [
-            'build-html',
+            'bliss:appDebug',
             'notify:html'
         ]
     },
@@ -130,9 +130,7 @@ TARGETS.LANDING_PAGES = {
     html: {
         files: ['./source/html/**/*.html'],
         tasks: [
-            'newer:replace:html_bad_chars',
             'bliss:landingPagesBuild',
-            'newer:htmlmin:landingPagesBuild',
             'notify:landingPages'
         ]
     }

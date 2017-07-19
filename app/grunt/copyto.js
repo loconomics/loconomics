@@ -15,13 +15,6 @@ module.exports = {
         dest: 'build/assets/css/images/',
         filter: 'isFile'
     },
-    html: {
-        expand: true,
-        cwd: 'source/html/',
-        src: ['activities/*.html', 'modals/*.html'],
-        dest: 'build/',
-        filter: 'isFile'
-    },
     webapp_assets: {
         expand: true,
         cwd: 'build/assets/',

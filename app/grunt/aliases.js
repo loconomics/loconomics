@@ -33,7 +33,6 @@ module.exports = {
     ],
     'build-html': [
         'replace:html_bad_chars',
-        //'copyto:html', // Now, html files are bundled with bliss
         'bliss:app',
         'bliss:appDebug'
     ],
@@ -87,6 +86,7 @@ module.exports = {
         'parallel:build-app'
     ],
     'build-webapp-html': [
+        'replace:html_bad_chars',
         'bliss:webapp',
         'htmlmin:webapp'
     ],
