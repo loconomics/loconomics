@@ -97,23 +97,46 @@
                             <div class="form-group">
                                 <div data-bind="visible: isNew">
                                     <label>Upload yours for us to verify:</label>
-                                    <p>Upload a photo, document, or screenshot of your license/certification, and we'll do our best to verify it.</p>
+                                    <p>Upload a photo, document, or 
+                                        <a style="color:#ffc0cb;cursor:pointer;font-weight:bold;" data-toggle="collapse" data-target="#screenshotInstructions" aria-expanded="false"  aria-controls="screenshotInstructions">
+                                            screenshot
+                                        </a> (if your licensing board has a website) of your license/certification, and we'll do our best to verify it.</p>
                                 </div>
                                 <div data-bind="visible: !isNew()">
                                     <label>Submit an update:</label>
                                     <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsForm-submittedImage" class="isolated">
                                         <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
                                     </div>
-                                    <p>Upload a photo, document, or screenshot of your updated license/certification.</p>
+                                    <p>Upload a photo, document, or 
+                                        <a style="color:#ffc0cb;cursor:pointer;font-weight:bold;" data-toggle="collapse" data-target="#screenshotInstructions" aria-expanded="false"  aria-controls="screenshotInstructions">
+                                            screenshot
+                                        </a>  (if your licensing board has a website) of your updated license/certification.</p>
+                                </div>
+                                <div id="screenshotInstructions" class="collapse" style="margin-top:15px;">
+                                    <label>Windows and Linux:</label>
+                                    <ol>
+                                        <li>Press PrtSc button</li>
+                                        <li>Press Ctrl + V to paste into a text editor or photo editor program and then save file</li>
+                                    </ol>
+                                    <label>Windows (8 or 10) only:</label>
+                                    <ol>
+                                        <li>Hold down <i class="fa fa-windows" aria-hidden="true"></i> (windows key) and press PrtSc button</li>
+                                        <li>Windows will save your entire screen as a file under your Pictures > Screenshots folder</li>
+                                    </ol>
+                                    <label>Mac:</label>
+                                    <ol>
+                                        <li>Hold down &#8984; (command key) and Shift and press 3</li>
+                                        <li>The file will be saved to your desktop </li>
+                                    </ol>
                                 </div>
                                 <button type="button" class="btn btn-default btn-block"
-                                        style="margin: 0 10% 20px 10%; width: 80%;"
+                                        style="margin: 20px 10% 20px 10%; width: 80%;"
                                         data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet"
                                         data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
                                     Upload/take photo
                                 </button>
                                 <div class="btn-file btn btn-default btn-block"
-                                    style="margin: 0 10% 20px 10%; width: 80%;"
+                                    style="margin: 20px 10% 20px 10%; width: 80%;"
                                     data-bind="visible: !takePhotoSupported(), attr: { disabled: isLocked }">
                                     <div>Upload/take photo</div>
                                     <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: isLocked">
