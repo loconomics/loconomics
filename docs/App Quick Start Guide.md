@@ -80,7 +80,7 @@ Open the Web console with the page opened (can be the local development server c
 
 #### For our dev database (ignore security warnings):
 ```
-localStorage["LoconomicsApp/config"] = '{"siteUrl":"https://dev.loconomics.com"}';
+localStorage["LoconomicsApp/config"] = '{"siteUrl":"http://dev.loconomics.com"}';
 ```
 #### For your local database:
 
