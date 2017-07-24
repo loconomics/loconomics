@@ -114,7 +114,7 @@
                                             <strong>screenshot</strong>
                                         </a>  (if your licensing board has a website) of your updated license/certification.</p>
                                 </div>
-                                <div id="licensesCertificationsForm-screenshotInstructions" class="collapse" style="margin-top:15px;">
+                                <div id="licensesCertificationsForm-screenshotInstructions" class="collapse">
                                     <label>Windows and Linux:</label>
                                     <ol>
                                         <li>Press PrtSc button</li>
@@ -131,14 +131,13 @@
                                         <li>The file will be saved to your desktop </li>
                                     </ol>
                                 </div>
-                                <button type="button" class="btn btn-default btn-block"
-                                        style="margin: 20px 10% 20px 10%; width: 80%;"
+                                <button
+                                        type="button" class="btn btn-default btn-block licensesCertificationsForm-uploadBtn"
                                         data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet"
                                         data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
                                     Upload/take photo
                                 </button>
-                                <div class="btn-file btn btn-default btn-block"
-                                    style="margin: 20px 10% 20px 10%; width: 80%;"
+                                <div class="btn-file btn btn-default btn-block licensesCertificationsForm-uploadBtn"
                                     data-bind="visible: !takePhotoSupported(), attr: { disabled: isLocked }">
                                     <div>Upload/take photo</div>
                                     <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: isLocked">
