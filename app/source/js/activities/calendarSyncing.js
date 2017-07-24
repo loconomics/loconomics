@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity'),
     $ = require('jquery'),
     ko = require('knockout');
+var calendarSyncing = require('../data/calendarSyncing');
 
 var A = Activity.extend(function CalendarSyncingActivity() {
 
@@ -28,7 +29,7 @@ var A = Activity.extend(function CalendarSyncingActivity() {
     });
 
     this.registerHandler({
-        target: this.app.model.calendarSyncing,
+        target: calendarSyncing,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving calendar syncing settings.' : 'Error loading calendar syncing settings.';
@@ -46,15 +47,13 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Keep data updated:
-    this.app.model.calendarSyncing.sync();
+    calendarSyncing.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };
 
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201959953-syncing-your-existing-calendar';
-
-    var calendarSyncing = app.model.calendarSyncing;
 
     var syncVersion = calendarSyncing.newVersion();
     syncVersion.isObsolete.subscribe(function(itIs) {

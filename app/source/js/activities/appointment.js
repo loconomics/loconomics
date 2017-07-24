@@ -9,6 +9,7 @@ var $ = require('jquery'),
     AppointmentCardViewModel = require('../viewmodels/AppointmentCard'),
     Listener = require('../utils/EventEmitterListener');
 
+var calendar = require('../data/calendar');
 require('../components/DatePicker');
 
 var Activity = require('../components/Activity');
@@ -542,7 +543,7 @@ function ViewModel(app) {
                 else
                     ids.calendarEventID = id;
 
-                return app.model.calendar.getAppointment(ids)
+                return calendar.getAppointment(ids)
                 .then(function (item) {
                     if (item) {
                         // Force a load for the item date.
@@ -567,7 +568,7 @@ function ViewModel(app) {
         }
         else {
             this.isLoading(true);
-            return app.model.calendar.getDateAvailability(date)
+            return calendar.getDateAvailability(date)
             .then(function (dateAvail) {
                 this.isLoading(false);
                 this.dateAvailability(dateAvail);

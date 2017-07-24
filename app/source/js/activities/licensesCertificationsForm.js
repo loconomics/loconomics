@@ -7,19 +7,23 @@ var Activity = require('../components/Activity'),
     ko = require('knockout'),
     photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
+var onboarding = require('../data/onboarding');
+var userLicensesCertifications = require('../data/userLicensesCertifications');
+var licenseCertification = require('../data/licenseCertification');
+var jobTitleLicenses = require('../data/jobTitleLicenses');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
-    
+
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
         backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
-    
+
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
         var $input = this.$activity.find('#licensesCertificationsForm-photoFile');//input[type=file]
@@ -73,7 +77,7 @@ exports.init = A.init;
 A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/licensesCertifications/';
-    
+
     if (this.viewModel.isNew())
         this.convertToCancelAction(this.navBar.leftAction(), link);
     else
@@ -82,25 +86,25 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     // Reset
     this.viewModel.version(null);
 
     // Params
     var params = state && state.route && state.route.segments || [];
     var query = state && state.route && state.route.query || {};
-    
+
     this.viewModel.jobTitleID(params[0] |0);
     this.viewModel.userLicenseCertificationID(params[1] |0);
     this.viewModel.licenseCertificationID(query.licenseCertificationID |0);
 
     this.updateNavBarState();
-    
+
     var ModelVersion = require('../utils/ModelVersion'),
         UserLicenseCertification = require('../models/UserLicenseCertification');
-    
+
     if (!this.viewModel.isNew()) {
-        this.app.model.userLicensesCertifications
+        userLicensesCertifications
         .getItem(this.viewModel.jobTitleID(), this.viewModel.userLicenseCertificationID())
         .then(function(data) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
@@ -117,7 +121,7 @@ A.prototype.show = function show(state) {
         }.bind(this));
     }
     else {
-        this.app.model.licenseCertification
+        licenseCertification
         .getItem(this.viewModel.licenseCertificationID())
         .then(function(data) {
             var item = new UserLicenseCertification({
@@ -142,23 +146,23 @@ A.prototype.show = function show(state) {
 
 function ViewModel(app) {
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.userLicenseCertificationID = ko.observable(0);
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
-    this.jobTitleNamePlural = ko.observable(); 
+    this.jobTitleNamePlural = ko.observable();
     this.isLoading = ko.pureComputed(function() {
         return (
-            app.model.userLicensesCertifications.state.isLoading()
+            userLicensesCertifications.state.isLoading()
         );
     }, this);
-    this.isSaving = app.model.userLicensesCertifications.state.isSaving;
-    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing;
-    this.isDeleting = app.model.userLicensesCertifications.state.isDeleting;
+    this.isSaving = userLicensesCertifications.state.isSaving;
+    this.isSyncing = userLicensesCertifications.state.isSyncing;
+    this.isDeleting = userLicensesCertifications.state.isDeleting;
     this.isLocked = ko.pureComputed(function() {
         return (
-            app.model.userLicensesCertifications.state.isLocked()
+            userLicensesCertifications.state.isLocked()
         );
     }, this);
     this.isReady = ko.pureComputed(function() {
@@ -166,7 +170,7 @@ function ViewModel(app) {
         return !!(it && (it.localTempFilePath() || it.localTempFileData()));
     }, this);
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
-    
+
     this.submitText = ko.pureComputed(function() {
         return (this.isLoading() || this.isSyncing()) ? 'Loading..' : this.isSaving() ? 'Saving..' : this.isDeleting() ? 'Deleting..' : 'Save';
     }, this);
@@ -174,7 +178,7 @@ function ViewModel(app) {
     this.isNew = ko.pureComputed(function() {
         return !this.userLicenseCertificationID();
     }, this);
-    
+
     this.version = ko.observable(null);
     this.item = ko.pureComputed(function() {
         var v = this.version();
@@ -188,29 +192,29 @@ function ViewModel(app) {
         var v = this.version();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
-                'Deleting...' : 
+            this.isDeleting() ?
+                'Deleting...' :
                 'Delete'
         );
     }, this);
 
     this.save = function() {
         var data = this.item().model.toPlainObject(true);
-        app.model.userLicensesCertifications.setItem(data)
+        userLicensesCertifications.setItem(data)
         .then(function(serverData) {
             // Update version with server data.
             this.item().model.updateWith(serverData);
             // Push version so it appears as saved
             this.version().push({ evenIfObsolete: true });
             // Cache of licenses info for the user and job title is dirty, clean up so is updated later
-            app.model.jobTitleLicenses.clearCache();
-            app.model.userLicensesCertifications.clearCache();
+            jobTitleLicenses.clearCache();
+            userLicensesCertifications.clearCache();
             // Go out
 
-            if (app.model.onboarding.inProgress()) {
+            if (onboarding.inProgress()) {
                 app.shell.goBack();
             }
             else {
@@ -225,7 +229,7 @@ function ViewModel(app) {
         });
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
         // L18N
         app.modals.confirm({
@@ -240,7 +244,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.remove = function() {
-        app.model.userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
+        userLicensesCertifications.delItem(this.jobTitleID(), this.userLicenseCertificationID())
         .then(function() {
             // Go out
             app.shell.goBack();
@@ -252,7 +256,7 @@ function ViewModel(app) {
             });
         });
     }.bind(this);
-    
+
     var addNew = function(fromCamera) {
         var settings = {
             sourceType: fromCamera ?
@@ -276,11 +280,11 @@ function ViewModel(app) {
             app.modals.showError({ error: 'This feature is currently only available on mobile devices' });
         }
     }.bind(this);
-    
+
     this.takePhotoForNew = function() {
         addNew(true);
     }.bind(this);
-    
+
     this.pickPhotoForNew = function() {
         addNew(false);
     }.bind(this);

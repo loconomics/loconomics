@@ -10,6 +10,8 @@ var ko = require('knockout'),
     Field = require('./Field'),
     fb = require('../utils/facebookUtils'),
     countriesOptions = require('./CountriesOptions');
+var auth = require('../data/auth');
+var onboarding = require('../data/onboarding');
 
 /**
  * Enum with valid values for profile type.
@@ -224,7 +226,7 @@ else
             jobTitleName: this.jobTitleName()
         };
 
-        return app.model.signup(plainData)
+        return auth.signup(plainData)
             .then(function(signupData) {
 
                 // The reset includes already a call
@@ -233,9 +235,9 @@ else
                 // locked if a handler attacked choose to not reset the form
 
                 // Start onboarding
-                if (app.model.onboarding) {
-                    app.model.onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
-                    app.model.onboarding.setStep(signupData.onboardingStep);
+                if (onboarding) {
+                    onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
+                    onboarding.setStep(signupData.onboardingStep);
                 }
 
                 // Emit event before resetting data (to prevent some
@@ -320,7 +322,7 @@ else
         // email,user_about_me
         facebookLogin()
         .then(function(result) {
-            // Set credentials
+            // Set authorization data
             var auth = result.authResponse;
             // Set FacebookId to link accounts:
             vm.facebookUserID(auth.userID);

@@ -1,11 +1,11 @@
 /**
     Home activity (aka Search)
-    //used to get apisearch results by term, lat, long, 
+    //used to get apisearch results by term, lat, long,
 **/
 'use strict';
 var $ = require('jquery');
 
-var 
+var
     SearchResults = require('../models/SearchResults'),
     ko = require('knockout'),
     Activity = require('../components/Activity'),
@@ -13,7 +13,8 @@ var
 
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
-
+var user = require('../data/userProfile').data;
+var search = require('../data/search');
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -22,7 +23,7 @@ var A = Activity.extend(function HomeActivity() {
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
-    this.viewModel = new ViewModel(this.app.model);
+    this.viewModel = new ViewModel();
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
     this.$header = $('.AppNav');
@@ -70,7 +71,7 @@ var A = Activity.extend(function HomeActivity() {
                 country: 'US'
             }
         };
-        
+
         // WITH PLUGIN:
         $location.geocomplete(options);
         $location.on('geocode:result', function(e, place) {
@@ -88,7 +89,7 @@ var A = Activity.extend(function HomeActivity() {
         var autocomplete = new google.maps.places.Autocomplete(
             $location.get(0), options
         );
-        
+
         google.maps.event.addListener(
             autocomplete,
             'place_changed',
@@ -107,13 +108,6 @@ var A = Activity.extend(function HomeActivity() {
 
 exports.init = A.init;
 
-var DEFAULT_LOCATION = {
-    lat: '37.788479',
-    lng: '-122.40297199999998',
-    searchDistance: 30,
-    city: 'San Francisco, CA USA'
-};
-
 A.prototype._registerSnapPoints = function() {
 
     var $searchBox = this.$activity.find('#homeSearch'),
@@ -126,7 +120,7 @@ A.prototype._registerSnapPoints = function() {
             // Add the box height but sustract the header height because that is fixed and overlaps
             $searchBox.outerHeight() - this.$header.outerHeight()
         ) |0);
-    
+
     var pointsEvents = {
         // Just after start scrolling
         0: 'scroll-fixed-header'
@@ -138,14 +132,14 @@ A.prototype._registerSnapPoints = function() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     if (!this._notFirstShow) {
         this._registerSnapPoints();
         this._notFirstShow = true;
-        
+
         // Check if pop-up was displayed already to don't bother users
         // And of course we must not attempt that ones that are already users :-)
-        var showIt = !localStorage.sanFranciscoLaunchPopup && this.app.model.userProfile.data.isAnonymous();
+        var showIt = !localStorage.sanFranciscoLaunchPopup && user.isAnonymous();
         if (showIt) {
             this.app.modals.showAnnouncement({
                 message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
@@ -164,29 +158,23 @@ A.prototype.show = function show(state) {
 };
 
 
-function ViewModel(appModel) {
+function ViewModel() {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();
     // Coordinates
-    this.lat = ko.observable(DEFAULT_LOCATION.lat);
-    this.lng = ko.observable(DEFAULT_LOCATION.lng);
+    this.lat = ko.observable(search.DEFAULT_LOCATION.lat);
+    this.lng = ko.observable(search.DEFAULT_LOCATION.lng);
     this.city = ko.observable();
-    this.searchDistance = ko.observable(DEFAULT_LOCATION.searchDistance);
+    this.searchDistance = ko.observable(search.DEFAULT_LOCATION.searchDistance);
     //create an object named SearchResults to hold the search results returned from the API
     this.searchResults = new SearchResults();
-    var latestRequest = null;
+
     this.loadData = function(searchTerm, lat, lng) {
-        if (latestRequest) latestRequest.xhr.abort();
         this.isLoading(true);
-        //Call the get rest API method for api/v1/en-US/search
-        latestRequest = appModel.rest.get('search', {
-            searchTerm: searchTerm, 
-            origLat: lat || DEFAULT_LOCATION.lat,
-            origLong: lng || DEFAULT_LOCATION.lng,
-            searchDistance: DEFAULT_LOCATION.searchDistance
-        });
-        return latestRequest.then(function(searchResults) {
+
+        return search.byTerm(searchTerm, lat, lng)
+        .then(function(searchResults) {
             if(searchResults){
                 //update searchResults object with all the data from the API
                 this.searchResults.model.updateWith(searchResults, true);
@@ -202,7 +190,7 @@ function ViewModel(appModel) {
     };
     //creates a handler function for the html search button (event)
     this.search = function() {
-        //creates a variable for the search term to check to see when a user enters more than 2 characters, we'll auto-load the data. 
+        //creates a variable for the search term to check to see when a user enters more than 2 characters, we'll auto-load the data.
         var s = this.searchTerm();
         if(s && s.length > 2) {
             this.loadData(s, this.lat(), this.lng());
@@ -216,11 +204,11 @@ function ViewModel(appModel) {
         this.search();
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
     },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
-    
+
     this.isSearchAutocompleteOpened = ko.pureComputed(function() {
         return (
-            this.searchResults.jobTitles().length || 
-            this.searchResults.serviceProfessionals().length || 
+            this.searchResults.jobTitles().length ||
+            this.searchResults.serviceProfessionals().length ||
             this.searchResults.categories().length
         );
     }, this);

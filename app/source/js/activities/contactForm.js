@@ -5,15 +5,17 @@
 
 var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
+var onboarding = require('../data/onboarding');
+var feedback = require('../data/feedback');
 
 var A = Activity.extend(function ContactFormActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
-    
+
     this.accessLevel = null;
-    
+
     this.navBar = Activity.createSubsectionNavBar('Back');
     this.navBar.rightAction(null);
 });
@@ -27,7 +29,7 @@ A.prototype.show = function show(options) {
     var params = this.requestData.route.segments || [];
     var elementName = params[0] || '',
         elementID = VocElementEnum[elementName] |0;
-    
+
     this.viewModel.emailSubject(this.requestData.route.query.subject || '');
     this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
 
@@ -42,9 +44,11 @@ A.prototype.show = function show(options) {
 };
 
 var ko = require('knockout');
+var user = require('../data/userProfile').data;
+
 function ViewModel(app) {
-    
-    this.isInOnboarding = app.model.onboarding.inProgress;
+
+    this.isInOnboarding = onboarding.inProgress;
     this.message = ko.observable('');
     this.isSending = ko.observable(false);
     this.vocElementID = ko.observable(0);
@@ -53,14 +57,14 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         return this.isSending() ? 'Sending..' : 'Send';
     }, this);
-    
+
     this.isValid = ko.pureComputed(function() {
         var m = this.message();
         return m && !/^\s*$/.test(m);
     }, this);
-    
+
     this.anonymousButtonUrl = ko.pureComputed(function() {
-        if (!app.model.user().isAnonymous()) return '';
+        if (!user.isAnonymous()) return '';
 
         var subject = encodeURIComponent(this.emailSubject() || 'I need help!');
         var body = encodeURIComponent(this.message());
@@ -70,7 +74,7 @@ function ViewModel(app) {
 
     this.send = function send() {
         // Check is valid, and do nothing if not
-        if (!this.isValid() || app.model.user().isAnonymous()) {
+        if (!this.isValid() || user.isAnonymous()) {
             return;
         }
         this.isSending(true);
@@ -78,7 +82,7 @@ function ViewModel(app) {
         if (this.emailSubject()) {
             msg = this.emailSubject() + ': ' + msg;
         }
-        app.model.feedback.postSupport({
+        feedback.postSupport({
             message: msg,
             vocElementID: this.vocElementID()
         })

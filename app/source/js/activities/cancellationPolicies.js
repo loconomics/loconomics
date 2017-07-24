@@ -6,6 +6,7 @@
 
 var $ = require('jquery'),
     Activity = require('../components/Activity');
+var cancellationPolicies = require('../data/cancellationPolicies');
 
 var A = Activity.extend(function CancellationPoliciesActivity() {
 
@@ -13,7 +14,7 @@ var A = Activity.extend(function CancellationPoliciesActivity() {
 
     // Any user can access this
     this.accessLevel = null;
-    
+
     // null for logos
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
@@ -32,17 +33,17 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     var tabName = state && state.route.segments && state.route.segments[0];
     var tab = this.$activity.find('[href="#cancellationPolicies-' + tabName + '"]');
     if (tab.length) tab.tab('show');
 
     // Request to sync policies, just in case there are remote changes
-    this.app.model.cancellationPolicies.sync();
+    cancellationPolicies.sync();
 };
 
-function ViewModel(app) {
-    this.isLoading = app.model.cancellationPolicies.state.isLoading;
-    this.policies = app.model.cancellationPolicies.list;
+function ViewModel() {
+    this.isLoading = cancellationPolicies.state.isLoading;
+    this.policies = cancellationPolicies.list;
 }
 

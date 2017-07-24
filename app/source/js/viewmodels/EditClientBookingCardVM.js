@@ -2,17 +2,19 @@
 
 var ko = require('knockout');
 var BaseClientBookingCardVM = require('../viewmodels/BaseClientBookingCardVM');
+var bookings = require('../data/bookings');
+var availability = require('../data/availability');
 
 function EditClientBookingCardVM(app) {
-    
+
     // Base Class:
     BaseClientBookingCardVM.call(this, app);
-    
+
     ///
     /// Data properties
     /// States
     this.isLoadingBooking = ko.observable(false);
-    
+
     ///
     /// States
     var baseIsLoading = this.isLoading;
@@ -22,7 +24,7 @@ function EditClientBookingCardVM(app) {
             baseIsLoading()
         );
     }, this);
-    
+
     ///
     /// Reset
     var baseReset = this.reset;
@@ -31,21 +33,21 @@ function EditClientBookingCardVM(app) {
 
         this.isLoadingBooking(false);
     }.bind(this);
-    
+
     /// Text helpers
     this.submitText = ko.pureComputed(function() {
         var v = this.editedVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         'Save changes'
                         : 'Saved'
         );
     }, this);
-    
+
     ///
     /// Edition
     var baseCancel = this.cancel.bind(this);
@@ -53,7 +55,7 @@ function EditClientBookingCardVM(app) {
         baseCancel();
         this.progress.go('confirm');
     }.bind(this);
-    
+
     this.confirmCancel = function() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
@@ -98,7 +100,7 @@ function EditClientBookingCardVM(app) {
             // Load by ID
             var bookingID = bookingIdOrModel |0;
             this.isLoadingBooking(true);
-            return app.model.bookings.getBooking(bookingID).then(function(booking) {
+            return bookings.getBooking(bookingID).then(function(booking) {
                 this.originalBooking(booking);
                 this.progress.reset().go('confirm');
                 this.isLoadingBooking(false);
@@ -123,9 +125,9 @@ function EditClientBookingCardVM(app) {
             this.editedVersion(null);
         }
         this.isCancelMode(false);
-        
+
         var msg = 'You\'re all set! We\'ll notify {0} of your changes.'.replace('{0}', this.serviceProfessionalInfo().profile().firstName());
-        
+
         app.modals.showNotification({
             title: 'Done!',
             message: msg
@@ -135,31 +137,31 @@ function EditClientBookingCardVM(app) {
 
         // Forget availability cache for this professional, since is not needed
         // and any new booking with it needs a refresh to avoid problems. See #905
-        app.model.availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
+        availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
     }.bind(this);
-    
+
     ///
     /// Save
     this.save = function() {
         // Final step, confirm and save booking
         this.isSaving(true);
 
-        app.model.bookings.setClientBooking(this.booking())
+        bookings.setClientBooking(this.booking())
         .then(afterSaveBooking)
         .catch(function(err) {
             this.isSaving(false);
             app.modals.showError({ error: err });
         }.bind(this));
     }.bind(this);
-    
+
     ///
     /// Cancel Booking
     this.cancelBookingByClient = function() {
         if (!this.canCancel()) return;
         this.isSaving(true);
         var apiCall = this.booking().canBeCancelledByClient() ?
-            app.model.bookings.cancelBookingByClient :
-            app.model.bookings.declineBookingByClient
+            bookings.cancelBookingByClient :
+            bookings.declineBookingByClient
         ;
         apiCall(this.booking().bookingID())
         .then(afterSaveBooking)

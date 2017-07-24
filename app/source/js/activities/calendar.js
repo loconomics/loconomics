@@ -8,6 +8,8 @@ var $ = require('jquery'),
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
+var user = require('../data/userProfile').data;
+var calendar = require('../data/calendar');
 
 var Activity = require('../components/Activity');
 
@@ -148,7 +150,7 @@ A.prototype.show = function show(options) {
     this.viewModel.previousDate = null;
     this.viewModel.currentDate(date);
     // Force a refresh of tags
-    this.tagAvailability(date, this.app.model.userProfile.data.userID(), true);
+    this.tagAvailability(date, user.userID(), true);
 };
 
 var Appointment = require('../models/Appointment'),
@@ -210,7 +212,7 @@ function ViewModel(app) {
 
         this.isLoading(true);
 
-        app.model.calendar.getDateAvailability(date)
+        calendar.getDateAvailability(date)
         .then(function(dateAvail) {
 
             // IMPORTANT: First, we need to check that we are
@@ -222,7 +224,7 @@ function ViewModel(app) {
             // TODO: still this has the minor bug of losing the isLoading
             // if a previous triggered load still didn't finished; its minor
             // because is very rare that happens, moving this stuff
-            // to a special appModel for mixed bookings and events with
+            // to a special data module for mixed bookings and events with
             // per date cache that includes a view object with isLoading will
             // fix it and reduce this complexity.
             if (date.toISOString() !== this.currentDate().toISOString()) {

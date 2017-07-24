@@ -1,38 +1,48 @@
 /**
-    Utility that allows to keep an original model untouched
-    while editing a version, helping synchronize both
-    when desired by push/pull/sync-ing.
-    
-    Its the usual way to work on forms, where an in memory
-    model can be used but in a copy so changes doesn't affects
-    other uses of the in-memory model (and avoids remote syncing)
-    until the copy want to be persisted by pushing it, or being
-    discarded or refreshed with a remotely updated original model.
-**/
+ * Utility that allows to keep an original model untouched
+ * while editing a version, helping synchronize both
+ * when desired by push/pull/sync-ing.
+ *
+ * Its the usual way to work on forms, where an in memory
+ * model can be used but in a copy so changes doesn't affects
+ * other uses of the in-memory model (and avoids remote syncing)
+ * until the copy want to be persisted by pushing it, or being
+ * discarded or refreshed with a remotely updated original model.
+ *
+ * @todo Looks for alternative approach, deprecate this and open migration issues.
+ * It adds unneeded complexity, we must use a more simple approach as
+ * create a copy of the data (once loaded) to work with, and after that
+ * push/save the changes using the specific data API. The additional
+ * feature that allows to know if data has changed (used to provide hints to user
+ * of 'not saved data') can be replaced by using directly the Model class
+ * property dataTimestamp or a flag in the form viewmodel.
+ * Data modules are using this for some methods, must be refactored and too some
+ * activities and viewmodels.
+ */
 'use strict';
 
 var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter;
 
 function ModelVersion(original) {
-    
+
     EventEmitter.call(this);
-    
+
     this.original = original;
-    
+
     // Create version
     // (updateWith takes care to set the same dataTimestamp)
     this.version = original.model.clone(null, true);
-    
+
     // Computed that test equality, allowing being notified of changes
     // A rateLimit is used on each to avoid several syncrhonous notifications.
-    
+
     /**
         Returns true when both versions has the same timestamp
     **/
     this.areDifferent = ko.pureComputed(function areDifferent() {
         return (
-            this.original.model.dataTimestamp() !== 
+            this.original.model.dataTimestamp() !==
             this.version.model.dataTimestamp()
         );
     }, this).extend({ rateLimit: 0 });
@@ -42,7 +52,7 @@ function ModelVersion(original) {
     **/
     this.isNewer = ko.pureComputed(function isNewer() {
         return (
-            this.original.model.dataTimestamp() < 
+            this.original.model.dataTimestamp() <
             this.version.model.dataTimestamp()
         );
     }, this).extend({ rateLimit: 0 });
@@ -52,7 +62,7 @@ function ModelVersion(original) {
     **/
     this.isObsolete = ko.pureComputed(function isComputed() {
         return (
-            this.original.model.dataTimestamp() > 
+            this.original.model.dataTimestamp() >
             this.version.model.dataTimestamp()
         );
     }, this).extend({ rateLimit: 0 });
@@ -73,7 +83,7 @@ ModelVersion.prototype.getRollback = function getRollback(from) {
 /**
     Discard the version changes getting the original
     data.
-    
+
     options: {
         evenIfNewer: false
     }
@@ -81,18 +91,18 @@ ModelVersion.prototype.getRollback = function getRollback(from) {
 ModelVersion.prototype.pull = function pull(options) {
 
     options = options || {};
-    
+
     // By default, nothing to do, or avoid overwrite changes.
     var result = false,
         rollback = null;
-    
+
     if (options.evenIfNewer || !this.isNewer()) {
         // Update version with the original data,
         // creating first a rollback function.
         rollback = createRollbackFunction(this.version);
         // Ever deepCopy, since only properties and fields from models
         // are copied and that must avoid circular references
-        // The method updateWith takes care to set the same dataTimestamp:        
+        // The method updateWith takes care to set the same dataTimestamp:
         this.version.model.updateWith(this.original, true);
         // Done
         result = true;
@@ -104,15 +114,15 @@ ModelVersion.prototype.pull = function pull(options) {
 
 /**
     Sends the version changes to the original
-    
+
     options: {
         evenIfObsolete: false
     }
 **/
 ModelVersion.prototype.push = function push(options) {
-    
+
     options = options || {};
-    
+
     // By default, nothing to do, or avoid overwrite changes.
     var result = false,
         rollback = null;
@@ -137,7 +147,7 @@ ModelVersion.prototype.push = function push(options) {
     by getting the newest one.
 **/
 ModelVersion.prototype.sync = function sync() {
-    
+
     if (this.isNewer())
         return this.push();
     else if (this.isObsolete())
@@ -147,7 +157,7 @@ ModelVersion.prototype.sync = function sync() {
 };
 
 /**
-    Utility that create a function able to 
+    Utility that create a function able to
     perform a data rollback on execution, useful
     to pass on the events to allow react upon changes
     or external synchronization failures.

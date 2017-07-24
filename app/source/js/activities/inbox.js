@@ -8,13 +8,15 @@ var Activity = require('../components/Activity'),
     MessageView = require('../models/MessageView'),
     textSearch = require('../utils/textSearch');
 
+var messaging = require('../data/messaging');
+
 var A = Activity.extend(function InboxActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-    
+
     this.navBar = Activity.createSectionNavBar('Inbox');
 });
 
@@ -22,9 +24,9 @@ exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     // Messages
-    this.app.model.messaging.getList()
+    messaging.getList()
     .then(function(threads) {
         this.viewModel.sourceThreads(threads());
     }.bind(this))
@@ -37,14 +39,14 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    
-    this.isLoading = app.model.messaging.state.isLoading;
-    this.isSyncing = app.model.messaging.state.isSyncing;
+
+    this.isLoading = messaging.state.isLoading;
+    this.isSyncing = messaging.state.isSyncing;
 
     this.sourceThreads = ko.observableArray([]);
-    
+
     this.searchText = ko.observable('');
-    
+
     // NOTE: since current API-connection implementation only gets
     // the latest message with getList, the search is done in the
     // bodyText of the last message (additionally to the thread subject)
@@ -57,13 +59,13 @@ function ViewModel(app) {
             return [];
         else if (!s)
             return t.map(MessageView.fromThread.bind(null, app));
-        else        
+        else
             return t.filter(function(thread) {
                 var found = false;
-                
+
                 // Check subject
                 found = textSearch(s, thread.subject());
-                
+
                 if (!found) {
                     // Try content of messages
                     // It stops on first 'true' result
@@ -72,7 +74,7 @@ function ViewModel(app) {
                         return found;
                     });
                 }
-                
+
                 return found;
             }).map(MessageView.fromThread.bind(null, app));
     }, this);

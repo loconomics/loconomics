@@ -15,6 +15,8 @@ var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter;
 var Booking = require('../models/Booking');
 var Address = require('../models/Address');
+var calendar = require('../data/calendar');
+var bookings = require('../data/bookings');
 
 var events = {
     confirmed: 'confirmed',
@@ -199,7 +201,7 @@ function AppointmentCardViewModel(params) {
 
         if (version && version.areDifferent()) {
             this.isSaving(true);
-            app.model.calendar.setAppointment(version.version, this.allowBookUnavailableTime())
+            calendar.setAppointment(version.version, this.allowBookUnavailableTime())
             .then(afterSave)
             .catch(function(err) {
                 // The version data keeps untouched, user may want to retry
@@ -324,7 +326,7 @@ function AppointmentCardViewModel(params) {
     this.cancelBookingByServiceProfessional = function() {
         if (!this.bookingCanBeCancelledByServiceProfessional()) return;
         this.isSaving(true);
-        app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
+        bookings.cancelBookingByServiceProfessional(this.bookingID())
         .then(function(booking) { afterSaveBooking(booking, events.cancelled); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
@@ -345,7 +347,7 @@ function AppointmentCardViewModel(params) {
     this.declineBookingByServiceProfessional = function() {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
-        app.model.bookings.declineBookingByServiceProfessional(this.bookingID())
+        bookings.declineBookingByServiceProfessional(this.bookingID())
         .then(function(booking) { afterSaveBooking(booking, events.declined); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
@@ -366,7 +368,7 @@ function AppointmentCardViewModel(params) {
     this.confirmBookingRequest = function(dateType) {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
-        app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
+        bookings.confirmBookingRequest(this.bookingID(), dateType)
         .then(function(booking) { afterSaveBooking(booking, events.confirmed); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry

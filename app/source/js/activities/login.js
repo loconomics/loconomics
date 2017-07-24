@@ -6,9 +6,12 @@
 var ko = require('knockout'),
     Activity = require('../components/Activity'),
     ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
+var user = require('../data/userProfile').data;
+var auth = require('../data/auth');
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function LoginActivity() {
-    
+
     Activity.apply(this, arguments);
 
     // No accessLevel, all users can access this
@@ -16,7 +19,7 @@ var A = Activity.extend(function LoginActivity() {
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSectionNavBar('Log in');
     this.navBar.rightAction(null);
-    
+
     // Updating URL for the view
     var app = this.app;
     var act = this;
@@ -47,11 +50,11 @@ exports.init = A.init;
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     this.viewModel.reset();
     var params = state && state.route && state.route.segments;
     var query = state && state.route && state.route.query;
-    
+
     var redirectUrl = state.redirectUrl || query.redirectUrl;
     if (!redirectUrl && state.requiredLevel) {
         // Called from the shell access control after a failed access to an activity,
@@ -59,7 +62,7 @@ A.prototype.show = function show(state) {
         redirectUrl = this.app.shell.referrerRoute && this.app.shell.referrerRoute.url;
     }
     this.viewModel.redirectUrl(redirectUrl);
-    
+
     if (params[0] === 'reset-password') {
         var t = query.token || '';
         this.viewModel.resetToken(t);
@@ -89,16 +92,16 @@ var facebookLogin = function() {
             window.facebookConnectPlugin.login(['email'], s, e);
         });
     }
-    else {        
+    else {
         // email,user_about_me
         return fb.login({ scope: 'email' });
-    }  
+    }
 };
 
 function ViewModel(app) {
     fb.load();
 
-    var credentials = new FormCredentials();    
+    var credentials = new FormCredentials();
     this.username = credentials.username;
     this.password = credentials.password;
     this.validatedPassword = new ValidatedPasswordViewModel();
@@ -115,11 +118,11 @@ function ViewModel(app) {
         this.resetToken('');
         this.requestResetMessage('');
         this.isWorking(false);
-        // The view is NEVER reset here, because can cause infinite loops. Must be managed outside by the 
+        // The view is NEVER reset here, because can cause infinite loops. Must be managed outside by the
         // activity.show, properly.
         //this.view('login');
     };
-    
+
     this.loginButtonText = ko.pureComputed(function() {
         return this.isWorking() ? 'Logging you in...' : 'Log in';
     }, this);
@@ -152,7 +155,7 @@ function ViewModel(app) {
         }
         this.isWorking(true);
 
-        app.model.login(
+        auth.login(
             this.username(),
             this.password()
         ).then(function(/*loginData*/) {
@@ -160,9 +163,9 @@ function ViewModel(app) {
             this.reset();
             this.isWorking(false);
 
-            app.model.onboarding.setStep(app.model.user().onboardingStep());
+            onboarding.setStep(user.onboardingStep());
 
-            if (app.model.onboarding.goIfEnabled())
+            if (onboarding.goIfEnabled())
                 return;
             else if (this.redirectUrl())
                 app.shell.go(this.redirectUrl());
@@ -180,10 +183,10 @@ function ViewModel(app) {
             });
         }.bind(this));
     }.bind(this);
-    
+
     this.requestReset = function requestReset() {
         this.isWorking(true);
-        app.model.resetPassword({ username: this.username() }).then(function(result) {
+        auth.resetPassword({ username: this.username() }).then(function(result) {
             this.requestResetMessage(result.message);
             this.isWorking(false);
             this.goConfirm();
@@ -208,7 +211,7 @@ function ViewModel(app) {
 
         this.isWorking(true);
 
-        app.model.confirmResetPassword({
+        auth.confirmResetPassword({
             password: this.validatedPassword.password(),
             token: this.resetToken()
         }).then(function(result) {
@@ -227,14 +230,14 @@ function ViewModel(app) {
             });
         }.bind(this));
     }.bind(this);
-    
+
     // Facebook Login
     this.facebook = function() {
         facebookLogin()
         .then(function (result) {
             var accessToken = result.authResponse && result.authResponse.accessToken || result.auth && result.auth.accessToken;
             this.isWorking(true);
-            return app.model.facebookLogin(accessToken)
+            return auth.facebookLogin(accessToken)
             .then(function(/*loginData*/) {
                 // Is implicit at reset: this.isWorking(false);
                 this.reset();

@@ -7,6 +7,9 @@ var ko = require('knockout'),
     $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
+var jobTitles = require('../data/jobTitles');
+var pricingTypes = require('../data/pricingTypes');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 
 function ServiceProfessionalServiceViewModel(app) {
     // jshint maxstatements:100
@@ -44,7 +47,7 @@ function ServiceProfessionalServiceViewModel(app) {
     /**
       * Implementations of this view model should specify a factory function
       * for creating list groups from services depending on the desired behavior
-      * 
+      *
       * @see {@link viewmodels/ServiceListGroupFactories}
       * @function
       * @abstract
@@ -93,7 +96,7 @@ function ServiceProfessionalServiceViewModel(app) {
         app.shell.go(this.editServiceURL(this.jobTitleID(), service.serviceProfessionalServiceID()),
                      this.editServiceRequest());
     }.bind(this);
-    
+
     /**
         Handler for the listview items, managing edition and selection depending on current mode
     **/
@@ -127,9 +130,9 @@ function ServiceProfessionalServiceViewModel(app) {
         var request = $.extend({}, this.newServiceRequest(), {
             selectedJobTitleID: this.jobTitleID()
         });
-        
+
         // When in selection mode:
-        // Add current selection as preselection, so can be recovered later and 
+        // Add current selection as preselection, so can be recovered later and
         // the editor can add the new pricing to the list
         if (this.isSelectionMode()) {
             request.selectedServices = this.selectedServices().map(this.selectedServiceRequest);
@@ -166,13 +169,13 @@ function ServiceProfessionalServiceViewModel(app) {
         this.isLoading(true);
         // Get data for the Job title ID and pricing types.
         // They are essential data
-        return app.model.jobTitles.getJobTitle(jobTitleID)
+        return jobTitles.getJobTitle(jobTitleID)
         .then(function(jobTitle) {
             this.jobTitle(jobTitle);
 
             var pricingTypeIDs = jobTitle.pricingTypes().map(function(type) { return type.pricingTypeID(); });
 
-            return app.model.pricingTypes.getListByIDs(pricingTypeIDs);
+            return pricingTypes.getListByIDs(pricingTypeIDs);
         }.bind(this))
         .then(function(pricingTypes) {
             this.pricingTypes(pricingTypes);
@@ -182,7 +185,7 @@ function ServiceProfessionalServiceViewModel(app) {
         }.bind(this))
         .then(function(list) {
 
-            list = app.model.serviceProfessionalServices.asModel(list);
+            list = serviceProfessionalServices.asModel(list);
 
             // Read presets selection from requestData
             var preset = this.preSelectedServices(),

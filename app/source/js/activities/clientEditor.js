@@ -7,18 +7,22 @@ var Activity = require('../components/Activity'),
     is = require('is_js'),
     ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter'),
     RouteParser = require('../utils/Router.js').RouteParser;
+var clients = require('../data/clients');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var userJobProfile = require('../data/userJobProfile');
+var pricingTypes = require('../data/pricingTypes');
 
 var A = Activity.extend(function ClientEditionActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
-    
+
     this.accessLevel = this.app.UserType.loggedUser;
     this.navBar = Activity.createSubsectionNavBar('Clients', {
         backLink: 'clients' , helpLink: this.viewModel.helpLink
     });
-    
+
     // If there is a change on the clientID, the URL must match
     // that (if is not already that).
     // NOTE: Except for call from another activity with returning, to avoid bug trying to do a goBack
@@ -53,7 +57,7 @@ var A = Activity.extend(function ClientEditionActivity() {
             }
         }.bind(this)
     });
-    
+
     // Special treatment of the save operation
     this.viewModel.onSave = function(clientID) {
         if (this.requestData.returnNewAsSelected === true) {
@@ -84,18 +88,18 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 A.prototype.show = function show(state) {
     /*jshint maxcomplexity: 8*/
     Activity.prototype.show.call(this, state);
-    
+
     // reset
     this.viewModel.clientID(0);
 
     // params
     var params = state && state.route && state.route.segments || [];
-    
+
     var clientID = params[0] |0;
-    
+
     if (clientID) {
         this.viewModel.clientID(clientID);
-        
+
         /*this.viewModel.client.sync(clientID)
         .catch(function (err) {
             this.app.modals.showError({
@@ -104,7 +108,7 @@ A.prototype.show = function show(state) {
             });
         }.bind(this));*/
 
-        this.app.model.clients.createItemVersion(clientID)
+        clients.createItemVersion(clientID)
         .then(function (clientVersion) {
             if (clientVersion) {
                 this.viewModel.clientVersion(clientVersion);
@@ -122,14 +126,14 @@ A.prototype.show = function show(state) {
         }.bind(this));
     }
     else {
-        
+
         // Check request parameters that allow preset client information
         // (used when the client is created based on an existent marketplace user)
         var presetData = this.requestData.presetData || {};
         // If there is not set an explicit 'false' value on editable
         // field (as when there is not data given), set to true so can be edited
         // NOTE: This is because a given marketplace user will come with editable:false
-        // and need to be preserved, while on regular 'new client' all data is set by 
+        // and need to be preserved, while on regular 'new client' all data is set by
         // the service professional.
         if (presetData.editable !== false) {
             presetData.editable = true;
@@ -137,9 +141,9 @@ A.prototype.show = function show(state) {
 
         /*this.viewModel.client.newItem(presetData);*/
         // New client
-        this.viewModel.clientVersion(this.app.model.clients.newItem(presetData));
+        this.viewModel.clientVersion(clients.newItem(presetData));
         this.viewModel.header('Add a client');
-        
+
         // Extra preset data
         if (this.requestData.newForSearchText) {
             clientDataFromSearchText(this.requestData.newForSearchText || '', this.viewModel.client());
@@ -161,7 +165,7 @@ A.prototype.show = function show(state) {
 function seemsAPhoneNumber(str) {
     // Possible stricker comparision
     // return is.nanpPhone(str) || is.eppPhone(str);
-    
+
     // Just if there are more than three consecutive numbers,
     // then 'may' be a phone number (may be anything else, but
     // since some special phone numbers can have letters or signs,
@@ -195,9 +199,9 @@ function clientDataFromSearchText(txt, client) {
 function ViewModel(app) {
     /*jshint maxstatements:80 */
     this.helpLink = '/help/relatedArticles/201152639-managing-clients';
-    
+
     this.clientID = ko.observable(0);
-    
+
     this.clientVersion = ko.observable(null);
     this.client = ko.pureComputed(function() {
         var v = this.clientVersion();
@@ -206,23 +210,23 @@ function ViewModel(app) {
         }
         return null;
     }, this);
-    //this.client = app.model.clients.createWildcardItem();
+    //this.client = clients.createWildcardItem();
 
     this.header = ko.observable('');
-    
+
     this.isLoadingServices = ko.observable(false);
     this.isLoading = ko.pureComputed(function() {
         return (
-            app.model.clients.state.isLoading() ||
+            clients.state.isLoading() ||
             this.isLoadingServices()
         );
     }, this);
 
-    this.isSyncing = app.model.clients.state.isSyncing;
-    this.isSaving = app.model.clients.state.isSaving;
+    this.isSyncing = clients.state.isSyncing;
+    this.isSaving = clients.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
         return (
-            app.model.clients.state.isLocked() ||
+            clients.state.isLocked() ||
             this.isDeleting()
         );
     }, this);
@@ -231,7 +235,7 @@ function ViewModel(app) {
         return c && !c.editable();
     }, this);
 
-    this.isDeleting = app.model.clients.state.isDeleting;
+    this.isDeleting = clients.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
 
@@ -247,11 +251,11 @@ function ViewModel(app) {
 
         this.isLoadingServices(true);
 
-        Promise.all([app.model.serviceProfessionalServices.getClientSpecificServices(clientID),
-                     app.model.userJobProfile.getJobTitles(),
-                     app.model.pricingTypes.getList()])
+        Promise.all([serviceProfessionalServices.getClientSpecificServices(clientID),
+                     userJobProfile.getJobTitles(),
+                     pricingTypes.getList()])
         .then(function(models) {
-            var services = app.model.serviceProfessionalServices.asModel(models[0]),
+            var services = serviceProfessionalServices.asModel(models[0]),
                 jobTitles = models[1],
                 pricingTypes = models[2](),
 
@@ -277,10 +281,10 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         var v = this.clientVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     this.isNew() ?
                         'Add client' :
                         v && v.areDifferent() ?
@@ -293,10 +297,10 @@ function ViewModel(app) {
         var v = this.clientVersion();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
+            this.isDeleting() ?
                 'Deleting client...' :
                 'Delete client'
         );
@@ -308,13 +312,13 @@ function ViewModel(app) {
 
     this.save = function() {
 
-        app.model.clients.setItem(this.client().model.toPlainObject())
+        clients.setItem(this.client().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.client().model.updateWith(serverData);
             // Push version so it appears as saved
             this.clientVersion().push({ evenIfObsolete: true });
-          
+
             // Special save, function provided by the activity on set-up
             this.onSave(serverData.clientUserID);
         }.bind(this))
@@ -326,7 +330,7 @@ function ViewModel(app) {
         });
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
         app.modals.confirm({
             title: 'Delete client',
@@ -341,7 +345,7 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.clients.delItem(this.clientID())
+        clients.delItem(this.clientID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location
@@ -409,12 +413,12 @@ function ViewModel(app) {
         },
         owner: this
     });
-    
+
     this.monthDays = ko.observableArray([]);
     for (var iday = 1; iday <= 31; iday++) {
         this.monthDays.push(iday);
     }
-    
+
     // Extra for button addons
     this.validEmail = ko.pureComputed(function() {
         var c = this.client();
@@ -433,17 +437,17 @@ function ViewModel(app) {
         }
         return '';
     }, this);
-    
+
     // Public Search
-    
+
     var foundPublicUser = function foundPublicUser(user) {
         // Only if still matches current view data
         var c = this.client();
         if (!c) return;
-        
+
         // Don't offer if is already that user!
         if (c.clientUserID() === user.clientUserID) return;
-        
+
         // NOTE: avoiding use fullName because it can make more than one conflicting
         // results, being not enough the name to confirm the user (use the search for that)
         //  c.fullName() === user.fullName ||
@@ -469,23 +473,23 @@ function ViewModel(app) {
                 // Discarded, do nothing
             });
         }
-        
+
     }.bind(this);
-    
+
     // When filering has no results:
     ko.computed(function() {
         var c = this.client();
         if (!c) return;
-        
+
         // NOTE: discarded the fullName because several results can be retrieved,
         // better use the search for that and double check entries
-        
+
         var email = c.email(),
             //fullName = c.fullName(),
             phone = c.phone();
         if (!email && !phone /*!fullName && */) return;
 
-        app.model.clients.publicSearch({
+        clients.publicSearch({
             //fullName: fullName,
             email: email,
             phone: phone

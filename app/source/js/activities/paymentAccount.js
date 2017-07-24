@@ -6,6 +6,8 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var PostalCodeVM = require('../viewmodels/PostalCode');
+var onboarding = require('../data/onboarding');
+var paymentAccount = require('../data/paymentAccount');
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
@@ -22,7 +24,7 @@ var A = Activity.extend(function PaymentAccountActivity() {
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
     this.registerHandler({
-        target: this.app.model.paymentAccount,
+        target: paymentAccount,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your payment account.' : 'Unable to load your payment account.';
@@ -38,7 +40,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
 
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         this.navBar.model.updateWith(this.defaultNavBar, true);
     }
@@ -52,13 +54,13 @@ A.prototype.show = function show(state) {
     // Discard any previous unsaved edit
     this.viewModel.discard();
     // Keep data updated:
-    this.app.model.paymentAccount.sync();
+    paymentAccount.sync();
 };
 
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201967096-accepting-and-receiving-payments';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     /**
      * Sets if the form must reduce the number of fields.
@@ -72,7 +74,6 @@ function ViewModel(app) {
         this.simplifiedFormEnabled(itIs);
     }.bind(this));
 
-    var paymentAccount = app.model.paymentAccount;
     this.errorMessages = paymentAccount.errorMessages;
 
     var dataVersion = paymentAccount.newVersion();
@@ -98,7 +99,7 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
+            onboarding.inProgress() ?
                 'Save and continue' :
                 this.isLoading() ?
                     'loading...' :
@@ -123,15 +124,15 @@ function ViewModel(app) {
         if (this.isInOnboarding() &&
             dataVersion.version.status() &&
             !this.formVisible()) {
-            app.model.onboarding.goNext();
+            onboarding.goNext();
         }
         else {
             // Save
             dataVersion.pushSave()
             .then(function() {
                 // Move forward:
-                if (this.isInOnboarding()) {
-                    app.model.onboarding.goNext();
+                if (onboarding.inProgress()) {
+                    onboarding.goNext();
                 } else {
                     app.successSave();
                 }
@@ -155,13 +156,12 @@ function ViewModel(app) {
 
     // On change to a valid code, do remote look-up
     this.postalCodeVM = new PostalCodeVM({
-        appModel: app.model,
         address: this.paymentAccount,
         postalCodeError: this.errorMessages.postalCode
     });
 
     // Postal code VM needs to know when the form data has loaded
-    app.model.paymentAccount.isLoading.subscribe(function(isLoading) {
+    paymentAccount.isLoading.subscribe(function(isLoading) {
         if(!isLoading) {
             this.postalCodeVM.onFormLoaded();
         }

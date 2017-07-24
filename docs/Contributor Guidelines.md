@@ -36,6 +36,13 @@ We use 'custom-elements' syntax sometimes in the HTML, for components created wi
 
 We use a preprocessor, [Bliss](https://github.com/cstivers78/bliss) at the minimum; it uses Asp.net Razor-like syntax, adapted for javascript. Generally, we use it only at the files wrapping all the html (examples: app.js.html, web.js.html).
 
+### Ordering HTML attributes
+
+To keep consistency in our code, make it easier for debugging, and to adhere to our [Accessbility Policy](https://github.com/loconomics/loconomics/blob/master/docs/App%20Accessibility%20Policy.md) the following ordering should be followed:
+```
+id="", data-bind="", role="", title="", rel="", src="", alt="", href="", target="", class=""
+```
+
 ## Changes to the database
 
 Any proposed changes to the database should be made by placing a .sql file in the web/_DBUpdate folder of your branch with the file named with these three attributes:

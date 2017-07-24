@@ -10,6 +10,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     NavBar = require('./viewmodels/NavBar'),
     NavAction = require('./viewmodels/NavAction');
+var user = require('./data/userProfile').data;
 
 exports.extend = function (app) {
 
@@ -21,8 +22,6 @@ exports.extend = function (app) {
     // since different things are need for logged-in/out.
     function adjustUserBar() {
         //jshint maxcomplexity:8
-
-        var user = app.model.user();
 
         if (user.isAnonymous()) {
             var prev = app.navBar().leftAction();
@@ -61,10 +60,6 @@ exports.extend = function (app) {
             }
         }
     }
-    // Commented lines, used previously but unused now, it must be enough with the update
-    // per activity change
-    //app.model.user().isAnonymous.subscribe(updateStatesOnUserChange);
-    //app.model.user().onboardingStep.subscribe(updateStatesOnUserChange);
 
     app.navBar = ko.observable(null);
 
@@ -233,15 +228,14 @@ exports.extend = function (app) {
         active: ko.observable('')
     };
 
-    app.model.on('modulesLoaded', function() {
-        ko.computed(function() {
-            app.navBarBinding.isInOnboarding(app.model.onboarding.inProgress());
-            app.navBarBinding.isAtCurrentOnboardingStep(app.model.onboarding.isAtCurrentStep());
-        });
+    var onboarding = require('./data/onboarding');
+    ko.computed(function() {
+        app.navBarBinding.isInOnboarding(onboarding.inProgress());
+        app.navBarBinding.isAtCurrentOnboardingStep(onboarding.isAtCurrentStep());
     });
 
     app.navBarBinding.continueOnboarding = function() {
-        app.model.onboarding.goCurrentStep();
+        onboarding.goCurrentStep();
     };
 
     app.shell.on(app.shell.events.itemReady, function() {

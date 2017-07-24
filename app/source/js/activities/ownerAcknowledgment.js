@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var ownerAcknowledgment = require('../data/ownerAcknowledgment');
 
 var A = Activity.extend(function OwnerAcknowledgmentActivity() {
 
@@ -27,15 +28,15 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Load data, if any
-    this.app.model.ownerAcknowledgment.sync();
+    ownerAcknowledgment.sync();
 };
 
 function ViewModel(app) {
 
-    this.isLoading = app.model.ownerAcknowledgment.isLoading;
-    this.isSaving = app.model.ownerAcknowledgment.isSaving;
+    this.isLoading = ownerAcknowledgment.isLoading;
+    this.isSaving = ownerAcknowledgment.isSaving;
 
-    this.acknowledgment = app.model.ownerAcknowledgment.data;
+    this.acknowledgment = ownerAcknowledgment.data;
 
     this.ownerFullName = ko.observable('');
 
@@ -44,7 +45,7 @@ function ViewModel(app) {
     };
 
     this.acknowledge = function() {
-        app.model.ownerAcknowledgment.acknowledge({ ownerFullName: this.ownerFullName() })
+        ownerAcknowledgment.acknowledge({ ownerFullName: this.ownerFullName() })
         .then(function() {
             app.successSave();
         })

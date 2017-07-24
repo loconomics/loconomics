@@ -2,10 +2,9 @@
 // IMPORTANT: it requires access to DOM with jQuery in order to the COPY LINK to work on browsers
 var ko = require('knockout');
 var clipboard = require('../utils/clipboard');
+var marketplaceProfile = require('../data/marketplaceProfile');
 
 module.exports = function MarketplaceProfileVM(app) {
-
-    var marketplaceProfile = app.model.marketplaceProfile;
 
     var profileVersion = marketplaceProfile.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
@@ -21,7 +20,7 @@ module.exports = function MarketplaceProfileVM(app) {
             profileVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.profile = profileVersion.version;
 
@@ -37,9 +36,9 @@ module.exports = function MarketplaceProfileVM(app) {
     this.save = function save() {
         return profileVersion.pushSave();
     };
-    
-    this.sync = app.model.marketplaceProfile.sync.bind(app.model.marketplaceProfile);
-    
+
+    this.sync = marketplaceProfile.sync.bind(marketplaceProfile);
+
     /// Utilities
     // Custom URL
     this.customUrlProtocol = ko.observable('https://');

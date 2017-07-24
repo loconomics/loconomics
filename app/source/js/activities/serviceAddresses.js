@@ -6,6 +6,10 @@
 var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
+var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var serviceAddresses = require('../data/serviceAddresses');
+var clientAddresses = require('../data/clientAddresses');
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -30,7 +34,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         handler: function(jobTitleID) {
             if (jobTitleID) {
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
                     // Save for use in the view
                     this.viewModel.jobTitle(jobTitle);
@@ -41,10 +45,10 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                     this.viewModel.jobTitleName(jobTitle.singularName());
 
                     // Get addresses
-                    return this.app.model.serviceAddresses.getList(jobTitleID);
+                    return serviceAddresses.getList(jobTitleID);
                 }.bind(this))
                 .then(function(list) {
-                    list = this.app.model.serviceAddresses.asModel(list);
+                    list = serviceAddresses.asModel(list);
                     this.viewModel.serviceAddresses.sourceAddresses(list);
                     if (this.requestData.selectedAddressID) {
                         this.viewModel.serviceAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
@@ -86,9 +90,9 @@ var A = Activity.extend(function ServiceAddressesActivity() {
         target: this.viewModel.clientUserID,
         handler: function(clientUserID) {
             if (clientUserID) {
-                this.app.model.clientAddresses.getList(clientUserID)
+                clientAddresses.getList(clientUserID)
                 .then(function(list) {
-                    list = this.app.model.clientAddresses.asModel(list);
+                    list = this.clientAddresses.asModel(list);
                     this.viewModel.clientAddresses.sourceAddresses(list);
                     if (this.requestData.selectedAddressID) {
                         this.viewModel.clientAddresses.presetSelectedAddressID(this.requestData.selectedAddressID);
@@ -163,7 +167,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    this.app.model.onboarding.updateNavBar(this.navBar) ||
+    onboarding.updateNavBar(this.navBar) ||
     this.applyOwnNavbarRules();
 };
 
@@ -216,7 +220,7 @@ function ViewModel(app) {
     // jshint maxstatements:70
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.serviceAddresses = new ServiceAddresses();
 
@@ -281,19 +285,19 @@ function ViewModel(app) {
         return false;
     }.bind(this);
 
-    this.isSyncing = app.model.serviceAddresses.state.isSyncing();
+    this.isSyncing = serviceAddresses.state.isSyncing();
     this.isLoading = ko.computed(function() {
-        var add = app.model.serviceAddresses.state.isLoading();
+        var add = serviceAddresses.state.isLoading();
         var jobs = this.jobTitles.isLoading();
-        var cli = app.model.clientAddresses.state.isLoading();
+        var cli = clientAddresses.state.isLoading();
         return add || jobs || cli;
     }, this);
 
     this.goNext = function() {
-        if (app.model.onboarding.inProgress()) {
+        if (onboarding.inProgress()) {
             // Ensure we keep the same jobTitleID in next steps as here:
-            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
-            app.model.onboarding.goNext();
+            onboarding.selectedJobTitleID(this.jobTitleID());
+            onboarding.goNext();
         }
     }.bind(this);
 
@@ -356,7 +360,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.onboardingNextReady = ko.computed(function() {
-        var isin = app.model.onboarding.inProgress(),
+        var isin = onboarding.inProgress(),
             hasItems = this.serviceAddresses.sourceAddresses().length > 0;
 
         return isin && hasItems;
