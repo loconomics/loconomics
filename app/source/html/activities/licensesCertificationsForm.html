@@ -20,7 +20,7 @@
                             <span data-bind="text: item() && item().licenseCertification().name() || 'New license/certification'"></span>
                         </h2>
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                        <form class="LightForm PaddedBox-xs" style="background-color: white;" role="form" data-bind="submit: save, visible: item">
+                        <form class="LightForm PaddedBox-xs Box-xs" role="form" data-bind="submit: save, visible: item">
                             <div data-bind="with: item">
                                 <div class="form-group" data-bind="visible: !$root.isNew()">
                                     <label>Status<span data-bind= "visible: lastVerifiedDate"> (last updated: <span data-bind= "text: lastVerifiedDate, format: { type: 'datetime', format: 'L'}"></span>)</span>:</label> <div class="form-control-static"><strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong><span data-bind="visible: statusID() === 1 || statusID() === 6">  (Expiry date: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</span> – <em data-bind="text: statusDescription"></em></div>
@@ -98,8 +98,9 @@
                                 <div data-bind="visible: isNew">
                                     <label>Upload yours for us to verify:</label>
                                     <p>Upload a photo, document, or
-                                        <a style="color:#ffc0cb;cursor:pointer;font-weight:bold;" data-toggle="collapse" data-target="#licensesCertificationsForm-screenshotInstructions" aria-expanded="false"  aria-controls="licensesCertificationsForm-screenshotInstructions">
-                                            screenshot
+                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsForm-screenshotInstructions"
+                                            aria-expanded="false" aria-controls="licensesCertificationsForm-screenshotInstructions" role="button">
+                                            <strong>screenshot</strong>
                                         </a> (if your licensing board has a website) of your license/certification, and we'll do our best to verify it.</p>
                                 </div>
                                 <div data-bind="visible: !isNew()">
@@ -108,8 +109,9 @@
                                         <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
                                     </div>
                                     <p>Upload a photo, document, or
-                                        <a style="color:#ffc0cb;cursor:pointer;font-weight:bold;" data-toggle="collapse" data-target="#licensesCertificationsForm-screenshotInstructions" aria-expanded="false"  aria-controls="licensesCertificationsForm-screenshotInstructions">
-                                            screenshot
+                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsForm-screenshotInstructions"
+                                            aria-expanded="false" aria-controls="licensesCertificationsForm-screenshotInstructions" role="button">
+                                            <strong>screenshot</strong>
                                         </a>  (if your licensing board has a website) of your updated license/certification.</p>
                                 </div>
                                 <div id="licensesCertificationsForm-screenshotInstructions" class="collapse" style="margin-top:15px;">
