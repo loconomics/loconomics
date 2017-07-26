@@ -8,7 +8,7 @@ We use the [Phonegap Build](https://build.phonegap.com/) service to build the ap
 
 This is our preferred way, both to generate the production version of the app ('live' channel) and testing versions when some debugging in actual devices is needed (working against 'dev' or 'testing' channels).
 
-To build for the build service, 
+To build for the build service,
 
 ```bash
 grunt build
@@ -33,7 +33,7 @@ The project has a folder ready to store results of a local build, but most files
 
 ### Preparing Phonegap Build
 
-To prepare for a phonegap build, 
+To prepare for a phonegap build,
 
 ```bash
 grunt build
@@ -78,7 +78,18 @@ phonegap build android
 ```
 The APK file will be built at ``app/phonegap/platforms/android/build/outputs/apk/``.
 
-### Web
+## Phonegap tasks summary
+**grunt prepare-phonegap?-? tasks**
+- The `*cli-` tasks prepare the /phonegap folder to build locally using `phonegap` or `cordoba`
+command line tools, having the SDKs for the target system (Android, iOS).
+- The `*build-` tasks prepare the /phonegap folder and creates a **zip file** under /build folder, that can be uploaded to the
+PhoneGap Build service to build the native apps.
+- The `-dev` tasks uses files meant for debugging (not minified, with source maps) and pointing to the *dev* site URL.
+(An html data-site-url with http://dev.loconomics.co)
+- The `-live` tasks uses files meant for production (minified, optimized) and pointing to the *live* site URL.
+(An html data-site-url with https://loconomics.com)
+
+## Web
 In terminal enter command:
 ```
 grunt build-webapp

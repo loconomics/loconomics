@@ -32,7 +32,9 @@ grunt build
 ```
 It will recreate the content of the /build folder.
 
-## Start your local host
+After do that you may want to [build the native apps using Phonegap](Deploying the App.md) or debug the app.
+
+## Debug the app on localhost
 
 **Ensure you're in the project's /app folder **
 
@@ -91,26 +93,3 @@ delete localStorage.siteUrl;
 ## API Access & Testing
 Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iago@loconomics.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
 http://dev.loconomics.com/tests/testrest
-
-## Prepare to build with Phonegap
-
-Just doing a `grunt build` will compile assets, bundles at /build folder,
-but after do that you may want to build native apps using Phonegap.
-
-There are several tasks to prepare the /phonegap folder with the correct set-up and built files (copied from /build):
-```
-grunt prepare-phonegapcli-dev
-grunt prepare-phonegapcli-live
-grunt prepare-phonegapbuild-dev
-grunt prepare-phonegapbuild-live
-```
-
-Run just one of them at a time.
-- The `*cli-` tasks prepare the /phonegap folder to build locally using `phonegap` or `cordoba`
-command line tools, having the SDKs for the target system (Android, iOS).
-- The `*build-` tasks prepare the /phonegap folder and creates a **zip file** under /build folder, that can be uploaded to the
-PhoneGap Build service to build the native apps.
-- The `-dev` tasks uses files meant for debugging (not minified, with source maps) and pointing to the *dev* site URL.
-(An html data-site-url with http://dev.loconomics.co)
-- The `-live` tasks uses files meant for production (minified, optimized) and pointing to the *live* site URL.
-(An html data-site-url with https://loconomics.com)
