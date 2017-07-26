@@ -45,7 +45,9 @@ The activity.show method receives as single parameter an object containing a pro
 
 Analyzing that, each activity can performs different actions dependent on segments or query values provided (that way more advanced routing is delegated to the activity receiving the call).
 
-To assist with that, we have a **Router class** (/app/source/js/utils/Router.js); can be optionally used to make more declarative the list of available URLs inside the activity and processing them.
+To assist with that, we have a **Router class** (/app/source/js/utils/Router.js); can be optionally used to make more declarative the list of available URLs inside the activity and processing them. *It's something introduced recently and still used in few cases*.
+
+**Will change:** we have an [open issue](https://github.com/loconomics/loconomics/issues/365) proposing to change this routing. Let's speak and work there to enhance this.
 
 ## Managing data
 Data structures are defined as Model classes, where properties are Knockout observables and the base class provide utilities to easily generate plain objects, being updated with external data or being cloned in an effective way.
