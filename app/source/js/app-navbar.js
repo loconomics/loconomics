@@ -12,6 +12,9 @@ var ko = require('knockout'),
     NavAction = require('./viewmodels/NavAction');
 var user = require('./data/userProfile').data;
 
+// Components in use by the AppNav template
+require('./kocomponents/navbar-action');
+
 exports.extend = function (app) {
 
     // REVIEW: still needed? Maybe the per activity navBar means
