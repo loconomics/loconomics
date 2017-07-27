@@ -22,9 +22,7 @@
   "private": true,
   "devDependencies": {
     "bliss": "~1.0.1",
-    "blueimp-canvas-to-blob": "^2.2.0",
     "blueimp-file-upload": "^9.18.0",
-    "blueimp-load-image": "^2.12.2",
     "browserify": "^14.4.0",
     "browserify-shim": "~3.8.14",
     "browsernizr": "~1.0.2",
@@ -35,7 +33,6 @@
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "geocomplete": "^1.6.5",
-    "google-libphonenumber": "^2.0.0",
     "grunt": "^1.0.1",
     "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
     "grunt-browserify": "^5.0.0",
