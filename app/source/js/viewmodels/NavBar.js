@@ -2,7 +2,7 @@
  * NavBar view model.
  * It allows customize the NavBar per activity.
  * @module viewmodels/NavBar
-*/
+ */
 var Model = require('../models/Model'),
     NavAction = require('./NavAction');
 
