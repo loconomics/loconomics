@@ -37,30 +37,23 @@
             <div data-bind="foreach: serviceAttributes().serviceAttributes">
                 <div data-bind="text: name"></div>
                     <div data-bind="foreach: serviceAttributes" class="clearfix">
-                    <i class="icon ion-android-done"></i> <span data-bind="text: name"></span>
+                    <i class="ion-android-done"></i> <span data-bind="text: name"></span>
                     </div>
             </div>
             <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
                 <h5>Experience</h5>
                 <div class="clearfix">
-                    <div class="col-xs-6 col-md-4 pad5l pad5r">
-                        <i class="icon ion-android-done"></i> <span data-bind="text: name"></span>
+                    <div class="col-xs-6 col-md-4">
+                        <i class="ion-android-done"></i> <span data-bind="text: name"></span>
                     </div>
                 </div>
             </div>
         </section>
         <section id="listing-offerings" data-bind="with: selectedJobTitle" title="">
-                <script type="text/html" id="profile-services-listing-template">
-                    <div class="col-xs-6">
-                        <h5 data-bind="text: name"></h5>
-                        <p data-bind="text: displayedDurationAndPrice"></p>
-                        <p data-bind="visible: description, text: description"></p>
-                    </div>
-                </script>
                 <h2 data-bind="visible: clientSpecificServices().length > 0"><i class="ion-social-usd-outline"></i> Offerings Only For You</h2>
-                <div class="row" data-bind="template: { name: 'profile-services-listing-template', foreach: clientSpecificServices() }"></div>
+                <div class="row" data-bind="template: { name: 'listing-offering-template', foreach: clientSpecificServices() }"></div>
                 <h2><i class="ion-social-usd-outline"></i> Offerings</h2>
-                <div class="row" data-bind="template: { name: 'profile-services-listing-template', foreach: publicServices() }"></div>
+                <div class="row" data-bind="template: { name: 'listing-offering-template', foreach: publicServices() }"></div>
         </section>
         <section id="listing-reviews" data-bind="with: selectedJobTitle" title="">
             <h2><i class="ion-ios-chatboxes-outline"></i> Reviews (<span data-bind="text: rating() && rating().totalRatings"></span>)
@@ -87,9 +80,9 @@
             </div>
             <div class="row" data-bind="visible: $root.reviews.list().length">
                 <div data-bind="foreach: $root.reviews.list()">
-                    <div class="col-xs-12 col-sm-6">
+                    <div class="col-xs-10 col-sm-5 Card">
                         <div class="row">
-                            <div class="col-xs-3"><i class="Avatar Avatar--xs Avatar--primary"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
+                            <div class="col-xs-3"><i class="Avatar Avatar--xs"><img src="https://loconomics.com/en-US/Profile/Photo/"></i></div>
                             <h5 data-bind="text: reviewerName"></h5>
                             <p>Client since <span data-bind="text: reviewerUserSince, format: { type: 'datetime', format: 'MMMM YYYY' }"></span></p>
                         </div>
