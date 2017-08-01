@@ -7,23 +7,14 @@
 <li data-bind="visible: isAnonymous, css: cssIfActive('login')">
     <a href="/login">Log in</a>
 </li>
+<li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
+    <a href="/signup/client">Sign up</a>
+</li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('home-hiw')">
     <a href="/home/home-hiw">How it works</a>
 </li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('help')" class="go-help">
     <a href="/help">Help</a>
-</li>
-<li>
-    <h4 class="App-menus-group-header" data-bind="visible: isAnonymous">SIGN UP</h4>
-</li>
-<li data-bind="visible: isAnonymous, css: cssIfActive('coop-hiw')">
-    <a href="/learnMoreProfessionals/coop-hiw">I'm a local service professional</a>
-</li>
-<li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
-    <a href="/signup/client">I'm a potential client</a>
-</li>
-<li data-bind="visible: isAnonymous, css: cssIfActive('coop-hiw')">
-    <a href="/learnMoreProfessionals/coop-hiw">I'm both</a>
 </li>
 <li data-bind="visible: isInOnboarding() && isServiceProfessional()" class="go-dashboard">
     <a href="#!/help/articles/214880503-take-a-tour" target="_blank"><i class="fa fa-fw ion-map" aria-hidden="true"></i> Take a tour</a>
