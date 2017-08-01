@@ -7,7 +7,7 @@
                 <ul>
                     <li>
                         <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
                             <span data-bind="text: jobTitleName"></span>
                         </a>
                     </li>
@@ -18,8 +18,8 @@
                 <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must specify pricing, locations, and any required credentials for your <span data-bind="text: jobTitleName"></span> services before adding scheduling to your website.</p>
                 <form class="container-fluid LightForm" role="form">
                     <div data-bind="visible: !bookMeButtonReady()">
-                        <a class="btn btn-block btn-secondary"href="/jobtitles/" data-bind="attr: {href: '/jobtitles/' + jobTitleID()}">Complete 
-                            <span data-bind="text: jobTitleName"></span> profile</a>      
+                        <a class="btn btn-block btn-secondary"href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">Complete
+                            <span data-bind="text: jobTitleName"></span> profile</a>
 
                     </div>
                     <div data-bind="visible: bookMeButtonReady()">
@@ -68,4 +68,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>

@@ -10,16 +10,12 @@ var Model = require('./Model'),
 // of attributes per category.
 // It's useful for attIDs and attNames.
 function extendValuesByCategory(obs) {
-    // Alias to notify changes, if change a source plain value is needed, this must
-    // be manually called to ensure updates.
-    obs.notifyChanges = obs.valueHasMutated;
-
     obs.serviceAttributeCategoriesIDs = ko.pureComputed(function() {
         return Object.keys(obs() || {}).filter(function(key) {
             return (key |0) === 0;
         });
     });
-    
+
     // Indexed list of observers to detect changes in categories values, allowing
     // the cat-atts observers to recompute only on changes on its categories, being more
     // optimal.
@@ -38,7 +34,7 @@ function extendValuesByCategory(obs) {
             return base && base[catID] || [];
         });
     };
-    
+
     // On a real bulk change, trigger al cats observers
     var prevValue = obs();
     obs.subscribe(function(v) {
@@ -67,7 +63,7 @@ function extendValuesByCategory(obs) {
             if (cat.indexOf(attID) === -1) {
                 cat.push(attID);
                 // changes on all the data
-                obs.notifyChanges();
+                obs.valueHasMutated();
                 // changes on this category
                 if (catsObs[catID]) catsObs[catID].valueHasMutated();
             }
@@ -81,7 +77,7 @@ function extendValuesByCategory(obs) {
             var i = cat.indexOf(attID);
             if (i > -1) {
                 cat.splice(i, 1);
-                obs.notifyChanges();
+                obs.valueHasMutated();
                 if (catsObs[catID]) catsObs[catID].valueHasMutated();
             }
         }
@@ -90,7 +86,7 @@ function extendValuesByCategory(obs) {
 
 // Public Model
 function UserJobTitleServiceAttributes(values) {
-    
+
     Model(this);
 
     this.model.defProperties({
@@ -104,7 +100,7 @@ function UserJobTitleServiceAttributes(values) {
         //createdDate: null,
         //updatedDate: null
     }, values);
-    
+
     extendValuesByCategory(this.serviceAttributes);
     extendValuesByCategory(this.proposedServiceAttributes);
 }

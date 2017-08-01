@@ -429,7 +429,7 @@ var appInit = function appInit() {
     }
 
     // Set-up Google Analytics
-    ga.setup();
+    ga.setup(app.shell);
 
     var marketplaceProfile = require('./data/marketplaceProfile');
     /**

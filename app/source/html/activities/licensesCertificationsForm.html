@@ -20,7 +20,7 @@
                             <span data-bind="text: item() && item().licenseCertification().name() || 'New license/certification'"></span>
                         </h2>
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                        <form class="LightForm PaddedBox-xs" style="background-color: white;" role="form" data-bind="submit: save, visible: item">
+                        <form class="LightForm PaddedBox-xs Box-xs" role="form" data-bind="submit: save, visible: item">
                             <div data-bind="with: item">
                                 <div class="form-group" data-bind="visible: !$root.isNew()">
                                     <label>Status<span data-bind= "visible: lastVerifiedDate"> (last updated: <span data-bind= "text: lastVerifiedDate, format: { type: 'datetime', format: 'L'}"></span>)</span>:</label> <div class="form-control-static"><strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong><span data-bind="visible: statusID() === 1 || statusID() === 6">  (Expiry date: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</span> – <em data-bind="text: statusDescription"></em></div>
@@ -97,23 +97,47 @@
                             <div class="form-group">
                                 <div data-bind="visible: isNew">
                                     <label>Upload yours for us to verify:</label>
-                                    <p>Upload a photo, document, or screenshot of your license/certification, and we'll do our best to verify it.</p>
+                                    <p>Upload a photo, document, or
+                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsForm-screenshotInstructions"
+                                            aria-expanded="false" aria-controls="licensesCertificationsForm-screenshotInstructions" role="button">
+                                            <strong>screenshot</strong>
+                                        </a> (if your licensing board has a website) of your license/certification, and we'll do our best to verify it.</p>
                                 </div>
                                 <div data-bind="visible: !isNew()">
                                     <label>Submit an update:</label>
                                     <div data-bind="visible: item() && item().submittedImageLocalURL()" id="licensesCertificationsForm-submittedImage" class="isolated">
                                         <img data-bind="attr: { src: item() && item().submittedImageLocalURL() }" alt="License Image" />
                                     </div>
-                                    <p>Upload a photo, document, or screenshot of your updated license/certification.</p>
+                                    <p>Upload a photo, document, or
+                                        <a class="text-info" data-toggle="collapse" href="#licensesCertificationsForm-screenshotInstructions"
+                                            aria-expanded="false" aria-controls="licensesCertificationsForm-screenshotInstructions" role="button">
+                                            <strong>screenshot</strong>
+                                        </a>  (if your licensing board has a website) of your updated license/certification.</p>
                                 </div>
-                                <button type="button" class="btn btn-default btn-block"
-                                        style="margin: 0 10% 20px 10%; width: 80%;"
+                                <div id="licensesCertificationsForm-screenshotInstructions" class="collapse">
+                                    <label>Windows and Linux:</label>
+                                    <ol>
+                                        <li>Press PrtSc button</li>
+                                        <li>Press Ctrl + V to paste into a text editor or photo editor program and then save file</li>
+                                    </ol>
+                                    <label>Windows (8 or 10) only:</label>
+                                    <ol>
+                                        <li>Hold down <i class="fa fa-windows" aria-hidden="true"></i> (windows key) and press PrtSc button</li>
+                                        <li>Windows will save your entire screen as a file under your Pictures > Screenshots folder</li>
+                                    </ol>
+                                    <label>Mac:</label>
+                                    <ol>
+                                        <li>Hold down &#8984; (command key) and Shift and press 3</li>
+                                        <li>The file will be saved to your desktop </li>
+                                    </ol>
+                                </div>
+                                <button
+                                        type="button" class="btn btn-default btn-block licensesCertificationsForm-uploadBtn"
                                         data-toggle="ActionSheet" data-target="licensesCertificationsForm-photoSheet"
                                         data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
                                     Upload/take photo
                                 </button>
-                                <div class="btn-file btn btn-default btn-block"
-                                    style="margin: 0 10% 20px 10%; width: 80%;"
+                                <div class="btn-file btn btn-default btn-block licensesCertificationsForm-uploadBtn"
                                     data-bind="visible: !takePhotoSupported(), attr: { disabled: isLocked }">
                                     <div>Upload/take photo</div>
                                     <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: isLocked">

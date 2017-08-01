@@ -14,7 +14,7 @@ var A = Activity.extend(function OwnerAcknowledgmentActivity() {
     this.accessLevel = this.app.UserType.isServiceProfessional;
     this.viewModel = new ViewModel(this.app);
 
-    this.navBar = Activity.createSubsectionNavBar('Owner information', {
+    this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo', helpLink: '/help/relatedArticles/201964153-how-owner-user-fees-work'
     });
 });

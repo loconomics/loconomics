@@ -2,13 +2,13 @@
 Loconomics is a hybrid application built with HTML, CSS and JavaScript with a single codebase. It uses [Phonegap](http://phonegap.com/) to export the app to iOS and Android.
 
 ## Preprocessors
-### CSS 
+### CSS
 [Stylus](http://stylus-lang.com)
 
-### JS 
+### JS
 [Browserify](http://browserify.org/)
 
-### HTML 
+### HTML
 [Bliss](html)
 
 ## Preferred Dev Tools
@@ -63,8 +63,8 @@ After the tests have been built, you can also run (and debug) them in the browse
 1. Tests in ``source/test`` correspond to modules under ``source/js``.
 2. Use the same file name as the module you are testing, but change the suffix to ``.spec.js``.
 
-## Database  
-We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
+## Database
+We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access from [@iagosrl](mailto:iago@loconomics.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
 
 # Supported Browsers and Platforms
 | Browser | Supported Version |

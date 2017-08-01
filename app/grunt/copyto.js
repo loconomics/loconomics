@@ -8,13 +8,6 @@ module.exports = {
         dest: 'build/assets/images/',
         filter: 'isFile'
     },
-    jqueryuiimages: {
-        expand: true,
-        cwd: 'vendor/jquery-ui/images/',
-        src: ['*.png'],
-        dest: 'build/assets/css/images/',
-        filter: 'isFile'
-    },
     webapp_assets: {
         expand: true,
         cwd: 'build/assets/',

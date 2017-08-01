@@ -23,8 +23,7 @@ module.exports = {
         'cssmin:app'
     ],
     'build-images': [
-        'copyto:images',
-        'copyto:jqueryuiimages'
+        'copyto:images'
     ],
     'build-fonts': [
         'copyto:bootstrap-fonts',

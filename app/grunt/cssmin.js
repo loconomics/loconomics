@@ -18,13 +18,7 @@ module.exports = {
     },
     landingPages: {
         files: {
-            './build/assets/css/welcome.min.css': [
-                //'./vendor/bootstrap/css/bootstrap.css',
-                //'./vendor/jquery-ui/jquery-ui.css',
-                //'./vendor/font-awesome/css/font-awesome.css',
-                //'./vendor/ionicons/css/ionicons.css',
-                './build/assets/css/welcome.css'
-            ]
+            './build/assets/css/welcome.min.css': ['./build/assets/css/welcome.css']
         }
     }
 };
