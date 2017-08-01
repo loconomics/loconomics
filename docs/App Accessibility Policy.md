@@ -66,7 +66,7 @@ Tool | Function | Purpose
 ----- | ---------- | ---------
 Inspect | Reveals the Name, Role, State, and Value of software elements | Software testing 
 Java | Ferret Reveals the Name, Role, State, and Value of Java software elements | Software testing 
-Web Accessibility Toolbar (WAT) 2012 | Aids in the manual inspection of accessibility-related elements on web pages | Web testing 
+[Web Accessibility Toolbar (WAT) 2012](https://github.com/ThePacielloGroup/WebAccessibilityToolbar/blob/master/documentation.md) | Aids in the manual inspection of accessibility-related elements on web pages | Web testing 
 ARIA Markup Favelet | Highlights all ARIA code on a page | Web testing 
 Frames Favelet | Marks up frames and iframes on a page with name/title | Web testing 
 Named Anchor Bookmarklet | Highlights a skip link's target (anchor) on a page | Web testing 
