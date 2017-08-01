@@ -1,10 +1,12 @@
 <div class="LargeNavBar container">
     <div class="LargeNavBar-brand">
         <a class="navbar-brand" href="/home">Loconomics</a>
+        
     </div>
     <!-- Anonymous nav -->
-    <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: isAnonymous()">
-        <li class="dropdown toggle">
+    <nav role="navigation" class="LargeNavBar-navBar nav navbar-right" data-bind="visible: isAnonymous()">
+        <span class="sr-only">Main navigation: </span>
+        <button class="dropdown toggle">
             <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown">Sign up <b class="caret"></b>
             </a>
             <ul class="dropdown-menu Category-menu">
@@ -18,14 +20,14 @@
                     <a href="/signup/service-professional">I'm both</a>
                 </li>
             </ul>
-        </li>
+        </button>
         <li>
             <a href="/login" class="btn btn-link">Log in</a>
         </li>
         <li>
             <a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
         </li>
-    </ul>
+    </nav>
     <!-- User nav -->
     <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
         <li class="LargeNavBar-userMenu dropdown text-right">
