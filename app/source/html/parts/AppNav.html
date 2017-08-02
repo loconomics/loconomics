@@ -1,7 +1,7 @@
 <nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
 
     <div class="SmartNavBar visible-xs visible-sm">
-        <span data-bind="component: { name: 'smart-nav-bar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
+        <smart-nav-bar-action params="action: 'leftAction', navBar: navBar" class="SmartNavBar-edge left"></smart-nav-bar-action>
 
         <h1>&nbsp;
             <span data-bind="text: navBar() && navBar().title()"></span>
@@ -10,7 +10,7 @@
 
         <div class="SmartNavBar-notification bg-info"></div>
 
-        <span data-bind="component: { name: 'smart-nav-bar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
+        <smart-nav-bar-action params="action: 'rightAction', navBar: navBar" class="SmartNavBar-edge right"></smart-nav-bar-action>
     </div>
     <div class="hidden-xs hidden-sm">@render('parts/LargeNavBar.html')</div>
     <div class="App-menus">
@@ -26,7 +26,7 @@
         </div>
         <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg">
             <ul class="nav navbar-nav">
-          @render('parts/AddNewMenuContents.html')
+                @render('parts/AddNewMenuContents.html')
             </ul>
         </div>
     </div>
