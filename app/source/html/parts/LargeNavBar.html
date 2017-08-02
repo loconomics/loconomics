@@ -1,3 +1,4 @@
+<h2 id="mainLargeScreenNav" class="sr-only">Main Navigation</h2>
 <ul class="LargeNavBar container">
     <li class="LargeNavBar-brand">
         <a class="navbar-brand" href="/home">Loconomics</a>
@@ -19,9 +20,10 @@
     <!-- User nav -->
     <li class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
         <ul>
-            <li>
+            <li aria-labelledby="mainMenuLargeScreen">
+                <h2 id="mainMenuLargeScreen" class="sr-only">Main Menu</h2>
                 <a role="button" class="LargeNavBar-userMenu dropdown text-right dropdown-toggle toggle" data-toggle="dropdown" aria-label="Main Menu">
-                    <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" alt="User public profile picture" /></i>
+                    <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" alt="Public user profile picture" /></i>
                     <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">

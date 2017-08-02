@@ -1,27 +1,29 @@
 <div class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
-    <nav role="navigation" class="SmartNavBar visible-xs visible-sm" aria-label="Main Navigation">
+    <nav role="navigation" class="SmartNavBar visible-xs visible-sm" aria-labelledby="mainMobileNav">
+        <h2 id="mainMobileNav" class="sr-only">Main Navigation</h2>
         <smart-nav-bar-action params="action: 'leftAction', navBar: navBar" class="SmartNavBar-edge left"></smart-nav-bar-action>
         <h1>&nbsp;
             <span data-bind="text: navBar() && navBar().title()"></span>
-            <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics</a>
+            <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics Home</a>
         &nbsp;</h1>
         <div class="SmartNavBar-notification bg-info"></div>
         <smart-nav-bar-action params="action: 'rightAction', navBar: navBar" class="SmartNavBar-edge right"></smart-nav-bar-action>
     </nav>
-    <nav role="navigation" class="hidden-xs hidden-sm" aria-label="Main Navigation">@render('parts/LargeNavBar.html')</nav>
+    <nav role="navigation" class="hidden-xs hidden-sm"  aria-labelledby="mainLargeScreenNav">@render('parts/LargeNavBar.html')</nav>
     <div class="App-menus">
-        <div id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg">
+        <div id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mainMobileMenu">
+            <h2 id="mainMobileMenu" class="sr-only">Main Menu</h2>
             <h2 class="App-menus-header" data-bind="visible: !isAnonymous()">
                 <a href="/aboutMe">
-                <div class="App-menus-header-photo" data-bind="visible: !isAnonymous()"><img data-bind="attr: { src: photoUrl }" /></div>
+                <div class="App-menus-header-photo" data-bind="visible: !isAnonymous()"><img data-bind="attr: { src: photoUrl }" alt="Public user profile picture"/></div>
                 <span class="App-menus-header-user" data-bind="text: userName, visible: !isAnonymous()"></span></a>
             </h2>
             <ul class="nav navbar-nav">
                 @render('parts/UserMenuContents.html')
             </ul>
         </div>
-        <span class="sr-only hidden-md hidden-lg">Add new menu: </span>
-        <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg">
+        <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mobileAddNewMenu">
+            <h2 id="mobileAddNewMenu" class="sr-only">Add new menu</h2>
             <ul class="nav navbar-nav">
             @render('parts/AddNewMenuContents.html')
             </ul>
