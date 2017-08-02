@@ -13,7 +13,7 @@ var ko = require('knockout'),
 var user = require('./data/userProfile').data;
 
 // Components in use by the AppNav template
-require('./kocomponents/navbar-action');
+require('./kocomponents/smart-nav-bar-action');
 
 exports.extend = function (app) {
 

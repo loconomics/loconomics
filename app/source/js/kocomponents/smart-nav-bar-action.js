@@ -1,17 +1,17 @@
 /**
- * An action button inside a NavBar.
- * @module kocomponents/navbar-action
+ * An action button inside a smart-nav-bar.
+ * @module kocomponents/smart-nav-bar-action
  */
 'use strict';
 
-var TAG_NAME = 'app-navbar-action';
-var template = require('../../html/kocomponents/navbar-action.html');
+var TAG_NAME = 'smart-nav-bar-action';
+var template = require('../../html/kocomponents/smart-nav-bar-action.html');
 
 var ko = require('knockout');
 var propTools = require('../utils/jsPropertiesTools');
 
 /**
- * The viewModel for the navbar-action rather than being just a
+ * The viewModel rather than being just a
  * viewmodels/NavAction it returns that as a property ('action') computed
  * from a provided observable navBar and action name ('left', 'right');
  * the set-up is more complex but let the 'action' to change as a result
