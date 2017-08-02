@@ -32,7 +32,7 @@
     </head>
     <body>
         <div class="SplashScreen">Loading...</div>
-        @render('parts/AppNav.html')
+        <header role="banner">@render('parts/AppNav.html')</header>
         <div class="App-activities">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render(includedFiles[f])
