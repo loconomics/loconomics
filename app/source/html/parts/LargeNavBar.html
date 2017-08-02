@@ -17,24 +17,28 @@
                 <a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
             </li>
         </ul>
+    </nav>
     <!-- User nav -->
-    <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
-        <li class="LargeNavBar-userMenu dropdown text-right">
-            <a href="#user-menu" class="dropdown-toggle toggle" data-toggle="dropdown">
-                <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" /></i>
-                <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                @render('parts/UserMenuContents.html')
-            </ul>
-        </li>
-        <li>
-            <a data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/help/categories/200431835-resources-for-service-professionals"><span class="LargeNavBar-label">Help</span></a>
-            <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
-            <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
-        </li>
-        <li>
-            <a data-bind="visible: !isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/learnMoreProfessionals"><span class="btn btn-secondary">List your services</span></a>
-        </li>
-    </ul>
+    <nav role="navigation" data-bind="visible: !isAnonymous()" hidden="hidden">
+        <span class="sr-only">Main navigation: </span>
+        <ul class="LargeNavBar-navBar nav navbar-right">
+            <li class="LargeNavBar-userMenu dropdown text-right">
+                <a href="#user-menu" class="dropdown-toggle toggle" data-toggle="dropdown">
+                    <i class="Avatar Avatar--xs" alt=""><img data-bind="attr: { src: photoUrl }" alt="Public profile photo"/></i>
+                    <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    @render('parts/UserMenuContents.html')
+                </ul>
+            </li>
+            <li>
+                <a data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/help/categories/200431835-resources-for-service-professionals"><span class="LargeNavBar-label">Help</span></a>
+                <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
+                <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
+            </li>
+            <li>
+                <a data-bind="visible: !isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/learnMoreProfessionals"><span class="btn btn-secondary">List your services</span></a>
+            </li>
+        </ul>    
+    </nav>
 </div>
