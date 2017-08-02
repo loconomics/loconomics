@@ -1,14 +1,14 @@
 <li>
-    <h4 class="App-menus-group-header" data-bind="visible: isAnonymous">WELCOME</h4>
+    <h2 class="App-menus-group-header" data-bind="visible: isAnonymous">WELCOME</h2>
 </li>
-<li data-bind="visible: !isApp(), css: cssIfActive('downloadApp')" class="go-download">
-    <a href="/downloadApp">Download the app</a>
+<li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
+    <a href="/signup/client">Sign up</a>
 </li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('login')">
     <a href="/login">Log in</a>
 </li>
-<li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
-    <a href="/signup/client">Sign up</a>
+<li data-bind="visible: !isApp(), css: cssIfActive('downloadApp')" class="go-download">
+    <a href="/downloadApp">Download the app</a>
 </li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('home-hiw')">
     <a href="/home/home-hiw">How it works</a>
