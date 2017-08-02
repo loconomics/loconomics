@@ -33,10 +33,10 @@
     <body>
         <div class="SplashScreen">Loading...</div>
         <header role="banner">@render('parts/AppNav.html')</header>
-        <div class="App-activities">
+        <main role="main" class="App-activities">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render(includedFiles[f])
             }
-        </div>
+        </main>
 </body>
 </html>
