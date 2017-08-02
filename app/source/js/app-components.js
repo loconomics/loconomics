@@ -11,7 +11,6 @@
 
 var ko = require('knockout'),
     $ = require('jquery'),
-    propTools = require('./utils/jsPropertiesTools'),
     getObservable = require('./utils/getObservable'),
     MessageBar = require('./components/MessageBar');
 
@@ -19,21 +18,6 @@ var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
     //jshint maxstatements:100
-
-    /// navbar-action
-    ko.components.register('app-navbar-action', {
-        template: { element: 'navbar-action-template' },
-        viewModel: function(params) {
-
-            propTools.defineGetter(this, 'action', function() {
-                return (
-                    params.action && params.navBar() ?
-                    params.navBar()[params.action]() :
-                    null
-                );
-            });
-        }
-    });
 
     /// unlabeled-input
     ko.components.register('app-unlabeled-input', {
