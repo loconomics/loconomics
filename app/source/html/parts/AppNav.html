@@ -1,33 +1,30 @@
-<nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
-
-    <div class="SmartNavBar visible-xs visible-sm">
+<div class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
+    <nav role="navigation" class="SmartNavBar visible-xs visible-sm" aria-label="Main Navigation">
         <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
-
-        <h1>&nbsp;
-            <span data-bind="text: navBar() && navBar().title()"></span>
+        <h1>
+            <h1 data-bind="text: navBar() && navBar().title()"></h1>
             <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics</a>
         &nbsp;</h1>
-
         <div class="SmartNavBar-notification bg-info"></div>
-
         <span data-bind="component: { name: 'app-navbar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
-    </div>
-    <div class="hidden-xs hidden-sm">@render('parts/LargeNavBar.html')</div>
+    </nav>
+    <nav role="navigation" class="hidden-xs hidden-sm" aria-label="Main Navigation">@render('parts/LargeNavBar.html')</nav>
     <div class="App-menus">
         <div id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg">
-            <h4 class="App-menus-header" data-bind="visible: !isAnonymous()">
+            <h2 class="App-menus-header" data-bind="visible: !isAnonymous()">
                 <a href="/aboutMe">
                 <div class="App-menus-header-photo" data-bind="visible: !isAnonymous()"><img data-bind="attr: { src: photoUrl }" /></div>
                 <span class="App-menus-header-user" data-bind="text: userName, visible: !isAnonymous()"></span></a>
-            </h4>
+            </h2>
             <ul class="nav navbar-nav">
                 @render('parts/UserMenuContents.html')
             </ul>
         </div>
+        <span class="sr-only hidden-md hidden-lg">Add new menu: </span>
         <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg">
             <ul class="nav navbar-nav">
-          @render('parts/AddNewMenuContents.html')
+            @render('parts/AddNewMenuContents.html')
             </ul>
         </div>
     </div>
-</nav>
+</div>
