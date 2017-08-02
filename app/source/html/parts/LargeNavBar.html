@@ -1,22 +1,19 @@
 <div class="LargeNavBar container">
     <div class="LargeNavBar-brand">
         <a class="navbar-brand" href="/home">Loconomics</a>
-        
     </div>
     <!-- Anonymous nav -->
-    <nav role="navigation" data-bind="visible: isAnonymous()">
-        <span class="sr-only">Main navigation: </span>
-        <ul class="LargeNavBar-navBar nav navbar-right">
-            <li>
-                <a href="/signup/client" class="btn btn-link">Sign up</a>
-            </li>
-            <li>
-                <a href="/login" class="btn btn-link">Log in</a>
-            </li>
-            <li>
-                <a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
-            </li>
-        </ul>
+    <ul data-bind="visible: isAnonymous()" class="LargeNavBar-navBar nav navbar-right">
+        <li>
+            <a href="/signup/client" class="btn btn-link">Sign up</a>
+        </li>
+        <li>
+            <a href="/login" class="btn btn-link">Log in</a>
+        </li>
+        <li>
+            <a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
+        </li>
+    </ul>
     <!-- User nav -->
     <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
         <li class="LargeNavBar-userMenu dropdown text-right">

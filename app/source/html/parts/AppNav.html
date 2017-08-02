@@ -1,14 +1,14 @@
-<header role="banner" class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
+<nav class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
 
     <div class="SmartNavBar visible-xs visible-sm">
         <span data-bind="component: { name: 'app-navbar-action', params: { action: 'leftAction', navBar: navBar } }" class="SmartNavBar-edge left"></span>
 
         <h1>&nbsp;
             <span data-bind="text: navBar() && navBar().title()"></span>
-            <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics Home</a>
+            <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics</a>
         &nbsp;</h1>
 
-        <div role="alert" class="SmartNavBar-notification bg-info"></div>
+        <div class="SmartNavBar-notification bg-info"></div>
 
         <span data-bind="component: { name: 'app-navbar-action', params: { action: 'rightAction', navBar: navBar } }" class="SmartNavBar-edge right"></span>
     </div>
@@ -30,4 +30,4 @@
             </ul>
         </div>
     </div>
-</header>
+</nav>
