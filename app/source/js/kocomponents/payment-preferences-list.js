@@ -1,5 +1,5 @@
 /**
- * An action button inside a smart-nav-bar.
+ * A selectable list of available payment preferences options.
  * @module kocomponents/payment-preferences-list
  */
 'use strict';
