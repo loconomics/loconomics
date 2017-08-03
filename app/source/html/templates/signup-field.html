@@ -2,7 +2,7 @@
 <script type="text/html" id="signup-field">
     <div class="form-group" data-bind="css: { 'has-error': field.error }">
         <input class="form-control has-feedback" data-bind="textInput: field,
-            attr: { placeholder: label, 'aria-label': label, type: type, name: name },
+            attr: { placeholder: label, 'aria-label': label, type: type, name: name, id: id},
             popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' },
             disable: $parent.isLocked, event: $data.inputEvent">
         <i class="fa form-control-feedback form-control-feedback--valid text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
