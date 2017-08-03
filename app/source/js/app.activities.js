@@ -69,6 +69,7 @@ module.exports = {
     'searchCategory': require('./activities/searchCategory'),
     'boardMemberNominations': require('./activities/boardMemberNominations'),
     'paymentAccount': require('./activities/paymentAccount'),
+    'paymentPreference': require('./activities/paymentPreference'),
     'myAppointments': require('./activities/myAppointments'),
     'clientAppointment': require('./activities/clientAppointment'),
     'viewBooking': require('./activities/viewBooking'),
