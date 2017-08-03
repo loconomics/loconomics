@@ -1,15 +1,16 @@
 <div class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
-    <nav class="SmartNavBar visible-xs visible-sm" aria-labelledby="mainMobileNav">
+    <nav role="navigation" class="SmartNavBar visible-xs visible-sm" aria-labelledby="mainMobileNav">
         <h2 id="mainMobileNav" class="sr-only">Main Navigation</h2>
         <smart-nav-bar-action params="action: 'leftAction', navBar: navBar" class="SmartNavBar-edge left"></smart-nav-bar-action>
-        <h2 data-bind="text: navBar() && navBar().title()"></h2>
-        <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics Home</a>
+        <h1>
+        <span data-bind="text: navBar() && navBar().title()"></span>
+        <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home">Loconomics Home</a></h1>
         <div class="SmartNavBar-notification bg-info"></div>
         <smart-nav-bar-action params="action: 'rightAction', navBar: navBar" class="SmartNavBar-edge right"></smart-nav-bar-action>
     </nav>
-    <nav class="hidden-xs hidden-sm" aria-labelledby="mainLargeScreenNav">@render('parts/LargeNavBar.html')</nav>
-    <div class="App-menus">
-        <div id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mainMobileMenu">
+    <nav role="navigation" class="hidden-xs hidden-sm" aria-labelledby="mainLargeScreenNav">@render('parts/LargeNavBar.html')</nav>
+    <ul class="App-menus">
+        <li id="menuIn" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mainMobileMenu">
             <h2 id="mainMobileMenu" class="sr-only">Main Menu</h2>
             <h2 class="App-menus-header" data-bind="visible: !isAnonymous()">
                 <a href="/aboutMe">
@@ -19,12 +20,12 @@
             <ul class="nav navbar-nav">
                 @render('parts/UserMenuContents.html')
             </ul>
-        </div>
-        <div id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mobileAddNewMenu">
+        </li>
+        <li id="menuNewItem" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mobileAddNewMenu">
             <h2 id="mobileAddNewMenu" class="sr-only">Add new menu</h2>
             <ul class="nav navbar-nav">
             @render('parts/AddNewMenuContents.html')
             </ul>
-        </div>
-    </div>
+        </li>
+    </ul>
 </div>
