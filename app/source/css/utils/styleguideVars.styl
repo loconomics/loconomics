@@ -14,11 +14,11 @@
 @import '../../../vendor/bootstrap/styl/variables.styl'
 
 /* Grayscale colors */
-$gray-darker = gray-darker;
-$gray-dark = gray-dark;
-$gray = gray;
-$gray-light = gray-light;
-$gray-lighter = gray-lighter;
+$gray-darker = gray-darker; /* CR 15.9 on #fff; CR 14.6 on #f5f5f5 */
+$gray-dark = gray-dark; /* CR 12.6 on #fff; CR 11.6 on #f5f5f5 */ 
+$gray = gray; /* CR 3.9 on #fff; CR 6.8 on #f5f5f5 */
+$gray-light = gray-light; /* 4.5 on #fff; CR 4.1 on #f5f5f5 */
+$gray-lighter = gray-lighter; /* CR 1.6 on #fff; CR 1.5 on #f5f5f5  */
 // Special custom new color:
 $gray-background = #f5f5f5;
 // Object of colors (to automate functions)
@@ -32,13 +32,13 @@ $gray-colors = {
 };
 
 /* Semantic colors */
-$brand-primary = brand-primary;
+$brand-primary = brand-primary; /* CR 3.5 on #fff - NOT AA COMPLIANT; CR 4.5 with gray-darker */
 // Additional color requested by Josh at design
-$brand-secondary = rgb(255, 103, 101);
-$brand-success = brand-success;
-$brand-info = brand-info;
-$brand-warning = #fdd199;
-$brand-danger = brand-danger;
+$brand-secondary = rgb(255, 103, 101); /* CR 2.7 on #fff; CR 2.6 on #f5f5f5 with gray-dark */
+$brand-success = brand-success; /* CR 2.7 on #fff - NOT AA COMPLIANT; CR 4.7 with gray-dark */
+$brand-info = brand-info; /* CR 2.1 on #fff - NOT AA COMPLIANT; CR 6.0 with gray-dark */
+$brand-warning = #fdd199; /* CR 1.9 on #fff - NOT AA COMPLIANT; CR 6.5 with gray-dark */
+$brand-danger = brand-danger; /* CR 4 on #fff - NOT AA COMPLIANT; CR 5.3 with gray-dark */
 // Object of colors (to automate functions)
 $brand-colors = {
     primary: $brand-primary,
@@ -72,12 +72,12 @@ $brand-colors-background = {
 /* Semantic dark colors (darker than base) */
 // Bootstrap uses some colors using brand as base and functions like 'darker' for some uses.
 // But this set of colours is from Josh design, specific pallette.
-$brand-primary-dark = #006c6c;
-$brand-secondary-dark = rgb(228, 66, 62);
-$brand-success-dark = #47b347;
-$brand-info-dark = #5bc0de;
-$brand-warning-dark = #c09853;
-$brand-danger-dark = #b94a48;
+$brand-primary-dark = #006c6c; /* CR 6.2 on #fff; CR 5.7 on #f5f5f5 */
+$brand-secondary-dark = rgb(228, 66, 62); /* CR 4.1 on #fff; CR 3.7 on #f5f5f5 */
+$brand-success-dark = #47b347; /* CR 2.7 on #fff; CR 3.7 on #f5f5f5 */
+$brand-info-dark = #5bc0de; /* CR 2.1 on #fff; CR 2.5 on #f5f5f5 */
+$brand-warning-dark = #c09853; /* CR 2.7 on #fff; CR 2.5 on #f5f5f5 */
+$brand-danger-dark = #b94a48; /* CR 5.1 on #fff; CR 4.7 on #f5f5f5 */
 // Object of colors (to automate functions)
 $brand-colors-dark = {
     primary: $brand-primary-dark,
@@ -93,7 +93,7 @@ $brand-colors-dark = {
 // Semantic alias for muted/disabled text
 $text-muted = $gray-light;
 // General text color
-$body-copy-color = $gray-dark;
+$body-copy-color = $gray-dark; /* CR 12.6 on #fff; CR 11.6 on #f5f5f5 */
 
 /** state color aliases **/
 $state-primary-text = $brand-primary;
