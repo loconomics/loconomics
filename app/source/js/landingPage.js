@@ -5,6 +5,8 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
+// Make jquery reference global, may still be needed by some shimed plugins
+window.$ = window.jQuery = $;
 require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
