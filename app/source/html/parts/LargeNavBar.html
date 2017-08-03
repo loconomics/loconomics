@@ -1,11 +1,11 @@
 <h2 id="mainLargeScreenNav" class="sr-only">Main Navigation</h2>
 <ul class="LargeNavBar container">
     <li class="LargeNavBar-brand">
-        <a class="navbar-brand" href="/home">Loconomics</a>
+        <a class="navbar-brand" href="/home">Loconomics Home</a>
     </li>    
     <!-- Anonymous nav -->
-    <li class="LargeNavBar-navBar nav navbar-right" data-bind="visible: isAnonymous()">
-        <ul>
+    <li data-bind="visible: isAnonymous()">
+        <ul class="LargeNavBar-navBar nav navbar-right">
             <li>
                 <a href="/signup/client" class="btn btn-link">Sign up</a>
             </li>
@@ -13,13 +13,13 @@
                 <a href="/login" class="btn btn-link">Log in</a>
             </li>
             <li>
-                <a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
+                <a href="/learnMoreProfessionals" class="btn btn-link">List your services</a>
             </li>
         </ul>
     </li>
     <!-- User nav -->
-    <li class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
-        <ul>
+    <li data-bind="visible: !isAnonymous()">
+        <ul class="LargeNavBar-navBar nav navbar-right">
             <li aria-labelledby="mainMenuLargeScreen">
                 <h2 id="mainMenuLargeScreen" class="sr-only">Main Menu</h2>
                 <a role="button" class="LargeNavBar-userMenu dropdown text-right dropdown-toggle toggle" data-toggle="dropdown" aria-label="Main Menu">
@@ -36,7 +36,7 @@
                 <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
             </li>
             <li data-bind="visible: !isServiceProfessional() && !isAnonymous() && !isInOnboarding()">
-                <a href="/learnMoreProfessionals"><span class="btn btn-secondary">List your services</span></a>
+                <a href="/learnMoreProfessionals"><span class="btn btn-link">List your services</span></a>
             </li>
         </ul>
     </li>
