@@ -156,7 +156,7 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         // the button can contain a title, used normally when
         // the button label content replace the centered title
         // so the style must show different on that cases
-        h1 {
+        h2 {
             color: $SmartNavBar-headerColor;
             font-size: $SmartNavBar-buttonHeaderFontSize;
             display: inline;
@@ -173,7 +173,7 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         }
     }
         
-    h1 {
+    h2 {
         color: $SmartNavBar-headerColor;
         display: block;
         padding: 0;
@@ -186,6 +186,10 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
         margin: 0 65px;
         font-weight: 700; // 500;
         line-height: $SmartNavBar-height;
+    }
+    * > .navbar-brand {
+        background-position: center;
+        display: block;
     }
     
     // Support for Bootstrap menu button
