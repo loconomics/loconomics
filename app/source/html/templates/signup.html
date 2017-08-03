@@ -1,31 +1,6 @@
 <!-- Sign up -->
 <script type="text/html" id="signup-template">
     <div class="SignupLogin">
-        <div class="LeadContent" data-bind="visible: !profile()">
-            <ul class="TilesList TilesList--openEnd">
-                <li>
-                    <a class="LinkTile" href="/signup/service-professional">
-                        <div class="Tile-content">
-                            <p>I'm a local service professional</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a class="LinkTile" href="/signup/client">
-                        <div class="Tile-content">
-                            <p>I'm a potential client</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a class="LinkTile" href="/signup/service-professional">
-                        <div class="Tile-content">
-                            <p>I'm both</p>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
         <div class="LeadContent" data-bind="visible: profile">
             <h2 data-bind="visible: !forServiceProfessional()">Sign up for free</h2>
             <h2 data-bind="visible: forServiceProfessional">Your first listing is free</h2>
