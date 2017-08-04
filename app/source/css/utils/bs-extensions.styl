@@ -6,7 +6,7 @@
 
 @import 'styleguideVars.styl'
 
-// Added a new semantic color, 'secondary', 
+// Added a new semantic color, 'secondary',
 // create the button for that
 @import '../../../vendor/bootstrap/styl/mixins/buttons.styl'
 $btn-secondary-color = #fff
@@ -59,7 +59,7 @@ a {
 }
 
 /**
-    To solve the usability and between-scripts interaction problems 
+    To solve the usability and between-scripts interaction problems
     of Bootstrap toggle buttons for radio and checkboxes, is better
     replace the use of data-toggle="buttons" on .btn-groups > input[type=radio|checkbox]
     by this utility class .ut-noRadioCheck.
@@ -76,7 +76,7 @@ a {
         // Bootstrap uses the deprecated 'clip' trick rather than a negative position.
         clip: rect(0px, 0px, 0px, 0px);
     }
-    
+
     // Fix bug in iOS: span elements inside the label (used normally to set text programatically)
     // make that it receive the first click/touch, not reacting the label and not setting the underground
     // radio input, needing a long-tap to get enabled; gets solved making that span elements not able
@@ -123,6 +123,16 @@ a {
     }
 }
 
+// New class btn-inline, mostly when a btn-link is needed inside a text
+// It's correctly aligned (because it's vertical padding increase line height)
+// and horizontal padding removed (preventing that the link keeps separated
+// from the text)
+.btn-inline {
+    padding-left: 0;
+    padding-right: 0;
+    vertical-align: baseline;
+}
+
 // Only bottom border to look flatty
 .form-control,
 .input-group-addon,
@@ -167,7 +177,7 @@ a {
 // Allow reset the column paddings and other features added because of global
 // Bootstrap column styles that get applied even when in sizes that must not apply.
 // Example: a col-md-6 column becomes implicitelly a col-xs-12 on mobile, what
-// means it keeps the padding/column gutter even if you do not want a column on 
+// means it keeps the padding/column gutter even if you do not want a column on
 // that size; the only way to let the column use the full width, without padding,
 // is to reset that: do it with this classes, that apply on each size and smaller
 // following the opposite Bootstrap rules for col-* classes because thats the common
@@ -239,7 +249,7 @@ ResetSectionTitleMargin() {
         }
     }
     @media $mediaMinLg {
-        &.nogaps-lg {            
+        &.nogaps-lg {
             padding: 0;
             ResetSectionTitleMargin();
         }
@@ -255,13 +265,13 @@ ResetSectionTitleMargin() {
   -webkit-box-shadow: 0 1.5px 0 0 $gray-background;
   box-shadow: 0 1.5px 0 0 $gray-background;
   border-radius: 0px;
-  
-  .App-menus-group-header {    
+
+  .App-menus-group-header {
         padding: 0px 10px 10px;
         border-bottom: 1px solid $gray-light;
-        color: $gray-light;            
+        color: $gray-light;
         font-size: 1.1em;
-  }  
+  }
   > li {
         width: 250px;
         &.go-help,
@@ -269,15 +279,15 @@ ResetSectionTitleMargin() {
           display none;
         }
         > a {
-        color: $gray;        
-        font-size: 1.1em;               
+        color: $gray;
+        font-size: 1.1em;
         padding: 10px 10px 10px 40px;
         margin: 0;
 
         // icons
         > i {
             color: $gray;
-            font-size: 1.5em;      
+            font-size: 1.5em;
             margin-right: 5px;
         }
 
@@ -294,7 +304,7 @@ ResetSectionTitleMargin() {
     }
     li.active > a {
       color: $gray-dark !important;
-      background: transparent;  
+      background: transparent;
       > i {
         color: $gray-dark !important;
       }
@@ -306,13 +316,13 @@ ResetSectionTitleMargin() {
     border-radius: 0px;
 }
 
-.bootstrap-switch-handle-on 
+.bootstrap-switch-handle-on
 &.bootstrap-switch-primary {
     background-color: $brand-success;
     color: white;
     border-radius: 0px;
 }
-.bootstrap-switch-handle-off 
+.bootstrap-switch-handle-off
 &.bootstrap-switch-default {
     background-color: $gray-background;
     border-radius: 0px;
@@ -329,8 +339,8 @@ ResetSectionTitleMargin() {
     padding: 20px 20px -5px 20px;
     background-color: #FFFFA5;
     border: none;
-    
-    .list-group {      
+
+    .list-group {
       margin-bottom: 0px;
       padding-left: 20px;
     }
@@ -343,10 +353,10 @@ ResetSectionTitleMargin() {
     padding: 8px 12px;
 }
 // TODO: make this cross browser, not just webkit specific (and standard/future-proof if possible)
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .bg-white {
