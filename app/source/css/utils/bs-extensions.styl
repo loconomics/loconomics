@@ -149,6 +149,16 @@ html .dropdown-toggle:focus {
     }
 }
 
+// New class btn-inline, mostly when a btn-link is needed inside a text
+// It's correctly aligned (because it's vertical padding increase line height)
+// and horizontal padding removed (preventing that the link keeps separated
+// from the text)
+.btn-inline {
+    padding-left: 0;
+    padding-right: 0;
+    vertical-align: baseline;
+}
+
 // Only bottom border to look flatty
 .form-control,
 .input-group-addon,
