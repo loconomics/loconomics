@@ -1,5 +1,5 @@
 <div class="LightForm container-fluid" data-bind="with: data">
-    <h2 class="SectionTitle">Set-up your account</h2>
+    <h2 class="SectionTitle">Set-up your Direct Deposit account</h2>
     <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $parent.isLocked"></app-unlabeled-input>
     <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $parent.isLocked"></app-unlabeled-input>
     <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $parent.isLocked"></app-unlabeled-input>
@@ -32,20 +32,23 @@
     </div>
     <app-unlabeled-input params="placeholder: 'Date of birth (mm/dd/yyyy)', value: birthDate, disable: $parent.isLocked"></app-unlabeled-input>
 
-    <div>
-        <label class="form-label" for="paymentDirectDepositEditor-termsAgreement">
-            <input id="paymentDirectDepositEditor-termsAgreement" type="checkbox" data-bind="checked: agree, disable: $parent.isLocked" />
-            <span>I agree to the Braintree terms of service.</span>
-        </label>
-        <a class="btn btn-link btn-inline text-secondary" data-toggle="collapse" aria-expanded="false" data-target="#paymentDirectDepositEditor-termsText" data-controls="#paymentDirectDepositEditor-termsText">(Show terms of service)</a>
-        <p id="paymentDirectDepositEditor-termsText" class="collapse container-fluid">
-            Loconomics Cooperative, Inc. (Loconomics) uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing
-            services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement
-            available at
-            <a class="text-secondary" href="https://www.braintreepayments.com/legal/payment-services-agreement" target="_blank">https://www.braintreepayments.com/legal/payment-services-agreement</a>,
-            and the applicable bank agreement available at
-            <a class="text-secondary" href="https://www.braintreepayments.com/legal/bank-agreement" target="_blank">https://www.braintreepayments.com/legal/bank-agreement</a>.
-            If you have questions regarding the agreements, please contact Braintree at 877.434.2894.
-        </p>
+    <label class="form-label" for="paymentDirectDepositEditor-termsAgreement">
+        <input id="paymentDirectDepositEditor-termsAgreement" type="checkbox" data-bind="checked: agree, disable: $parent.isLocked" />
+        <span>I agree to the Braintree terms of service.</span>
+    </label>
+    <a class="btn btn-link btn-inline text-secondary" data-toggle="collapse" aria-expanded="false" data-target="#paymentDirectDepositEditor-termsText" data-controls="#paymentDirectDepositEditor-termsText">(Show terms of service)</a>
+    <p id="paymentDirectDepositEditor-termsText" class="collapse container-fluid">
+        Loconomics Cooperative, Inc. (Loconomics) uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing
+        services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement
+        available at
+        <a class="text-secondary" href="https://www.braintreepayments.com/legal/payment-services-agreement" target="_blank">https://www.braintreepayments.com/legal/payment-services-agreement</a>,
+        and the applicable bank agreement available at
+        <a class="text-secondary" href="https://www.braintreepayments.com/legal/bank-agreement" target="_blank">https://www.braintreepayments.com/legal/bank-agreement</a>.
+        If you have questions regarding the agreements, please contact Braintree at 877.434.2894.
+    </p>
+
+    <div class="isolated top-only">
+        <button type="submit" class="btn btn-primary btn-block"
+            data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save"></button>
     </div>
 </div>

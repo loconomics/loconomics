@@ -54,12 +54,10 @@ function ViewModel(params) {
      * @member {KnockoutComputed<string>}
      */
     this.submitText = ko.pureComputed(function() {
-        return (
-            this.isSaving() ?
-                'saving...' :
-                'Save'
-        );
-    });
+        return this.isSaving() ?
+            'saving...' :
+            'Save';
+    }, this);
 
     this.save = function save() {
         this.isSaving(true);

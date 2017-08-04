@@ -16,4 +16,10 @@
     <!-- ko if:isVenmoEditorOpened -->
     <payment-venmo-editor params="data: paymentOptionData"></payment-venmo-editor>
     <!-- /ko -->
+
+    <div class="LightForm container-fluid" data-bind="visible: editorPreferenceID()">
+        <button type="button" class="btn btn-secondary btn-block" data-bind="click: openSelector">
+            Change payout preference
+        </button>
+    </div>
 </div>

@@ -121,6 +121,14 @@ function ViewModel() {
         // and hide the selector list
         this.isSelectorOpened(false);
     }.bind(this);
+    /**
+     * Open the selector component, hidden active editor if any
+     * @method
+     */
+    this.openSelector = function() {
+        this.editorPreferenceID(null);
+        this.isSelectorOpened(true);
+    }.bind(this);
 
     /**
      * Request to load the stored user data for current payment preference
