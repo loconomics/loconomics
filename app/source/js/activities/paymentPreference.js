@@ -19,6 +19,12 @@ var A = Activity.extend(function PaymentPreferenceActivity() {
     });
     // Share navBar with desktop nav through viewModel
     this.viewModel.navBar = this.navBar;
+    // Using activity.isShown to enable components at the template,
+    // their set-up is simplified by being re-created every time the
+    // activity is displayed and disposed when hidden (this prevents from
+    // needing reset/discard/show-hide-detection logics at component level;
+    // they does init at constructor and implement 'dispose' method).
+    this.viewModel.isShown = this.isShown;
 });
 
 exports.init = A.init;
