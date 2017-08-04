@@ -1,0 +1,47 @@
+<div class="LightForm container-fluid" data-bind="with: data">
+    <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $parent.isLocked"></app-unlabeled-input>
+    <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $parent.isLocked"></app-unlabeled-input>
+    <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $parent.isLocked"></app-unlabeled-input>
+    <app-unlabeled-input params="placeholder: 'Street address', value: streetAddress, disable: $parent.isLocked"></app-unlabeled-input>
+    <div class="form-group" data-bind="css: { 'has-error': $parent.postalCodeErrorMessage() }">
+        <input type="number" class="form-control"
+                placeholder="Postal code" aria-label="Postal code" min="0"
+                data-bind="textInput: postalCode, event: { blur: $parent.postalCodeVM.onBlur }, disable: $parent.isLocked,
+                        popover: { content: $parent.postalCodeErrorMessage(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+    </div>
+    <div class="form-group">
+        <p class="form-control-static">
+            <span data-bind="visible: city() || stateProvinceCode()">
+                <span data-bind="text: city"></span>,
+                <span data-bind="text: stateProvinceCode"></span>
+            </span>
+            <!-- White space to reserve space -->
+            &nbsp;
+        </p>
+    </div>
+    <app-unlabeled-input params="placeholder: 'Date of birth (mm/dd/yyyy)', value: birthDate, disable: $parent.isLocked"></app-unlabeled-input>
+
+    <p class="alert alert-info" role="alert">
+        A <a href="https://venmo.com" target="_system">Venmo</a> account will be created and linked to your email.
+        You will then have to set up your Venmo account to release payments.
+        We do not recommend this option as it requires you to cash out every time you get a payment.
+    </p>
+
+    <div>
+        <label class="form-label" for="paymentVenmoEditor-termsAgreement">
+            <input id="paymentVenmoEditor-termsAgreement" type="checkbox" data-bind="checked: agree, disable: $parent.isLocked" />
+            <span>I agree to the Braintree terms of service.</span>
+        </label>
+        <a class="btn btn-link btn-inline text-secondary" data-toggle="collapse" aria-expanded="false" data-target="#paymentVenmoEditor-termsText" data-controls="#paymentVenmoEditor-termsText">(Show terms of service)</a>
+        <p id="paymentVenmoEditor-termsText" class="collapse container-fluid">
+            Venmo is a service of Braintree, a division of PayPal, Inc. (Braintree).
+            Loconomics Cooperative, Inc. (Loconomics) uses Braintree for payment processing
+            services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement
+            available at
+            <a class="text-secondary" href="https://www.braintreepayments.com/legal/payment-services-agreement" target="_blank">https://www.braintreepayments.com/legal/payment-services-agreement</a>,
+            and the applicable bank agreement available at
+            <a class="text-secondary" href="https://www.braintreepayments.com/legal/bank-agreement" target="_blank">https://www.braintreepayments.com/legal/bank-agreement</a>.
+            If you have questions regarding the agreements, please contact Braintree at 877.434.2894.
+        </p>
+    </div>
+</div>

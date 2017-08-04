@@ -12,6 +12,8 @@ var ko = require('knockout');
 require('./payment-preferences-list');
 require('./payment-direct-deposit-viewer');
 require('./payment-direct-deposit-editor');
+require('./payment-venmo-viewer');
+require('./payment-venmo-editor');
 var paymentAccount = require('../data/paymentAccount');
 var PaymentPreferenceOption = require('../models/PaymentPreferenceOption');
 
