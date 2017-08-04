@@ -16,6 +16,7 @@ require('./payment-venmo-viewer');
 require('./payment-venmo-editor');
 var paymentAccount = require('../data/paymentAccount');
 var PaymentPreferenceOption = require('../models/PaymentPreferenceOption');
+var AvailableOptions = PaymentPreferenceOption.AvailableOptions;
 
 /**
  *
@@ -56,7 +57,7 @@ function ViewModel() {
 
         if(data && data.status()) {
             var isVenmo = !data.accountNumber() || !data.routingNumber();
-            return isVenmo ? PaymentPreferenceOption.venmo : PaymentPreferenceOption.directDeposit;
+            return isVenmo ? AvailableOptions.venmo : AvailableOptions.directDeposit;
         }
         else {
             return null;
@@ -67,28 +68,28 @@ function ViewModel() {
      * @member {KnockoutComputed<boolean>}
      */
     this.isVenmoViewerOpened = ko.pureComputed(function() {
-        return this.viewerPreferenceID() === PaymentPreferenceOption.venmo;
+        return this.viewerPreferenceID() === AvailableOptions.venmo;
     }, this);
     /**
      * When the viewer component for Direct Deposit preference must be opened.
      * @member {KnockoutComputed<boolean>}
      */
     this.isDirectDepositViewerOpened = ko.pureComputed(function() {
-        return this.viewerPreferenceID() === PaymentPreferenceOption.directDeposit;
+        return this.viewerPreferenceID() === AvailableOptions.directDeposit;
     }, this);
     /**
      * When the editor component for Venmo preference must be opened.
      * @member {KnockoutComputed<boolean>}
      */
     this.isVenmoEditorOpened = ko.pureComputed(function() {
-        return this.editorPreferenceID() === PaymentPreferenceOption.venmo;
+        return this.editorPreferenceID() === AvailableOptions.venmo;
     }, this);
     /**
      * When the viewer component for Direct Deposit preference must be opened.
      * @member {KnockoutComputed<boolean>}
      */
     this.isDirectDepositEditorOpened = ko.pureComputed(function() {
-        return this.editorPreferenceID() === PaymentPreferenceOption.directDeposit;
+        return this.editorPreferenceID() === AvailableOptions.directDeposit;
     }, this);
 
     /**
@@ -107,7 +108,7 @@ function ViewModel() {
      * @method
      */
     this.openDirectDepositEditor = function() {
-        this.editorPreferenceID(PaymentPreferenceOption.directDeposit);
+        this.editorPreferenceID(AvailableOptions.directDeposit);
         // and hide the selector list
         this.isSelectorOpened(false);
     }.bind(this);
@@ -116,7 +117,7 @@ function ViewModel() {
      * @method
      */
     this.openVenmoEditor = function() {
-        this.editorPreferenceID(PaymentPreferenceOption.venmo);
+        this.editorPreferenceID(AvailableOptions.venmo);
         // and hide the selector list
         this.isSelectorOpened(false);
     }.bind(this);
@@ -129,7 +130,7 @@ function ViewModel() {
     var load = function() {
         paymentAccount.load()
         .then(function(data) {
-            this.paymentOptionData(data);
+            this.paymentOptionData(data.model.clone());
             // If there is data with an active record, selector is hidden
             if (data && data.status()) {
                 this.isSelectorOpened(false);
