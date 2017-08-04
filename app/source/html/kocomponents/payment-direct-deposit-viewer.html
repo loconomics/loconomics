@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <h2 class="SectionTitle">Merchant account status</h2>
+    <p data-bind="visible: data.status() === 'active'" class="bg-success PaddedBox-xs">
+        You're all set up with Braintree. We'll deposit any payments due to you
+        <span data-bind="visible: data.accountNumber">to your account ending in <span data-bind="text: data.accountNumber"></span></span>
+        <span data-bind="visible: !data.accountNumber()">to your Venmo account attached to e-mail address <span data-bind="text: data.email"></span>.</span>
+    </p>
+    <p data-bind="visible: data.status() === 'pending'" class="bg-warning PaddedBox-xs">
+        We're working with Braintree to set up your merchant account. Please check back in 24 hours for an update.
+    </p>
+    <div data-bind="visible: data.status() === 'suspended'" class="bg-danger PaddedBox-xs">
+        <p>We're having problems setting up your Braintree account. Please <a href="/contactForm/payments?mustReturn=true">contact us</a> for further assistance.</p>
+        <div data-bind="visible: data.errors().length">
+            <p>Error(s) reported by Braintree:</p>
+            <ul data-bind="foreach: data.errors()">
+                <li data-bind="text: this"></li>
+            </ul>
+        </div>
+    </div>
+    <div class="isolated text-center" data-bind="if: requestEdit && !isEditorOpened()">
+        <button type="button" class="btn btn-info" data-bind="click: requestEdit">Update Bank Info</button>
+    </div>
+</div>

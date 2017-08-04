@@ -14,7 +14,7 @@ var PaymentPreferenceOption = require('../models/PaymentPreferenceOption');
  *
  * @class
  * @param {Object} params
- * @param {Function<models/PaymentPreferenceOption,void>} [params.selectItem] Callback to execute when a item is
+ * @param {Function<models/PaymentPreferenceOption,void>} params.selectItem Callback to execute when a item is
  * selected, passing it as parameter the option instance.
  */
 function ViewModel(params) {
@@ -28,7 +28,7 @@ function ViewModel(params) {
     /**
      * @member {Array<models/PaymentPreferenceOption>}
      */
-    this.list = PaymentPreferenceOption.AvailableOptions;
+    this.list = PaymentPreferenceOption.optionsList;
 }
 
 ko.components.register(TAG_NAME, {

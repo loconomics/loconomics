@@ -1,0 +1,12 @@
+<div data-bind="if: isReady">
+    <div data-bind="if: isSelectorOpened">
+        <h2 class="SectionTitle">Choose a payout preference</h2>
+        <payment-preferences-list params="selectItem: selectPreference"></payment-preferences-list>
+    </div>
+    <!-- ko if:isDirectDepositViewerOpened -->
+    <payment-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payment-direct-deposit-viewer>
+    <!-- /ko -->
+    <!-- ko if:isDirectDepositEditorOpened -->
+    <payment-direct-deposit-editor params="data: paymentOptionData"></payment-direct-deposit-editor>
+    <!-- /ko -->
+</div>

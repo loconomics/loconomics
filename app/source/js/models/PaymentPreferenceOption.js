@@ -20,19 +20,29 @@ function PaymentPreferenceOption(values) {
 module.exports = PaymentPreferenceOption;
 
 /**
- * List of available options, since is predefined data
+ * @enum {string}
  */
-var AvailableOptions = [
+var AvailableOptions = {
+    directDeposit: 'direct-deposit',
+    venmo: 'venmo'
+};
+
+/**
+ * List of available options
+ * @type {Array<models/PaymentPreferenceOption>}
+ */
+var optionsList = [
     new PaymentPreferenceOption({
-        paymentPreferenceOptionID: 'direct-deposit',
+        paymentPreferenceOptionID: AvailableOptions.directDeposit,
         name: 'Direct deposit',
         description: 'Your bank account information to receive payments through Braintree'
     }),
     new PaymentPreferenceOption({
-        paymentPreferenceOptionID: 'venmo',
+        paymentPreferenceOptionID: AvailableOptions.venmo,
         name: 'Venmo',
         description: 'You will have to set up your Venmo account to release payments'
     })
 ];
 
 PaymentPreferenceOption.AvailableOptions = AvailableOptions;
+PaymentPreferenceOption.optionsList = optionsList;

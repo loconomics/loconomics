@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
-require('../kocomponents/payment-preferences-list');
+require('../kocomponents/payment-preference-view');
 
 var A = Activity.extend(function PaymentPreferenceActivity() {
 
@@ -26,8 +26,4 @@ exports.init = A.init;
 function ViewModel() {
     this.helpLink = '/help/relatedArticles/201967096-accepting-and-receiving-payments';
     this.isInOnboarding = onboarding.inProgress;
-
-    this.selectPreference = function(prefOption) {
-        console.log('Option choosen', prefOption.paymentPreferenceOptionID());
-    };
 }
