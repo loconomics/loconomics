@@ -1,4 +1,11 @@
 <div class="LightForm container-fluid" data-bind="with: data">
+    <h2 class="SectionTitle">Set-up your account</h2>
+    <p class="alert alert-info" role="alert">
+        A <a href="https://venmo.com" target="_system">Venmo</a> account will be created and linked to your email.
+        You will then have to set up your Venmo account to release payments.
+        We do not recommend this option as it requires you to cash out every time you get a payment.
+    </p>
+
     <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $parent.isLocked"></app-unlabeled-input>
     <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $parent.isLocked"></app-unlabeled-input>
     <app-unlabeled-input params="placeholder: 'Phone', value: phone, disable: $parent.isLocked"></app-unlabeled-input>
@@ -20,12 +27,6 @@
         </p>
     </div>
     <app-unlabeled-input params="placeholder: 'Date of birth (mm/dd/yyyy)', value: birthDate, disable: $parent.isLocked"></app-unlabeled-input>
-
-    <p class="alert alert-info" role="alert">
-        A <a href="https://venmo.com" target="_system">Venmo</a> account will be created and linked to your email.
-        You will then have to set up your Venmo account to release payments.
-        We do not recommend this option as it requires you to cash out every time you get a payment.
-    </p>
 
     <div>
         <label class="form-label" for="paymentVenmoEditor-termsAgreement">
