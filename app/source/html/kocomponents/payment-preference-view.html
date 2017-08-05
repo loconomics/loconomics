@@ -1,25 +1,26 @@
 <div data-bind="if: isReady">
     <div data-bind="if: isSelectorOpened">
-        <h2 class="SectionTitle">Choose a payout preference</h2>
+        <div class="isolated top-only"><h2 class="SectionTitle">Choose a payout preference</h2></div>
         <payment-preferences-list params="selectItem: selectPreference"></payment-preferences-list>
     </div>
     <!-- ko if:isDirectDepositViewerOpened -->
     <payment-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payment-direct-deposit-viewer>
     <!-- /ko -->
-    <!-- ko if:isDirectDepositEditorOpened -->
-    <payment-direct-deposit-editor params="data: paymentOptionData"></payment-direct-deposit-editor>
-    <!-- /ko -->
-
     <!-- ko if:isVenmoViewerOpened -->
     <payment-venmo-viewer params="data: paymentOptionData, requestEdit: openVenmoEditor, isEditorOpened: isVenmoEditorOpened()"></payment-venmo-viewer>
     <!-- /ko -->
-    <!-- ko if:isVenmoEditorOpened -->
-    <payment-venmo-editor params="data: paymentOptionData"></payment-venmo-editor>
-    <!-- /ko -->
 
-    <div class="LightForm PaddedBox-xs-only PaddedBox-sm-only" data-bind="visible: editorPreferenceID()">
-        <button type="button" class="btn btn-secondary btn-block" data-bind="click: openSelector">
-            Change payout preference
-        </button>
+    <div class="PaddedBox-xs-only PaddedBox-sm-only" data-bind="if: editorPreferenceID()">
+        <!-- ko if:isDirectDepositEditorOpened -->
+        <payment-direct-deposit-editor params="data: paymentOptionData"></payment-direct-deposit-editor>
+        <!-- /ko -->
+        <!-- ko if:isVenmoEditorOpened -->
+        <payment-venmo-editor params="data: paymentOptionData"></payment-venmo-editor>
+        <!-- /ko -->
+        <div class="LightForm">
+            <button type="button" class="btn btn-secondary btn-block" data-bind="click: openSelector">
+                Change payout preference
+            </button>
+        </div>
     </div>
 </div>
