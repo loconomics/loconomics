@@ -129,6 +129,15 @@ function ViewModel() {
         this.editorPreferenceID(null);
         this.isSelectorOpened(true);
     }.bind(this);
+    /**
+     * Gets a copy of the data model to pass in to the editor.
+     * By using a copy/clone, data being edited don't affect the other
+     * components that will get an updated data only when saved.
+     * @returns {model/PaymentAccount}
+     */
+    this.getDataForEditor = function() {
+        return this.paymentOptionData().model.clone();
+    }.bind(this);
 
     /**
      * Request to load the stored user data for current payment preference
