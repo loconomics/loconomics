@@ -137,4 +137,16 @@
             font-weight: 200;
         }
     }
+/**
+To ensure that the HTML 5 landmarks display properly for sighted users in older browsers, you probably want to assign display:block to them in the CSS. Otherwise they may display inline, which could break the page's layout. You may also want to take advantage of the opportunity to set other HTML 5 elements to display:block for backward-compatibility purposes. Note that in some cases you may have a reason to set some of these to display:inline, so use your judgment here.
+**/
+/* landmarks */
+    article, aside, footer, header, main, nav, section,
+
+/* other HTML 5 elements that should (probably) 
+be set to display:block */
+    audio, canvas, datalist, details, figcaption, 
+    figure, output, progress, summary, video {
+       display:block;
+    }
 }
