@@ -1,7 +1,6 @@
-<h2 id="mainLargeScreenNav" class="sr-only">Main Navigation</h2>
 <ul class="LargeNavBar container">
     <li class="LargeNavBar-brand">
-        <a class="navbar-brand" href="/home">Loconomics Home</a>
+        <a class="navbar-brand" href="/home">Loconomics Home Page</a>
     </li>    
     <!-- Anonymous nav -->
     <li data-bind="visible: isAnonymous()">
@@ -20,12 +19,11 @@
     <!-- User nav -->
     <li data-bind="visible: !isAnonymous()">
         <ul class="LargeNavBar-navBar nav navbar-right">
-            <li aria-labelledby="mainMenuLargeScreen">
-                <h2 id="mainMenuLargeScreen" class="sr-only">Main Menu</h2>
-                <a role="button" class="LargeNavBar-userMenu dropdown text-right dropdown-toggle toggle" data-toggle="dropdown" aria-label="Main Menu">
-                    <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" alt="Public user profile picture" /></i>
-                    <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
-                </a>
+            <li id="LargeNavBarMainMenu" role="menu" aria-label="Main Menu">
+                <button type="button" class="LargeNavBar-userMenu dropdown text-right dropdown-toggle toggle" data-toggle="dropdown" >
+                <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" alt="Public user profile picture" /></i>
+                <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
+                </button>
                 <ul class="dropdown-menu">
                     @render('parts/UserMenuContents.html')
                 </ul>
