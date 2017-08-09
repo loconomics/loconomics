@@ -2,18 +2,18 @@
 <div data-activity="dashboard" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <h1 class="hidden-xs hidden-sm">At a glance</h1>
+        <h1>Your Dashboard</h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()" style="background-color: white">
-                    <h1 class="SectionTitle">Current appointment</h1>
+                <div data-bind="visible: user.isClient() && upcomingAppointments.currentAppointment()">
+                    <h2 class="SectionTitle">Current appointment</h2>
                     <ul class="TilesList TilesList--openEnd">
                         <li id="dashboardCurrentAppointment" data-bind="with: upcomingAppointments.currentAppointment">
-                            <h4>
-                                <span data-bind="text: serviceDate().startTime, format: { type: 'datetime', format: 'h:mma' }"></span>
+                            <h3>
+                                <time><span data-bind="text: serviceDate().startTime, format: { type: 'datetime', format: 'h:mma' }"></span></time>
                                 <span>until</span>
-                                <span data-bind="text: serviceDate().endTime, format: { type: 'datetime', format: 'h:mma' }"></span>
-                            </h4>
+                                <time><span data-bind="text: serviceDate().endTime, format: { type: 'datetime', format: 'h:mma' }"></span></time>
+                            </h3>
                             <a href="#map" class="btn btn-secondary" target="_blank"
                                data-bind="
                                visible: serviceAddress(),
@@ -24,15 +24,15 @@
                         <a href="#" data-bind="template: { name: 'service-professional-info-template', data: nextAppointmentServiceProfessionalInfo()}, attr: { href: $root.getUrlTo('clientAppointment') }"></a>
                     </div>
                 </div>
-                <div data-bind="visible: user.isServiceProfessional" style="background-color: white">
-                    <h1 class="SectionTitle"
+                <div data-bind="visible: user.isServiceProfessional">
+                    <h2 class="SectionTitle"
                         data-bind="css: { 'is-syncing': upcomingBookings.isSyncing() }">
                         Upcoming bookings
                         <!-- ko component: {
                             name: 'app-loading-spinner',
                             params: { mod: 'onRight' }
                         } --><!-- /ko -->
-                    </h1>
+                    </h2>
                     <div id="dashboardNextBooking"
                        data-bind="css: { 'is-loading': upcomingBookings.isLoading() }">
                         <div data-bind="with: nextBooking">
@@ -41,9 +41,9 @@
                                 <h3 class="Tile-title">
                                     <div data-bind="text: displayedDate"></div>
                                     <div>
-                                        <span data-bind="text: displayedStartTime"></span>
+                                        <time><span data-bind="text: displayedStartTime"></span>
                                         -
-                                        <span data-bind="text: displayedEndTime"></span>
+                                        <time><span data-bind="text: displayedEndTime"></span></time>
                                     </div>
                                 </h3>
                                 <h4 class="Tile-subtitle" data-bind="text: client() && client().fullName()"></h4>
@@ -63,35 +63,37 @@
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     </div>
                     <ul id="dashboardUpcomingBookings" class="TilesList TilesList--openEnd" data-bind="foreach: upcomingBookings.items">
-                        <li><a href="#" class="LineTile"
+                        <li>
+                            <a href="#" class="LineTile"
                            data-bind="attr: { href: url }">
                             <strong data-bind="text: quantity"></strong>
                             <span data-bind="text: phrase"></span>
-                        </a></li>
+                            </a>
+                        </li>
                     </ul>
                     <a class="CompactLinkTile visible-xs visible-sm" href="/calendar">
                         <div class="Tile-content">Go to calendar</div>
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
-                <div data-bind="visible: user.isClient()" style="background-color: white">
-                    <h1 class="SectionTitle"
+                <div data-bind="visible: user.isClient()">
+                    <h2 class="SectionTitle"
                         data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing() }">
                         Upcoming appointments
                         <!-- ko component: {
                             name: 'app-loading-spinner',
                             params: { mod: 'onRight' }
                         } --><!-- /ko -->
-                    </h1>
+                    </h2>
                     <div data-bind="visible: upcomingAppointments.items().length, with: upcomingAppointments.nextBooking()">
                         <a href="#" class="LeadTile"
                            data-bind="attr: { href: $root.getUrlTo('clientAppointment') }">
                             <h3 class="Tile-title">
                                 <div data-bind="text: displayedDate"></div>
                                 <div>
-                                    <span data-bind="text: displayedStartTime"></span>
+                                    <time><span data-bind="text: displayedStartTime"></span></time>
                                     -
-                                    <span data-bind="text: displayedEndTime"></span>
+                                    <time><span data-bind="text: displayedEndTime"></span></time>
                                 </div>
                             </h3>
                             <h4 class="Tile-subtitle" data-bind="text: $root.nextAppointmentServiceProfessionalInfo() && $root.nextAppointmentServiceProfessionalInfo().profile().publicName()"></h4>
@@ -116,62 +118,14 @@
                         <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                     </a>
                 </div>
-                <!-- NOT IMPLEMENTED: TO BE CONNECTED SOON
-                <h1 class="SectionTitle">
-                    Steps to become an owner
-                </h1>
-                <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="InfoTile" href="/marketplaceProfile">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-list-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Complete your first listing</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/appointment/-4">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-android-calendar" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <div>Complete two bookings</div>
-                                <em>You have 1 left</em>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/userFees">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-card" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <div>Pay user fees</div>
-                                <em>Free trial ends in 29 days</em>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/ownerAcknowledgment">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-document-text" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Complete owner acknowledgment</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>-->
-                <h1 class="SectionTitle"
+                <h2 class="SectionTitle"
                     data-bind="visible: inbox.top().length, css: { 'is-syncing': inbox.isSyncing() }">
                     Inbox
                     <!-- ko component: {
                         name: 'app-loading-spinner',
                         params: { mod: 'onRight' }
                     } --><!-- /ko -->
-                </h1>
+                </h2>
                 <div data-bind="css: { 'is-loading': inbox.isLoading() }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
@@ -180,35 +134,7 @@
                     <div class="Tile-content">Go to inbox</div>
                     <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
                 </a>
-                <div data-bind="visible: user.isServiceProfessional" hidden="hidden">
-                    <h1 class="SectionTitle">Performance</h1>
-                    <ul id="dashboardPerformance" class="TilesList TilesList--openEnd" data-bind="foreach: performance.items">
-                        <li>
-                            <a href="#" class="LineTile" data-bind="attr: { href: link }">
-                                <strong data-bind="text: markerLine1"></strong>
-                                <span data-bind="text: contentLine1"></span>
-                            </a>
-                        </li>
-                    </ul>
-                    <a class="CompactLinkTile visible-xs visible-sm" href="/performance">
-                        <div class="Tile-content">Go to performance</div>
-                        <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right" aria-hidden="true"></span></div>
-                    </a>
-                </div>
-            </div>
-            <!-- HIDDEN UNTIL MARKETPLACE-PROFILE IS FULLY IMPLEMENTED
-            <div data-bind="visible: getMore.items().length">
-                <h1 class="SectionTitle">Get more from Loconomics</h1>
-                <ul class="TilesList TilesList--openEnd" id="dashboardGetMore" data-bind="foreach: getMore.items()">
-                    <li><a href="#" class="InfoTile" data-bind="attr: { href: link }">
-                        <div class="Tile-icon" aria-hidden="true">
-                            <span data-bind="css: markerIcon"></span>
-                        </div>
-                        <div class="Tile-content"><p data-bind="text: contentLine1()"></p></div>
-                    </a></li>
-                </ul>
-            </div>
-            -->
+             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                <app-inline-side-menu params="vocElement: 'dashboard'"></app-inline-side-menu>
             </div>
