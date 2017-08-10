@@ -13,7 +13,8 @@ var A = Activity.extend(function AccountActivity() {
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel();
-    this.navBar = Activity.createSectionNavBar('Account');
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
 });
 
 exports.init = A.init;

@@ -16,8 +16,8 @@ var A = Activity.extend(function InboxActivity() {
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-
-    this.navBar = Activity.createSectionNavBar('Inbox');
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
 });
 
 exports.init = A.init;

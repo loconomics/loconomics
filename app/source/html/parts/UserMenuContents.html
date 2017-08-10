@@ -1,6 +1,3 @@
-<li>
-    <h2 class="App-menus-group-header" data-bind="visible: isAnonymous">WELCOME</h2>
-</li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
     <a href="/signup/client">Sign up</a>
 </li>
@@ -26,9 +23,7 @@
     <a data-bind="attr: { href: isInOnboarding() ? null : '/dashboard' }"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
 </li>
 <li class="divider" data-bind="visible: !isServiceProfessional() && !isAnonymous()"></li>
-<li>
-    <h2 class="App-menus-group-header" data-bind="visible: isServiceProfessional">QUICK LINKS</h2>
-</li>
+<h2 class="App-menus-group-header" data-bind="visible: isServiceProfessional">QUICK LINKS</h2>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() == 'calendar' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/calendar' }"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
 </li>
@@ -58,9 +53,7 @@
 <li data-bind="visible: !isAnonymous() && !isServiceProfessional(), css: cssIfActive('help')" class="go-help">
     <a href="/help/categories/200474305-resources-for-clients"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a>
 </li>
-<li>
-    <h2 class="App-menus-group-header" data-bind="visible: !isAnonymous()">FIND SERVICES</h2>
-</li>
+<h2 class="App-menus-group-header" data-bind="visible: !isAnonymous()">FIND SERVICES</h2>
 <li data-bind="visible: !isAnonymous(), css: cssIfActive('home')" class="go-marketplace">
     <a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search marketplace</a>
 </li>

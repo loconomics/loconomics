@@ -3,20 +3,16 @@
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <h1 class="hidden-xs hidden-sm">You've got mail</h1>
+            <h1>Your Inbox</h1>
             <div class="col-md-7 col-sm-reset">
                 <div class="isolated inset">
                     <div class="input-group">
                         <span class="input-group-addon" data-bind="css: { 'is-syncing': isSyncing }">
                             <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
-                            <span class="fa ion ion-ios-search"></span>
-                            <span class="sr-only">Search</span>
+                            <span class="fa ion ion-ios-search" aria-hidden="true"></span>
                         </span>
-                        <input type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText">
-                        <!-- NOT IMPLEMENTED <span class="input-group-btn">
-                            <button type="button" class="btn btn-secondary">New</button>
-                        </span>-->
-                    </div><!-- /input-group -->
+                        <input type="text" class="form-control" placeholder="search inbox" data-bind="textInput: searchText" aria-label="Search inbox">
+                    </div>
                 </div>
                 <div data-bind="css: { 'is-loading': isLoading() }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
