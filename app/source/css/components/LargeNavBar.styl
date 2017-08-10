@@ -86,10 +86,13 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                 vertical-align: top;
                 display: inline-block;
                 }
-            & > a {
+            & > a, 
+            & > button {
                   height $LargeNavBar-contentHeight
                   line-height $LargeNavBar-contentHeight
                   color $gray;
+                  background-color: transparent;
+                  border: none;
                   padding-top 0
                   padding-bottom 0
                   font-size 16px;
@@ -104,9 +107,14 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
             }
           & > .open {
 
-            & > a {
+            & > a{
                 color: $gray;
                 background-color: #fff;
+                }
+            
+            & > button {
+                background-color: transparent;
+                border: none;
                 }
             & > .dropdown-menu {                
                 .go-dashboard > a

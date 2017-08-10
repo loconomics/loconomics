@@ -67,7 +67,7 @@ $AppNav-brandHeight = 38px;
     // Menus
     .App-menus {
         // General menus container
-        background: white;        
+        background: white;
         margin-bottom: 0px;
         
         // Individual menus set-up
@@ -131,6 +131,7 @@ $AppNav-brandHeight = 38px;
             border-bottom: 1px solid White;
             color: White;
             font-size: 1.1em;
+            display: block;
             
             .App-menus-header-user {
                 text-align: center;
@@ -157,11 +158,9 @@ $AppNav-brandHeight = 38px;
                     overflow: hidden;
                 }
             }
-            a {
-                &:hover,
-                &:focus {
-                  text-decoration: none;    
-              }
+            &:hover,
+            &:focus {
+                text-decoration: none;    
             }
         }
         
@@ -354,7 +353,7 @@ $AppNav-brandHeight = 38px;
             .SmartNavBar-btn {
                 pointer-events: auto;
             }
-            h1 {
+            h1, .navbar-brand {
                 opacity: 0;
                 pointer-events: none;
             }
