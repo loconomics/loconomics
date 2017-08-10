@@ -4,22 +4,19 @@
     <div class="container">
         <div class="row">
             <div class="CalendarContainer col-md-7 col-sm-reset">
-                <div class="row hidden-xs hidden-sm">
-                    <h1 class="col-md-7">Calendar</h1>
+                <div class="row">
+                    <h1 class="col-md-7">Your Calendar</h1>
                     <a class="pull-right RelatedLink CalendarSettings" href="/schedulingPreferences">
-                        <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availability settings
+                        <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availability <span hidden-xs hidden-sm>settings</span>
                     </a>
                 </div>
                 <h2 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
-                    <button class="btn btn-default fa ion ion-ios-arrow-left hidden-xs hidden-sm" data-bind="click: prevDate"></button>
+                    <button type="button" class="btn btn-default fa ion ion-ios-arrow-left hidden-xs hidden-sm" data-bind="click: prevDate"></button>
                     <button type="button" class="btn btn-link" data-bind="click: openDatePicker">
                         <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
                         <span class="caret"></span>
                     </button>
-                    <button class="btn btn-default fa ion ion-ios-arrow-right hidden-xs hidden-sm" data-bind="click: nextDate"></button>
-                    <a class="pull-right RelatedLink CalendarSettings visible-xs visible-sm" href="/schedulingPreferences">
-                        <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availability
-                    </a>
+                    <button type="button" class="btn btn-default fa ion ion-ios-arrow-right hidden-xs hidden-sm" data-bind="click: nextDate"></button>
                 </h2>
                 <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
                 <!-- Daily View (appointments list) -->
