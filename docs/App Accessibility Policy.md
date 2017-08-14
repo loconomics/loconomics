@@ -56,6 +56,8 @@ Tool | Function | Purpose
 [Accessibility Developer Tools](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en) | Google Chrome extension for doing audits | Web testing
 [Contrast Ratio Checker](https://chrome.google.com/webstore/detail/contrast-ratio-checker/kmicfegjejpginnockfnjpdgeffebdcf/related?hl=en) | Google Chrome extension for checking contrast ratios | Web testing
 [Contrast Ratio Calculator](http://leaverou.github.io/contrast-ratio/) | Website to check Contrast Ratios of different colors | Web testing
+[aXe](https://www.deque.com/products/axe/) | Open-source accessibility testing tool
+[Adobe Photoshop's Color Blindness Filter and Accessibility Validation](http://www.adobe.com/accessibility/products/photoshop.html)
 
 ### Section 508 
 The six tools listed in this table, when used together, provide the ability to perform comprehensive Section 508 testing for software and web applications and web content. They all require Windows to run.
