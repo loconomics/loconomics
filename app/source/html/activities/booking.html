@@ -132,7 +132,7 @@
                                 <div class="form-group">
                                     <p class="form-control-static">
                                         <span data-bind="visible: city() || stateProvinceCode()">
-                                            <span data-bind="text: city"></span>, 
+                                            <span data-bind="text: city"></span>,
                                             <span data-bind="text: stateProvinceCode"></span>
                                         </span>
                                         <!-- White space to reserve space -->
@@ -339,7 +339,7 @@
                     <div class="SignupLogin" data-bind="visible: isAnonymous(), with: signupVM">
                         <h2 class="SectionTitle">Create a free account</h2>
                         <div class="LightForm LeadContent">
-                            <div data-bind="visible: !facebookUserID()"> 
+                            <div data-bind="visible: !facebookUserID()">
                                 <a href="#facebook" data-bind="click: facebook, disable: !enableFacebookButton()" class="btn btn-lg btn-block btn-facebook">
                                     <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
                                 </a>
@@ -347,12 +347,12 @@
                             <p class="isolated text-center">
                                 <svg height="5" width="45%">
                                     <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                </svg>  
-                                <span> or </span> 
+                                </svg>
+                                <span> or </span>
                                 <svg height="5" width="45%">
                                     <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
                                 </svg>
-                            </p>           
+                            </p>
                             <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }" novalidate>
                                 <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text', icon: {'icon ion-android-done': isFirstNameValid} } }, css: {'is-valid': isFirstNameValid}"></div>
                                 <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, css: {'is-valid': isLastNameValid}"></div>
@@ -366,7 +366,7 @@
                                     <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { name: 'postalCode', field: postalCode, label: 'Postal code', type: 'text', icon: { 'icon ion-android-done': isPostalCodeValid } } }, css: { 'is-valid': isPostalCodeValid }"></div>
                                     <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { name: 'referralCode', field: referralCode, label: 'Referral code', type: 'text', icon: { 'icon ion-android-done': isReferralCodeValid } } }, css: { 'is-valid': isReferralCodeValid }"></div>
                                 </div>
-                                <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel', icon: {'icon ion-android-done': isPhoneValid} } }, css: {'is-valid': isPhoneValid }, visible: forServiceProfessional"></div>
+                                <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel', icon: {'icon ion-android-done': isPhoneValid} } }, css: {'is-valid': isPhoneValid }"></div>
                                 <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
                                     <div type="email" id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { name: 'email', field: email, label: 'E-mail address', type: 'email', icon: {'icon ion-android-done': isEmailValid } } }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
                                     </div>
