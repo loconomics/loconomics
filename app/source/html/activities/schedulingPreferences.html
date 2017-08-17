@@ -111,10 +111,11 @@
                             <div class="WeeklySchedule-weekDay">
                                 <div>
                                     <label>
-                                        <input type="checkbox" class="checkbox"
-                                               data-bind="switch: { disabled: isLocked, state: day.isEnabled }"
-                                       /><span data-bind="text: label"></span>
+                                       <span data-bind="text: label"></span>
                                     </label>
+                                    <input type="checkbox" class="checkbox"
+                                        data-bind="switch: { disabled: isLocked, state: day.isEnabled }"
+                                    />
                                 </div>
                                 <div class="WeeklySchedule-weekDay-timeSelectors"
                                      data-bind="visible: day.isEnabled">
@@ -129,8 +130,8 @@
                         <div class="WeeklySchedule-allTime">
                             <label>
                                 <span>All days/times</span>
-                                <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
                             </label>
+                            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
                         </div>
                         <div class="WeeklySchedule-days" data-bind="visible: !schedule.isAllTime()">
                             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Mondays', isLocked: isLocked } } --><!-- /ko -->
