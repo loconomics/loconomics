@@ -110,11 +110,11 @@
                         <script type="text/html" id="weeklySchedule-weekDayTpl">
                             <div class="WeeklySchedule-weekDay">
                                 <div>
-                                    <label>
+                                    <label data-bind="attr: {for: label}">
                                        <span data-bind="text: label"></span>
                                     </label>
                                     <input type="checkbox" class="checkbox"
-                                        data-bind="switch: { disabled: isLocked, state: day.isEnabled }"
+                                        data-bind="attr: {id: label}, switch: { disabled: isLocked, state: day.isEnabled }"
                                     />
                                 </div>
                                 <div class="WeeklySchedule-weekDay-timeSelectors"
