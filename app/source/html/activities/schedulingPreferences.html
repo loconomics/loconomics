@@ -128,10 +128,10 @@
                         </script>
 
                         <div class="WeeklySchedule-allTime">
-                            <label>
+                            <label for="isAllTime">
                                 <span>All days/times</span>
                             </label>
-                            <input type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
+                            <input id="isAllTime" type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
                         </div>
                         <div class="WeeklySchedule-days" data-bind="visible: !schedule.isAllTime()">
                             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Mondays', isLocked: isLocked } } --><!-- /ko -->
