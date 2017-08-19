@@ -111,9 +111,11 @@
                             <div class="WeeklySchedule-weekDay">
                                 <div class="WeeklySchedule-weekDay-switch">
                                     <label data-bind="attr: {for: 'weeklySchedule-weekDay-' + label}, text: label"></label>
-                                    <input type="checkbox" class="checkbox"
-                                        data-bind="attr: {id: 'weeklySchedule-weekDay-' + label}, switch: { disabled: isLocked, state: day.isEnabled }"
-                                    />
+                                    <div class="SwitchCheckbox">
+                                        <input type="checkbox" class="checkbox"
+                                            data-bind="attr: {id: 'weeklySchedule-weekDay-' + label}, disabled: isLocked, checked: day.isEnabled" />
+                                        <span></span>
+                                    </div>
                                 </div>
                                 <div class="WeeklySchedule-weekDay-timeSelectors"
                                      data-bind="visible: day.isEnabled">
@@ -126,10 +128,11 @@
                         </script>
 
                         <div class="WeeklySchedule-allTime">
-                            <label for="isAllTime">
-                                <span>All days/times</span>
-                            </label>
-                            <input id="isAllTime" type="checkbox" data-bind="switch: { disabled: isLocked, state: schedule.isAllTime, onColor: 'success', offColor: 'lightgray'}" />
+                            <label for="isAllTime">All days/times</label>
+                            <div class="SwitchCheckbox">
+                                <input id="isAllTime" type="checkbox" data-bind="disabled: isLocked, checked: schedule.isAllTime" />
+                                <span></span>
+                            </div>
                         </div>
                         <div class="WeeklySchedule-days" data-bind="visible: !schedule.isAllTime()">
                             <!-- ko template: { name: 'weeklySchedule-weekDayTpl', data: { day: schedule.monday, label: 'Mondays', isLocked: isLocked } } --><!-- /ko -->
