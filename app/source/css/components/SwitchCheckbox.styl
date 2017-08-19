@@ -22,6 +22,7 @@ $SwitchCheckbox-borderColor = $gray-light;
 $SwitchCheckbox-markerColor = #fff;
 $SwitchCheckbox-checkedColor = $brand-primary;
 $SwitchCheckbox-uncheckedColor = $gray-background;
+$SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
 
 .SwitchCheckbox {
     // Positioning context for children
@@ -67,7 +68,7 @@ $SwitchCheckbox-uncheckedColor = $gray-background;
         width: $SwitchCheckbox-width;
         height: $SwitchCheckbox-height;
         background-color: $SwitchCheckbox-borderColor;
-        border-radius: $SwitchCheckbox-height;
+        border-radius: $SwitchCheckbox-borderRadius;
     }
 
     > span:before,
@@ -84,14 +85,14 @@ $SwitchCheckbox-uncheckedColor = $gray-background;
     > span:before {
         right: $SwitchCheckbox-offset;
         background-color: $SwitchCheckbox-uncheckedColor;
-        border-radius: $SwitchCheckbox-width;
+        border-radius: $SwitchCheckbox-borderRadius;
         transition: background 0.4s;
     }
 
     > span:after {
         width: $SwitchCheckbox-markerWidth;
         background-color: $SwitchCheckbox-markerColor;
-        border-radius: $SwitchCheckbox-width;
+        border-radius: $SwitchCheckbox-borderRadius;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         transition: margin 0.4s;
     }
