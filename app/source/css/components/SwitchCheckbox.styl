@@ -31,8 +31,6 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
     display: inline-block;
     // Make companion labels (outside this element) centered
     vertical-align: middle;
-    // Look like a button for the mouse
-    cursor: pointer;
     // Layout appearance and size
     padding: $SwitchCheckbox-padding;
     width: $SwitchCheckbox-width;
@@ -59,6 +57,8 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
         -moz-appearance: none;
         -webkit-appearance: none;
         appearance: none;
+        // Look like a button for the mouse
+        cursor: pointer;
     }
 
     > .SwitchCheckbox-drawer,
@@ -104,6 +104,7 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
     // Allows text inside marker
     .SwitchCheckbox-marker > span {
         display: none;
+        line-height: $SwitchCheckbox-height;
     }
     input:checked + .SwitchCheckbox-drawer + .SwitchCheckbox-marker > span {
         display: block;

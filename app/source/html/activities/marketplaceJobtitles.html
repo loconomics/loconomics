@@ -22,9 +22,14 @@
                         <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
                     </div>
                     <div class="switchLine-switch">
-                        <label>
-                            <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
+                        <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">
+                            Display listing at the marketplace
                         </label>
+                        <label aria-hidden="true" for="marketplaceJobtitles-profileStatus-checkbox">
+                            <strong data-bind="visible: isActiveStatus" class="text-success">ON</strong>
+                            <strong data-bind="visible: !isActiveStatus()" class="text-danger">OFF</strong>
+                        </label>
+                        <switch-checkbox params="id: 'marketplaceJobtitles-profileStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
                     </div>
                 </div>
                 <!-- ko ifnot: isToggleReady -->
