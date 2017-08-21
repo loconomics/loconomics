@@ -195,7 +195,6 @@ function ViewModel(app) {
             serviceAddresses.state.isLoading() ||
             serviceProfessionalServices.state.isLoading()
         );
-
     }, this);
 
     this.addressesCount = ko.pureComputed(function() {
@@ -282,15 +281,6 @@ function ViewModel(app) {
     this.submittedUserLicensesCertifications = ko.observableArray([]);
     this.jobTitleApplicableLicences = ko.observable(null);
     this.workPhotos = ko.observable([]);
-
-    // Computed since it can check several externa loadings
-    this.isLoading = ko.pureComputed(function() {
-        return (
-            serviceAddresses.state.isLoading() ||
-            serviceProfessionalServices.state.isLoading()
-        );
-
-    }, this);
 
     this.licensesCertificationsSummary = ko.pureComputed(function() {
         var lc = this.submittedUserLicensesCertifications();
