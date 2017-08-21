@@ -31,6 +31,14 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
     display: inline-block;
     // Make companion labels (outside this element) centered
     vertical-align: middle;
+    // Look like a button for the mouse
+    cursor: pointer;
+    // Layout appearance and size
+    padding: $SwitchCheckbox-padding;
+    width: $SwitchCheckbox-width;
+    height: $SwitchCheckbox-height;
+    border-radius: $SwitchCheckbox-borderRadius;
+    background-color: $SwitchCheckbox-borderColor;
 
     // The input element will be behind the span (that behaves as 'the graphic'
     // but taking all the space so is the clickable area)
@@ -53,43 +61,25 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
         appearance: none;
     }
 
-    // The span element will draw the switch button above the input but
-    // passing through any event so click goes to the input (as for pseudo
-    // elements)
-    > span {
-        display: block;
-        position: relative;
-        cursor: pointer;
-        outline: none;
+    > .SwitchCheckbox-drawer,
+    > .SwitchCheckbox-marker {
         user-select: none;
         pointer-events: none;
-
-        padding: $SwitchCheckbox-padding;
-        width: $SwitchCheckbox-width;
-        height: $SwitchCheckbox-height;
-        background-color: $SwitchCheckbox-borderColor;
-        border-radius: $SwitchCheckbox-borderRadius;
-    }
-
-    > span:before,
-    > span:after {
         display: block;
         position: absolute;
         top: $SwitchCheckbox-offset;
         left: $SwitchCheckbox-offset;
         bottom: $SwitchCheckbox-offset;
-        content: "";
-        pointer-events: none;
     }
 
-    > span:before {
+    > .SwitchCheckbox-drawer {
         right: $SwitchCheckbox-offset;
         background-color: $SwitchCheckbox-uncheckedColor;
         border-radius: $SwitchCheckbox-borderRadius;
         transition: background 0.4s;
     }
 
-    > span:after {
+    > .SwitchCheckbox-marker {
         width: $SwitchCheckbox-markerWidth;
         background-color: $SwitchCheckbox-markerColor;
         border-radius: $SwitchCheckbox-borderRadius;
@@ -97,17 +87,25 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
         transition: margin 0.4s;
     }
 
-    input:checked + span:before {
+    input:checked + .SwitchCheckbox-drawer {
         background-color: $SwitchCheckbox-checkedColor;
     }
 
-    input:checked + span:after {
+    input:checked + .SwitchCheckbox-drawer + .SwitchCheckbox-marker {
         margin-left: $SwitchCheckbox-middlePosition;
-        // The standard 'checked' symbol is added to make it easily to
+        // In the HTML, text is allowed like the
+        // standard 'checked' symbol, to make the 'checked' state easily to
         // understand (in case position+color is not clear) and accessible
         // for color-blind people (the position already indicates the state
         // but may not be obvious)
-        content: "✓";
         text-align: center;
+    }
+
+    // Allows text inside marker
+    .SwitchCheckbox-marker > span {
+        display: none;
+    }
+    input:checked + .SwitchCheckbox-drawer + .SwitchCheckbox-marker > span {
+        display: block;
     }
 }
