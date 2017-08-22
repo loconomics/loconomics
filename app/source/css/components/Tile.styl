@@ -1,10 +1,10 @@
 /**
     Tile base class and mixim.
-    
+
     'Tile-' works as namespace for generic children elements used in
     based tile classes; names in use: Tile-title, Tile-content, Tile-icon,
     Tile-subtitle.
-    
+
     Modifiers using 'Tile-' as prefix, rather than subtiles names:
     Tile--tag-** (one per each $brand-colors)
 **/
@@ -26,27 +26,26 @@ Tile() {
     position: relative;
     padding-left: $Tile-hgap;
     padding-right: $Tile-hgap;
-    
+
     &:active,
     &:hover {
         &, * {
             color: $brand-secondary-dark !important;
         }
     }
-    
-//    &:hover,
-//    &:focus {
-//        outline: 1px solid lighten($brand-secondary, 50%);
-//        outline-offset: -2px;
-//    }
-//    
+
+    &:hover {
+        outline: 1px solid lighten($brand-secondary, 50%);
+        outline-offset: -2px;
+    }
+
     // Class to permanent mark as active, and :active pseudo styles
     &:active,
-    &.active {
+    &:focus {
         outline: 1px solid $brand-secondary;
         outline-offset: -2px;
     }
-    
+
     &.active {
         // Tile icons changes color too
         i,
@@ -64,7 +63,7 @@ Tile-singleLine($gap = 0) {
     height: line-height-computed;
     padding-top: $gap;
     padding-bottom: $gap;
-    
+
     // Cut if out of single line
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -123,7 +122,7 @@ Tile-addContent($linesNumber) {
                 margin: $btnMargin auto;
             }
         }
-        
+
         // Support for Bootstrap labels
         .label {
             font-size: 1em;
@@ -139,8 +138,8 @@ Tile-addContent($linesNumber) {
 
 /** Add colored tags support, marking the content */
 Tile-addTagContentSupport($vgap, $left = -6px) {
-    
-    addTagFor($colorName, $color) { 
+
+    addTagFor($colorName, $color) {
         &.Tile--tag-{$colorName} {
             .Tile-content:before {
                 content: '';
@@ -156,11 +155,11 @@ Tile-addTagContentSupport($vgap, $left = -6px) {
             }
         }
     }
-    
+
     for $color in $brand-colors {
         addTagFor($color, $brand-colors[$color]);
     }
-    
+
     for $color in $gray-colors {
         addTagFor('gray-' + $color, $gray-colors[$color]);
     }
@@ -169,21 +168,21 @@ Tile-addTagContentSupport($vgap, $left = -6px) {
 /** Add colored background support */
 Tile-addStyleSupport() {
 
-    addTagFor($colorName, $color) { 
+    addTagFor($colorName, $color) {
         &.Tile--{$colorName} {
           font-style: italic;
           border-left: 10px solid $color;
           z-index: 3;
           > i {
-            color: $gray-dark;      
+            color: $gray-dark;
           }
         }
     }
-    
+
     for $color in $brand-colors {
         addTagFor($color, $brand-colors[$color]);
     }
-    
+
     for $color in $gray-colors {
         addTagFor('gray-' + $color, $gray-colors[$color]);
     }
