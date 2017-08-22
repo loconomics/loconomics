@@ -9,6 +9,11 @@
 // Added a new semantic color, 'secondary',
 // create the button for that
 @import '../../../vendor/bootstrap/styl/mixins/buttons.styl'
+
+enhancedOutline() {
+    outline: $focusOutline;
+}
+
 $btn-secondary-color = #fff
 $btn-secondary-bg = lighten($brand-secondary, 10%)
 $btn-secondary-border = lighten($brand-secondary-dark, 10%)
@@ -23,7 +28,8 @@ a {
   &:focus {
       color: inherit;
       text-decoration: none;
-      outline: none;
+      enhancedOutline();
+      outline-offset: 2px;
   }
 }
 
@@ -100,8 +106,17 @@ a {
     font-weight: 700;
     &:hover,
     &:focus {
-        text-decoration: none;
-        outline: none;
+        enhancedOutline();
+    }
+}
+// Standard elements (without class) must have better outline too
+button,
+input,
+textarea,
+select {
+    &:hover,
+    &:focus {
+        enhancedOutline();
     }
 }
 .btn-link {
@@ -109,7 +124,7 @@ a {
     &:focus,
     &:active{
         text-decoration: none;
-        outline: none;
+        enhancedOutline();
     }
 }
 
