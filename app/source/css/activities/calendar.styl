@@ -83,7 +83,11 @@
         left: 0;
         right: 0;
         z-index: 100;
-        top: $SectionTitle-height;
+        // We do not set the 'top' so we let it be in it's natural place in the
+        // document, everything fine while, in markup, the picker is placed just
+        // after the buttont that triggers opening. That way no need to update
+        // it for any change in layout like headers or nav before and screens
+        // top: ..
         // Set limits to avoid innusable full-width sizes:
         min-width: 250px;
         max-width: 500px;
@@ -96,7 +100,6 @@
         border-radius: 4px;
 
         @media $mediaMinMd {
-          top: 116px;
           margin-left: auto;
         }
 
