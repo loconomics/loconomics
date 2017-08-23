@@ -11,12 +11,12 @@ var getObservable = require('../../utils/getObservable');
 var ko = require('knockout');
 
 function ViewModel(params) {
-    // parameter "icon" for the selected font icon using the Ionicon or Font Awesome icon fonts. 
+    // parameter "icon" for the selected font icon using the Ionicon or Font Awesome icon fonts.
     this.icon = getObservable(params.icon);
-    // parameter "icon", string to fill icon class that adds the "fa" class if a Font Awesome icon. 
+    // parameter "icon", string to fill icon class that adds the "fa" class if a Font Awesome icon.
     this.iconClass = ko.pureComputed(function() {
-        if (this.icon.match(/^fa-.*$/)) 
-        { 
+        if (this.icon().match(/^fa-.*$/))
+        {
             return 'fa ' + this.icon();
         }
         else {

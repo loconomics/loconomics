@@ -13,4 +13,3 @@ var A = Activity.extend(function _styleGuideActivity() {
  });
 
 exports.init = A.init;
- 
