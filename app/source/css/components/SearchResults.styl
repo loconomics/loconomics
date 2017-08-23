@@ -47,7 +47,6 @@
                 clearfix();
                 border-bottom: 1px solid $gray-background;
                 display: block;
-                padding: 15px;
                 height: auto;
                 clear: both;
 
@@ -81,12 +80,26 @@
                     width: 20%;
                     float: right;
                     margin-right: auto;
+
+                    // We are using the btn class at this element too to simulate
+                    // it, when is not one and what we have is a link wrapping this
+                    // and other content. We need to disabled the focus,hover,active
+                    // state styles for a good reason, and still being accessible:
+                    // prevent confusion about available link/button to click;
+                    // the area where this fake button is, is already clickable, focusable
+                    // and hightlighed
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        outline: none !important;
+                    }
                 }
 
-                a {
+                > a {
                     cursor: pointer;
                     clearfix();
                     display: block;
+                    padding: 15px;
                 }
             }
 
