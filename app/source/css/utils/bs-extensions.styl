@@ -104,16 +104,16 @@ a {
 .btn {
     border-radius: 0; // Or 1px so looks square but gets a smooth rendering??
     font-weight: 700;
-    &:hover,
-    &:focus {
-        enhancedOutline();
-    }
 }
-// Standard elements (without class) must have better outline too
+// Form elements including buttons, both
+// standard elements (without class) and specific Bootstrap classes
+// must have better outline
 button,
 input,
 textarea,
-select {
+select,
+.btn,
+.form-control {
     &:hover,
     &:focus {
         enhancedOutline();
@@ -123,7 +123,6 @@ select {
     &:hover,
     &:focus,
     &:active{
-        text-decoration: none;
         enhancedOutline();
     }
 }
