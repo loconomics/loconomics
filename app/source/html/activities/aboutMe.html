@@ -20,13 +20,18 @@
                         <form class="LightForm" role="form" data-bind="submit: save">
                             <app-onboarding-progress-bar></app-onboarding-progress-bar>
                             <h1><span class="fa ion-ios-contact-outline" aria-hidden="true"></span><span data-bind="visible: isInOnboarding()"> Introduce yourself</span><span data-bind="visible: !isInOnboarding()"> Your profile</span></h1>
-                            <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>
-                            <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: {marketplaceProfilePicture: marketplaceProfilePicture, showNonEssentialFields: !isInOnboarding()} }"></div>
-                            <div data-bind="visible: !isInOnboarding(), template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
-                            <div data-bind="visible: !isInOnboarding(), template: { name: user.isServiceProfessional() ? 'service-professional-website-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
-                            <div class="LightForm-submitBar">
-                                <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
-                            </div>
+                            <fieldset>
+                                <legend class="OnboardingValueProp" data-bind="visible: user.isServiceProfessional">Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</legend>
+                                <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
+                                <legend data-bind="visible: !user.isServiceProfessional()">Service professionals will get your full name, phone #, and email only after a booking is confirmed.</legend>
+                                <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>
+                                <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: {marketplaceProfilePicture: marketplaceProfilePicture, showNonEssentialFields: !isInOnboarding()} }"></div>
+                                <div data-bind="visible: !isInOnboarding(), template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
+                                <div data-bind="visible: !isInOnboarding(), template: { name: user.isServiceProfessional() ? 'service-professional-website-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
+                                <div class="LightForm-submitBar">
+                                    <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                                </div>
+                            </fieldset>
                         </form>
                     </div>
                 </div>
