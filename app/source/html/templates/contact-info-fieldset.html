@@ -9,36 +9,36 @@
         <legend>Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</legend>
         <div class="form-group">
             <label for="firstName">First name:</label>
-            <input id="firstName" type="text" class="form-control" required="true" maxlength="50" data-bind="textInput: profile.firstName, disable: isLocked">
+            <input id="firstName" type="text" class="form-control" required maxlength="50" data-bind="textInput: profile.firstName, disable: isLocked">
         </div>
         <div class="form-group">
             <label for="lastName">Last name:</label>
-            <input id="lastName" type="text" class="form-control" required="true" maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked">
+            <input id="lastName" type="text" class="form-control" required maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked">
         </div>
         <div class="form-group" data-bind="visible: user.isServiceProfessional">
             <label for="businessName">Business name (optional):</label>
-            <input id="businessName" type="text" class="form-control" required="false" maxlength="145" data-bind="textInput: profile.businessName, disable: isLocked">
+            <input id="businessName" type="text" class="form-control" maxlength="145" data-bind="textInput: profile.businessName, disable: isLocked">
         </div>
         <div class="form-group" data-bind="visible: user.isServiceProfessional">
             <label for="phone">Phone:</label>
-            <input id="phone" type="tel" class="form-control" required="true" maxlength="145" data-bind="textInput: profile.phone, disable: isLocked">
+            <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: profile.phone, disable: isLocked">
         </div>
         <div class="form-group" data-bind="visible: user.isServiceProfessional">
             <label for="canReceiveSms">Does this number receive texts?</label>
-            <input id="canReceiveSms" type="checkbox" required="false" data-bind="textInput: profile.phone, disable: isLocked">
+            <input id="canReceiveSms" type="checkbox" data-bind="textInput: profile.phone, disable: isLocked">
         </div>
         <h2 class="SectionTitle">Your mailing address (for our records)</h2>
         <div class="form-group">
             <label for="addressLine1">Street address line 1:</label>
-            <input id="addressLine1" type="text" class="form-control" required="true" maxlength="100" data-bind="textInput: address.addressLine1, disable: isLocked">
+            <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: address.addressLine1, disable: isLocked">
         </div>
         <div class="form-group">
             <label for="addressLine2">Street address line 2:</label>
-            <input id="addressLine2" type="text" class="form-control" required="false" maxlength="100" data-bind="textInput: address.addressLine2">
+            <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: address.addressLine2">
         </div>
         <div class="form-group" data-bind="css: { 'has-error': errorMessages.postalCode() }">
             <label for="addressLine2">Zip code:</label>
-            <input type="number" class="form-control" min="0" required="true" data-bind="textInput: address.postalCode, event: { blur: postalCodeVM.onBlur }, disable: isLocked, popover: { content: errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+            <input type="number" class="form-control" min="0" required data-bind="textInput: address.postalCode, event: { blur: postalCodeVM.onBlur }, disable: isLocked, popover: { content: errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
         </div>
         <div class="form-group">
             <label for="city">City:</label>
@@ -51,7 +51,7 @@
         <div data-bind="visible: $parent.showNonEssentialFields">
             <div class="form-group" data-bind="visible: user.isServiceProfessional">
                 <label for="alternativeEmail">Alternative e-mail address (optional):</label>
-                <input id="alternativeEmail" type="email" class="form-control" required="false" maxlength="145" data-bind="textInput: profile.alternativeEmail, disable: isLocked">
+                <input id="alternativeEmail" type="email" class="form-control" maxlength="145" data-bind="textInput: profile.alternativeEmail, disable: isLocked">
             </div>
             <div class="form-group">
                 <label for="selectedBirthMonth">Birth month (optional):</label>
