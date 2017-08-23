@@ -3,7 +3,7 @@
 **/
 'use strict';
 
-require('../kocomponents/utilities/icon.js');
+require('../kocomponents/utilities/icon-dec.js');
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function _styleGuideActivity() {
