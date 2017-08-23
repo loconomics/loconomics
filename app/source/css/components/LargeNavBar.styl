@@ -5,9 +5,9 @@
     with lot of defails, status and shortcut tools links
     for the Loconomics App Styleguide.
 
-    Areas: Logo, Search, Contextual Menu, User Menu, Notifications 
+    Areas: Logo, Search, Contextual Menu, User Menu, Notifications
     and tool links
-    
+
     Initial code (hightly adapted, renamed): Adi/Juvo.
 **/
 
@@ -19,7 +19,7 @@ $LargeNavBar-height = $big-navbar-height
 $LargeNavBar-vGap = 2px
 $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
 
-.LargeNavBar {    
+.LargeNavBar {
     height $LargeNavBar-height
     width: 100%;
     background-color: white;
@@ -29,7 +29,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     z-index: 250;
     padding $LargeNavBar-vGap 60px $LargeNavBar-vGap 60px
     // common border color
-    $border-color =	$gray-lighter    
+    $border-color =	$gray-lighter
     // General layout: flexible layout using 'table' so search expands all the needed while using
     // only one line
     display: table;
@@ -42,32 +42,32 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
         white-space nowrap
         // Automatic size, the minimum required
         width auto
-        }
+    }
     // Brand has fixed size
     & > .LargeNavBar-brand {
         width 100px
-        }
+    }
     // Search grow the max, all remaining size for it
     & > .LargeNavBar-searchBar {
         width 100%
-        }
+    }
     // Navbar left with auto size, just the needed minimum size for one line
     // Search bar.
     .LargeNavBar-searchBar {
         border-left 1px solid $border-color
-        SearchBar($LargeNavBar-contentHeight) 
-        }
+        SearchBar($LargeNavBar-contentHeight)
+    }
     // Brand
     .LargeNavBar-brand {
         padding-right $container-padding-right;
         .navbar-brand {
             height $LargeNavBar-contentHeight
-            }
         }
+    }
     // Links
     .LargeNavBar-navBar {
         padding 0px
-        float right 
+        float right
         & > li {
             display: inline-block;
             height: $LargeNavBar-contentHeight;
@@ -85,65 +85,66 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                 overflow: hidden;
                 vertical-align: top;
                 display: inline-block;
-                }
-            & > a, 
+            }
+            & > a,
             & > button {
-                  height $LargeNavBar-contentHeight
-                  line-height $LargeNavBar-contentHeight
-                  color $gray;
-                  background-color: transparent;
-                  border: none;
-                  padding-top 0
-                  padding-bottom 0
-                  font-size 16px;
-                  &:hover
-                  &:focus {
-                      background-color transparent
-                      color $brand-secondary-dark !important
-                      border-color transparent
-                      border-bottom none;
-                      }
+                height $LargeNavBar-contentHeight
+                line-height $LargeNavBar-contentHeight
+                color $gray;
+                background-color: transparent;
+                border: none;
+                padding-top 0
+                padding-bottom 0
+                font-size 16px;
+                &:hover
+                &:focus {
+                    background-color transparent
+                    color $brand-secondary-dark !important
+                    border-color transparent
+                    border-bottom none;
                 }
             }
-          & > .open {
+        }
+        & > .open {
 
             & > a{
                 color: $gray;
                 background-color: #fff;
-                }
-            
+            }
+
             & > button {
                 background-color: transparent;
                 border: none;
-                }
-            & > .dropdown-menu {                
+            }
+
+            & > .dropdown-menu {
                 .go-dashboard > a
                 .go-onboarding > a
                 .go-logout > a {
-                  padding-left: 10px;
-                  padding-bottom: 10px;
-                  &:hover,
-                  &:focus {
-                    padding-left: 17px;
+                    padding-left: 10px;
+                    padding-bottom: 10px;
+                    &:hover,
+                    &:focus {
+                        padding-left: 17px;
                     }
                 }
                 &.Category-menu {
-                  > li {        
-                    text-align: center;
-                    border-bottom: 1px solid $gray-background;
-                    > a {
-                      white-space: normal;
-                      font-size: inherit;
-                      padding: 10px 0px;
+                    > li {
+                        text-align: center;
+                        border-bottom: 1px solid $gray-background;
+                        > a {
+                            white-space: normal;
+                            font-size: inherit;
+                            padding: 10px 0px;
                         }
                     }
-                 > li:last-child {
-                     border-bottom: none;
-                     }
-                 }
-             }
-         }
-     }
+                    > li:last-child {
+                        border-bottom: none;
+                    }
+                }
+            }
+        }
+    }
 
     // Fix for the navbar-right class that get an ugly media-min-query value as sideeffect of customization
     // (min-width: 99999)...replaced by a min-width: sm-size
@@ -151,7 +152,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
         .navbar-right .dropdown-menu {
             left: auto;
             right: 0;
-            }
+        }
         .navbar-right .dropdown-menu-left {
             left: 0;
             right: auto;
