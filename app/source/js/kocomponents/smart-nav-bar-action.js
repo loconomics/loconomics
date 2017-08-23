@@ -5,7 +5,7 @@
 'use strict';
 
 var TAG_NAME = 'smart-nav-bar-action';
-var template = require('../../html/kocomponents/smart-nav-bar-action.html');
+var TEMPLATE = require('../../html/kocomponents/smart-nav-bar-action.html');
 
 var ko = require('knockout');
 var propTools = require('../utils/jsPropertiesTools');
@@ -43,6 +43,6 @@ function ViewModel(params) {
 }
 
 ko.components.register(TAG_NAME, {
-    template: template,
+    template: TEMPLATE,
     viewModel: ViewModel
 });

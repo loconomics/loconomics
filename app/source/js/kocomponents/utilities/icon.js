@@ -5,7 +5,7 @@
 'use strict';
 
 var TAG_NAME = 'icon';
-var template = require('../../../html/kocomponents/utilities/icon.html');
+var TEMPLATE = require('../../../html/kocomponents/utilities/icon.html');
 var getObservable = require('../../utils/getObservable');
 
 var ko = require('knockout');
@@ -26,6 +26,6 @@ function ViewModel(params) {
 }
 
 ko.components.register(TAG_NAME, {
-    template: template,
+    template: TEMPLATE,
     viewModel: ViewModel
 });
