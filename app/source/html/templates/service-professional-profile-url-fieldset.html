@@ -5,11 +5,10 @@
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
     </h2>
     <div class="form-group">
-        <label for="serviceProfessionalProfileUrl-url">Create your custom URL:</label>
+        <label for="serviceProfessionalProfileUrl">Create your custom URL:</label>
         <div class="input-group">
             <span class="input-group-addon" data-bind="text: customUrlDomainPrefix"></span>
-            <input type="text" id="serviceProfessionalProfileUrl-url" class="form-control"
-data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+            <input type="text" id="serviceProfessionalProfileUrl" class="form-control" required="false" data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
         </div>
     </div>
     <button type="button" class="btn btn-default btn-block" data-bind="click: copyCustomUrl, disable: isLocked, text: copyCustomUrlButtonText">Copy</button>
