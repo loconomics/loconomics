@@ -11,13 +11,12 @@
 
 [data-activity=home] {
 
-
     // NO NAVBAR, disabled on the JS activity, so this can replace the default:
     top: 0 !important;
 
     // NOTE: all activities are absolute positioned, so is already a positioning context
 
-    [role=main] {
+    .home-main {
         $arrowSize = 30px;
         $sectionTitleFontSize = 32px;
         $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);

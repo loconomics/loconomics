@@ -1,6 +1,6 @@
 <!-- Home activity (aka search) -->
 <div data-activity="home">
-    <div role="main">
+    <div class="home-main">
         <div class="home-search">
             <h1 class="home-title">Make life better.</h1>
             <p class="home-tagline">Book local, independent service professionals safely and easily</p>
@@ -34,47 +34,47 @@
                                     <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                                         <div class="Result-info">
                                             <span class="Result-name" data-bind="text: pluralName"></span>
-                                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>        
-                                            <span class="Result-description" data-bind="text: searchDescription"></span> 
+                                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
+                                            <span class="Result-description" data-bind="text: searchDescription"></span>
                                         </div>
                                         <button type="submit" class="btn btn-secondary btn-md btn-inline" >Go</button>
                                     </a>
                                 </li>
-                            </ul>   
+                            </ul>
                         </li>
                         <li data-bind="visible: searchResults.serviceProfessionals().length && !isLoading()">
-                            <h3>Professionals</h3>                             
+                            <h3>Professionals</h3>
                             <ul data-bind="foreach: searchResults.serviceProfessionals">
                                 <li class="Result clearfix">
                                     <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
                                         <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: firstName"></span> 
-                                            <span class="Result-name"  data-bind="text: lastName"></span> 
-                                            <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>     
+                                            <span class="Result-name" data-bind="text: firstName"></span>
+                                            <span class="Result-name"  data-bind="text: lastName"></span>
+                                            <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
                                             <span class="Result-description" data-bind="text: allJobTitles"></span>
-                                        </div>  
+                                        </div>
                                         <button type="submit" class="btn btn-secondary btn-md btn-inline" >Go</button>
                                     </a>
                                 </li>
-                            </ul>   
+                            </ul>
                         </li>
                         <li data-bind="visible: searchResults.categories().length && !isLoading()">
-                            <h3>Categories</h3>               
+                            <h3>Categories</h3>
                             <ul data-bind="foreach: searchResults.categories">
                                 <li class="Result clearfix">
                                     <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                                         <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: categoryName"></span>     
-                                            <span class="Result-description" data-bind="text: searchDescription"></span> 
-                                        </div> 
+                                            <span class="Result-name" data-bind="text: categoryName"></span>
+                                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                                        </div>
                                         <button type="submit" class="btn btn-secondary btn-md btn-inline" >Go</button>
                                     </a>
                                 </li>
-                            </ul>   
+                            </ul>
                         </li>
                     </ul>
                 </div>
-            </form> 
+            </form>
         </div>
         <div id="home-hiw" class="home-hiw">
             <h2 class="home-section-title">How Loconomics works:</h2>
@@ -143,7 +143,7 @@
             <div class="home-section-listing">
                 <ul class="list-unstyled">
                     <li class="SearchCategory-home">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Home Care</h3>
                             <div class="SearchCategoryBackground Icon-home"></div>
                             <p>Need some help around the house? Painters, housekeepers, handymen and more await you.</p>
@@ -151,7 +151,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-children">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Child Care</h3>
                             <div class="SearchCategoryBackground Icon-child"></div>
                             <p>Give yourself a night out on the town, help your child learn a language, or play an instrument.</p>
@@ -159,7 +159,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-pet">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Pet Care</h3>
                             <div class="SearchCategoryBackground Icon-pet"></div>
                             <p>Throw your dog a bone. Treat your pet to grooming services, walkers, sitters, and more.</p>
@@ -167,7 +167,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-self">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Self Care</h3>
                             <div class="SearchCategoryBackground Icon-self"></div>
                             <p>You need a massage. Personal trainers, music teachers, and a number of therapists are here.</p>
@@ -175,7 +175,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-transport">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Transport</h3>
                             <div class="SearchCategoryBackground Icon-transport"></div>
                             <p>Mechanics, bicycle repairers, and car detailers all ready to help you get where you need to go.</p>
@@ -183,7 +183,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-office">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Office</h3>
                             <div class="SearchCategoryBackground Icon-office"></div>
                             <p>Tax season have you nervous? Get some help for your business or family matters.</p>
@@ -191,7 +191,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-senior">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Senior Care</h3>
                             <div class="SearchCategoryBackground Icon-senior"></div>
                             <p>Do you or a family member need a little extra help around the house? Help make life easier.</p>
@@ -199,7 +199,7 @@
                         </a>
                     </li>
                     <li class="SearchCategory-celebration">
-                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"> 
+                        <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
                             <h3>Celebration</h3>
                             <div class="SearchCategoryBackground Icon-celebration"></div>
                             <p>Make your next celebration a real blowout with help from some very talented professionals.</p>
