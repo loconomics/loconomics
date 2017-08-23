@@ -346,11 +346,12 @@ exports.registerAll = function(app) {
     var i18n = require('./utils/i18n');
     ko.components.register('app-address-map', {
         synchronous: true,
-        template: '<div></div>',
+        template: '<p tabindex="0" class="sr-only" data-bind="text: label"></p><div></div>',
         viewModel: {
             createViewModel: function(params, componentInfo) {
-                var mapContainer = componentInfo.element.children[0];
+                var mapContainer = componentInfo.element.children[1];
                 var v = {
+                    label: getObservable(params.label),
                     lat: ko.unwrap(params.lat),
                     lng: ko.unwrap(params.lng),
                     zoom: ko.unwrap(params.zoom) || 11,
