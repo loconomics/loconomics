@@ -1,15 +1,15 @@
 <!-- service-professional-profile-url-fieldset -->
 <script type="text/html" id="service-professional-profile-url-fieldset-template">
-    <h2 class="SectionTitle">
-        <span>Use your listing as your website</span>
+    <fieldset>
+        <legend>Create a personal and unique URL for your listing that clients will remember.</legend>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-    </h2>
-    <div class="form-group">
-        <label for="serviceProfessionalProfileUrl">Create your custom URL:</label>
-        <div class="input-group">
-            <span class="input-group-addon" data-bind="text: customUrlDomainPrefix"></span>
-            <input type="text" id="serviceProfessionalProfileUrl" class="form-control" required="false" data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+        <div class="form-group">
+            <label for="serviceProfessionalProfileUrl">Your listing's custom URL:</label>
+            <div class="input-group">
+                <span class="input-group-addon" data-bind="text: customUrlDomainPrefix"></span>
+                <input type="text" id="serviceProfessionalProfileUrl" class="form-control" required="false" data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+            </div>
         </div>
-    </div>
-    <button type="button" class="btn btn-default btn-block" data-bind="click: copyCustomUrl, disable: isLocked, text: copyCustomUrlButtonText">Copy</button>
+    </fieldset>
+    <button type="button" class="btn btn-default btn-block" data-bind="click: copyCustomUrl, disable: isLocked, text: copyCustomUrlButtonText">Copy your listing's URL</button>
 </script>
