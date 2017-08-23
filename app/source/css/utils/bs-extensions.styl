@@ -115,6 +115,7 @@ select,
 .btn,
 .form-control {
     &:hover,
+    &:active,
     &:focus {
         enhancedOutline();
     }
@@ -125,6 +126,12 @@ select,
     &:active{
         enhancedOutline();
     }
+}
+
+// For some weird reason, Bootstrap removes outline of dropdown-toggle links
+// (we add html to increase specifity)
+html .dropdown-toggle:focus {
+    enhancedOutline();
 }
 
 .btn-link.text-secondary {
