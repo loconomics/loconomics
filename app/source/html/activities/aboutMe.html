@@ -21,9 +21,9 @@
                             <app-onboarding-progress-bar></app-onboarding-progress-bar>
                             <h1><span class="fa ion-ios-contact-outline" aria-hidden="true"></span><span data-bind="visible: isInOnboarding()"> Introduce yourself</span><span data-bind="visible: !isInOnboarding()"> Your profile</span></h1>
                             <fieldset>
-                                <legend class="OnboardingValueProp" data-bind="visible: user.isServiceProfessional">Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</legend>
+                                <legend class="OnboardingValueProp" data-bind="visible: user.isServiceProfessional && isInOnboarding">Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</legend>
+                                <legend data-bind="visible: !user.isServiceProfessional() && isInOnboarding">Service professionals will get your full name, phone #, and email only after a booking is confirmed.</legend>
                                 <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                                <legend data-bind="visible: !user.isServiceProfessional()">Service professionals will get your full name, phone #, and email only after a booking is confirmed.</legend>
                                 <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>
                                 <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: {marketplaceProfilePicture: marketplaceProfilePicture, showNonEssentialFields: !isInOnboarding()} }"></div>
                                 <div data-bind="visible: !isInOnboarding(), template: { name:  user.isServiceProfessional() ? 'service-professional-profile-url-fieldset-template' : '', data: marketplaceProfilePicture }"></div>
