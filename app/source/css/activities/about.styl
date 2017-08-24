@@ -2,7 +2,7 @@
     About activity styles.
 **/
 [data-activity=about]
- 
+
     // Ensure contents don't create horizontal scroll
     .container
         background $gray-background
@@ -13,13 +13,13 @@
         // Legal text better justified
         text-align: justify;
         padding: 40px;
-        
-        .nav 
+
+        .nav
         &.navbar-nav
             margin-top: 50px;
             a
               text-align: right;
-        
+
         .team-cards
           width 100%
           text-align center
@@ -28,7 +28,7 @@
           display flex
           flex-wrap wrap
           justify-content center
-                    
+
           .team-member
             list-style none
             box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
@@ -41,19 +41,19 @@
             @media $mediaMinSm {
               width 280px;
             }
-            
+
             p
               opacity 0.5
               padding 0 25px
               text-align: justify;
-              
+
             .title
               font-style italic
               display inline-block
               padding-bottom 25px
               border-bottom 3px solid rgba(100,100,100,0.5)
               margin-bottom: 25px
-                 
+
             .member-image
               width 200px
               border-radius: 50%;
@@ -63,34 +63,43 @@
               display inline-block
               padding 0px
 
-      .special-thanks-partners          
+      .special-thanks-partners
         position: relative;
-        
-      .special-thanks-logos
+
+      a.special-thanks-logos
+        // Fixes clickable and focusable area (accessibility)
         display: block;
-        margin-top: 15px;
-        margin-bottom: 15px;
-        margin-right: auto;
-        margin-left: auto;
-        height: 160px;
+
+        > img {
+          margin-top: 15px;
+          margin-bottom: 15px;
+          margin-right: auto;
+          margin-left: auto;
+          height: 160px;
+        }
 
         @media $mediaMinSm {
           display: inline-block;
-          margin-right: 0px;
-          margin-left: 5px;
           top: 0px;
           right: 0px;
+          > img {
+            margin-right: 0px;
+            margin-left: 5px;
+          }
         }
-        
+
         &.special-thanks-logos-right
-          border: solid 20px white;
-          height: 350px;
+          > img {
+            border: solid 20px white;
+            height: 350px;
+          }
 
           @media $mediaMinSm {
             position: absolute;
-            margin-right: 5px;
-            margin-left: 15px;
             top: 0px;
             right: 0px;
+            > img {
+              margin-right: 5px;
+              margin-left: 15px;
+            }
           }
-            
