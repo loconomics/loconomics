@@ -113,7 +113,12 @@ input,
 textarea,
 select,
 .btn,
-.form-control {
+.form-control,
+// We need to be especific of next types because they have being specified
+// that way at Bootstrap styles
+input[type="file"],
+input[type="radio"],
+input[type="checkbox"] {
     &:hover,
     &:active,
     &:focus {
