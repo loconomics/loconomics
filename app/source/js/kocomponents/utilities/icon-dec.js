@@ -1,11 +1,11 @@
 /**
  * Use for icons that use icon fonts. It adjusts for the slightly larger size of Font Awesome icons.
- * @module kocomponents/icon
+ * @module kocomponents/icon-dec
  */
 'use strict';
 
-var TAG_NAME = 'icon';
-var TEMPLATE = require('../../../html/kocomponents/utilities/icon.html');
+var TAG_NAME = 'icon-dec';
+var TEMPLATE = require('../../../html/kocomponents/utilities/icon-dec.html');
 var getObservable = require('../../utils/getObservable');
 
 var ko = require('knockout');

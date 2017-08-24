@@ -50,10 +50,10 @@ module.exports = function MarketplaceProfileVM(app) {
         return this.customUrlProtocol() + this.customUrlDomainPrefix() + this.profile.serviceProfessionalProfileUrlSlug();
     }, this);
     // Copy Custom URL
-    this.copyCustomUrlButtonText = ko.observable('Copy');
+    this.copyCustomUrlButtonText = ko.observable("Copy your listing's URL");
     this.profile.serviceProfessionalProfileUrlSlug.subscribe(function() {
         // On any change, restore copy label
-        this.copyCustomUrlButtonText('Copy');
+        this.copyCustomUrlButtonText("Copy your listing's URL");
     }.bind(this));
     this.copyCustomUrl = function() {
         var url = this.customUrlDraft();
