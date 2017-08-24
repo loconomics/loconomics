@@ -1,11 +1,7 @@
 <!-- service-professional-profile-url-fieldset -->
 <script type="text/html" id="service-professional-website-fieldset-template">
-    <fieldset>
-        <legend>Have a website? Tell clients where to find it.</legend>
-        <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-        <div class="form-group">
-            <label for="serviceProfessionalWebsite-url">Your business website's URL:</label>
-            <input type="url" id="serviceProfessionalWebsite-url" class="form-control" required="false" data-bind="textInput: profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
-        </div>
-    </fieldset>
+    <div class="form-group">
+        <label for="serviceProfessionalWebsite-url">Your business website's URL:</label>
+        <input type="url" id="serviceProfessionalWebsite-url" class="form-control" data-bind="textInput: profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
+    </div>
 </script>

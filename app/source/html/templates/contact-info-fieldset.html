@@ -2,18 +2,15 @@
 <script type="text/html" id="contact-info-fieldset-template">
     <!-- ko with: contactInfo -->
     <fieldset>
-        <legend>Contact information for confirmed bookings:</legend>
+        <legend>Contact information:</legend>
+        <p class="help-block"><span data-bind="visible: user.isServiceProfessional()">Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</span><span data-bind="visible: !user.isServiceProfessional()">Service professionals will get your full name, phone #, and email only after a booking is confirmed.</span></p>
         <div class="form-group">
             <label for="firstName">First name:</label>
-            <input id="firstName" type="text" class="form-control" required maxlength="50" data-bind="textInput: profile.firstName, disable: isLocked">
+            <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: profile.firstName, disable: isLocked">
         </div>
         <div class="form-group">
             <label for="lastName">Last name:</label>
-            <input id="lastName" type="text" class="form-control" required maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked">
-        </div>
-        <div class="form-group" data-bind="visible: user.isServiceProfessional">
-            <label for="businessName">Business name (optional):</label>
-            <input id="businessName" type="text" class="form-control" maxlength="145" data-bind="textInput: profile.businessName, disable: isLocked">
+            <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked">
         </div>
         <div class="form-group">
             <label for="phone">Phone number:</label>
@@ -21,11 +18,12 @@
         </div>
         <div class="form-group">
             <label for="canReceiveSms">Does this number receive texts?</label>
-            <input id="canReceiveSms" type="checkbox" data-bind="textInput: profile.phone, disable: isLocked">
+            <input id="canReceiveSms" type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked">
         </div>
     </fieldset>
     <fieldset>
-        <legend>Your mailing address (for our records):</legend>
+        <legend>Your mailing address:</legend>
+        <p class="help-block">This is just for our records.</p>
         <div class="form-group">
             <label for="addressLine1">Street address line 1:</label>
             <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: address.addressLine1, disable: isLocked">
@@ -50,17 +48,29 @@
     <fieldset data-bind="visible: $parent.showNonEssentialFields">
         <legend>Optional information:</legend>
         <div class="form-group" data-bind="visible: user.isServiceProfessional">
+            <label for="businessName">Business name:</label>
+            <input id="businessName" type="text" class="form-control" maxlength="145" data-bind="textInput: profile.businessName, disable: isLocked">
+        </div>
+        <div class="form-group" data-bind="visible: user.isServiceProfessional">
+            <label for="serviceProfessionalWebsite-url">Your business website's URL:</label>
+            <input type="url" id="serviceProfessionalWebsite-url" class="form-control" data-bind="textInput: profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
+        </div>
+        <div class="form-group" data-bind="visible: user.isServiceProfessional">
             <label for="alternativeEmail">Alternative e-mail address:</label>
-            <input id="alternativeEmail" type="email" class="form-control" maxlength="145" data-bind="textInput: profile.alternativeEmail, disable: isLocked">
+            <input id="alternativeEmail" type="email" class="form-control" maxlength="145" pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" data-bind="textInput: profile.alternativeEmail, disable: isLocked">
         </div>
-        <div class="form-group">
-            <label for="selectedBirthMonth">Birth month:</label>
-            <select id="selectedBirthMonth" class="form-control" data-bind="textInput: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Select month', disable: isLocked"></select>
-        </div>
-        <div class="form-group">
-            <label for="birthMonthDay">Birth day:</label>
-            <select id="birthMonthDay" class="form-control" data-bind="textInput: profile.birthMonthDay, options: monthDays, optionsCaption: 'Select day', disable: isLocked"></select>
-        </div>
+        <fieldset>
+            <label for="selectedBirthMonth birthMonthDay">Birthday:</label>
+            <p class="help-block">Some service professionals offer birthday specials for their clients.</p>
+            <div class="form-group col-sm-8">
+                <label for="selectedBirthMonth">Birth month:</label>
+                <select id="selectedBirthMonth" class="form-control" data-bind="textInput: selectedBirthMonth, options: months, optionsText: 'name', optionsCaption: 'Select month', disable: isLocked"></select>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="birthMonthDay">Birth day:</label>
+                <select id="birthMonthDay" class="form-control" data-bind="textInput: profile.birthMonthDay, options: monthDays, optionsCaption: 'Select day', disable: isLocked"></select>
+            </div>
+        </fieldset>
     </fieldset>
     <!-- /ko -->
 </script>
