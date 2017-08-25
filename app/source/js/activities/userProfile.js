@@ -14,6 +14,7 @@ var A = Activity.extend(function UserProfileActivity() {
     this.viewModel = user;
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title('Profile');
 });
 
 exports.init = A.init;

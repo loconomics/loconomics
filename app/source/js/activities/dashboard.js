@@ -24,6 +24,7 @@ var A = Activity.extend(function DashboardActivity() {
     this.viewModel = new ViewModel();
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title('Your Dashboard');
 
     // Getting elements
     //this.$nextBooking = this.$activity.find('#dashboardNextBooking');

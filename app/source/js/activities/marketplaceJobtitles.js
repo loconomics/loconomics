@@ -23,6 +23,7 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Your listings', {
         backLink: '/marketplaceProfile' , helpLink: this.viewModel.helpLink
     });
+    this.title('Your Listings');
 
     // On changing jobTitleID:
     // - load addresses

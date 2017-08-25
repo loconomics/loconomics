@@ -15,6 +15,7 @@ var A = Activity.extend(function AccountActivity() {
     this.viewModel = new ViewModel();
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title('Your Account');
 });
 
 exports.init = A.init;

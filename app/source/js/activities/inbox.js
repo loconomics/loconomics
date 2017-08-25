@@ -18,6 +18,7 @@ var A = Activity.extend(function InboxActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title('Your Inbox');
 });
 
 exports.init = A.init;

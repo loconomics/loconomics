@@ -21,6 +21,7 @@ var A = Activity.extend(function CalendarActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title('Your Calendar');
 
     /* Getting elements */
     this.$datepicker = this.$activity.find('#calendarDatePicker');

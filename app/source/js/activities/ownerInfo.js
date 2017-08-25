@@ -7,13 +7,14 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 
 var A = Activity.extend(function OwnerInfoActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel();
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.navBar = Activity.createSectionNavBar('Cooperative');
+    this.title('Cooperative');
 });
 
 exports.init = A.init;

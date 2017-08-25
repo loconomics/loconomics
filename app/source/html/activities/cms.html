@@ -3,7 +3,7 @@
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <h1>Client Manager</h1>
+            <h1 data-bind="text: title"></h1>
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">Your clients</h2>
                 <a class="LinkTile" href="/clients">
@@ -19,7 +19,7 @@
                     </div>
                 </a>
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'cms'"></app-feedback-entry>
-            </div>   
+            </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                <app-inline-side-menu params="vocElement: 'cms'"></app-inline-side-menu>
             </div>
