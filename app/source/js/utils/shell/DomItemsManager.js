@@ -108,7 +108,7 @@ DomItemsManager.prototype.inject = function inject(name, html) {
     It's designed to be able to manage transitions, but this default
     implementation is as simple as 'show the new and hide the old'.
 **/
-DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, state) {
+DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, state, preventChangeFocus) {
 
     var toName = state.route.name;
     //console.log('switch to', toName);
@@ -159,6 +159,8 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
      * html in use.
      */
     var moveFocus = function moveFocus() {
+        if (preventChangeFocus) return;
+
         var focusedElement = $to;
         if (this.autofocusElementSelector) {
             var found = $to.find(this.autofocusElementSelector);
