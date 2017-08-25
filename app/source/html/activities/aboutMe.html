@@ -19,7 +19,7 @@
                     <div class="SmartNavContent container-fluid nogaps-md nogaps-lg">
                         <form class="LightForm" role="form" data-bind="submit: save">
                             <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                            <h1><span class="fa ion-ios-contact-outline" aria-hidden="true"></span><span data-bind="visible: isInOnboarding()"> Introduce yourself</span><span data-bind="visible: !isInOnboarding()"> Your profile</span></h1>
+                            <h1><icon-dec params="icon: 'ion-ios-contact-outline'"></icon-dec> <span data-bind="visible: isInOnboarding()"> Introduce yourself</span><span data-bind="visible: !isInOnboarding()"> Your profile</span></h1>
                             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                             <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>
                             <div data-bind="template: { name: 'profile-picture-bio-fieldset-template', data: {marketplaceProfilePicture: marketplaceProfilePicture, showNonEssentialFields: !isInOnboarding()} }"></div>
