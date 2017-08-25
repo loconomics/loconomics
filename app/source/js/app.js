@@ -370,6 +370,19 @@ var appInit = function appInit() {
                     opts.topOffset = act.children('header').outerHeight();
                 }
                 scrollToElement(target, opts);
+                // Move focus too
+                var noTabindex = !target.attr('tabindex');
+                if (noTabindex) {
+                    // Set-up to allow programatic focus
+                    target.attr('tabindex', -1);
+                }
+                setTimeout(function(){
+                    target.focus();
+                    // reset tabindex
+                    if (noTabindex) {
+                        target.removeAttr('tabindex');
+                    }
+                }, 100);
             }
         }
     });

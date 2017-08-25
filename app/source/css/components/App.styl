@@ -9,19 +9,19 @@
 
 /* More app specific styles */
 .App {
-    
+
     // At the beggining, all content must be hidden except
     // an splash screen, up to the app being flagged as 'ready'
     > body > * {
         visibility: hidden;
-        
+
         &.SplashScreen {
             visibility: visible;
         }
     }
     &.is-ready > body > * {
         visibility: inherit;
-        
+
         &.SplashScreen {
             visibility: hidden;
         }
@@ -49,7 +49,7 @@
         @media $media-big-navbar {
             padding-top: $big-navbar-height;
         }
-        
+
         // DO NEVER EVER EVER PUT THE NEXT LINE ON BODY,
         // WILL BREAK Webkit/Blink (iOS, Android, Chrome, Opera).
         // scrolling is auto on html/documentElement so no need for this.
@@ -58,13 +58,13 @@
     }
 
     @import '../utils/signup-btns.styl';
-    
+
     /**
         Some small utilities,
         they *may* upgrade to its own class as
         part of the Styleguide elements.
     **/
-    
+
     /** Customized or extended Bootstrap components **/
     /* bottom modal */
     .modal.bottom {
@@ -76,7 +76,7 @@
             bottom: 0;
         }
     }
-    
+
     /* top modal: modals appear on top by default, but
         needs an extra margin to avoid hide the top
         nav (thats blocked but gets more nice UI)
@@ -89,17 +89,17 @@
             }
         }
     }
-    
+
     /* why modals has not the standard modal-backdrop? anyway, fix.. */
     .modal {
         background: rgba(0, 0, 0, .4);
     }
-    
+
     #errorModal {
         // On top of items-disable-layer, for errors parsing/loading activity or bindings
         z-index: 101050;
     }
-    
+
     // Special icon color for feedback 'lamp'
     app-feedback-entry {
         .ion-lightbulb,
@@ -107,14 +107,31 @@
             color: #f0ad4e;
         }
     }
-    
+
+    // skip-navigation link has assigned sr-only on markup, placed as first
+    // body element and we display, place and style it properly when focused
+    // to meet accessibility guidelines.
+    #skip-navigation:focus {
+        position: absolute;
+        clip: initial;
+        margin: 0;
+        z-index: 90900;
+        top: 15px;
+        left: 15px;
+        width: auto;
+        height: auto;
+        background: #fdf6e7;
+        outline-offset: 0;
+        padding: 6px 30px;
+    }
+
     .App-activities {
         background: White;
     }
     .ion-ios-lightbulb {
         color: #f0ad4e;
     }
-    
+
     // In order to support the component ActionSheet
     // and because we have a global SmartNavBar right now,
     // we need additional code to set the SmartNavBar/AppNav under
@@ -130,7 +147,7 @@
         opacity: 1;
         pointer-events: auto;
     }
-    
+
     input,
     textarea {
         +input-placeholder() {
@@ -143,9 +160,9 @@ To ensure that the HTML 5 landmarks display properly for sighted users in older 
 /* landmarks */
     article, aside, footer, header, main, nav, section,
 
-/* other HTML 5 elements that should (probably) 
+/* other HTML 5 elements that should (probably)
 be set to display:block */
-    audio, canvas, datalist, details, figcaption, 
+    audio, canvas, datalist, details, figcaption,
     figure, output, progress, summary, video {
        display:block;
     }

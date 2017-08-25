@@ -43,9 +43,10 @@
         }
     </head>
     <body>
+        <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
         <div class="SplashScreen">Loading...</div>
         @render('parts/AppNav.html')
-        <div class="App-activities">
+        <div class="App-activities" id="activities-container">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render(includedFiles[f])
             }
