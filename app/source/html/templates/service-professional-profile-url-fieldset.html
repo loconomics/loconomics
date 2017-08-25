@@ -2,14 +2,14 @@
 <script type="text/html" id="service-professional-profile-url-fieldset-template">
     <fieldset>
         <legend>Profile URL:</legend>
-        <p class="help-block">Create a personal and unique URL for your listing that clients will remember. You can also use it as your own website.</p>
         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
         <div class="form-group">
             <label for="serviceProfessionalProfileUrl">Your custom URL:</label>
             <div class="input-group">
                 <span class="input-group-addon" data-bind="text: customUrlDomainPrefix"></span>
-                <input type="text" id="serviceProfessionalProfileUrl" class="form-control" data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked"/>
+                <input type="text" id="serviceProfessionalProfileUrl" class="form-control" data-bind="textInput: profile.serviceProfessionalProfileUrlSlug, disable: isLocked" aria-describedby="serviceProfessionalProfileUrlInstructions" />
             </div>
+            <p id="serviceProfessionalProfileUrlInstructions" class="help-block">Create a personal and unique URL for your listing that clients will remember. You can also use it as your own website.</p>
         </div>
     </fieldset>
     <button type="button" class="btn btn-default btn-block" data-bind="click: copyCustomUrl, disable: isLocked, text: copyCustomUrlButtonText"></button>

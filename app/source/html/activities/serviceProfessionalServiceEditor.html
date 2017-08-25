@@ -12,52 +12,52 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <form class="container-fluid LightForm" role="form" data-bind="submit: save">
+                <form id="offeringForm" role="form" class="container-fluid LightForm" data-bind="submit: save" aria-describedby="offeringFormInstructions">
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'floating'"></app-loading-spinner>
                     </div>
                     <h1><icon-dec params="icon: 'ion-ios-pricetag-outline'"></icon-dec> <span data-bind="text: header"></span></h1>
                     <div data-bind="with: current">
-                        <p class="help-block" data-bind="text: type.serviceProfessionalDescription"></p>
+                        <p id="offeringFormInstructions" class="help-block" data-bind="text: type.serviceProfessionalDescription"></p>
                         <fieldset>
                             <legend><span data-bind="text: type.singularName"></span> description:</legend>
-                            <p class="help-block"><span data-bind="text: type.namePlaceHolder"></span></p>
                             <div class="form-group">
                                 <label for="name">Title of <span class="text-lowercase" data-bind="text: type.singularName"></span>:</label>
-                                <input id="name" type="text" class="form-control" required maxlength="50" data-bind="textInput: pricing.name, disable: $root.isLocked() || !!type.fixedName()">
+                                <input id="name" type="text" class="form-control" required maxlength="50" data-bind="textInput: pricing.name, disable: $root.isLocked() || !!type.fixedName()" aria-describedby="nameInstructions">
                                 <!-- <div class="help-block" data-bind="if: showRemaining">Character limit: <span data-bind="text: charRemaining"></span></div> -->
+                                <p id="nameInstructions" class="help-block"><span data-bind="text: type.namePlaceHolder"></span></p>
                             </div>
                             <div class="form-group" data-bind="visible: type.serviceProfessionalDescription">
-                                <p class="help-block"><span data-bind="text: type.descriptionPlaceHolder"></span></p>
                                 <label for="serviceProfessionalServiceEditor-description">Description of <span class="text-lowercase" data-bind="text: type.singularName"></span>:</label>
-                                <textarea id="serviceProfessionalServiceEditor-description" class="form-control"  type="text" maxlength="1000" data-bind="textInput: pricing.description, disable: $root.isLocked">
+                                <textarea id="serviceProfessionalServiceEditor-description" class="form-control"  type="text" maxlength="1000" data-bind="textInput: pricing.description, disable: $root.isLocked"  aria-describedby="descriptionInstructions">
                                 </textarea>
+                                <p id="descriptionInstructions" class="help-block"><span data-bind="text: type.descriptionPlaceHolder"></span></p>
                                 <!-- <div class="help-block" data-bind="if: showRemaining">Character limit: <span data-bind="text: charRemaining"></span></div> -->
                             </div>
                         </fieldset>
                         <fieldset>
                             <legend><span data-bind="text: type.singularName"></span> pricing:</legend>
-                            <p class="help-block">How much does the client pay for this <span class="text-lowercase" data-bind="text: type.singularName"></span>?</p>
                             <div class="form-group" data-bind="visible: type.priceLabel">
                                 <label for="serviceProfessionalServiceEditor-price" class="control-label" data-bind="text: type.priceLabel"></label>
                                 <div class="input-group">
                                     <span class="input-group-addon" data-bind="text: $root.moneySymbol"></span>
-                                    <input id="serviceProfessionalServiceEditor-price" type="number" class="form-control" required min="0" pattern="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="$0.00" data-bind="textInput: pricing.price, disable: $root.isLocked" />
+                                    <input id="serviceProfessionalServiceEditor-price" type="number" class="form-control" required min="0" pattern="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="$0.00" data-bind="textInput: pricing.price, disable: $root.isLocked"  aria-describedby="priceInstructions"/>
                                 </div>
+                                <p id="priceInstructions" class="help-block">How much does the client pay for this <span class="text-lowercase" data-bind="text: type.singularName"></span>?</p>
                             </div>
                             <div class="form-group" data-bind="visible: $root.showFirstTimeClientsOnlyLabel">
-                                <input id="firstTimeClientsOnly" type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked"/>
+                                <input id="firstTimeClientsOnly" type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked"  aria-describedby="firstTimeClientsOnlyInstructions"/>
                                 <label for="firstTimeClientsOnly"><span data-bind="text: type.firstTimeClientsOnlyLabel"></span></label>
                             </div>
+                            <p id="firstTimeClientsOnlyInstructions" class="help-block">If you check this box, we'll only show this <span class="text-lowercase" data-bind="text: type.singularName"></span> to new clients.</p>
                             <div class="form-inline isolated" data-bind="visible: type.numberOfSessionsLabel">
-                                <p class="help-block">Enter the number of sessions or appointments included with this <span class="text-lowercase" data-bind="text: type.singularName"></span>:</p>
                                 <div class="form-group">
                                     <label for="serviceProfessionalServiceEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
-                                    <input id="serviceProfessionalServiceEditor-numberOfSessions" class="form-control" required type="number" min="1" data-bind="textInput: pricing.numberOfSessions, disable: $root.isLocked" />
+                                    <input id="serviceProfessionalServiceEditor-numberOfSessions" class="form-control" required type="number" min="1" data-bind="textInput: pricing.numberOfSessions, disable: $root.isLocked" aria-describedby="numberOfSessionsInstructions"/>
                                 </div>
+                                <p id="numberOfSessionsInstructions" class="help-block">Enter the number of sessions or appointments included with this <span class="text-lowercase" data-bind="text: type.singularName"></span>.</p>
                             </div>
                             <div class="form-group" data-bind="visible: type.priceRateQuantityLabel">
-                                <p class="help-block">Give clients an idea of your regular pricing. <span  data-bind="visible: type.priceRateLearnMoreLabel() && type.priceRateLearnMoreText(), text: type.priceRateLearnMoreText()"></span></p>
                                 <label for="serviceProfessionalServiceEditor-priceRateQuantity serviceProfessionalServiceEditor-priceRateUnit" class="control-label col-xs-12" data-bind="text: type.priceRateQuantityLabel"></label>
                                 <div class="form-group col-xs-12 col-sm-6">
                                     <div class="input-group">
@@ -82,6 +82,7 @@
                                         </button>
                                     </span>
                                 </div>
+                                <p id="descriptionInstructions" class="help-block">Give clients an idea of your regular pricing. <span  data-bind="visible: type.priceRateLearnMoreLabel() && type.priceRateLearnMoreText(), text: type.priceRateLearnMoreText()"></span></p>
                             </div>
                         </fieldset>
                         <fieldset>
