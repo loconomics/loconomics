@@ -3,7 +3,10 @@
     <!-- ko with: contactInfo -->
     <fieldset>
         <legend>Contact information:</legend>
-        <p class="help-block"><span data-bind="visible: user.isServiceProfessional()">Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</span><span data-bind="visible: !user.isServiceProfessional()">Service professionals will get your full name, phone #, and email only after a booking is confirmed.</span></p>
+        <p class="help-block">
+            <span data-bind="visible: user.isServiceProfessional()">Clients see your first name, last initial, and business name on your listing. They'll get your full name, phone #, and email after you confirm a booking.</span>
+            <span data-bind="visible: !user.isServiceProfessional()">Service professionals will get your full name, phone #, and email only after a booking is confirmed.</span>
+        </p>
         <div class="form-group">
             <label for="firstName">First name:</label>
             <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: profile.firstName, disable: isLocked">

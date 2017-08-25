@@ -45,7 +45,7 @@
                                     <input id="serviceProfessionalServiceEditor-price" type="number" class="form-control" required min="0" pattern="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="$0.00" data-bind="textInput: pricing.price, disable: $root.isLocked" />
                                 </div>
                             </div>
-                            <div class="form-group checkbox" data-bind="visible: $root.showFirstTimeClientsOnlyLabel">
+                            <div class="form-group" data-bind="visible: $root.showFirstTimeClientsOnlyLabel">
                                 <input id="firstTimeClientsOnly" type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked"/>
                                 <label for="firstTimeClientsOnly"><span data-bind="text: type.firstTimeClientsOnlyLabel"></span></label>
                             </div>
@@ -72,13 +72,18 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-12" data-bind="visible: type.noPriceRateLabel">
-                                        <input id="preferNotToStatePrice" type="checkbox" data-bind="checked: pricing.noPriceRate, disable: $root.isLocked"/>
-                                        <label for="preferNotToStatePrice"><span data-bind="text: type.noPriceRateLabel"></span></label>
-                                        <a href="#" data-bind="visible: type.noPriceRateLearnMoreLabel() && type.noPriceRateLearnMoreText(), popover: { content: type.noPriceRateLearnMoreText(), trigger: 'hover', container: 'body', placement: 'top' }">(<span data-bind="text: type.noPriceRateLearnMoreLabel"></span>)
-                                        </a>
-                                </div>      
+                                    <input id="preferNotToStatePrice" type="checkbox" data-bind="checked: pricing.noPriceRate, disable: $root.isLocked"/>
+                                    <label for="preferNotToStatePrice"><span data-bind="text: type.noPriceRateLabel"></span></label>
+                                    <span data-bind="visible: type.noPriceRateLearnMoreLabel() && type.noPriceRateLearnMoreText()">
+                                        <!-- IMPORTANT It's a button and no trigger to be accessible: it opens at click and closes at click/blur -->
+                                        <button type="button" class="btn btn-link btn-inline"
+                                            data-bind="popover: { content: type.noPriceRateLearnMoreText(), container: 'body', placement: 'top' }">
+                                            (<span data-bind="text: type.noPriceRateLearnMoreLabel"></span>)
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
-                        </fieldset>                            
+                        </fieldset>
                         <fieldset>
                             <legend><span data-bind="text: type.singularName"></span> scheduling info:</legend>
                             <div class="form-group" data-bind="visible: type.durationLabel">
@@ -102,7 +107,7 @@
                                 <label for="consultation-in-person consultation-phone" data-bind="text: type.inPersonPhoneLabel"></label>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-5 form-group">
-                                        <input id="consultation-in-person" type="radio" class="radio-inline" data-bind="checked: pricing.isPhone, checkedValue: false, disable: $root.isLocked()"> 
+                                        <input id="consultation-in-person" type="radio" class="radio-inline" data-bind="checked: pricing.isPhone, checkedValue: false, disable: $root.isLocked()">
                                         <label for="consultation-in-person">in-person</label>
                                     </div>
                                     <div class="col-xs-12 col-sm-5 form-group">
