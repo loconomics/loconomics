@@ -46,32 +46,34 @@
                                 <p id="priceInstructions" class="help-block">How much does the client pay for this <span class="text-lowercase" data-bind="text: type.singularName"></span>?</p>
                             </div>
                             <div class="form-group" data-bind="visible: $root.showFirstTimeClientsOnlyLabel">
-                                <input id="firstTimeClientsOnly" type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked"  aria-describedby="firstTimeClientsOnlyInstructions"/>
+                                <input id="firstTimeClientsOnly" class="control-label" type="checkbox" data-bind="checked: pricing.firstTimeClientsOnly, disable: $root.isLocked" aria-describedby="firstTimeClientsOnlyInstructions"/>
                                 <label for="firstTimeClientsOnly"><span data-bind="text: type.firstTimeClientsOnlyLabel"></span></label>
+                                <p id="firstTimeClientsOnlyInstructions" class="help-block">If you check this box, we'll only show this <span class="text-lowercase" data-bind="text: type.singularName"></span> to new clients.</p>
                             </div>
-                            <p id="firstTimeClientsOnlyInstructions" class="help-block">If you check this box, we'll only show this <span class="text-lowercase" data-bind="text: type.singularName"></span> to new clients.</p>
                             <div class="form-inline isolated" data-bind="visible: type.numberOfSessionsLabel">
                                 <div class="form-group">
                                     <label for="serviceProfessionalServiceEditor-numberOfSessions" class="control-label" data-bind="text: type.numberOfSessionsLabel()"></label>
                                     <input id="serviceProfessionalServiceEditor-numberOfSessions" class="form-control" required type="number" min="1" data-bind="textInput: pricing.numberOfSessions, disable: $root.isLocked" aria-describedby="numberOfSessionsInstructions"/>
+                                    <p id="numberOfSessionsInstructions" class="help-block">Enter the number of sessions or appointments included with this <span class="text-lowercase" data-bind="text: type.singularName"></span>.</p>
                                 </div>
-                                <p id="numberOfSessionsInstructions" class="help-block">Enter the number of sessions or appointments included with this <span class="text-lowercase" data-bind="text: type.singularName"></span>.</p>
                             </div>
-                            <div class="form-group" data-bind="visible: type.priceRateQuantityLabel">
-                                <label for="serviceProfessionalServiceEditor-priceRateQuantity serviceProfessionalServiceEditor-priceRateUnit" class="control-label col-xs-12" data-bind="text: type.priceRateQuantityLabel"></label>
-                                <div class="form-group col-xs-12 col-sm-6">
-                                    <div class="input-group">
-                                        <label for="serviceProfessionalServiceEditor-priceRateQuantity" class="input-group-addon"> Price:</label>
-                                        <input id="serviceProfessionalServiceEditor-priceRateQuantity" type="number" pattern="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="$0.00" class="form-control" min="0" data-bind="textInput: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" />
+                            <div data-bind="visible: type.priceRateQuantityLabel">
+                                <label for="serviceProfessionalServiceEditor-priceRateQuantity serviceProfessionalServiceEditor-priceRateUnit" class="control-label" data-bind="text: type.priceRateQuantityLabel"></label>
+                                <div class="row">
+                                    <div class="form-group col-xs-12 col-sm-6">
+                                        <div class="input-group">
+                                            <label for="serviceProfessionalServiceEditor-priceRateQuantity" class="input-group-addon"> Price:</label>
+                                            <input id="serviceProfessionalServiceEditor-priceRateQuantity" type="number" pattern="^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$" placeholder="$0.00" class="form-control" min="0" data-bind="textInput: pricing.priceRate, disable: $root.isLocked() || pricing.noPriceRate()" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-6" data-bind="visible: type.priceRateUnitLabel">
+                                        <div class="input-group">
+                                            <label for="serviceProfessionalServiceEditor-priceRateUnit" class="input-group-addon"><span data-bind="text: type.priceRateUnitLabel"></span> (unit)</label>
+                                            <input id="serviceProfessionalServiceEditor-priceRateUnit" type="text" class="form-control" data-bind="textInput: pricing.priceRateUnit, disable: $root.isLocked() || pricing.noPriceRate()"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-12 col-sm-6" data-bind="visible: type.priceRateUnitLabel">
-                                    <div class="input-group">
-                                        <label for="serviceProfessionalServiceEditor-priceRateUnit" class="input-group-addon"><span data-bind="text: type.priceRateUnitLabel"></span> (unit)</label>
-                                        <input id="serviceProfessionalServiceEditor-priceRateUnit" type="text" class="form-control" data-bind="textInput: pricing.priceRateUnit, disable: $root.isLocked() || pricing.noPriceRate()"/>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12" data-bind="visible: type.noPriceRateLabel">
+                                <div data-bind="visible: type.noPriceRateLabel">
                                     <input id="preferNotToStatePrice" type="checkbox" data-bind="checked: pricing.noPriceRate, disable: $root.isLocked"/>
                                     <label for="preferNotToStatePrice"><span data-bind="text: type.noPriceRateLabel"></span></label>
                                     <span data-bind="visible: type.noPriceRateLearnMoreLabel() && type.noPriceRateLearnMoreText()">
@@ -81,8 +83,8 @@
                                             (<span data-bind="text: type.noPriceRateLearnMoreLabel"></span>)
                                         </button>
                                     </span>
+                                    <p id="descriptionInstructions" class="help-block">Give clients an idea of your regular pricing. <span  data-bind="visible: type.priceRateLearnMoreLabel() && type.priceRateLearnMoreText(), text: type.priceRateLearnMoreText()"></span></p>
                                 </div>
-                                <p id="descriptionInstructions" class="help-block">Give clients an idea of your regular pricing. <span  data-bind="visible: type.priceRateLearnMoreLabel() && type.priceRateLearnMoreText(), text: type.priceRateLearnMoreText()"></span></p>
                             </div>
                         </fieldset>
                         <fieldset>
@@ -90,13 +92,13 @@
                             <div class="form-group" data-bind="visible: type.durationLabel">
                                 <label for="serviceProfessionalServiceEditor-durationHours serviceProfessionalServiceEditor-durationMinutes" data-bind="text: type.durationLabel"></label>
                                 <div class="row">
-                                    <div class="col-xs-12 col-sm-5 form-group">
+                                    <div class="col-xs-12 col-sm-6 form-group">
                                         <div class="input-group">
                                             <input id="serviceProfessionalServiceEditor-durationHours" type="number" required class="form-control" min="0" data-bind="textInput: pricing.durationHoursPart, disable: $root.isLocked" />
                                             <label for="serviceProfessionalServiceEditor-durationHours" class="input-group-addon">hours</label>
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-sm-offset-1 col-sm-5 form-group">
+                                    <div class="col-xs-12 col-sm-6 form-group">
                                         <div class="input-group">
                                             <input id="serviceProfessionalServiceEditor-durationMinutes" type="number" required class="form-control" min="0" data-bind="textInput: pricing.durationMinutesPart, disable: $root.isLocked" />
                                             <label for="serviceProfessionalServiceEditor-durationMinutes"class="input-group-addon">minutes</label>
@@ -108,11 +110,12 @@
                                 <label for="consultation-in-person consultation-phone" data-bind="text: type.inPersonPhoneLabel"></label>
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-5 form-group">
-                                        <input id="consultation-in-person" type="radio" class="radio-inline" data-bind="checked: pricing.isPhone, checkedValue: false, disable: $root.isLocked()">
-                                        <label for="consultation-in-person">in-person</label>
+                                        <input id="consultation-in-person" type="radio" data-bind="checked: pricing.isPhone, checkedValue: false, disable: $root.isLocked()">
+                                        <label for="consultation-in-person" class="form-label">in-person</label>
                                     </div>
                                     <div class="col-xs-12 col-sm-5 form-group">
-                                        <input id="consultation-phone" type="radio" class="radio-inline" data-bind="checked: pricing.isPhone, checkedValue: true, disable: $root.isLocked()"> <label for="consultation-phone">phone</label>
+                                        <input id="consultation-phone" type="radio" data-bind="checked: pricing.isPhone, checkedValue: true, disable: $root.isLocked()">
+                                        <label for="consultation-phone" class="form-label">phone</label>
                                     </div>
                                 </div>
                             </div>
