@@ -13,39 +13,39 @@
         </div>
         <div class="form-group">
             <label for="lastName">Last name:</label>
-            <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked" aria-describedby="firstNameInstructions">
-            <p id="firstNameInstructions" class="help-block">
+            <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked" aria-describedby="lastNameInstructions">
+            <p id="lastNameInstructions" class="help-block">
                 <span data-bind="visible: user.isServiceProfessional()">Clients see your last name's initial on your listing and will receive your full name after a booking is confirmed.</span>
                 <span data-bind="visible: !user.isServiceProfessional()">Service professionals see your last name's initial on your booking request and will receive your full name after a booking is confirmed.</span>
             </p>
         </div>
         <div class="form-group">
             <label for="phone">Phone number:</label>
-            <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: profile.phone, disable: isLocked" aria-describedby="firstNameInstructions">
-            <p id="firstNameInstructions" class="help-block">
+            <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: profile.phone, disable: isLocked" aria-describedby="phoneInstructions">
+            <p id="phoneInstructions" class="help-block">
                 <span data-bind="visible: user.isServiceProfessional()">Only confirmed clients will see this and may use it to contact you.</span>
                 <span data-bind="visible: !user.isServiceProfessional()">Service professionals will receive your phone number only after a booking is confirmed.</span>
             </p>
         </div>
         <div class="form-group">
             <label for="canReceiveSms">Does this number receive texts?</label>
-            <input id="canReceiveSms" type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked" aria-describedby="firstNameInstructions">
-            <p id="firstNameInstructions" class="help-block">We may send text notifications about bookings. You can cancel these anytime.</p>
+            <input id="canReceiveSms" type="checkbox" data-bind="checked: profile.canReceiveSms, disable: isLocked" aria-describedby="canReceiveSmsInstructions">
+            <p id="canReceiveSmsInstructions" class="help-block">We may send text notifications about bookings. You can cancel these anytime.</p>
         </div>
     </fieldset>
     <fieldset>
         <legend>Your mailing address:</legend>
         <div class="form-group">
             <label for="addressLine1">Street address line 1:</label>
-            <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: address.addressLine1, disable: isLocked">
+            <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: address.addressLine1, disable: isLocked" aria-describedby="mailingAddressInstructions">>
         </div>
         <div class="form-group">
             <label for="addressLine2">Street address line 2:</label>
-            <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: address.addressLine2, disable: isLocked">
+            <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: address.addressLine2, disable: isLocked" aria-describedby="mailingAddressInstructions">>
         </div>
         <div class="form-group" data-bind="css: { 'has-error': errorMessages.postalCode() }">
             <label for="postalCode">Zip code:</label>
-            <input id="postalCode" type="number" class="form-control" min="0" required data-bind="textInput: address.postalCode, event: { blur: postalCodeVM.onBlur }, disable: isLocked, popover: { content: errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+            <input id="postalCode" type="number" class="form-control" min="0" required data-bind="textInput: address.postalCode, event: { blur: postalCodeVM.onBlur }, disable: isLocked, popover: { content: errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }" aria-describedby="mailingAddressInstructions">>
         </div>
         <div class="form-group">
             <label for="city">City:</label>
@@ -55,6 +55,7 @@
                 &nbsp;
             </p>
         </div>
+        <p id="mailingAddressInstructions" class="help-block">Your mailing address is only for our records.</p>
     </fieldset>
     <fieldset data-bind="visible: $parent.showNonEssentialFields">
         <legend>Optional information:</legend>
