@@ -47,7 +47,7 @@
                                 <div class="radio">
                                     <div class="input-group">
                                         <label class="form-control-static btn-block" data-bind="attr: { for: 'cancellationPolicy' + policy.cancellationPolicyID() }">
-                                            <input type="radio" data-bind="checked: $parent.selectedCancellationPolicyID, value: policy.cancellationPolicyID, disable: $parent.isLocked, attr: { id: 'cancellationPolicy' + policy.cancellationPolicyID(), 'aria-describedby': 'cancellationPolicyInformation' + policy.cancellationPolicyID() }" />
+                                            <input type="radio" data-bind="checked: $parent.selectedCancellationPolicyID, value: policy.cancellationPolicyID, disable: $parent.isLocked, attr: { id: 'cancellationPolicy' + policy.cancellationPolicyID(), 'aria-describedby': 'cancellationPolicyInformation' + policy.cancellationPolicyID() }"/>
                                             <span data-bind="text: policy.name"></span>
                                         </label>
                                         <p class="help-block"><span data-bind="text: policy.description, attr: { id: 'cancellationPolicyInformation' + policy.cancellationPolicyID() }"></span><em><span> For example, if a booking was made by a client for one week from now and cancelled by <strong data-bind="text: policy.refundLimitDate, format: { type: 'datetime', format: 'LT dddd, LL' }"></strong>, they would <strong><span data-bind="text: policy.cancellationFeeBeforeDisplay"></span></strong>. If they cancelled after, they would be charged a <strong><span data-bind="text: policy.cancellationFeeAfterDisplay"></span> cancellation fee.</strong></span></em></p>
