@@ -21,7 +21,6 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
-// this.title defined in switch statement in lines 156 through 180
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -32,6 +31,9 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Locations', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        return this.formInstructions() + this.jobTitleName();
+    }, this.viewModel);
 
     // On changing jobTitleID:
     // - load job title name
