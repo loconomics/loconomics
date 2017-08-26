@@ -41,7 +41,7 @@
         </div>
         <div class="form-group">
             <label for="addressLine2">Street address line 2:</label>
-            <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: address.addressLine2">
+            <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: address.addressLine2, disable: isLocked">
         </div>
         <div class="form-group" data-bind="css: { 'has-error': errorMessages.postalCode() }">
             <label for="postalCode">Zip code:</label>
