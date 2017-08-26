@@ -1,16 +1,17 @@
 /**
-    ClientEdition activity
+    ClientEditor activity
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    is = require('is_js'),
-    ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter'),
-    RouteParser = require('../utils/Router.js').RouteParser;
+var Activity = require('../components/Activity');
+var is = require('is_js');
+var ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter');
+var RouteParser = require('../utils/Router.js').RouteParser;
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var userJobProfile = require('../data/userJobProfile');
 var pricingTypes = require('../data/pricingTypes');
+var ko = require('knockout');
 
 var A = Activity.extend(function ClientEditionActivity() {
 
@@ -22,6 +23,9 @@ var A = Activity.extend(function ClientEditionActivity() {
     this.navBar = Activity.createSubsectionNavBar('Clients', {
         backLink: 'clients' , helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        return this.header();
+    }, this.viewModel);
 
     // If there is a change on the clientID, the URL must match
     // that (if is not already that).
@@ -74,8 +78,6 @@ var A = Activity.extend(function ClientEditionActivity() {
 });
 
 exports.init = A.init;
-
-var ko = require('knockout');
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     var referrerRoute = this.app.shell.referrerRoute,
