@@ -17,6 +17,7 @@ var A = Activity.extend(function UserFeePaymentsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account', helpLink: this.viewModel.helpLink
     });
+    this.title('Payment history');
 });
 
 module.exports = A;

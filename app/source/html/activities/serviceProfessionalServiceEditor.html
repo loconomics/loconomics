@@ -29,7 +29,7 @@
                             </div>
                             <div class="form-group" data-bind="visible: type.serviceProfessionalDescription">
                                 <label for="serviceProfessionalServiceEditor-description">Description of <span class="text-lowercase" data-bind="text: type.singularName"></span>:</label>
-                                <textarea id="serviceProfessionalServiceEditor-description" class="form-control"  type="text" maxlength="1000" data-bind="textInput: pricing.description, disable: $root.isLocked"  aria-describedby="descriptionInstructions">
+                                <textarea id="serviceProfessionalServiceEditor-description" type="text" class="form-control" maxlength="1000" data-bind="textInput: pricing.description, disable: $root.isLocked"  aria-describedby="descriptionInstructions">
                                 </textarea>
                                 <p id="descriptionInstructions" class="help-block"><span data-bind="text: type.descriptionPlaceHolder"></span></p>
                                 <!-- <div class="help-block" data-bind="if: showRemaining">Character limit: <span data-bind="text: charRemaining"></span></div> -->

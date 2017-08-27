@@ -18,6 +18,7 @@ var A = Activity.extend(function ServicesOverviewActivity() {
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
+    this.title('Overview of your services');
 
     this.navBar = Activity.createSubsectionNavBar(DEFAULT_BACK_TEXT, {
         backLink: DEFAULT_BACK_LINK,
