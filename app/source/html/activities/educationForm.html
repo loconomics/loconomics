@@ -11,41 +11,40 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Your certifications &amp; degrees</span>
-                </h2>                
+                <h1><icon-dec params="icon: 'ion-university'"></icon-dec> <span data-bind="text: title"></span></h1>               
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <form class="container-fluid LightForm" data-bind="submit: save, with: item">
+                <p id="profileFormInstructions" class="help-block">Clients like to know if you've had special education or training for your profession.</p> 
+                <form id="educationForm" class="container-fluid LightForm" data-bind="submit: save, with: item" aria-describedby="profileFormInstructions">
+                    <fieldset>
+                        <legend>Training or degree:</legend>
+                    </fieldset>
                     <div class="form-group">
-                        <label for="educationForm-school">School</label>
-                        <div>
-                            <input type="text" id="educationForm-school" class="form-control" data-bind="value: institutionName, disable: $parent.isLocked"/>
-                        </div>
+                    <label for="school">School or institution:</label>
+                        <input id="school" type="text"  class="form-control" data-bind="value: institutionName, disable: $parent.isLocked"/>
                     </div>
                     <div class="form-group">
-                        <label for="educationForm-degree">Certificate/Degree</label>
-                        <input type="text" id="educationForm-degree" class="form-control" data-bind="value: degreeCertificate, disable: $parent.isLocked"/>
+                        <label for="degree">Accomplishment:</label>
+                        <input id="degree" type="text" class="form-control" data-bind="value: degreeCertificate, disable: $parent.isLocked"/ aria-describedby="degreeInstructions">
+                        <p id="degreeInstructions" class="help-block">This could be a degree, certificate, or level of training.</p>
                     </div>
                     <div class="form-group">
-                        <label for="educationForm-field">Field of study</label>
-                        <input type="text" id="educationForm-field" class="form-control"
-                           data-bind="value: fieldOfStudy, disable: $parent.isLocked"/>
+                        <label for="fieldOfStudy">Field of study:</label>
+                        <input id="fieldOfStudy" type="text" class="form-control" data-bind="value: fieldOfStudy, disable: $parent.isLocked"/>
                     </div>
                     <div class="form-group">
-                        <label for="educationForm-startYear">Years attended: </label>
+                        <label for="startYear endYear">Years attended: </label>
+                        <br>
                         <div class="form-group form-group-inline">
-                            <label for="educationForm-startYear" class="sr-only">Started:</label>
-                            <select id="educationForm-startYear" class="form-control"
-                                   data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked">
+                            <label for="educationForm-startYear">Started:  </label>
+                            <select id="startYear" class="form-control" data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked">
                             </select>
                         </div>
                         <span>&nbsp;-&nbsp;</span>
                         <div class="form-group form-group-inline">
-                            <label for="educationForm-startYear" class="sr-only">Ended:</label>
-                            <select id="educationForm-endYear" class="form-control"
-                                   data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked">
+                            <label for="endYear">Ended:  </label>
+                            <select id="endYear" class="form-control"data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked">
                             </select>
                         </div>
                     </div>
