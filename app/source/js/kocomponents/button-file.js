@@ -1,6 +1,17 @@
 /**
- * An action button inside a smart-nav-bar.
+ * A button that triggers an input type=file file picker.
+ * It uses a CSS trick to being able to create a fully customizable button
+ * while passing user events directly to the input element; must be known
+ * that browsers prevent programatic events on this for a security reason.
+ * Additionally to the parameters documented at the ViewModel below,
+ * the component allows child elements that will be placed as-is inside
+ * the button and before the input in DOM order.
  * @module kocomponents/button-file
+ *
+ * @example Basic usage providing a label
+ * <button-file params="id: 'upload-file', disabled: isFormDisabled">
+ *     <label for='upload-file'>Choose a file for upload</label>
+ * </button-file>
  */
 'use strict';
 
