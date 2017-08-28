@@ -15,46 +15,48 @@
                 <h1>
                     <icon-dec params="icon: titleIcon"></icon-dec> <span data-bind="text: title"></span>
                 </h1>
-                <form id="addressEditorForm" role="form" data-bind="submit: save" class="container-fluid LightForm" aria-describedby="addressEditorFormInstructions"> 
-                        <p id="addressEditorFormInstructions" class="help-block" data-bind="visible: formInstructions"><span data-bind="text: formInstructions"></span> <span class="text-lowercase" data-bind="text: jobTitleName"></span> services.</p>
-                        <div data-bind="css: { 'is-loading': isLoading }">
-                            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                        </div>
+                <form id="addressEditorForm" role="form" data-bind="submit: save" class="container-fluid LightForm" aria-describedby="addressEditorFormInstructions">
+                    <p id="addressEditorFormInstructions" class="help-block" data-bind="visible: formInstructions">
+                        <span data-bind="text: formInstructions"></span> <span class="text-lowercase" data-bind="text: jobTitleName"></span> services.
+                    </p>
+                    <div data-bind="css: { 'is-loading': isLoading }">
+                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                    </div>
                     <div data-bind="with: address()">
                         <div data-bind="visible: isServiceLocation">
                             <fieldset>
-                                    <legend><span data-bind="text: $root.jobTitleName"></span> place of work:</legend>
-                                    <div class="form-group" data-bind="visible: !$parent.clientUserID()">
-                                        <label for="locationName">Name of location:</label>
-                                        <input id="locationName" type="text" class="form-control" required maxlength="100" data-bind="textInput: addressName, disable: $root.isLocked" aria-describedby="locationNameInstructions">
-                                        <p id="locationNameInstructions" class="help-block">Enter the name of your building or business location. If it's your home, enter "My home".</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="addressLine1">Street address line 1:</label>
-                                        <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: addressLine1, disable: $root.isLocked">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="addressLine2">Street address line 2:</label>
-                                        <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: addressLine2, disable: $root.isLocked">
-                                    </div>
-                                    <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
-                                        <label for="postalCode">Zip code:</label>
-                                        <input id="postalCode" type="number" class="form-control" min="0" required data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="city">City:</label>
-                                        <p id="city" class="form-control-static">
+                                <legend><span data-bind="text: $root.jobTitleName"></span> place of work:</legend>
+                                <div class="form-group" data-bind="visible: !$parent.clientUserID()">
+                                    <label for="locationName">Name of location:</label>
+                                    <input id="locationName" type="text" class="form-control" required maxlength="100" data-bind="textInput: addressName, disable: $root.isLocked" aria-describedby="locationNameInstructions">
+                                    <p id="locationNameInstructions" class="help-block">Enter the name of your building or business location. If it's your home, enter "My home".</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressLine1">Street address line 1:</label>
+                                    <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: addressLine1, disable: $root.isLocked">
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressLine2">Street address line 2:</label>
+                                    <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: addressLine2, disable: $root.isLocked">
+                                </div>
+                                <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+                                    <label for="postalCode">Zip code:</label>
+                                    <input id="postalCode" type="number" class="form-control" min="0" required data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $root.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">City:</label>
+                                    <p id="city" class="form-control-static">
                                         <span data-bind="text: cityState() || 'Enter a valid zip code'"></span>
-                                            <!-- White space to reserve vertical space -->
-                                            &nbsp;
-                                        </p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="locationSpecialInstructions">Special instructions:</label>
-                                        <textarea rows="2" class="form-control" placeholder="" id="locationSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked" aria-describedby="locationSpecialInstructionsInstructions"></textarea>
-                                        <p id="locationSpecialInstructionsInstructions" class="help-block">List anything helpful in finding this location, e.g., intercom code, parking, color of building, pets, etc.</p>
-                                    </div>
-                                </fieldset>
+                                        <!-- White space to reserve vertical space -->
+                                        &nbsp;
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="locationSpecialInstructions">Special instructions:</label>
+                                    <textarea rows="2" class="form-control" placeholder="" id="locationSpecialInstructions" data-bind="textInput: specialInstructions, disable: $root.isLocked" aria-describedby="locationSpecialInstructionsInstructions"></textarea>
+                                    <p id="locationSpecialInstructionsInstructions" class="help-block">List anything helpful in finding this location, e.g., intercom code, parking, color of building, pets, etc.</p>
+                                </div>
+                            </fieldset>
                         </div>
                         <div data-bind="visible: isServiceArea">
                             <fieldset>
@@ -66,15 +68,14 @@
                                 <div class="form-group">
                                     <label for="city">City:</label>
                                     <p id="city" class="form-control-static">
-                                    <span data-bind="text: cityState() || 'Enter a valid zip code'"></span>
+                                        <span data-bind="text: cityState() || 'Enter a valid zip code'"></span>
                                         <!-- White space to reserve vertical space -->
                                         &nbsp;
                                     </p>
                                 </div>
                                 <div class="form-group">
                                     <label for="addressEditorRadius">Service radius<span data-bind="visible: postalCode"> from <span data-bind="text: postalCode"></span></span>:</label>
-                                    <select class="form-control" id="addressEditorRadius" required data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true">
-                                    </select>
+                                    <select class="form-control" id="addressEditorRadius" required data-bind="value: serviceRadius, options: $root.serviceRadiusOptions, optionsText: 'label', optionsValue: 'value', disable: $root.isLocked, valueAllowUnset: true"></select>
                                 </div>
                             </fieldset>
                         </div>

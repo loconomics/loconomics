@@ -31,9 +31,7 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Locations', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
-    this.title = ko.pureComputed(function() {
-        return this.formInstructions() + this.jobTitleName();
-    }, this.viewModel);
+    this.title('Edit location');
 
     // On changing jobTitleID:
     // - load job title name
@@ -130,12 +128,12 @@ A.prototype.show = function show(options) {
                 var title = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Edit this place of work' : 'Edit this service area';
                 var formInstructions = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'This is an address of a location where clients come to receive your ' : "This is an area where you are willing to go to a client's home or business to perform your ";
 
-                this.viewModel.title(title);
+                this.title(title);
                 this.viewModel.formInstructions(formInstructions);
             }
             else {
                 this.viewModel.addressVersion(null);
-                this.viewModel.title('Unknown or deleted location');
+                this.title('Unknown or deleted location');
                 this.viewModel.formInstructions('');
             }
 
@@ -161,14 +159,14 @@ A.prototype.show = function show(options) {
             case 'serviceArea':
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
-                this.viewModel.title('Add an area where you work');
+                this.title('Add an area where you work');
                 this.viewModel.titleIcon('ion-pinpoint');
                 this.viewModel.formInstructions("Enter a zip code and a distance from that zip code to create an area where you are willing to go to a client's home or business to perform your ");
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.title('Add a place where you work');
+                this.title('Add a place where you work');
                 this.viewModel.titleIcon('ion-ios-location-outline');
                 this.viewModel.formInstructions('Enter the address of the location where clients come to receive your ');
                 break;
@@ -178,14 +176,14 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().userID(clientUserID);
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.title('Add a client location');
+                this.title('Add a client location');
                 this.viewModel.titleIcon('ion-ios-location-outline');
                 this.viewModel.formInstructions("Enter your client's address where you'll perform your ");
                 break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.title('Add a location for your ');
+                this.title('Add a location for your ');
                 this.viewModel.titleIcon('ion-ios-location-outline');
                 break;
         }
@@ -198,7 +196,6 @@ function ViewModel(app) {
 
     this.isInOnboarding = onboarding.inProgress;
 
-    this.title = ko.observable('Edit location');
     this.titleIcon = ko.observable('ion-ios-location-outline');
     this.formInstructions = ko.observable('');
     // List of possible error messages registered
