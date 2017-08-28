@@ -33,15 +33,20 @@
                             <input id="fieldOfStudy" type="text" class="form-control" data-bind="value: fieldOfStudy, disable: $parent.isLocked"/>
                         </div>
                         <div class="form-group">
-                            <label for="startYear endYear">Years attended: </label>
+                            <label id="educationForm-yearsAttended">Years attended: </label>
+                            <br/>
                             <div class="form-group form-group-inline">
-                                <label for="educationForm-startYear">Started:  </label>
-                                <select id="startYear" class="form-control" data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked"></select>
+                                <label id="educationForm-startYearLabel" for="educationForm-startYear">Started: </label>
+                                <select id="educationForm-startYear" class="form-control"
+                                    aria-labelledby="educationForm-yearsAttended educationForm-startYearLabel"
+                                    data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: fromYearAttended, disable: $parent.isLocked"></select>
                             </div>
                             <span>&nbsp;-&nbsp;</span>
                             <div class="form-group form-group-inline">
-                                <label for="endYear">Ended:  </label>
-                                <select id="endYear" class="form-control"data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked"></select>
+                                <label id="educationForm-endYearLabel" for="educationForm-endYear">Ended: </label>
+                                <select id="educationForm-endYear" class="form-control"
+                                    aria-labelledby="educationForm-yearsAttended educationForm-endYearLabel"
+                                    data-bind="options: $parent.yearsOptions, optionsCaption: '-', value: toYearAttended, disable: $parent.isLocked"></select>
                             </div>
                         </div>
                     </fieldset>
