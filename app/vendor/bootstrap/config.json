@@ -1,20 +1,20 @@
 {
   "vars": {
     "@gray-base": "#000",
-    "@gray-darker": "#222",
-    "@gray-dark": "#333",
-    "@gray": "#555",
-    "@gray-light": "#777",
-    "@gray-lighter": "#ccc",
-    "@brand-primary": "#00989A",
-    "@brand-success": "#47b347",
-    "@brand-info": "#5bc0de",
-    "@brand-warning": "#f0ad4e",
-    "@brand-danger": "#d9534f",
-    "@body-bg": "#fff",
+    "@gray-darker": "lighten(@gray-base, 13.5%)",
+    "@gray-dark": "lighten(@gray-base, 20%)",
+    "@gray": "lighten(@gray-base, 33.5%)",
+    "@gray-light": "lighten(@gray-base, 46.7%)",
+    "@gray-lighter": "lighten(@gray-base, 93.5%)",
+    "@brand-primary": "#007a7c",
+    "@brand-success": "#00aa55",
+    "@brand-info": "#2176ae",
+    "@brand-warning": "#f9dc5c",
+    "@brand-danger": "#ff0000",
+    "@body-bg": "#f5f5f5",
     "@text-color": "@gray-dark",
-    "@link-color": "#428bca",
-    "@link-hover-color": "#2a6496",
+    "@link-color": "@brand-primary",
+    "@link-hover-color": "darken(@link-color, 15%)",
     "@link-hover-decoration": "underline",
     "@font-family-sans-serif": "\"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "@font-family-serif": "Georgia, \"Times New Roman\", Times, serif",
@@ -378,6 +378,7 @@
     "@blockquote-border-color": "@gray-lighter",
     "@page-header-border-color": "@gray-lighter",
     "@dl-horizontal-offset": "@component-offset-horizontal",
+    "@dl-horizontal-breakpoint": "@grid-float-breakpoint",
     "@hr-border": "@gray-lighter"
   },
   "css": [
@@ -422,5 +423,5 @@
     "collapse.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=d1cdadca1a856dbeb745"
+  "customizerUrl": "http://getbootstrap.com/docs/3.3/customize/?id=6d342b2ada0d9dd5846ab3be046f140c"
 }
