@@ -43,20 +43,23 @@
                     </ul>
                 </div>
                 <form id="planSelectionForm" data-bind="visible: isNew" aria-describedby="planSelectionFormInstructions">
-                    <p id="planSelectionFormInstructions" class="help-block">We have plans to fit any budget. Since we're a cooperative, any paid plans entitle you to becoming an official owner.</p>  
+                    <p id="planSelectionFormInstructions" class="help-block">We have plans to fit any budget. Since we're a cooperative, any paid plans entitle you to becoming an official owner.</p>
                     <fieldset>
                         <legend>Select a plan:</legend>
                         <script type="text/html" id="userFees-item-tpl">
-                            <div class="radio">
-                                <div class="input-group">
-                                    <label class="form-control-static btn-block" data-bind="attr: { for: id }">
-                                        <input type="radio" data-bind="attr: { id: id, 'aria-describedby': describedBy }, checked: checkedValue, value: itemValue, disable: disabled" />
+                            <div class="input-group">
+                                <div class="radio-inline">
+                                    <input type="radio" data-bind="attr: { id: id, 'aria-describedby': describedBy }, checked: checkedValue, value: itemValue, disable: disabled" />
+                                    <label class="btn-block" data-bind="attr: { for: id }">
                                         <strong data-bind="text: itemLabel"></strong> - <span data-bind="text: itemSummary"></span>
                                     </label>
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false" data-bind="attr: { 'data-target': '#userFees-info-' + itemValue(), 'data-controls': '#userFees-info-' + itemValue() }">View details</button>
-                                    </span>
                                 </div>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false"
+                                        data-bind="attr: { 'data-target': '#userFees-info-' + itemValue(), 'data-controls': '#userFees-info-' + itemValue() }">
+                                        View details
+                                    </button>
+                                </span>
                             </div>
                         </script>
                         <div data-bind="visible: isNew">
@@ -80,8 +83,8 @@
                         <legend>Enter payment info:</legend>
                         <div data-bind="with: paymentMethod" class="PaddedBox-xs Box-md bg-white">
                             <div class="form-group">
+                                <label for="creditCard">Credit card number:</label>
                                 <span class="input-group">
-                                    <label for="creditCard">Credit card number:</label>
                                     <input id="creditCard" type="text" required class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" aria-describedby="creditCardSecureForm">
                                     <span class="input-group-addon" aria-hidden="true">
                                         <span class="fa ion ion-card fa-lg"></span>
@@ -89,24 +92,26 @@
                                 </span>
                             </div>
                             <div class="row">
-                                <div class="col-xs-7">
+                                <div class="col-sm-7">
                                     <div class="form-group">
-                                        <span class="input-group">
+                                        <div class="input-group">
                                             <label for="expiry" class="input-group-addon">Expires (mm/yyyy):</label>
                                             <input id="expiry" type="text" required class="form-control" data-bind="value: expirationMonthYear, disable: $parent.isLocked" placeholder="mm/yyyy"  aria-describedby="creditCardSecureForm">
-                                        </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-5">
+                                <div class="col-sm-5">
                                     <div class="form-group">
-                                        <label for="securityCode">CCV:</label>
-                                        <input id="securityCode" type="text" required class="form-control" data-bind="value: securityCode, disable: $parent.isLocked"  aria-describedby="creditCardSecureForm">
+                                        <div class="input-group">
+                                            <label for="securityCode" class="input-group-addon">CCV:</label>
+                                            <input id="securityCode" type="text" required class="form-control" data-bind="value: securityCode, disable: $parent.isLocked" aria-describedby="creditCardSecureForm">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="postalCode">Zip code:</label>
-                                <input id="postalCode" type="number" required class="form-control" min="0" data-bind="textInput: billingAddress().postalCode, disable: $parent.isLocked"  aria-describedby="creditCardSecureForm">
+                                <label for="userFees-postalCode">Zip code:</label>
+                                <input id="userFees-postalCode" type="number" required class="form-control" min="0" data-bind="textInput: billingAddress().postalCode, disable: $parent.isLocked"  aria-describedby="creditCardSecureForm">
                             </div>
                             <p id="creditCardSecureForm" class="help-block"><icon-dec params="icon: 'ion-ios-locked-outline'"></icon-dec> This is a secure 128 bit SSL encrypted form, and we're PCI compliant.</p>
                         </div>
