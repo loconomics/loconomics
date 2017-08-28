@@ -11,6 +11,7 @@ var onboarding = require('../data/onboarding');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var licenseCertification = require('../data/licenseCertification');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
+var $ = require('jquery');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
