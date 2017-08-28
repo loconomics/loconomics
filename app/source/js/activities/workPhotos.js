@@ -11,6 +11,7 @@ var WorkPhoto = require('../models/WorkPhoto'),
     photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
 var workPhotos = require('../data/workPhotos');
+require('../kocomponents/button-file');
 
 var A = Activity.extend(function WorkPhotosActivity() {
 

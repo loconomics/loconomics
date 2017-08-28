@@ -7,7 +7,7 @@
 var TAG_NAME = 'switch-checkbox';
 var TEMPLATE = require('../../html/kocomponents/switch-checkbox.html');
 var CSS_CLASS = 'SwitchCheckbox';
-//require-styl '../../css/components/SwitchCheckbox'
+//require-styl '../../css/components/SwitchCheckbox.styl'
 
 var ko = require('knockout');
 var getObservable = require('../utils/getObservable');

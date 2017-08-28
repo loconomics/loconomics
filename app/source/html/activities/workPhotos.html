@@ -7,7 +7,7 @@
                 <ul>
                     <li>
                         <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
                             <span></span> Back
                         </a>
                     </li>
@@ -45,11 +45,12 @@
                                 <div class="Tile-content text-muted">Upload/take photo</div>
                                 <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
                             </button>
-                            <span class="CompactLinkTile btn-file" data-bind="visible: !takePhotoSupported(), attr: { disabled: state.isLocked }">
-                                <div class="Tile-content text-muted">Upload/take photo</div>
-                                <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-                                <input type="file" id="workPhotos-photoFile" data-bind="disable: state.isLocked">
-                            </span>
+                            <button-file class="CompactLinkTile btn-file"
+                                data-bind="visible: !takePhotoSupported()"
+                                params="disabled: state.isLocked, id: 'workPhotos-photoFile'">
+                                <label class="Tile-content text-muted" for="workPhotos-photoFile">Upload/take photo</label>
+                                <div class="Tile-icon text-muted" aria-hidden="true"><span class="fa ion ion-plus"></span></div>
+                            </button-file>
                         </div>
                         <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
                             <button type="button" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>

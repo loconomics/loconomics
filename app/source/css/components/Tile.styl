@@ -40,8 +40,11 @@ Tile() {
     }
 
     // Class to permanent mark as active, and :active pseudo styles
+    // Supported for the state class is-focused, required for components
+    // like button-file that may be used along Tile classes.
     &:active,
-    &:focus {
+    &:focus,
+    &.is-focused {
         outline: 1px solid $brand-secondary;
         outline-offset: -2px;
     }
