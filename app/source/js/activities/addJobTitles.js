@@ -19,6 +19,7 @@ var A = Activity.extend(function AddJobTitlesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
+    this.title('Create a new listing');
 });
 
 exports.init = A.init;

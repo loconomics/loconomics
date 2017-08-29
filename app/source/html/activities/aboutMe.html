@@ -19,7 +19,7 @@
                     <div class="SmartNavContent container-fluid nogaps-md nogaps-lg">
                         <form id="profileForm" class="LightForm" role="form" data-bind="submit: save" aria-describedby="profileFormInstructions">
                             <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                            <h1><icon-dec params="icon: 'ion-ios-contact-outline'"></icon-dec> <span data-bind="visible: isInOnboarding()"> Introduce yourself</span><span data-bind="visible: !isInOnboarding()"> Your profile</span></h1>
+                            <h1><icon-dec params="icon: 'ion-ios-contact-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
                             <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                             <p id="profileFormInstructions" class="help-block"><span data-bind="visible: user.isServiceProfessional()">Clients</span><span data-bind="visible: !user.isServiceProfessional()">Service professionals</span> see your first name and last initial on your public listing. They'll receive your full name, email address, and phone number once a booking is confirmed.</p>
                             <div data-bind="template: { name: 'contact-info-fieldset-template', data: {contactInfo: contactInfo, showNonEssentialFields: !isInOnboarding()} }"></div>

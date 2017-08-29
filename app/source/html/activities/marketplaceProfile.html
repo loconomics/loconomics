@@ -4,31 +4,27 @@
   <div class="container">
       <div class="row">
         <h1 data-bind="text: title"></h1>
+        <div data-bind="css: { 'is-loading': isLoading }">
+            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
         <div class="col-md-7 col-sm-reset">
             <div data-bind="visible: user.isServiceProfessional">
                 <h2 class="SectionTitle">Listings by job title</h2>
-                <div data-bind="css: { 'is-loading': isLoading }">
-                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                </div>
                 <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
                 <h2 class="SectionTitle">Add a new listing</h2>
-                <a class="CompactLinkTile" href="/addJobTitles">
-                    <div class="Tile-content text-muted">Search for job title</div>
-                    <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
+                <a class="IconLinkItem" href="/addJobTitles">
+                    <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Search for a job title</p>
+                    </div>
                 </a>
                 <h2 class="SectionTitle">Availability settings</h2>
-                <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="InfoTile" href="/schedulingPreferences?mustReturn=marketplaceProfile&returnText=Your Listings">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-settings" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Adjust your availability</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <a class="IconLinkItem" href="/schedulingPreferences?mustReturn=marketplaceProfile&returnText=Your Listings">
+                    <icon-dec params="icon: 'ion-ios-settings'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Adjust your availability</p>
+                    </div>
+                </a>
             </div>
             <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
         </div>
