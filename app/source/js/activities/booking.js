@@ -77,8 +77,6 @@ A.prototype.hide = function hide() {
 /// and sufix 'Load'
 
 A.prototype.servicesLoad = function() {
-    // TODO Depends on jobTitle:
-    this.viewModel.supportsGratuity(false);
     this.viewModel.loadServices();
 };
 
