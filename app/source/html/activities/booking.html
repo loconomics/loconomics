@@ -4,7 +4,7 @@
     <div>
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
     </div>
-    <div class="container Boxes-sm animated">
+    <div class="container animated">
         <div class="row" data-bind="if: booking">
             <div class="Sidebar hidden-xs hidden-sm col-md-3" >
                 <h2>Steps:</h2>
@@ -13,57 +13,56 @@
                 </div>
             </div>
             <div class="col-md-9 col-sm-reset booking-steps">
-                <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
-                    <span>Already have an account?</span>
-                    <a href="/login" data-bind="click: goLogin">Sign in
-                    </a>
-                </div>
-                <form>
-                    <fieldset>
-                        <legend>Your professional:</legend>
-                        <div class="Box-sm">
+                <div id="bookingSelectOfferings" class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <span>Already have an account?  </span>
+                        <a href="/login" class="btn btn-default" data-bind="click: goLogin">Sign in
+                        </a>
+                    </div>
+                    <form>
+                        <fieldset>
+                            <legend>Your professional:</legend>
                             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
-                        </div>
-                    </fieldset>
-                    <fieldset class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
-                        <legend>Select offering(s):</legend>
-                        <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Summary:</legend>
-                        <div class="PricingSummary Box-sm PaddedBox-xs">
-                            <table>
-                                <tbody data-bind="foreach: booking().pricingSummary().items">
-                                    <tr>
-                                        <td class="PricingSummary-concept" data-bind="text: serviceName"></td>
-                                        <td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th class="PricingSummary-concept">Total</th>
-                                        <th class="PricingSummary-price"><span data-bind="text: booking().pricingSummary().totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span><span data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">*</span></th>
-                                    </tr>
-                                    <tr data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">
-                                        <td class="PricingSummary-fees" colspan="2">
-                                            <span data-bind="text: booking().pricingSummary().feesMessage"></span>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                            <div class="PricingSummary-time isolated inset" data-bind="visible: booking().pricingSummary().firstSessionDurationDisplay">
-                                <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
-                                <span data-bind="text: booking().pricingSummary().firstSessionDurationDisplay"></span>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Select offering(s):</legend>
+                            <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
+                        </fieldset>
+                        <fieldset data-bind="visible: booking().pricingSummary().servicesSummary()">
+                            <legend>Summary:</legend>
+                            <div class="PricingSummary PaddedBox-xs">
+                                <table>
+                                    <tbody data-bind="foreach: booking().pricingSummary().items">
+                                        <tr>
+                                            <td class="PricingSummary-concept" data-bind="text: serviceName"></td>
+                                            <td class="PricingSummary-price" data-bind="text: price, format: { type: 'number', format: '$#,##0.00' }"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="PricingSummary-concept">Total</th>
+                                            <th class="PricingSummary-price"><span data-bind="text: booking().pricingSummary().totalPrice, format: { type: 'number', format: '$#,##0.00' }"></span><span data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">*</span></th>
+                                        </tr>
+                                        <tr data-bind="visible: booking().pricingSummary().clientServiceFeePrice() > 0">
+                                            <td class="PricingSummary-fees" colspan="2">
+                                                <span data-bind="text: booking().pricingSummary().feesMessage"></span>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <div class="PricingSummary-time isolated inset" data-bind="visible: booking().pricingSummary().firstSessionDurationDisplay">
+                                    <span class="fa fa-lg ion ion-ios-clock-outline" aria-hidden="true"></span>
+                                    <span data-bind="text: booking().pricingSummary().firstSessionDurationDisplay"></span>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <div class="PaddedBox-xs-only isolated-sm">
+                            <div>
+                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !hasServicesSelected(), click: nextStep">Save and continue</button>
                             </div>
                         </div>
-                    </fieldset>
-                    
-                    <div class="PaddedBox-xs-only isolated-sm">
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked() || !hasServicesSelected(), click: nextStep">Save and continue</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
                 <div id="bookingSelectLocation" class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">

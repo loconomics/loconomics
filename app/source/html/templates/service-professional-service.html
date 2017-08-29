@@ -11,22 +11,27 @@
 
             <ul class="TilesList TilesList--openEnd Box-sm">
                 <!-- ko foreach: { data: services, as: 'service' } -->
-                    <li><a href="#" class="ItemTile" data-bind="click: $parents[2].tapService, css: { active: service.isSelected }" role="button">
-                        <div class="Tile-marker"><p data-bind="text: service.displayedPrice"></p></div>
-                        <div class="Tile-content">
-                            <div data-bind="visible: service.sessionsAndDuration(), text: service.name"></div>
-                            <em data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></em>
-                            <p data-bind="visible: !service.sessionsAndDuration(), text: service.name"></p>
+                    <li>
+                        <div class="OfferingItem">
+                            <div class="Item-content">
+                                <h3 data-bind="text: service.name"></h3>
+                                <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
+                                <p data-bind="text: service.offeringPrice"></p>
+                            </div>
+                            <div class="Item-action" data-bind="click: $parents[2].tapService">
+                                <span role="checkbox" data-bind="visible: $parents[2].isSelectionMode, attr: { 'aria-pressed': service.isSelected, 'aria-label': 'Select '+ service.name() }"><i data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }" aria-hidden="true"></i></span> <span role="link" data-bind="visible: !$parents[2].isSelectionMode(), attr: {'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
+                            </div>
                         </div>
-                        <div class="Tile-icon">
-                          <span data-bind="visible: $parents[2].isSelectionMode, attr: { 'aria-pressed': service.isSelected }" role="button"><span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }"></span><span class="sr-only">Selected?</span></span>
-                          <span data-bind="visible: !$parents[2].isSelectionMode()"><span class="fa ion ion-edit"></span><span class="sr-only">Edit</span></span>
-                        </div>
-                    </a></li>
+                    </li>
                 <!-- /ko -->
                 <!-- ko foreach: newButtons -->
                     <li>
-                        <a class="LinkTile" role="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $parents[2].tapNewService, text: label"></a>
+                        <a class="IconLinkItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $parents[2].tapNewService">
+                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                            <div class="Item-content">
+                                <p data-bind="text: label"></p>
+                            </div>
+                        </a>
                     </li>
                 <!-- /ko -->
             </ul>
