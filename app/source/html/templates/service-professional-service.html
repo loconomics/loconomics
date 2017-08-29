@@ -5,36 +5,35 @@
     </div>
     <!-- ko foreach: serviceListGroups -->
         <div data-bind="foreach: serviceLists()">
-            <div class="SectionTitle" data-bind="visible: !$parents[1].isAdditionMode()">
-                <span data-bind="text: title"></span>
-            </div>
-
-            <ul class="TilesList TilesList--openEnd Box-sm">
-                <!-- ko foreach: { data: services, as: 'service' } -->
-                    <li>
-                        <div class="OfferingItem">
-                            <div class="Item-content">
-                                <h3 data-bind="text: service.name"></h3>
-                                <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
-                                <p data-bind="text: service.offeringPrice"></p>
+            <fieldset>
+                <legend data-bind="visible: !$parents[1].isAdditionMode()"><span data-bind="text: title"></span></legend>
+                <ul class="TilesList TilesList--openEnd Box-sm">
+                    <!-- ko foreach: { data: services, as: 'service' } -->
+                        <li>
+                            <div class="OfferingItem">
+                                <label class="Item-content" data-bind="attr: { for: 'offering' + service.id() }">
+                                    <h3 data-bind="text: service.name"></h3>
+                                    <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
+                                    <p data-bind="text: service.offeringPrice"></p>
+                                </label>
+                                <div class="Item-action" data-bind="click: $parents[2].tapService">
+                                    <span role="checkbox" data-bind="visible: $parents[2].isSelectionMode, attr: { id: 'offering' + service.id(), 'aria-pressed': service.isSelected }"><i data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }" aria-hidden="true"></i></span> <span role="link" data-bind="visible: !$parents[2].isSelectionMode(), attr: {'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
+                                </div>
                             </div>
-                            <div class="Item-action" data-bind="click: $parents[2].tapService">
-                                <span role="checkbox" data-bind="visible: $parents[2].isSelectionMode, attr: { 'aria-pressed': service.isSelected, 'aria-label': 'Select '+ service.name() }"><i data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }" aria-hidden="true"></i></span> <span role="link" data-bind="visible: !$parents[2].isSelectionMode(), attr: {'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
-                            </div>
-                        </div>
-                    </li>
-                <!-- /ko -->
-                <!-- ko foreach: newButtons -->
-                    <li>
-                        <a class="IconLinkItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $parents[2].tapNewService">
-                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
-                            <div class="Item-content">
-                                <p data-bind="text: label"></p>
-                            </div>
-                        </a>
-                    </li>
-                <!-- /ko -->
-            </ul>
+                        </li>
+                    <!-- /ko -->
+                    <!-- ko foreach: newButtons -->
+                        <li>
+                            <a class="IconLinkItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $parents[2].tapNewService">
+                                <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                <div class="Item-content">
+                                    <p data-bind="text: label"></p>
+                                </div>
+                            </a>
+                        </li>
+                    <!-- /ko -->
+                </ul>
+            </fieldset>
         </div>
     <!-- /ko -->
 </script>
