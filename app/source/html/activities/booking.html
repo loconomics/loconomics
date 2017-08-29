@@ -13,13 +13,13 @@
                 </div>
             </div>
             <div class="col-md-9 col-sm-reset booking-steps">
-                <div id="bookingSelectOfferings" class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
+                <div class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <span>Already have an account?  </span>
                         <a href="/login" class="btn btn-default" data-bind="click: goLogin">Sign in
                         </a>
                     </div>
-                    <form>
+                    <form id="bookingSelectOfferings">
                         <fieldset>
                             <legend>Your professional:</legend>
                             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
