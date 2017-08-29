@@ -31,7 +31,7 @@ var A = Activity.extend(function BookingActivity() {
         }.bind(this)
     });
 
-    var labelTpl = 'Booking (Step __step__ of __total__)';
+    var labelTpl = ' (Step __step__ of __total__)';
     var title = this.title;
     ko.computed(function() {
         var step = this.step() + 1;
