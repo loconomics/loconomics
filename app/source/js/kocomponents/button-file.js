@@ -30,6 +30,8 @@ var getObservable = require('../utils/getObservable');
  * @param {Object} params
  * @param {KnockoutObservable<string>} [params.id]
  * @param {KnockoutObservable<boolean>} [params.disabled]
+ * @param {KnockoutObservable<string>} [params.accept] Value for the 'accept'
+ * attribute at the input[type=file]
  * @param {KnockoutObservable<DOMElement>} [params.inputElement] Output
  * parameter; when provided, a reference to the internal input[type=file]
  * will be wrote to it.
@@ -39,13 +41,17 @@ var getObservable = require('../utils/getObservable');
  */
 function ViewModel(params, refs) {
     /**
-     * @member {KnockoutObservable<boolean>} [id]
+     * @member {KnockoutObservable<string>} [id]
      */
     this.id = getObservable(params.id);
     /**
      * @member {KnockoutObservable<boolean>} [disabled]
      */
     this.disabled = getObservable(params.disabled);
+    /**
+     * @member {KnockoutObservable<string>} [accept]
+     */
+    this.accept = getObservable(params.accept);
 
     // Write output parameter inputElement
     if (ko.isWriteableObservable(params.inputElement)) {
