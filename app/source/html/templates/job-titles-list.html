@@ -2,14 +2,16 @@
 <script type="text/html" id="job-titles-list-template">
     <ul class="TilesList TilesList--openEnd" data-bind="foreach: jobTitles">
         <li>
-            <button class="LinkTile" type="button" data-bind="click: $parent.selectJobTitle">
-                <div class="Tile-content">
-                    <p data-bind="visible: !$parent.showMarketplaceInfo(), text: displayedSingularName"></p>
-                    <div data-bind="visible: $parent.showMarketplaceInfo(), text: displayedSingularName"></div>
-                    <em data-bind="visible: $parent.showMarketplaceInfo(), html: marketplaceStatusHtml"></em>
+            <div class="ListingSummaryItem">
+                <div class="Item-content">
+                    <h3 data-bind="text: displayedSingularName"></h3>
+                    <p data-bind="visible: $parent.showMarketplaceInfo(), html: marketplaceStatusHtml"></p>
                 </div>
-                <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
-            </button>
+                <a data-bind="click: $parent.selectJobTitle">
+                    <span data-bind="attr: { 'aria-label': 'Go to your '+ displayedSingularName() + ' listing' }"></span>
+                    <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+                </a>
+            </div>
         </li>
     </ul>
 </script>
