@@ -26,12 +26,23 @@
                                     <img alt="Work photo" class="WorkPhotos-img" data-bind="attr: { src: url, alt: caption, style: photoRotationStyle, hidden: localTempPhotoPreview }" />
                                     <div data-label="Work photo" class="WorkPhotos-img" data-bind="domElement: localTempPhotoPreview, attr: { style: photoRotationStyle, hidden: !localTempPhotoPreview() }"></div>
                                 </div>
-                                <input class="form-control" type="text" data-bind="textInput: caption, disable: $parent.state.isLocked" placeholder="Photo caption" />
+                                <label data-bind="attr: { 'for': 'workPhotos-item-' + $index }" class="sr-only">Photo caption</label>
+                                <input class="form-control" type="text" placeholder="Photo caption"
+                                    data-bind="textInput: caption, disable: $parent.state.isLocked, attr: { 'id': 'workPhotos-item-' + $index }"/>
                                 <div class="WorkPhotos-toolbar">
-                                    <button type="button" class="btn btn-link WorkPhotos-rotateBtn" data-bind="click: $root.rotateImg"><span class="glyphicon glyphicon-repeat"></span></button>
+                                    <button type="button" class="btn btn-link WorkPhotos-rotateBtn" data-bind="click: $root.rotateImg">
+                                        <span class="glyphicon glyphicon-repeat"></span>
+                                        <span>Rotate</span>
+                                    </button>
                                     <!-- Needed as a link with #move, setting role=button for accessibility; if can be changed to real button, the best -->
-                                    <a href="#move" role="button" class="btn btn-link WorkPhotos-moveBtn"><span class="glyphicon glyphicon-move"></span></a>
-                                    <button type="button" class="btn btn-link WorkPhotos-removeBtn" data-bind="click: $root.removeImg"><span class="glyphicon glyphicon-remove"></span></button>
+                                    <a href="#move" role="button" class="btn btn-link WorkPhotos-moveBtn">
+                                        <span class="glyphicon glyphicon-move"></span>
+                                        <span>Move</span>
+                                    </a>
+                                    <button type="button" class="btn btn-link WorkPhotos-removeBtn" data-bind="click: $root.removeImg">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        <span>Delete</span>
+                                    </button>
                                 </div>
                             </li>
                         </ul>
