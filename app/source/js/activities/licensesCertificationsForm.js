@@ -11,6 +11,7 @@ var onboarding = require('../data/onboarding');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var licenseCertification = require('../data/licenseCertification');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
+var $ = require('jquery');
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
@@ -26,48 +27,51 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
-        var $input = this.$activity.find('#licensesCertificationsForm-photoFile');//input[type=file]
-        // Constant size: is the maximum as defined in the CSS and server processing.
-        var PHOTO_WIDTH = 442;
-        var PHOTO_HEIGHT = 332;
-        $input.fileupload({
-            // Asigned per file uploaded:
-            //url: 'assigned per file uploaded',
-            //type: 'PUT',
-            //paramName: 'file',
-            dataType: 'json',
-            autoUpload: false,
-            acceptFileTypes: /(\.|\/)(png|gif|tiff|pdf|jpe?g)$/i,
-            maxFileSize: 20000000, // 20MB
-            disableImageResize: true,
-            // // Enable image resizing, except for Android and Opera,
-            // // which actually support image resizing, but fail to
-            // // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            // .test(window.navigator.userAgent),
-            previewMaxWidth: PHOTO_WIDTH,
-            previewMaxHeight: PHOTO_HEIGHT,
-            previewCrop: true
-        })
-        .on('fileuploadadd', function (e, data) {
-            this.viewModel.item().localTempFileData(data);
-            if (!data.originalFiles.length ||
-                !/^image\//.test(data.originalFiles[0].type)) {
-                this.viewModel.item().localTempPhotoPreview(null);
-            }
-            this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
-        }.bind(this))
-        .on('fileuploadprocessalways', function (e, data) {
-            var file = data.files[data.index];
-            if (file.error) {
-                // TODO Show preview error?
-                this.viewModel.item().localTempPhotoPreview(null);
-                console.error('Photo Preview', file.error);
-            }
-            else if (file.preview) {
-                //this.viewModel.item().localTempFileData(data);
-                this.viewModel.item().localTempPhotoPreview(file.preview);
-            }
+        this.viewModel.inputElement.subscribe(function(input) {
+            if (!input) return;
+            var $input = $(input);
+            // Constant size: is the maximum as defined in the CSS and server processing.
+            var PHOTO_WIDTH = 442;
+            var PHOTO_HEIGHT = 332;
+            $input.fileupload({
+                // Asigned per file uploaded:
+                //url: 'assigned per file uploaded',
+                //type: 'PUT',
+                //paramName: 'file',
+                dataType: 'json',
+                autoUpload: false,
+                acceptFileTypes: /(\.|\/)(png|gif|tiff|pdf|jpe?g)$/i,
+                maxFileSize: 20000000, // 20MB
+                disableImageResize: true,
+                // // Enable image resizing, except for Android and Opera,
+                // // which actually support image resizing, but fail to
+                // // send Blob objects via XHR requests:
+                // disableImageResize: /Android(?!.*Chrome)|Opera/
+                // .test(window.navigator.userAgent),
+                previewMaxWidth: PHOTO_WIDTH,
+                previewMaxHeight: PHOTO_HEIGHT,
+                previewCrop: true
+            })
+            .on('fileuploadadd', function (e, data) {
+                this.viewModel.item().localTempFileData(data);
+                if (!data.originalFiles.length ||
+                    !/^image\//.test(data.originalFiles[0].type)) {
+                    this.viewModel.item().localTempPhotoPreview(null);
+                }
+                this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
+            }.bind(this))
+            .on('fileuploadprocessalways', function (e, data) {
+                var file = data.files[data.index];
+                if (file.error) {
+                    // TODO Show preview error?
+                    this.viewModel.item().localTempPhotoPreview(null);
+                    console.error('Photo Preview', file.error);
+                }
+                else if (file.preview) {
+                    //this.viewModel.item().localTempFileData(data);
+                    this.viewModel.item().localTempPhotoPreview(file.preview);
+                }
+            }.bind(this));
         }.bind(this));
     }
 });
@@ -152,6 +156,7 @@ function ViewModel(app) {
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.jobTitleNamePlural = ko.observable();
+    this.inputElement = ko.observable();
     this.isLoading = ko.pureComputed(function() {
         return (
             userLicensesCertifications.state.isLoading()

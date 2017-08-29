@@ -37,47 +37,50 @@ var A = Activity.extend(function WorkPhotosActivity() {
 
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
-        var $input = this.$activity.find('#workPhotos-photoFile');//input[type=file]
-        // Constant size: is the maximum as defined in the CSS and server processing.
-        var PHOTO_WIDTH = 442;
-        var PHOTO_HEIGHT = 332;
-        $input.fileupload({
-            // Asigned per file uploaded:
-            //url: 'assigned per file uploaded',
-            //type: 'PUT',
-            //paramName: 'file',
-            dataType: 'json',
-            autoUpload: false,
-            acceptFileTypes: /(\.|\/)(jpe?g)$/i,
-            maxFileSize: 5000000, // 5MB
-            disableImageResize: true,
-            // // Enable image resizing, except for Android and Opera,
-            // // which actually support image resizing, but fail to
-            // // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            // .test(window.navigator.userAgent),
-            previewMaxWidth: PHOTO_WIDTH,
-            previewMaxHeight: PHOTO_HEIGHT,
-            previewCrop: false
-        })
-        .on('fileuploadprocessalways', function (e, data) {
-            var file = data.files[data.index];
-            if (file.error) {
-                // TODO Show preview error?
-                console.error('Photo Preview', file.error);
-            }
-            else if (file.preview) {
-                //this.viewModel.list()[data.index].localTempPhotoPreview(file.preview);
-                var newItem = new WorkPhoto({
-                    workPhotoID: 0,
-                    jobTitleID: this.viewModel.jobTitleID(),
-                    url: null,
-                    localTempFileData: data,
-                    localTempPhotoPreview: file.preview,
-                    caption: ''
-                });
-                this.viewModel.list.push(newItem);
-            }
+        this.viewModel.inputElement.subscribe(function(input) {
+            if (!input) return;
+            var $input = $(input);
+            // Constant size: is the maximum as defined in the CSS and server processing.
+            var PHOTO_WIDTH = 442;
+            var PHOTO_HEIGHT = 332;
+            $input.fileupload({
+                // Asigned per file uploaded:
+                //url: 'assigned per file uploaded',
+                //type: 'PUT',
+                //paramName: 'file',
+                dataType: 'json',
+                autoUpload: false,
+                acceptFileTypes: /(\.|\/)(jpe?g)$/i,
+                maxFileSize: 5000000, // 5MB
+                disableImageResize: true,
+                // // Enable image resizing, except for Android and Opera,
+                // // which actually support image resizing, but fail to
+                // // send Blob objects via XHR requests:
+                // disableImageResize: /Android(?!.*Chrome)|Opera/
+                // .test(window.navigator.userAgent),
+                previewMaxWidth: PHOTO_WIDTH,
+                previewMaxHeight: PHOTO_HEIGHT,
+                previewCrop: false
+            })
+            .on('fileuploadprocessalways', function (e, data) {
+                var file = data.files[data.index];
+                if (file.error) {
+                    // TODO Show preview error?
+                    console.error('Photo Preview', file.error);
+                }
+                else if (file.preview) {
+                    //this.viewModel.list()[data.index].localTempPhotoPreview(file.preview);
+                    var newItem = new WorkPhoto({
+                        workPhotoID: 0,
+                        jobTitleID: this.viewModel.jobTitleID(),
+                        url: null,
+                        localTempFileData: data,
+                        localTempPhotoPreview: file.preview,
+                        caption: ''
+                    });
+                    this.viewModel.list.push(newItem);
+                }
+            }.bind(this));
         }.bind(this));
     }
 });
@@ -124,6 +127,7 @@ function ViewModel(app) {
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
 
     this.state = workPhotos.state;
+    this.inputElement = ko.observable();
 
     this.saveBtnText = ko.pureComputed(function() {
         return this.state.isSaving() ? 'Saving..' : this.state.isLoading() ? 'Loading..' : this.state.isDeleting() ? 'Deleting..' : 'Save';

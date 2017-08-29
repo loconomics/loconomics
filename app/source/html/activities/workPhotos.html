@@ -45,9 +45,9 @@
                                 <div class="Tile-content text-muted">Upload/take photo</div>
                                 <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
                             </button>
-                            <button-file class="CompactLinkTile btn-file"
+                            <button-file class="CompactLinkTile"
                                 data-bind="visible: !takePhotoSupported()"
-                                params="disabled: state.isLocked, id: 'workPhotos-photoFile'">
+                                params="disabled: state.isLocked, id: 'workPhotos-photoFile', inputElement: inputElement">
                                 <label class="Tile-content text-muted" for="workPhotos-photoFile">Upload/take photo</label>
                                 <div class="Tile-icon text-muted" aria-hidden="true"><span class="fa ion ion-plus"></span></div>
                             </button-file>

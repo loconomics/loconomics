@@ -137,11 +137,12 @@
                                         data-bind="visible: $root.takePhotoSupported, disable: $root.isLocked">
                                     Upload/take photo
                                 </button>
-                                <div class="btn-file btn btn-default btn-block licensesCertificationsForm-uploadBtn"
-                                    data-bind="visible: !takePhotoSupported(), attr: { disabled: isLocked }">
-                                    <div>Upload/take photo</div>
-                                    <input type="file" id="licensesCertificationsForm-photoFile" data-bind="disable: isLocked">
-                                </div>
+                                <button-file
+                                    class="btn btn-default btn-block licensesCertificationsForm-uploadBtn"
+                                    data-bind="visible: !takePhotoSupported()"
+                                    params="disabled: isLocked, id: 'licensesCertificationsForm-photoFile', inputElement: inputElement">
+                                    <label for="licensesCertificationsForm-uploadPhoto">Upload/take photo</label>
+                                </button-file>
                             </div>
                             <div data-bind="with: item" id="licensesCertificationsForm-preview">
                                 <img alt="License Preview" data-bind="visible: localTempPhotoPreviewUrl, attr: { src: localTempPhotoPreviewUrl }" />

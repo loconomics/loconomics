@@ -30,8 +30,14 @@ var getObservable = require('../utils/getObservable');
  * @param {Object} params
  * @param {KnockoutObservable<string>} [params.id]
  * @param {KnockoutObservable<boolean>} [params.disabled]
+ * @param {KnockoutObservable<DOMElement>} [params.inputElement] Output
+ * parameter; when provided, a reference to the internal input[type=file]
+ * will be wrote to it.
+ * @param {Object} refs Set of references to generated elements meant to be
+ * provided internally by the creator of the component.
+ * @param {DOMElement} refs.input Reference to the input[type=file] element.
  */
-function ViewModel(params) {
+function ViewModel(params, refs) {
     /**
      * @member {KnockoutObservable<boolean>} [id]
      */
@@ -40,6 +46,11 @@ function ViewModel(params) {
      * @member {KnockoutObservable<boolean>} [disabled]
      */
     this.disabled = getObservable(params.disabled);
+
+    // Write output parameter inputElement
+    if (ko.isWriteableObservable(params.inputElement)) {
+        params.inputElement(refs.input);
+    }
 }
 
 /**
@@ -83,7 +94,7 @@ var create = function(params, componentInfo) {
     });
 
     // Create and return viewModel
-    return new ViewModel(params);
+    return new ViewModel(params, { input: input });
 };
 
 ko.components.register(TAG_NAME, {
