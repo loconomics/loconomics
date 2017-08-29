@@ -20,20 +20,7 @@ var A = Activity.extend(function BookingActivity() {
         helpLink: '/help'
     });
     this.navBar.title('Booking');
-    
-    // Only on change (not first time), when choosed the option 'custom'
-    // from gratuity, focus the textbox to input the custom value
-    this.viewModel.presetGratuity.subscribe(function(preset) {
-        if (preset === 'custom') {
-            // Small delay to allow the binding to display the custom field,
-            // the UI to update, and then focus it; trying to do it without
-            // timeout will do nothing.
-            setTimeout(function() {
-                this.$activity.find('[name=custom-gratuity]').focus();
-            }.bind(this), 50);
-        }
-    }.bind(this));
-    
+  
     this.registerHandler({
         target: this.viewModel.progress.step,
         handler: function() {
