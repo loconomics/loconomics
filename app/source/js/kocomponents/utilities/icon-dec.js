@@ -19,6 +19,10 @@ function ViewModel(params) {
         {
             return 'fa ' + this.icon();
         }
+        else if (this.icon().match(/^ion-.*$/))
+        {
+            return 'ion ' + this.icon();
+        }
         else {
             return this.icon();
         }
