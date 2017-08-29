@@ -136,7 +136,7 @@
                     </form>
                     <!-- /ko -->
                 </div>
-                 <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
+                <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
@@ -417,7 +417,7 @@
                                     <p data-bind="text: booking().pricingSummary() && booking().pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().totalPrice())}"></p>
                                 </div>
                             </li>
-                            <li data-bind="if: supportsGratuity() && booking().paymentEnabled()">
+                            <!-- <li data-bind="if: supportsGratuity() && booking().paymentEnabled()">
                                 <button type="button" class="InfoTile" data-bind="click: pickServices">
                                     <div class="Tile-icon" aria-hidden="true">
                                         <span class="fa ion ion-cash"></span>
@@ -426,7 +426,7 @@
                                         <p><span data-bind="text: booking().pricingSummary().gratuity() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary().gratuity())}"></span> <span>gratuity</span></p>
                                     </div>
                                 </button>
-                            </li>
+                            </li> -->
                             <li data-bind="if: booking().paymentEnabled()">
                                 <button type="button" class="InfoTile" data-bind="click: pickPayment">
                                     <div class="Tile-icon" aria-hidden="true">
