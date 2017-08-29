@@ -18,12 +18,12 @@ var serviceAddresses = require('../data/serviceAddresses');
 // L18N
 // List of all possible steps by name providing the language for the UI
 var stepsLabels = {
-    services: 'Services',
-    selectLocation: 'Select a location',
-    selectTimes: 'Select preferred times',
-    selectTime: 'Select the time',
-    payment: 'Payment',
-    confirm: 'Confirm'
+    services: 'Select offering(s)',
+    selectLocation: 'Select location',
+    selectTimes: 'Select preferred time(s)',
+    selectTime: 'Select time',
+    payment: 'Complete payment',
+    confirm: 'Confirm booking'
 };
 
 function BaseClientBookingCardVM(app) {
