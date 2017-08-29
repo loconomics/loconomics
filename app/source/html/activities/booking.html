@@ -1,9 +1,6 @@
 <!-- Activity booking -->
 <div data-activity="booking" data-bind="css: { 'is-loading': isLoading }">
     <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: bookingHeader"></span><span data-bind="text: title"></span></h1>  
-    <div>
-        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-    </div>
     <div class="container animated">
         <div class="row" data-bind="if: booking">
             <div class="Sidebar hidden-xs hidden-sm col-md-3" >
@@ -14,6 +11,7 @@
             </div>
             <div class="col-md-9 col-sm-reset booking-steps">
                 <div class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <span>Already have an account?  </span>
                         <a href="/login" class="btn btn-default" data-bind="click: goLogin">Sign in
@@ -21,15 +19,15 @@
                     </div>
                     <form id="bookingSelectOfferings">
                         <fieldset>
-                            <legend>Your professional:</legend>
+                            <legend>YOUR PROFESSIONAL</legend>
                             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
                         </fieldset>
                         <fieldset>
-                            <legend>Select offering(s):</legend>
+                            <legend>SELECT OFFERING(S)</legend>
                             <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
                         </fieldset>
                         <fieldset data-bind="visible: booking().pricingSummary().servicesSummary()">
-                            <legend>Summary:</legend>
+                            <legend>SUMMARY</legend>
                             <div class="PricingSummary PaddedBox-xs">
                                 <table>
                                     <tbody data-bind="foreach: booking().pricingSummary().items">
@@ -63,38 +61,82 @@
                         </div>
                     </form>
                 </div>
-                <div id="bookingSelectLocation" class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
-                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
-                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
-                            <span class="text-muted">Already have an account?</span>
-                            <span class="text-secondary">Log In</span>
-                        </a>
-                    </div>
-                    <div data-bind="visible: !addressEditorOpened()">
-                        <h1 data-bind="visible: serviceAddresses.hasAddresses" class="SectionTitle">Select one of <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations</h1>
-                        <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
-                        <h1 data-bind="visible: clientAddresses.hasAddresses" class="SectionTitle">Select one of your locations</h1>
-                        <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
-                        <div class="Box-sm" data-bind="visible: hasServiceArea">
-                            <h1 class="SectionTitle">Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</h1>
-                            <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
-                                <li>
-                                    <button type="button" class="ItemAddonTile" data-bind="click: $parent.addAddress">
-                                        <i class="Tile-marker" aria-hidden="true"></i>
-                                        <div class="Tile-content">
-                                            <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
-                                        </div>
-                                        <div class="Tile-addon" aria-hidden="true">
-                                            <span class="fa fa-xl ion ion-ios-plus-outline" aria-hidden="true"></span>
-                                        </div>
-                                    </button>
-                                </li>
-                            </ul>
+                <div class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
+                    <form id="bookingSelectLocation" data-bind="visible: !addressEditorOpened()">
+                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                        <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                            <a href="/login" class="btn btn-link" data-bind="click: goLogin">
+                                <span class="text-muted">Already have an account?</span>
+                                <span class="text-secondary">Log In</span>
+                            </a>
                         </div>
-                    </div>
+                        <fieldset>
+                            <legend>SELECT A LOCATION</legend>
+                            <fieldset data-bind="visible: serviceAddresses.hasAddresses">
+                                <legend><span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations:</legend>
+                                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                            </fieldset>
+                            <fieldset data-bind="visible: clientAddresses.hasAddresses">
+                                <legend>Select one of your locations:</legend>
+                                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                            </fieldset>
+                            <fieldset data-bind="visible: hasServiceArea">
+                                <legend>Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</legend>
+                                <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
+                                    <li>
+                                        <a class="IconLinkItem" href="#" data-bind="click: $parent.addAddress">
+                                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                            <div class="Item-content">
+                                                <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </fieldset>
+                        </fieldset>
+                    </form>
                     <!-- ko if: addressEditorOpened -->
-                        <div data-bind="with: booking().serviceAddress">
+                    <form id="addBookingLocation">
+                        <fieldset>
+                            <legend>Add your location details:</legend>
+                            <div data-bind="with: booking().serviceAddress">
+                                <div class="form-group">
+                                    <label for="addressLine1">Street address line 1:</label>
+                                    <input id="addressLine1" type="text" class="form-control" required maxlength="100" data-bind="textInput: addressLine1, disable: $parent.isLocked">
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressLine2">Street address line 2:</label>
+                                    <input id="addressLine2" type="text" class="form-control" maxlength="100" data-bind="textInput: addressLine2, disable: $parent.isLocked">
+                                </div>
+                                <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
+                                    <label for="postalCode">Zip code:</label>
+                                    <input id="postalCode" type="number" class="form-control" min="0" required data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM.onBlur }, disable: $parent.isLocked, popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }" aria-describedby="mailingAddressInstructions">
+                                </div>
+                                <div class="form-group" data-bind="visible: city() || stateProvinceCode()">
+                                    <label for="city">City:</label>
+                                    <p id="city" class="form-control-static">
+                                        <span data-bind="text: city() + ', ' + stateProvinceCode()"></span>
+                                        <!-- White space to reserve vertical space -->
+                                        &nbsp;
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressName">Save location as:</label>
+                                    <input id="addressName" type="text" class="form-control" maxlength="50" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="e.g., My home, My office" aria-describedby="addressNameInstructions">
+                                    <p id="addressNameInstructions" class="sr-only">For example, "My home" or "My office"</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="addressSpecialInstructions">Special instructions for location:</label>
+                                    <textarea id="addressSpecialInstructions" type="text" rows="3" class="form-control" maxlength="1000" data-bind="textInput: specialInstructions, disable: $parent.isLocked" placeholder="Is there anything tricky to get to your location? How's the parking? Any pets? List anything helpful." aria-describedby="addressSpecialInstructionsHint"></textarea> 
+                                    <p id="addressSpecialInstructionsHint" class="sr-only">Is there anything tricky to get to your location? How's the parking? Any pets? List anything helpful.</p>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <!-- /ko -->
+                </div>
+                        <!-- <div data-bind="with: booking().serviceAddress">
                             <h1 class="SectionTitle">Add your location details</h1>
                             <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
                                 <div class="form-group" data-bind="css: { 'has-error': $root.errorMessages.postalCode() }">
@@ -102,36 +144,34 @@
                                          placeholder="Zip code" aria-label="Zip code" min="0"
                                          data-bind="textInput: postalCode, event: { blur: $root.postalCodeVM().onBlur }, disable: $parent.isLocked,
                                                     popover: { content: $root.errorMessages.postalCode(), trigger: 'focus', container: 'body', placement: 'bottom' }">
-                                </div>
-                                <div class="form-group">
+                                </div> -->
+                                <!-- <div class="form-group">
                                     <p class="form-control-static">
                                         <span data-bind="visible: city() || stateProvinceCode()">
                                             <span data-bind="text: city"></span>,
                                             <span data-bind="text: stateProvinceCode"></span>
                                         </span>
                                         <!-- White space to reserve space -->
-                                        &nbsp;
+                                        <!-- &nbsp;
                                     </p>
-                                </div>
-                                <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
-                                <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input>
-                                <div class="form-group">
+                                </div>  -->
+                                <!-- <app-unlabeled-input params="placeholder: 'Street address line 1', value: addressLine1, disable: $parent.isLocked"></app-unlabeled-input>
+                                <app-unlabeled-input params="placeholder: 'Street address line 2', value: addressLine2, disable: $parent.isLocked"></app-unlabeled-input> -->
+                                <!-- <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon">Save as:</span>
                                         <input type="text" class="form-control" data-bind="textInput: addressName, disable: $parent.isLocked" placeholder="Location name">
                                     </div>
-                                </div>
-                                <div class="form-group">
+                                </div> -->
+                                <!-- <div class="form-group">
                                     <label class="sr-only" for="bookingAddressEditorSpecialInstructions">Special instructions</label>
                                     <textarea rows="2" class="form-control" placeholder="Special instructions" id="bookingAddressEditorSpecialInstructions" data-bind="textInput: specialInstructions, disable: $parent.isLocked"></textarea>
-                                </div>
-                                <div>
+                                </div> -->
+                                <!-- <div>
                                     <button type="submit" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
                                 </div>
                             </div>
-                        </div>
-                    <!-- /ko -->
-                </div>
+                        </div> -->
                 <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
