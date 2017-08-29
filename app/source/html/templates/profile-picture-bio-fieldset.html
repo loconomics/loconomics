@@ -14,14 +14,19 @@
                 data-bind="disable: isLocked, click: rotatePhoto">
             <span class="ion-ios-refresh-empty" aria-hidden="true"></span><span> Rotate photo</span>
         </button>
-        <button type="button" class="btn btn-file btn-block"
+        <button type="button" class="btn btn-default btn-block"
                 data-bind="visible: takePhotoSupported, disable: isLocked" data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">
             <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
         </button>
-        <span class="btn btn-default btn-block btn-file" data-bind="if: !takePhotoSupported(), attr: { disabled: isLocked }">
-            <span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span> <span>Change photo</span>
-            <input type="file" accept="image/*" data-bind="disable: isLocked, fileUploader: { options: uploaderOptions, eventHandlers: uploaderEventHandlers }">
-        </span>
+        <button-file
+            class="btn btn-default btn-block"
+            data-bind="visible: !takePhotoSupported()"
+            params="disabled: isLocked, id: 'profilePicture-photoFile', inputElement: inputElement, accept: 'image/*'">
+            <label for="profilePicture-photoFile">
+                <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+                <span>Change photo</span>
+            </label>
+        </button-file>
     </fieldset>
     <div data-bind="visible: $parent.showNonEssentialFields">
         <fieldset>
