@@ -19,7 +19,7 @@ var A = Activity.extend(function BookingActivity() {
     this.navBar = Activity.createSubsectionNavBar('Booking', {
         helpLink: '/help'
     });
-    this.navBar.title('Booking');
+    this.title('Booking');
   
     this.registerHandler({
         target: this.viewModel.progress.step,
@@ -31,8 +31,8 @@ var A = Activity.extend(function BookingActivity() {
         }.bind(this)
     });
 
-    var labelTpl = '__step__ of __total__';
-    var nav = this.navBar;
+    var labelTpl = 'Booking (Step __step__ of __total__)';
+    var title = this.title;
     ko.computed(function() {
         var step = this.step() + 1;
         var total = this.totalSteps();
@@ -42,7 +42,7 @@ var A = Activity.extend(function BookingActivity() {
             .replace('__step__', step)
             .replace('__total__', total);
         }
-        nav.title(label);
+        title(label);
     }, this.viewModel.progress);
 });
 

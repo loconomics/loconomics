@@ -1,9 +1,10 @@
 <!-- Activity booking -->
-<div data-activity="booking" class="Boxes-sm animated" data-bind="css: { 'is-loading': isLoading }">
-    <div class="container">
-        <div>
-            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-        </div>
+<div data-activity="booking" data-bind="css: { 'is-loading': isLoading }">
+    <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: title"></span></h1>  
+    <div>
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    <div class="container Boxes-sm animated">
         <div class="row" data-bind="if: booking">
             <div class="Sidebar hidden-xs hidden-sm col-md-3" >
                 <h4>Add a new booking</h4>
