@@ -1,0 +1,36 @@
+/**
+    ListingSummaryItem: two lines tile of indented text
+    and pointing icon on the right.
+    
+    Follows same indent as CompactLinkTile
+**/
+@import '../../components/Item.styl'
+
+.ListingSummaryItem {
+    Item();
+    $height = 2.5em;
+    Item-addContent($height);
+    $vgap = 1em;
+    padding: $vgap $Item-hgap $vgap (30px + $Item-hgap);
+    .Item-content {
+        width: 95%;
+    }
+    a {
+        width: 5%;
+        height: $height;
+        min-width: 48px; 
+        min-height: 48px;
+        display: table-cell;
+        text-align: right;
+        vertical-align: middle;
+        // Left space for the icon and small gap:
+        padding-right: (4px + $Item-hgap);
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 2em;
+        }
+    }
+}

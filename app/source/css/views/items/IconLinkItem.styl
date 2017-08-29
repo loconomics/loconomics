@@ -1,0 +1,32 @@
+/**
+    ListingSummaryItem: two lines tile of indented text
+    and pointing icon on the right.
+    
+    Follows same indent as CompactLinkTile
+**/
+@import '../../components/Item.styl'
+
+.IconLinkItem {
+    Item();
+    $height = 1.5em;
+    Item-addContent($height);
+    $vgap = 1em;
+    background-color: white;
+    padding: $vgap $Item-hgap;
+    &:hover {
+        outline-offset: -2px;
+    }
+    .Item-content {
+        width: 90%;
+    }
+    i {
+        float: left;
+        height: $height;
+        width: 10%;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 1.5em;
+        line-height: $height;
+    }
+}
