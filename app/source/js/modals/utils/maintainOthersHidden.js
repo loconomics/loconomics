@@ -6,12 +6,32 @@
  * As of [issue #632 comment](https://github.com/loconomics/loconomics/issues/632#issuecomment-324402586).
  * Based on the idea of [ally.maintain.hidden](https://allyjs.io/api/maintain/hidden.html)
  * (no code from there actually; not using the library since does too much
- * from what here we 'know' what exactly we need to do --no mutation observers,
- * prefixed selectors for elements to aria-hide)
+ * from what here we 'know' what exactly we need to do --no mutation observers,).
+ *
+ * The updated approach is: ensure the given element is 'aria visible', its parent
+ * and each ancestor, while ensure all sibling are 'aria hidden', and siblings
+ * of each ancestor. This ensure that ONLY this element is visible to aria,
+ * no need for queries by selectors that may be imprecise, get obsolete or even
+ * worse performant.
  */
 'use strict';
 
-var HIDE_ELEMENTS_SELECTOR = 'body > *';
+/**
+ * Get the sibling elements of a given element (excluding itself)
+ * @param {DOMElement} el
+ * @return {Array<DOMElement>}
+ */
+var getSiblings = function getSiblings(el) {
+    var s = el.parentElement.firstElementChild;
+    var r = [];
+    while (s) {
+        if (s !== el) {
+            r.push(s);
+        }
+        s = s.nextElementSibling;
+    }
+    return r;
+};
 
 /**
  * Aria hide an element
@@ -28,6 +48,24 @@ var hideElement = function(el) {
  */
 var showElement = function(el) {
     el.removeAttribute('aria-hidden');
+};
+
+/**
+ * Aria show an element and hide its siblings
+ * @param {DOMElement} el
+ */
+var exclusivelyShowElement = function(el) {
+    showElement(el);
+    getSiblings(el).forEach(hideElement);
+};
+
+/**
+ * Aria hide an element and show its siblings
+ * @param {DOMElement} el
+ */
+var exclusivelyHideElement = function(el) {
+    hideElement(el);
+    getSiblings(el).forEach(showElement);
 };
 
 /**
@@ -54,11 +92,8 @@ var forEachParent = function(el, cb) {
  * @returns {Revertable}
  */
 exports.keep = function(modalElement) {
-    document.querySelectorAll(HIDE_ELEMENTS_SELECTOR)
-    .forEach(hideElement);
-
-    showElement(modalElement);
-    forEachParent(modalElement, showElement);
+    exclusivelyShowElement(modalElement);
+    forEachParent(modalElement, exclusivelyShowElement);
 
     return {
         revert: exports.revert.bind(null, modalElement)
@@ -71,8 +106,6 @@ exports.keep = function(modalElement) {
  * @param {DOMElement} modalElement
  */
 exports.revert = function(modalElement) {
-    document.querySelectorAll(HIDE_ELEMENTS_SELECTOR)
-    .forEach(showElement);
-
-    hideElement(modalElement);
+    exclusivelyHideElement(modalElement);
+    forEachParent(modalElement, exclusivelyHideElement);
 };
