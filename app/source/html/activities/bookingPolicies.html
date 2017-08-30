@@ -3,25 +3,25 @@
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
-                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
+                            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
                             <span data-bind="text: jobTitleName"></span>
                         </a>
                     </li>
                 </ul>
             </div>
-            <div class="col-md-7 col-sm-reset"> 
+            <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <h1>
                     <icon-dec params="icon: 'ion-ios-close'"></icon-dec> <span data-bind="text: title"></span>
                 </h1>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                </div>         
+                </div>
                 <form id="bookingPoliciesForm" data-bind="submit: save" aria-describedby="bookingPoliciesFormInstructions">
                     <p id="bookingPoliciesFormInstructions" class="help-block">Communicate clearly to clients your <span class="text-lowercase" data-bind="text: jobTitleName"></span> booking policies. We'll help you enforce them when we can. Please review our <a href="#loconomicsGeneralCancellationPolicy">general cancellation policy.</a></p>
                     <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
@@ -29,27 +29,31 @@
                         <fieldset>
                             <legend>Instant booking policy</legend>
                             <div class="PaddedBox-xs Box-md bg-white">
-                                <div class="form-group radio">
-                                    <label for="acceptanceRequired" class="form-control-static btn-block">
-                                    <input id="acceptanceRequired" type="radio" data-bind="checked: instantBooking, value: false, disable: isLocked" aria-describedby="acceptanceRequiredInstructions"/> Acceptance required (default)</label>
+                                <div>
+                                    <input id="acceptanceRequired" name="bookingPolicy-policy" type="radio" data-bind="checked: instantBooking, value: false, disable: isLocked" aria-describedby="acceptanceRequiredInstructions"/>
+                                    <label for="acceptanceRequired"> Acceptance required (default)</label>
                                     <p id="acceptanceRequiredInstructions" class="help-block">Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: jobTitleName"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
                                 </div>
-                                <div class="form-group radio">
-                                    <label for="instantBooking" class="form-control-static btn-block">
-                                    <input id="instantBooking" type="radio" data-bind="checked: instantBooking, value: true, disable: isLocked" aria-describedby="instantBookingInstructions"/> Instant booking</label>
+                                <div>
+                                    <input id="instantBooking" name="bookingPolicy-policy" type="radio" data-bind="checked: instantBooking, value: true, disable: isLocked" aria-describedby="instantBookingInstructions"/>
+                                    <label for="instantBooking">Instant booking</label>
                                     <p id="instantBookingInstructions" class="help-block">Clients love the ability to book <span class="text-lowercase" data-bind="text: jobTitleName"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a href="/calendarSyncing">sync your calendars</a> to make this easier for you.</p>
                                 </div>
                             </div>
-                        </fieldset> 
+                        </fieldset>
                         <fieldset>
                             <legend>Cancellation policy</legend>
                             <div data-bind="foreach: { data: policies, as: 'policy' }" class="PaddedBox-xs Box-md bg-white">
-                                <div class="radio">
+                                <div>
                                     <div class="input-group">
-                                        <label class="form-control-static btn-block" data-bind="attr: { for: 'cancellationPolicy' + policy.cancellationPolicyID() }">
-                                            <input type="radio" data-bind="checked: $parent.selectedCancellationPolicyID, value: policy.cancellationPolicyID, disable: $parent.isLocked, attr: { id: 'cancellationPolicy' + policy.cancellationPolicyID(), 'aria-describedby': 'cancellationPolicyInformation' + policy.cancellationPolicyID() }"/>
-                                            <span data-bind="text: policy.name"></span>
-                                        </label>
+                                        <input type="radio" name="bookingPolicy-cancellationPolicy" data-bind="
+                                            checked: $parent.selectedCancellationPolicyID,
+                                            value: policy.cancellationPolicyID,
+                                            disable: $parent.isLocked,
+                                            attr: { id: 'cancellationPolicy' + policy.cancellationPolicyID(), 'aria-describedby': 'cancellationPolicyInformation' + policy.cancellationPolicyID() }"/>
+                                        <label data-bind="
+                                            attr: { for: 'cancellationPolicy' + policy.cancellationPolicyID() },
+                                            text: policy.name"></label>
                                         <p class="help-block"><span data-bind="text: policy.description, attr: { id: 'cancellationPolicyInformation' + policy.cancellationPolicyID() }"></span><em><span> For example, if a booking was made by a client for one week from now and cancelled by <strong data-bind="text: policy.refundLimitDate, format: { type: 'datetime', format: 'LT dddd, LL' }"></strong>, they would <strong><span data-bind="text: policy.cancellationFeeBeforeDisplay"></span></strong>. If they cancelled after, they would be charged a <strong><span data-bind="text: policy.cancellationFeeAfterDisplay"></span> cancellation fee.</strong></span></em></p>
                                     </div>
                                 </div>
@@ -72,4 +76,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
