@@ -79,6 +79,15 @@ var A = Activity.extend(function WorkPhotosActivity() {
                         caption: ''
                     });
                     this.viewModel.list.push(newItem);
+
+                    // Usability/accessibility: after add a new item, move focus
+                    // to it's caption textbox.
+                    // Give a moment to allow DOM processing using a timeout
+                    setTimeout(function() {
+                        this.$activity
+                        .find('.WorkPhotos > li:last-child input[type=text]')
+                        .focus();
+                    }.bind(this));
                 }
             }.bind(this));
         }.bind(this));
