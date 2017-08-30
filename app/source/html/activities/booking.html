@@ -273,53 +273,57 @@
                     </form>
                 </div>
                 <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
-                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
-                            <span class="text-muted">Already have an account?</span>
-                            <span class="text-secondary">Log In</span>
+                        <span>Already have an account?  </span>
+                        <a href="/login" class="btn btn-default" data-bind="click: goLogin">Sign in
                         </a>
                     </div>
-                    <div class="SignupLogin" data-bind="visible: isAnonymous(), with: signupVM">
-                        <h2 class="SectionTitle">Create a free account</h2>
-                        <div class="LightForm LeadContent">
-                            <div data-bind="visible: !facebookUserID()">
-                                <a href="#facebook" data-bind="click: facebook, disable: !enableFacebookButton()" class="btn btn-lg btn-block btn-facebook">
-                                    <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
-                                </a>
+                    <form id="bookingConfirmationForm" class="Box-sm" aria-describedby="bookingConfirmationFormInstructions">
+                        <fieldset>
+                            <legend class="text-uppercase" data-bind="visible: isAnonymous()">SIGN UP AND CONFIRM BOOKING</legend>
+                            <legend class="text-uppercase" data-bind="visible: !isAnonymous()">CONFIRM BOOKING</legend>
+                            <div class="SignupLogin" data-bind="visible: isAnonymous(), with: signupVM">
+                                <div class="LeadContent">
+                                    <button href="#facebook" data-bind="click: facebook, disable: !enableFacebookButton()" class="btn btn-lg btn-block btn-facebook">
+                                        <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
+                                    </button>
+                                    <p class="isolated text-center">
+                                        or
+                                    </p>
+                                    <!-- <div data-bind="visible: !isEmailSignupDisplayed()">
+                                        <button href="#email" data-bind="click: showEmailSignup" class="btn btn-lg btn-default btn-block btn-email"><i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i>Sign up with Email</button>
+                                    </div> -->
+                                    <form id="signupForm" role="form" data-bind=" event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
+                                        <div data-bind="visible: forClient">
+                                            <label for="firstName">First Name*</label>
+                                            <div data-bind="template: { name: 'signup-field', data: { id: 'firstName', name: 'firstName', field: firstName,  placeholder: '', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
+                                            <label for="lastName">Last Name*</label>
+                                            <div data-bind="template: { name: 'signup-field', data: { id: 'lastName', name: 'lastName', field: lastName,  placeholder: '', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
+                                        </div>
+                                        <label for="countryID" data-bind="visible: isCountryVisible">Country*</label>
+                                        <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': countryID.error }, visible: isCountryVisible">
+                                            <select id="countryID" data-bind="value: country, options: countriesOptions, optionsText: 'name', optionsValues: 'id'" class="form-control select-unstyled"></select>
+                                            <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                                            <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
+                                        </div>
+                                        <div data-bind="visible: forClient">
+                                            <label for="phone">Mobile Phone*</label>
+                                            <div data-bind="template: { name: 'signup-field', data: { id: 'phone', name: 'phone', field: phone, placeholder: '', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
+                                        </div>
+                                        <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
+                                            <label for="signupAccountEmail">E-mail address*</label>
+                                            <div data-bind="template: { name: 'signup-field', data: { id: 'signupAccountEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
+                                        </div>
+                                        <p>* - required fields</p>
+                                    </form>
+                                </div>
                             </div>
-                            <p class="isolated text-center">
-                                <svg height="5" width="45%">
-                                    <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                </svg>
-                                <span> or </span>
-                                <svg height="5" width="45%">
-                                    <line x1="0" y1="0" x2="500" y2="0" style="stroke:rgb(204,204,204);stroke-width:2" />
-                                </svg>
-                            </p>
-                            <form role="form" data-bind="event: { submit: performSignup }, css: { 'has-error': signupError }" novalidate>
-                                <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text', icon: {'icon ion-android-done': isFirstNameValid} } }, css: {'is-valid': isFirstNameValid}"></div>
-                                <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text', icon: {'icon ion-android-done': isLastNameValid} } }, css: {'is-valid': isLastNameValid}"></div>
-                                <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': device.error }">
-                                    <label for="countryID">Country</label>
-                                    <select id="countryID" data-bind="value: country, options: countriesOptions, optionsText: 'name', optionsValues: 'id'" class="form-control select-unstyled"></select>
-                                    <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
-                                    <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-5" data-bind="template: { name: 'signup-field', data: { name: 'postalCode', field: postalCode, label: 'Postal code', type: 'text', icon: { 'icon ion-android-done': isPostalCodeValid } } }, css: { 'is-valid': isPostalCodeValid }"></div>
-                                    <div class="col-xs-7" data-bind="template: { name: 'signup-field', data: { name: 'referralCode', field: referralCode, label: 'Referral code', type: 'text', icon: { 'icon ion-android-done': isReferralCodeValid } } }, css: { 'is-valid': isReferralCodeValid }"></div>
-                                </div>
-                                <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel', icon: {'icon ion-android-done': isPhoneValid} } }, css: {'is-valid': isPhoneValid }"></div>
-                                <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-                                    <div type="email" id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { name: 'email', field: email, label: 'E-mail address', type: 'email', icon: {'icon ion-android-done': isEmailValid } } }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
-                                    </div>
-                                </div>
-
-                                <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                        </fieldset>
+                    </form>
                     <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
                     <div class="Box-sm">
                         <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
