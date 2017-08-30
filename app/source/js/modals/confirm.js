@@ -42,15 +42,21 @@ exports.show = function (options) {
         // Increased accessibility:
         // NOTE: must be reverted BEFORE we fullfill
         var handle = maintainOthersHidden.keep(modal.get(0));
-        yesBtn.on('click', function() {
-            handle.revert();
+        yesBtn
+        .off('click')
+        .one('click', function() {
             resolve();
+            modal.modal('hide');
         });
-        noBtn.on('click', function() {
-            handle.revert();
+        noBtn
+        .off('click')
+        .one('click', function() {
             reject();
+            modal.modal('hide');
         });
-        modal.on('hide.bs.modal', function() {
+        modal
+        .off('hide.bs.modal')
+        .one('hide.bs.modal', function() {
             handle.revert();
             reject();
         });

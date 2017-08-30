@@ -22,6 +22,8 @@
  * @return {Array<DOMElement>}
  */
 var getSiblings = function getSiblings(el) {
+    // In case it's root, or detached, there is no siblings
+    if (!el.parentElement) return [];
     var s = el.parentElement.firstElementChild;
     var r = [];
     while (s) {
@@ -77,7 +79,7 @@ var exclusivelyHideElement = function(el) {
 var forEachParent = function(el, cb) {
     if (el.parentElement) {
         cb(el.parentElement);
-        forEachParent(el.parentElement);
+        forEachParent(el.parentElement, cb);
     }
 };
 
