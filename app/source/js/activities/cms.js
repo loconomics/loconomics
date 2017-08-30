@@ -17,7 +17,7 @@ var A = Activity.extend(function CmsActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    this.title('Client Manager');
+    this.title('Client manager');
 });
 
 exports.init = A.init;

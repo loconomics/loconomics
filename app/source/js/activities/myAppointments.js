@@ -14,7 +14,8 @@ var A = Activity.extend(function MyAppointmentsActivity() {
 
     this.viewModel = new ViewModel();
     this.accessLevel = this.app.UserType.loggedUser;
-    this.navBar = Activity.createSectionNavBar('My appointments');
+    this.navBar = Activity.createSectionNavBar(null);
+    this.title('My appointments');
 
     this.prepareShowErrorFor = function prepareShowErrorFor(title) {
         return function(err) {

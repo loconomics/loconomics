@@ -23,6 +23,7 @@ var A = Activity.extend(function ConversationActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+    this.title('Conversation history');
 });
 
 exports.init = A.init;
