@@ -154,6 +154,23 @@
             font-weight: 200;
         }
     }
+    //legend class to emulate legend css when a legend tag is not semantically correct
+    .legend
+    legend {
+            display: block;
+            width: 100%;
+            padding: 0;
+            margin-top: .5em;
+            margin-bottom: 1.0em;
+            font-size: 21px;
+            line-height: inherit;
+            color: $gray-dark;
+            border: 0;
+            border-bottom: 1px solid $gray-lighter;
+    }
+    fieldset {
+        margin-top: .75em;
+    }
 /**
 To ensure that the HTML 5 landmarks display properly for sighted users in older browsers, you probably want to assign display:block to them in the CSS. Otherwise they may display inline, which could break the page's layout. You may also want to take advantage of the opportunity to set other HTML 5 elements to display:block for backward-compatibility purposes. Note that in some cases you may have a reason to set some of these to display:inline, so use your judgment here.
 **/

@@ -6,7 +6,7 @@
     <!-- ko foreach: serviceListGroups -->
         <div data-bind="foreach: serviceLists()">
             <fieldset>
-                <legend data-bind="visible: !$parents[1].isAdditionMode()"><span data-bind="text: title"></span>:</legend>
+                <legend class="text-center" data-bind="visible: !$parents[1].isAdditionMode()"><span data-bind="text: title"></span>:</legend>
                 <ul class="TilesList TilesList--openEnd Box-sm">
                     <!-- ko foreach: { data: services, as: 'service' } -->
                         <li>
