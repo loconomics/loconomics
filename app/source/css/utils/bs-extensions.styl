@@ -65,35 +65,6 @@ a {
 }
 
 /**
-    To solve the usability and between-scripts interaction problems
-    of Bootstrap toggle buttons for radio and checkboxes, is better
-    replace the use of data-toggle="buttons" on .btn-groups > input[type=radio|checkbox]
-    by this utility class .ut-noRadioCheck.
-    The Boostrap code for the toggle-buttons breaks when used with other
-    scripts like Knockout; using Knockout to keep the 'active' class applied
-    on the label (with .btn class) fix interaction and this class
-    removes the native UI for the radio and checkbox if unwanted.
-    TODO: needs reimplementation, probably as kocomponent too, to be accessible
-**/
-.ut-noRadioCheck {
-    input[type="radio"],
-    input[type="checkbox"] {
-        position: absolute;
-        left: -99999px;
-        // Bootstrap uses the deprecated 'clip' trick rather than a negative position.
-        clip: rect(0px, 0px, 0px, 0px);
-    }
-
-    // Fix bug in iOS: span elements inside the label (used normally to set text programatically)
-    // make that it receive the first click/touch, not reacting the label and not setting the underground
-    // radio input, needing a long-tap to get enabled; gets solved making that span elements not able
-    // to react to events
-    label span {
-        pointer-events: none;
-    }
-}
-
-/**
     Overwritting buttons and form controls default style:
 **/
 // Flatty, square
