@@ -39,14 +39,16 @@
                             </div>
                         </div>
                         <script type="text/html" id="bookMeButton-radioButton">
-                            <label class="btn btn-default" data-bind="css: { 'active btn-secondary': value() === itemValue }">
-                                <input type="radio" data-bind="checked: value, checkedValue: itemValue, disable: disabled" />
-                                <span data-bind="text: labelText"></span>
-                            </label>
+                            <div class="radio-inline">
+                                <input type="radio" name="book-me-button-option" data-bind="checked: value, checkedValue: itemValue, disable: disabled,
+                                    attr: { 'id': 'bookMeButton-option' + itemValue }" />
+                                <label data-bind="text: labelText,
+                                    attr: { 'for': 'bookMeButton-option' + itemValue }"></label>
+                            </div>
                         </script>
                         <div class="center-block isolated" style="height: 60px; text-align: center" data-bind="html: buttonHtmlCode"></div>
                         <div class="center-block row isolated" style="text-align: center">
-                            <div class="btn-group ut-noRadioCheck">
+                            <div class="btn-group">
                                 <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'icon', disabled: isLocked, labelText: 'Button' } } --><!-- /ko -->
                                 <!-- ko template: { name: 'bookMeButton-radioButton', data: { value: type, itemValue: 'link', disabled: isLocked, labelText: 'Link only' } } --><!-- /ko -->
                             </div>
