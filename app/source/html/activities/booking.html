@@ -334,7 +334,7 @@
                                     <fieldset>
                                         <div data-bind="visible: !booking().instantBooking()">
                                             <legend>Requested appointment times:</legend>
-                                            <div class="TimesRequestedSummaryItem">
+                                            <div class="BookingSummaryItem">
                                                 <div class="Item-icon">
                                                     <icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec>
                                                 </div>
@@ -366,7 +366,7 @@
                                             </div>
                                         </div>
                                         <div data-bind="visible: booking().instantBooking()">
-                                            <legend>Appointment time:</legend><div class="TimesRequestedSummaryItem">
+                                            <legend>Appointment time:</legend><div class="BookingSummaryItem">
                                                     <div class="Item-icon">
                                                         <icon-dec data-bind="visible: !hasSomeDateSelected()" params="icon: 'ion-plus'"></icon-dec>
                                                         <icon-dec data-bind="visible: hasSomeDateSelected()" params="icon: 'ion-ios-clock-outline'"></icon-dec>
@@ -374,8 +374,7 @@
                                                     <label for="serviceDate" class="Item-content">
                                                         <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
                                                             <p>
-                                                                <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>
-                                                                <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
+                                                                <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
                                                             </p>
                                                         </div>
                                                         
@@ -390,40 +389,103 @@
                                         </div>
                                     </fieldset>
                                 </li>
+                                <li data-bind="if: !isPhoneServiceOnly()">
+                                    <fieldset>
+                                        <legend>Location:</legend>
+                                        <div class="BookingSummaryItem">
+                                            <div class="Item-icon">
+                                                <icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec>
+                                            </div>
+                                            <label for="serviceAddress" class="Item-content">
+                                                <p data-bind="text: booking().serviceAddress() && booking().serviceAddress().singleLine() || 'Select/Add location'"></p>
+                                            </label>
+                                            <span id="serviceAddress" role="button" class="Item-action" data-bind="click: pickLocation" aria-label="Edit  appointment time">
+                                                <icon-dec data-bind="visible: !booking().serviceAddress()" params="icon: 'ion-plus'"></icon-dec>
+                                                <icon-dec data-bind="visible: booking().serviceAddress()" params="icon: 'ion-edit'"></icon-dec>
+                                            </span>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                                <li>
+                                    <fieldset>
+                                        <legend>Offering(s):</legend>
+                                        <div class="BookingSummaryItem">
+                                            <div class="Item-icon">
+                                                <icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec>
+                                            </div>
+                                            <label for="offerings" class="Item-content">
+                                                <p data-bind="text: booking().pricingSummary() && booking().pricingSummary().servicesSummary() || 'Select/Add service(s)'"></p>
+                                            </label>
+                                            <span id="offerings" role="button" class="Item-action" data-bind="click: pickServices" aria-label="Edit  appointment time">
+                                                <icon-dec data-bind="visible: !booking().pricingSummary()" params="icon: 'ion-plus'"></icon-dec>
+                                                <icon-dec data-bind="visible: booking().pricingSummary()" params="icon: 'ion-edit'"></icon-dec>
+                                            </span>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                                <li>
+                                    <fieldset>
+                                        <legend>Price:</legend>
+                                        <div class="BookingSummaryItem">
+                                            <div class="Item-icon">
+                                                <icon-dec params="icon: 'ion-social-usd'"></icon-dec>
+                                            </div>
+                                            <div for="offerings" class="Item-content">
+                                                <p data-bind="text: booking().pricingSummary() && booking().pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().totalPrice())}"></p>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                                <li data-bind="if: booking().paymentEnabled()">
+                                    <fieldset>
+                                        <legend>Payment:</legend>
+                                        <div class="BookingSummaryItem">
+                                            <div class="Item-icon">
+                                                <icon-dec params="icon: 'ion-card'"></icon-dec>
+                                            </div>
+                                            <label for="payment" class="Item-content">
+                                                <p data-bind="text: paymentMethodDisplay() || 'Add payment method'"></p>
+                                            </label>
+                                            <span id="payment" role="button" class="Item-action" data-bind="click: pickPayment" aria-label="Edit  appointment time">
+                                                <icon-dec data-bind="visible: !booking().pricingSummary()" params="icon: 'ion-plus'"></icon-dec>
+                                                <icon-dec data-bind="visible: booking().pricingSummary()" params="icon: 'ion-edit'"></icon-dec>
+                                            </span>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                                <li>
+                                    <fieldset>
+                                        <legend>Notes for professional:</legend>
+                                        <div class="BookingSummaryItem">
+                                            <div class="Item-icon">
+                                                <icon-dec params="icon: 'ion-clipboard'"></icon-dec>
+                                            </div>
+                                            <label for="notesForProfessional" class="Item-content">
+                                                <p data-bind="text: booking().specialRequests() || specialRequestsPlaceholder()"></p>
+                                            </label>
+                                            <span id="notesForProfessional" role="button" class="Item-action" data-bind="click: pickPayment" aria-label="Edit appointment time">
+                                                <icon-dec data-bind="visible: !booking().specialRequests()" params="icon: 'ion-ios-compose-outline'"></icon-dec>
+                                                <icon-dec data-bind="visible: booking().specialRequests()" params="icon: 'ion-edit'"></icon-dec>
+                                            </span>
+                                        </div>
+                                    </fieldset>
+                                </li>
                             </ul>
                         </fieldset>
+                        <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save, text: confirmBtnText">Confirm</button>
+                                </div>
+                                <div class="isolated">
+                                    By tapping sign up &amp; confirm, I agree to Loconomics'
+                                    <a class="text-secondary" target="_blank" data-bind="attr: { href: urlTos }">Terms of Service</a>,
+                                    <a class="text-secondary" target="_blank" data-bind="attr: { href: urlBcp }">Background Check Policy</a>,
+                                    <a class="text-secondary" target="_blank" data-bind="attr: { href: urlPp }">Privacy Policy</a>, &amp;
+                                    <a class="text-secondary" target="_blank" data-bind="attr: { href: urlCp }"><span data-bind="text:  serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s Cancellation Policy</a>
+                                </div>
+                        </div>
                     </form>
                     
-                    <div class="Box-sm">
-                        <ul class="TilesList">
-                            <li data-bind="if: !isPhoneServiceOnly()">
-                                <button type="button" class="InfoTile" data-bind="click: pickLocation">
-                                    <div class="Tile-icon" aria-hidden="true">
-                                        <span class="fa ion ion-ios-location-outline"></span>
-                                    </div>
-                                    <div class="Tile-content">
-                                        <p data-bind="text: booking().serviceAddress() && booking().serviceAddress().singleLine() || 'Select/Add location', css: { 'text-muted': !(booking().serviceAddress() && booking().serviceAddress().singleLine()) }"></p>
-                                    </div>
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button" class="InfoTile" data-bind="click: pickServices">
-                                    <div class="Tile-icon" aria-hidden="true">
-                                        <span class="fa ion ion-ios-pricetags-outline"></span>
-                                    </div>
-                                    <div class="Tile-content">
-                                        <p data-bind="text: booking().pricingSummary() && booking().pricingSummary().servicesSummary() || 'Select/Add service(s)', css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().servicesSummary()) }"></p>
-                                    </div>
-                                </button>
-                            </li>
-                            <li class="InfoTile">
-                                <div class="Tile-icon" aria-hidden="true">
-                                    <span class="fa ion ion-social-usd"></span>
-                                </div>
-                                <div class="Tile-content">
-                                    <p data-bind="text: booking().pricingSummary() && booking().pricingSummary().totalPrice() || 0, format: { type: 'number', format: '$0,0.00' }, css: { 'text-muted': !(booking().pricingSummary() && booking().pricingSummary().totalPrice())}"></p>
-                                </div>
-                            </li>
                             <!-- <li data-bind="if: supportsGratuity() && booking().paymentEnabled()">
                                 <button type="button" class="InfoTile" data-bind="click: pickServices">
                                     <div class="Tile-icon" aria-hidden="true">
@@ -434,40 +496,7 @@
                                     </div>
                                 </button>
                             </li> -->
-                            <li data-bind="if: booking().paymentEnabled()">
-                                <button type="button" class="InfoTile" data-bind="click: pickPayment">
-                                    <div class="Tile-icon" aria-hidden="true">
-                                        <span class="fa ion ion-card"></span>
-                                    </div>
-                                    <div class="Tile-content">
-                                        <p data-bind="text: paymentMethodDisplay() || 'Add payment method', css: { 'text-muted': !(paymentMethodDisplay())}"></p>
-                                    </div>
-                                </button>
-                            </li>
-                            <li>
-                                <button type="button" class="InfoTile" data-bind="click: pickSpecialRequests">
-                                    <div class="Tile-icon" aria-hidden="true">
-                                        <span class="fa ion ion-clipboard"></span>
-                                    </div>
-                                    <div class="Tile-content">
-                                        <p data-bind="text: booking().specialRequests() || specialRequestsPlaceholder(), css: { 'text-muted': !(booking().specialRequests())}"></p>
-                                    </div>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: save, text: confirmBtnText">Confirm</button>
-                        </div>
-                        <div class="isolated">
-                            By tapping sign up &amp; confirm, I agree to Loconomics'
-                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlTos }">Terms of Service</a>,
-                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlBcp }">Background Check Policy</a>,
-                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlPp }">Privacy Policy</a>, &amp;
-                            <a class="text-secondary" target="_blank" data-bind="attr: { href: urlCp }"><span data-bind="text:  serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s Cancellation Policy</a>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
