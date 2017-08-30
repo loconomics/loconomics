@@ -1,7 +1,7 @@
 /**
-    Shows a textarea field to introduce or change a text, usefull 
+    Shows a textarea field to introduce or change a text, usefull
     for interfaces like Cards where an inline textarea is not wanted.
-    
+
     @param options:Object {
         title:string Optional. The text to show in the modal's header,
             with fallback to the Modal's default title.
@@ -12,6 +12,7 @@
 'use strict';
 
 var $ = require('jquery');
+require('../utils/jquery.multiline');
 
 exports.show = function showAnnouncementModal(options) {
     var modal = $('#announcementModal'),
