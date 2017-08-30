@@ -49,15 +49,15 @@
                         <script type="text/html" id="userFees-item-tpl">
                             <div class="input-group">
                                 <div class="radio-inline">
-                                    <input type="radio" data-bind="attr: { id: id, 'aria-describedby': describedBy }, checked: checkedValue, value: itemValue, disable: disabled" />
+                                    <input type="radio" name="userFees-selectedPlan" data-bind="attr: { id: id, 'aria-describedby': describedBy }, checked: checkedValue, value: itemValue, disable: disabled" />
                                     <label class="btn-block" data-bind="attr: { for: id }">
                                         <strong data-bind="text: itemLabel"></strong> - <span data-bind="text: itemSummary"></span>
                                     </label>
                                 </div>
                                 <span class="input-group-btn">
                                     <button class="btn btn-link text-secondary" type="button" data-toggle="collapse" aria-expanded="false"
-                                        data-bind="attr: { 'data-target': '#userFees-info-' + itemValue(), 'data-controls': '#userFees-info-' + itemValue() }">
-                                        View details
+                                        data-bind="attr: { 'data-target': '#userFees-info-' + itemValue(), 'data-controls': '#userFees-info-' + itemValue()">
+                                        View details <span class="sr-only">for "<span data-bind="text: itemLabel"></span>" plan</span>
                                     </button>
                                 </span>
                             </div>
