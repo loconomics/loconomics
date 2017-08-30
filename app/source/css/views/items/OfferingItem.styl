@@ -1,0 +1,41 @@
+/**
+    OfferingItem: Three lines tile of indented text
+    and action icon on the right.
+
+    Follows same indent as CompactLinkTile
+**/
+@import '../../components/Item.styl'
+
+.OfferingItem {
+    Item();
+    $height = 3.5em;
+    Item-addContent($height);
+    $vgap = 1em;
+    padding: $vgap $Item-hgap $vgap (30px + $Item-hgap);
+    label {
+        font-weight: normal;
+    }
+    .Item-content {
+        width: 95%;
+    }
+    a,
+    button,
+    .Item-action {
+        width: 5%;
+        height: $height;
+        min-width: 48px;
+        min-height: 48px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        // Left space for the icon and small gap:
+        padding-right: (4px + $Item-hgap);
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 2em;
+        }
+    }
+}

@@ -17,6 +17,7 @@ var A = Activity.extend(function ClientAppointmentActivity() {
     this.navBar = Activity.createSubsectionNavBar('', {
         backLink: '/myAppointments' , helpLink: this.viewModel.helpLink
     });
+    this.title('Your appoiontments');
 });
 
 exports.init = A.init;

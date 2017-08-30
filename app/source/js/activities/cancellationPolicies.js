@@ -18,6 +18,7 @@ var A = Activity.extend(function CancellationPoliciesActivity() {
     // null for logos
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
+    this.title('Cancellation policies');
     this.viewModel = new ViewModel(this.app);
     var shell = this.app.shell;
     this.$activity.find('#cancellationPolicies-index').on('click', 'a', function (e) {

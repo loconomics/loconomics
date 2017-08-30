@@ -12,15 +12,13 @@
     </ul>
 </script>
 <script type="text/html" id="service-addresses-list-item-template">
-    <a class="ItemAddonTile" href="#" data-bind="click: function(data, event) { viewModel.selectAddress(data.address, event) }, css: { active: viewModel.observerSelected(address) }">
-        <i class="Tile-marker fa ion ion-ios-location-outline" aria-hidden="true"></i>
-        <div class="Tile-content" data-bind="with: address">
-            <div data-bind="text: addressName() || 'Service Area'"></div>
-            <em data-bind="text: singleLine"></em>
-        </div>
-        <div class="Tile-addon" aria-hidden="true">
-              <span class="fa fa-xl ion ion-ios-circle-outline" aria-hidden="true"
-                  data-bind="css: { 'ion-ios-arrow-right': !viewModel.isSelectionMode(), 'ion-ios-circle-filled': viewModel.isSelectionMode() && viewModel.observerSelected(address), 'ion-ios-circle-outline': viewModel.isSelectionMode() && !viewModel.observerSelected(address)() }"></span>
-        </div>
-    </a>
+    <div class="AddressItem">
+        <label class="Item-content" data-bind="with: address, attr: { for: 'location' + address.addressID() }">
+            <h3 data-bind="text: address.addressName() || 'Service Area'"></h3>
+            <p data-bind="text: address.singleLine"></p>
+        </label>
+        <div class="Item-action">
+            <span role="radio" data-bind="visible: viewModel.isSelectionMode(), attr: { id: 'location' + address.addressID(), 'aria-pressed': viewModel.observerSelected(address) }, click: function(data, event) { viewModel.selectAddress(data.address, event) }"><i data-bind="css: { 'ion-ios-circle-outline': !viewModel.observerSelected(address)(), 'ion-ios-circle-filled': viewModel.observerSelected(address) }" aria-hidden="true"></i></span> <span role="link" data-bind="visible: !viewModel.isSelectionMode(), attr: {'aria-label': 'Go to '+ address.addressName() || 'Service Area' }"><icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec></span>
+        </div>  
+    </div>
 </script>

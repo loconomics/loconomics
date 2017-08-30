@@ -3,16 +3,16 @@
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <h1 class="hidden-xs hidden-sm">Treat yourself</h1>
+            <h1><icon-dec params="icon: 'ion-calendar'"></icon-dec> <span data-bind="text: title"></span></h1>
             <div class="col-md-7 col-sm-reset">
-                <h1 class="SectionTitle"
+                <h2 class="SectionTitle"
                     data-bind="css: { 'is-syncing': upcomingAppointments.isSyncing(), 'is-loading': upcomingAppointments.isLoading() }">
                     Upcoming 
                     <!-- ko component: {
                         name: 'app-loading-spinner',
                         params: { mod: 'onRight' }
                     } --><!-- /ko -->
-                </h1>
+                </h2>
                 <ul class="TilesList">
                     <li data-bind="with: upcomingAppointments.nextOnes">
                         <a class="InfoTile" href="/clientAppointment" data-bind="attr: { href: $root.getUrlTo('clientAppointment') }">

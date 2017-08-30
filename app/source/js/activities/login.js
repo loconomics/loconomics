@@ -17,8 +17,9 @@ var A = Activity.extend(function LoginActivity() {
     // No accessLevel, all users can access this
     //this.accessLevel =
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSectionNavBar('Log in');
+    this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
+    this.title('Sign in to your account');
 
     // Updating URL for the view
     var app = this.app;

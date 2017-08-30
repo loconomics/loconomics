@@ -19,6 +19,7 @@ var A = Activity.extend(function DatetimePickerActivity() {
     this.navBar = Activity.createSubsectionNavBar('');
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
+    this.title('Chosse an appointment time');
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
 

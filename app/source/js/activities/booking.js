@@ -19,21 +19,8 @@ var A = Activity.extend(function BookingActivity() {
     this.navBar = Activity.createSubsectionNavBar('Booking', {
         helpLink: '/help'
     });
-    this.navBar.title('Booking');
-    
-    // Only on change (not first time), when choosed the option 'custom'
-    // from gratuity, focus the textbox to input the custom value
-    this.viewModel.presetGratuity.subscribe(function(preset) {
-        if (preset === 'custom') {
-            // Small delay to allow the binding to display the custom field,
-            // the UI to update, and then focus it; trying to do it without
-            // timeout will do nothing.
-            setTimeout(function() {
-                this.$activity.find('[name=custom-gratuity]').focus();
-            }.bind(this), 50);
-        }
-    }.bind(this));
-    
+    this.title('Booking');
+  
     this.registerHandler({
         target: this.viewModel.progress.step,
         handler: function() {
@@ -44,8 +31,8 @@ var A = Activity.extend(function BookingActivity() {
         }.bind(this)
     });
 
-    var labelTpl = '__step__ of __total__';
-    var nav = this.navBar;
+    var labelTpl = ' (Step __step__ of __total__)';
+    var title = this.title;
     ko.computed(function() {
         var step = this.step() + 1;
         var total = this.totalSteps();
@@ -55,7 +42,7 @@ var A = Activity.extend(function BookingActivity() {
             .replace('__step__', step)
             .replace('__total__', total);
         }
-        nav.title(label);
+        title(label);
     }, this.viewModel.progress);
 });
 
@@ -90,8 +77,6 @@ A.prototype.hide = function hide() {
 /// and sufix 'Load'
 
 A.prototype.servicesLoad = function() {
-    // TODO Depends on jobTitle:
-    this.viewModel.supportsGratuity(false);
     this.viewModel.loadServices();
 };
 

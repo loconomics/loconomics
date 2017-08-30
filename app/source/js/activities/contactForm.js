@@ -18,6 +18,7 @@ var A = Activity.extend(function ContactFormActivity() {
 
     this.navBar = Activity.createSubsectionNavBar('Back');
     this.navBar.rightAction(null);
+    this.title('Contact us');
 });
 
 exports.init = A.init;

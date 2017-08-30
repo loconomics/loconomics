@@ -298,7 +298,7 @@ function NewClientBookingCardVM(app) {
     /// UI
     this.bookingHeader = ko.pureComputed(function() {
         var v = this.booking() && this.booking().instantBooking();
-        return v === true ? 'Your instant booking' : v === false ? 'Your booking request' : '';
+        return v === true ? 'Your instant booking:' : v === false ? 'Your booking request:' : '';
     }, this);
 
     ///

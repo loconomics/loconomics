@@ -19,6 +19,7 @@ var A = Activity.extend(function ClientsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Clients', {
         backLink: 'cms' , helpLink: this.viewModel.helpLink
     });
+    this.title('Your clients');
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject();
 
