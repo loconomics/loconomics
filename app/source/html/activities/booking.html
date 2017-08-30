@@ -17,17 +17,17 @@
                         <a href="/login" class="btn btn-default" data-bind="click: goLogin">Sign in
                         </a>
                     </div>
-                    <form id="bookingSelectOfferings">
+                    <form id="bookingSelectOfferingsForm">
                         <fieldset>
-                            <legend>YOUR PROFESSIONAL</legend>
+                            <legend class="text-uppercase">YOUR PROFESSIONAL</legend>
                             <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
                         </fieldset>
                         <fieldset>
-                            <legend>SELECT OFFERING(S)</legend>
+                            <legend class="text-uppercase">SELECT OFFERING(S)</legend>
                             <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
                         </fieldset>
                         <fieldset data-bind="visible: booking().pricingSummary().servicesSummary()">
-                            <legend>SUMMARY</legend>
+                            <legend class="text-uppercase">SUMMARY</legend>
                             <div class="PricingSummary PaddedBox-xs">
                                 <table>
                                     <tbody data-bind="foreach: booking().pricingSummary().items">
@@ -62,16 +62,16 @@
                     </form>
                 </div>
                 <div class="booking-step" data-bind="attr: { hidden: !isAtLocation() }, css: { 'is-loading': isLoadingServiceAddresses }">
-                    <form id="bookingSelectLocation" data-bind="visible: !addressEditorOpened()">
-                        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                        <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
-                            <a href="/login" class="btn btn-link" data-bind="click: goLogin">
-                                <span class="text-muted">Already have an account?</span>
-                                <span class="text-secondary">Log In</span>
-                            </a>
-                        </div>
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                    <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
+                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
+                            <span class="text-muted">Already have an account?</span>
+                            <span class="text-secondary">Log In</span>
+                        </a>
+                    </div>
+                    <form id="bookingSelectLocationForm" data-bind="visible: !addressEditorOpened()">
                         <fieldset>
-                            <legend>SELECT A LOCATION</legend>
+                            <legend class="text-uppercase">SELECT A LOCATION</legend>
                             <fieldset data-bind="visible: serviceAddresses.hasAddresses">
                                 <legend><span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations:</legend>
                                 <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
@@ -84,7 +84,7 @@
                                 <legend>Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</legend>
                                 <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
                                     <li>
-                                        <a class="IconLinkItem" href="#" data-bind="click: $parent.addAddress">
+                                        <a class="IconContentItem" href="#" data-bind="click: $parent.addAddress">
                                             <icon-dec params="icon: 'ion-plus'"></icon-dec>
                                             <div class="Item-content">
                                                 <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
@@ -96,7 +96,7 @@
                         </fieldset>
                     </form>
                     <!-- ko if: addressEditorOpened -->
-                    <form id="addBookingLocation">
+                    <form id="addBookingLocationForm">
                         <fieldset>
                             <legend>Add your location details:</legend>
                             <div data-bind="with: booking().serviceAddress">
@@ -137,112 +137,84 @@
                     <!-- /ko -->
                 </div>
                 <div class="booking-step" data-bind="attr: { hidden: !(isAtSelectTimes() || isAtSelectTime()) }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
-                        <a href="/login" class="btn btn-link" data-bind="click: goLogin">
-                            <span class="text-muted">Already have an account?</span>
-                            <span class="text-secondary">Log In</span>
+                        <span>Already have an account?  </span>
+                        <a href="/login" class="btn btn-default" data-bind="click: goLogin">Sign in
                         </a>
                     </div>
-                    <h1 class="SectionTitle">
-                        <span data-bind="visible: isAtSelectTimes">Select up to 3 appointment times</span>
-                        <span data-bind="visible: isAtSelectTime">Select a start day and time</span>                        &nbsp;
-                    </h1>
-                    <div data-bind="visible: !timeFieldToBeSelected()" class="Box-sm">
-                        <ul class="TilesList">
-                            <li data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
-                                <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickServiceDate">
-                                    <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                                    <div class="Tile-content">
-                                        <div>
-                                            <strong>First choice:</strong>
+                    <form id="bookingRequestTimesForm" data-bind="visible: !timeFieldToBeSelected()" class="Box-sm" aria-describedby="bookingRequestTimesFormInstructions">
+                        <fieldset>
+                            <legend class="text-uppercase">REQUEST UP TO THREE APPOINTMENT TIMES</legend>
+                            <ul class="TilesList">
+                                <li data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
+                                    <div class="TimeItem">
+                                        <label for="serviceDate" class="Item-content">
+                                            <h3>First choice:</h3>
+                                            <p data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></p>
+                                            <p data-bind="text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></p>
+                                        </label>
+                                        <span id="serviceDate" role="button" class="Item-action" data-bind="click: pickServiceDate" aria-label="Edit second choice"><icon-dec params="icon: 'ion-edit'"></icon-dec>
+                                        </span>
+                                    </div>
+                                </li>
+                                <li data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())">
+                                    <button class="IconContentItem" type="button" data-bind="click: pickServiceDate">
+                                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                        <div class="Item-content">
+                                            <p>Select a day and time</p>
                                         </div>
-                                        <div data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
-                                        <div data-bind="text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></div>
+                                    </button>
+                                </li>
+                                <li data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
+                                    <div class="TimeItem">
+                                        <label for="alternativeDate1" class="Item-content">
+                                            <h3>Second choice:</h3>
+                                            <p data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></p>
+                                            <p data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></p>
+                                        </label>
+                                        <span id="alternativeDate1" role="button" class="Item-action" data-bind="click: pickAlternativeDate1" aria-label="Edit second choice"><icon-dec params="icon: 'ion-edit'"></icon-dec>
+                                        </span>
                                     </div>
-                                    <div class="Tile-addon">
-                                        <span class="fa fa-lg ion ion-edit" aria-hidden="true"></span>
-                                    </div>
-                                </button>
-                            </li>
-                            <li data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())">
-                                <button class="ItemAddonTile" type="button" data-bind="click: pickServiceDate">
-                                    <div class="Tile-marker"></div>
-                                    <div class="Tile-content">
-                                        <p class="text-muted">Select a first choice</p>
-                                    </div>
-                                    <div class="Tile-addon">
-                                        <span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span>
-                                    </div>
-                                </button>
-                            </li>
-                            <li data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
-                                <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate1">
-                                    <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                                    <div class="Tile-content">
-                                        <div>
-                                            <strong>Second choice:</strong>
+                                </li>
+                                <li data-bind="visible: booking().serviceDate() && !(booking().alternativeDate1() && booking().alternativeDate1().startTime())">
+                                    <button class="IconContentItem" type="button" data-bind="click: pickAlternativeDate1">
+                                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                        <div class="Item-content">
+                                            <p>Select a second day and time</p>
                                         </div>
-                                        <div data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
-                                        <div data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></div>
+                                    </button>
+                                </li>
+                                <li data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
+                                    <div class="TimeItem">
+                                        <label for="alternativeDate2" class="Item-content">
+                                            <h3>Third choice:</h3>
+                                            <p data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></p>
+                                            <p data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></p>
+                                        </label>
+                                        <span id="alternativeDate2" role="button" class="Item-action" data-bind="click: pickAlternativeDate1" aria-label="Edit second choice"><icon-dec params="icon: 'ion-edit'"></icon-dec>
+                                        </span>
                                     </div>
-                                    <div class="Tile-addon">
-                                        <span class="fa fa-lg ion ion-edit" aria-hidden="true"></span>
-                                    </div>
-                                </button>
-                            </li>
-                            <li data-bind="visible: !(booking().alternativeDate1() && booking().alternativeDate1().startTime())">
-                                <button class="ItemAddonTile" type="button" data-bind="click: pickAlternativeDate1">
-                                    <div class="Tile-marker"></div>
-                                    <div class="Tile-content">
-                                        <p class="text-muted">Select a second choice</p>
-                                    </div>
-                                    <div class="Tile-addon">
-                                        <span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span>
-                                    </div>
-                                </button>
-                            </li>
-                            <li data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
-                                <button class="ItemAddonTile ItemAddonTile--largerContent" type="button" data-bind="click: pickAlternativeDate2">
-                                    <i class="Tile-marker fa ion ion-ios-clock-outline" aria-hidden="true"></i>
-                                    <div class="Tile-content">
-                                        <div>
-                                            <strong>Third choice:</strong>
+                                </li>
+                                <li data-bind="visible: booking().serviceDate() && booking().alternativeDate1() && !(booking().alternativeDate2() && booking().alternativeDate2().startTime())">
+                                    <button class="IconContentItem" type="button" data-bind="click: pickAlternativeDate2">
+                                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                        <div class="Item-content">
+                                            <p>Select a third day and time</p>
                                         </div>
-                                        <div data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do YYYY' }"></div>
-                                        <div data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></div>
-                                    </div>
-                                    <div class="Tile-addon">
-                                        <span class="fa fa-lg ion ion-edit" aria-hidden="true"></span>
-                                    </div>
-                                </button>
-                            </li>
-                            <li data-bind="visible: !(booking().alternativeDate2() && booking().alternativeDate2().startTime())">
-                                <button class="ItemAddonTile" type="button" data-bind="click: pickAlternativeDate2">
-                                    <div class="Tile-marker"></div>
-                                    <div class="Tile-content">
-                                        <p class="text-muted">Select a third choice</p>
-                                    </div>
-                                    <div class="Tile-addon">
-                                        <span class="fa fa-2x ion ion-ios-plus-outline" aria-hidden="true"></span>
-                                    </div>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div data-bind="visible: timeFieldToBeSelected">
+                                    </button>
+                                </li>
+                            </ul>
+                        </fieldset>
+                        <div class="isolated bottom-only">
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        </div>
+                        <p id="bookingRequestTimesFormInstructions" class="help-block">Request up to three times for your appointment. This allows us to figure out a good time on both ends. Your service professional has 18 hours to confirm your appointment.</p>
+                    </form>
+                    <form id="bookingSelectTimeForm" data-bind="visible: timeFieldToBeSelected()" class="Box-sm">
+                        <legend class="text-uppercase">SELECT A START DAY AND TIME</legend>
                         <app-datetime-picker params="api: serviceStartDatePickerView"></app-datetime-picker>
-                    </div>
-                    <div class="PaddedBox-xs-only PaddedBox-sm-only isolated-md">
-                        <div class="isolated bottom-only" data-bind="visible: isAtSelectTimes">
-                            <div>
-                                <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                            </div>
-                        </div>
-                        <div class="well Box-xs" data-bind="visible: !timeFieldToBeSelected()">
-                            <h5><strong>Why am I choosing three times?</strong></h5>
-                            <p>This allows us to figure out a good appointment time on both ends. Your service professional has 18 hours to confirm your appointment.</p>
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="booking-step" data-bind="attr: { hidden: !isAtPayment() }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
