@@ -18,7 +18,7 @@
         </div>
         <ul class="TilesList TilesList--openEnd" data-bind="visible: newAppointmentVisible()">
             <li>
-                <a class="IconLinkItem" data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newBooking }">
+                <a class="IconContentItem" data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newBooking }">
                     <icon-dec params="icon: 'ion-ios-plus-outline'"></icon-dec>
                     <div class="Item-content">
                         <p>Add a new booking</p>
@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a class="IconLinkItem" data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newEvent }">
+                <a class="IconContentItem" data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newEvent }">
                     <icon-dec params="icon: 'ion-ios-plus-outline'"></icon-dec>
                     <div class="Item-content">
                         <p>Add a new calendar block</p>
@@ -34,7 +34,7 @@
                 </a>
             </li>
             <li>
-                <a class="IconLinkItem" href="#!/schedulingPreferences?mustReturn=1">
+                <a class="IconContentItem" href="#!/schedulingPreferences?mustReturn=1">
                     <icon-dec params="icon: 'ion-ios-settings'"></icon-dec>
                     <div class="Item-content">
                         <p>Adjust your availability</p>
