@@ -8,24 +8,20 @@
 
 .ListingSummaryItem {
     Item();
-    $height = 2.5em;
+    $height-em = 2.5em;
     Item-addContent($height);
-    $vgap = 1em;
-    padding: $vgap $Item-hgap $vgap (30px + $Item-hgap);
     .Item-content {
         width: 95%;
     }
     a,
     button {
         width: 5%;
-        height: $height;
+        height: $height-em;
         min-width: 48px;
         min-height: 48px;
         display: table-cell;
         text-align: right;
         vertical-align: middle;
-        // Left space for the icon and small gap:
-        padding-right: (4px + $Item-hgap);
         // there are some problems with some icons (ionicons mainly) where
         // even with enough space, gets cut on the edges; add a minimum gap
         // to give them overflow space

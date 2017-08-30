@@ -25,18 +25,17 @@ Item() {
     background: none;
     text-align: left;
     position: relative;
-    padding-left: $Item-hgap;
-    padding-right: $Item-hgap;
+    padding: 1em;
 }
 
 // Add style for a Item-content child with multiline and single-line
 // sub-childs with common styles and the given number of lines as height limit.
-Item-addContent($height) {
+Item-addContent($height-em) {
     .Item-content {
         white-space: normal;
         word-wrap: break-word;
         margin: 0;
-        height: $height;
+        height: $height-em;
         overflow: hidden;
         display: table-cell;
         vertical-align: middle;

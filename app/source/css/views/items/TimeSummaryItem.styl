@@ -1,20 +1,36 @@
 /**
-    OfferingItem: Three lines tile of indented text
+    TimeSummaryItem: Three lines tile of indented text
     and action icon on the right.
 
     Follows same indent as CompactLinkTile
 **/
 @import '../../components/Item.styl'
 
-.OfferingItem {
+TimeSummaryItem($height-em) {
     Item();
-    $height-em = 3.5em;
+    height: $height-em;
     Item-addContent($height-em);
     label {
         font-weight: normal;
     }
+    .Item-icon {
+        width: 5%;
+        height: $height-em;
+        min-width: 48px;
+        min-height: 48px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 2em;
+        }
+    }
     .Item-content {
-        width: 95%;
+        width: 80%;
     }
     a,
     button,
@@ -34,4 +50,7 @@
             font-size: 2em;
         }
     }
+}
+.TimeSummaryItem {
+    TimeSummaryItem(3.5em)
 }
