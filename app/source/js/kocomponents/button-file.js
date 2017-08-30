@@ -81,10 +81,7 @@ var create = function(params, componentInfo) {
     // because even if keyboard events can be catch at this element the
     // opening of the input cannot be forced (triggering events programatically
     // is blocked by web-engines)
-    var input = el.querySelector('input[type=file]');
-    el.addEventListener('focus', function() {
-        el.classList.add(FAKE_FOCUS_CSS_CLASS);
-        input.focus();
+    var onInputFocus = function() {
         // TRICK 2 and workaround:
         // A keyboard trap is created by this code until this line,
         // that prevents a user move focus back with keyboard (Alt+Tab)
@@ -92,15 +89,51 @@ var create = function(params, componentInfo) {
         // That's why we remove 'el' temporarly from tab order and restore
         // after input lost focus (and successfully moved to another element).
         el.removeAttribute('tabindex');
-    });
-    input.addEventListener('blur', function() {
-        el.classList.remove(FAKE_FOCUS_CSS_CLASS);
-        // Last step of the trick to prevent a keyboard trap (see TRICK 2 note)
-        el.setAttribute('tabindex', '0');
+        // IMPORTANT: do this at the input.focus event rather than at
+        // the el.focus handler to prevent edge cases of input not getting
+        // the focus even doing input.focus();
+    };
+    // TRICK 3 and workaround:
+    // Get and cache a reference to the input element and set-up it's handlers
+    // is just fine usually, but when working in combination with third party
+    // scripts like AJAX file-uploaders this may fail because some of them
+    // clone the input and remove the original under some actions (like picking
+    // a file); because of that, any reference
+    // to input here will be to a disposed element and event handlers never call
+    // leading to broken state (tabindex and class at element not being reset).
+    // Workaround: wrap the set-up in a function and call at focus, if needed;
+    // to avoid introduce other bugs, do that only if the input is new.
+    var latestInputElement = null;
+    var setupInput = function() {
+        var input = el.querySelector('input[type=file]');
+        input.focus();
+
+        // We need to prevent to attach handlers twice and more if the input
+        // is still the same, not new
+        if (latestInputElement === input) {
+            return;
+        }
+
+        input.addEventListener('focus', onInputFocus);
+        var onEndFocus = function() {
+            el.classList.remove(FAKE_FOCUS_CSS_CLASS);
+            // Last step of the trick to prevent a keyboard trap (see TRICK 2 note)
+            el.setAttribute('tabindex', '0');
+        };
+        input.addEventListener('focusout', onEndFocus);
+        // TRICK 4: some web engines don't trigger neither focusout or blur
+        // at change event, but we need to do the same stuff or state will get
+        // broken
+        input.addEventListener('change', onEndFocus);
+    };
+    el.addEventListener('focus', function() {
+        el.classList.add(FAKE_FOCUS_CSS_CLASS);
+        setupInput();
     });
 
     // Create and return viewModel
-    return new ViewModel(params, { input: input });
+    var originalInput = el.querySelector('input[type=file]');
+    return new ViewModel(params, { input: originalInput });
 };
 
 ko.components.register(TAG_NAME, {
