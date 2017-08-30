@@ -13,6 +13,7 @@
 
 var ko = require('knockout');
 var $ = require('jquery');
+var maintainOthersHidden = require('./utils/maintainOthersHidden');
 
 exports.show = function showTextEditor(options) {
     //jshint maxcomplexity:10
@@ -34,18 +35,23 @@ exports.show = function showTextEditor(options) {
     vm.text(options.text || '');
 
     return new Promise(function(resolve, reject) {
+        modal.modal('show');
+        // Increased accessibility:
+        // NOTE: must be reverted BEFORE we fullfill
+        var handle = maintainOthersHidden.keep(modal.get(0));
 
         // Handlers
         var save = function() {
             resolve(vm.text());
             modal.modal('hide');
         };
-
         // Just closed without pick anything, rejects
         modal.off('hide.bs.modal');
-        // Reject on hide event, but do not pass the event in the
-        // first parameter (the error is null, since there is no error).
-        modal.on('hide.bs.modal', reject.bind(null, null));
+        // Reject on hide event
+        modal.on('hide.bs.modal', function() {
+            handle.revert();
+            reject();
+        });
         modal.off('click', '#textEditorModal-save');
         modal.on('click', '#textEditorModal-save', save);
 
@@ -54,8 +60,6 @@ exports.show = function showTextEditor(options) {
         // (example, NVDA Windows Firefox, reads 'section section section..'
         // before mention the text field).
         // So was removed as of #528
-
-        modal.modal('show');
     });
 };
 
