@@ -2,8 +2,12 @@
     WorkPhotos component for the serviceProfessional photos dahsboard
 **/
 
+$workPhotos-maxImageWidth = 442px;
+$workPhotos-borderWidth = 1px;
+$workPhotos-maxContainerWidth = $workPhotos-maxImageWidth + ($workPhotos-borderWidth * 2);
+
 .WorkPhotos {
-    max-width: 442px;
+    max-width: $workPhotos-maxContainerWidth;
     display: block;
     width: auto
     overflow: hidden;
@@ -16,7 +20,7 @@
         margin-bottom: 15px;
 
         // Group the elements visually:
-        border: 1px solid #dbdbdb;
+        border: $workPhotos-borderWidth solid #dbdbdb;
         // ..and remove lines that seems to separate them
         .form-control {
             border: none;
