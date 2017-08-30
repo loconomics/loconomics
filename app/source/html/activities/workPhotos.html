@@ -26,9 +26,9 @@
                                     <img alt="Work photo" class="WorkPhotos-img" data-bind="attr: { src: url, alt: caption, style: photoRotationStyle, hidden: localTempPhotoPreview }" />
                                     <div data-label="Work photo" class="WorkPhotos-img" data-bind="domElement: localTempPhotoPreview, attr: { style: photoRotationStyle, hidden: !localTempPhotoPreview() }"></div>
                                 </div>
-                                <label data-bind="attr: { 'for': 'workPhotos-item-' + $index }" class="sr-only">Photo caption</label>
+                                <label data-bind="attr: { 'for': 'workPhotos-item-' + $index() }" class="sr-only">Photo caption</label>
                                 <input class="form-control" type="text" placeholder="Photo caption"
-                                    data-bind="textInput: caption, disable: $parent.state.isLocked, attr: { 'id': 'workPhotos-item-' + $index }"/>
+                                    data-bind="textInput: caption, disable: $parent.state.isLocked, attr: { 'id': 'workPhotos-item-' + $index() }"/>
                                 <div class="WorkPhotos-toolbar">
                                     <button type="button" class="btn btn-link WorkPhotos-rotateBtn" data-bind="click: $root.rotateImg">
                                         <span class="glyphicon glyphicon-repeat"></span>
