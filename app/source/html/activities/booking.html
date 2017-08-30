@@ -332,33 +332,61 @@
                             <ul class="TilesList">
                                 <li>
                                     <fieldset>
-                                        <legend><span data-bind="visible: booking().instantBooking()">Appointment time:</span><span data-bind="visible: !booking().instantBooking()">Requested appointment times:</span></legend>
-                                        <div class="TimeSummaryItem" data-bind="visible: !booking().instantBooking()">
-                                            <div class="Item-icon">
-                                                <icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec>
+                                        <div data-bind="visible: !booking().instantBooking()">
+                                            <legend>Requested appointment times:</legend>
+                                            <div class="TimesRequestedSummaryItem">
+                                                <div class="Item-icon">
+                                                    <icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec>
+                                                </div>
+                                                <label for="timesRequested" class="Item-content">
+                                                    <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
+                                                        <p>
+                                                            <strong>1st choice:</strong>
+                                                            <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
+                                                        </p>
+                                                    </div>
+                                                    <div data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
+                                                        <p>
+                                                            <strong>2nd choice:</strong>
+                                                            <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
+                                                        </p>
+                                                    </div>
+                                                    <div data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
+                                                        <p>
+                                                            <strong>3rd choice:</strong>
+                                                            <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
+                                                        </p>
+                                                    </div>
+                                                    <div data-bind="visible: !hasSomeDateSelected()">
+                                                        <p>Select a day and time</p>
+                                                    </div>
+                                                </label>
+                                                <span id="timesRequested" role="button" class="Item-action" data-bind="click: pickDateTime" aria-label="Edit requested appointment times"><icon-dec params="icon: 'ion-edit'"></icon-dec>
+                                                </span>
                                             </div>
-                                            <label for="timesRequested" class="Item-content">
-                                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
-                                                    <p>
-                                                        <strong>1st choice:</strong>
-                                                        <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
-                                                    </p>
-                                                </div>
-                                                <div data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
-                                                    <p>
-                                                        <strong>2nd choice:</strong>
-                                                        <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
-                                                    </p>
-                                                </div>
-                                                <div data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
-                                                    <p>
-                                                        <strong>3rd choice:</strong>
-                                                        <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
-                                                    </p>
-                                                </div>
-                                            </label>
-                                            <span id="timesRequested" role="button" class="Item-action" data-bind="click: pickDateTime" aria-label="Edit requested appointment times"><icon-dec params="icon: 'ion-edit'"></icon-dec>
-                                            </span>
+                                        </div>
+                                        <div data-bind="visible: booking().instantBooking()">
+                                            <legend>Appointment time:</legend><div class="TimesRequestedSummaryItem">
+                                                    <div class="Item-icon">
+                                                        <icon-dec data-bind="visible: !hasSomeDateSelected()" params="icon: 'ion-plus'"></icon-dec>
+                                                        <icon-dec data-bind="visible: hasSomeDateSelected()" params="icon: 'ion-ios-clock-outline'"></icon-dec>
+                                                    </div>
+                                                    <label for="serviceDate" class="Item-content">
+                                                        <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
+                                                            <p>
+                                                                <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>
+                                                                <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
+                                                            </p>
+                                                        </div>
+                                                        
+                                                        <div data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())">
+                                                            <p>Select a day and time</p>
+                                                        </div>
+                                                    </label>
+                                                    <span id="serviceDate" role="button" class="Item-action" data-bind="click: pickDateTime" aria-label="Edit  appointment time">
+                                                        <icon-dec data-bind="visible: !hasSomeDateSelected()" params="icon: 'ion-plus'"></icon-dec>
+                                                        <icon-dec data-bind="visible: hasSomeDateSelected()" params="icon: 'ion-edit'"></icon-dec>
+                                                    </span>
                                         </div>
                                     </fieldset>
                                 </li>
@@ -368,33 +396,6 @@
                     
                     <div class="Box-sm">
                         <ul class="TilesList">
-                            <li>
-                                <button type="button" class="InfoTile" data-bind="css: { InfoTile: booking().instantBooking(), InfoTile3L: !booking().instantBooking() }, click: pickDateTime">
-                                    <div class="Tile-icon" aria-hidden="true">
-                                        <span class="fa ion ion-ios-clock-outline"></span>
-                                    </div>
-                                    <div class="Tile-content" data-bind="visible: !booking().instantBooking()">
-                                        <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
-                                            <strong>1st choice: </strong>
-                                            <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
-                                        </div>
-                                        <div data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
-                                            <strong>2nd choice: </strong>
-                                            <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
-                                        </div>
-                                        <div data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
-                                            <strong>3rd choice: </strong>
-                                            <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
-                                        </div>
-                                        <p data-bind="visible: !hasSomeDateSelected()" class="text-muted">Select preferred times</p>
-                                    </div>
-                                    <div class="Tile-content" data-bind="visible: booking().instantBooking">
-                                        <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></div>
-                                        <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></div>
-                                        <p data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())" class="text-muted">Select date/time</p>
-                                    </div>
-                                </button>
-                            </li>
                             <li data-bind="if: !isPhoneServiceOnly()">
                                 <button type="button" class="InfoTile" data-bind="click: pickLocation">
                                     <div class="Tile-icon" aria-hidden="true">
