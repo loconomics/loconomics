@@ -66,7 +66,7 @@
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
-                            <span class="text-secondary">Log In</span>
+                            <span class="text-secondary">Sign in</span>
                         </a>
                     </div>
                     <form id="bookingSelectLocationForm" data-bind="visible: !addressEditorOpened()">
@@ -221,7 +221,7 @@
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
-                            <span class="text-secondary">Log In</span>
+                            <span class="text-secondary">Sign in</span>
                         </a>
                     </div>
                     <form id="bookingPaymentForm" class="PaddedBox-xs Box-md" data-bind="visible: !addressEditorOpened()" aria-describedby="bookingPaymentFormInstructions">
@@ -323,14 +323,51 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <fieldset>
+                            <legend class="text-uppercase" data-bind="visible: isAnonymous()">CONFIRM BOOKING</legend>
+                            <fieldset>
+                                <legend>Your professional:</legend>
+                                <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
+                            </fieldset>
+                            <ul class="TilesList">
+                                <li>
+                                    <fieldset>
+                                        <legend><span data-bind="visible: booking().instantBooking()">Appointment time:</span><span data-bind="visible: !booking().instantBooking()">Requested appointment times:</span></legend>
+                                        <div class="TimeSummaryItem" data-bind="visible: !booking().instantBooking()">
+                                            <div class="Item-icon">
+                                                <icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec>
+                                            </div>
+                                            <label for="timesRequested" class="Item-content">
+                                                <div data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime()">
+                                                    <p>
+                                                        <strong>1st choice:</strong>
+                                                        <span data-bind="text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
+                                                    </p>
+                                                </div>
+                                                <div data-bind="visible: booking().alternativeDate1() && booking().alternativeDate1().startTime()">
+                                                    <p>
+                                                        <strong>2nd choice:</strong>
+                                                        <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate1() && booking().alternativeDate1().displayedTimeRange()"></span>
+                                                    </p>
+                                                </div>
+                                                <div data-bind="visible: booking().alternativeDate2() && booking().alternativeDate2().startTime()">
+                                                    <p>
+                                                        <strong>3rd choice:</strong>
+                                                        <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="text: booking().alternativeDate2() && booking().alternativeDate2().displayedTimeRange()"></span>
+                                                    </p>
+                                                </div>
+                                            </label>
+                                            <span id="timesRequested" role="button" class="Item-action" data-bind="click: pickDateTime" aria-label="Edit requested appointment times"><icon-dec params="icon: 'ion-edit'"></icon-dec>
+                                            </span>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                            </ul>
+                        </fieldset>
                     </form>
-                    <h1 class="SectionTitle" data-bind="text: bookingHeader"></h1>
-                    <div class="Box-sm">
-                        <div data-bind="template: { name: 'service-professional-info-template', data: serviceProfessionalInfo() }"></div>
-                    </div>
+                    
                     <div class="Box-sm">
                         <ul class="TilesList">
-                            <li></li>
                             <li>
                                 <button type="button" class="InfoTile" data-bind="css: { InfoTile: booking().instantBooking(), InfoTile3L: !booking().instantBooking() }, click: pickDateTime">
                                     <div class="Tile-icon" aria-hidden="true">
