@@ -217,67 +217,60 @@
                     </form>
                 </div>
                 <div class="booking-step" data-bind="attr: { hidden: !isAtPayment() }">
+                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
                         <a href="/login" class="btn btn-link" data-bind="click: goLogin">
                             <span class="text-muted">Already have an account?</span>
                             <span class="text-secondary">Log In</span>
                         </a>
                     </div>
-                    <h1 class="SectionTitle">Add payment</h1>
-                    <div class="WhiteForm PaddedBox-sm-only PaddedBox-xs-only">
-                        <div data-bind="with: paymentMethod">
+                    <form id="bookingPaymentForm" class="PaddedBox-xs Box-md" data-bind="visible: !addressEditorOpened()" aria-describedby="bookingPaymentFormInstructions">
+                        <fieldset data-bind="with: paymentMethod">
+                            <legend class="text-uppercase">ADD PAYMENT INFORMATION</legend>
                             <div class="form-group">
+                                <label for="creditCard">Credit card number:</label>
                                 <span class="input-group">
-                                    <input type="text" class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" placeholder="Card number">
+                                    <input id="creditCard" type="text" required class="form-control" data-bind="textInput: cardNumber, disable: $parent.isLocked" aria-describedby="creditCardSecureForm">
                                     <span class="input-group-addon" aria-hidden="true">
                                         <span class="fa ion ion-card fa-lg"></span>
                                     </span>
                                 </span>
                             </div>
                             <div class="row">
-                                <div class="col-xs-7">
+                                <div class="col-sm-7">
                                     <div class="form-group">
-                                        <span class="input-group">
-                                            <span class="input-group-addon">Expiry</span>
-                                            <input type="text" class="form-control" data-bind="value: expirationMonthYear, disable: $parent.isLocked" placeholder="mm/yyyy">
-                                        </span>
+                                        <div class="input-group">
+                                            <label for="expiry" class="input-group-addon">Expires (mm/yyyy):</label>
+                                            <input id="expiry" type="text" required class="form-control" data-bind="value: expirationMonthYear, disable: $parent.isLocked" placeholder="mm/yyyy"  aria-describedby="creditCardSecureForm">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-5">
-                                    <app-unlabeled-input params="placeholder: 'CCV', value: securityCode, disable: $parent.isLocked"></app-unlabeled-input>
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <label for="securityCode" class="input-group-addon">CCV:</label>
+                                            <input id="securityCode" type="text" required class="form-control" data-bind="value: securityCode, disable: $parent.isLocked" aria-describedby="creditCardSecureForm">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <span class="input-group">
-                                    <input type="text" class="form-control" data-bind="textInput: billingAddress().postalCode, disable: $parent.isLocked" placeholder="Billing zip code">
-                                    <span class="input-group-addon">
-                                        <span class="fa ion fa-lg ion-ios-home-outline"></span>
-                                    </span>
-                                </span>
+                                <label for="userFees-postalCode">Zip code:</label>
+                                <input id="userFees-postalCode" type="number" required class="form-control" min="0" data-bind="textInput: billingAddress().postalCode, disable: $parent.isLocked"  aria-describedby="creditCardSecureForm">
                             </div>
-                        </div>
-                        <div>
-                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
-                        </div>
-                        <div class="booking-secure-form-warning">
-                            <span>
-                                <span class="fa ion ion-ios-locked-outline fa-lg" aria-hidden="true"></span>
-                            </span>
-                            <span>
-                                This is a secure 128 bit SSL encrypted form, and we're PCI compliant
-                            </span>
-                        </div>
-                        <div class="well Box-xs">
-                            <h5><strong>How payment works:</strong></h5>
+                            <div id="creditCardSecureForm" class="booking-secure-form-warning">
+                                <span class="fa ion ion-ios-locked-outline fa-lg" aria-hidden="true"></span><span>  This is a secure 128 bit SSL encrypted form, and we're PCI compliant</span>
+                            </div>
+                        </fieldset>
+                        <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep">Save and continue</button>
+                        <div id="bookingPaymentFormInstructions" class="well Box-xs">
+                            <h2><strong>How payment works:</strong></h2>
                             <p>
-                                Your card will be authorized for $<span data-bind="text: booking().pricingSummary().totalPrice"></span>.
-                                <span data-bind="visible: !booking().instantBooking()">
-                                    If your request is accepted (within 18 hours), we'll change your card the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs the scheduled services.
-
-                                </span>
+                                <span data-bind="visible: !booking().instantBooking()">Your card will be authorized for $<span data-bind="text: booking().pricingSummary().totalPrice"></span> after <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> confirms this booking. It will be charged on the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs the scheduled services.</span>
+                                <span data-bind="visible: booking().instantBooking()">Your card will be authorized for $<span data-bind="text: booking().pricingSummary().totalPrice"></span> when you confirm this booking in the next step. It will be charged on the day <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span> performs the scheduled services.</span>
                             </p>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="booking-step" data-bind="attr: { hidden: !isAtConfirm() }">
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
