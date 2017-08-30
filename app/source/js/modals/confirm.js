@@ -14,6 +14,7 @@
 
 var $ = require('jquery');
 require('../utils/jquery.multiline');
+var maintainOthersHidden = require('./utils/maintainOthersHidden');
 
 exports.show = function (options) {
 
@@ -38,13 +39,19 @@ exports.show = function (options) {
 
     return new Promise(function(resolve, reject) {
         modal.modal('show');
+        // Increased accessibility:
+        // NOTE: must be reverted BEFORE we fullfill
+        var handle = maintainOthersHidden.keep(modal.get(0));
         yesBtn.on('click', function() {
+            handle.revert();
             resolve();
         });
         noBtn.on('click', function() {
+            handle.revert();
             reject();
         });
         modal.on('hide.bs.modal', function() {
+            handle.revert();
             reject();
         });
     });
