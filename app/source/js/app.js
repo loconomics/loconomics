@@ -74,6 +74,9 @@ var app = {
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
 
+    /**
+     * @deprecated See the module comment for more info
+     */
     modals: require('./app.modals'),
 
     /**
