@@ -4,6 +4,7 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var ko = require('knockout');
 
 var $ = require('jquery');
 
@@ -13,7 +14,6 @@ var A = Activity.extend(function AboutActivity() {
 
     // Any user can access this
     this.accessLevel = null;
-    this.title('About Loconomics Cooperative');
 
     // null for logos
     this.navBar = Activity.createSectionNavBar(null);
@@ -26,6 +26,9 @@ var A = Activity.extend(function AboutActivity() {
         var link = $(this).attr('href').replace(/^#about-/, '');
         shell.replaceState(null, null, '#!about/' + link);
     });
+    this.title = ko.pureComputed(function() {
+        return shell === '#!about/press' ? 'Press' : shell == '#!about/careers' ? 'Careers' : 'About Loconomics cooperative';
+    }, this.viewModel);
 });
 
 exports.init = A.init;
