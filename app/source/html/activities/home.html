@@ -28,7 +28,7 @@
                             </li></ul>
                         </li>
                         <li data-bind="visible: searchResults.jobTitles().length && !isLoading()">
-                            <h2>Services</h2>
+                            <h2 class="SearchResultsPreview-h">Services</h2>
                             <ul data-bind="foreach: searchResults.jobTitles">
                                 <li class="Result clearfix">
                                     <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
@@ -43,7 +43,7 @@
                             </ul>
                         </li>
                         <li data-bind="visible: searchResults.serviceProfessionals().length && !isLoading()">
-                            <h2>Professionals</h2>
+                            <h2 class="SearchResultsPreview-h">Professionals</h2>
                             <ul data-bind="foreach: searchResults.serviceProfessionals">
                                 <li class="Result clearfix">
                                     <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
@@ -59,7 +59,7 @@
                             </ul>
                         </li>
                         <li data-bind="visible: searchResults.categories().length && !isLoading()">
-                            <h2>Categories</h2>
+                            <h2 class="SearchResultsPreview-h">Categories</h2>
                             <ul data-bind="foreach: searchResults.categories">
                                 <li class="Result clearfix">
                                     <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
