@@ -5,16 +5,16 @@
 'use strict';
 var $ = require('jquery');
 
-var
-    SearchResults = require('../models/SearchResults'),
-    ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    snapPoints = require('../utils/snapPoints');
+var SearchResults = require('../models/SearchResults');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
+var snapPoints = require('../utils/snapPoints');
 
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 var user = require('../data/userProfile').data;
 var search = require('../data/search');
+require('../kocomponents/input-autocomplete');
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -213,4 +213,8 @@ function ViewModel() {
             this.searchResults.categories().length
         );
     }, this);
+
+    this.getJobTitleUrl = function(id) {
+        return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
+    }.bind(this);
 }

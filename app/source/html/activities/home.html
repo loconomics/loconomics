@@ -14,65 +14,36 @@
                 </div>
                 <div class="form-group col-sm-7">
                     <label for="homeSearch" class="sr-only">Search</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
-                        <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search services, e.g. Dog Walker, Tutor" >
-                    </div>
-                    <ul class="SearchResultsPreview" data-bind="visible: isSearchAutocompleteOpened">
-                        <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
-                            <ul><li class="Result">
+                    <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
+                        placeholder: 'Search services, e.g. Dog Walker, Tutor',
+                        value: searchTerm, results: searchResults, isBusy: isLoading">
+                        <!-- templates -->
+                        <div slot="isBusy">
+                            <div class="Result">
                                 <div class="Result-info">
                                     <span class="Result-name">Searching...</span>
                                 </div>
                                 <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
-                            </li></ul>
-                        </li>
-                        <li data-bind="visible: searchResults.jobTitles().length && !isLoading()">
-                            <h2 class="SearchResultsPreview-h">Services</h2>
-                            <ul data-bind="foreach: searchResults.jobTitles">
-                                <li class="Result clearfix">
-                                    <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                        <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: pluralName"></span>
-                                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
-                                            <span class="Result-description" data-bind="text: searchDescription"></span>
-                                        </div>
-                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li data-bind="visible: searchResults.serviceProfessionals().length && !isLoading()">
-                            <h2 class="SearchResultsPreview-h">Professionals</h2>
-                            <ul data-bind="foreach: searchResults.serviceProfessionals">
-                                <li class="Result clearfix">
-                                    <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
-                                        <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: firstName"></span>
-                                            <span class="Result-name"  data-bind="text: lastName"></span>
-                                            <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
-                                            <span class="Result-description" data-bind="text: allJobTitles"></span>
-                                        </div>
-                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li data-bind="visible: searchResults.categories().length && !isLoading()">
-                            <h2 class="SearchResultsPreview-h">Categories</h2>
-                            <ul data-bind="foreach: searchResults.categories">
-                                <li class="Result clearfix">
-                                    <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                        <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: categoryName"></span>
-                                            <span class="Result-description" data-bind="text: searchDescription"></span>
-                                        </div>
-                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                            </div>
+                        </div>
+                        <div slot="results">
+                            <div class="SearchResultsPreview" data-bind="visible: results().jobTitles().length">
+                                <h2 class="SearchResultsPreview-h">Services</h2>
+                                <ul data-bind="foreach: results().jobTitles">
+                                    <li class="Result clearfix">
+                                        <a data-bind="attr: { href: $component.results().getJobTitleUrl(jobTitleID()) }">
+                                            <div class="Result-info">
+                                                <span class="Result-name" data-bind="text: pluralName"></span>
+                                                <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
+                                                <span class="Result-description" data-bind="text: searchDescription"></span>
+                                            </div>
+                                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </input-autocomplete>
                 </div>
             </form>
         </div>
