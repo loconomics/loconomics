@@ -34,15 +34,14 @@
                             <ul class="TilesList TilesList--openEnd" data-bind="">
                                 <!-- ko foreach: services -->
                                     <li>
-                                        <div class="OfferingItem">
-                                            <label class="Item-content" data-bind="attr: { for: 'offering' + id() }">
+                                        <div class="OfferingItem" data-bind="attr: { id: 'offering' + id() }">
+                                            <div class="Item-content">
                                                 <p><strong data-bind="text: name"></strong><p>
                                                 <p data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></p>
                                                 <p data-bind="text: offeringPrice"></p>
-                                            </label>
-                                            <div class="Item-action" data-bind="click: $root.tapService">
-                                                <span role="checkbox" data-bind="visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><i data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }" aria-hidden="true"></i></span> 
-                                                <span role="button" data-bind="visible: !$root.isSelectionMode(), click: $root.tapService, attr: {'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
+                                            </div>
+                                            <div class="Item-action"> 
+                                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + id(),'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                                             </div>
                                         </div>
                                     </li>

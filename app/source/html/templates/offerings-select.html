@@ -1,0 +1,40 @@
+<!-- Knockout Template offerings-list -->
+<!-- Used to list offerings with a link to edit along with links to add new offerings for each type.  -->
+<script type="text/html" id="offerings-select-template">
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    <!-- ko foreach: serviceListGroups -->
+        <div data-bind="foreach: serviceLists()">
+            <fieldset>
+                <legend class="text-center"><span data-bind="text: title"></span>:</legend>
+                <ul class="TilesList TilesList--openEnd Box-sm">
+                    <!-- ko foreach: { data: services, as: 'service' } -->
+                        <li>
+                            <div class="OfferingItem" data-bind="attr: { id: 'offering' + service.id() }">
+                                <div class="Item-content">
+                                    <p><strong data-bind="text: service.name"></strong><p>
+                                    <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
+                                    <p data-bind="text: service.offeringPrice"></p>
+                                </div>
+                                <div class="Item-action" data-bind="click: $parents[2].tapService"> 
+                                    <input type="checkbox" data-bind="visible: $parents[2].isSelectionMode, attr: { id: 'offering' + service.id(), 'aria-pressed': service.isSelected, 'aria-label': 'Select ' + service.name() }">
+                                </div>
+                            </div>
+                        </li>
+                    <!-- /ko -->
+                    <!-- ko foreach: newButtons -->
+                        <li>
+                            <a class="IconContentItem" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + service.pricingTypeID() + '/new','aria-label': 'Add new '+ service.pricingTypeName() }"> <!-- needs switch statement for client-specific -->
+                                <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                <div class="Item-content">
+                                    <p data-bind="text: label"></p>
+                                </div>
+                            </a>
+                        </li>
+                    <!-- /ko -->
+                </ul>
+            </fieldset>
+        </div>
+    <!-- /ko -->
+</script>

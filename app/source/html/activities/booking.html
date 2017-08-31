@@ -24,7 +24,7 @@
                         </fieldset>
                         <fieldset>
                             <legend>SELECT OFFERING(S)</legend>
-                            <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
+                            <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>
                         </fieldset>
                         <div data-bind="visible: booking().pricingSummary().servicesSummary()">
                             <p class="legend">SUMMARY</p>
@@ -74,11 +74,11 @@
                             <legend class="text-uppercase">SELECT A LOCATION</legend>
                             <fieldset data-bind="visible: serviceAddresses.hasAddresses">
                                 <legend class"text-center"><span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations:</legend>
-                                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                                <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: serviceAddresses }"></div>
                             </fieldset>
                             <fieldset class"text-center" data-bind="visible: clientAddresses.hasAddresses">
                                 <legend class="text-center" >Select one of your locations:</legend>
-                                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                                <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: clientAddresses }"></div>
                             </fieldset>
                             <fieldset class"text-center" data-bind="visible: hasServiceArea">
                                 <legend class="text-center" >Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</legend>
