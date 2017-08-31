@@ -1,0 +1,18 @@
+<!-- Knockout Template addresses -->
+<!-- Used to list service addresses with a link to edit. Will be used for billing addresses in the future (will need switch statement at URL) -->
+<script type="text/html" id="addresses-select-template">
+    <ul class="TilesList" data-bind="foreach: {data: addresses, as: 'address'}">
+        <li data-bind="template: { name: 'address-select-item-template', data: { address: address, viewModel: $parent} }"></li>
+    </ul>
+</script>
+<script type="text/html" id="address-select-item-template">
+    <div class="AddressItem">
+        <label class="Item-content" data-bind="with: address, attr: { for: 'location' + address.addressID() }">
+            <p><strong data-bind="text: address.addressName() || 'Service Area'"></strong></p>
+            <p data-bind="text: address.singleLine"></p>
+        </label>
+        <div class="Item-action">
+            <input type="radio" data-bind="attr: { id: 'location' + address.addressID(), 'aria-pressed': viewModel.observerSelected(address) }, click: function(data, event) { viewModel.selectAddress(data.address, event) }">
+        </div>  
+    </div>
+</script>
