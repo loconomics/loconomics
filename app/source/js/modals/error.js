@@ -18,10 +18,12 @@
 var $ = require('jquery');
 require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 var getErrorMessageFrom = require('./utils/getErrorMessageFrom');
 
 exports.show = function (options) {
     var modal = $('#errorModal');
+    fixFocus(modal);
     var header = modal.find('#errorModal-label');
     var body = modal.find('#errorModal-body');
 

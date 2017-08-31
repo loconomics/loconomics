@@ -15,10 +15,12 @@
 var $ = require('jquery');
 require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 
 exports.show = function (options) {
 
     var modal = $('#notificationModal');
+    fixFocus(modal);
     var header = modal.find('#notificationModal-label');
     var button = modal.find('#notificationModal-button');
     var body = modal.find('#notificationModal-body');

@@ -15,14 +15,16 @@
 var $ = require('jquery');
 require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 
 exports.show = function (options) {
 
-    var modal = $('#confirmModal'),
-        header = modal.find('#confirmModal-label'),
-        body = modal.find('#confirmModal-body'),
-        yesBtn = modal.find('#confirmModal-yesBtn'),
-        noBtn = modal.find('#confirmModal-noBtn');
+    var modal = $('#confirmModal');
+    fixFocus(modal);
+    var header = modal.find('#confirmModal-label');
+    var body = modal.find('#confirmModal-body');
+    var yesBtn = modal.find('#confirmModal-yesBtn');
+    var noBtn = modal.find('#confirmModal-noBtn');
 
     options = options || {};
 

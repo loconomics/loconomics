@@ -7,6 +7,7 @@
 var ko = require('knockout');
 var $ = require('jquery');
 var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 
 // internal utility function 'to string with two digits almost'
 function twoDigits(n) {
@@ -29,6 +30,7 @@ exports.show = function showTimePicker(options) {
     //jshint maxcomplexity:10
 
     var modal = $('#timePickerModal');
+    fixFocus(modal);
     var vm = modal.data('viewmodel');
 
     if (!vm) {

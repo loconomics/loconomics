@@ -15,9 +15,11 @@
 var $ = require('jquery');
 require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 
 exports.show = function showAnnouncementModal(options) {
     var modal = $('#announcementModal');
+    fixFocus(modal);
     var primaryBtn = modal.find('#announcementModal-primaryBtn');
     var secondaryBtn = modal.find('#announcementModal-secondaryBtn');
     var body = modal.find('#announcementModal-body');

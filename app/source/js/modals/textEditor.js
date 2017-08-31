@@ -15,12 +15,14 @@
 var ko = require('knockout');
 var $ = require('jquery');
 var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 
 exports.show = function showTextEditor(options) {
     //jshint maxcomplexity:10
 
-    var modal = $('#textEditorModal'),
-        vm = modal.data('viewmodel');
+    var modal = $('#textEditorModal');
+    var vm = modal.data('viewmodel');
+    fixFocus(modal);
 
     if (!vm) {
         vm = new TextEditorModel();
