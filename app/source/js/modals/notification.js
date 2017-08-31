@@ -13,6 +13,7 @@
 'use strict';
 
 var $ = require('jquery');
+require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
 
 exports.show = function (options) {
