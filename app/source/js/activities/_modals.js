@@ -115,7 +115,7 @@ var A = Activity.extend(function _modalsActivity() {
                 title: 'Change selected time',
                 selectedTime: '11:40',
                 stepInMinutes: 10,
-                unsetLabel: 'Cancel',
+                unsetLabel: 'Reset',
                 selectLabel: 'Update'
             });
         }
