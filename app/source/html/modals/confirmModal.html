@@ -1,17 +1,18 @@
-<!-- confirmModal -->
-<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog" aria-describedby="confirmModal-content" data-backdrop="static">
+<div id="confirmModal" class="modal fade" tabindex="-1" role="dialog"
+    data-backdrop="static"
+    aria-labelledby="confirmModal-label" aria-describedby="confirmModal-content" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <label class="modal-title" id="confirmModal-label" data-default-text="Confirmation">Confirmation</label>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="confirmModal-label" data-default-text="Confirmation">Confirmation</h2>
+            </div>
+            <div class="modal-body" id="confirmModal-content">
+                <p id="confirmModal-body" data-default-text="Are you sure?"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmModal-noBtn" type="button" class="btn btn-default" data-default-text="No">No</button>
+                <button id="confirmModal-yesBtn" type="button" class="btn btn-default" data-default-text="Yes">Yes</button>
+            </div>
         </div>
-        <div class="modal-body" id="confirmModal-content">
-            <p id="confirmModal-body" data-default-text="Are you sure?"></p>
-        </div>
-        <div class="modal-footer">
-            <button id="confirmModal-noBtn" type="button" class="btn btn-default" data-default-text="No" data-dismiss="modal" aria-labelledby="confirmModal-label">No</button>
-            <button id="confirmModal-yesBtn" type="button" class="btn btn-default" data-default-text="Yes" data-dismiss="modal" aria-labelledby="confirmModal-label">Yes</button>
-        </div>
-      </div>
     </div>
 </div>

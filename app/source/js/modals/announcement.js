@@ -1,7 +1,7 @@
 /**
-    Shows a textarea field to introduce or change a text, usefull 
+    Shows a textarea field to introduce or change a text, usefull
     for interfaces like Cards where an inline textarea is not wanted.
-    
+
     @param options:Object {
         title:string Optional. The text to show in the modal's header,
             with fallback to the Modal's default title.
@@ -9,15 +9,20 @@
     @returns Promise. It resolves when a button is pressed with the introduced text on 'save'.
     Is rejected when the modal is dismissed/closed, like when pressing 'cancel', 'return' or 'close'.
 **/
+// TODO jsdocs
 'use strict';
 
 var $ = require('jquery');
+require('../utils/jquery.multiline');
+var ariaHideElements = require('./utils/ariaHideElements');
+var fixFocus = require('./utils/fixFocus');
 
 exports.show = function showAnnouncementModal(options) {
-    var modal = $('#announcementModal'),
-        primaryBtn = modal.find('#announcementModal-primaryBtn'),
-        secondaryBtn = modal.find('#announcementModal-secondaryBtn'),
-        body = modal.find('#announcementModal-body');
+    var modal = $('#announcementModal');
+    fixFocus(modal);
+    var primaryBtn = modal.find('#announcementModal-primaryBtn');
+    var secondaryBtn = modal.find('#announcementModal-secondaryBtn');
+    var body = modal.find('#announcementModal-body');
 
     options = options || {};
 
@@ -33,9 +38,15 @@ exports.show = function showAnnouncementModal(options) {
     secondaryBtn.attr('href', options.secondaryButtonLink || '#');
 
     return new Promise(function(resolve) {
-        modal.off('hide.bs.modal').one('hide.bs.modal', function() {
+        modal.modal('show');
+        // Increased accessibility:
+        // NOTE: must be reverted BEFORE we fullfill
+        var handle = ariaHideElements.keep(modal.get(0));
+        modal
+        .off('hide.bs.modal')
+        .one('hide.bs.modal', function() {
+            handle.revert();
             resolve();
         });
-        modal.modal('show');
     });
 };

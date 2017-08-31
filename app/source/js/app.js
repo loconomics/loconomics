@@ -5,7 +5,6 @@ var $ = require('jquery');
 // Make jquery reference global, may still be needed by some shimed plugins
 window.$ = window.jQuery = $;
 require('detect_swipe');
-require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
@@ -75,6 +74,9 @@ var app = {
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
 
+    /**
+     * @deprecated See the module comment for more info
+     */
     modals: require('./app.modals'),
 
     /**
