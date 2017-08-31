@@ -13,12 +13,13 @@
 
 var $ = require('jquery');
 require('../utils/jquery.multiline');
+var ariaHideElements = require('./utils/ariaHideElements');
 
 exports.show = function showAnnouncementModal(options) {
-    var modal = $('#announcementModal'),
-        primaryBtn = modal.find('#announcementModal-primaryBtn'),
-        secondaryBtn = modal.find('#announcementModal-secondaryBtn'),
-        body = modal.find('#announcementModal-body');
+    var modal = $('#announcementModal');
+    var primaryBtn = modal.find('#announcementModal-primaryBtn');
+    var secondaryBtn = modal.find('#announcementModal-secondaryBtn');
+    var body = modal.find('#announcementModal-body');
 
     options = options || {};
 
@@ -34,9 +35,15 @@ exports.show = function showAnnouncementModal(options) {
     secondaryBtn.attr('href', options.secondaryButtonLink || '#');
 
     return new Promise(function(resolve) {
-        modal.off('hide.bs.modal').one('hide.bs.modal', function() {
+        modal.modal('show');
+        // Increased accessibility:
+        // NOTE: must be reverted BEFORE we fullfill
+        var handle = ariaHideElements.keep(modal.get(0));
+        modal
+        .off('hide.bs.modal')
+        .one('hide.bs.modal', function() {
+            handle.revert();
             resolve();
         });
-        modal.modal('show');
     });
 };

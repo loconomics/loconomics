@@ -9,6 +9,7 @@
     @returns Promise. It resolves when a button is pressed with the introduced text on 'save'.
     Is rejected when the modal is dismissed/closed, like when pressing 'cancel', 'return' or 'close'.
 **/
+// TODO jsdocs
 'use strict';
 
 var ko = require('knockout');
