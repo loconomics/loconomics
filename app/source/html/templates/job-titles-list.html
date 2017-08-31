@@ -7,7 +7,7 @@
                     <p><strong data-bind="text: displayedSingularName"></strong><p>
                     <p data-bind="visible: $parent.showMarketplaceInfo(), html: marketplaceStatusHtml"></p>
                 </div>
-                <button type="button" class="btn btn-link" data-bind="click: $parent.selectJobTitle">
+                <button type="button" class="btn btn-icon-link" data-bind="click: $parent.selectJobTitle">
                     <span data-bind="attr: { 'aria-label': 'Go to your '+ displayedSingularName() + ' listing' }"></span>
                     <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
                 </button>
