@@ -57,14 +57,14 @@ var A = Activity.extend(function _modalsActivity() {
         },
         error2: function() {
             // Error object, with saving data example
-            showConfirm({
+            showError({
                 title: 'Unable so save data',
                 error: new Error('Server Error: impossible to save item')
             });
         },
         error3: function() {
             // Exception object, with loading data example
-            showConfirm({
+            showError({
                 title: 'Unable so load your availability preferences',
                 error: {
                     name: 'XMLHttpRequest Error',
