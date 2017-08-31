@@ -41,8 +41,7 @@
                                                 <p data-bind="text: offeringPrice"></p>
                                             </label>
                                             <div class="Item-action" data-bind="click: $root.tapService">
-                                                <span role="checkbox" data-bind="visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><i data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }" aria-hidden="true"></i></span> 
-                                                <span role="button" data-bind="visible: !$root.isSelectionMode(), click: $root.tapService, attr: {'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
+                                                    <input type="checkbox" data-bind="checked: isSelected, visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><button role="link" class="btn btn-icon-link" data-bind="visible: !$root.isSelectionMode(), click: $root.tapService, attr: {'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></button>
                                             </div>
                                         </div>
                                     </li>

@@ -16,8 +16,8 @@
                                     <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
                                     <p data-bind="text: service.offeringPrice"></p>
                                 </label>
-                                <div class="Item-action" data-bind="click: $parents[2].tapService">
-                                    <span role="checkbox" data-bind="visible: $parents[2].isSelectionMode, attr: { id: 'offering' + service.id(), 'aria-pressed': service.isSelected, 'aria-label': 'Select ' + service.name() } }"><i data-bind="css: { 'ion-android-checkbox-outline': service.isSelected, 'ion-android-checkbox-outline-blank': !service.isSelected() }" aria-hidden="true"></i></span> <span role="link" data-bind="visible: !$parents[2].isSelectionMode(), attr: {'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
+                                <div class="Item-action">
+                                    <input type="checkbox" data-bind="checked: service.isSelected, defaultValue: false, onclick: $parents[2].tapService, visible: $parents[2].isSelectionMode, attr: { id: 'offering' + service.id(), 'aria-pressed': isSelected, 'aria-label': 'Select ' + service.name() } "><button role="link" class="btn btn-icon-link" data-bind="visible: !$parents[2].isSelectionMode(), attr: {'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></button>
                                 </div>
                             </div>
                         </li>
