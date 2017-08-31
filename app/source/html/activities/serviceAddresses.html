@@ -3,7 +3,7 @@
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
@@ -31,13 +31,14 @@
                 </div>
                 <h2 class="SectionTitle" data-bind="visible: addMoreHeaderText, text: addMoreHeaderText"></h2>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
-                    <a class="IconContentItem" data-bind="attr: {href: '#!addressEditor/service/' + jobTitleID() + '/serviceLocation'">
+                    <a class="IconContentItem" data-bind="attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceLocation' }">
                         <icon-dec params="icon: 'ion-plus'"></icon-dec>
                         <div class="Item-content">
                             <p>Add a new service location</p>
                         </div>
                     </a>
-                    <a class="IconContentItem" data-bind="visible: !serviceAddresses.isSelectionMode(), attr: {href: '#!addressEditor/service/' + jobTitleID() + '/serviceArea'">
+                    <a class="IconContentItem" data-bind="visible: !serviceAddresses.isSelectionMode(),
+                        attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceArea' }">
                         <icon-dec params="icon: 'ion-plus'"></icon-dec>
                         <div class="Item-content">
                             <p>Add a new service area</p>
@@ -49,7 +50,8 @@
                     <div data-bind="template: { name: 'addresses-list-template', data: clientAddresses }"></div>
                 </div>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
-                    <a class="IconContentItem" data-bind="visible: serviceAddresses.isSelectionMode() && clientUserID(), attr: {href: '#!addressEditor/service/' +jobTitleID() + '/clientLocation/' + clientUserID()">
+                    <a class="IconContentItem" data-bind="visible: serviceAddresses.isSelectionMode() && clientUserID(),
+                        attr: { href: '#!addressEditor/service/' +jobTitleID() + '/clientLocation/' + clientUserID() }">
                         <icon-dec params="icon: 'ion-plus'"></icon-dec>
                         <div class="Item-content">
                             <p>Add a new location for this client</p>
@@ -65,4 +67,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
