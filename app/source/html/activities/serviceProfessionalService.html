@@ -34,33 +34,25 @@
                             <ul class="TilesList TilesList--openEnd" data-bind="">
                                 <!-- ko foreach: services -->
                                     <li>
-                                        <a href="#" class="ItemTile" data-bind="click: $root.tapService" role="button">
-                                            <div class="Tile-marker">
-                                                <p data-bind="text: displayedPrice"></p>
+                                        <div class="OfferingItem">
+                                            <label class="Item-content" data-bind="attr: { for: 'offering' + id() }">
+                                                <p><strong data-bind="text: name"></strong><p>
+                                                <p data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></p>
+                                                <p data-bind="text: offeringPrice"></p>
+                                            </label>
+                                            <div class="Item-action" data-bind="click: $root.tapService">
+                                                <span role="checkbox" data-bind="visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><i data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }" aria-hidden="true"></i></span> 
+                                                <span role="button" data-bind="visible: !$root.isSelectionMode(), click: $root.tapService, attr: {'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
                                             </div>
-                                            <div class="Tile-content">
-                                                <div data-bind="visible: sessionsAndDuration(), text: name"></div>
-                                                <em data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></em>
-                                                <p data-bind="visible: !sessionsAndDuration(), text: name"></p>
-                                            </div>
-                                            <div class="Tile-icon">
-                                                <span data-bind="visible: $root.isSelectionMode, attr: { 'aria-pressed': isSelected }" role="button">
-                                                    <span class="fa ion" data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }"></span>
-                                                    <span class="sr-only">Selected?</span>
-                                                </span>
-                                                <span data-bind="visible: !$root.isSelectionMode()"><span class="fa ion ion-edit"></span>
-                                                    <span class="sr-only">Edit</span>
-                                                </span>
-                                            </div>
-                                        </a>
+                                        </div>
                                     </li>
                                 <!-- /ko -->
                                 <!-- ko foreach: newButtons -->
                                     <li>
-                                        <a class="CompactLinkTile" type="button" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
-                                            <div class="Tile-content text-muted"data-bind="text: label"></div>
-                                            <div class="Tile-icon text-muted">
-                                             <span class="fa ion ion-plus"></span>
+                                        <a class="IconContentItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
+                                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                            <div class="Item-content">
+                                                <p data-bind="text: label"></p>
                                             </div>
                                         </a>
                                     </li>
@@ -68,7 +60,7 @@
                             </ul>
                         </div>
                     </div>
-                    <p class="isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="text-secondary" role="button" title="Manage clients">First, select a client.</a>
+                    <p class="help-block isolated" data-bind="visible: clientManagerLink">Looking for special pricings for clients? <a data-bind="attr: { href: clientManagerLink }" class="btn btn-link btn-default">Select a client</a>
                     </p>
                 </div>
                 <div class="isolated inset" data-bind="visible: (onboardingNextReady() || isSelectionMode()) && jobTitleID() !== 0">
