@@ -18,7 +18,7 @@
             <p data-bind="text: address.singleLine"></p>
         </label>
         <div class="Item-action">
-            <span role="radio" data-bind="visible: viewModel.isSelectionMode(), attr: { id: 'location' + address.addressID(), 'aria-pressed': viewModel.observerSelected(address) }, click: function(data, event) { viewModel.selectAddress(data.address, event) }"><i data-bind="css: { 'ion-ios-circle-outline': !viewModel.observerSelected(address)(), 'ion-ios-circle-filled': viewModel.observerSelected(address) }" aria-hidden="true"></i></span> <span role="link" data-bind="visible: !viewModel.isSelectionMode(), attr: {'aria-label': 'Go to '+ address.addressName() || 'Service Area' }"><icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec></span>
+            <input type="radio" data-bind="visible: viewModel.isSelectionMode(), attr: { id: 'location' + address.addressID(), 'aria-pressed': viewModel.observerSelected(address) }, click: function(data, event) { viewModel.selectAddress(data.address, event) }"><span role="link" data-bind="visible: !viewModel.isSelectionMode(), attr: {'aria-label': 'Go to '+ address.addressName() || 'Service Area' }"><icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec></span>
         </div>  
     </div>
 </script>
