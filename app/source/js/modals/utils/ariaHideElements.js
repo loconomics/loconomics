@@ -110,5 +110,12 @@ exports.keep = function(element) {
  */
 exports.revert = function(element) {
     exclusivelyHideElement(element);
-    forEachParent(element, exclusivelyHideElement);
+    // We don't use exclusivelyHideElement at parents because we need
+    // each parent to be visible, not hidden
+    forEachParent(element, function(parent) {
+        // In theory the parent is already show, but double check
+        showElement(parent);
+        // ARIA Show again all siblings
+        getSiblings(parent).forEach(showElement);
+    });
 };
