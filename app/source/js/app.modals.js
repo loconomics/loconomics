@@ -149,41 +149,7 @@ exports.showError = function showErrorModal(options) {
 
 exports.confirm = require('./modals/confirm').show;
 
-/**
-    Show an information modal to notify the user about something.
-    @param options:Object {
-        message:string. Informative message.
-        title:string Optional. The text to show in the modal's header,
-            with fallback to the Modal's default title.
-        buttonText:string Optional: The label of the unique (close) button
-    }
-    @returns Promise. It resolves when the modal is dismissed/closed.
-    No formal rejection happens.
-**/
-exports.showNotification = function showNotification(options) {
-
-    var modal = $('#notificationModal'),
-        header = modal.find('#notificationModal-label'),
-        button = modal.find('#notificationModal-button'),
-        body = modal.find('#notificationModal-body');
-
-    options = options || {};
-
-    // Fallback message
-    var msg = options.message || body.data('default-text');
-
-    body.multiline(msg);
-
-    header.text(options.title || header.data('default-text'));
-    button.text(options.buttonText || button.data('default-text'));
-
-    return new Promise(function(resolve) {
-        modal.modal('show');
-        modal.on('hide.bs.modal', function() {
-            resolve();
-        });
-    });
-};
+exports.showNotification = require('./modals/notification').show;
 
 exports.showTimePicker = require('./modals/timePicker').show;
 
