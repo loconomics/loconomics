@@ -119,6 +119,15 @@ h1 {
     }
 }
 
+.btn-link.text-secondary {
+    color: $brand-secondary;
+    background-color: transparent;
+    &:hover,
+    &:focus,
+    &:active{
+        color: $brand-secondary-dark;
+    }
+}
 // For some weird reason, Bootstrap removes outline of dropdown-toggle links
 // (we add html to increase specifity)
 html .dropdown-toggle:focus {
