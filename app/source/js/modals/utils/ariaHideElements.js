@@ -1,7 +1,8 @@
 /**
  * It allows to hide with ARIA all page elements except the given element;
  * this helps to make it accessible by preventing that some screen readers
- * get confused with any no relevant content and keep focused at the modal.
+ * get confused with any no relevant content and keep focused at the given
+ * element, like modals/dialogs.
  *
  * As of [issue #632 comment](https://github.com/loconomics/loconomics/issues/632#issuecomment-324402586).
  * Based on the idea of [ally.maintain.hidden](https://allyjs.io/api/maintain/hidden.html)
@@ -90,24 +91,24 @@ var forEachParent = function(el, cb) {
  */
 
 /**
- * @param {DOMElement} modalElement
+ * @param {DOMElement} element
  * @returns {Revertable}
  */
-exports.keep = function(modalElement) {
-    exclusivelyShowElement(modalElement);
-    forEachParent(modalElement, exclusivelyShowElement);
+exports.keep = function(element) {
+    exclusivelyShowElement(element);
+    forEachParent(element, exclusivelyShowElement);
 
     return {
-        revert: exports.revert.bind(null, modalElement)
+        revert: exports.revert.bind(null, element)
     };
 };
 
 /**
- * Reverts a previous 'keep' action by hidden from aria the given modal element
+ * Reverts a previous 'keep' action by hidden from aria the given element
  * and showing up the previously hidden elements.
- * @param {DOMElement} modalElement
+ * @param {DOMElement} element
  */
-exports.revert = function(modalElement) {
-    exclusivelyHideElement(modalElement);
-    forEachParent(modalElement, exclusivelyHideElement);
+exports.revert = function(element) {
+    exclusivelyHideElement(element);
+    forEachParent(element, exclusivelyHideElement);
 };
