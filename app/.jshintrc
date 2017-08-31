@@ -109,7 +109,7 @@
     // Whether line breaks should not be checked around commas.
     "laxcomma": false,
     // This option prohibits the use of the comma operator
-    "nocomma": false, // RECOMENDED: false
+    "nocomma": true,
     // Whether semicolons may be ommitted for the trailing statements inside of a
     // one-line blocks.
     "lastsemic": false,
