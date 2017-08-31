@@ -48,7 +48,7 @@
                                     </div>
                                     <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
                                         <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                        <h3 data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h3>
+                                        <h2 data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h2>
                                             <ul data-bind="foreach: autocompleteAttributes">
                                                 <li>
                                                     <a class="Result" data-bind="click: $parent.selectAttribute">
@@ -62,7 +62,7 @@
                                             </ul>
                                         </li>
                                         <li data-bind="visible: autocompleteAttributes().length === 0">
-                                            <h3>You've added all suggestions.</h3>
+                                            <strong>You've added all suggestions.</strong>
                                         </li>
                                     </ul>
                                 </div>

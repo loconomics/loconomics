@@ -14,7 +14,7 @@
 <script type="text/html" id="service-addresses-list-item-template">
     <div class="AddressItem">
         <label class="Item-content" data-bind="with: address, attr: { for: 'location' + address.addressID() }">
-            <h3 data-bind="text: address.addressName() || 'Service Area'"></h3>
+            <p><strong data-bind="text: address.addressName() || 'Service Area'"></strong></p>
             <p data-bind="text: address.singleLine"></p>
         </label>
         <div class="Item-action">

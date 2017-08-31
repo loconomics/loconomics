@@ -12,7 +12,7 @@
                         <li>
                             <div class="OfferingItem">
                                 <label class="Item-content" data-bind="attr: { for: 'offering' + service.id() }">
-                                    <h3 data-bind="text: service.name"></h3>
+                                    <p><strong data-bind="text: service.name"></strong><p>
                                     <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
                                     <p data-bind="text: service.offeringPrice"></p>
                                 </label>
