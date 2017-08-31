@@ -14,7 +14,7 @@
 
 var $ = require('jquery');
 require('../utils/jquery.multiline');
-var maintainOthersHidden = require('./utils/maintainOthersHidden');
+var ariaHideElements = require('./utils/ariaHideElements');
 
 exports.show = function (options) {
 
@@ -41,7 +41,7 @@ exports.show = function (options) {
         modal.modal('show');
         // Increased accessibility:
         // NOTE: must be reverted BEFORE we fullfill
-        var handle = maintainOthersHidden.keep(modal.get(0));
+        var handle = ariaHideElements.keep(modal.get(0));
         yesBtn
         .off('click')
         .one('click', function() {

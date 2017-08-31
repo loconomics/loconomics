@@ -13,7 +13,7 @@
 
 var ko = require('knockout');
 var $ = require('jquery');
-var maintainOthersHidden = require('./utils/maintainOthersHidden');
+var ariaHideElements = require('./utils/ariaHideElements');
 
 exports.show = function showTextEditor(options) {
     //jshint maxcomplexity:10
@@ -38,7 +38,7 @@ exports.show = function showTextEditor(options) {
         modal.modal('show');
         // Increased accessibility:
         // NOTE: must be reverted BEFORE we fullfill
-        var handle = maintainOthersHidden.keep(modal.get(0));
+        var handle = ariaHideElements.keep(modal.get(0));
 
         // Handlers
         var save = function() {

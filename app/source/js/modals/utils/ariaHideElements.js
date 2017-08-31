@@ -1,5 +1,5 @@
 /**
- * It allows to hide from ARIA all page elements except the given modal element;
+ * It allows to hide with ARIA all page elements except the given element;
  * this helps to make it accessible by preventing that some screen readers
  * get confused with any no relevant content and keep focused at the modal.
  *
