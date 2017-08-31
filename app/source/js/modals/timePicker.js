@@ -1,7 +1,12 @@
+/**
+ * Modal that helps user to pick a time of the day value.
+ */
+// TODO jsdocs There are some incomplete or bad formatted comments
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery');
+var ko = require('knockout');
+var $ = require('jquery');
+var ariaHideElements = require('./utils/ariaHideElements');
 
 // internal utility function 'to string with two digits almost'
 function twoDigits(n) {
@@ -23,9 +28,9 @@ function twoDigits(n) {
 exports.show = function showTimePicker(options) {
     //jshint maxcomplexity:10
 
-    var modal = $('#timePickerModal'),
-        vm = modal.data('viewmodel');
-    
+    var modal = $('#timePickerModal');
+    var vm = modal.data('viewmodel');
+
     if (!vm) {
         vm = new TimePickerModel();
 
@@ -34,7 +39,7 @@ exports.show = function showTimePicker(options) {
     }
 
     options = options || {};
-    
+
     // Fallback title
     vm.title(options.title || 'Select time');
     vm.stepInMinutes(options.stepInMinutes || 5);
@@ -46,9 +51,14 @@ exports.show = function showTimePicker(options) {
     }
     vm.unsetLabel(options.unsetLabel || 'Remove');
     vm.selectLabel(options.selectLabel || 'Select');
-    
+
     return new Promise(function(resolve, reject) {
-        
+
+        modal.modal('show');
+        // Increased accessibility:
+        // NOTE: must be reverted BEFORE we fullfill
+        var handle = ariaHideElements.keep(modal.get(0));
+
         // Handlers
         var unset = function() {
             resolve(null);
@@ -64,18 +74,19 @@ exports.show = function showTimePicker(options) {
 
         // Just closed without pick anything, rejects
         modal.off('hide.bs.modal');
-        modal.on('hide.bs.modal', reject);
+        modal.on('hide.bs.modal', function() {
+            handle.revert();
+            reject();
+        });
         modal.off('click', '.timePickerModal-unset');
         modal.on('click', '.timePickerModal-unset', unset);
         modal.off('click', '.timePickerModal-select');
         modal.on('click', '.timePickerModal-select', select);
-
-        modal.modal('show');
     });
 };
 
 function TimePickerModel() {
-    
+
     // Set-up viewmodel and binding
     var vm = {
         title: ko.observable(''),
@@ -195,6 +206,6 @@ function TimePickerModel() {
         },
         owner: vm
     });
-    
+
     return vm;
 }
