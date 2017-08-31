@@ -85,7 +85,11 @@ var A = Activity.extend(function _modalsActivity() {
         },
         // TEXT EDITOR
         textEditor1: function() {
-            showTextEditor();
+            // A title is required, that's the minimum options can be set
+            // at this modal
+            showTextEditor({
+                title: 'Text editor'
+            });
         },
         textEditor2: function() {
             showTextEditor({

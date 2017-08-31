@@ -33,6 +33,10 @@ exports.show = function showTextEditor(options) {
 
     options = options || {};
 
+    if (!options.title) {
+        throw new Error('A title is required for the modal');
+    }
+
     // Input options and data
     vm.title(options.title || '');
     vm.text(options.text || '');
