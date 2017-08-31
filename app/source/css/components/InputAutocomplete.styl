@@ -2,9 +2,12 @@
  * InputAutocomplete component, holding a field-input and a panel elements.
  */
 .InputAutocomplete {
+
+    display: block;
+    position: relative;
+
     > .InputAutocomplete-field {
         input {
-
         }
     }
 
@@ -15,5 +18,8 @@
         right: 0;
         z-index: 10100;
         background-color: white;
+        box-shadow: 0 1px 5px rgba(50,50,50,0.2);
+        border-top: 1px solid #e6e6e6;
+        border: 1px solid #c4c4c4;
     }
 }

@@ -214,7 +214,7 @@ function ViewModel() {
         );
     }, this);
 
-    this.getJobTitleUrl = function(id) {
+    this.searchResults.getJobTitleUrl = function(id) {
         return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
 }

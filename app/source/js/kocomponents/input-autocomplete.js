@@ -31,8 +31,14 @@ var getObservable = require('../utils/getObservable');
  * @param {KnockoutObservable<ResultsBase>} params.results
  * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
  * the external load of results data (search/filtering)
+ * @param {Object} children Set of named children giving externally and
+ * filtered by the creator of the component.
+ * @param {DOMElement} children.isBusyTemplate Element used as template for the
+ * item that notifies the isBusy state.
+ * @param {DOMElement} children.resultsTemplate Element used as template for the
+ * results object.
  */
-function ViewModel(params) {
+function ViewModel(params, children) {
     /// Members from input params
     /**
      * @member {KnockoutObservable<string>} id
@@ -71,6 +77,7 @@ function ViewModel(params) {
      */
     this.notificationText = ko.observable('');
 
+    /// Computed properties
     /**
      * @member {KnockoutComputed<boolean>} isExpanded Let's know if the
      * results panel must be expanded (AKA opened).
@@ -86,6 +93,16 @@ function ViewModel(params) {
     this.panelID = ko.pureComputed(function() {
         return this.id() + '-input-autocomplete-panel';
     }, this);
+
+    /// Children / Elements injected
+    /**
+     * @member {DOMElement} children.isBusyTemplate
+     */
+    this.isBusyTemplate = children.isBusyTemplate;
+    /**
+     * @member {DOMElement} children.resultsTemplate
+     */
+    this.resultsTemplate = children.resultsTemplate;
 }
 
 /**
@@ -93,12 +110,35 @@ function ViewModel(params) {
  * to the component instance DOM elements.
  * @param {object} params Component parameters to pass it to ViewModel
  * @param {object} componentInfo Instance DOM elements
- * @param {DOMElement} componentInfo.element
+ * @param {DOMElement} componentInfo.element the component element
+ * @param {Array<DOMElement>} componentInfo.templateNodes elements passed in
+ * to the component by place them as children.
+ * Allowed children:
+ * <div slot="isBusy">..</div>
+ * <div slot="results">..</div>
  */
 var create = function(params, componentInfo) {
     // We set the class name directly in the component
     componentInfo.element.classList.add(CSS_CLASS);
-    return new ViewModel(params);
+    // Get the provided template for the results and state
+    var isBusyTemplate;
+    var resultsTemplate;
+    componentInfo.templateNodes.forEach(function(node) {
+        var slot = node.getAttribute && node.getAttribute('slot');
+        switch (slot) {
+            case 'isBusy':
+                isBusyTemplate = node;
+                break;
+            case 'results':
+                resultsTemplate = node;
+                break;
+        }
+    });
+    var children = {
+        isBusyTemplate: isBusyTemplate,
+        resultsTemplate: resultsTemplate
+    };
+    return new ViewModel(params, children);
 };
 
 ko.components.register(TAG_NAME, {
