@@ -2,8 +2,8 @@
 <div data-activity="appointment" data-bind="css: { 'in-edit': editMode }" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row"> 
-            <div class="SubSectionNavBar col-md-7 col-sm-reset hidden-xs hidden-sm"> 
+        <div class="row">
+            <div class="SubSectionNavBar col-md-7 col-sm-reset hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
@@ -20,7 +20,7 @@
                 <div id="appointment-toolbar" class="hidden-xs hidden-sm container-fluid">
                     <button class="btn btn-default fa fa-lg ion ion-ios-arrow-left" data-bind="visible: !isNewCard() && !editMode(), click: goPrevious"></button>
                     <button class="btn btn-default fa fa-lg ion ion-ios-arrow-right" data-bind="visible: !isNewCard() && !editMode(), click: goNext"></button>
-                    <button class="btn btn-default pull-right" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
+                    <!--<button class="btn btn-default pull-right" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>-->
                 </div>
                 <!-- Appointment View (cards) -->
                 <div id="calendarAppointmentView" class="container-fluid CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
@@ -35,4 +35,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
