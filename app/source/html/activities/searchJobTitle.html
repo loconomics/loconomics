@@ -6,7 +6,7 @@
             <h1 data-bind="text: pluralName"></h1>
             <div class="SearchResultsBackground-text">
                 <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
-                <h2><span data-bind="text: searchDescription"></span></h2>
+                <p><span data-bind="text: searchDescription"></span></p>
             </div>
         </div>
       </div>
@@ -17,15 +17,15 @@
               </div>          
               <div class="ServiceProfessionalResult-summary">
                   <div>
-                     <h3>
+                     <h2>
                         <span data-bind="text: firstName"></span>
                         <span data-bind="text: lastInitial"></span>
-                     </h3>
+                     </h2>
                   </div>
                   <div>
-                    <h5>
+                    <p>
                         <span data-bind="text: businessName"></span>
-                    </h5>
+                    </p>
                   </div>
                   <div class="ServiceProfessionalInfo-meta">
                     <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings">
@@ -38,19 +38,19 @@
     -->
                   </div>
                   <div>
-                    <h5>
+                    <p>
                         <span data-bind="text: distance"></span> miles
-                    </h5>
+                    </p>
                   </div>
                   <div>
-                    <h5>
+                    <p>
                         <span data-bind="visible: !businessName()">&nbsp;</span>
-                    </h5>
+                    </p>
                   </div>
                 </div>
               </a>
             <div class="ServiceProfessionalResult-description">
-                  <h5>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></h5>
+                  <p><strong>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></strong></p>
             </div>
             <div class="ServiceProfessionalResult-actions">         
                 <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request to book</a> 
@@ -65,10 +65,10 @@
                   <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
                   <div class="ServiceProfessionalResult-summary">
                       <div>
-                         <h3>Your name?</h3>
+                         <h2>Provide services?</h2>
                       </div>
                       <div>
-                          <h5>Your <span data-bind="text: singularName"></span> business</h5>
+                          <p>Your <span data-bind="text: singularName"></span> business</p>
                       </div>
                       <div class="ServiceProfessionalInfo-meta">
                         <app-stars-rating params="rating: '5.0', total: '74'">
@@ -76,12 +76,12 @@
                         <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (6)</span>
                       </div>
                       <div>
-                        <h5>1 mile</h5>
+                        <p>1 mile</p>
                       </div>
                 </div>
                 </a>
                 <div class="ServiceProfessionalResult-description">
-                      <h5>Offers 8 services from $59</h5>
+                      <p>Offers 8 services from $59</p>
                 </div>
                 <div class="ServiceProfessionalResult-actions">         
                     <a href="/learnMoreProfessionals" class="btn btn-primary" style="font-size: 12px">List your services</a> 
@@ -93,10 +93,10 @@
                   <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
                   <div class="ServiceProfessionalResult-summary">
                       <div>
-                         <h3>Know any?</h3>
+                         <h2>Know any?</h2>
                       </div>
                       <div>
-                          <h5>Help us recruit <span data-bind="text: pluralName"></span>!</h5>
+                          <p>Help us recruit <span data-bind="text: pluralName"></span>!</p>
                       </div>
                       <div class="ServiceProfessionalInfo-meta">
                         <app-stars-rating params="rating: '5.0', total: '74'">
@@ -104,12 +104,12 @@
                         <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (6)</span>
                       </div>
                       <div>
-                        <h5>Your area</h5>
+                        <p>Your area</p>
                       </div>
                 </div>
                 </a>
                 <div class="ServiceProfessionalResult-description">
-                      <h5>We'll help them with their business.</h5>
+                      <p>We'll help them with their business.</p>
                 </div>
                 <div class="ServiceProfessionalResult-actions">         
                     <a class="btn btn-block btn-secondary" href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0A%0AI%20just%20wanted%20to%20share%20with%20you%20a%20new%20app%2Fsite%20for%20local%20services%20that%20could%20really%20help%20you%20with%20your%20business.%20It's%20cooperatively%20owned%20by%20the%20service%20professionals%2C%20which%20sounds%20pretty%20cool.%20%0A%0ACheck%20them%20out%20here%3A%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0A%0ACheers!" target="_blank">Refer <span data-bind="text: pluralName"></span></a> 

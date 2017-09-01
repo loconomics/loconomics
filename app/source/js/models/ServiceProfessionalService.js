@@ -129,6 +129,8 @@ function ServiceProfessionalService(values) {
             return dur;
     }, this);
 
+    this.offeringPrice = numeral(this.price()).format('$0,0.00');
+
     this.displayedPrice = ko.pureComputed(function() {
         var price = this.price(),
             rate = this.priceRate(),

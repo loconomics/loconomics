@@ -84,7 +84,6 @@
   "browser": {
     "bootstrap": "./vendor/bootstrap/js/bootstrap.js",
     "bootstrap-carousel": "./vendor/bootstrap-source/js/carousel.js",
-    "bootstrap-switch": "./vendor/bootstrap-switch/js/bootstrap-switch.js",
     "fastclick": "./vendor/fastclick-forked/fastclick.js",
     "jquery.ajaxQueue": "./vendor/caoglish/jquery.ajaxQueue.js",
     "jquery.ui.touch-punch": "./vendor/touch-punch/jquery.ui.touch-punch.min",
@@ -101,12 +100,6 @@
       ]
     },
     "bootstrap-carousel": {
-      "depends": [
-        "jquery",
-        "bootstrap"
-      ]
-    },
-    "bootstrap-switch": {
       "depends": [
         "jquery",
         "bootstrap"

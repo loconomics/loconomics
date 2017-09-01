@@ -21,6 +21,9 @@ var A = Activity.extend(function BookingPoliciesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: 'scheduling', helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        return this.jobTitleName() + ' booking policies';
+    }, this.viewModel);
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 

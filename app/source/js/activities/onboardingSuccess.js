@@ -11,6 +11,8 @@ var A = Activity.extend(function OnboardingSuccessActivity() {
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
+    this.title("Nice work!");
+
 
     this.viewModel = {
         userProfile: user,

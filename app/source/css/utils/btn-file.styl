@@ -6,6 +6,9 @@
         Browse <input type="file">
     </span>
 **/
+
+@import 'styleguideVars.styl';
+
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -24,4 +27,19 @@
     background: white;
     cursor: inherit;
     display: block;
+}
+/**
+    Fake focus class required to emulate focus in the button when this
+    is moved to the actual input element; because the input is not visible,
+    the ':focus' styles needs to be applied to our fake button
+ */
+.btn-file.is-focused {
+    outline: $focusOutline;
+}
+
+// Let a label as the text element (so can link text with the input field)
+// but reset some styles so doesn't break the button layout/style
+.btn-file > label[for] {
+    margin: 0;
+    color: $body-copy-color;
 }

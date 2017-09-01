@@ -17,24 +17,28 @@
             </div>
         </div>
         <ul class="TilesList TilesList--openEnd" data-bind="visible: newAppointmentVisible()">
-            <li>
-                <a class="LinkTile"
-                   data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newBooking }">
-                    <div class="Tile-content"><p>Add a new booking</p></div>
-                    <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
+            <!-- <li>
+                <a class="IconContentItem" data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newBooking }">
+                    <icon-dec params="icon: 'ion-ios-plus-outline'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Add a new booking</p>
+                    </div>
                 </a>
             </li>
             <li>
-                <a class="LinkTile"
-                    data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newEvent }">
-                    <div class="Tile-content"><p>Add a new calendar block</p></div>
-                    <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-plus-outline text-primary"></span></div>
+                <a class="IconContentItem" data-bind="attr: { href: '#!appointment/' + currentDatetime().toISOString() + '/' + specialAppointmentIds.newEvent }">
+                    <icon-dec params="icon: 'ion-ios-plus-outline'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Add a new calendar block</p>
+                    </div>
                 </a>
-            </li>
-            <li data-bind="visible: editScheduleVisible">
-                <a class="LinkTile" href="#!/schedulingPreferences?mustReturn=1">
-                    <div class="Tile-content"><p>Adjust availability</p></div>
-                    <div class="Tile-icon" aria-hidden="true"><span class="fa ion ion-ios-settings"></span></div>
+            </li> -->
+            <li>
+                <a class="IconContentItem" href="#!/schedulingPreferences?mustReturn=1">
+                    <icon-dec params="icon: 'ion-ios-settings'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Adjust your availability</p>
+                    </div>
                 </a>
             </li>
         </ul>

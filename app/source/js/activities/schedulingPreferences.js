@@ -10,6 +10,9 @@ var weeklySchedule = require('../data/weeklySchedule');
 var schedulingPreferences = require('../data/schedulingPreferences');
 var userJobProfile = require('../data/userJobProfile');
 
+// Components in use in the template
+require('../kocomponents/switch-checkbox');
+
 var A = Activity.extend(function SchedulingPreferencesActivity() {
 
     Activity.apply(this, arguments);
@@ -215,4 +218,3 @@ function WeeklyScheduleVM() {
     this.timeZonesList = ko.observable(timeZoneList.getUserList());
     this.topUsTimeZones = ko.observable(timeZoneList.getTopUsZones());
 }
-

@@ -28,6 +28,9 @@ var A = Activity.extend(function AboutMeActivity() {
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
     // Share navBar with desktop nav through viewModel
     this.viewModel.navBar = this.navBar;
+    this.title = ko.pureComputed(function() {
+        return this.isInOnboarding() ? ' Introduce yourself' : ' Your profile';
+    }, this.viewModel);
 
     this.registerHandler({
         target: userProfile,

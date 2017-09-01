@@ -11,6 +11,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <h1 data-bind="text: title"></h1>
                 <h2 class="SectionTitle">
                     <span data-bind="text: jobTitleName"></span>&nbsp;listing status
                 </h2>
@@ -22,9 +23,14 @@
                         <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
                     </div>
                     <div class="switchLine-switch">
-                        <label>
-                            <input type="checkbox" data-bind="switch: { state: isActiveStatus, onColor: 'success', offColor: 'danger' }" />
+                        <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">
+                            Display listing at the marketplace
                         </label>
+                        <label aria-hidden="true" for="marketplaceJobtitles-profileStatus-checkbox">
+                            <strong data-bind="visible: isActiveStatus" class="text-success">ON</strong>
+                            <strong data-bind="visible: !isActiveStatus()" class="text-danger">OFF</strong>
+                        </label>
+                        <switch-checkbox params="id: 'marketplaceJobtitles-profileStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
                     </div>
                 </div>
                 <!-- ko ifnot: isToggleReady -->
@@ -119,7 +125,7 @@
                             </div>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a class="InfoTile" href="/bookMeButton" data-bind="attr: { href: getJobUrlTo('bookMeButton') }">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa ion ion-ios-world-outline" aria-hidden="true"></span>
@@ -128,7 +134,7 @@
                                 <p>Add scheduling to your website</p>
                             </div>
                         </a>
-                    </li>
+                    </li> -->
                     <li>
                         <button type="button" class="InfoTile" data-bind="click: deleteJobTitle">
                             <div class="Tile-icon" aria-hidden="true">

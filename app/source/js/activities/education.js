@@ -16,6 +16,7 @@ var A = Activity.extend(function EducationActivity() {
     this.navBar = Activity.createSubsectionNavBar('Profile', {
         backLink: '/userProfile' , helpLink: this.viewModel.helpLink
     });
+    this.title('Education');
     // Share navBar with desktop nav through viewModel
     this.viewModel.navBar = this.navBar;
 });

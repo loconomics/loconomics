@@ -2,7 +2,7 @@
  * DatePicker JS Component, with several
  * modes and optional inline-permanent visualization.
  *
- * Copyright 2014 Loconomics Coop.
+ * Copyright 2017 Loconomics Coop.
  *
  * Based on:
  * Datepicker for Bootstrap
@@ -13,14 +13,26 @@
  */
 @import 'nib';
 @import '../bs-mixims/caret.styl';
- 
+
+$DatePicker-weekDay-cell-height = 30px;
+// Recommended touch accessible button height
+$DatePicker-day-cell-height = 48px;
+// Whole height must kept consistent when changing modes
+// that's why we need to compute size for month-year modes.
+// Take care to choose sizes that makes this an integer result so there is
+// no slightly differences between browsers, and mostly at 1x screens
+// We have 3 rows of month-years while 6 rows of days plus weekDay header
+$DatePicker-monthYear-cell-height = (($DatePicker-day-cell-height * 6 + $DatePicker-weekDay-cell-height) / 3);
+$DatePicker-day-content-height = 28px;
+$DatePicker-day-content-width = 28px;
+
 .DatePicker
     top 0
     left 0
     padding 0 // There is enough cell padding and any extra make it strange with the new borders
     margin 0
     border-radius 4px
-  
+
     &:before
         content ''
         display inline-block
@@ -31,7 +43,7 @@
         position absolute
         top -7px
         left 6px
-  
+
     &:after
         content ''
         display inline-block
@@ -41,10 +53,10 @@
         position absolute
         top -6px
         left 7px
-  
+
     > div
         display none
-  
+
     table
         width 100%
         margin 0
@@ -56,21 +68,22 @@
                 padding: 5px;
 
     .DatePicker-weekDays th
-        height 30px
+        height $DatePicker-weekDay-cell-height
         border-radius 4px
         vertical-align bottom
         padding-bottom 0 !important
-  
+
     td, th
         text-align center
-        width 20px
-        height 20px
+        // A minimum size
+        width $DatePicker-day-content-width
+        height $DatePicker-day-content-height
 
         &.day
             span
                 display inline-block
-                width 28px
-                line-height 28px
+                width $DatePicker-day-content-width
+                line-height $DatePicker-day-content-height
                 font-size 17px
 
             &:hover
@@ -84,7 +97,7 @@
         &.new
             color $gray-light
             opacity .5
-            
+
         &.active
         &.active:hover
             color #fff
@@ -98,6 +111,9 @@
             span
                 background none
 
+    td.day
+        height $DatePicker-day-cell-height
+
     span.month,
     span.year
         display block
@@ -105,13 +121,13 @@
         cursor pointer
         border-radius(4px)
 
-        /* Percentual sizing to being responsive rather than the 
+        /* Percentual sizing to being responsive rather than the
            original fixed size
         */
         box-sizing border-box
         width 25%
-        height 86px
-        line-height 86px
+        height $DatePicker-monthYear-cell-height
+        line-height $DatePicker-monthYear-cell-height
         margin 0
 
         &:hover
@@ -122,7 +138,7 @@
             text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
         &.old
             color $gray-light
-  
+
     th
         font-weight normal
         &.switch
@@ -130,14 +146,14 @@
         &.next
         &.prev
             font-size ($font-size-base * 1.5)
-  
+
     thead tr:first-child
         th
             cursor pointer
             &:hover
                 background $gray-lighter
 
-    /* Percentual sizing to being responsive rather than the 
+    /* Percentual sizing to being responsive rather than the
     original fixed size
     */
     .DatePicker-years tr > td
@@ -172,7 +188,8 @@
 
         td.day
             // General styles to be ready for tags
-            // IMPORTANT: changes to this sizing needs changes to months/years later
+            // IMPORTANT: changes to this sizing needs changes to months/years
+            // in this style modifier and take care of general cell height
             padding: 3px 5px 14px !important;
             border-bottom 1px solid $gray-lighter
             position: relative;
@@ -188,13 +205,13 @@
               bottom 7px
               width 6px
               height 6px
-          
+
             // Possible tags
             &.tag-muted
               color $gray-lighter
               &:after
                   background $gray-lighter
-              
+
             // This tag is empty: &.tag-blank
             &.tag-dark
                 &:after
@@ -211,18 +228,11 @@
                 &:after
                     opacity .5
 
-        // IMPORTANT: Adapt size of months/years to keep the whole
-        // calendar in the same size independent of the view mode
-        span.month
-        span.year
-            height 102px
-            line-height 102px
-
     $.DatePicker-hasLegend
         border-bottom 1px solid $gray-lighter
-            
+
 /*
-    TOREVIEW: Addapt it with other name?
+    TODO TOREVIEW: Adapt with other name?
 */
 .input-append, .input-prepend
     &.date

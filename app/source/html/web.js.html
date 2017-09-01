@@ -13,9 +13,7 @@
         <meta name="description" content="Loconomics.com App">
         <meta name="author" content="Loconomics Coop.">
         <link rel="icon" href="assets/images/favicon.ico" />
-        <meta
-          name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width" />
 
         <meta name="format-detection" content="telephone=no" />
 
@@ -43,9 +41,10 @@
         }
     </head>
     <body>
+        <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
         <div class="SplashScreen">Loading...</div>
         @render('parts/AppNav.html')
-        <div class="App-activities">
+        <div class="App-activities" id="activities-container">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render(includedFiles[f])
             }

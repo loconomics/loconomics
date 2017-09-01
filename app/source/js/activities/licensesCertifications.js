@@ -24,6 +24,7 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     this.navBar = Activity.createSubsectionNavBar(DEFAULT_BACK_TEXT, {
         backLink: DEFAULT_BACK_LINK, helpLink: this.viewModel.helpLink
     });
+    this.title('Professional credentials');
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 

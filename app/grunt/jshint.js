@@ -9,7 +9,6 @@ module.exports = {
             jshintrc: '.jshintrc',
             // options here to override JSHint defaults
             browser: true,
-            laxcomma: true,
             globals: {
                 jQuery: true,
                 console: true,

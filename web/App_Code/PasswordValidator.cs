@@ -36,7 +36,7 @@ public class PasswordValidator : IValidator
 
     #region Const values
     const int MIN_REQUIREMENTS = 3;
-    public const string InvalidPasswordErrorMessage = @"Your password must be at least 8 characters long, have at least 3 out of these 4 requirements: one lowercase letter, one uppercase letter, one numeric digit and one symbol (~!@#$%^*&;?.+_).";
+    public const string InvalidPasswordErrorMessage = @"Your password must be Must be at least 8 characters long, and have at least 3 out of these 4 requirements: one lowercase letter, one uppercase letter, one numeric digit and one symbol (~!@#$%^*&;?.+_).";
     static readonly Regex rLength = new Regex(@".{8,}", RegexOptions.ECMAScript);
     static readonly Regex rSymbol = new Regex(@"[^\w\s]|_", RegexOptions.ECMAScript);
     static readonly Regex rNumber = new Regex(@"[0-9]", RegexOptions.ECMAScript);
