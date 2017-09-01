@@ -1,5 +1,4 @@
-<!-- Knockout Template offerings-list -->
-<!-- Used to list offerings with a link to edit along with links to add new offerings for each type.  -->
+<!-- Knockout Template offerings-select -->
 <script type="text/html" id="offerings-select-template">
     <div data-bind="css: { 'is-loading': isLoading }">
         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -17,9 +16,11 @@
                                     <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
                                     <p data-bind="text: service.offeringPrice"></p>
                                 </div>
-                                <div class="Item-action" data-bind="click: $parents[2].tapService"> 
-                                    <input type="checkbox" data-bind="visible: $parents[2].isSelectionMode, attr: { id: 'offering' + service.id(), 'aria-pressed': service.isSelected, 'aria-label': 'Select ' + service.name() }">
-                                </div>
+                                <label class="Item-action">
+                                    <input type="checkbox" data-bind="
+                                        event: { change: $parents[2].onCheckboxChange },
+                                        checked: service.isSelected, attr: { 'aria-label': 'Select ' + service.name() }">
+                                </label>
                             </div>
                         </li>
                     <!-- /ko -->
