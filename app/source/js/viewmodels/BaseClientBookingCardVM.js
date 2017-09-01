@@ -237,8 +237,6 @@ function BaseClientBookingCardVM(app) {
     var setAddress = function(add) {
         if (!add || !this.booking()) return;
         this.booking().serviceAddress(add);
-        if (!this.isRestoring || !this.isRestoring())
-            this.nextStep();
     }.bind(this);
     // IMPORTANT: selection from one list must deselect from the other one
     this.serviceAddresses.selectedAddress.subscribe(function(add) {

@@ -5,11 +5,11 @@
             <div class="Sidebar hidden-xs hidden-sm col-md-3" >
                 <h2>Steps:</h2>
                 <div class="row" data-bind="foreach: { data: progress.stepsList, as: 'stepName' }">
-                    <a type="button" class="btn btn-link btn-block" data-bind="css: { active: $parent.progress.observeStep(stepName)() }, text: $parent.getStepLabel(stepName), click: $parent.progress.go.bind($parent.progress, stepName)"></a>
+                    <button type="button" class="btn btn-link btn-block" data-bind="css: { active: $parent.progress.observeStep(stepName)() }, text: $parent.getStepLabel(stepName), click: $parent.progress.go.bind($parent.progress, stepName)"></button>
                 </div>
             </div>
             <div class="col-md-9 col-sm-reset booking-steps">
-                <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: bookingHeader"></span><span data-bind="text: title"></span></h1>  
+                <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: bookingHeader"></span><span data-bind="text: title"></span></h1>
                 <div class="booking-step" data-bind="attr: { hidden: !isAtServices() }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     <div class="isolated-sm top-only text-center Box-sm PaddedBox-xs" data-bind="visible: isAnonymous">
@@ -24,7 +24,7 @@
                         </fieldset>
                         <fieldset>
                             <legend>SELECT OFFERING(S)</legend>
-                            <div data-bind="template: { name: 'service-professional-service-template', data: serviceProfessionalServices }"></div>
+                            <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>
                         </fieldset>
                         <div data-bind="visible: booking().pricingSummary().servicesSummary()">
                             <p class="legend">SUMMARY</p>
@@ -74,12 +74,13 @@
                             <legend class="text-uppercase">SELECT A LOCATION</legend>
                             <fieldset data-bind="visible: serviceAddresses.hasAddresses">
                                 <legend class"text-center"><span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s locations:</legend>
-                                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div>
+                                <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: serviceAddresses }"></div>
                             </fieldset>
                             <fieldset class"text-center" data-bind="visible: clientAddresses.hasAddresses">
                                 <legend class="text-center" >Select one of your locations:</legend>
-                                <div class="Box-sm" data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                                <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: clientAddresses }"></div>
                             </fieldset>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep, visible: booking().serviceAddress">Save and continue</button>
                             <fieldset class"text-center" data-bind="visible: hasServiceArea">
                                 <legend class="text-center" >Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</legend>
                                 <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
@@ -127,7 +128,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="addressSpecialInstructions">Special instructions for location:</label>
-                                    <textarea id="addressSpecialInstructions" type="text" rows="3" class="form-control" maxlength="1000" data-bind="textInput: specialInstructions, disable: $parent.isLocked" placeholder="Is there anything tricky to get to your location? How's the parking? Any pets? List anything helpful." aria-describedby="addressSpecialInstructionsHint"></textarea> 
+                                    <textarea id="addressSpecialInstructions" type="text" rows="3" class="form-control" maxlength="1000" data-bind="textInput: specialInstructions, disable: $parent.isLocked" placeholder="Is there anything tricky to get to your location? How's the parking? Any pets? List anything helpful." aria-describedby="addressSpecialInstructionsHint"></textarea>
                                     <p id="addressSpecialInstructionsHint" class="sr-only">Is there anything tricky to get to your location? How's the parking? Any pets? List anything helpful.</p>
                                 </div>
                                 <button type="submit" form="addBookingLocationForm" class="btn btn-primary btn-block" data-bind="disable: $parent.isLocked, click: $parent.nextStep">Save and continue</button>
@@ -378,7 +379,7 @@
                                                             <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().startTime(), format: { type: 'datetime', format: 'dddd, MMMM Do' }"></span>, <span data-bind="visible: booking().serviceDate() && booking().serviceDate().startTime(), text: booking().serviceDate() && booking().serviceDate().displayedTimeRange()"></span>
                                                         </p>
                                                     </div>
-                                                    
+
                                                     <div data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())">
                                                         <p>Select a day and time</p>
                                                     </div>
@@ -487,7 +488,7 @@
                                 </p>
                         </div>
                     </form>
-                    
+
                             <!-- <li data-bind="if: supportsGratuity() && booking().paymentEnabled()">
                                 <button type="button" class="InfoTile" data-bind="click: pickServices">
                                     <div class="Tile-icon" aria-hidden="true">
@@ -498,7 +499,7 @@
                                     </div>
                                 </button>
                             </li> -->
-                    
+
                 </div>
             </div>
         </div>

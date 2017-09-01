@@ -1,0 +1,71 @@
+<!-- Knockout Template offerings-list -->
+<!-- Used to list offerings with a link to edit along with links to add new offerings for each type.  -->
+<script type="text/html" id="offerings-list-template">
+    <!-- ko foreach: serviceListGroups -->
+        <div data-bind="foreach: serviceLists()">
+            <h2><span data-bind="text: title"></span>:</h2>
+            <ul class="TilesList TilesList--openEnd Box-sm">
+                <!-- ko foreach: { data: services, as: 'service' } -->
+                    <li>
+                        <div class="OfferingItem" data-bind="attr: { id: 'offering' + service.id() }">
+                            <div class="Item-content">
+                                <p><strong data-bind="text: service.name"></strong><p>
+                                <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
+                                <p data-bind="text: service.offeringPrice"></p>
+                            </div>
+                            <div class="Item-action"> 
+                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + service.id(),'aria-label': 'Edit '+ service.name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                            </div>
+                        </div>
+                    </li>
+                <!-- /ko -->
+                <!-- ko foreach: newButtons -->
+                    <li>
+                        <a class="IconContentItem" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + service.pricingTypeID() + '/new','aria-label': 'Add new '+ service.pricingTypeName() }"> <!-- needs switch statement for client-specific -->
+                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                            <div class="Item-content">
+                                <p data-bind="text: label"></p>
+                            </div>
+                        </a>
+                    </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    <!-- /ko -->
+</script>
+
+<div class="ServiceListGroup" data-bind="foreach: serviceListGroups">
+        <h2 class="ServiceListGroup-title" data-bind="visible: title.length > 0, text: title"></h2>
+        <div data-bind="foreach: serviceLists()">
+            <h3 class="SectionTitle" data-bind="visible: !$root.isAdditionMode() && title.length > 0">
+                <span data-bind="text: title"></span>
+            </h3>
+            <ul class="TilesList TilesList--openEnd" data-bind="">
+                <!-- ko foreach: services -->
+                    <li>
+                        <div class="OfferingItem">
+                            <label class="Item-content" data-bind="attr: { for: 'offering' + id() }">
+                                <p><strong data-bind="text: name"></strong><p>
+                                <p data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></p>
+                                <p data-bind="text: offeringPrice"></p>
+                            </label>
+                            <div class="Item-action" data-bind="click: $root.tapService">
+                                <span role="checkbox" data-bind="visible: $root.isSelectionMode, attr: { id: 'offering' + id(), 'aria-pressed': isSelected, 'aria-label':  'Select ' +  name() }"><i data-bind="css: { 'ion-android-checkbox-outline': isSelected, 'ion-android-checkbox-outline-blank': !isSelected() }" aria-hidden="true"></i></span> 
+                                <span role="button" data-bind="visible: !$root.isSelectionMode(), click: $root.tapService, attr: {'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></span>
+                            </div>
+                        </div>
+                    </li>
+                <!-- /ko -->
+                <!-- ko foreach: newButtons -->
+                    <li>
+                        <a class="IconContentItem" href="#!serviceProfessionalServiceEditor/" data-bind="click: $root.tapNewService">
+                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                            <div class="Item-content">
+                                <p data-bind="text: label"></p>
+                            </div>
+                        </a>
+                    </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    </div>

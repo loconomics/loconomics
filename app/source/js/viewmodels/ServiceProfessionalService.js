@@ -62,25 +62,37 @@ function ServiceProfessionalServiceViewModel(app) {
     }, this);
 
     /**
-        Toggle the selection status of a single pricing, adding
-        or removing it from the 'selectedServices' array.
-    **/
-    this.toggleServiceSelection = function(service) {
-
-        var inIndex = -1,
-            isSelected = this.selectedServices().some(function(selectedServices, index) {
-            if (selectedServices === service) {
+     * Toggle the selection of a given service from the list of services.
+     * It identifies automatically if was included in the list already,
+     * removing or adding to reflect the change.
+     * @param {Object} service The model object representing a service/offering
+     * @private
+     */
+    var toggleAtSelectedServices = function(service) {
+        var inIndex = -1;
+        var wasSelected = this.selectedServices()
+        .some(function(item, index) {
+            if (item === service) {
                 inIndex = index;
                 return true;
             }
         });
 
-        service.isSelected(!isSelected);
-
-        if (isSelected)
+        if (wasSelected)
             this.selectedServices.splice(inIndex, 1);
         else
             this.selectedServices.push(service);
+    }.bind(this);
+
+    /**
+        Toggle the selection status of a single pricing, adding
+        or removing it from the 'selectedServices' array.
+    **/
+    this.toggleServiceSelection = function(service) {
+        // Toggle selection of the service
+        service.isSelected(!service.isSelected());
+        // And update list of selectedServices for this change
+        toggleAtSelectedServices(service);
     }.bind(this);
 
     this.editServiceURL = function(jobTitleID, serviceID) {
@@ -110,6 +122,16 @@ function ServiceProfessionalServiceViewModel(app) {
 
         event.preventDefault();
         event.stopImmediatePropagation();
+    }.bind(this);
+
+    /**
+     * Handler for the 'change' event at a checkbox used in selection mode,
+     * so rather than use tapService/toggleServiceSelection we invert the control,
+     * detecting the value change for checked that auto updates service.isSelected
+     * and we update the list of selectedServices based on that.
+     */
+    this.onCheckboxChange = function(service) {
+        toggleAtSelectedServices(service);
     }.bind(this);
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {

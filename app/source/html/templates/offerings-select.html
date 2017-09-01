@@ -1,0 +1,41 @@
+<!-- Knockout Template offerings-select -->
+<script type="text/html" id="offerings-select-template">
+    <div data-bind="css: { 'is-loading': isLoading }">
+        <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+    </div>
+    <!-- ko foreach: serviceListGroups -->
+        <div data-bind="foreach: serviceLists()">
+            <fieldset>
+                <legend class="text-center"><span data-bind="text: title"></span>:</legend>
+                <ul class="TilesList TilesList--openEnd Box-sm">
+                    <!-- ko foreach: { data: services, as: 'service' } -->
+                        <li>
+                            <div class="OfferingItem" data-bind="attr: { id: 'offering' + service.id() }">
+                                <div class="Item-content">
+                                    <p><strong data-bind="text: service.name"></strong><p>
+                                    <p data-bind="visible: service.sessionsAndDuration(), text: service.sessionsAndDuration"></p>
+                                    <p data-bind="text: service.offeringPrice"></p>
+                                </div>
+                                <label class="Item-action">
+                                    <input type="checkbox" data-bind="
+                                        event: { change: $parents[2].onCheckboxChange },
+                                        checked: service.isSelected, attr: { 'aria-label': 'Select ' + service.name() }">
+                                </label>
+                            </div>
+                        </li>
+                    <!-- /ko -->
+                    <!-- ko foreach: newButtons -->
+                        <li>
+                            <a href="#" class="IconContentItem" data-bind="click: $parents[2].tapNewService">
+                                <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                <div class="Item-content">
+                                    <p data-bind="text: label"></p>
+                                </div>
+                            </a>
+                        </li>
+                    <!-- /ko -->
+                </ul>
+            </fieldset>
+        </div>
+    <!-- /ko -->
+</script>
