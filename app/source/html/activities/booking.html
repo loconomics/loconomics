@@ -80,6 +80,7 @@
                                 <legend class="text-center" >Select one of your locations:</legend>
                                 <div class="Box-sm" data-bind="template: { name: 'addresses-select-template', data: clientAddresses }"></div>
                             </fieldset>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="disable: isLocked, click: nextStep, visible: booking().serviceAddress">Save and continue</button>
                             <fieldset class"text-center" data-bind="visible: hasServiceArea">
                                 <legend class="text-center" >Add new location within <span data-bind="text: serviceProfessionalInfo() && serviceProfessionalInfo().profile() && serviceProfessionalInfo().profile().firstName()"></span>'s service area(s)</legend>
                                 <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">

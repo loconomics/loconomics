@@ -12,7 +12,11 @@
             <p data-bind="text: address.singleLine"></p>
         </label>
         <div class="Item-action">
-            <input type="radio" data-bind="attr: { id: 'location' + address.addressID(), 'aria-pressed': viewModel.observerSelected(address) }, click: function(data, event) { viewModel.selectAddress(data.address, event) }">
-        </div>  
+            <!-- TODO The name of the radio, to group all the items making them accessible, should be provided externally but
+                for now a preset one makes the trick #528 -->
+            <input type="radio" name="addresses-select" data-bind="attr: { id: 'location' + address.addressID() },
+                checked: viewModel.selectedAddressID,
+                checkedValue: address.addressID">
+        </div>
     </div>
 </script>
