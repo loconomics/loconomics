@@ -114,8 +114,8 @@ function ViewModel(params, children) {
  * @param {Array<DOMElement>} componentInfo.templateNodes elements passed in
  * to the component by place them as children.
  * Allowed children:
- * <div slot="isBusy">..</div>
- * <div slot="results">..</div>
+ * <template name="isBusy">..</template>
+ * <template name="results">..</template>
  */
 var create = function(params, componentInfo) {
     // We set the class name directly in the component
@@ -124,13 +124,13 @@ var create = function(params, componentInfo) {
     var isBusyTemplate;
     var resultsTemplate;
     componentInfo.templateNodes.forEach(function(node) {
-        var slot = node.getAttribute && node.getAttribute('slot');
+        var slot = node.getAttribute && node.getAttribute('name');
         switch (slot) {
             case 'isBusy':
-                isBusyTemplate = node;
+                isBusyTemplate = node.content || node;
                 break;
             case 'results':
-                resultsTemplate = node;
+                resultsTemplate = node.content || node;
                 break;
         }
     });

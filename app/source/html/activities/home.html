@@ -17,16 +17,15 @@
                     <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
                         placeholder: 'Search services, e.g. Dog Walker, Tutor',
                         value: searchTerm, results: searchResults, isBusy: isLoading">
-                        <!-- templates -->
-                        <div slot="isBusy">
+                        <template name="isBusy">
                             <div class="Result">
                                 <div class="Result-info">
                                     <span class="Result-name">Searching...</span>
                                 </div>
                                 <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
                             </div>
-                        </div>
-                        <div slot="results">
+                        </template>
+                        <template name="results">
                             <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
                                 <h2 class="SearchResultsPreview-h">Services</h2>
                                 <ul data-bind="foreach: jobTitles">
@@ -42,7 +41,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div>
+                        </template>
                     </input-autocomplete>
                 </div>
             </form>
