@@ -14,7 +14,7 @@ var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 var user = require('../data/userProfile').data;
 var search = require('../data/search');
-require('../kocomponents/input-autocomplete');
+require('../kocomponents/home/search-box');
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -205,14 +205,6 @@ function ViewModel() {
         this.search();
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
     },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
-
-    this.isSearchAutocompleteOpened = ko.pureComputed(function() {
-        return (
-            this.searchResults.jobTitles().length ||
-            this.searchResults.serviceProfessionals().length ||
-            this.searchResults.categories().length
-        );
-    }, this);
 
     this.searchResults.getJobTitleUrl = function(id) {
         return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();

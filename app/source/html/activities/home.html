@@ -4,7 +4,7 @@
         <div class="home-search">
             <h1 class="home-title">Make life better.</h1>
             <p class="home-tagline">Book local, independent service professionals safely and easily</p>
-           <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
+            <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
                 <div class="form-group col-sm-5">
                     <label for="homeLocation" class="sr-only">Where?</label>
                     <div class="input-group input-group-lg">
@@ -12,37 +12,8 @@
                         <input type="text" name="location" class="form-control inset" id="homeLocation" value="San Francisco, CA">
                     </div>
                 </div>
-                <div class="form-group col-sm-7">
-                    <label for="homeSearch" class="sr-only">Search</label>
-                    <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
-                        placeholder: 'Search services, e.g. Dog Walker, Tutor',
-                        value: searchTerm, results: searchResults, isBusy: isLoading">
-                        <template name="isBusy">
-                            <div class="Result">
-                                <div class="Result-info">
-                                    <span class="Result-name">Searching...</span>
-                                </div>
-                                <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
-                            </div>
-                        </template>
-                        <template name="results">
-                            <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
-                                <h2 class="SearchResultsPreview-h">Services</h2>
-                                <ul data-bind="foreach: jobTitles">
-                                    <li class="Result clearfix">
-                                        <a data-bind="attr: { href: $parent.getJobTitleUrl(jobTitleID()) }">
-                                            <div class="Result-info">
-                                                <span class="Result-name" data-bind="text: pluralName"></span>
-                                                <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
-                                                <span class="Result-description" data-bind="text: searchDescription"></span>
-                                            </div>
-                                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </template>
-                    </input-autocomplete>
+                <div class="col-sm-7">
+                    <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading"></home-search-box>
                 </div>
             </form>
         </div>

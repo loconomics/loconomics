@@ -1,0 +1,32 @@
+<div class="form-group">
+    <label for="homeSearch" class="sr-only">Search</label>
+    <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
+        placeholder: 'Search services, e.g. Dog Walker, Tutor',
+        value: value, results: results, isBusy: isBusy">
+        <template name="isBusy">
+            <div class="Result">
+                <div class="Result-info">
+                    <span class="Result-name">Searching...</span>
+                </div>
+                <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
+            </div>
+        </template>
+        <template name="results">
+            <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
+                <h2 class="SearchResultsPreview-h">Services</h2>
+                <ul data-bind="foreach: jobTitles">
+                    <li class="Result clearfix">
+                        <a data-bind="attr: { href: $parent.getJobTitleUrl(jobTitleID()) }">
+                            <div class="Result-info">
+                                <span class="Result-name" data-bind="text: pluralName"></span>
+                                <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
+                                <span class="Result-description" data-bind="text: searchDescription"></span>
+                            </div>
+                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </template>
+    </input-autocomplete>
+</div>
