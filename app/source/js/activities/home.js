@@ -209,4 +209,10 @@ function ViewModel() {
     this.searchResults.getJobTitleUrl = function(id) {
         return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
+    this.searchResults.getServiceProfessionalUrl = function(id) {
+        return '/profile/' + id;
+    }.bind(this);
+    this.searchResults.getSearchCategoryUrl = function(categoryID) {
+        return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
+    }.bind(this);
 }

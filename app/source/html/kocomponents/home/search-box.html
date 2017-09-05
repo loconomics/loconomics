@@ -27,6 +27,36 @@
                     </li>
                 </ul>
             </div>
+            <div class="SearchResultsPreview" data-bind="visible: serviceProfessionals().length">
+                <h2 class="SearchResultsPreview-h">Professionals</h2>
+                <ul data-bind="foreach: serviceProfessionals">
+                    <li class="Result clearfix">
+                        <a data-bind="attr: { href: $parent.getServiceProfessionalUrl(userID()) }">
+                            <div class="Result-info">
+                                <span class="Result-name" data-bind="text: firstName"></span>
+                                <span class="Result-name"  data-bind="text: lastName"></span>
+                                <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
+                                <span class="Result-description" data-bind="text: allJobTitles"></span>
+                            </div>
+                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="SearchResultsPreview" data-bind="visible: categories().length">
+                <h2 class="SearchResultsPreview-h">Categories</h2>
+                <ul data-bind="foreach: categories">
+                    <li class="Result clearfix">
+                        <a data-bind="attr: { href: $parent.getSearchCategoryUrl(categoryID()) }">
+                            <div class="Result-info">
+                                <span class="Result-name" data-bind="text: categoryName"></span>
+                                <span class="Result-description" data-bind="text: searchDescription"></span>
+                            </div>
+                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </template>
     </input-autocomplete>
 </div>
