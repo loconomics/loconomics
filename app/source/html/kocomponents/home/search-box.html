@@ -15,7 +15,7 @@
             <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
                 <h2 class="SearchResultsPreview-h">Services</h2>
                 <ul data-bind="foreach: jobTitles">
-                    <li class="Result clearfix">
+                    <li is="input-autocomplete-result" class="Result clearfix" data-bind="attr: { id: 'homeSearch-autocomplete-service-' + pluralName() }">
                         <a data-bind="attr: { href: $parent.getJobTitleUrl(jobTitleID()) }">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: pluralName"></span>
@@ -30,12 +30,12 @@
             <div class="SearchResultsPreview" data-bind="visible: serviceProfessionals().length">
                 <h2 class="SearchResultsPreview-h">Professionals</h2>
                 <ul data-bind="foreach: serviceProfessionals">
-                    <li class="Result clearfix">
+                    <li is="input-autocomplete-result" class="Result clearfix" data-bind="attr: { id: 'homeSearch-autocomplete-proffesional-' + $index() }">
                         <a data-bind="attr: { href: $parent.getServiceProfessionalUrl(userID()) }">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: firstName"></span>
-                                <span class="Result-name"  data-bind="text: lastName"></span>
-                                <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
+                                <span class="Result-name" data-bind="text: lastName"></span>
+                                <span class="Result-name" data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
                                 <span class="Result-description" data-bind="text: allJobTitles"></span>
                             </div>
                             <div class="btn btn-secondary btn-md btn-inline">Go</div>
@@ -46,7 +46,7 @@
             <div class="SearchResultsPreview" data-bind="visible: categories().length">
                 <h2 class="SearchResultsPreview-h">Categories</h2>
                 <ul data-bind="foreach: categories">
-                    <li class="Result clearfix">
+                    <li is="input-autocomplete-result" class="Result clearfix" data-bind="attr: { id: 'homeSearch-autocomplete-category-' + categoryName() }">
                         <a data-bind="attr: { href: $parent.getSearchCategoryUrl(categoryID()) }">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: categoryName"></span>

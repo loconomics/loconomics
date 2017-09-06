@@ -3,7 +3,14 @@
     <input type="text" autocomplete="off" role="combobox"
         aria-expanded="false" aria-autocomplete="list"
         class="form-control inset"
-        data-bind="textInput: value, attr: { id: id, 'aria-owns': panelID, 'aria-expanded': isExpanded, placeholder: placeholder }">
+        data-bind="textInput: value, attr: {
+            id: id,
+            'aria-owns': panelID,
+            'aria-expanded': isExpanded,
+            placeholder: placeholder,
+            'aria-activedescendant': activeResultID
+        },
+        event: { keypress: onKeyPress, keydown: onKeyDown }">
 </div>
 <div role="listbox" class="InputAutocomplete-panel"
     data-bind="visible: isExpanded, attr: { id: panelID }">
