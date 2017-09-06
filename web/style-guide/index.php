@@ -68,65 +68,136 @@
                 <div class="sg-color-swatch" style="background-color: #007a7c;"></div>
                 <div class="sg-color-name">$brand-primary</div>
                 <div class="sg-color-value">#007a7c</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 4.7</div>
+                <div class="sg-color-value">White: 5.2</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #2ecc71;"></div>
-                <div class="sg-color-name">Emerald</div>
-                <div class="sg-color-value">#2ecc71</div>
+                <div class="sg-color-swatch" style="background-color: #d3424e;"></div>
+                <div class="sg-color-name">$brand-secondary</div>
+                <div class="sg-color-value">#d3424e</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 4.1</div>
+                <div class="sg-color-value">White: 4.5</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #3498db;"></div>
-                <div class="sg-color-name">Peter River</div>
-                <div class="sg-color-value">#3498db</div>
+                <div class="sg-color-swatch" style="background-color: #2176ae;"></div>
+                <div class="sg-color-name">$brand-info</div>
+                <div class="sg-color-value">#2176ae</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 4.5</div>
+                <div class="sg-color-value">White: 4.9</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #9b59b6;"></div>
-                <div class="sg-color-name">Amethyst</div>
-                <div class="sg-color-value">#9b59b6</div>
+                <div class="sg-color-swatch" style="background-color: #00aa55;"></div>
+                <div class="sg-color-name">$brand-success</div>
+                <div class="sg-color-value">#00aa55</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value" style="color: #ff0000">$background-gray: 2.8</div>
+                <div class="sg-color-value">White: 3.1</div>
               </div>
             </div><!--/.sg-color-grid-->
             <div class="sg-color-grid">
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #f1c40f;"></div>
-                <div class="sg-color-name">Sun Flower</div>
-                <div class="sg-color-value">#f1c40f</div>
+                <div class="sg-color-swatch" style="background-color: #f9dc5c;"></div>
+                <div class="sg-color-name">$brand-warning</div>
+                <div class="sg-color-value">#f9dc5c</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Border only</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value" style="color: #ff0000">$background-gray: 1.2</div>
+                <div class="sg-color-value" style="color: #ff0000">White: 1.4</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #e67e22;"></div>
-                <div class="sg-color-name">Carrot</div>
-                <div class="sg-color-value">#e67e22</div>
+                <div class="sg-color-swatch" style="background-color: #ff0000;"></div>
+                <div class="sg-color-name">$brand-danger</div>
+                <div class="sg-color-value">#ff0000</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 3.7</div>
+                <div class="sg-color-value">White: 4.0</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #e74c3c;"></div>
-                <div class="sg-color-name">Alizarin</div>
-                <div class="sg-color-value">#e74c3c</div>
+                <div class="sg-color-swatch" style="background-color: #222222;"></div>
+                <div class="sg-color-name">$gray-darker</div>
+                <div class="sg-color-value">#222222</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 0.85rem</div>
+                <div class="sg-color-value">Font weight: 400</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 14.6</div>
+                <div class="sg-color-value">White: 15.9</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #c0392b;"></div>
-                <div class="sg-color-name">Pomegranate</div>
-                <div class="sg-color-value">#c0392b</div>
+                <div class="sg-color-swatch" style="background-color: #333333;"></div>
+                <div class="sg-color-name">$gray-dark</div>
+                <div class="sg-color-value">#333333</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 0.85rem</div>
+                <div class="sg-color-value">Font weight: 400</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 11.6</div>
+                <div class="sg-color-value">White: 12.6</div>
               </div>
             </div><!--/.sg-color-grid-->
             <div class="sg-color-grid">
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #ecf0f1;"></div>
-                <div class="sg-color-name">Clouds</div>
-                <div class="sg-color-value">#ecf0f1</div>
+                <div class="sg-color-swatch" style="background-color: #555555;"></div>
+                <div class="sg-color-name">$gray</div>
+                <div class="sg-color-value">#555555</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 0.85rem</div>
+                <div class="sg-color-value">Font weight: 400</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 6.8</div>
+                <div class="sg-color-value">White: 7.5</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #95a5a6;"></div>
-                <div class="sg-color-name">Silver</div>
-                <div class="sg-color-value">#95a5a6</div>
+                <div class="sg-color-swatch" style="background-color: #777777;"></div>
+                <div class="sg-color-name">$gray-light</div>
+                <div class="sg-color-value">#777777</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value">$background-gray: 4.1</div>
+                <div class="sg-color-value">White: 4.5</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #697374;"></div>
-                <div class="sg-color-name">Concrete</div>
-                <div class="sg-color-value">#697374</div>
+                <div class="sg-color-swatch" style="background-color: #eeeeee;"></div>
+                <div class="sg-color-name">$gray-lighter</div>
+                <div class="sg-color-value">#eeeeee</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Font size: 1.125rem</div>
+                <div class="sg-color-value">Font weight: 700</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value" style="color: #ff0000">$background-gray: 1.1</div>
+                <div class="sg-color-value" style="color: #ff0000">White: 1.2</div>
               </div>
               <div class="sg-color">
-                <div class="sg-color-swatch" style="background-color: #111313;"></div>
-                <div class="sg-color-name">Obsidian</div>
-                <div class="sg-color-value">#111313</div>
+                <div class="sg-color-swatch" style="background-color: #f5f5f5;"></div>
+                <div class="sg-color-name">$gray-background</div>
+                <div class="sg-color-value">#f5f5f5</div>
+                <div class="sg-color-name">Minimum use:</div>
+                <div class="sg-color-value">Background color only</div>
+                <div class="sg-color-value">Font weight: 400</div>
+                <div class="sg-color-name">Contrast ratios:</div>
+                <div class="sg-color-value" style="color: #ff0000">$background-gray: 1.0</div>
+                <div class="sg-color-value" style="color: #ff0000">White: 1.1</div>
               </div>
             </div><!--/.sg-color-grid-->
           </div><!--/.sg-colors-->
