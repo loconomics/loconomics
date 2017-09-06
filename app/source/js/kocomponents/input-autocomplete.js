@@ -1,6 +1,33 @@
 /**
- * An input with accessible autocomplete feature
+ * An input with accessible and customizable autocomplete feature.
+ *
+ * The component allows for custom templates for the isBusy and results content
+ * displayed in floating panel.
+ * For a results template, each element that represents an item from the results
+ * MUST have the SUGGESTION_ATTR_NAME attribute, and the value to be the text
+ * to be used as input value when selected.
+ *
  * @module kocomponents/input-autocomplete
+ * @example
+ * Basic usage:
+ * <input-autocomplete data-params="value: searchTerm, results: searchResults,
+ * id: 'searchInput', name: 's', icon: 'ion-ios-search'"></input-autocomplete>
+ *
+ * Custom templates:
+ * <input-autocomplete data-params="value: searchTerm, results: searchResults,
+ * id: 'searchInput', name: 's', icon: 'ion-ios-search'">
+ *     <template name="isBusy">
+ *         <span class="some-external-class">Searching...</span>
+ *     </template>
+ *     <template name="results">
+ *         <ul data-bind="foreach: $data">
+ *             <li data-bind="attr: { 'data-input-autocomplete-suggestion': itemValue }">
+ *                 <strong data-bind="text: itemValue"></strong>
+ *                 <em data-bind="text: itemDescription"</em>
+ *             </li>
+ *         </ul>
+ *     </template
+ * </input-autocomplete>
  */
 'use strict';
 
@@ -8,10 +35,8 @@ var TAG_NAME = 'input-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/input-autocomplete.html');
 var CSS_CLASS = 'InputAutocomplete';
 //require-styl '../../css/components/InputAutocomplete.styl'
-var RESULT_ELEMENT_NAME = 'input-autocomplete-result';
-var RESULT_ELEMENT_NAME_SELECTOR = '[is=' + RESULT_ELEMENT_NAME + ']';
-var RESULT_VALUE_ELEMENT_NAME = 'input-autocomplete-result-value';
-var RESULT_VALUE_ELEMENT_NAME_SELECTOR = '[is=' + RESULT_VALUE_ELEMENT_NAME + ']';
+var SUGGESTION_ATTR_NAME = 'data-input-autocomplete-suggestion';
+var SUGGESTION_ATTR_NAME_SELECTOR = '[' + SUGGESTION_ATTR_NAME + ']';
 
 var ko = require('knockout');
 var getObservable = require('../utils/getObservable');
@@ -134,12 +159,15 @@ function ViewModel(params, refs, children) {
      */
     this.activeResultValue = ko.pureComputed(function() {
         var el = this.activeResultElement();
-        if (el) {
-            var valEl = el.querySelector(RESULT_VALUE_ELEMENT_NAME_SELECTOR);
-            if (valEl && valEl.innerText) {
-                return valEl.innerText;
+        if (el && el.getAttribute) {
+            // A suggestion is active
+            // Get attribute value if any
+            var valEl = el.getAttribute(SUGGESTION_ATTR_NAME);
+            if (valEl) {
+                return valEl;
             }
             else {
+                // Or get the literal text content of the element.
                 valEl.innerText;
             }
         }
@@ -225,15 +253,13 @@ function ViewModel(params, refs, children) {
          */
         shiftTo: function(offset) {
             var el = this.activeResultElement();
-            var results = refs.root.querySelectorAll(RESULT_ELEMENT_NAME_SELECTOR);
+            var results = refs.root.querySelectorAll(SUGGESTION_ATTR_NAME_SELECTOR);
             // Make it an array
             results = Array.prototype.slice.call(results);
-            // If has value and is a valid one
-            //var isValidElement = el && el.tagName === RESULT_ELEMENT_NAME;
-            var isValidElement = el && el.getAttribute && el.getAttribute('is') === RESULT_ELEMENT_NAME;
-            if (isValidElement) {
-                // Look for the current index
-                var activeIndex = results.indexOf(el);
+            // Look for the current index
+            var activeIndex = results.indexOf(el);
+            // If is valid
+            if (activeIndex > -1) {
                 // Go
                 var newIndex = this.fixIndex(activeIndex + offset, results.length);
                 var newEl = results[newIndex];
