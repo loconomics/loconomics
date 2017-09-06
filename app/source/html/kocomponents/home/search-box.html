@@ -18,7 +18,7 @@
                     <li is="input-autocomplete-result" class="Result clearfix" data-bind="attr: { id: 'homeSearch-autocomplete-service-' + pluralName() }">
                         <a data-bind="attr: { href: $parent.getJobTitleUrl(jobTitleID()) }">
                             <div class="Result-info">
-                                <span class="Result-name" data-bind="text: pluralName"></span>
+                                <span is="input-autocomplete-result-value" class="Result-name" data-bind="text: pluralName"></span>
                                 <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
                                 <span class="Result-description" data-bind="text: searchDescription"></span>
                             </div>
@@ -33,8 +33,10 @@
                     <li is="input-autocomplete-result" class="Result clearfix" data-bind="attr: { id: 'homeSearch-autocomplete-proffesional-' + $index() }">
                         <a data-bind="attr: { href: $parent.getServiceProfessionalUrl(userID()) }">
                             <div class="Result-info">
-                                <span class="Result-name" data-bind="text: firstName"></span>
-                                <span class="Result-name" data-bind="text: lastName"></span>
+                                <span is="input-autocomplete-result-value">
+                                    <span class="Result-name" data-bind="text: firstName"></span>
+                                    <span class="Result-name" data-bind="text: lastName"></span>
+                                </span>
                                 <span class="Result-name" data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
                                 <span class="Result-description" data-bind="text: allJobTitles"></span>
                             </div>
@@ -49,7 +51,7 @@
                     <li is="input-autocomplete-result" class="Result clearfix" data-bind="attr: { id: 'homeSearch-autocomplete-category-' + categoryName() }">
                         <a data-bind="attr: { href: $parent.getSearchCategoryUrl(categoryID()) }">
                             <div class="Result-info">
-                                <span class="Result-name" data-bind="text: categoryName"></span>
+                                <span is="input-autocomplete-result-value" class="Result-name" data-bind="text: categoryName"></span>
                                 <span class="Result-description" data-bind="text: searchDescription"></span>
                             </div>
                             <div class="btn btn-secondary btn-md btn-inline">Go</div>

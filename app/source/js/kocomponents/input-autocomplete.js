@@ -10,6 +10,8 @@ var CSS_CLASS = 'InputAutocomplete';
 //require-styl '../../css/components/InputAutocomplete.styl'
 var RESULT_ELEMENT_NAME = 'input-autocomplete-result';
 var RESULT_ELEMENT_NAME_SELECTOR = '[is=' + RESULT_ELEMENT_NAME + ']';
+var RESULT_VALUE_ELEMENT_NAME = 'input-autocomplete-result-value';
+var RESULT_VALUE_ELEMENT_NAME_SELECTOR = '[is=' + RESULT_VALUE_ELEMENT_NAME + ']';
 
 var ko = require('knockout');
 var getObservable = require('../utils/getObservable');
@@ -107,10 +109,10 @@ function ViewModel(params, refs, children) {
         return this.id() + '-input-autocomplete-panel';
     }, this);
     /**
-     * @member {KnockoutComputed} activeResult Holds the value/object of
-     * the result item currently active
+     * @member {KnockoutComputed} activeResultData Holds the data value/object
+     * that generates the result item currently active
      */
-    this.activeResult = ko.pureComputed(function() {
+    this.activeResultData = ko.pureComputed(function() {
         var el = this.activeResultElement();
         return el ? ko.dataFor(el) : null;
     }, this);
@@ -125,6 +127,25 @@ function ViewModel(params, refs, children) {
             console.error('input-autocomplete: an active result element has not a required ID attribute value', el);
         }
         return id;
+    }, this);
+    /**
+     * @member {KnockoutObservable<string>} activeResultValue Give access to the
+     * text value of the active result.
+     */
+    this.activeResultValue = ko.pureComputed(function() {
+        var el = this.activeResultElement();
+        if (el) {
+            var valEl = el.querySelector(RESULT_VALUE_ELEMENT_NAME_SELECTOR);
+            if (valEl && valEl.innerText) {
+                return valEl.innerText;
+            }
+            else {
+                valEl.innerText;
+            }
+        }
+        else {
+            return null;
+        }
     }, this);
 
     /// Children / Elements injected
@@ -234,6 +255,21 @@ function ViewModel(params, refs, children) {
         }
     };
 
+    /// Methods
+    /**
+     * Gets the value from the active result and put it in the input value.
+     */
+    this.selectActiveResult = function() {
+        var textValue = this.activeResultValue();
+        if (textValue) {
+            // Put it as the new input value
+            this.value(textValue);
+            // Remove as active element
+            activeResultManager.clear();
+        }
+        // TODO Close list
+    }.bind(this);
+
     /// Events
     var KEY_ENTER = 13;
     var KEY_UP = 38;
@@ -289,16 +325,7 @@ function ViewModel(params, refs, children) {
      */
     var pressSelect = function(e) {
         if (e.which === KEY_ENTER) {
-            var active = activeResultManager.activeResultElement();
-            if (active) {
-                // Copy the text/value of the active item
-                var textValue = active.innerText;
-                // Put it as the new input value
-                this.value(textValue);
-                // Remove as active element
-                activeResultManager.clear();
-            }
-            // TODO Close list
+            this.selectActiveResult();
             // managed
             return true;
         }
