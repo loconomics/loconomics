@@ -1,0 +1,28 @@
+{
+  "name": "Style-Guide-Boilerplate-nodejs",
+  "version": "1.0.0",
+  "description": "A starting point for crafting living style guides.",
+  "main": "server.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "express": "^4.12.2",
+    "handlebars": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DeadlyBrad42/Style-Guide-Boilerplate-nodejs.git"
+  },
+  "author": "Acatar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DeadlyBrad42/Style-Guide-Boilerplate-nodejs/issues"
+  },
+  "homepage": "https://github.com/DeadlyBrad42/Style-Guide-Boilerplate-nodejs"
+}

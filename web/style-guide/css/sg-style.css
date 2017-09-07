@@ -24,7 +24,7 @@ body {
 }
 
 .sg-header {
-  background: #007a7c;
+  background: #000;
   color: #fff;
   padding-bottom: 0.75rem;
   padding-bottom: 12px; /* For older browsers */
@@ -204,9 +204,9 @@ body {
 /* Navigation
 ---------------------------------------------------------------------------- */
 .sg-nav-toggle {
-  background-color: #007a7c;
+  background-color: #000;
   border-radius: 5px;
-  border: 1px solid #fff;
+  border: 1px solid #7C7C7C;
   color: #fff;
   float: right;
   font-size: 16px;
@@ -266,7 +266,7 @@ body {
 }
 
 .sg-nav-group .sg-subnav-parent {
-  margin: 2.5em 0;
+  margin: 0 0;
 }
 
 .sg-nav-group:first-child > .sg-subnav-parent {
