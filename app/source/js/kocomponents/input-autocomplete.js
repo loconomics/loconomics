@@ -260,6 +260,7 @@ function ViewModel(params, refs, children) {
      * key)
      * - allow user to show it again (by pressing Ctrl+Alt+Space)
      * - automatically close when moving focus away from the input
+     * - automatically open when moving focus to the input (and has suggestions)
      * - automatically re-open when the value changed even if collapse was
      * required (reset this flag)
      */
@@ -494,6 +495,13 @@ function ViewModel(params, refs, children) {
      */
     this.onBlur = function() {
         this.collapsedRequested(true);
+    }.bind(this);
+    /**
+     * On input focus in handler, supports:
+     * - show the listbox (if there is data)
+     */
+    this.onFocus = function() {
+        this.collapsedRequested(false);
     }.bind(this);
 }
 

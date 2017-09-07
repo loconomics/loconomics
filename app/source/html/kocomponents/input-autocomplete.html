@@ -10,7 +10,7 @@
             placeholder: placeholder,
             'aria-activedescendant': activeSuggestionID
         },
-        event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur }">
+        event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur, focus: onFocus }">
 </div>
 <div role="listbox" class="InputAutocomplete-listBox"
     data-bind="visible: isExpanded, attr: { id: listBoxID }">
