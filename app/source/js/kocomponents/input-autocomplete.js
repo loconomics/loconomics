@@ -2,7 +2,7 @@
  * An input with accessible and customizable autocomplete feature.
  *
  * The component allows for custom templates for the isBusy and suggestions
- * content, displayed in a floating panel.
+ * content, displayed in a listBox.
  * For a suggestions template, each element that represents an item from the data
  * MUST have the SUGGESTION_ATTR_NAME attribute, and the value to be the text
  * to be used as input value when selected.
@@ -120,18 +120,18 @@ function ViewModel(params, refs, children) {
     /// Computed properties
     /**
      * @member {KnockoutComputed<boolean>} isExpanded Let's know if the
-     * suggestions panel must be expanded (AKA opened).
+     * suggestions listBox must be expanded (AKA opened).
      */
     this.isExpanded = ko.pureComputed(function() {
         return this.isBusy() || ko.unwrap(this.suggestions().length);
     }, this);
     /**
-     * @member {KnockoutComputed<string>} panelID Generated identifier for the
-     * panel element, required to create a relationship between elements
+     * @member {KnockoutComputed<string>} listBoxID Generated identifier for the
+     * listBox element, required to create a relationship between elements
      * and state.
      */
-    this.panelID = ko.pureComputed(function() {
-        return this.id() + '-input-autocomplete-panel';
+    this.listBoxID = ko.pureComputed(function() {
+        return this.id() + '-input-autocomplete-listBox';
     }, this);
     /**
      * @member {KnockoutComputed} activeSuggestionData Holds the data value/object

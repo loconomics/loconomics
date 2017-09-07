@@ -5,15 +5,15 @@
         class="form-control inset"
         data-bind="textInput: value, attr: {
             id: id,
-            'aria-owns': panelID,
+            'aria-owns': listBoxID,
             'aria-expanded': isExpanded,
             placeholder: placeholder,
             'aria-activedescendant': activeSuggestionID
         },
         event: { keypress: onKeyPress, keydown: onKeyDown }">
 </div>
-<div role="listbox" class="InputAutocomplete-panel"
-    data-bind="visible: isExpanded, attr: { id: panelID }">
+<div role="listbox" class="InputAutocomplete-listBox"
+    data-bind="visible: isExpanded, attr: { id: listBoxID }">
     <div data-bind="template: { if: isBusy, nodes: isBusyTemplate.children, data: $component }"></div>
     <div data-bind="template: { ifnot: isBusy, nodes: suggestionsTemplate.children, data: suggestions }"></div>
 </div>
