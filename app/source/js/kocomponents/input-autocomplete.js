@@ -190,7 +190,7 @@ function ActiveSuggestionManager(activeSuggestionElement, root) {
  * provided template (here must be the external or the default template).
  */
 function ViewModel(params, refs, children) {
-    //jshint maxstatements:30
+    //jshint maxstatements:40
     /// Members from input params
     /**
      * @member {KnockoutObservable<string>} id
@@ -246,6 +246,24 @@ function ViewModel(params, refs, children) {
      * Used for accessibility and styling, at the element and at the input.
      */
     this.activeSuggestionElement = ko.observable(null);
+    /**
+     * @member {KnockoutObservable<boolean>} collapsedRequested Forces the
+     * listbox to be collapsed when value is 'true', even if there are
+     * data/state to show up the list; otherwise is just left the listbox to
+     * be collapsed or expanded depending on the availability of data or
+     * current state.
+     * This is needed to be able to:
+     * - close/hide the list of suggestions when
+     * one was already selected (so there is data at 'suggestions' but does
+     * not need to be displayed --one value was picked already)
+     * - allow user to request to hide it even without select one (press Esc
+     * key)
+     * - allow user to show it again (by pressing Ctrl+Alt+Space)
+     * - automatically close when moving focus away from the input
+     * - automatically re-open when the value changed even if collapse was
+     * required (reset this flag)
+     */
+    this.collapsedRequested = ko.observable(false);
 
     /// Computed properties
     /**
@@ -253,7 +271,7 @@ function ViewModel(params, refs, children) {
      * suggestions listBox must be expanded (AKA opened).
      */
     this.isExpanded = ko.pureComputed(function() {
-        return this.isBusy() || ko.unwrap(this.suggestions().length);
+        return !this.collapsedRequested() && (this.isBusy() || ko.unwrap(this.suggestions().length));
     }, this);
     /**
      * @member {KnockoutComputed<string>} listBoxID Generated identifier for the
@@ -332,31 +350,47 @@ function ViewModel(params, refs, children) {
             this.onSelect(textValue, contextData);
             // Remove as active element
             activeSuggestionManager.clear();
+            // Close list
+            this.collapsedRequested(true);
         }
-        // TODO Close list
     }.bind(this);
 
     /// Events
     var KEY_ENTER = 13;
     var KEY_UP = 38;
     var KEY_DOWN = 40;
+    var KEY_SPACE = 32;
+    var KEY_ESC = 27;
     /**
      * Detects standard key press for 'display autocomplete' and force to
      * expand the list of available options, if any.
-     * Standard autocompletes collapse on focus out, and at focus in the list
-     * can be manually expanded. Alternatives are to keep it expanded or
-     * auto-expand when getting focus again.
+     * Standard autocompletes collapse on focus out, when selecting an item,
+     * and when focus enters the input again, the list can be manually expanded.
+     * Alternatives are to keep it expanded on focus out (not recommended)
+     * or auto-expand when getting focus again (if there is data).
      * @param {Event} e Keypress event
      * @private
      */
-    /*
-    var KEY_SPACE = 32;
     var pressExpand = function(e) {
-        // Press Ctrl+Alt+Space: Show up the autocomplete list
+        // Press Ctrl+Alt+Space: Show up the autocomplete list, if data
         if (e.ctrlKey && e.altKey && e.which === KEY_SPACE) {
-            // TODO Force to show up the autocomplete, if there are items
+            this.collapsedRequested(false);
+            // managed
+            return true;
         }
-    };*/
+    }.bind(this);
+    /**
+     * Detects standard key press for 'hide autocomplete' and force to
+     * collapse the list, even if has data.
+     */
+    var pressCollapse = function(e) {
+        // Press Esc: hide the autocomplete list even with data
+        if (e.which === KEY_ESC) {
+            this.collapsedRequested(true);
+            // managed
+            return true;
+        }
+    }.bind(this);
     /**
      * Detects standard key press for 'move/active next item (from the
      * autocomplete suggestions list)'.
@@ -365,10 +399,12 @@ function ViewModel(params, refs, children) {
     var pressNext = function(e) {
         if (e.which === KEY_DOWN) {
             activeSuggestionManager.shiftTo(activeSuggestionManager.SHIFT_TO_NEXT);
+            // Show up list
+            this.collapsedRequested(false);
             // managed
             return true;
         }
-    };
+    }.bind(this);
     /**
      * Detects standard key press for 'move/active previous item (from the
      * autocomplete suggestions list)'.
@@ -377,10 +413,12 @@ function ViewModel(params, refs, children) {
     var pressPrevious = function(e) {
         if (e.which === KEY_UP) {
             activeSuggestionManager.shiftTo(activeSuggestionManager.SHIFT_TO_PREVIOUS);
+            // Show up list
+            this.collapsedRequested(false);
             // managed
             return true;
         }
-    };
+    }.bind(this);
     /**
      * Detects standard key press for 'select element as input value (from the
      * autocomplete suggestions list)'.
@@ -399,7 +437,6 @@ function ViewModel(params, refs, children) {
     this.onKeyPress = function(data, e) {
         e = e.originalEvent || e;
         if (pressSelect(e)) return;
-        // TODO press ESC to close list
         // Allow default behavior, or will get blocked by Knockout:
         return true;
     };
@@ -419,7 +456,8 @@ function ViewModel(params, refs, children) {
     };
     this.onKeyDown = function(data, e) {
         e = e.originalEvent || e;
-        //if (pressExpand(e)) return;
+        if (pressExpand(e)) return;
+        if (pressCollapse(e)) return;
         if (pressNext(e)) return;
         if (pressPrevious(e)) return;
         // Allow default behavior, or will get blocked by Knockout:
