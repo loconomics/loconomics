@@ -53,6 +53,112 @@ var getObservable = require('../utils/getObservable');
  */
 
 /**
+ * Utility class to manage the suggestion DOM elements and how to change
+ * the active one. It's use by the component ViewModel to performs the actions
+ * from keyboard interactions.
+ * @class ActiveSuggestionManager
+ * @param {KnockoutObservable<HTMLElement} activeSuggestionElement From the
+ * ViewModel, holds the element that is active and will be updated by this
+ * class methods.
+ * @param {HTMLElement} root The component HTMLElement instance
+ */
+function ActiveSuggestionManager(activeSuggestionElement, root) {
+    return {
+        /**
+         * Reference to the viewModel observable that keeps track of which
+         * DOM element is now the active one.
+         * This is updated and accessed by the manager methods.
+         * @member {KnockoutObservable<HTMLElement>}
+         */
+        activeSuggestionElement: activeSuggestionElement,
+        /**
+         * Remove any attribute or state from the given element that could
+         * previously being the active suggestion.
+         * Does NOT touch the observable (a call to 'set' with a new element
+         * must be performed)
+         * @param {HTMLElement} element
+         */
+        unset: function(element) {
+            // replaced 'element instanceof HTMLElement' because of unknow support
+            if (element && element.removeAttribute) {
+                element.removeAttribute('aria-selected');
+            }
+        },
+        /**
+         * Set the given element as the active suggestion element, adding any
+         * attribute or state to it.
+         * @param {HTMLElement} element
+         */
+        set: function(element) {
+            this.unset(this.activeSuggestionElement());
+            // replaced 'element instanceof HTMLElement' because of unknow support
+            if (element && element.setAttribute) {
+                element.setAttribute('aria-selected', 'true');
+            }
+            this.activeSuggestionElement(element || null);
+        },
+        /**
+         * Given and index and total of elements, returns the index if is in
+         * the boundaries or makes a circular movement when out (when before
+         * first returns last, after last returns first).
+         * @private
+         * @param {number} index The proposed index that need to be checked
+         * or fixed
+         * @param {number} total Number of elements. The index goes between
+         * zero and (total - 1).
+         * @returns {number} A correct index.
+         */
+        fixIndex: function(index, total) {
+            if (index < 0) {
+                return total - 1;
+            }
+            else if (index >= total) {
+                return 0;
+            }
+            else {
+                return index;
+            }
+        },
+        /**
+         * Changes the active suggestion by changing the index of the current one
+         * by a given offset.
+         * A couple of constants are provided representing the needed offset
+         * to move to next or previous element.
+         * @param {number} offset Amount of positions from current index to shift
+         * the current active suggestion. 1 to select next, -1 for previous.
+         */
+        shiftTo: function(offset) {
+            var el = this.activeSuggestionElement();
+            var suggestions = root.querySelectorAll(SUGGESTION_ATTR_NAME_SELECTOR);
+            // Make it an array
+            suggestions = Array.prototype.slice.call(suggestions);
+            // Look for the current index
+            var activeIndex = suggestions.indexOf(el);
+            // If is valid
+            if (activeIndex > -1) {
+                // Go
+                var newIndex = this.fixIndex(activeIndex + offset, suggestions.length);
+                var newEl = suggestions[newIndex];
+                this.set(newEl);
+            }
+            else {
+                // Select the first one
+                this.set(suggestions[0]);
+            }
+        },
+        SHIFT_TO_NEXT: 1,
+        SHIFT_TO_PREVIOUS: -1,
+        /**
+         * Makes that no element is registered as active at the moment.
+         */
+        clear: function() {
+            this.unset(this.activeSuggestionElement());
+            this.activeSuggestionElement(null);
+        }
+    };
+}
+
+/**
  * The component view model
  * @class
  * @param {Object} params
@@ -77,6 +183,7 @@ var getObservable = require('../utils/getObservable');
  * suggestions object.
  */
 function ViewModel(params, refs, children) {
+    //jshint maxstatements:30
     /// Members from input params
     /**
      * @member {KnockoutObservable<string>} id
@@ -192,99 +299,7 @@ function ViewModel(params, refs, children) {
     this.suggestionsTemplate = children.suggestionsTemplate;
 
     /// Management of active suggestion element (mainly for accessibility)
-    var activeSuggestionManager = {
-        /**
-         * Reference to the viewModel observable that keeps track of which
-         * DOM element is now the active one.
-         * This is updated and accessed by the manager methods.
-         * @member {KnockoutObservable<HTMLElement>}
-         */
-        activeSuggestionElement: this.activeSuggestionElement,
-        /**
-         * Remove any attribute or state from the given element that could
-         * previously being the active suggestion.
-         * Does NOT touch the observable (a call to 'set' with a new element
-         * must be performed)
-         * @param {HTMLElement} element
-         */
-        unset: function(element) {
-            // replaced 'element instanceof HTMLElement' because of unknow support
-            if (element && element.removeAttribute) {
-                element.removeAttribute('aria-selected');
-            }
-        },
-        /**
-         * Set the given element as the active suggestion element, adding any
-         * attribute or state to it.
-         * @param {HTMLElement} element
-         */
-        set: function(element) {
-            this.unset(this.activeSuggestionElement());
-            // replaced 'element instanceof HTMLElement' because of unknow support
-            if (element && element.setAttribute) {
-                element.setAttribute('aria-selected', 'true');
-            }
-            this.activeSuggestionElement(element || null);
-        },
-        /**
-         * Given and index and total of elements, returns the index if is in
-         * the boundaries or makes a circular movement when out (when before
-         * first returns last, after last returns first).
-         * @private
-         * @param {number} index The proposed index that need to be checked
-         * or fixed
-         * @param {number} total Number of elements. The index goes between
-         * zero and (total - 1).
-         * @returns {number} A correct index.
-         */
-        fixIndex: function(index, total) {
-            if (index < 0) {
-                return total - 1;
-            }
-            else if (index >= total) {
-                return 0;
-            }
-            else {
-                return index;
-            }
-        },
-        /**
-         * Changes the active suggestion by changing the index of the current one
-         * by a given offset.
-         * A couple of constants are provided representing the needed offset
-         * to move to next or previous element.
-         * @param {number} offset Amount of positions from current index to shift
-         * the current active suggestion. 1 to select next, -1 for previous.
-         */
-        shiftTo: function(offset) {
-            var el = this.activeSuggestionElement();
-            var suggestions = refs.root.querySelectorAll(SUGGESTION_ATTR_NAME_SELECTOR);
-            // Make it an array
-            suggestions = Array.prototype.slice.call(suggestions);
-            // Look for the current index
-            var activeIndex = suggestions.indexOf(el);
-            // If is valid
-            if (activeIndex > -1) {
-                // Go
-                var newIndex = this.fixIndex(activeIndex + offset, suggestions.length);
-                var newEl = suggestions[newIndex];
-                this.set(newEl);
-            }
-            else {
-                // Select the first one
-                this.set(suggestions[0]);
-            }
-        },
-        SHIFT_TO_NEXT: 1,
-        SHIFT_TO_PREVIOUS: -1,
-        /**
-         * Makes that no element is registered as active at the moment.
-         */
-        clear: function() {
-            this.unset(this.activeSuggestionElement());
-            this.activeSuggestionElement(null);
-        }
-    };
+    var activeSuggestionManager = new ActiveSuggestionManager(this.activeSuggestionElement, refs.root);
 
     /// Methods
     /**
