@@ -1,25 +1,25 @@
 /**
  * An input with accessible and customizable autocomplete feature.
  *
- * The component allows for custom templates for the isBusy and results content
- * displayed in floating panel.
- * For a results template, each element that represents an item from the results
+ * The component allows for custom templates for the isBusy and suggestions
+ * content, displayed in a floating panel.
+ * For a suggestions template, each element that represents an item from the data
  * MUST have the SUGGESTION_ATTR_NAME attribute, and the value to be the text
  * to be used as input value when selected.
  *
  * @module kocomponents/input-autocomplete
  * @example
  * Basic usage:
- * <input-autocomplete data-params="value: searchTerm, results: searchResults,
+ * <input-autocomplete data-params="value: searchTerm, suggestions: searchResults,
  * id: 'searchInput', name: 's', icon: 'ion-ios-search'"></input-autocomplete>
  *
  * Custom templates:
- * <input-autocomplete data-params="value: searchTerm, results: searchResults,
+ * <input-autocomplete data-params="value: searchTerm, suggestions: searchResults,
  * id: 'searchInput', name: 's', icon: 'ion-ios-search'">
  *     <template name="isBusy">
  *         <span class="some-external-class">Searching...</span>
  *     </template>
- *     <template name="results">
+ *     <template name="suggestions">
  *         <ul data-bind="foreach: $data">
  *             <li data-bind="attr: { 'data-input-autocomplete-suggestion': itemValue }">
  *                 <strong data-bind="text: itemValue"></strong>
@@ -42,8 +42,8 @@ var ko = require('knockout');
 var getObservable = require('../utils/getObservable');
 
 /**
- * @typedef {Object} ResultsBase Base class or interface that externally
- * provided results object must meet.
+ * @interface SuggestionsBase Base class or interface that externally
+ * provided suggestions object must meet.
  * @member {(number|KnockoutObservable<number>)} length Number of elements
  */
 
@@ -57,9 +57,9 @@ var getObservable = require('../utils/getObservable');
  * @param {KnockoutObservable<string>} [params.placeholder]
  * @param {KnockoutObservable<string>} params.value It holds the user typed
  * text at the input element 'realtime'.
- * @param {KnockoutObservable<ResultsBase>} params.results
+ * @param {KnockoutObservable<SuggestionsBase>} params.suggestions
  * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
- * the external load of results data (search/filtering)
+ * the external load of suggestions data (search/filtering)
  * @param {Object} refs Set of references to generated elements meant to be
  * provided internally by the creator of the component.
  * @param {HTMLElement} refs.root Reference to the component instance element,
@@ -68,8 +68,8 @@ var getObservable = require('../utils/getObservable');
  * filtered by the creator of the component.
  * @param {HTMLElement} children.isBusyTemplate Element used as template for the
  * item that notifies the isBusy state.
- * @param {HTMLElement} children.resultsTemplate Element used as template for the
- * results object.
+ * @param {HTMLElement} children.suggestionsTemplate Element used as template for the
+ * suggestions object.
  */
 function ViewModel(params, refs, children) {
     /// Members from input params
@@ -94,9 +94,9 @@ function ViewModel(params, refs, children) {
      */
     this.value = getObservable(params.value);
     /**
-     * @member {KnockoutObservable<ResultsBase>} results
+     * @member {KnockoutObservable<SuggestionsBase>} suggestions
      */
-    this.results = getObservable(params.results);
+    this.suggestions = getObservable(params.suggestions);
     /**
      * @member {KnockoutObservable<boolean>} isBusy
      */
@@ -110,20 +110,20 @@ function ViewModel(params, refs, children) {
      */
     this.notificationText = ko.observable('');
     /**
-     * @member {KnockoutObservable<HTMLElement>} activeResultElement Holds the
-     * element that represents an input-autocomplete-result and is
+     * @member {KnockoutObservable<HTMLElement>} activeSuggestionElement Holds the
+     * element that represents an input-autocomplete-suggestion and is
      * currently active (highlighted) with keyboard.
      * Used for accessibility and styling, at the element and at the input.
      */
-    this.activeResultElement = ko.observable(null);
+    this.activeSuggestionElement = ko.observable(null);
 
     /// Computed properties
     /**
      * @member {KnockoutComputed<boolean>} isExpanded Let's know if the
-     * results panel must be expanded (AKA opened).
+     * suggestions panel must be expanded (AKA opened).
      */
     this.isExpanded = ko.pureComputed(function() {
-        return this.isBusy() || ko.unwrap(this.results().length);
+        return this.isBusy() || ko.unwrap(this.suggestions().length);
     }, this);
     /**
      * @member {KnockoutComputed<string>} panelID Generated identifier for the
@@ -134,31 +134,31 @@ function ViewModel(params, refs, children) {
         return this.id() + '-input-autocomplete-panel';
     }, this);
     /**
-     * @member {KnockoutComputed} activeResultData Holds the data value/object
-     * that generates the result item currently active
+     * @member {KnockoutComputed} activeSuggestionData Holds the data value/object
+     * that generates the suggestion item currently active
      */
-    this.activeResultData = ko.pureComputed(function() {
-        var el = this.activeResultElement();
+    this.activeSuggestionData = ko.pureComputed(function() {
+        var el = this.activeSuggestionElement();
         return el ? ko.dataFor(el) : null;
     }, this);
     /**
-     * @member {KnockoutObservable<string>} activeResultID Holds the string ID of
-     * the result item currently active.
+     * @member {KnockoutObservable<string>} activeSuggestionID Holds the string ID of
+     * the suggestion item currently active.
      */
-    this.activeResultID = ko.pureComputed(function() {
-        var el = this.activeResultElement();
+    this.activeSuggestionID = ko.pureComputed(function() {
+        var el = this.activeSuggestionElement();
         var id = el ? el.getAttribute('id') : null;
         if (el && !id) {
-            console.error('input-autocomplete: an active result element has not a required ID attribute value', el);
+            console.error('input-autocomplete: an active suggestion element has not a required ID attribute value', el);
         }
         return id;
     }, this);
     /**
-     * @member {KnockoutObservable<string>} activeResultValue Give access to the
-     * text value of the active result.
+     * @member {KnockoutObservable<string>} activeSuggestionValue Give access to the
+     * text value of the active suggestion.
      */
-    this.activeResultValue = ko.pureComputed(function() {
-        var el = this.activeResultElement();
+    this.activeSuggestionValue = ko.pureComputed(function() {
+        var el = this.activeSuggestionElement();
         if (el && el.getAttribute) {
             // A suggestion is active
             // Get attribute value if any
@@ -182,22 +182,22 @@ function ViewModel(params, refs, children) {
      */
     this.isBusyTemplate = children.isBusyTemplate;
     /**
-     * @member {HTMLElement} children.resultsTemplate
+     * @member {HTMLElement} children.suggestionsTemplate
      */
-    this.resultsTemplate = children.resultsTemplate;
+    this.suggestionsTemplate = children.suggestionsTemplate;
 
-    /// Management of active result element (mainly for accessibility)
-    var activeResultManager = {
+    /// Management of active suggestion element (mainly for accessibility)
+    var activeSuggestionManager = {
         /**
          * Reference to the viewModel observable that keeps track of which
          * DOM element is now the active one.
          * This is updated and accessed by the manager methods.
          * @member {KnockoutObservable<HTMLElement>}
          */
-        activeResultElement: this.activeResultElement,
+        activeSuggestionElement: this.activeSuggestionElement,
         /**
          * Remove any attribute or state from the given element that could
-         * previously being the active result.
+         * previously being the active suggestion.
          * Does NOT touch the observable (a call to 'set' with a new element
          * must be performed)
          * @param {HTMLElement} element
@@ -209,17 +209,17 @@ function ViewModel(params, refs, children) {
             }
         },
         /**
-         * Set the given element as the active result element, adding any
+         * Set the given element as the active suggestion element, adding any
          * attribute or state to it.
          * @param {HTMLElement} element
          */
         set: function(element) {
-            this.unset(this.activeResultElement());
+            this.unset(this.activeSuggestionElement());
             // replaced 'element instanceof HTMLElement' because of unknow support
             if (element && element.setAttribute) {
                 element.setAttribute('aria-selected', 'true');
             }
-            this.activeResultElement(element || null);
+            this.activeSuggestionElement(element || null);
         },
         /**
          * Given and index and total of elements, returns the index if is in
@@ -244,30 +244,30 @@ function ViewModel(params, refs, children) {
             }
         },
         /**
-         * Changes the active result by changing the index of the current one
+         * Changes the active suggestion by changing the index of the current one
          * by a given offset.
          * A couple of constants are provided representing the needed offset
          * to move to next or previous element.
          * @param {number} offset Amount of positions from current index to shift
-         * the current active result. 1 to select next, -1 for previous.
+         * the current active suggestion. 1 to select next, -1 for previous.
          */
         shiftTo: function(offset) {
-            var el = this.activeResultElement();
-            var results = refs.root.querySelectorAll(SUGGESTION_ATTR_NAME_SELECTOR);
+            var el = this.activeSuggestionElement();
+            var suggestions = refs.root.querySelectorAll(SUGGESTION_ATTR_NAME_SELECTOR);
             // Make it an array
-            results = Array.prototype.slice.call(results);
+            suggestions = Array.prototype.slice.call(suggestions);
             // Look for the current index
-            var activeIndex = results.indexOf(el);
+            var activeIndex = suggestions.indexOf(el);
             // If is valid
             if (activeIndex > -1) {
                 // Go
-                var newIndex = this.fixIndex(activeIndex + offset, results.length);
-                var newEl = results[newIndex];
+                var newIndex = this.fixIndex(activeIndex + offset, suggestions.length);
+                var newEl = suggestions[newIndex];
                 this.set(newEl);
             }
             else {
                 // Select the first one
-                this.set(results[0]);
+                this.set(suggestions[0]);
             }
         },
         SHIFT_TO_NEXT: 1,
@@ -276,22 +276,22 @@ function ViewModel(params, refs, children) {
          * Makes that no element is registered as active at the moment.
          */
         clear: function() {
-            this.unset(this.activeResultElement());
-            this.activeResultElement(null);
+            this.unset(this.activeSuggestionElement());
+            this.activeSuggestionElement(null);
         }
     };
 
     /// Methods
     /**
-     * Gets the value from the active result and put it in the input value.
+     * Gets the value from the active suggestion and put it in the input value.
      */
-    this.selectActiveResult = function() {
-        var textValue = this.activeResultValue();
+    this.selectActiveSuggestion = function() {
+        var textValue = this.activeSuggestionValue();
         if (textValue) {
             // Put it as the new input value
             this.value(textValue);
             // Remove as active element
-            activeResultManager.clear();
+            activeSuggestionManager.clear();
         }
         // TODO Close list
     }.bind(this);
@@ -324,7 +324,7 @@ function ViewModel(params, refs, children) {
      */
     var pressNext = function(e) {
         if (e.which === KEY_DOWN) {
-            activeResultManager.shiftTo(activeResultManager.SHIFT_TO_NEXT);
+            activeSuggestionManager.shiftTo(activeSuggestionManager.SHIFT_TO_NEXT);
             // managed
             return true;
         }
@@ -336,7 +336,7 @@ function ViewModel(params, refs, children) {
      */
     var pressPrevious = function(e) {
         if (e.which === KEY_UP) {
-            activeResultManager.shiftTo(activeResultManager.SHIFT_TO_PREVIOUS);
+            activeSuggestionManager.shiftTo(activeSuggestionManager.SHIFT_TO_PREVIOUS);
             // managed
             return true;
         }
@@ -351,7 +351,7 @@ function ViewModel(params, refs, children) {
      */
     var pressSelect = function(e) {
         if (e.which === KEY_ENTER) {
-            this.selectActiveResult();
+            this.selectActiveSuggestion();
             // managed
             return true;
         }
@@ -383,22 +383,22 @@ function ViewModel(params, refs, children) {
  * to the component by place them as children.
  * Allowed children:
  * <template name="isBusy">..</template>
- * <template name="results">..</template>
+ * <template name="suggestions">..</template>
  */
 var create = function(params, componentInfo) {
     // We set the class name directly in the component
     componentInfo.element.classList.add(CSS_CLASS);
-    // Get the provided template for the results and state
+    // Get the provided template for the suggestions and state
     var isBusyTemplate;
-    var resultsTemplate;
+    var suggestionsTemplate;
     componentInfo.templateNodes.forEach(function(node) {
         var slot = node.getAttribute && node.getAttribute('name');
         switch (slot) {
             case 'isBusy':
                 isBusyTemplate = node.content || node;
                 break;
-            case 'results':
-                resultsTemplate = node.content || node;
+            case 'suggestions':
+                suggestionsTemplate = node.content || node;
                 break;
         }
     });
@@ -407,7 +407,7 @@ var create = function(params, componentInfo) {
     };
     var children = {
         isBusyTemplate: isBusyTemplate,
-        resultsTemplate: resultsTemplate
+        suggestionsTemplate: suggestionsTemplate
     };
     return new ViewModel(params, refs, children);
 };

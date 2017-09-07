@@ -2,7 +2,7 @@
     <label for="homeSearch" class="sr-only">Search</label>
     <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
         placeholder: 'Search services, e.g. Dog Walker, Tutor',
-        value: value, results: results, isBusy: isBusy">
+        value: value, suggestions: results, isBusy: isBusy">
         <template name="isBusy">
             <div class="Result">
                 <div class="Result-info">
@@ -11,7 +11,7 @@
                 <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
             </div>
         </template>
-        <template name="results">
+        <template name="suggestions">
             <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
                 <h2 class="SearchResultsPreview-h">Services</h2>
                 <ul data-bind="foreach: jobTitles">

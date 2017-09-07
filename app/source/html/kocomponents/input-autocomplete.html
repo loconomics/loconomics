@@ -8,14 +8,14 @@
             'aria-owns': panelID,
             'aria-expanded': isExpanded,
             placeholder: placeholder,
-            'aria-activedescendant': activeResultID
+            'aria-activedescendant': activeSuggestionID
         },
         event: { keypress: onKeyPress, keydown: onKeyDown }">
 </div>
 <div role="listbox" class="InputAutocomplete-panel"
     data-bind="visible: isExpanded, attr: { id: panelID }">
     <div data-bind="template: { if: isBusy, nodes: isBusyTemplate.children, data: $component }"></div>
-    <div data-bind="template: { ifnot: isBusy, nodes: resultsTemplate.children, data: results }"></div>
+    <div data-bind="template: { ifnot: isBusy, nodes: suggestionsTemplate.children, data: suggestions }"></div>
 </div>
 <div aria-live="polite" aria-atomic="true"
     data-bind="text: notificationText">
