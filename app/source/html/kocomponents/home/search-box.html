@@ -17,7 +17,7 @@
                 <h2 class="SearchResultsPreview-h">Services</h2>
                 <ul data-bind="foreach: jobTitles">
                     <li class="Result clearfix" data-bind="attr: {
-                            id: 'homeSearch-autocomplete-service-' + pluralName(),
+                            id: 'homeSearch-autocomplete-service-' + $index(),
                             'data-input-autocomplete-suggestion': pluralName
                         }">
                         <div class="Result-info">
