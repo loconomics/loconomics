@@ -185,8 +185,9 @@ function ViewModel(shell) {
             }
             this.isLoading(false);
         }.bind(this))
-        .catch(function(/*err*/) {
+        .catch(function(err) {
             this.isLoading(false);
+            if (err && err.statusText === 'abort') return null;
         }.bind(this));
     };
     //creates a handler function for the html search button (event)
