@@ -393,11 +393,20 @@ function ViewModel(params, refs, children) {
     /**
      * Detects standard key press for 'hide autocomplete' and force to
      * collapse the list, even if has data.
+     * Standard behavior dictates that if is already collapsed, or there are
+     * no results, pressing the key forces to clean the user input.
      */
     var pressCollapse = function(e) {
-        // Press Esc: hide the autocomplete list even with data
+        // Press Esc
         if (e.which === KEY_ESC) {
-            this.collapsedRequested(true);
+            if (this.isExpanded()) {
+                // hide the autocomplete list even with data
+                this.collapsedRequested(true);
+            }
+            else {
+                // already collapsed, clean user input
+                this.value('');
+            }
             // managed
             return true;
         }
