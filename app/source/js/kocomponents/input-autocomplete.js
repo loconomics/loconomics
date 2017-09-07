@@ -159,6 +159,87 @@ function ActiveSuggestionManager(activeSuggestionElement, root) {
 }
 
 /**
+ * Utility class to manage setting ARIA live notification messages.
+ * @param {KnockoutObservable<string>} notificationText
+ */
+function LiveNotificationManager(notificationText) {
+    this.message = notificationText;
+
+    // 6 seconds to automatically dispose a notification message
+    var NOTIFICATION_DISPOSE_MS = 6 * 1000;
+    var notifyTimeout = null;
+    /**
+     * Sends a notification immediately, and dispose it automatically
+     * @param {string} message
+     */
+    this.notify = function(message) {
+        // Only if changed
+        if (this.message() === message) {
+            return;
+        }
+        if (notifyTimeout) {
+            clearTimeout(notifyTimeout);
+            notifyTimeout = null;
+        }
+        // Set message
+        this.message(message);
+        // Auto dispose on timeout
+        notifyTimeout = setTimeout(function() {
+            this.message('');
+        }.bind(this), NOTIFICATION_DISPOSE_MS);
+    };
+
+    var AVAILABLE_SUGGESTIONS_ZERO = 'There are no suggestions.';
+    var AVAILABLE_SUGGESTIONS_ONE = 'There are 1 suggestion.';
+    var AVAILABLE_SUGGESTIONS_MORE = 'There are {0} suggestions.';
+    /**
+     * Creates a message that notifies user of how many suggestions are
+     * available.
+     */
+    this.getAvailableSuggestionsMessage = function(count) {
+        if (count <= 0) {
+            return AVAILABLE_SUGGESTIONS_ZERO;
+        }
+        else if (count === 1) {
+            return AVAILABLE_SUGGESTIONS_ONE;
+        }
+        else {
+            return AVAILABLE_SUGGESTIONS_MORE.replace('{0}', count);
+        }
+    };
+
+    // Throttle sending notifications for available suggestions for 1.2 seconds
+    // because if done each time immediately would be too intrusive and lead
+    // to confusion.
+    var THROTTLE_SUGGESTIONS_MS = 1.2 * 1000;
+    var INSTRUCTIONS_MESSAGE = 'Press down arrow for suggestions, and then Press enter to select one.';
+    var availableSuggestionsTimeout = null;
+    /**
+     * Sends a notification announcing the available suggestions and instructions of use.
+     * This announcement is throttle to prevent too much messages.
+     * @param {number} count Number of suggestions available.
+     */
+    this.notifyAvailableSuggestions = function(count) {
+        this.cancelPendingAvailableSuggestionsNotification();
+        availableSuggestionsTimeout = setTimeout(function() {
+            var message = this.getAvailableSuggestionsMessage(count);
+            message += ' ' + INSTRUCTIONS_MESSAGE;
+            this.notify(message);
+        }.bind(this), THROTTLE_SUGGESTIONS_MS);
+    };
+    /**
+     * Allows to cancel a notification for 'available suggestions' that was
+     * pending (because of the throttle).
+     */
+    this.cancelPendingAvailableSuggestionsNotification = function() {
+        if (availableSuggestionsTimeout) {
+            clearTimeout(availableSuggestionsTimeout);
+            availableSuggestionsTimeout = null;
+        }
+    };
+}
+
+/**
  * The component view model
  * @class
  * @param {Object} params
@@ -190,7 +271,7 @@ function ActiveSuggestionManager(activeSuggestionElement, root) {
  * provided template (here must be the external or the default template).
  */
 function ViewModel(params, refs, children) {
-    //jshint maxstatements:40
+    //jshint maxstatements:50
     /// Members from input params
     /**
      * @member {KnockoutObservable<string>} id
@@ -266,15 +347,6 @@ function ViewModel(params, refs, children) {
      */
     this.collapsedRequested = ko.observable(false);
 
-    /// Computed side-effects / Observable subcriptions
-    /**
-     * Automaticall re-open the listbox when the value changed (reset the
-     * collapsedRequested flag)
-     */
-    this.value.subscribe(function() {
-        this.collapsedRequested(false);
-    }.bind(this));
-
     /// Computed properties
     /**
      * @member {KnockoutComputed<boolean>} isExpanded Let's know if the
@@ -333,6 +405,30 @@ function ViewModel(params, refs, children) {
             return null;
         }
     }, this);
+
+    /// Computed side-effects / Observable subcriptions
+    /**
+     * Automaticall re-open the listbox when the value changed (reset the
+     * collapsedRequested flag)
+     */
+    this.value.subscribe(function() {
+        this.collapsedRequested(false);
+    }.bind(this));
+
+    // Management of ARIA live announcements/notifications
+    var liveNotificationManager = new LiveNotificationManager(this.notificationText);
+    this.activeSuggestionValue.subscribe(function(value) {
+        liveNotificationManager.notify(value);
+    });
+    this.isExpanded.subscribe(function(isExpandedNow) {
+        if (isExpandedNow) {
+            var count = ko.unwrap(this.suggestions().length);
+            liveNotificationManager.notifyAvailableSuggestions(count);
+        }
+        else {
+            liveNotificationManager.cancelPendingAvailableSuggestionsNotification();
+        }
+    }.bind(this));
 
     /// Children / Elements injected
     /**
