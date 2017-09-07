@@ -265,6 +265,15 @@ function ViewModel(params, refs, children) {
      */
     this.collapsedRequested = ko.observable(false);
 
+    /// Computed side-effects / Observable subcriptions
+    /**
+     * Automaticall re-open the listbox when the value changed (reset the
+     * collapsedRequested flag)
+     */
+    this.value.subscribe(function() {
+        this.collapsedRequested(false);
+    }.bind(this));
+
     /// Computed properties
     /**
      * @member {KnockoutComputed<boolean>} isExpanded Let's know if the
@@ -350,7 +359,8 @@ function ViewModel(params, refs, children) {
             this.onSelect(textValue, contextData);
             // Remove as active element
             activeSuggestionManager.clear();
-            // Close list
+            // Close list (must be last step, since a value change at onSelect
+            // make this flag to turn off).
             this.collapsedRequested(true);
         }
     }.bind(this);
@@ -434,12 +444,21 @@ function ViewModel(params, refs, children) {
             return true;
         }
     }.bind(this);
+    /**
+     * On input keypress handler, supports:
+     * - select a suggestion with keyboard (the one made active after use
+     * down/up keys onKeyDown)
+     */
     this.onKeyPress = function(data, e) {
         e = e.originalEvent || e;
         if (pressSelect(e)) return;
         // Allow default behavior, or will get blocked by Knockout:
         return true;
     };
+    /**
+     * On suggestion click handler, supports:
+     * - select a suggestion with a pointer device (mouse, touch)
+     */
     this.onClick = function(d, e) {
         // Only valid on an actual suggestion:
         var el = e.target.closest(SUGGESTION_ATTR_NAME_SELECTOR);
@@ -454,6 +473,12 @@ function ViewModel(params, refs, children) {
             return true;
         }
     };
+    /**
+     * On input keydown handler, supports:
+     * - expand/collapse listbox by user preference
+     * - navigate the list of available suggestions (make next/previous the
+     * active one)
+     */
     this.onKeyDown = function(data, e) {
         e = e.originalEvent || e;
         if (pressExpand(e)) return;
@@ -463,6 +488,13 @@ function ViewModel(params, refs, children) {
         // Allow default behavior, or will get blocked by Knockout:
         return true;
     };
+    /**
+     * On input blur/focus out handler, supports:
+     * - hide the listbox
+     */
+    this.onBlur = function() {
+        this.collapsedRequested(true);
+    }.bind(this);
 }
 
 /**
