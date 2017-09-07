@@ -212,7 +212,7 @@ function LiveNotificationManager(notificationText) {
     // because if done each time immediately would be too intrusive and lead
     // to confusion.
     var THROTTLE_SUGGESTIONS_MS = 1.2 * 1000;
-    var INSTRUCTIONS_MESSAGE = 'Press down arrow for suggestions, and then Press enter to select one.';
+    var INSTRUCTIONS_MESSAGE = 'Press down arrow to review the suggestions and then Press enter to select one.';
     var availableSuggestionsTimeout = null;
     /**
      * Sends a notification announcing the available suggestions and instructions of use.
@@ -353,8 +353,9 @@ function ViewModel(params, refs, children) {
      * suggestions listBox must be expanded (AKA opened).
      */
     this.isExpanded = ko.pureComputed(function() {
-        return !this.collapsedRequested() && (this.isBusy() || ko.unwrap(this.suggestions().length));
-    }, this);
+        return !!(!this.collapsedRequested() && (this.isBusy() || ko.unwrap(this.suggestions().length)));
+    }, this)
+    .extend({ rateLimit: { timeout: 200, method: 'notifyWhenChangesStop' } });
     /**
      * @member {KnockoutComputed<string>} listBoxID Generated identifier for the
      * listBox element, required to create a relationship between elements
@@ -417,18 +418,34 @@ function ViewModel(params, refs, children) {
 
     // Management of ARIA live announcements/notifications
     var liveNotificationManager = new LiveNotificationManager(this.notificationText);
+    /**
+     * On each active suggestion change, notify the new value ready to select
+     */
+    /* This is recommended at dequeuniversity.com examples, but didn't get it
+       working fine: with NVDA2017.1-Firefox-Windows7, it reads the value but
+       is duplicated because is able to read the active element content too,
+       and when moving through the list it keeps multiplicating the repeatition
+       for each element;
+       because of that problems and since without it reads the content correctly
+       was disabled (but keep with this comment in case of any further research)
     this.activeSuggestionValue.subscribe(function(value) {
         liveNotificationManager.notify(value);
     });
-    this.isExpanded.subscribe(function(isExpandedNow) {
+    */
+    /**
+     * On expanded state changed, and count of suggestions available changed,
+     * trigger a live notification with the count and instructions of use.
+     */
+    ko.computed(function() {
+        var isExpandedNow = this.isExpanded();
+        var count = ko.unwrap(this.suggestions().length);
         if (isExpandedNow) {
-            var count = ko.unwrap(this.suggestions().length);
             liveNotificationManager.notifyAvailableSuggestions(count);
         }
         else {
             liveNotificationManager.cancelPendingAvailableSuggestionsNotification();
         }
-    }.bind(this));
+    }, this);
 
     /// Children / Elements injected
     /**
