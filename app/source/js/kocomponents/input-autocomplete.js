@@ -482,7 +482,7 @@ function ViewModel(params, refs, children) {
             // Left default behavior to continue
             return true;
         }
-    };
+    }.bind(this);
     /**
      * On input keydown handler, supports:
      * - expand/collapse listbox by user preference
@@ -503,7 +503,20 @@ function ViewModel(params, refs, children) {
      * - hide the listbox
      */
     this.onBlur = function() {
-        this.collapsedRequested(true);
+        // IMPORTANT: There is a conflict here with input-blur/suggestion-click
+        // If this is run immediately, when a click starts, the listbox is
+        // collapsed and the end of the click does not targets a suggestion
+        // element, selecting nothing.
+        // WORKAROUND: the choosen solution is to delay the blur side effect,
+        // is visible on focus out but fixes the problem even when the click
+        // is slow or started by a touch event.
+        // ALTERNATIVE: using mousedown event rather than click for the onClick
+        // handler looks like an option (because the blur happens after that),
+        // but not tested, the main fear is to have problems with touch input
+        // and with fastclick module.
+        setTimeout(function() {
+            this.collapsedRequested(true);
+        }.bind(this), 310);
     }.bind(this);
     /**
      * On input focus in handler, supports:
