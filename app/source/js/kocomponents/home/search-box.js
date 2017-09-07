@@ -27,6 +27,12 @@ require('../input-autocomplete');
  * @param {KnockoutObservable<ResultsBase>} params.results
  * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
  * the external load of results data (search/filtering)
+ * @param {Function<string, object, void>} [params.onSelect] Callback triggered
+ * when the user selects a suggestion from the listBox, providing as parameters
+ * the text value and the context data of the suggestion. Any provided function
+ * will replace the default onSelect handler, that automatically sets the
+ * autocomplete value (params.value) as the selected text value; if that
+ * behavior is still wanted, must be done by the new callback.
  */
 function ViewModel(params) {
     /// Members from input params
@@ -42,6 +48,11 @@ function ViewModel(params) {
      * @member {KnockoutObservable<boolean>} isBusy
      */
     this.isBusy = getObservable(params.isBusy);
+    /**
+     * React when a suggestion is selected.
+     * @member {Function<string, object, void>} onSelect
+     */
+    this.onSelect = params.onSelect;
 }
 
 ko.components.register(TAG_NAME, {

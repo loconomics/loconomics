@@ -215,4 +215,8 @@ function ViewModel() {
     this.searchResults.getSearchCategoryUrl = function(categoryID) {
         return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
+
+    this.onSelect = function() {
+        // Nothing, just prevent default behavior
+    };
 }

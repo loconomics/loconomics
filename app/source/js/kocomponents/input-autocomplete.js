@@ -171,16 +171,23 @@ function ActiveSuggestionManager(activeSuggestionElement, root) {
  * @param {KnockoutObservable<SuggestionsBase>} params.suggestions
  * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
  * the external load of suggestions data (search/filtering)
+ * @param {Function<string, object, void>} [params.onSelect] Callback triggered
+ * when the user selects a suggestion from the listBox, providing as parameters
+ * the text value and the context data of the suggestion. Any provided function
+ * will replace the default onSelect handler, that automatically sets the
+ * autocomplete value (params.value) as the selected text value; if that
+ * behavior is still wanted, must be done by the new callback.
  * @param {Object} refs Set of references to generated elements meant to be
  * provided internally by the creator of the component.
  * @param {HTMLElement} refs.root Reference to the component instance element,
  * the root of any other elements inside it.
  * @param {Object} children Set of named children giving externally and
  * filtered by the creator of the component.
- * @param {HTMLElement} children.isBusyTemplate Element used as template for the
+ * @param {HTMLElement} [children.isBusyTemplate] Element used as template for the
  * item that notifies the isBusy state.
  * @param {HTMLElement} children.suggestionsTemplate Element used as template for the
- * suggestions object.
+ * suggestions object. A template is required, but optional for externally
+ * provided template (here must be the external or the default template).
  */
 function ViewModel(params, refs, children) {
     //jshint maxstatements:30
@@ -213,6 +220,17 @@ function ViewModel(params, refs, children) {
      * @member {KnockoutObservable<boolean>} isBusy
      */
     this.isBusy = getObservable(params.isBusy);
+    /**
+     * Default implementation for the onSelect handler, replaced for any
+     * function given as params.onSelect.
+     * @member {Function<string, object, void>} onSelect
+     */
+    this.onSelect = function(textValue/*, contextData*/) {
+        this.value(textValue);
+    };
+    if (typeof(params.onSelect) === 'function') {
+        this.onSelect = params.onSelect;
+    }
 
     /// Internal members
     /**
@@ -308,8 +326,10 @@ function ViewModel(params, refs, children) {
     this.selectActiveSuggestion = function() {
         var textValue = this.activeSuggestionValue();
         if (textValue) {
-            // Put it as the new input value
-            this.value(textValue);
+            // Notify the onSelect handler; it will put the new value as the
+            // autocomplete value by default.
+            var contextData = this.activeSuggestionData();
+            this.onSelect(textValue, contextData);
             // Remove as active element
             activeSuggestionManager.clear();
         }

@@ -2,7 +2,8 @@
     <label for="homeSearch" class="sr-only">Search</label>
     <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
         placeholder: 'Search services, e.g. Dog Walker, Tutor',
-        value: value, suggestions: results, isBusy: isBusy">
+        value: value, suggestions: results, isBusy: isBusy,
+        onSelect: onSelect">
         <template name="isBusy">
             <div class="Result">
                 <div class="Result-info">
