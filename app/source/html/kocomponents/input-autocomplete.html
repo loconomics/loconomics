@@ -14,9 +14,16 @@
 </div>
 <div role="listbox" class="InputAutocomplete-listBox"
     data-bind="visible: isExpanded, attr: { id: listBoxID }">
-    <div data-bind="template: { if: isBusy, nodes: isBusyTemplate.children, data: $component }"></div>
+    <div data-bind="template: { if: isBusy, nodes: isBusyTemplate && isBusyTemplate.children, data: $component }"></div>
     <div data-bind="template: { ifnot: isBusy, nodes: suggestionsTemplate.children, data: suggestions }"></div>
 </div>
+<template name="defaultSuggestions">
+    <ul data-bind="foreach: $data">
+        <li data-input-autocomplete-suggestion
+            data-bind="attr: { id: id() + '-suggestion-' + $index() }, text: $data">
+        </li>
+    </ul>
+</template>
 <div aria-live="polite" aria-atomic="true"
     data-bind="text: notificationText">
 </div>

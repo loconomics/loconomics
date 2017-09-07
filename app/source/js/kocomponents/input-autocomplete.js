@@ -1,11 +1,13 @@
 /**
  * An input with accessible and customizable autocomplete feature.
  *
- * The component allows for custom templates for the isBusy and suggestions
+ * The component allows to provide custom templates for the isBusy and suggestions
  * content, displayed in a listBox.
  * For a suggestions template, each element that represents an item from the data
- * MUST have the SUGGESTION_ATTR_NAME attribute, and the value to be the text
- * to be used as input value when selected.
+ * MUST have the SUGGESTION_ATTR_NAME attribute, and the value can be empty or the text
+ * to be used as input value when selected; when empty, the text content of the
+ * element will be used.
+ * Too, each of that elements MUST HAVE a unique ID attribute.
  *
  * @module kocomponents/input-autocomplete
  * @example
@@ -14,19 +16,22 @@
  * id: 'searchInput', name: 's', icon: 'ion-ios-search'"></input-autocomplete>
  *
  * Custom templates:
- * <input-autocomplete data-params="value: searchTerm, suggestions: searchResults,
+ * <input-autocomplete params="value: searchTerm, suggestions: searchResults,
  * id: 'searchInput', name: 's', icon: 'ion-ios-search'">
  *     <template name="isBusy">
  *         <span class="some-external-class">Searching...</span>
  *     </template>
  *     <template name="suggestions">
  *         <ul data-bind="foreach: $data">
- *             <li data-bind="attr: { 'data-input-autocomplete-suggestion': itemValue }">
+ *             <li data-bind="attr: {
+ *                     id: 'searchInput-suggestion-' + $index(),
+ *                     'data-input-autocomplete-suggestion': itemValue
+ *                 }">
  *                 <strong data-bind="text: itemValue"></strong>
- *                 <em data-bind="text: itemDescription"</em>
+ *                 <em data-bind="text: itemDescription"></em>
  *             </li>
  *         </ul>
- *     </template
+ *     </template>
  * </input-autocomplete>
  */
 'use strict';
@@ -402,6 +407,12 @@ var create = function(params, componentInfo) {
                 break;
         }
     });
+    // Both isBusy and suggestions templates are optional; if no isBusy,
+    // nothing will be used, but if not suggestions, we will use a default
+    // template from the component definition.
+    if (!suggestionsTemplate) {
+        suggestionsTemplate = componentInfo.element.querySelector('template[name=defaultSuggestions]');
+    }
     var refs = {
         root: componentInfo.element
     };
