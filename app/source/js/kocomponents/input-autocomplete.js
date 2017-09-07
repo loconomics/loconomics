@@ -403,6 +403,20 @@ function ViewModel(params, refs, children) {
         // Allow default behavior, or will get blocked by Knockout:
         return true;
     };
+    this.onClick = function(d, e) {
+        // Only valid on an actual suggestion:
+        var el = e.target.closest(SUGGESTION_ATTR_NAME_SELECTOR);
+        if (el) {
+            // We reuse logic by locating this and setting the active suggestion..
+            this.activeSuggestionElement(el);
+            // and immediately calling to select it
+            this.selectActiveSuggestion();
+        }
+        else {
+            // Left default behavior to continue
+            return true;
+        }
+    };
     this.onKeyDown = function(data, e) {
         e = e.originalEvent || e;
         //if (pressExpand(e)) return;

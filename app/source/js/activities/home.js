@@ -24,7 +24,7 @@ var A = Activity.extend(function HomeActivity() {
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
     this.title('Find and book local services');
-    this.viewModel = new ViewModel();
+    this.viewModel = new ViewModel(this.app.shell);
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
     this.$header = $('.AppNav');
@@ -159,7 +159,7 @@ A.prototype.show = function show(state) {
 };
 
 
-function ViewModel() {
+function ViewModel(shell) {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
     this.searchTerm = ko.observable();
@@ -206,17 +206,26 @@ function ViewModel() {
     //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
     },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
 
-    this.searchResults.getJobTitleUrl = function(id) {
+    this.getJobTitleUrl = function(id) {
         return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
-    this.searchResults.getServiceProfessionalUrl = function(id) {
+    this.getServiceProfessionalUrl = function(id) {
         return '/profile/' + id;
     }.bind(this);
-    this.searchResults.getSearchCategoryUrl = function(categoryID) {
+    this.getSearchCategoryUrl = function(categoryID) {
         return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
 
-    this.onSelect = function() {
-        // Nothing, just prevent default behavior
-    };
+    this.onSelect = function(textValue, data) {
+        if (!data) return;
+        if (data.jobTitleID) {
+            shell.go(this.getJobTitleUrl(data.jobTitleID()));
+        }
+        else if (data.userID) {
+            shell.go(this.getServiceProfessionalUrl(data.userID()));
+        }
+        else if (data.categoryID) {
+            shell.go(this.getSearchCategoryUrl(data.categoryID()));
+        }
+    }.bind(this);
 }

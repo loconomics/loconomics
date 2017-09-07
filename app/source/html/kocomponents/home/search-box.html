@@ -20,14 +20,12 @@
                             id: 'homeSearch-autocomplete-service-' + pluralName(),
                             'data-input-autocomplete-suggestion': pluralName
                         }">
-                        <a data-bind="attr: { href: $parent.getJobTitleUrl(jobTitleID()) }">
-                            <div class="Result-info">
-                                <span class="Result-name" data-bind="text: pluralName"></span>
-                                <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
-                                <span class="Result-description" data-bind="text: searchDescription"></span>
-                            </div>
-                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                        </a>
+                        <div class="Result-info">
+                            <span class="Result-name" data-bind="text: pluralName"></span>
+                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
+                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                        </div>
+                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
                     </li>
                 </ul>
             </div>
@@ -38,15 +36,13 @@
                             id: 'homeSearch-autocomplete-proffesional-' + $index(),
                             'data-input-autocomplete-suggestion': fullName
                         }">
-                        <a data-bind="attr: { href: $parent.getServiceProfessionalUrl(userID()) }">
-                            <div class="Result-info">
-                                <span class="Result-name" data-bind="text: firstName"></span>
-                                <span class="Result-name" data-bind="text: lastName"></span>
-                                <span class="Result-name" data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
-                                <span class="Result-description" data-bind="text: allJobTitles"></span>
-                            </div>
-                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                        </a>
+                        <div class="Result-info">
+                            <span class="Result-name" data-bind="text: firstName"></span>
+                            <span class="Result-name" data-bind="text: lastName"></span>
+                            <span class="Result-name" data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
+                            <span class="Result-description" data-bind="text: allJobTitles"></span>
+                        </div>
+                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
                     </li>
                 </ul>
             </div>
@@ -57,13 +53,11 @@
                             id: 'homeSearch-autocomplete-category-' + categoryName(),
                             'data-input-autocomplete-suggestion': categoryName
                         }">
-                        <a data-bind="attr: { href: $parent.getSearchCategoryUrl(categoryID()) }">
-                            <div class="Result-info">
-                                <span class="Result-name" data-bind="text: categoryName"></span>
-                                <span class="Result-description" data-bind="text: searchDescription"></span>
-                            </div>
-                            <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                        </a>
+                        <div class="Result-info">
+                            <span class="Result-name" data-bind="text: categoryName"></span>
+                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                        </div>
+                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
                     </li>
                 </ul>
             </div>
