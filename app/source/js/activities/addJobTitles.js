@@ -9,6 +9,7 @@ var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var userJobProfile = require('../data/userJobProfile');
+require('../kocomponents/job-title-autocomplete');
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -93,19 +94,24 @@ function ViewModel(app) {
 
     // API entry-point for search component
     this.search = ko.observable(new SearchJobTitlesVM(app));
-    this.search().onClickJobTitle = function(jobTitle) {
-        // Add to the list, if is not already in it
-        var item = {
-            value: jobTitle.jobTitleID(),
-            label: jobTitle.singularName()
-        };
-        this.addItem(item);
-    }.bind(this);
-    this.search().onClickNoJobTitle = function(jobTitleName) {
-        this.addNewItem(jobTitleName);
-    }.bind(this);
-    this.search().customResultsButtonText('Add');
     this.searchText = this.search().searchTerm;
+
+    this.onSelectJobTitle = function(value, jobTitle) {
+        if (jobTitle && jobTitle.jobTitleID) {
+            // Add to the list, if is not already in it
+            var item = {
+                value: jobTitle.jobTitleID(),
+                label: jobTitle.singularName()
+            };
+            this.addItem(item);
+        }
+        else {
+            this.addNewItem(value);
+        }
+        return {
+            clearValue: true
+        };
+    }.bind(this);
 
     this.submitText = ko.pureComputed(function() {
         return (
