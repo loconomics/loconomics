@@ -16,24 +16,24 @@
                 </li></ul>
             </li>
             <li data-bind="visible: thereAreJobTitles() && !isLoading()">
-                <h3>Sound like you?</h3>
+                <h3 class="SearchResultsPreview-h">Sound like you?</h3>
                 <ul data-bind="foreach: searchResults.jobTitles">
                     <li class="Result">
                         <a data-bind="click: $parent.clickJobTitle, attr: { href: $parent.jobTitleHref }">
                             <div class="Result-info">
-                                <span class="Result-name" data-bind="text: singularName, visible: description"></span>  
+                                <span class="Result-name" data-bind="text: singularName, visible: description"></span>
                                 <span class="Result-description" data-bind="text: description, visible: description"></span>
                             </div>
                             <span class="btn btn-secondary btn-md btn-inline" data-bind="visible: description, text: $parent.resultsButtonText"></span>
                         </a>
                     </li>
-                </ul>  
+                </ul>
                 <ul>
                     <li class="Result">
                         <a data-bind="click: clickNoJobTitle, attr: { href: $parent.noJobTitleHref }">
                             <div class="Result-info">
-                                <span class="Result-name">No?</span>  
-                                <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
+                                <span class="Result-name">No?</span>
+                                <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span>
                             </div>
                             <span class="btn btn-secondary btn-md btn-inline" data-bind="text: resultsButtonText"></span>
                         </a>
@@ -45,13 +45,13 @@
                     <li class="Result">
                         <a data-bind="click: clickNoJobTitle, attr: { href: $parent.noJobTitleHref }">
                             <div class="Result-info">
-                                <span class="Result-name">You're our first!</span>  
-                                <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
+                                <span class="Result-name">You're our first!</span>
+                                <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span>
                             </div>
                             <span type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: resultsButtonText"></span>
                         </a>
                     </li>
-                 </ul>   
+                 </ul>
             </li>
         </ul>
     </div>

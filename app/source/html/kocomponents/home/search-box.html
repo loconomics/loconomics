@@ -1,0 +1,66 @@
+<div class="form-group">
+    <label for="homeSearch" class="sr-only">Search</label>
+    <input-autocomplete params="id: 'homeSearch', name: 's', icon: 'ion-ios-search',
+        placeholder: 'Search services, e.g. Dog Walker, Tutor',
+        value: value, suggestions: results, isBusy: isBusy,
+        onSelect: onSelect">
+        <template name="isBusy">
+            <div class="Result">
+                <div class="Result-info">
+                    <span class="Result-name">Searching...</span>
+                </div>
+                <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
+            </div>
+        </template>
+        <template name="suggestions">
+            <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
+                <h2 class="SearchResultsPreview-h">Services</h2>
+                <ul data-bind="foreach: jobTitles">
+                    <li class="Result clearfix" data-bind="attr: {
+                            id: 'homeSearch-autocomplete-service-' + $index(),
+                            'data-input-autocomplete-suggestion': pluralName
+                        }">
+                        <div class="Result-info">
+                            <span class="Result-name" data-bind="text: pluralName"></span>
+                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
+                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                        </div>
+                        <div aria-hidden="true" class="btn btn-secondary btn-md btn-inline">Go</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="SearchResultsPreview" data-bind="visible: serviceProfessionals().length">
+                <h2 class="SearchResultsPreview-h">Professionals</h2>
+                <ul data-bind="foreach: serviceProfessionals">
+                    <li class="Result clearfix" data-bind="attr: {
+                            id: 'homeSearch-autocomplete-proffesional-' + $index(),
+                            'data-input-autocomplete-suggestion': fullName
+                        }">
+                        <div class="Result-info">
+                            <span class="Result-name" data-bind="text: firstName"></span>
+                            <span class="Result-name" data-bind="text: lastName"></span>
+                            <span class="Result-name" data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
+                            <span class="Result-description" data-bind="text: allJobTitles"></span>
+                        </div>
+                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="SearchResultsPreview" data-bind="visible: categories().length">
+                <h2 class="SearchResultsPreview-h">Categories</h2>
+                <ul data-bind="foreach: categories">
+                    <li class="Result clearfix" data-bind="attr: {
+                            id: 'homeSearch-autocomplete-category-' + categoryName(),
+                            'data-input-autocomplete-suggestion': categoryName
+                        }">
+                        <div class="Result-info">
+                            <span class="Result-name" data-bind="text: categoryName"></span>
+                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                        </div>
+                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                    </li>
+                </ul>
+            </div>
+        </template>
+    </input-autocomplete>
+</div>

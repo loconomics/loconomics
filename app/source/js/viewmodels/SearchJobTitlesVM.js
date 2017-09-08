@@ -23,12 +23,7 @@ module.exports = function SearchJobTitlesVM() {
     this.loadData = function(searchTerm, lat, lng) {
         this.isLoading(true);
 
-        return search.byTerm('search', {
-            searchTerm: searchTerm,
-            origLat: lat || search.DEFAULT_LOCATION.lat,
-            origLong: lng || search.DEFAULT_LOCATION.lng,
-            searchDistance: search.DEFAULT_LOCATION.searchDistance
-        })
+        return search.byTerm(searchTerm, lat, lng)
         .then(function(searchResults) {
             if(searchResults){
                 //update searchResults object with all the data from the API
