@@ -15,7 +15,7 @@
 <div role="listbox" class="InputAutocomplete-listBox"
     data-bind="visible: isExpanded, attr: { id: listBoxID }">
     <div data-bind="template: { if: isBusy, nodes: isBusyTemplate && isBusyTemplate.children, data: $component }"></div>
-    <div data-bind="template: { ifnot: isBusy, nodes: suggestionsTemplate.children, data: suggestions }, click: onClick"></div>
+    <div data-bind="template: { ifnot: isBusy, nodes: suggestionsTemplate.children, data: $component }, click: onClick"></div>
 </div>
 <template name="defaultSuggestions">
     <ul data-bind="foreach: $data">

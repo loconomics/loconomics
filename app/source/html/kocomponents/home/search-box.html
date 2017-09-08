@@ -13,9 +13,9 @@
             </div>
         </template>
         <template name="suggestions">
-            <div class="SearchResultsPreview" data-bind="visible: jobTitles().length">
+            <div class="SearchResultsPreview" data-bind="visible: suggestions().jobTitles().length">
                 <h2 class="SearchResultsPreview-h">Services</h2>
-                <ul data-bind="foreach: jobTitles">
+                <ul data-bind="foreach: suggestions().jobTitles">
                     <li class="Result clearfix" data-bind="attr: {
                             id: 'homeSearch-autocomplete-service-' + $index(),
                             'data-input-autocomplete-suggestion': pluralName
@@ -29,9 +29,9 @@
                     </li>
                 </ul>
             </div>
-            <div class="SearchResultsPreview" data-bind="visible: serviceProfessionals().length">
+            <div class="SearchResultsPreview" data-bind="visible: suggestions().serviceProfessionals().length">
                 <h2 class="SearchResultsPreview-h">Professionals</h2>
-                <ul data-bind="foreach: serviceProfessionals">
+                <ul data-bind="foreach: suggestions().serviceProfessionals">
                     <li class="Result clearfix" data-bind="attr: {
                             id: 'homeSearch-autocomplete-proffesional-' + $index(),
                             'data-input-autocomplete-suggestion': fullName
@@ -46,9 +46,9 @@
                     </li>
                 </ul>
             </div>
-            <div class="SearchResultsPreview" data-bind="visible: categories().length">
+            <div class="SearchResultsPreview" data-bind="visible: suggestions().categories().length">
                 <h2 class="SearchResultsPreview-h">Categories</h2>
-                <ul data-bind="foreach: categories">
+                <ul data-bind="foreach: suggestions().categories">
                     <li class="Result clearfix" data-bind="attr: {
                             id: 'homeSearch-autocomplete-category-' + categoryName(),
                             'data-input-autocomplete-suggestion': categoryName

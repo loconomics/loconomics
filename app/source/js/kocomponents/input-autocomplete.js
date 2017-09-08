@@ -22,7 +22,7 @@
  *         <span class="some-external-class">Searching...</span>
  *     </template>
  *     <template name="suggestions">
- *         <ul data-bind="foreach: $data">
+ *         <ul data-bind="foreach: suggestions">
  *             <li data-bind="attr: {
  *                     id: 'searchInput-suggestion-' + $index(),
  *                     'data-input-autocomplete-suggestion': itemValue
@@ -252,6 +252,11 @@ function LiveNotificationManager(notificationText) {
  * @param {KnockoutObservable<SuggestionsBase>} params.suggestions
  * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
  * the external load of suggestions data (search/filtering)
+ * @param {(Object|KnockoutObservable<Object>)} params.extraData Additional data
+ * properties provided externally to be used inside the templates (because the
+ * templates can only access this component data, this is useful when something
+ * in the templates is dynamic based on external data or when wrapping this
+ * inside another component).
  * @param {Function<string, object, void>} [params.onSelect] Callback triggered
  * when the user selects a suggestion from the listBox, providing as parameters
  * the text value and the context data of the suggestion. Any provided function
@@ -301,6 +306,10 @@ function ViewModel(params, refs, children) {
      * @member {KnockoutObservable<boolean>} isBusy
      */
     this.isBusy = getObservable(params.isBusy);
+        /**
+     * @member {Object} extraData
+     */
+    this.extraData = ko.unwrap(params.extraData) || {};
     /**
      * Default implementation for the onSelect handler, replaced for any
      * function given as params.onSelect.
