@@ -4,9 +4,11 @@
  * search categories) automatically on parameters changes; it exposes properties
  * for the parameters, to be linked to form input.
  *
- * NOTE: Based on original code at /viewmodels/SearchJobTitlesVM.js and
- * /activities/home.js
- * (it expects to replace/combine them).
+ * NOTE: Combined and replaced code from /viewmodels/SearchJobTitlesVM.js (deleted)
+ * and /activities/home.js (code removed), but is mostly the same
+ *
+ * TODO jsdocs
+ * TODO searchTerm removal, replaced by value
  */
 'use strict';
 var ko = require('knockout');
