@@ -26,17 +26,22 @@ var getObservable = require('../utils/getObservable');
  * The component view model
  * @class
  * @param {Object} params
- * @param {KnockoutObservable<string>} params.value It holds the user typed
- * text at the input element 'realtime'.
- * @param {KnockoutObservable<ResultsBase>} params.results
+ * @param {KnockoutObservable<string>} params.id Input element ID
+ * @param {KnockoutObservable<string>} params.value Let's subscribe to what
+ * user types in the autocomplete, or selected from suggestions. It gives
+ * a read-only access to the value.
  * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
  * the external load of results data (search/filtering)
- * @param {Function<string, object, void>} [params.onSelect] Callback triggered
- * when the user selects a suggestion from the listBox, providing as parameters
- * the text value and the context data of the suggestion. Any provided function
- * will replace the default onSelect handler, that automatically sets the
- * autocomplete value (params.value) as the selected text value; if that
- * behavior is still wanted, must be done by the new callback.
+ * @param {Function<string, object, BehaviorAfterSelect>} [params.onSelect]
+ * Callback triggered when the user selects a suggestion from the listBox,
+ * providing as parameters the text value and the context data of the
+ * suggestion, and allowing to return an options object to define standard
+ * behavior after selecting a value. If BehaviorAfterSelect.clearValue is true,
+ * the input value will be cleared, otherwise the selected value will be set.
+ * @param {(string|KnockoutObservable<string>)} [params.suggestionButtonText]
+ * Text for an optional button displayed on each suggestion; it doesn't trigger
+ * anything different than select the suggestion, but gives a hint to user
+ * for the action after select it.
  */
 function ViewModel(params) {
     // Observables for parameters and results, and auto-search all comes from:
