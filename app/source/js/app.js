@@ -348,33 +348,36 @@ var appInit = function appInit() {
 
     // Scroll to element when clicking a usual fragment link (not a page link)
     var scrollToElement = require('./utils/scrollToElement');
-    app.shell.on('fragmentNavigation', function(href) {
-        // Check link, avoiding empty links
-        // (href comes with the initial hash ever, so empty is just '#')
-        if (href === '#') {
-            // Notify for debugging, because this may be unwanted
-            console.warn(
-                'Navigation to an empty fragment, this may be not wanted. ' +
-                'For root links, use "/"; on script handled links, call event.preventDefault; ' +
-                'A touch event was listened on a link, but not the click event.'
-            );
-        }
-        else {
-            // Locate target
-            var target = $(href);
-            if (target.length) {
-                // Smooth scrolling with animation
-                var opts = { animation: { duration: 300 } };
-                // Special case: if we are at the home page, the special, fixed header
-                // must be an offset to avoid the content to fall behind it
-                // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
-                // the header is still not-fixed -scroll still at the top).
-                var act = target.closest('[data-activity]');
-                var isHome = act.data('activity') === 'home';
-                if (isHome) {
-                    opts.topOffset = act.children('header').outerHeight();
-                }
-                scrollToElement(target, opts);
+    /// API adition to 'shell'
+    /**
+     * @method app.shell.scrollTo Makes the viewport and positioning elements
+     * to scroll to the top of the element identified by the given ID.
+     * @param {string} idOrHash The element ID; a fragment URL can be passed in
+     * to, is just the ID starting with hash character.
+     * @param {boolean} giveFocus Flag to optionally request to focus the
+     * element, making it the active element in the page.
+     */
+    app.shell.scrollTo = function(idOrHash, giveFocus) {
+        // Clean-up id
+        var id = idOrHash.replace(/^#/, '');
+        var hash = '#' + id;
+        // Locate target
+        var target = $(hash);
+        if (target.length) {
+            // Smooth scrolling with animation
+            var opts = { animation: { duration: 300 } };
+            // Special case: if we are at the home page, the special, fixed header
+            // must be an offset to avoid the content to fall behind it
+            // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
+            // the header is still not-fixed -scroll still at the top).
+            var act = target.closest('[data-activity]');
+            var isHome = act.data('activity') === 'home';
+            if (isHome) {
+                opts.topOffset = act.children('header').outerHeight();
+            }
+            scrollToElement(target, opts);
+
+            if (giveFocus) {
                 // Move focus too
                 var noTabindex = !target.attr('tabindex');
                 if (noTabindex) {
@@ -389,6 +392,21 @@ var appInit = function appInit() {
                     }
                 }, 100);
             }
+        }
+    };
+    app.shell.on('fragmentNavigation', function(href) {
+        // Check link, avoiding empty links
+        // (href comes with the initial hash ever, so empty is just '#')
+        if (href === '#') {
+            // Notify for debugging, because this may be unwanted
+            console.warn(
+                'Navigation to an empty fragment, this may be not wanted. ' +
+                'For root links, use "/"; on script handled links, call event.preventDefault; ' +
+                'A touch event was listened on a link, but not the click event.'
+            );
+        }
+        else {
+            app.shell.scrollTo(href, true);
         }
     });
 

@@ -9,7 +9,7 @@ var SignupVM = require('../viewmodels/Signup');
 var user = require('../data/userProfile').data;
 require('../kocomponents/job-title-autocomplete');
 
-//var SIGNUP_ELEMENT_SELECTOR = '#learnMoreProfessionals-signup';
+var SIGNUP_ELEMENT_SELECTOR = '#learnMoreProfessionals-signup';
 
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
@@ -98,6 +98,7 @@ function ViewModel(app) {
         if (jobTitle && jobTitle.jobTitleID) {
             if (user.isAnonymous()) {
                 this.setSignupJobTitle(jobTitle.jobTitleID());
+                app.shell.scrollTo(SIGNUP_ELEMENT_SELECTOR, true);
             }
             else {
                 // For logged users, assist them to add the job title:
@@ -108,6 +109,7 @@ function ViewModel(app) {
         else {
             if (user.isAnonymous()) {
                 this.setSignupJobTitle(null, jobTitleName);
+                app.shell.scrollTo(SIGNUP_ELEMENT_SELECTOR, true);
             }
             else {
                 // Go to addJobTitles
