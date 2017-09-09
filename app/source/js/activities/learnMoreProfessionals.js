@@ -17,6 +17,7 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
     this.navBar = Activity.createSectionNavBar(null);
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
+    this.title('List your services');
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app);
     this.viewModel.nav = this.app.navBarBinding;
