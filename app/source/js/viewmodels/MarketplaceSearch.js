@@ -75,9 +75,12 @@ module.exports = function MarketplaceSearchVM() {
             this.searchResults.model.reset();
         }
     };
-    //anything that happens in the computed function after a timeout of 60 seconds, run the code
+
+    // Auto-search on user typing but throttling it to prevent too much requests
+    // that undermine performance.
+    // It performs the search one has passed a timeout from latest keystroke
     ko.computed(function() {
         this.search();
-    //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
-    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
+    },this)
+    .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 120 } });
 };
