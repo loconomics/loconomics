@@ -4,7 +4,6 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
@@ -43,7 +42,6 @@ A.prototype.show = function show(options) {
     var s = options.route.query.s;
 
     // Reset
-    this.viewModel.searchText(s);
     this.viewModel.jobTitles.removeAll();
 
     this.updateNavBarState();
@@ -61,7 +59,6 @@ A.prototype.show = function show(options) {
                 value: +options.route.query.id,
                 label: s
             });
-            this.viewModel.searchText('');
         }
     }
 };
@@ -91,10 +88,6 @@ function ViewModel(app) {
             });
         }
     };
-
-    // API entry-point for search component
-    this.search = ko.observable(new SearchJobTitlesVM(app));
-    this.searchText = this.search().searchTerm;
 
     this.onSelectJobTitle = function(value, jobTitle) {
         if (jobTitle && jobTitle.jobTitleID) {
@@ -169,7 +162,6 @@ function ViewModel(app) {
             var onEnd = function onEnd() {
                 this.isSaving(false);
                 // Reset UI list
-                this.searchText('');
                 this.jobTitles.removeAll();
                 if (onboarding.inProgress()) {
                     onboarding.selectedJobTitleID(firstJobID);
@@ -195,7 +187,6 @@ function ViewModel(app) {
             }
         }.bind(this))
         .catch(function(error) {
-            this.searchText('');
             this.isSaving(false);
             app.modals.showError({
                 title: 'Unable to add one or more job titles',
