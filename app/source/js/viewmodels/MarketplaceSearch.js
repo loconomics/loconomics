@@ -13,6 +13,12 @@ var ko = require('knockout');
 var search = require('../data/search');
 var SearchResults = require('../models/SearchResults');
 
+/**
+ * Minimun text length required to perform a search
+ * @type {number}
+ */
+var MIN_LENGTH = 3;
+
 module.exports = function MarketplaceSearchVM() {
     this.isLoading = ko.observable(false);
     //create an observable variable to hold the search term
@@ -26,6 +32,16 @@ module.exports = function MarketplaceSearchVM() {
     this.searchDistance = ko.observable(search.DEFAULT_LOCATION.searchDistance);
     //create an object named SearchResults to hold the search results returned from the API
     this.searchResults = new SearchResults();
+
+    /**
+     * @member {KnockoutComputed<string>} queryTerm Gets a valid query term to
+     * perform a search, otherwise null.
+     * It's valid if there is a value and meets the minimum length.
+     */
+    this.queryTerm = ko.pureComputed(function() {
+        var s = this.value();
+        return s && s.length >= MIN_LENGTH ? s : null;
+    }, this);
 
     this.loadData = function(searchTerm, lat, lng) {
         this.isLoading(true);
@@ -49,8 +65,8 @@ module.exports = function MarketplaceSearchVM() {
     //creates a handler function for the html search button (event)
     this.search = function() {
         //creates a variable for the search term to check to see when a user enters more than 2 characters, we'll auto-load the data.
-        var s = this.searchTerm();
-        if(s && s.length > 2) {
+        var s = this.queryTerm();
+        if(s) {
             this.loadData(s, this.lat(), this.lng());
         }
         else {

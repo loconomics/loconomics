@@ -43,6 +43,18 @@ function ViewModel(params) {
     // Inherits
     MarketplaceSearchVM.call(this);
 
+    /// Overwritting
+    // We replace the internal 'length' that counts how many results there are,
+    // by one that returns almost 1 if there is valid query; this allow us
+    // to ever show a suggestion to add user typed query even if there are not
+    // result, as far as it meets the minimum query lenght (implicit by the
+    // the result of the inherit 'queryTerm').
+    var internalResultsLength = this.searchResults.length;
+    this.searchResults.length = ko.pureComputed(function() {
+        var hasQuery = !!this.queryTerm();
+        return Math.max(hasQuery ? 1 : 0, internalResultsLength());
+    }, this);
+
     /// Out parameters: allows to expose some internal values externally, but
     /// read-only (changes to internals are copied to externals, but not vice
     /// versa)
