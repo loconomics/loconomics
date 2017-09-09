@@ -36,11 +36,13 @@
                 </div>
                 <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
                     <div class="ListView-item">
-                        <a class="btn btn-link btn-block ListView-item-content">
+                        <span class="ListView-item-content">
                             <p data-bind="text: label"></p>
-                        </a>
-                        <a class="btn btn-link ListView-item-action" data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span>
-                        </a>
+                        </span>
+                        <button type="button" class="btn btn-link ListView-item-action" data-bind="click: $root.remove">
+                            <span class="fa ion ion-ios-minus"></span>
+                            <span class="sr-only">Remove <span data-bind="text: label"></span></span>
+                        </button>
                     </div>
                 </div>
                 <div class="LightForm-submitBar">
