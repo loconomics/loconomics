@@ -245,14 +245,14 @@ function LiveNotificationManager(notificationText) {
  * @param {Object} params
  * @param {KnockoutObservable<string>} params.id
  * @param {KnockoutObservable<string>} params.name
- * @param {KnockoutObservable<string>} params.icon
+ * @param {KnockoutObservable<string>} [params.icon]
  * @param {KnockoutObservable<string>} [params.placeholder]
  * @param {KnockoutObservable<string>} params.value It holds the user typed
  * text at the input element 'realtime'.
  * @param {KnockoutObservable<SuggestionsBase>} params.suggestions
- * @param {KnockoutObservable<boolean>} params.isBusy Let's know the state of
+ * @param {KnockoutObservable<boolean>} [params.isBusy] Let's know the state of
  * the external load of suggestions data (search/filtering)
- * @param {(Object|KnockoutObservable<Object>)} params.extraData Additional data
+ * @param {(Object|KnockoutObservable<Object>)} [params.extraData] Additional data
  * properties provided externally to be used inside the templates (because the
  * templates can only access this component data, this is useful when something
  * in the templates is dynamic based on external data or when wrapping this
@@ -271,9 +271,15 @@ function LiveNotificationManager(notificationText) {
  * filtered by the creator of the component.
  * @param {HTMLElement} [children.isBusyTemplate] Element used as template for the
  * item that notifies the isBusy state.
- * @param {HTMLElement} children.suggestionsTemplate Element used as template for the
+ * @param {HTMLElement} [children.suggestionsTemplate] Element used as template for the
  * suggestions object. A template is required, but optional for externally
  * provided template (here must be the external or the default template).
+ * @param {HTMLElement} [children.validateAfterInputElement] Element to be
+ * placed just after the input element; must have a valid Bootstrap class for
+ * use inside an input-group (input-group-addon, input-group-btn). Has access
+ * to all the component viewModel, that means that external methods to implement
+ * custom actions at the element can be provided as part of the suggestions
+ * object or extraData param.
  */
 function ViewModel(params, refs, children) {
     //jshint maxstatements:50
@@ -458,13 +464,17 @@ function ViewModel(params, refs, children) {
 
     /// Children / Elements injected
     /**
-     * @member {HTMLElement} children.isBusyTemplate
+     * @member {HTMLElement} isBusyTemplate
      */
     this.isBusyTemplate = children.isBusyTemplate;
     /**
-     * @member {HTMLElement} children.suggestionsTemplate
+     * @member {HTMLElement} suggestionsTemplate
      */
     this.suggestionsTemplate = children.suggestionsTemplate;
+    /**
+     * @member {HTMLElement} validateAfterInputElement
+     */
+    this.validateAfterInputElement = children.validateAfterInputElement;
 
     /// Management of active suggestion element (mainly for accessibility)
     var activeSuggestionManager = new ActiveSuggestionManager(this.activeSuggestionElement, refs.root);
@@ -650,6 +660,21 @@ function ViewModel(params, refs, children) {
 }
 
 /**
+ * Checks if the given element is valid to be used at the 'afterInput' slot:
+ * - Must have a 'input-group-btn' or 'input-group-addon' class
+ * If not, throws an error.
+ * @param {HTMLElement} element
+ * @throws {Error}
+ */
+var validateAfterInputElement = function(element) {
+    var valid = element.classList.contains('input-group-btn') ||
+        element.classList.contains('input-group-addon');
+    if (!valid) {
+        throw new Error('The given afterInput element for input-autocomplete must have a valid "input-group-*" class');
+    }
+};
+
+/**
  * Factory for the component view model instances that has access
  * to the component instance DOM elements.
  * @param {object} params Component parameters to pass it to ViewModel
@@ -667,14 +692,18 @@ var create = function(params, componentInfo) {
     // Get the provided template for the suggestions and state
     var isBusyTemplate;
     var suggestionsTemplate;
+    var afterInputElement;
     componentInfo.templateNodes.forEach(function(node) {
-        var slot = node.getAttribute && node.getAttribute('name');
+        var slot = node.getAttribute && node.getAttribute('slot');
         switch (slot) {
             case 'isBusy':
                 isBusyTemplate = node.content || node;
                 break;
             case 'suggestions':
                 suggestionsTemplate = node.content || node;
+                break;
+            case 'afterInput':
+                afterInputElement = node;
                 break;
         }
     });
@@ -684,12 +713,16 @@ var create = function(params, componentInfo) {
     if (!suggestionsTemplate) {
         suggestionsTemplate = componentInfo.element.querySelector('template[name=defaultSuggestions]');
     }
+    if (afterInputElement) {
+        validateAfterInputElement(afterInputElement);
+    }
     var refs = {
         root: componentInfo.element
     };
     var children = {
         isBusyTemplate: isBusyTemplate,
-        suggestionsTemplate: suggestionsTemplate
+        suggestionsTemplate: suggestionsTemplate,
+        afterInputElement: afterInputElement
     };
     return new ViewModel(params, refs, children);
 };
