@@ -11,7 +11,7 @@
             'aria-activedescendant': activeSuggestionID
         },
         event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur, focus: onFocus }" />
-    <!-- ko template: { if: afterInputElement, nodes: [afterInputElement], data: $component } -->
+    <!-- ko template: { if: afterInputElement, nodes: [afterInputElement], data: $component } --><!-- /ko -->
 </div>
 <div role="listbox" class="InputAutocomplete-listBox"
     data-bind="visible: isExpanded, attr: { id: listBoxID }">
