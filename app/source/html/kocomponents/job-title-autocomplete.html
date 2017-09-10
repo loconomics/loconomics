@@ -5,7 +5,7 @@
         value: value, suggestions: searchResults, isBusy: isLoading,
         onSelect: onSelect,
         extraData: { suggestionButtonText: suggestionButtonText }">
-        <template name="isBusy">
+        <template slot="isBusy">
             <div class="Result">
                 <div class="Result-info">
                     <span class="Result-name">Searching...</span>
@@ -13,7 +13,7 @@
                 <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
             </div>
         </template>
-        <template name="suggestions">
+        <template slot="suggestions">
             <div class="SearchResultsPreview">
                 <h3 class="SearchResultsPreview-h">Sounds like you?</h3>
                 <div data-bind="if: suggestions().jobTitles().length">

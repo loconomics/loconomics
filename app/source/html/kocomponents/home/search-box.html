@@ -4,7 +4,7 @@
         placeholder: 'Search services, e.g. Dog Walker, Tutor',
         value: value, suggestions: results, isBusy: isBusy,
         onSelect: onSelect">
-        <template name="isBusy">
+        <template slot="isBusy">
             <div class="Result">
                 <div class="Result-info">
                     <span class="Result-name">Searching...</span>
@@ -12,7 +12,7 @@
                 <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
             </div>
         </template>
-        <template name="suggestions">
+        <template slot="suggestions">
             <div class="SearchResultsPreview" data-bind="visible: suggestions().jobTitles().length">
                 <h2 class="SearchResultsPreview-h">Services</h2>
                 <ul data-bind="foreach: suggestions().jobTitles">
