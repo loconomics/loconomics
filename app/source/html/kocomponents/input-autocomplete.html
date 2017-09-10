@@ -1,4 +1,4 @@
-<div class="InputAutocomplete-field input-group input-group-lg">
+<div class="InputAutocomplete-field input-group" data-bind="css: groupClasses">
     <!-- ko if: icon --><span class="input-group-addon inset"><icon-dec params="icon: icon"></icon-dec></span><!-- /ko -->
     <input type="text" autocomplete="off" role="combobox"
         aria-expanded="false" aria-autocomplete="list"
@@ -11,7 +11,7 @@
             'aria-activedescendant': activeSuggestionID
         },
         event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur, focus: onFocus }" />
-    <!-- ko template: { if: afterInputElement, nodes: [afterInputElement], data: $component } --><!-- /ko -->
+    <!-- ko template: { if: afterInputElement, nodes: afterInputElement && [afterInputElement], data: $component } --><!-- /ko -->
 </div>
 <div role="listbox" class="InputAutocomplete-listBox"
     data-bind="visible: isExpanded, attr: { id: listBoxID }">

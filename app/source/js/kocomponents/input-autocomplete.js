@@ -47,6 +47,15 @@ var ko = require('knockout');
 var getObservable = require('../utils/getObservable');
 
 /**
+ * @enum {string} Option size of the element.
+ */
+var Size = {
+    large: 'lg',
+    medium: 'md',
+    small: 'sm'
+};
+
+/**
  * @interface SuggestionsBase Base class or interface that externally
  * provided suggestions object must meet.
  * @member {(number|KnockoutObservable<number>)} length Number of elements
@@ -263,6 +272,8 @@ function LiveNotificationManager(notificationText) {
  * will replace the default onSelect handler, that automatically sets the
  * autocomplete value (params.value) as the selected text value; if that
  * behavior is still wanted, must be done by the new callback.
+ * @param {(Size|KnockoutObservable<Size>)} [params.size=Size.medium] Displayed
+ * size for the input (applies to all the group).
  * @param {Object} refs Set of references to generated elements meant to be
  * provided internally by the creator of the component.
  * @param {HTMLElement} refs.root Reference to the component instance element,
@@ -327,6 +338,10 @@ function ViewModel(params, refs, children) {
     if (typeof(params.onSelect) === 'function') {
         this.onSelect = params.onSelect;
     }
+    /**
+     * @member {KnockoutObservable<Size>} size
+     */
+    this.size = getObservable(params.size);
 
     /// Internal members
     /**
@@ -400,7 +415,7 @@ function ViewModel(params, refs, children) {
         return id;
     }, this);
     /**
-     * @member {KnockoutObservable<string>} activeSuggestionValue Give access to the
+     * @member {KnockoutComputed<string>} activeSuggestionValue Give access to the
      * text value of the active suggestion.
      */
     this.activeSuggestionValue = ko.pureComputed(function() {
@@ -420,6 +435,17 @@ function ViewModel(params, refs, children) {
         else {
             return null;
         }
+    }, this);
+    /**
+     * @member {KnockoutComputed<string>} groupClasses Additional CSS classes
+     * for the input-group element based on optional settings.
+     */
+    this.groupClasses = ko.pureComputed(function() {
+        var size = this.size();
+        var sizeClass = size === Size.large ? 'input-group-lg' :
+            size === Size.small ? 'input-group-md' :
+            '';
+        return sizeClass;
     }, this);
 
     /// Computed side-effects / Observable subcriptions
@@ -732,3 +758,5 @@ ko.components.register(TAG_NAME, {
     viewModel: { createViewModel: create },
     synchronous: true
 });
+
+exports.Size = Size;
