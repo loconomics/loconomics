@@ -274,7 +274,7 @@ function LiveNotificationManager(notificationText) {
  * @param {HTMLElement} [children.suggestionsTemplate] Element used as template for the
  * suggestions object. A template is required, but optional for externally
  * provided template (here must be the external or the default template).
- * @param {HTMLElement} [children.validateAfterInputElement] Element to be
+ * @param {HTMLElement} [children.afterInputElement] Element to be
  * placed just after the input element; must have a valid Bootstrap class for
  * use inside an input-group (input-group-addon, input-group-btn). Has access
  * to all the component viewModel, that means that external methods to implement
@@ -472,9 +472,9 @@ function ViewModel(params, refs, children) {
      */
     this.suggestionsTemplate = children.suggestionsTemplate;
     /**
-     * @member {HTMLElement} validateAfterInputElement
+     * @member {HTMLElement} afterInputElement
      */
-    this.validateAfterInputElement = children.validateAfterInputElement;
+    this.afterInputElement = children.afterInputElement;
 
     /// Management of active suggestion element (mainly for accessibility)
     var activeSuggestionManager = new ActiveSuggestionManager(this.activeSuggestionElement, refs.root);
