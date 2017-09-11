@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="utf-8">
     <title>Style Guide Boilerplate</title>
@@ -14,10 +14,14 @@
     <link rel="stylesheet" href="css/github-markdown.css">
   
     <!-- Replace below stylesheet with your own stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/libs.min.css">
+
+    <!-- Replace below stylesheet with your own stylesheet -->
+    <link rel="stylesheet" href="assets/css/app.min.css">
   
     <!-- prism Syntax Highlighting Styles -->
     <link rel="stylesheet" href="vendor/prism/prism.css">
+
   </head>
   <body>
     <a href="#main" class="sg-visually-hidden sg-visually-hidden-focusable">Skip to main content</a>
@@ -52,7 +56,7 @@
                 {{/each}}
             </li>
         </ul>
-        <h2 class="sg-h2 sg-subnav-title">Patters</h2>
+        <h2 class="sg-h2 sg-subnav-title">Patterns</h2>
         <ul class="sg-nav-group">
             {{#each patterns}}
             <li class="sg-subnav-parent">
@@ -239,17 +243,15 @@
             <h1 class="sg-h1">Base</h1>
             {{#each base}}
             <div class="sg-section">
-              <h2 class="sg-title"><a id="sg-{{this.title}}">{{title}}</a></h2>
+              <h2 class="sg-h2"><a id="sg-{{this.title}}">{{title}}</a></h2>
               {{#if documentation}}
               <div class="sg-sub-section sg-doc">
-                <h3 class="sg-h3 sg-title">Usage</h3>
-                <div class="markdown-body">
-                </div>
-                {{{documentation}}}
+                <h3 class="sg-h3">Usage</h3>
+                <div class="markdown-body">{{{documentation}}}</div>
               </div>
               {{/if}}
               <div class="sg-sub-section sg-example">
-                <h3 class="sg-h3 sg-title">Example</h3>
+                <h3 class="sg-h3">Example</h3>
                 {{{content}}}
               </div>
               <div class="sg-sub-section">
@@ -271,17 +273,15 @@
               <h1 class="sg-h1">Patterns</h1>
               {{#each patterns}}
               <div class="sg-section">
-                <h2 class="sg-title"><a id="sg-{{this.title}}">{{title}}</a></h2>
+                <h2 class="sg-h2"><a id="sg-{{this.title}}">{{title}}</a></h2>
                 {{#if documentation}}
                 <div class="sg-sub-section sg-doc">
-                  <h3 class="sg-h3 sg-title">Usage</h3>
-                  <div class="markdown-body">
-                  </div>
-                  {{{documentation}}}
+                  <h3 class="sg-h3">Usage</h3>
+                  <div class="markdown-body">{{{documentation}}}</div>
                 </div>
                 {{/if}}
                 <div class="sg-sub-section sg-example">
-                  <h3 class="sg-h3 sg-title">Example</h3>
+                  <h3 class="sg-h3">Example</h3>
                   {{{content}}}
                 </div>
                 <div class="sg-sub-section">
