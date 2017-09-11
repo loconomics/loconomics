@@ -73,11 +73,8 @@ function ViewModel(params, refs) {
     // Available attributes filtered out by the search text
     var textSearch = require('../../utils/textSearch');
     /**
-     * @member {KnockoutComputed<Object>} Generates the list of available
-     * suggestions as an object with 'attributes' property holding the actual
-     * list of suggestions and a specially implemented 'length' property that
-     * is the way the input-autocomplete choose to expand the listbox so
-     * we implement a specific logic case (explained inline).
+     * @member {KnockoutComputed<Object>} suggestions Get the list of available
+     * suggestions if something was typed or user requested to show all.
      */
     this.suggestions = ko.pureComputed(function() {
         var s = this.value();
@@ -104,30 +101,7 @@ function ViewModel(params, refs) {
             }));
         }
 
-        /**
-         * It returns the available suggestions count or almost 1 if user opt-in
-         * to display the list with no query/value.
-         * That special logic let us supports the combobox template to show up
-         * a message explaining the user that has added all suggestions, and
-         * manually expand the list for all options even if no query was typed.
-         */
-        var length = ko.pureComputed(function() {
-            var hasQuery = !!this.value();
-            var userOpened = this.expandedByUser();
-            if (!hasQuery && userOpened) {
-                // let message 'all suggestions were added'
-                return 1;
-            }
-            else {
-                var count = attributes.length;
-                return count;
-            }
-        }, this);
-
-        return {
-            attributes: attributes,
-            length: length
-        };
+        return attributes;
     }, this);
 
     /// Methods
