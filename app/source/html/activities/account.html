@@ -2,21 +2,11 @@
 <div data-activity="account" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <h1 class="hidden-xs hidden-sm">Set your preferences here</h1>
+        <h1 data-bind="text: title"></h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <h1 class="SectionTitle has-HelpPoint">Your account</h1>
+                <h2 class="SectionTitle has-HelpPoint">Your preferences</h2>
                 <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="InfoTile" href="/userFees">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa fa-dollar" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>User fees</p>
-                            </div>
-                        </a>
-                    </li>
                     <li data-bind="visible: isServiceProfessional">
                         <a class="InfoTile" href="/paymentAccount">
                             <div class="Tile-icon" aria-hidden="true">

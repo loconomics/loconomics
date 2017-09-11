@@ -27,6 +27,7 @@ var A = Activity.extend(function FeedbackFormActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+    this.title('Send us feedback');
 });
 
 exports.init = A.init;

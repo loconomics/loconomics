@@ -15,6 +15,7 @@ var A = Activity.extend(function HelpActivity() {
     this.accessLevel = null;
 
     this.navBar = Activity.createSubsectionNavBar('Back');
+    this.title("We're here to help");
 
     // TestingData
     //setSomeTestingData(this.viewModel);

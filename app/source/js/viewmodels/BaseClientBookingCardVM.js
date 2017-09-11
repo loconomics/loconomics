@@ -18,12 +18,12 @@ var serviceAddresses = require('../data/serviceAddresses');
 // L18N
 // List of all possible steps by name providing the language for the UI
 var stepsLabels = {
-    services: 'Services',
-    selectLocation: 'Select a location',
-    selectTimes: 'Select preferred times',
-    selectTime: 'Select the time',
-    payment: 'Payment',
-    confirm: 'Confirm'
+    services: 'Select offering(s)',
+    selectLocation: 'Select location',
+    selectTimes: 'Select preferred time(s)',
+    selectTime: 'Select time',
+    payment: 'Complete payment',
+    confirm: 'Confirm booking'
 };
 
 function BaseClientBookingCardVM(app) {
@@ -237,8 +237,6 @@ function BaseClientBookingCardVM(app) {
     var setAddress = function(add) {
         if (!add || !this.booking()) return;
         this.booking().serviceAddress(add);
-        if (!this.isRestoring || !this.isRestoring())
-            this.nextStep();
     }.bind(this);
     // IMPORTANT: selection from one list must deselect from the other one
     this.serviceAddresses.selectedAddress.subscribe(function(add) {

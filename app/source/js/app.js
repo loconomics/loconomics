@@ -5,7 +5,6 @@ var $ = require('jquery');
 // Make jquery reference global, may still be needed by some shimed plugins
 window.$ = window.jQuery = $;
 require('detect_swipe');
-require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
@@ -75,6 +74,9 @@ var app = {
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
 
+    /**
+     * @deprecated See the module comment for more info
+     */
     modals: require('./app.modals'),
 
     /**
@@ -252,9 +254,7 @@ var appInit = function appInit() {
 
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
-    require('./utils/bootstrapSwitchBinding').plugIn(ko);
     require('./utils/pressEnterBindingHandler').plugIn(ko);
-    require('./utils/fileUploaderBindingHandler').plugIn(ko);
 
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -371,6 +371,19 @@ var appInit = function appInit() {
                     opts.topOffset = act.children('header').outerHeight();
                 }
                 scrollToElement(target, opts);
+                // Move focus too
+                var noTabindex = !target.attr('tabindex');
+                if (noTabindex) {
+                    // Set-up to allow programatic focus
+                    target.attr('tabindex', -1);
+                }
+                setTimeout(function(){
+                    target.focus();
+                    // reset tabindex
+                    if (noTabindex) {
+                        target.removeAttr('tabindex');
+                    }
+                }, 100);
             }
         }
     });
@@ -429,7 +442,7 @@ var appInit = function appInit() {
     }
 
     // Set-up Google Analytics
-    ga.setup();
+    ga.setup(app.shell);
 
     var marketplaceProfile = require('./data/marketplaceProfile');
     /**

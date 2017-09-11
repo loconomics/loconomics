@@ -49,10 +49,10 @@ createBoxesSize($media, $name, $mediaMax) {
     }
 }
 
-createBoxesOnlySize($media, $name, $mediaMax) {
-    $mediaOnly = $media + ' and ' + $mediaMax
+createBoxesOnlySize($mediaMin, $name, $mediaMax) {
+    $mediaOnly = $mediaMin + ' and ' + $mediaMax;
 
-    @media ($mediaOnly) {
+    @media $mediaOnly {
         .Boxes-{$name}-only {
             Boxes()
         }
@@ -68,7 +68,10 @@ createBoxesOnlySize($media, $name, $mediaMax) {
 createBoxesSize($mediaMinSm, 'sm', $mediaMaxSm);
 createBoxesSize($mediaMinMd, 'md', $mediaMaxMd);
 createBoxesSize($mediaMinLg, 'lg', $mediaMaxLg);
-createBoxesOnlySize('screen',    'xs', $mediaMaxXs); // or any smaller rather than $mediaMinXs
+createBoxesOnlySize('screen', 'xs', $mediaMaxXs); // or any smaller rather than $mediaMinXs
 createBoxesOnlySize($mediaMinSm, 'sm', $mediaMaxSm);
 createBoxesOnlySize($mediaMinMd, 'md', $mediaMaxMd);
-createBoxesOnlySize($mediaMinLg, 'lg', 'screen'); // or any larger rather than $mediaMaxLg);
+// We put the lower limit as third parameter since 'screen' is only valid at
+// the beggining in CSS (Stylus throws an error if used in last position too,
+// which is good to detect that incorrect CSS syntax)
+createBoxesOnlySize('screen', 'lg', $mediaMinLg); // or any larger rather than $mediaMaxLg

@@ -20,6 +20,8 @@
         text-indent: -99999px;
         margin: 20px 8px;
         display: inline-block;
+        // fix clickable/focusable area
+        overflow: hidden;
         width: $buttonWidth;
         height: $buttonHeight;
         background-size: $buttonWidth $buttonHeight;
@@ -27,7 +29,7 @@
     }
 
     .btn-appleStore {
-        background-image: 
+        background-image:
           linear-gradient(transparent, transparent),
           url('../images/badge-en-app-store.svg');
     }

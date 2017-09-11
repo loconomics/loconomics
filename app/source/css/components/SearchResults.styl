@@ -1,7 +1,7 @@
 /**
     Search Results component
 
-    background linear-gradient(rgba(255, 103, 101, .8), transparent 90%), 
+    background linear-gradient(rgba(255, 103, 101, .8), transparent 90%),
                $brand-secondary  url('../images/self-header.jpg') no-repeat center / cover
 **/
 
@@ -20,16 +20,18 @@
 
     @media $mediaMinSm {
         margin: 0 10px;
-    }  
+    }
 
     li {
         list-style: none;
 
         a {
             text-decoration: none;
+            // Make all box area clickable and focusable
+            display: block;
         }
 
-        h3 {
+        h2 {
             padding-top: 5px;
             font-size: 18px;
             text-align: center;
@@ -45,53 +47,66 @@
                 clearfix();
                 border-bottom: 1px solid $gray-background;
                 display: block;
-                padding: 15px;
                 height: auto;
                 clear: both;
 
                 .Result-info {
                     width: 75%;
                     float: left;
-                    padding-left: 15px;         
+                    padding-left: 15px;
                 }
 
-                .Result-name { 
+                .Result-name {
                     color: $gray-dark;
-                    font-size: 15px;         
+                    font-size: 15px;
                     // Height paired with the usual button placed at right (thats why we set a percentage width at 'info')
                     // that way it looks vertically centered with the button, both when there is description and when not.
                     // Height of a usual .btn class
                     line-height: 34px;
                 }
 
-                .Result-count { 
+                .Result-count {
                     font-size: 15px;
-                    color: $gray;         
+                    color: $gray;
                 }
 
-                .Result-description { 
+                .Result-description {
                     display: block;
                     font-size: 12px;
-                    color: $gray;      
+                    color: $gray;
                 }
 
                 .btn-inline {
                     width: 20%;
                     float: right;
-                    margin-right: auto;        
+                    margin-right: auto;
+
+                    // We are using the btn class at this element too to simulate
+                    // it, when is not one and what we have is a link wrapping this
+                    // and other content. We need to disabled the focus,hover,active
+                    // state styles for a good reason, and still being accessible:
+                    // prevent confusion about available link/button to click;
+                    // the area where this fake button is, is already clickable, focusable
+                    // and hightlighed
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        outline: none !important;
+                    }
                 }
-                
-                a {
+
+                > a {
                     cursor: pointer;
                     clearfix();
                     display: block;
+                    padding: 15px;
                 }
             }
 
             .Result:hover {
                 background-color: $gray-background;
             }
-            
+
             a.Result {
                 cursor: pointer;
             }
@@ -150,13 +165,15 @@
 
     a
         text-decoration none
+        // Make all box area clickable and focusable
+        display: block;
 
     .SearchResultsBackground {
         padding-top: 10px;
         height: auto;
         padding-bottom: 60px;
-        background: $brand-primary no-repeat center / cover; 
-        
+        background: $brand-primary no-repeat center / cover;
+
         @media $mediaMinSm {
             padding-bottom: 120px;
         }
@@ -173,7 +190,7 @@
         }
 
         &.CategoryBackground-1 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -182,7 +199,7 @@
         }
 
         &.CategoryBackground-2 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -191,7 +208,7 @@
         }
 
         &.CategoryBackground-3 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -200,7 +217,7 @@
         }
 
         &.CategoryBackground-4 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -209,7 +226,7 @@
         }
 
         &.CategoryBackground-5 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -218,7 +235,7 @@
         }
 
         &.CategoryBackground-6 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -227,7 +244,7 @@
         }
 
         &.CategoryBackground-7 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -236,7 +253,7 @@
         }
 
         &.CategoryBackground-8 {
-            background-image:  
+            background-image:
             linear-gradient(
                 rgba(0, 0, 0, 0.5),
                 rgba(0, 0, 0, 0.5)
@@ -254,7 +271,7 @@
                 display: none;
                 font-size: 20px;
                 color: White;
-                text-align: center;   
+                text-align: center;
 
                 @media $mediaMinSm {
                     display: inherit;
@@ -269,7 +286,7 @@
 
                 @media $mediaMinSm {
                     display: inherit;
-                }        
+                }
             }
         }
     }
@@ -296,7 +313,7 @@
 .ServiceProfessionalResult-description
     text-align center
     padding-top 5px
-    clear both 
+    clear both
 
     h5
         margin-top 8px
@@ -311,7 +328,7 @@
 .ServiceProfessionalResult-actions
     text-align center
     padding-top 5px
-    clear both 
+    clear both
 
     a
         margin-top 8px
@@ -339,7 +356,7 @@
     padding-top 5px
     padding-left 15px
     padding-right 15px
-    clear both 
+    clear both
     color $gray-dark
     font-size 14px
     overflow: hidden;
@@ -350,7 +367,7 @@
     line-height: 1.42857143;        /* fallback */
     max-height: 4.28571429;       /* fallback */
 
-    h5  
+    h5
         text-align justify
         margin-top 8px
         display block
@@ -365,7 +382,7 @@
     background-repeat: round;
     display: inline-block;
     background-image: url('../images/avatar.png');
-    background-image: 
+    background-image:
         linear-gradient(transparent, transparent),
         url('../images/avatar.svg');
 }

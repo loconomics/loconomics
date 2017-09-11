@@ -1,5 +1,5 @@
 /**
-    DomItemsManager class, that manage a collection 
+    DomItemsManager class, that manage a collection
     of HTML/DOM items under a root/container, where
     only one element at the time is visible, providing
     tools to uniquerly identify the items,
@@ -34,8 +34,15 @@ function DomItemsManager(settings) {
     // if not is mobile OR is Chrome OR is WKWebview
     if (!flags.isMobile || flags.isChrome || flags.isWkWebview)
         defaultDelay = 40;
-    
+
     this.switchDelay = settings.switchDelay || defaultDelay;
+    /**
+     * Let's customize which element will try to focus after switching to an
+     * item, by setting a CSS selector; will get only the first one that
+     * matches. Defaults to the first heading level 1 'h1'.
+     * @member {string}
+     */
+    this.autofocusElementSelector = settings.autofocusElementSelector || 'h1:first';
 }
 
 module.exports = DomItemsManager;
@@ -54,7 +61,7 @@ DomItemsManager.prototype.getActive = function getActive() {
 };
 
 /**
-    It adds the item in the html provided (can be only the element or 
+    It adds the item in the html provided (can be only the element or
     contained in another or a full html page).
     Replaces any existant if duplicates are not allowed.
 **/
@@ -90,24 +97,24 @@ DomItemsManager.prototype.inject = function inject(name, html) {
     $c.appendTo(this.$root);
 };
 
-/** 
+/**
     The switch method receive the items to interchange as active or current,
     the 'from' and 'to', and the shell instance that MUST be used
     to notify each event that involves the item:
     willClose, willOpen, ready, opened, closed.
     It receives as latest parameter the 'notification' object that must be
     passed with the event so handlers has context state information.
-    
+
     It's designed to be able to manage transitions, but this default
     implementation is as simple as 'show the new and hide the old'.
 **/
-DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, state) {
+DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, state, preventChangeFocus) {
 
     var toName = state.route.name;
     //console.log('switch to', toName);
-    
+
     this.disableAccess();
-    
+
     function hideit() {
         var fromIsHidden = $from.is('[hidden]');
         if ($from.length > 0 && !fromIsHidden) {
@@ -132,6 +139,49 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
             $from.find(':focus').blur();
         }
     }
+
+    /**
+     * Mainly for accessibility purposes, but too for usability,
+     * we need to move the focus to the new opened item.
+     * We need to take care of some requirements and screen readers issues:
+     * - tabindex must be set to -1 at the element where focus will be set.
+     * - VoiceOver on iOS didn't get the new focus when focused too quickly
+     * after being created/added to DOM: needs a delay almost of 1 second.
+     * - VoiceOver on macOS didn't notify the call to focus if done at the
+     * same element even if content changed; it needs to move the focus
+     * temporarily (we do it to an empty element, then to the correct
+     * destination); this happens only when the target item is the same.
+     * - The focus should be sent to a heading at the beginning: we try our
+     * best but locating the first 'h1' element to focus (or another as
+     * defined at 'autofocusElementSelector'), otherwise focus the
+     * item (is the container); that h1 is expected to be the first element with
+     * text, but is not checked so if that's not the case is an error of the
+     * html in use.
+     */
+    var moveFocus = function moveFocus() {
+        if (preventChangeFocus) return;
+
+        var focusedElement = $to;
+        if (this.autofocusElementSelector) {
+            var found = $to.find(this.autofocusElementSelector);
+            if (found.length > 0) {
+                focusedElement = found.first();
+            }
+        }
+        // Element must allow focus
+        if (!focusedElement.attr('tabindex')) {
+            // Set-up to allow programatic focus
+            focusedElement.attr('tabindex', -1);
+        }
+        // If is already focused, move focus away temporarily
+        if (focusedElement.is(':focus')) {
+            this.$backstage.focus();
+        }
+        // Delay focus as workaround for VoiceOver
+        setTimeout(function() {
+            focusedElement.focus();
+        }, 1000);
+    }.bind(this);
 
     var toIsHidden = $to.is('[hidden]'); // !$to.is(':visible')
 
@@ -158,7 +208,7 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
         // Its enough visible and in DOM to perform initialization tasks
         // that may involve layout information
         shell.emit(shell.events.itemReady, $to, state);
-        
+
         //console.log('SWITCH ready done, wait', toName);
 
         // Finish in a small delay, enough to allow some initialization
@@ -169,10 +219,10 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
             // Race condition, redirection in the middle, abort:
             if (toName !== shell.currentRoute.name)
                 return;
-            
+
             // Hide the from
             hideit();
-            
+
             // Ends opening, reset transitional styles
             /* SETUP IS ALREADY CORRECT in the CSS class assigned to items
             $to.css({
@@ -187,36 +237,40 @@ DomItemsManager.prototype.switch = function switchActiveItem($from, $to, shell, 
             // Logically, 2 is a valid value, because of the relativeness of zIndex
             // But to make it work with <=IE10, 201 works, 200 not.
             $to.css('zIndex', 201);
-            
+
             this.enableAccess();
-            
+
             //console.log('SWITCH ended for', toName);
 
             // When its completely opened
             shell.emit(shell.events.opened, $to, state);
+
+            moveFocus();
         }.bind(this), this.switchDelay);
     } else {
         //console.log('ending switch to', toName, 'and current is', shell.currentRoute.name, 'INSTANT (to was visible)');
         // Race condition, redirection in the middle, abort:
         if (toName !== shell.currentRoute.name)
             return;
-        
+
         // Its ready; maybe it was but sub-location
         // or state change need to be communicated
         shell.emit(shell.events.itemReady, $to, state);
-        
+
         this.enableAccess();
-        
+
         hideit();
+
+        moveFocus();
     }
 };
 
 /**
     Initializes the list of items. No more than one
-    must be opened/visible at the same time, so at the 
+    must be opened/visible at the same time, so at the
     init all the elements are closed waiting to set
     one as the active or the current one.
-    
+
     Execute after DOM ready.
 **/
 DomItemsManager.prototype.init = function init() {
@@ -227,9 +281,11 @@ DomItemsManager.prototype.init = function init() {
     .attr('hidden', 'hidden')
     // For browser that don't support attr
     .css('display', 'none');
-    
+
     // A layer to visually hide an opening item while not completed opened
-    $('<div class="items-backstage"/>').css({
+    // NOTE: we save a reference for further use with the 'moveFocus'
+    // technique for usability, since this element is ever present and empty.
+    this.$backstage = $('<div class="items-backstage"/>').css({
         background: this.$root.css('background-color') || 'white',
         position: 'fixed',
         top: 0,
@@ -238,7 +294,7 @@ DomItemsManager.prototype.init = function init() {
         left: 0,
         zIndex: 0
     }).appendTo(this.$root);
-    
+
     // A layer to disable access to an item (disabling events)
     // NOTE: Tried CSS pointer-events:none has some strange side-effects: auto scroll-up.
     // TODO: After some testing with this, scroll-up happens again with this (??)

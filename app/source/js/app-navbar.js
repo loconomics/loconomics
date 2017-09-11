@@ -12,6 +12,9 @@ var ko = require('knockout'),
     NavAction = require('./viewmodels/NavAction');
 var user = require('./data/userProfile').data;
 
+// Components in use by the AppNav template
+require('./kocomponents/smart-nav-bar-action');
+
 exports.extend = function (app) {
 
     // REVIEW: still needed? Maybe the per activity navBar means
@@ -151,7 +154,7 @@ exports.extend = function (app) {
             return data;
         }
         return null;
-    },
+    };
 
     /**
      * Detects parameters requesting a specific 'go back' behavior

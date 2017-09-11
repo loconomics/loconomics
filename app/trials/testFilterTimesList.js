@@ -1,3 +1,4 @@
+// TODO convert to unit test under test/ folder
 'use strict';
 
 var filterListBy = require('../source/js/utils/createTimeSlots').filterListBy;

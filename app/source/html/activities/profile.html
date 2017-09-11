@@ -25,7 +25,7 @@
         <div class="container profile">
             <div class="col-xs-12 col-sm-3 user-in-card">
                 <div class="Avatar Avatar--primary Avatar--lg"><img data-bind="attr: { src: profile().photoUrl() }"></div>
-                <h3 class="text-center bold margin0b"><span data-bind="text: profile().fullName()"></span></h3>
+                <h1 class="text-center bold margin0b"><span data-bind="text: profile().fullName()"></span></h1>
                 <h5 class="bold text-center margin0t" data-bind="visible: profile().businessName(), text: profile().businessName()"></h5>
             </div>
             <div class="col-xs-12 col-sm-6">
@@ -47,7 +47,7 @@
                 <div class="sm-icons profile-share-icons">
                     <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>
                     <a class="loco-info" href="#" data-bind="attr: { href: $root.getEmailLink }" target="_blank" title="Share on Email"><i class="icon ion-ios-email-outline"></i></a>
-                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getFacebookLink }" target="_blank" title="Share on Facebook"><i class="icon ion-social-facebook"></i></a> 
+                    <a class="loco-info" href="#" data-bind="attr: { href: $root.getFacebookLink }" target="_blank" title="Share on Facebook"><i class="icon ion-social-facebook"></i></a>
                     <a class="loco-info" href="#" data-bind="attr: { href: $root.getTwitterLink }" target="_blank" title="Share on Twitter"><i class="icon ion-social-twitter"></i> </a>
                     <a class="loco-info" href="#" data-bind="attr: { href: $root.getGooglePlusLink }" target="_blank" title="Share on Google Plus"><i class="icon ion-social-googleplus"></i></a>
                     <a class="loco-info" href="#" data-bind="attr: { href: $root.getPinterestLink }" target="_blank" title="Share on Pinterest"><i class="icon ion-social-pinterest"></i></a>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-xs-6 col-sm-12 profile-book-btn">-->
                     <div class="col-xs-12 profile-book-btn">
-                        <a href="#" class="btn btn-primary btn-lg btn-block" data-bind="attr: { href: $root.getBookLink }">Book</a> 
+                        <a href="#" class="btn btn-primary btn-lg btn-block" data-bind="attr: { href: $root.getBookLink }">Book</a>
                     </div>
                 </div>
                 <p class="h5 text-center pad10b">
@@ -188,7 +188,9 @@
                                         <div data-bind="text: cityStateLine"></div>
                                         <div data-bind="visible: !addressLine()" aria-hidden="true">&nbsp;</div>
                                     </div>
-                                    <app-address-map data-bind="visible: latitude() && longitude()" params="lat: latitude, lng: longitude, isServiceLocation: isServiceLocation, radius: serviceRadius"></app-address-map>
+                                    <app-address-map data-bind="visible: latitude() && longitude()"
+                                        params="label: 'Interactive map to ' + singleLine(), lat: latitude, lng: longitude,
+                                        isServiceLocation: isServiceLocation, radius: serviceRadius"></app-address-map>
                                 </div>
                             </div>
                         </div>
@@ -246,14 +248,14 @@
                             <div class="sm-icons clearfix">
                                 <span class="bold h4 display-inline-block media-middle loco-info">Share: </span>&nbsp;
                                 <a class="loco-info" href="#" data-bind="attr: { href: $root.getEmailLink }" target="_blank" title="Share on Email"><i class="icon ion-ios-email-outline"></i></a>
-                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getFacebookLink }" target="_blank" title="Share on Facebook"><i class="icon ion-social-facebook"></i></a> 
+                                <a class="loco-info" href="#" data-bind="attr: { href: $root.getFacebookLink }" target="_blank" title="Share on Facebook"><i class="icon ion-social-facebook"></i></a>
                                 <a class="loco-info" href="#" data-bind="attr: { href: $root.getTwitterLink }" target="_blank" title="Share on Twitter"><i class="icon ion-social-twitter"></i> </a>
                                 <a class="loco-info" href="#" data-bind="attr: { href: $root.getGooglePlusLink }" target="_blank" title="Share on Google Plus"><i class="icon ion-social-googleplus"></i></a>
                                 <a class="loco-info" href="#" data-bind="attr: { href: $root.getPinterestLink }" target="_blank" title="Share on Pinterest"><i class="icon ion-social-pinterest"></i></a>
                             </div>
                         </div>
 
-                    </section>			  
+                    </section>
                     <!-- overview-->
 
                     <!-- book service --><!--
@@ -264,7 +266,7 @@
                         <table class="table table-condensed">
                             <tr>
                                 <td class="media-middle border-none">$99</td>
-                                <td class="col-xs-9 border-none"><span>Deep Tissue Massage</span> 
+                                <td class="col-xs-9 border-none"><span>Deep Tissue Massage</span>
                                     <h5 class="text-muted margin5t">120 minutes</h5>
                                 </td>
                                 <td class="border-none pad20b">
@@ -276,7 +278,7 @@
                             </tr>
                             <tr>
                                 <td class="media-middle pad20t">$99</td>
-                                <td class="col-xs-9 pad20t "><span>Deep Tissue Massage</span> 
+                                <td class="col-xs-9 pad20t "><span>Deep Tissue Massage</span>
                                     <h5 class="text-muted margin5t">120 minutes</h5>
                                 </td>
                                 <td class="media-middle">
@@ -300,7 +302,7 @@
                                         <label for="check3"></label>
                                     </div>
                                 </td>
-                            </tr>			 
+                            </tr>
                         </table>
                         <hr>
                         <p class="text-center margin20b">Summary</p>
@@ -308,11 +310,11 @@
                         <div class="col-sm-9">Deep Tissue Massage</div> <div class="col-sm-3">$99.00</div><div class="clearfix"></div>
                         <div class="col-sm-9">Special oils</div> <div class="col-sm-3">$15.00</div><div class="clearfix"></div>
                         <hr>
-                        <div class="col-sm-9 pad5l pad5r bold">Total</div> 
+                        <div class="col-sm-9 pad5l pad5r bold">Total</div>
                         <div class="col-sm-3 pad5l pad5r bold">$114.00</div>
                         <div class="clearfix"></div>
 
-                        <h4 class="col-sm-10 margin10t" style="font-weight:normal"><i class="ion-ios-clock-outline h3"></i> 2 hours, 30 minutes</h4> 
+                        <h4 class="col-sm-10 margin10t" style="font-weight:normal"><i class="ion-ios-clock-outline h3"></i> 2 hours, 30 minutes</h4>
                         <h4 class="col-sm-2">
                             <span class="editpen">
                                 <i class="icon ion-edit loco-primary h6"></i>
@@ -324,10 +326,10 @@
                             <input id="repeat" type="checkbox" name="repeat" value="repeat"/>
                             <label for="repeat"> &nbsp; Make this repeat booking</label>
                         </div>
-                        <div class="clearfix"></div>					
+                        <div class="clearfix"></div>
                         <a class="center-block btn-danger btn-lg h5 text-center" href="#">Schedule Appointment</a>
                         <br/>
-                    </div>			  
+                    </div>
                     --><!-- book service-->
                 </div>
             </div>

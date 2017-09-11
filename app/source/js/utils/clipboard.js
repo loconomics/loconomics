@@ -5,7 +5,7 @@
 
     IMPORTANT: Browsers require the invocation of clipboard commands from 'a short running user-generated event handler',
     like a button click.
-    
+
     The functions returns an error text or nothing when succesfull.
 **/
 'use strict';
@@ -24,6 +24,10 @@ function copyText(text) {
             // IMPORTANT: We need an element with the text and attached to the document DOM, visually hidden to avoid any flicker (if any)
             // but with care to avoid type=hidden or display:none just in case some engines may forbide the copy command on that ones.
             // IMPORTANT: We need a textarea instead of an input to be able to keep copied newlines.
+            // IMPORTANT: For usability/accessibility, we must to keep the focus at the element focused when starting this,
+            // because the technique move the focus to the temporary element, we need to remember what was focused and re-focus
+            // after copy.
+            var focusedElement = document.activeElement;
             var $code = $('<textarea style="position:absolute;left:-90999px;z-index:-9000"/>"');
             $code
             .appendTo('body')
@@ -35,6 +39,7 @@ function copyText(text) {
             if (!document.execCommand('copy')) {
                 errMsg = 'Impossible to copy text.';
             }
+            focusedElement.focus();
             $code.remove();
         }
     } catch(err) {

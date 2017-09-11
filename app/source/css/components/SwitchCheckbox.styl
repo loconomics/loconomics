@@ -1,0 +1,112 @@
+/**
+ * SwitchCheckbox component.
+ * Draws a 'switch button' on top of a input checkbox, hidden this behind,
+ * but still being usable and accessible as a standard checkbox (is only
+ * a visual trick). It requires a container (that gets the class) and
+ * an empty span element just after the input, and nothing more inside the
+ * container.
+ * Even the standard outline for the input works as expected, drawing around
+ * the switch button.
+ * Scheme
+ * .SwitchCheckbox
+ *   > input
+ *   > span
+ */
+$SwitchCheckbox-width = 3em;
+$SwitchCheckbox-height = 2em;
+$SwitchCheckbox-padding = 2px;
+$SwitchCheckbox-offset = 1px;
+$SwitchCheckbox-markerWidth = $SwitchCheckbox-height;
+$SwitchCheckbox-middlePosition = 1em;
+$SwitchCheckbox-borderColor = $gray-light;
+$SwitchCheckbox-markerColor = #fff;
+$SwitchCheckbox-checkedColor = $brand-primary;
+$SwitchCheckbox-uncheckedColor = $gray-background;
+$SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
+
+.SwitchCheckbox {
+    // Positioning context for children
+    position: relative;
+    // Correct layout
+    display: inline-block;
+    // Make companion labels (outside this element) centered
+    vertical-align: middle;
+    // Layout appearance and size
+    padding: $SwitchCheckbox-padding;
+    width: $SwitchCheckbox-width;
+    height: $SwitchCheckbox-height;
+    border-radius: $SwitchCheckbox-borderRadius;
+    background-color: $SwitchCheckbox-borderColor;
+
+    // The input element will be behind the span (that behaves as 'the graphic'
+    // but taking all the space so is the clickable area)
+    > input {
+        // Positioned in such a way that covers all the container, that gets
+        // sized because of the span. Both position and size attributes are
+        // needed
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        // Reset standard or inherit styles
+        margin: 0 !important;
+        // Remove default rendering graphic
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        appearance: none;
+        // Look like a button for the mouse
+        cursor: pointer;
+    }
+
+    > .SwitchCheckbox-drawer,
+    > .SwitchCheckbox-marker {
+        user-select: none;
+        pointer-events: none;
+        display: block;
+        position: absolute;
+        top: $SwitchCheckbox-offset;
+        left: $SwitchCheckbox-offset;
+        bottom: $SwitchCheckbox-offset;
+    }
+
+    > .SwitchCheckbox-drawer {
+        right: $SwitchCheckbox-offset;
+        background-color: $SwitchCheckbox-uncheckedColor;
+        border-radius: $SwitchCheckbox-borderRadius;
+        transition: background 0.4s;
+    }
+
+    > .SwitchCheckbox-marker {
+        width: $SwitchCheckbox-markerWidth;
+        background-color: $SwitchCheckbox-markerColor;
+        border-radius: $SwitchCheckbox-borderRadius;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        transition: margin 0.4s;
+    }
+
+    input:checked + .SwitchCheckbox-drawer {
+        background-color: $SwitchCheckbox-checkedColor;
+    }
+
+    input:checked + .SwitchCheckbox-drawer + .SwitchCheckbox-marker {
+        margin-left: $SwitchCheckbox-middlePosition;
+        // In the HTML, text is allowed like the
+        // standard 'checked' symbol, to make the 'checked' state easily to
+        // understand (in case position+color is not clear) and accessible
+        // for color-blind people (the position already indicates the state
+        // but may not be obvious)
+        text-align: center;
+    }
+
+    // Allows text inside marker
+    .SwitchCheckbox-marker > span {
+        display: none;
+        line-height: $SwitchCheckbox-height;
+    }
+    input:checked + .SwitchCheckbox-drawer + .SwitchCheckbox-marker > span {
+        display: block;
+    }
+}

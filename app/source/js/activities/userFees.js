@@ -20,6 +20,7 @@ var A = Activity.extend(function UserFeesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account', helpLink: this.viewModel.helpLink
     });
+    this.title('Loconomics plans');
 });
 
 module.exports = A;

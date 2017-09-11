@@ -11,7 +11,6 @@
 
 var ko = require('knockout'),
     $ = require('jquery'),
-    propTools = require('./utils/jsPropertiesTools'),
     getObservable = require('./utils/getObservable'),
     MessageBar = require('./components/MessageBar');
 
@@ -19,21 +18,6 @@ var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
     //jshint maxstatements:100
-
-    /// navbar-action
-    ko.components.register('app-navbar-action', {
-        template: { element: 'navbar-action-template' },
-        viewModel: function(params) {
-
-            propTools.defineGetter(this, 'action', function() {
-                return (
-                    params.action && params.navBar() ?
-                    params.navBar()[params.action]() :
-                    null
-                );
-            });
-        }
-    });
 
     /// unlabeled-input
     ko.components.register('app-unlabeled-input', {
@@ -362,10 +346,12 @@ exports.registerAll = function(app) {
     var i18n = require('./utils/i18n');
     ko.components.register('app-address-map', {
         synchronous: true,
-        template: '<div></div>',
+        template: '<p tabindex="0" class="sr-only" data-bind="text: label"></p><div></div>',
         viewModel: {
             createViewModel: function(params, componentInfo) {
+                var mapContainer = componentInfo.element.children[1];
                 var v = {
+                    label: getObservable(params.label),
                     lat: ko.unwrap(params.lat),
                     lng: ko.unwrap(params.lng),
                     zoom: ko.unwrap(params.zoom) || 11,
@@ -405,7 +391,7 @@ exports.registerAll = function(app) {
                         center: myLatlng,
                         mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
-                    v.map = new google.maps.Map(componentInfo.element.children[0], mapOptions);
+                    v.map = new google.maps.Map(mapContainer, mapOptions);
                     v.circle = new google.maps.Circle({
                         center: myLatlng,
                         map: v.map,
@@ -423,6 +409,25 @@ exports.registerAll = function(app) {
                     // of take care of that only when thay are visible (updating refreshTs),
                     // to don't waste cycles
                     //$(window).on('layoutUpdate', refresh);
+
+                    // Accessibility enhancement: an empty iframe gets first focus
+                    // of the map area, notifying nothing; just excluding it from tab
+                    // order gets better, since the first focus goes to Google Maps
+                    // link.
+                    var excludeIframeFromTabs = function() {
+                        return $(mapContainer).find('iframe').attr('tabindex', -1).length > 0;
+                    };
+                    // We don't know exactly when the DOM is ready, since is async
+                    // so we try until is done
+                    var tryExcludeIframeFromTabs = function() {
+                        setTimeout(function() {
+                            // If not done yet, schedule a new attempt
+                            if (!excludeIframeFromTabs()) {
+                                tryExcludeIframeFromTabs();
+                            }
+                        }, 500);
+                    };
+                    tryExcludeIframeFromTabs();
                 });
                 return v;
             }

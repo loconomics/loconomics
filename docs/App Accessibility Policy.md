@@ -56,6 +56,8 @@ Tool | Function | Purpose
 [Accessibility Developer Tools](https://chrome.google.com/webstore/detail/accessibility-developer-t/fpkknkljclfencbdbgkenhalefipecmb?hl=en) | Google Chrome extension for doing audits | Web testing
 [Contrast Ratio Checker](https://chrome.google.com/webstore/detail/contrast-ratio-checker/kmicfegjejpginnockfnjpdgeffebdcf/related?hl=en) | Google Chrome extension for checking contrast ratios | Web testing
 [Contrast Ratio Calculator](http://leaverou.github.io/contrast-ratio/) | Website to check Contrast Ratios of different colors | Web testing
+[aXe](https://www.deque.com/products/axe/) | Open-source accessibility testing tool
+[Adobe Photoshop's Color Blindness Filter and Accessibility Validation](http://www.adobe.com/accessibility/products/photoshop.html)
 
 ### Section 508 
 The six tools listed in this table, when used together, provide the ability to perform comprehensive Section 508 testing for software and web applications and web content. They all require Windows to run.
@@ -66,7 +68,7 @@ Tool | Function | Purpose
 ----- | ---------- | ---------
 Inspect | Reveals the Name, Role, State, and Value of software elements | Software testing 
 Java | Ferret Reveals the Name, Role, State, and Value of Java software elements | Software testing 
-Web Accessibility Toolbar (WAT) 2012 | Aids in the manual inspection of accessibility-related elements on web pages | Web testing 
+[Web Accessibility Toolbar (WAT) 2012](https://github.com/ThePacielloGroup/WebAccessibilityToolbar/blob/master/documentation.md) | Aids in the manual inspection of accessibility-related elements on web pages | Web testing 
 ARIA Markup Favelet | Highlights all ARIA code on a page | Web testing 
 Frames Favelet | Marks up frames and iframes on a page with name/title | Web testing 
 Named Anchor Bookmarklet | Highlights a skip link's target (anchor) on a page | Web testing 

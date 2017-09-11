@@ -16,6 +16,7 @@ var A = Activity.extend(function EducationFormActivity() {
     this.navBar = Activity.createSubsectionNavBar('Education', {
         backLink: '/education' , helpLink: this.viewModel.helpLink
     });
+    this.title('Add training or education');
 });
 
 exports.init = A.init;

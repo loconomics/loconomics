@@ -18,6 +18,7 @@ var A = Activity.extend(function CalendarSyncingActivity() {
     this.navBar = Activity.createSubsectionNavBar('Calendar', {
         backLink: 'calendar' , helpLink: this.viewModel.helpLink
     });
+    this.title('Syncing your calendars');
 
     // Adding auto-select behavior to the export URL
     this.registerHandler({

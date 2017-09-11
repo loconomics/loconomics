@@ -42,7 +42,18 @@ var A = Activity.extend(function AppointmentActivity() {
         leftAction: new Activity.NavAction(backActionSettings),
         rightAction: Activity.NavAction.goHelpIndex
     });
-
+    this.title = ko.pureComputed(function() {
+        return (
+            this.currentID() == this.specialAppointmentIds.newBooking ? 
+                'Add a new booking' : 
+                this.currentID() == this.specialAppointmentIds.newEvent ?
+                'Add a calendar block' :
+                !this.isNewCard() ?
+                this.formattedCurrentDate() :
+                'Add'
+        );
+    }, this.viewModel);
+   
     // NavBar must update depending on editMode state (to allow cancel and goBack)
     // and appointment date (on read-only, to go back to calendar on current date)
     ko.computed(function() {

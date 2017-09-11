@@ -40,6 +40,14 @@ function Activity($activity, app) {
         rightAction: null
     });
 
+    /**
+     * Observable property to allow each activity to set-up a title.
+     * This first value is a placeholder, can be replaced by a constant string
+     * or a computed at the activity constructor (before first 'show').
+     * @member {KnockoutObservable<string>|string}
+     */
+    this.title = ko.observable('');
+
     // Knockout binding of viewState delayed to first show
     // to avoid problems with subclasses replacing the viewState
 }
@@ -47,25 +55,67 @@ function Activity($activity, app) {
 module.exports = Activity;
 
 /**
+ * The text to attach as suffix to the instance title as part of the
+ * window/tab title.
+ * @member {string}
+ * @readonly
+ * @static
+ */
+Activity.TRAILING_WINDOW_TITLE = ' - Loconomics';
+
+/**
+ * Applies a new title to the window.
+ * This utility is fine to be used as a callback.
+ * @param {string} title New title to set in the window (the common trailing
+ * text will be appended)
+ * @static
+ */
+Activity.applyTitle = function (title) {
+    // A specific title per activity is being MANDATORY, so we throw
+    // a console error to make devs aware of that.
+    if (!title) {
+        console.error('A title for the activity is mandatory, empty was given.');
+    }
+    document.title = (title || '') + Activity.TRAILING_WINDOW_TITLE;
+};
+
+/**
     Set-up visualization of the view with the given options/state,
     with a reset of current state.
     Must be executed every time the activity is put in the current view.
 **/
 Activity.prototype.show = function show(options) {
+    //jshint maxcomplexity:9
     // TODO: must keep viewState up to date using options/state.
     //console.log('Activity show', this.constructor.name);
     if (!this.__bindingDone) {
+        // Default viewModel
+        this.viewModel = this.viewModel || {};
+        // Share title field with viewModel
+        if (!this.viewModel.title) {
+            this.viewModel.title = this.title;
+        }
+        // Set-up dynamic update of the title on observable value change
+        if (ko.isObservable(this.title)) {
+            this.registerHandler({
+                target: this.title,
+                handler: Activity.applyTitle
+            });
+        }
         // A view model and bindings being applied is ever required
         // even on Activities without need for a view model, since
         // the use of components and templates, or any other data-bind
         // syntax, requires to be in a context with binding enabled:
-        ko.applyBindings(this.viewModel || {}, this.$activity.get(0));
+        ko.applyBindings(this.viewModel, this.$activity.get(0));
 
         this.__bindingDone = true;
     }
 
     options = options || {};
     this.requestData = options;
+
+    // Apply current title
+    Activity.applyTitle(ko.unwrap(this.title));
 
     // Enable registered handlers
     // Validation of each settings object is performed

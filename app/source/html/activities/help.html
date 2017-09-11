@@ -23,10 +23,10 @@
                     </ul>
                 </div> 
             </div>
-            <h1 data-bind="visible: !isInOnboarding()" class="hidden-xs hidden-sm">We're here to help</h1> 
-            <div class="container-fluid LightForm col-md-12 col-sm-reset">
+            <h1 data-bind="text: title"></h1>
+            <div class="container-fluid col-md-12 col-sm-reset">
                 <div data-bind="visible: viewType() == 'viewAllCategories'">
-                    <p class="hidden-xs hidden-sm">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm/helpPages?subject=I%20need%20help!" class="text-secondary">send us a note!</a></p>
+                    <p class="hidden-xs hidden-sm help-block">We've done our best to help answer some of the common questions we receive. However, if you can't find an answer, <a href="/contactForm/helpPages?subject=I%20need%20help!" class="text-secondary">send us a note!</a></p>
                     <h2 class="SectionTitle">Select a category</h2>
                     <ul class="TilesList" data-bind="foreach: categories">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">
@@ -44,7 +44,7 @@
                     </ul>
                 </div>                
                 <div data-bind="visible: viewType() == 'categoryView'">
-                    <span class="hidden-xs hidden-sm" data-bind="html: categories().description"></span> 
+                    <p class="hidden-xs hidden-sm help-block" data-bind="html: categories().description"></p> 
                     <h2 class="SectionTitle" data-bind="text: selectedCategory() && selectedCategory().name"></h2>
                     <ul class="TilesList" data-bind="foreach: filteredCategorySections">
                         <li><a class="LinkTile" href="/help/" data-bind="attr: { href: urlPath() }">

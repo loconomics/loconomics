@@ -1,49 +1,41 @@
-<div class="LargeNavBar container">
-    <div class="LargeNavBar-brand">
-        <a class="navbar-brand" href="/home">Loconomics</a>
-    </div>
+<ul class="LargeNavBar container">
+    <li class="LargeNavBar-brand">
+        <a class="navbar-brand" href="/home" aria-label="Loconomics Home Page"></a>
+    </li>    
     <!-- Anonymous nav -->
-    <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: isAnonymous()">
-        <li class="dropdown toggle">
-            <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown">Sign up <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu Category-menu">
-                <li>
-                    <a href="/signup/service-professional">I'm a local service professional</a>
-                </li>
-                <li>
-                    <a href="/signup/client">I'm a potential client</a>
-                </li>
-                <li>
-                    <a href="/signup/service-professional">I'm both</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="/login" class="btn btn-link">Log in</a>
-        </li>
-        <li>
-            <a href="/learnMoreProfessionals"><button class="btn btn-secondary">List your services</button></a>
-        </li>
-    </ul>
+    <li data-bind="visible: isAnonymous()">
+        <ul class="LargeNavBar-navBar nav navbar-right">
+            <li>
+                <a href="/signup/client" class="btn btn-link">Sign up</a>
+            </li>
+            <li>
+                <a href="/login" class="btn btn-link">Log in</a>
+            </li>
+            <li>
+                <a href="/learnMoreProfessionals" class="btn btn-link">List your services</a>
+            </li>
+        </ul>
+    </li>
     <!-- User nav -->
-    <ul class="LargeNavBar-navBar nav navbar-right" data-bind="visible: !isAnonymous()" hidden="hidden">
-        <li class="LargeNavBar-userMenu dropdown text-right">
-            <a href="#user-menu" class="dropdown-toggle toggle" data-toggle="dropdown">
-                <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" /></i>
+    <li data-bind="visible: !isAnonymous()">
+        <ul class="LargeNavBar-navBar nav navbar-right">
+            <li id="LargeNavBarMainMenu" role="menu" aria-label="Main Menu">
+                <button type="button" class="LargeNavBar-userMenu dropdown text-right dropdown-toggle toggle" data-toggle="dropdown" >
+                <i class="Avatar Avatar--xs"><img data-bind="attr: { src: photoUrl }" alt="Public user profile picture" /></i>
                 <span class="LargeNavBar-label" data-bind="text: userName"></span> <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                @render('parts/UserMenuContents.html')
-            </ul>
-        </li>
-        <li>
-            <a data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/help/categories/200431835-resources-for-service-professionals"><span class="LargeNavBar-label">Help</span></a>
-            <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
-            <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
-        </li>
-        <li>
-            <a data-bind="visible: !isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/learnMoreProfessionals"><span class="btn btn-secondary">List your services</span></a>
-        </li>
-    </ul>
-</div>
+                </button>
+                <ul class="dropdown-menu">
+                    @render('parts/UserMenuContents.html')
+                </ul>
+            </li>
+            <li>
+                <a data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" href="/help/categories/200431835-resources-for-service-professionals"><span class="LargeNavBar-label">Help</span></a>
+                <a data-bind="visible: !isServiceProfessional() && !isAnonymous()" href="/help/categories/200474305-resources-for-clients"><span class="LargeNavBar-label">Help</span></a>
+                <a data-bind="visible: isAnonymous()" href="/help"><span class="LargeNavBar-label">Help</span></a>
+            </li>
+            <li data-bind="visible: !isServiceProfessional() && !isAnonymous() && !isInOnboarding()">
+                <a href="/learnMoreProfessionals"><span class="btn btn-link">List your services</span></a>
+            </li>
+        </ul>
+    </li>
+</ul>

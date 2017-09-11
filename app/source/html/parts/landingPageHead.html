@@ -33,7 +33,8 @@
         <script src="../assets/js/welcome@(dotVersion).js"></script>
     </head>
     <body>
-        <div class="App-activities">
+        <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
+        <div class="App-activities" id="activities-container">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render('../' + includedFiles[f])
             }

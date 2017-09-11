@@ -107,7 +107,9 @@
     // Allow multiline strings.
     "multistr": false,
     // Whether line breaks should not be checked around commas.
-    "laxcomma": true, //RECOMENDED: false
+    "laxcomma": false,
+    // This option prohibits the use of the comma operator
+    "nocomma": true,
     // Whether semicolons may be ommitted for the trailing statements inside of a
     // one-line blocks.
     "lastsemic": false,

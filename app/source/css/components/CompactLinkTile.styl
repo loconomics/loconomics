@@ -38,9 +38,9 @@ $CompactLinkTile-indentSize = 30px;
 .CompactLinkTile {
 
     Tile()
-    
+
     $vgap = 10px;
-    
+
     Tile-addTagContentSupport($vgap)
 
     padding-left: ($CompactLinkTile-indentSize + $Tile-hgap);
@@ -49,17 +49,24 @@ $CompactLinkTile-indentSize = 30px;
         Tile-singleLine($vgap);
     }
 
-    CompactLinkTile-addIcon($vgap); 
-    
+    // Let it be a label tab, but reset some styles so looks like any
+    // other Tile-content
+    label.Tile-content {
+        margin: 0;
+        font-weight: normal;
+    }
+
+    CompactLinkTile-addIcon($vgap);
+
     background-color: white;
 }
 
 .CompactLinkTile-twoLines {
 
     Tile()
-    
+
     $vgap = 20px;
-    
+
     Tile-addTagContentSupport($vgap)
 
     padding-left: ($CompactLinkTile-indentSize + $Tile-hgap);

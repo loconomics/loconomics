@@ -25,6 +25,7 @@ var A = Activity.extend(function PrivacySettingsActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+    this.title('Privacy settings');
 
     this.registerHandler({
         target: privacySettings,
