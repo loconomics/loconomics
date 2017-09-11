@@ -1,5 +1,5 @@
 <!-- Activity listing -->
-<div data-activity="listing" data-bind="css: { 'is-loading': isLoading }">
+<div data-activity="listingPreview" data-bind="css: { 'is-loading': isLoading }">
     <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
         <p class="small">
             <span data-bind="text: jobTitle"></span> listing is <span data-bind="ifnot:isActive">inactive.</span><span data-bind="if:isActive">active.</span>
@@ -10,7 +10,7 @@
     <div data-bind="with: user">
         <section id="listing-service-professional-info" title="Information about service professional">
             <img data-bind="attr: {src: profile().photoUrl()}" alt="Image of service professional">
-            <h3 data-bind="text: profile().fullName()"></h3>
+            <h1></h1>
             <h4 data-bind="visible: profile().businessName(), text: profile().businessName()"></h4>
             <h2 data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></h2>
             <div data-bind="with: selectedJobTitle">
@@ -19,7 +19,7 @@
             <nav id="listing-navigation" title="Listing shortcuts">
                 <ul>
                     <li data-bind="visible: $root.hasServicesOverview"><a href="#listing-services-overview">Overview</a></li>
-                    <li><a href="listing-offerings">Offerings</a></li>
+                    <li><a href="listing-offerings">Offeriiiings</a></li>
                     <li><a href="#listing-reviews">Reviews</a></li>
                     <li><a href="#listing-photos">Photos</a></li>
                     <li><a href="#listing-locations">Location</a></li>
@@ -32,7 +32,7 @@
             
         </section>
         <section id="listing-services-overview" data-bind="visible: $root.hasServicesOverview, with: selectedJobTitle" title="">
-            <h2><i class="ion-clipboard"></i> Overview of services</h2>
+            <h2><i class="ion-clipboard"></i> Overviiiew of services</h2>
             <p data-bind="text: intro, visible: hasIntro"></p>
             <div data-bind="foreach: serviceAttributes().serviceAttributes">
                 <div data-bind="text: name"></div>

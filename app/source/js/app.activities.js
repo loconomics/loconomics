@@ -84,5 +84,5 @@ module.exports = {
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'userProfile': require('./activities/userProfile'),
     'upgrade': require('./activities/upgrade'),
-    'listing': require('./activities/listing')
+    'listingPreview': require('./activities/listingPreview')
 };
