@@ -97,7 +97,7 @@ function ViewModel(params, refs) {
             // Append the search text as a selectable option at the beggining of the list
             attributes.unshift(new ServiceAttribute({
                 serviceAttributeID: 0,
-                name: 'Add new: ' + s
+                name: s
             }));
         }
 

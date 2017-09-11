@@ -52,7 +52,7 @@
                             'data-input-autocomplete-suggestion': name
                         }">
                         <div class="Result-info">
-                            <span class="Result-name" data-bind="text: name"></span>
+                            <span class="Result-name"><span data-bind="ifnot: serviceAttributeID">Add new: </span><span data-bind="text: name"></span>
                             <span class="Result-description hidden-xs hidden-sm"
                                 data-bind="text: description, visible: description"></span>
                         </div>
