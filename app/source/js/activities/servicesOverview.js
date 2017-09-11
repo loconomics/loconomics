@@ -290,7 +290,7 @@ function AttributesCategoryVM(cat, userAtts) {
         if (!isEmpty && !wasFound) {
             userAtts.proposedServiceAttributes.push(catID, newOne);
         }
-    };
+    }.bind(this);
 
     this.pushAttribute = function(att) {
         if (att.serviceAttributeID()) {
