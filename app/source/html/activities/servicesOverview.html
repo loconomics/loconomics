@@ -37,34 +37,13 @@
                             <div data-bind="foreach: categoriesView">
                                 <div class="form-group">
                                     <label data-bind="attr: { for: 'category' + category().serviceAttributeCategoryID() }, text: category().name"></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Select suggested or add new" data-bind="attr: { id: 'category' + category().serviceAttributeCategoryID(), 'aria-describedby': 'category' + category().serviceAttributeCategoryID() + 'Instructions'  }, textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute"/>
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span></button>
-                                            <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span></button>
-                                            <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && autocompleteOpenedByUser(), click: hideFullAutocomplete" aria-label="Close"><icon-dec params="icon: 'ion-arrow-up-b'"></icon-dec></button>
-                                        </span>
-                                        <p data-bind="attr: { id: ('category' + category().serviceAttributeCategoryID() + 'Instructions') } " class="help-block sr-only">Select suggested or add new</p>
-                                    </div>
-                                    <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                        <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                                        <h2 class="SearchResultsPreview-h" data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h2>
-                                            <ul data-bind="foreach: autocompleteAttributes">
-                                                <li>
-                                                    <a class="Result" data-bind="click: $parent.selectAttribute">
-                                                        <div class="Result-info">
-                                                            <span class="Result-name" data-bind="text: name"></span>
-                                                            <span class="Result-description hidden-xs hidden-sm" data-bind="text: description, visible: description"></span>
-                                                        </div>
-                                                        <span class="btn btn-secondary btn-md btn-inline">Add</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li data-bind="visible: autocompleteAttributes().length === 0">
-                                            <strong>You've added all suggestions.</strong>
-                                        </li>
-                                    </ul>
+                                    <servicesOverview-attributes-combobox params="
+                                        id: 'category' + category().serviceAttributeCategoryID(),
+                                        availableAttributes: availableAttributes,
+                                        isDisabled: $parent.isLocked,
+                                        onSelectAttribute: pushAttribute,
+                                        onSelectAttributeName: pushAttributeName
+                                        "></servicesOverview-attributes-combobox>
                                 </div>
                                 <ol class="TagsList" data-bind="foreach: selectedAttributes">
                                     <li class="TagsList-item">
