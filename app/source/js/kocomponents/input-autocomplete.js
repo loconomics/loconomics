@@ -45,6 +45,7 @@ var SUGGESTION_ATTR_NAME_SELECTOR = '[' + SUGGESTION_ATTR_NAME + ']';
 
 var ko = require('knockout');
 var getObservable = require('../utils/getObservable');
+var extend = require('jquery').extend; //when no jquery: require('extend');
 
 /**
  * @enum {string} Option size of the element.
@@ -53,6 +54,35 @@ var Size = {
     large: 'lg',
     medium: 'md',
     small: 'sm'
+};
+
+/**
+ * @typedef {Object} ActionsAfterSelect It defines what actions must be performed
+ * after an autocomplete.onSelect event; this allows external code, as part of
+ * an onSelect handler, to request (through 'return') to perform a common,
+ * standard action without mess with internal state.
+ * @property {BehaviorForValue} value What to do with the input value: clear it,
+ * use the selected suggestion value or keep untouched whatever user has typed.
+ * @property {boolean} keepExpanded Request to keep the listbox expanded,
+ * since by default it is collapsed as soon a suggestion is selected.
+ */
+
+/**
+ * @enum {number} Defines an standard action for value after select a suggestion
+ */
+var ActionForValue = {
+    clear: 1,
+    keepUserInput: 2,
+    copySelected: 3
+};
+
+/**
+ * Default set of actions performed, if one is not provided externally or
+ * overwritted.
+ * @const {ActionsAfterSelect}
+ */
+var DEFAULT_ACTIONS_AFTER_SELECT = {
+    value: ActionForValue.copySelected
 };
 
 /**
@@ -266,12 +296,11 @@ function LiveNotificationManager(notificationText) {
  * templates can only access this component data, this is useful when something
  * in the templates is dynamic based on external data or when wrapping this
  * inside another component).
- * @param {Function<string, object, void>} [params.onSelect] Callback triggered
+ * @param {Function<string, object, ActionsAfterSelect>} [params.onSelect] Callback triggered
  * when the user selects a suggestion from the listBox, providing as parameters
- * the text value and the context data of the suggestion. Any provided function
- * will replace the default onSelect handler, that automatically sets the
- * autocomplete value (params.value) as the selected text value; if that
- * behavior is still wanted, must be done by the new callback.
+ * the text value and the context data of the suggestion. It allows to return
+ * a settings object to overwrite the default behavior after select
+ * (automatically sets the selected text value as the autocomplete value).
  * @param {(Size|KnockoutObservable<Size>)} [params.size=Size.medium] Displayed
  * @param {KnockoutObservable<boolean>} [params.isDisabled] Allows to disable
  * the input, preventing user interaction.
@@ -333,12 +362,38 @@ function ViewModel(params, refs, children) {
      * function given as params.onSelect.
      * @member {Function<string, object, void>} onSelect
      */
-    this.onSelect = function(textValue/*, contextData*/) {
-        this.value(textValue);
-    };
-    if (typeof(params.onSelect) === 'function') {
-        this.onSelect = params.onSelect;
-    }
+    this.onSelect = function(textValue, contextData) {
+        //jshint maxcomplexity:10
+        var actions = DEFAULT_ACTIONS_AFTER_SELECT;
+        if (typeof(params.onSelect) === 'function') {
+            actions = extend({}, actions, params.onSelect(textValue, contextData));
+        }
+        // Perform actions
+        switch (actions.value) {
+            case ActionForValue.clear:
+                this.value('');
+                break;
+            case ActionForValue.copySelected:
+                this.value(textValue);
+                break;
+            case ActionForValue.keepUserInput:
+                // Just doing nothing we already preserve the user input
+                break;
+            default:
+                throw new Error('Invalid ActionForValue option:', actions.value);
+        }
+        // Close list? (must be last step, since any previous 'value' change
+        // make this flag to turn off).
+        if (actions.keepExpanded === true) {
+            this.collapsedRequested(false);
+            // To actually make it happens, we need to restore focus to the input
+            // or the blur event will collapse it anyway
+            this.getInputElement().focus();
+        }
+        else {
+            this.collapsedRequested(true);
+        }
+    }.bind(this);
     /**
      * @member {KnockoutObservable<Size>} size
      */
@@ -381,6 +436,15 @@ function ViewModel(params, refs, children) {
      * required (reset this flag)
      */
     this.collapsedRequested = ko.observable(false);
+    /**
+     * Gets a reference to the input element
+     * @returns {HTMLElement}
+     */
+    this.getInputElement = function getInputElement() {
+        if (getInputElement._cached) return getInputElement._cached;
+        getInputElement._cached = refs.root.querySelector('input');
+        return getInputElement._cached;
+    };
 
     /// Computed properties
     /**
@@ -523,9 +587,6 @@ function ViewModel(params, refs, children) {
             this.onSelect(textValue, contextData);
             // Remove as active element
             activeSuggestionManager.clear();
-            // Close list (must be last step, since a value change at onSelect
-            // make this flag to turn off).
-            this.collapsedRequested(true);
         }
     }.bind(this);
 
@@ -678,7 +739,12 @@ function ViewModel(params, refs, children) {
         // but not tested, the main fear is to have problems with touch input
         // and with fastclick module.
         setTimeout(function() {
-            this.collapsedRequested(true);
+            // Prevent race conditions by re-checking that the input is still
+            // out of focus (some other logic can return the focus
+            // to the element before this even dispatched)
+            if (document.activeElement !== this.getInputElement()) {
+                this.collapsedRequested(true);
+            }
         }.bind(this), 310);
     }.bind(this);
     /**
@@ -765,3 +831,4 @@ ko.components.register(TAG_NAME, {
 });
 
 exports.Size = Size;
+exports.ActionForValue = ActionForValue;

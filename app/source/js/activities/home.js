@@ -12,7 +12,7 @@ var snapPoints = require('../utils/snapPoints');
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 var user = require('../data/userProfile').data;
-require('../kocomponents/home/search-box');
+var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -181,5 +181,8 @@ function ViewModel(shell) {
         else if (data.categoryID) {
             shell.go(this.getSearchCategoryUrl(data.categoryID()));
         }
+        return {
+            value: ActionForValue.clear
+        };
     }.bind(this);
 }

@@ -8,7 +8,7 @@ var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var userJobProfile = require('../data/userJobProfile');
-require('../kocomponents/job-title-autocomplete');
+var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -102,7 +102,7 @@ function ViewModel(app) {
             this.addNewItem(value);
         }
         return {
-            clearValue: true
+            value: ActionForValue.clear
         };
     }.bind(this);
 

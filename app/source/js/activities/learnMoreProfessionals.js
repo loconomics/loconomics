@@ -7,7 +7,7 @@ var ko = require('knockout');
 var Activity = require('../components/Activity');
 var SignupVM = require('../viewmodels/Signup');
 var user = require('../data/userProfile').data;
-require('../kocomponents/job-title-autocomplete');
+var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
 
 var SIGNUP_ELEMENT_SELECTOR = '#learnMoreProfessionals-signup';
 
@@ -119,7 +119,7 @@ function ViewModel(app) {
             }
         }
         return {
-            clearValue: true
+            value: ActionForValue.clear
         };
     }.bind(this);
 }
