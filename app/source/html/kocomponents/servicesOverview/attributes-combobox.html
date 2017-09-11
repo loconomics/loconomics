@@ -1,0 +1,65 @@
+<div>
+    <input-autocomplete params="
+        id: id,
+        name: name,
+        placeholder: 'Select suggested or add new',
+        value: value,
+        suggestions: suggestions,
+        onSelect: selectAttribute,
+        isDisabled: isDisabled,
+        extraData: {
+            clearValue: clearValue,
+            expandedByUser: expandedByUser,
+            expandAutocomplete: expandAutocomplete,
+            collapseAutocomplete: collapseAutocomplete,
+            availableAttributes: availableAttributes
+        }">
+        <div slot="afterInput" class="input-group-btn">
+            <!-- ko if: value -->
+            <button type="button" class="btn btn-default" title="Clear"
+                data-bind="click: extraData.clearValue, disable: isDisabled">
+                <icon-dec params="icon: 'ion-android-close'"></icon-dec>
+                <span class="sr-only">Clear</span>
+            </button>
+            <!-- /ko -->
+            <!-- ko if: !value() && !extraData.availableAttributes().length -->
+            <div class="btn btn-default" title="You've added all suggestions." tabindex="0">
+                <icon-dec params="icon: 'ion-minus-round'"></icon-dec>
+                <span class="sr-only">You've added all suggestions.</span>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: !value() && !extraData.expandedByUser() && extraData.availableAttributes().length -->
+            <button type="button" class="btn btn-default" title="Show all"
+                data-bind="click: extraData.expandAutocomplete, disable: isDisabled">
+                <icon-dec params="icon: 'ion-arrow-down-b'"></icon-dec>
+                <span class="sr-only">Show all</span>
+            </button>
+            <!-- /ko -->
+            <!-- ko if: !value() && extraData.expandedByUser() && extraData.availableAttributes().length -->
+            <button type="button" class="btn btn-default" title="Close"
+                data-bind="click: extraData.collapseAutocomplete, disable: isDisabled">
+                <icon-dec params="icon: 'ion-arrow-up-b'"></icon-dec>
+                <span class="sr-only">Close</span>
+            </button>
+            <!-- /ko -->
+        </div>
+        <template slot="suggestions">
+            <div class="SearchResultsPreview">
+                <h2 class="SearchResultsPreview-h">Suggestions (or add new):</h2>
+                <ul data-bind="foreach: suggestions">
+                    <li class="Result" data-bind="attr: {
+                            id: $parent.id() + '-suggestion' + $index(),
+                            'data-input-autocomplete-suggestion': name
+                        }">
+                        <div class="Result-info">
+                            <span class="Result-name"><span data-bind="ifnot: serviceAttributeID">Add new: </span><span data-bind="text: name"></span>
+                            <span class="Result-description hidden-xs hidden-sm"
+                                data-bind="text: description, visible: description"></span>
+                        </div>
+                        <span class="btn btn-secondary btn-md btn-inline">Add</span>
+                    </li>
+                </ul>
+            </div>
+        </template>
+    </input-autocomplete>
+</div>

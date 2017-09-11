@@ -27,10 +27,10 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     </script>
     <!-- End Google Analytics -->
-    <link href="assets/css/libs.min.201709011929.css" rel="stylesheet">
-    <link href="assets/css/app.min.201709011929.css" rel="stylesheet">
-    <script src="assets/js/common.min.201709011929.js"></script>
-    <script src="assets/js/app.min.201709011929.js"></script>
+    <link href="assets/css/libs.min.201709111559.css" rel="stylesheet">
+    <link href="assets/css/app.min.201709111559.css" rel="stylesheet">
+    <script src="assets/js/common.min.201709111559.js"></script>
+    <script src="assets/js/app.min.201709111559.js"></script>
   </head>
   
   <body> <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
@@ -2037,7 +2037,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
             <div class="LightForm col-md-7 col-sm-reset">
               <app-onboarding-progress-bar></app-onboarding-progress-bar>
                <h1>
-                    <icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec> 
+                    <icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec>
                     <span data-bind="text: title"></span>
                 </h1>
 
@@ -2061,17 +2061,17 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                 </h2>
 
               <div class="isolated inset">
-                <!--<app-search-job-titles params="api: search"></app-search-job-titles>-->
-                <div data-bind="template: { name: 'search-job-titles-template', data: search() }"></div>
+                <job-title-autocomplete params="suggestionButtonText: 'Add', onSelect: onSelectJobTitle, id: 'addJobTitle-autocomplete'"></job-title-autocomplete>
               </div>
               <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
-                <div class="ListView-item"> <a class="btn btn-link btn-block ListView-item-content">
+                <div class="ListView-item"> <span class="ListView-item-content">
                             <p data-bind="text: label"></p>
-                        </a>
- <a class="btn btn-link ListView-item-action"
-                  data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span>
-                        </a>
+                        </span>
 
+                  <button type="button" class="btn btn-link ListView-item-action"
+                  data-bind="click: $root.remove"> <span class="fa ion ion-ios-minus"></span>
+ <span class="sr-only">Remove <span data-bind="text: label"></span></span>
+                  </button>
                 </div>
               </div>
               <div class="LightForm-submitBar">
@@ -2180,7 +2180,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
             </div>
           </div>
           <div class="LightForm-submitBar">
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+            <button type="submit" class="btn btn-primary btn-block" data-bind="click: save, text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
             <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
           </div>
           </form>
@@ -4251,73 +4251,8 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   value="San Francisco, CA">
                 </div>
               </div>
-              <div class="form-group col-sm-7">
-                <label for="homeSearch" class="sr-only">Search</label>
-                <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
-                  <input
-                  type="text" data-bind="textInput: searchTerm" class="form-control inset"
-                  id="homeSearch" name="s" placeholder="Search services, e.g. Dog Walker, Tutor">
-                </div>
-                <ul class="SearchResultsPreview" data-bind="visible: isSearchAutocompleteOpened">
-                  <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
-                    <ul>
-                      <li class="Result">
-                        <div class="Result-info"> <span class="Result-name">Searching...</span>
-
-                        </div> <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
-
-                      </li>
-                    </ul>
-                  </li>
-                  <li data-bind="visible: searchResults.jobTitles().length && !isLoading()">
-                     <h2>Services</h2>
-
-                    <ul data-bind="foreach: searchResults.jobTitles">
-                      <li class="Result clearfix"> <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                        <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: pluralName"></span>
-                                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
-                                            <span class="Result-description" data-bind="text: searchDescription"></span>
-                                        </div>
-                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                    </a>
-
-                      </li>
-                    </ul>
-                  </li>
-                  <li data-bind="visible: searchResults.serviceProfessionals().length && !isLoading()">
-                     <h2>Professionals</h2>
-
-                    <ul data-bind="foreach: searchResults.serviceProfessionals">
-                      <li class="Result clearfix"> <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
-                                        <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: firstName"></span>
-                                            <span class="Result-name"  data-bind="text: lastName"></span>
-                                            <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
-                                            <span class="Result-description" data-bind="text: allJobTitles"></span>
-                                        </div>
-                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                    </a>
-
-                      </li>
-                    </ul>
-                  </li>
-                  <li data-bind="visible: searchResults.categories().length && !isLoading()">
-                     <h2>Categories</h2>
-
-                    <ul data-bind="foreach: searchResults.categories">
-                      <li class="Result clearfix"> <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
-                                        <div class="Result-info">
-                                            <span class="Result-name" data-bind="text: categoryName"></span>
-                                            <span class="Result-description" data-bind="text: searchDescription"></span>
-                                        </div>
-                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
-                                    </a>
-
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
+              <div class="col-sm-7">
+                <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>
               </div>
               </form>
           </div>
@@ -4566,10 +4501,9 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
             <p class="coop-tagline">Find clients, community, tools and resources. Grow and manage your business
               on your terms.</p>
-            <form id="coop-search" data-bind="submit: search" action="/"
-            method="get" class="row" autocomplete="off">
-              <!--<app-search-job-titles params="api: search"></app-search-job-titles>-->
-              <div class="col-sm-12" data-bind="template: { name: 'search-job-titles-template', data: search() }"></div>
+            <form id="coop-search" class="row">
+              <!--class="col-sm-12" -->
+              <job-title-autocomplete params="suggestionButtonText: suggestionButtonText, onSelect: onSelectJobTitle, id: 'learnMoreProfessionals-autocomplete'"></job-title-autocomplete>
             </form>
             <div class="coop-join-up"> <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
 
@@ -7490,73 +7424,46 @@ from
                     </div>
                   </fieldset>
                   <fieldset>
-                    <legend>List details of your <span class="text-lowercase" data-bind="text: jobTitleName"> services</legend> 
+                    <legend>List details of your <span class="text-lowercase" data-bind="text: jobTitleName"> services</legend>
                             <div data-bind="foreach: categoriesView">
                                 <div class="form-group">
-                                    <label data-bind="attr: { for: 'category' + category().serviceAttributeCategoryID() }, text: category().name"></label> 
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Select suggested or add new" data-bind="attr: { id: 'category' + category().serviceAttributeCategoryID(), 'aria-describedby': 'category' + category().serviceAttributeCategoryID() + 'Instructions'  }, textInput: attributeSearch, disable: $parent.isLocked, pressEnter: addAttribute"/>
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-default" data-bind="visible: attributeSearch, click: clearAttributeSearch"><i class="fa ion ion-android-close" aria-hidden="true"></i><span class="sr-only">Clear</span>
-                      </button>
-                      <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && !autocompleteOpenedByUser(), click: showFullAutocomplete"><i class="fa ion ion-arrow-down-b" aria-hidden="true"></i><span class="sr-only">Show all</span>
-                      </button>
-                      <button type="button" class="btn btn-default" data-bind="visible: !attributeSearch() && autocompleteOpenedByUser(), click: hideFullAutocomplete"
-                      aria-label="Close">
-                        <icon-dec params="icon: 'ion-arrow-up-b'"></icon-dec>
-                      </button>
-                      </span>
-                      <p data-bind="attr: { id: ('category' + category().serviceAttributeCategoryID() + 'Instructions') } "
-                      class="help-block sr-only">Select suggested or add new</p>
-                </div>
-                <ul class="SearchResultsPreview" data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                  <li data-bind="visible: attributeSearch() || autocompleteOpenedByUser()">
-                     <h2 data-bind="visible: autocompleteAttributes().length > 0">Suggestions (or add new):</h2>
+                                    <label data-bind="attr: { for: 'category' + category().serviceAttributeCategoryID() }, text: category().name"></label>
+                                    <servicesOverview-attributes-combobox params="
+                                        id: 'category' + category().serviceAttributeCategoryID(),
+                                        availableAttributes: availableAttributes,
+                                        isDisabled: $parent.isLocked,
+                                        onSelectAttribute: pushAttribute,
+                                        onSelectAttributeName: pushAttributeName
+                                        "></servicesOverview-attributes-combobox>
+                                </div>
+                                <ol class="TagsList" data-bind="foreach: selectedAttributes">
+                                    <li class="TagsList-item">
+                                        <span data-bind="text: name"></span>
 
-                    <ul data-bind="foreach: autocompleteAttributes">
-                      <li> <a class="Result" data-bind="click: $parent.selectAttribute">
-                                                        <div class="Result-info">
-                                                            <span class="Result-name" data-bind="text: name"></span>
-                                                            <span class="Result-description hidden-xs hidden-sm" data-bind="text: description, visible: description"></span>
-                                                        </div>
-                                                        <span class="btn btn-secondary btn-md btn-inline">Add</span>
-                                                    </a>
-
-                      </li>
-                    </ul>
-                  </li>
-                  <li data-bind="visible: autocompleteAttributes().length === 0"> <strong>You've added all suggestions.</strong>
-
-                  </li>
-                </ul>
-            </div>
-            <ol class="TagsList" data-bind="foreach: selectedAttributes">
-              <li class="TagsList-item"> <span data-bind="text: name"></span>
-
-                <button type="button" class="btn btn-link"
-                data-bind="click: $parent.removeAttribute, disable: $parent.isLocked"> <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>
+                      <button
+                      type="button" class="btn btn-link" data-bind="click: $parent.removeAttribute, disable: $parent.isLocked"> <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>
  <span class="sr-only">Remove</span>
 
-                </button>
-              </li>
-            </ol>
+                        </button>
+                        </li>
+                        </ol>
+                </div>
+                <div class="form-group">
+                  <label for="experienceLevel">Experience level</label>
+                  <select id="experienceLevel" class="form-control"
+                  data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
+                </div>
+                </fieldset>
+                <div class="LightForm-submitBar">
+                  <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+                </div>
+            </div>
+            </form>
           </div>
-          <div class="form-group">
-            <label for="experienceLevel">Experience level</label>
-            <select id="experienceLevel" class="form-control"
-            data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
-          </div>
-          </fieldset>
-          <div class="LightForm-submitBar">
-            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
+          <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+            <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
           </div>
         </div>
-        </form>
-      </div>
-      <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-        <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
-      </div>
-      </div>
       </div>
       </div>
       <!-- Activity Signup -->
@@ -11612,64 +11519,6 @@ The Parties agree that, in the event
             <ul class="ActionSheet-close">
                 <li>
                     <a href="#close">Cancel</a>
-                </li>
-            </ul>
-        </div>
-      </script>
-      <!-- search job titles -->
-      <script type="text/html" id="search-job-titles-template">
-        <div class="form-group">
-            <label for="homeSearch" class="sr-only">Search</label>
-            <div class="input-group input-group-lg">
-                <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
-                <input type="text" data-bind="textInput: searchTerm" class="form-control inset" name="s" placeholder="Search for your profession" autocomplete="off">
-            </div>
-            <ul class="SearchResultsPreview" data-bind="visible: isInput">
-                <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
-                    <ul><li class="Result">
-                        <div class="Result-info">
-                            <span class="Result-name">Searching...</span>
-                        </div>
-                        <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
-                    </li></ul>
-                </li>
-                <li data-bind="visible: thereAreJobTitles() && !isLoading()">
-                    <h3>Sound like you?</h3>
-                    <ul data-bind="foreach: searchResults.jobTitles">
-                        <li class="Result">
-                            <a data-bind="click: $parent.clickJobTitle, attr: { href: $parent.jobTitleHref }">
-                                <div class="Result-info">
-                                    <span class="Result-name" data-bind="text: singularName, visible: description"></span>  
-                                    <span class="Result-description" data-bind="text: description, visible: description"></span>
-                                </div>
-                                <span class="btn btn-secondary btn-md btn-inline" data-bind="visible: description, text: $parent.resultsButtonText"></span>
-                            </a>
-                        </li>
-                    </ul>  
-                    <ul>
-                        <li class="Result">
-                            <a data-bind="click: clickNoJobTitle, attr: { href: $parent.noJobTitleHref }">
-                                <div class="Result-info">
-                                    <span class="Result-name">No?</span>  
-                                    <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
-                                </div>
-                                <span class="btn btn-secondary btn-md btn-inline" data-bind="text: resultsButtonText"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li data-bind="visible: !thereAreJobTitles() && !isLoading()">
-                    <ul>
-                        <li class="Result">
-                            <a data-bind="click: clickNoJobTitle, attr: { href: $parent.noJobTitleHref }">
-                                <div class="Result-info">
-                                    <span class="Result-name">You're our first!</span>  
-                                    <span class="Result-description">Fear not, if you provide a local service, we'll create a job title for you.</span> 
-                                </div>
-                                <span type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: resultsButtonText"></span>
-                            </a>
-                        </li>
-                     </ul>   
                 </li>
             </ul>
         </div>

@@ -1,0 +1,31 @@
+<div class="InputAutocomplete-field input-group" data-bind="css: groupClasses">
+    <!-- ko if: icon --><span class="input-group-addon inset"><icon-dec params="icon: icon"></icon-dec></span><!-- /ko -->
+    <input type="text" autocomplete="off" role="combobox"
+        aria-expanded="false" aria-autocomplete="list"
+        class="form-control inset"
+        data-bind="textInput: value, attr: {
+            id: id,
+            'aria-owns': listBoxID,
+            'aria-expanded': isExpanded,
+            placeholder: placeholder,
+            'aria-activedescendant': activeSuggestionID,
+            disable: isDisabled
+        },
+        event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur, focus: onFocus }" />
+    <!-- ko template: { if: afterInputElement, nodes: afterInputElement && [afterInputElement], data: $component } --><!-- /ko -->
+</div>
+<div role="listbox" class="InputAutocomplete-listBox"
+    data-bind="visible: isExpanded, attr: { id: listBoxID }">
+    <div data-bind="template: { if: isBusy, nodes: isBusyTemplate && isBusyTemplate.children, data: $component }"></div>
+    <div data-bind="template: { ifnot: isBusy, nodes: suggestionsTemplate.children, data: $component }, click: onClick"></div>
+</div>
+<template name="defaultSuggestions">
+    <ul data-bind="foreach: $data">
+        <li data-input-autocomplete-suggestion
+            data-bind="attr: { id: id() + '-suggestion-' + $index() }, text: $data">
+        </li>
+    </ul>
+</template>
+<div aria-live="polite" aria-atomic="true" class="sr-only"
+    data-bind="text: notificationText">
+</div>

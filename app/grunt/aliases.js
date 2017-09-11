@@ -87,7 +87,8 @@ module.exports = {
     'build-webapp-html': [
         'replace:html_bad_chars',
         'bliss:webapp',
-        'htmlmin:webapp'
+        // TODO Fix problem with htmlmin; disabled temporarly
+        //'htmlmin:webapp'
     ],
     'build-webapp-html-copy': [
         'build-webapp-html',

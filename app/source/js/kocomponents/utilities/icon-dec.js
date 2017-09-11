@@ -1,6 +1,19 @@
 /**
- * Use for icons that use icon fonts. It adjusts for the slightly larger size of Font Awesome icons.
  * @module kocomponents/icon-dec
+ * @author joshdanielson
+ * @overview A decorative icon. It adds detects which icon font is being used 
+ * and adds it as an extra class. Additionaly, it sets aria-hidden 
+ * to "true" so that it is hidden from screen readers.
+ * @param {string} icon - The icon class from either the Ionicon or 
+ * Font Awesome icon fonts.
+ * @function [<iconClass>] - This function takes icon parameter and adds 
+ * the 'fa' or 'ion' to the icon's class depending on the icon's font 
+ * to enable targeting via CSS.
+ * @example 
+ * <icon-dec params="icon: 'ion-edit'"><icon-dec>
+ * // returns <i data-bind="css: 'ion ion-edit'" aria-hidden="true"></i>
+ * <icon-dec params="icon: 'fa-cash'"><icon-dec>
+ * // returns <i data-bind="css: 'fa fa-cash'" aria-hidden="true"></i>
  */
 'use strict';
 
@@ -11,9 +24,7 @@ var getObservable = require('../../utils/getObservable');
 var ko = require('knockout');
 
 function ViewModel(params) {
-    // parameter "icon" for the selected font icon using the Ionicon or Font Awesome icon fonts.
     this.icon = getObservable(params.icon);
-    // parameter "icon", string to fill icon class that adds the "fa" class if a Font Awesome icon.
     this.iconClass = ko.pureComputed(function() {
         if (this.icon().match(/^fa-.*$/))
         {
