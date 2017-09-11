@@ -273,7 +273,8 @@ function LiveNotificationManager(notificationText) {
  * autocomplete value (params.value) as the selected text value; if that
  * behavior is still wanted, must be done by the new callback.
  * @param {(Size|KnockoutObservable<Size>)} [params.size=Size.medium] Displayed
- * size for the input (applies to all the group).
+ * @param {KnockoutObservable<boolean>} [params.isDisabled] Allows to disable
+ * the input, preventing user interaction.
  * @param {Object} refs Set of references to generated elements meant to be
  * provided internally by the creator of the component.
  * @param {HTMLElement} refs.root Reference to the component instance element,
@@ -342,6 +343,10 @@ function ViewModel(params, refs, children) {
      * @member {KnockoutObservable<Size>} size
      */
     this.size = getObservable(params.size);
+    /**
+     * @member {KnockoutObservable<boolean>} isDisabled
+     */
+    this.isDisabled = getObservable(params.isDisabled);
 
     /// Internal members
     /**

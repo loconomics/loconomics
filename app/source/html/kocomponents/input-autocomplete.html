@@ -8,7 +8,8 @@
             'aria-owns': listBoxID,
             'aria-expanded': isExpanded,
             placeholder: placeholder,
-            'aria-activedescendant': activeSuggestionID
+            'aria-activedescendant': activeSuggestionID,
+            disable: isDisabled
         },
         event: { keypress: onKeyPress, keydown: onKeyDown, blur: onBlur, focus: onFocus }" />
     <!-- ko template: { if: afterInputElement, nodes: afterInputElement && [afterInputElement], data: $component } --><!-- /ko -->
