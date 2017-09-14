@@ -62,7 +62,6 @@ API so it's important to keep that clear while learning Knockout to avoid confus
 ## Recommended Pluralsight courses
 - [Knockout Fundamentals](https://www.pluralsight.com/courses/knockout)
 - [Building HTML5 and JavaScript Apps with MVVM and Knockout](https://www.pluralsight.com/courses/knockout-mvvm)
-- [Single Page Apps with HTML5, Web API, Knockout and jQuery](https://www.pluralsight.com/courses/spa)
 
 ## Advanced documentation
 ### Creating custom bindings
