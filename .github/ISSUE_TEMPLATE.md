@@ -14,7 +14,7 @@ Feature: FEATURE
      When ACTION (When some action by the actor, And some other action, And yet another action)
      Then RESULT (Then some testable outcome is achieved, And something else we can check happens too)
 ```
-
+### Mockups/Wireframes
 ---
 
 **FEATURE**
