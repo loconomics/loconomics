@@ -1,0 +1,40 @@
+/**
+Listing
+**/
+
+.Listing {
+    .Listing-heading {
+        display: table;
+        background: white;
+        padding 3em;
+        border-bottom: .02em solid $brand-primary;
+        margin-bottom: 1.5em;
+        .Listing-professionalPic {
+            vertical-align: middle;
+            text-align: center;
+            @media $mediaMinSm {
+                display: table-cell;
+                width: 50%;
+            }
+            .Avatar--lg,
+            img {
+                height: 12em;
+                width: 12em;
+            }
+        }
+        .Listing-bookingInfo {
+            vertical-align: middle;
+            text-align: center;
+            @media $mediaMinSm {
+                display: table-cell;
+                width: 50%;
+            }
+            button {
+                width: 50%;
+            }
+        }
+    }
+    section {
+        margin-bottom: 2em;
+    }
+}
