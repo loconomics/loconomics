@@ -39,6 +39,17 @@ function PublicUserProfile(values) {
         return nameParts.join(' ');
     }, this);
     
+    this.firstNameLastInitial = ko.pureComputed(function() {
+        var nameParts = [this.firstName()];
+        if (this.lastName())
+            nameParts.push(this.lastName().substring(0, 1) + '.');
+        if (this.secondLastName())
+            nameParts.push(this.secondLastName().substring(0, 1) + '.');
+        
+        return nameParts.join(' ');
+    }, this);
+    
+    
     // The businessName or the fullName; it's the best choice to expose a service-professional name
     this.publicName = ko.pureComputed(function() {
         var b = this.businessName();
