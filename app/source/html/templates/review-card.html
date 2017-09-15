@@ -3,7 +3,7 @@
     <li class="col-xs-10 col-xs-offset-1 col-md-5 ReviewCard" data-bind="attr: { id: 'review' + bookingID() }">
         <div class="Card-heading">
             <div class="Card-image">
-                <img class="Avatar Avatar--primary Avatar--xs" data-bind="attr: { src: 'https://loconomics.com/en-US/Profile/Photo/' + reviewerUserID(), alt: 'Photo of ' + reviewerName() }">
+                <img class="Avatar Avatar--primary Avatar--xs" data-bind="attr: { src: reviewerPhotoUrl(), alt: 'Photo of ' + reviewerName() }">
             </div>
             <div class="Card-title">
                 <h5 data-bind="text: reviewerName"></h5>
