@@ -1,0 +1,20 @@
+<script type="text/html" id="education-card-template">
+    <li class="col-xs-10 col-xs-offset-1 col-md-5 CredentialCard" data-bind="attr: { id: 'education' + educationID() }">
+        <div class="Card-heading">
+            <div class="Card-title">
+                <h5 data-bind="text: degreeCertificate"></h5>
+                <p data-bind="text: institutionName"></p>
+            </div>
+            <div class="Card-action"> 
+                <a class="btn btn-icon-link" data-bind="attr: {href: '#!educationForm/' + educationID(),'aria-label': 'Edit '+ degreeCertificate() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+            </div>
+        </div>
+        <div class="Card-description">
+            <hr>
+            <p data-bind="text: fieldOfStudy"></p>
+            <p data-bind="visible: fromYearAttended() || toYearAttended()">
+                <span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span>
+            </p>
+        </div>
+    </li>
+</script>

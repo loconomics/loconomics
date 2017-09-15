@@ -1,0 +1,21 @@
+
+<script type="text/html" id="review-card-template">
+    <li class="col-xs-10 col-xs-offset-1 col-md-5 ReviewCard" data-bind="attr: { id: 'review' + bookingID() }">
+        <div class="Card-heading">
+            <div class="Card-image">
+                <img class="Avatar Avatar--primary Avatar--xs" data-bind="attr: { src: 'https://loconomics.com/en-US/Profile/Photo/' + reviewerUserID(), alt: 'Photo of ' + reviewerName() }">
+            </div>
+            <div class="Card-title">
+                <h5 data-bind="text: reviewerName"></h5>
+                <p>Client since <span data-bind="text: reviewerUserSince, format: { type: 'datetime', format: 'MMMM YYYY' }"></span></p>
+            </div>
+            <div class="Card-action"> 
+                <a class="btn btn-icon-link" data-bind=""><icon-dec params="icon: 'ion-android-open'"></icon-dec></a>
+            </div>
+        </div>
+        <div data-bind="visible: publicReview" class="Card-description">
+            <hr>
+            <p data-bind="text: publicReview"></p>
+        </div>
+    </li>
+</script>
