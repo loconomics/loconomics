@@ -1,5 +1,5 @@
 /**
-    Listing Preview activity
+    Listing Editor activity
 
     Visualizes a listing of a user, or current user
 **/
@@ -14,7 +14,7 @@ var users = require('../data/users');
 var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 
-var A = Activity.extend(function ListingPreviewActivity() {
+var A = Activity.extend(function ListingEditorActivity() {
 
     Activity.apply(this, arguments);
 

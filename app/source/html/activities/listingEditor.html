@@ -1,0 +1,165 @@
+<!-- Activity listing -->
+<div data-activity="listingEditor" class="Listing" data-bind="css: { 'is-loading': isLoading }">
+    <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
+        <p class="small">
+            <span data-bind="text: jobTitle"></span> listing is <span data-bind="ifnot:isActive">inactive.</span><span data-bind="if:isActive">active.</span>
+            <button data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</button>
+        </p>
+    </app-message-bar>
+    <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
+    <div data-bind="with: user">
+        <!-- <nav id="listing-navigation" class="row" title="Listing shortcuts">
+            <ul>
+                <li data-bind="visible: $root.hasServicesOverview"><a href="#listing-services-overview">Overview</a></li>
+                <li><a href="listing-offerings">Offerings</a></li>
+                <li><a href="#listing-reviews">Reviews</a></li>
+                <li><a href="#listing-photos">Photos</a></li>
+                <li><a href="#listing-locations">Location</a></li>
+                <li><a href="#listing-credentials">Credentials</a></li>
+                <li><a href="#listing-about-service-professional">About</a></li>
+            </ul>
+        </nav> -->
+        <section id="listing-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
+            <div class="Listing-professionalPic">
+                <div class="Avatar Avatar--primary Avatar--lg">
+                    <img data-bind="attr: {src: profile().photoUrl()}" alt="Image of service professional">
+                </div>
+            </div>
+            <div class="Listing-bookingInfo">
+                <h1>
+                    <span data-bind="text: profile().firstNameLastInitial()"></span>
+                    <br>
+                    <span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span>
+                </h1>
+                <p data-bind="visible: profile().businessName(), text: profile().businessName()"></p>
+                <div data-bind="with: selectedJobTitle">
+                    <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'"></app-stars-rating>
+                    <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
+                        <p>Experience: <span data-bind="text: name"></span></p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" data-bind="attr: { href: $root.getBookLink, 'aria-label': 'Book ' + profile().firstNameLastInitial() + '&#8217;s' + ' services' }">Book</button>
+                <p>Response time <span data-bind="text: stats() && stats().responseTimeText"></span></p>
+            </div>
+        </section>
+        <div class="container">
+            <section id="listing-services-overview" class="row" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
+                    <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview of services</h2>
+                    <a data-bind="visible: $root.hasServicesOverview, attr: {href: '#!servicesOverview/' + jobTitleID(),'aria-label': 'Edit the overview of your '+ jobTitleSingularName() + 'services' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.hasServicesOverview, attr: {href: '#!servicesOverview/' + jobTitleID(),'aria-label': 'Add an overview of your '+ jobTitleSingularName() + 'services' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <div class="col-xs-12 col-md-12" data-bind="visible: $root.hasServicesOverview, with: selectedJobTitle">
+                    <p data-bind="text: intro, visible: hasIntro"></p>
+                    <ul class="list-unstyled" data-bind="foreach: serviceAttributes().serviceAttributes">
+                        <li class="col-xs-12 col-md-4">
+                            <h5 data-bind="text: name"></h5>
+                            <ul class="list-unstyled" data-bind="foreach: serviceAttributes">
+                                <li>
+                                    <p><icon-dec params="icon: 'ion-android-done'"></icon-dec> <span data-bind="text: name"></span></p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section id="listing-offerings" class="row" data-bind="with: selectedJobTitle" title="">
+                <!-- <h2 data-bind="visible: clientSpecificServices().length > 0"><i class="ion-social-usd-outline"></i> Offerings Only For You</h2>
+                <div class="row" data-bind="template: { name: 'listing-offering-template', foreach: clientSpecificServices() }"></div> -->
+                <div class="col-xs-12 col-md-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings<span class="text-danger" data-bind="visible: publicServices()"><em> (REQUIRED)</em></span></h2>
+                    <a data-bind="visible: publicServices(), attr: {href: '#!serviceProfessionalService/' + jobTitleID(),'aria-label': 'Edit your'+ jobTitleSingularName() + 'offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
+                    <a data-bind="visible: !publicServices(), attr: {href: '#!serviceProfessionalService/' + jobTitleID(),'aria-label': 'Add your'+ jobTitleSingularName() + 'offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
+                </div>
+                <!-- <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>  -->
+                <ul class="list-unstyled" data-bind="template: { name: 'offering-card-template', foreach: publicServices() }"></ul>
+            </section>
+            <section id="listing-reviews" class="row" data-bind="with: selectedJobTitle" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-chatboxes-outline'"></icon-dec> Reviews (<span data-bind="text: rating() && rating().totalRatings"></span>) <app-stars-rating params="rating: rating() && rating().ratingAverage, size: 'sm'"></app-stars-rating></h2>
+                </div>
+                <div class="col-xs-12 col-md-12">
+                    <h3>Summary</h3>
+                    <div class="row">
+                        <p class="col-xs-5 col-md-2" aria-describedby="rating1stars">Quality of Work</p>
+                        <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating1, size: 'xs'"></app-stars-rating>
+                    </div>    
+                    <div class="row">
+                        <p class="col-xs-5 col-md-2" aria-describedby="rating2stars">Environment</p>
+                        <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating2, size: 'xs'"></app-stars-rating>
+                    </div>    
+                    <div class="row">
+                        <p class="col-xs-5 col-md-2" aria-describedby="rating3stars">Professionalism</p>
+                        <app-stars-rating id="rating3stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating3, size: 'xs'"></app-stars-rating>
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: $root.reviews.list().length">
+                    <ul class="list-unstyled" data-bind="template: { name: 'review-card-template', foreach: $root.reviews.list() }"></ul>
+                    <div class="col-xs-12 col-md-12 text-center" data-bind="visible: !$root.reviews.endReached()">
+                        <button class="btn btn-primary" data-bind="click: $root.reviews.loadOlder">View more reviews</button>
+                    </div>
+                </div>
+            </section>
+            <section id="listing-photos" class="row" data-bind="visible: $root.workPhotos().length" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
+                    <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + selectedJobTitle.jobTitleID,'aria-label': 'Edit the photos of your '+ selectedJobTitle.jobTitleSingularName + 'work' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + selectedJobTitle.jobTitleID,'aria-label': 'Add photos your '+ selectedJobTitle.jobTitleSingularName + 'work' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <div class="row" data-bind="foreach: $root.workPhotos">
+                    <figure class="col-xs-12 col-sm-6">
+                        <img class="display-block" data-bind="attr: { src: url}">
+                        <figcaption class="text-center" data-bind="text: caption"></figcaption>
+                    </figure>
+                </div>
+                <div class="col-xs-12 col-md-12 text-center" data-bind="visible: $root.viewMoreWorkPhotosLabel()">
+                    <button class="btn btn-primary" data-bind="text: $root.viewMoreWorkPhotosLabel, click: $root.viewAllPhotos"></button>
+                </div>
+            </section>
+            <section id="listing-locations" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
+                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Locations</h2>
+                    <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + jobTitleID(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + jobTitleID(),'aria-label': 'Add '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <ul class="list-unstyled" data-bind="template: { name: 'location-card-template', foreach: $root.serviceAddresses() }"></ul>
+            </section>
+            <section id="listing-credentials" class="row" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
+                    <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials</h2>
+                    <a data-bind="visible: licensesCertifications().length, attr: {href: '#!licensesCertifications/' + jobTitleID(), 'aria-label': 'Edit your '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !licensesCertifications().length, attr: {href: '#!licensesCertifications/' + jobTitleID(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <div data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
+                    <ul class="list-unstyled" data-bind="template: { name: 'license-card-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
+                </div>
+                <div data-bind="visible: education().length">
+                    <ul class="list-unstyled" data-bind="template: { name: 'education-card-template', foreach: education }"></ul>
+                </div>
+            </section>
+            <section id="listing-verifications" class="row" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Verifications</h2>
+                    <a data-bind="attr: {href: '#!verifications','aria-label': 'View your verifications' }" class="btn btn-default pull-right">View</a>
+                </div>
+                <div data-bind="visible: verifications().length">
+                    <div class="row" data-bind="foreach: verifications">
+                        <div class="col-xs-6 col-sm-3">
+                        <i class="ion-android-done"></i> <p data-bind="text: verification().name"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="listing-about-service-professional" class="row" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-android-contact'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
+                    <a data-bind="visible: profile().publicBio, attr: {href: '#!aboutMe','aria-label': 'Edit your public bio' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !profile().publicBio, attr: {href: '#!aboutMe','aria-label': 'Add your public bio' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <div class="col-xs-12 col-md-12">
+                    <p data-bind="text: profile().publicBio"></p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
