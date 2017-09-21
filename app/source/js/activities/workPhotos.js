@@ -23,6 +23,7 @@ var A = Activity.extend(function WorkPhotosActivity() {
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
+    this.title('Your work photos');
 
     // Event handlers for photo list management
     this.registerHandler({

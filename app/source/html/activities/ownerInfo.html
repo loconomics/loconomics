@@ -2,29 +2,23 @@
 <div data-activity="ownerInfo" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <h1 class="hidden-xs hidden-sm">You own this place</h1>
+        <h1 data-bind="text: title"></h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Owner information</span>
-                </h2>
+                <h1 data-bind="text: title"></h1>
                 <ul class="TilesList TilesList--openEnd">
                     <li>
-                        <a class="InfoTile" href="/ownerPerks">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-nutrition-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
+                        <a class="IconContentItem" href="/ownerPerks">
+                            <icon-dec params="icon: 'ion-ios-nutrition-outline'"></icon-dec>
+                            <div class="Item-content">
                                 <p>Owner perks &amp; benefits</p>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a class="InfoTile" href="/ownerAcknowledgment">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-list-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
+                        <a class="IconContentItem" href="/ownerAcknowledgment">
+                            <icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec>
+                            <div class="Item-content">
                                 <p>Owner acknowledgment</p>
                             </div>
                         </a>
@@ -33,21 +27,17 @@
                 <h2 class="SectionTitle">Things you should read</h2>
                 <ul class="TilesList TilesList--openEnd">
                     <li>
-                        <a class="InfoTile" href="#!terms/terms-of-service?mustReturn=true">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-list-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
+                        <a class="IconContentItem" href="#!terms/terms-of-service?mustReturn=true">
+                            <icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec>
+                            <div class="Item-content">
                                 <p>Terms of Service</p>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a class="InfoTile" href="https://loconomics.gitbooks.io/loconomics-cooperative-bylaws/content/" target="_blank">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa fa-gavel" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
+                        <a class="IconContentItem" href="https://loconomics.gitbooks.io/loconomics-cooperative-bylaws/content/" target="_blank">
+                            <icon-dec params="icon: 'fa-gavel'"></icon-dec>
+                            <div class="Item-content">
                                 <p>Cooperative Bylaws</p>
                             </div>
                         </a>
