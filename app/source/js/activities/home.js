@@ -9,10 +9,9 @@ var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var Activity = require('../components/Activity');
 var snapPoints = require('../utils/snapPoints');
 
-var googleMapReady = require('../utils/googleMapReady');
-require('geocomplete');
 var user = require('../data/userProfile').data;
 var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
+require('../kocomponents/location-autocomplete');
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -22,7 +21,8 @@ var A = Activity.extend(function HomeActivity() {
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
     this.title('Find and book local services');
-    this.viewModel = new ViewModel(this.app.shell);
+    var viewModel = new ViewModel(this.app.shell);
+    this.viewModel = viewModel;
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
     this.$header = $('.AppNav');
@@ -58,51 +58,17 @@ var A = Activity.extend(function HomeActivity() {
             }
         }
     });
-    // LOCATION AUTOCOMPLETE:
-    // Load Google Maps API with Places and prepare the location autocomplete
-    var $location = this.$activity.find('[name=location]');
-    var vm = this.viewModel;
-    googleMapReady(function(/*UNCOMMENT FOR USE THE 'WITHOUT PLUGIN' CODE:*//*google*/) {
-        var options = {
-            types: ['geocode'],
-            bounds: null,
-            componentRestrictions: {
-                country: 'US'
-            }
-        };
 
-        // WITH PLUGIN:
-        $location.geocomplete(options);
-        $location.on('geocode:result', function(e, place) {
-            if (place && place.geometry) {
-                // Save to viewmodel
-                vm.lat(place.geometry.location.lat());
-                vm.lng(place.geometry.location.lng());
-                vm.city(place.formatted_address);
-                console.log('LOCATION: ', place);
-            }
-        });
-
-        // WITHOUT PLUGIN: Calling direclty Google Maps API, core feature of the plugin
-        /*
-        var autocomplete = new google.maps.places.Autocomplete(
-            $location.get(0), options
-        );
-
-        google.maps.event.addListener(
-            autocomplete,
-            'place_changed',
-            function() {
-                var place = autocomplete.getPlace();
-                if (place && place.geometry) {
-                    // Save to viewmodel
-                    vm.lat(place.geometry.location.lat());
-                    vm.lng(place.geometry.location.lng());
-                    console.log('LOCATION: ', place.geometry);
-                }
-            }
-        );*/
-    });
+    viewModel.onGeocodeResult = function(e, place) {
+        console.log("Here");
+        if (place && place.geometry) {
+            // Save to viewmodel
+            viewModel.lat(place.geometry.location.lat());
+            viewModel.lng(place.geometry.location.lng());
+            viewModel.city(place.formatted_address);
+            console.log('LOCATION: ', place);
+        }
+    };
 });
 
 exports.init = A.init;
