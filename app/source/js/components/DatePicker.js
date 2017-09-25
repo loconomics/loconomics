@@ -5,7 +5,7 @@
  * Copyright 2014 Loconomics Coop.
  *
  * Based on:
- * bootstrap-datepicker.js 
+ * bootstrap-datepicker.js
  * http://www.eyecon.ro/bootstrap-datepicker
  * =========================================================
  * Copyright 2012 Stefan Petre
@@ -23,7 +23,7 @@
  * limitations under the License.
  * ========================================================= */
 
-var $ = require('jquery'); 
+var $ = require('jquery');
 
 var classes = {
     component: 'DatePicker',
@@ -148,29 +148,34 @@ var DPGlobal = {
     },
     headTemplate: '<thead>'+
                         '<tr>'+
-                            '<th class="prev">&lsaquo;</th>'+
+                            '<th class="prev"><button type="button" aria-label="{prevLabel}">&lsaquo;</button></th>'+
                             '<th colspan="5" class="switch"></th>'+
-                            '<th class="next">&rsaquo;</th>'+
+                            '<th class="next"><button type="button" aria-label="{nextLabel}">&rsaquo;</button></th>'+
                         '</tr>'+
                     '</thead>',
     contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>'
 };
+var createHead = function(options) {
+    return DPGlobal.headTemplate
+    .replace('{prevLabel}', options.prevLabel)
+    .replace('{nextLabel}', options.nextLabel);
+};
 DPGlobal.template = '<div class="' + classes.component + '">'+
                         '<div class="' + classes.days + '">'+
                             '<table class=" table-condensed">'+
-                                DPGlobal.headTemplate+
+                                createHead({ prevLabel: 'Previous month', nextLabel: 'Next month' }) +
                                 '<tbody></tbody>'+
                             '</table>'+
                         '</div>'+
                         '<div class="' + classes.months + '">'+
                             '<table class="table-condensed">'+
-                                DPGlobal.headTemplate+
+                                createHead({ prevLabel: 'Previous year', nextLabel: 'Next year' }) +
                                 DPGlobal.contTemplate+
                             '</table>'+
                         '</div>'+
                         '<div class="' + classes.years + '">'+
                             '<table class="table-condensed">'+
-                                DPGlobal.headTemplate+
+                                createHead({ prevLabel: 'Previous decade', nextLabel: 'Next decade' }) +
                                 DPGlobal.contTemplate+
                             '</table>'+
                         '</div>'+
@@ -187,11 +192,11 @@ var DatePicker = function(element, options) {
     /*jshint maxstatements:50,maxcomplexity:30*/
     this.element = $(element);
     this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
-    
+
     this.isInput = this.element.is('input');
     this.component = this.element.is('.date') ? this.element.find('.add-on') : false;
     this.isPlaceholder = this.element.is('.calendar-placeholder');
-    
+
     // Creating initial HTML
     this.picker = $(DPGlobal.template)
                         .appendTo(this.isPlaceholder ? this.element : 'body')
@@ -199,7 +204,7 @@ var DatePicker = function(element, options) {
     this.picker.addClass(this.isPlaceholder ? '' : 'dropdown-menu');
     if (options.extraClasses)
         this.picker.addClass(options.extraClasses);
-    
+
     // Create base html for..
     var html = '';
     // ..Days
@@ -218,7 +223,7 @@ var DatePicker = function(element, options) {
         html += '<span class="' + classes.year + (i === -1 || i === 10 ? ' old' : '') + '"></span>';
     }
     yearCont.html(html);
-    
+
     // Target set-up
     if (this.isPlaceholder) {
         this.picker.show();
@@ -244,7 +249,7 @@ var DatePicker = function(element, options) {
             this.element.on('click', $.proxy(this.show, this));
         }
     }
-    
+
     /* Touch events to swipe dates */
     this.element
     .on('swipeleft', function(e) {
@@ -297,12 +302,12 @@ var DatePicker = function(element, options) {
 
 DatePicker.prototype = {
     constructor: DatePicker,
-    
+
     _triggerViewDateChange: function() {
         var viewModeName = DPGlobal.modes[this.viewMode].clsName;
         this.element.trigger(events.viewDateChanged, [{ viewDate: this.viewDate, viewMode: viewModeName }]);
     },
-    
+
     show: function(e) {
         this.picker.show();
         this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
@@ -310,7 +315,7 @@ DatePicker.prototype = {
         $(window)
             .off('resize.datepicker')
             .on('resize.datepicker', $.proxy(this.place, this));
-        
+
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -330,7 +335,7 @@ DatePicker.prototype = {
             date: this.date
         });
     },
-    
+
     hide: function(){
         this.picker.hide();
         $(window).off('resize.datepicker', this.place);
@@ -345,7 +350,7 @@ DatePicker.prototype = {
             date: this.date
         });
     },
-    
+
     set: function() {
         var formated = DPGlobal.formatDate(this.date, this.format);
         if (!this.isInput) {
@@ -358,12 +363,12 @@ DatePicker.prototype = {
         }
         this.element.trigger(events.dateSet, [this.date, formated]);
     },
-    
+
     /**
         Sets a date as value and notify with an event.
         Parameter dontNotify is only for cases where the calendar or
         some related component gets already updated but the highlighted
-        date needs to be updated without create infinite recursion 
+        date needs to be updated without create infinite recursion
         because of notification. In other case, dont use.
     **/
     setValue: function(newDate, dontNotify) {
@@ -377,7 +382,7 @@ DatePicker.prototype = {
         this.fill();
         // TODO Must check dontNotify?
         this._triggerViewDateChange();
-        
+
         if (dontNotify !== true) {
             // Notify:
             this.element.trigger({
@@ -387,15 +392,15 @@ DatePicker.prototype = {
             });
         }
     },
-    
+
     getValue: function() {
         return this.date;
     },
-    
+
     getViewDate: function() {
         return this.viewDate;
     },
-    
+
     moveValue: function(dir, mode) {
         // dir can be: 'prev', 'next'
         if (['prev', 'next'].indexOf(dir && dir.toLowerCase()) == -1)
@@ -409,13 +414,13 @@ DatePicker.prototype = {
 
         this.date['set' + mode.navFnc].call(
             this.date,
-            this.date['get' + mode.navFnc].call(this.date) + 
+            this.date['get' + mode.navFnc].call(this.date) +
             mode.navStep * (dir === 'prev' ? -1 : 1)
         );
         this.setValue(this.date);
         return this.date;
     },
-    
+
     place: function(){
         var offset = this.component ? this.component.offset() : this.element.offset();
         this.picker.css({
@@ -423,7 +428,7 @@ DatePicker.prototype = {
             left: offset.left
         });
     },
-    
+
     update: function(newDate){
         this.date = DPGlobal.parseDate(
             typeof newDate === 'string' ? newDate : (this.isInput ? this.element.prop('value') : this.element.data('date')),
@@ -433,11 +438,11 @@ DatePicker.prototype = {
         this.fill();
         this._triggerViewDateChange();
     },
-    
+
     getDaysElements: function() {
         return this.picker.find('.' + classes.days + ' .' + classes.monthDay);
     },
-    
+
     fillDow: function(){
         var dowCnt = this.weekStart;
         var html = '<tr class="' + classes.weekDays + '">';
@@ -447,7 +452,7 @@ DatePicker.prototype = {
         html += '</tr>';
         this.picker.find('.' + classes.days + ' thead').append(html);
     },
-    
+
     fillMonths: function(){
         var html = '';
         var i = 0;
@@ -456,20 +461,20 @@ DatePicker.prototype = {
         }
         this.picker.find('.' + classes.months + ' td').append(html);
     },
-    
+
     fill: function() {
         /*jshint maxstatements:70, maxcomplexity:28*/
         var d = new Date(this.viewDate),
             year = d.getFullYear(),
             month = d.getMonth(),
             currentDate = this.date.valueOf();
-        
+
         // Calculate first date to show, usually on previous month:
         var prevMonth = new Date(year, month-1, 28,0,0,0,0),
             lastDayPrevMonth = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
         // L18N?
         prevMonth.setDate(lastDayPrevMonth);
-        prevMonth.setDate(lastDayPrevMonth - (prevMonth.getDay() - this.weekStart + 7)%7);        
+        prevMonth.setDate(lastDayPrevMonth - (prevMonth.getDay() - this.weekStart + 7)%7);
 
         // IMPORTANT: Avoid duplicated work, by checking we are still showing the same month,
         // so not need to 're-render' everything, only swap the active date
@@ -485,8 +490,8 @@ DatePicker.prototype = {
                 index = diff + this.date.getDate(),
                 irow = (index / 7) |0,
                 icol = index % 7;
-            tbody.find('tr:eq(' + irow + ') td:eq(' + icol + ')').addClass(classes.active);        
-            
+            tbody.find('tr:eq(' + irow + ') td:eq(' + icol + ')').addClass(classes.active);
+
             this._prevDate = new Date(this.viewDate);
         }
         else {
@@ -505,7 +510,7 @@ DatePicker.prototype = {
                 prevY,
                 prevM;
 
-            // Update days values    
+            // Update days values
             var weekTr = this.picker.find('.' + classes.days + ' tbody tr:first-child()');
             var dayTd = null;
             while(prevMonth.valueOf() < nextMonth) {
@@ -540,9 +545,9 @@ DatePicker.prototype = {
         }
 
         // Fill month and year modes:
-        
+
         var currentYear = this.date.getFullYear();
-        
+
         var months = this.picker.find('.' + classes.months)
                     .find('th:eq(1)')
                         .html(year)
@@ -551,14 +556,14 @@ DatePicker.prototype = {
         if (currentYear === year) {
             months.eq(this.date.getMonth()).addClass(classes.active);
         }
-        
+
         year = parseInt(year/10, 10) * 10;
         var yearCont = this.picker.find('.' + classes.years)
                             .find('th:eq(1)')
                                 .text(year + '-' + (year + 9))
                                 .end()
                             .find('td');
-        
+
         year -= 1;
         var i;
         var yearSpan = yearCont.find('span:first-child()');
@@ -570,19 +575,19 @@ DatePicker.prototype = {
             yearSpan = yearSpan.next();
         }
     },
-    
+
     moveDate: function(dir, mode) {
         // dir can be: 'prev', 'next'
         if (['prev', 'next'].indexOf(dir && dir.toLowerCase()) == -1)
             // No valid option:
             return;
-            
+
         // default mode is the current one
         mode = mode || this.viewMode;
 
         this.viewDate['set'+DPGlobal.modes[mode].navFnc].call(
             this.viewDate,
-            this.viewDate['get'+DPGlobal.modes[mode].navFnc].call(this.viewDate) + 
+            this.viewDate['get'+DPGlobal.modes[mode].navFnc].call(this.viewDate) +
             DPGlobal.modes[mode].navStep * (dir === 'prev' ? -1 : 1)
         );
         this.fill();
@@ -597,7 +602,7 @@ DatePicker.prototype = {
         var target = $(e.target).closest('span.month, span.year, td, th');
         if (target.length === 1) {
             var month, year;
-            
+
             var completeMonthYear = function completeMonthYear() {
                 if (this.viewMode !== 0) {
                     this.date = new Date(this.viewDate);
@@ -653,12 +658,12 @@ DatePicker.prototype = {
             }
         }
     },
-    
+
     mousedown: function(e){
         e.stopPropagation();
         e.preventDefault();
     },
-    
+
     showMode: function(dir) {
         if (dir) {
             this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
