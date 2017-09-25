@@ -10,7 +10,7 @@ var $ = require('jquery');
 var TAG_NAME = 'location-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/location-autocomplete.html');
 var googleMapReady = require('../utils/googleMapReady');
-
+require('geocomplete');
 var ko = require('knockout');
 
 function ViewModel(params, refs) {
