@@ -149,7 +149,7 @@ var DPGlobal = {
     headTemplate: '<thead>'+
                         '<tr>'+
                             '<th class="prev"><button type="button" aria-label="{prevLabel}">&lsaquo;</button></th>'+
-                            '<th colspan="5" class="switch"></th>'+
+                            '<th colspan="5" class="switch">{switchContent} <span class="sr-only" aria-label="{switchActionLabel}"></span></th>'+
                             '<th class="next"><button type="button" aria-label="{nextLabel}">&rsaquo;</button></th>'+
                         '</tr>'+
                     '</thead>',
@@ -158,24 +158,40 @@ var DPGlobal = {
 var createHead = function(options) {
     return DPGlobal.headTemplate
     .replace('{prevLabel}', options.prevLabel)
-    .replace('{nextLabel}', options.nextLabel);
+    .replace('{nextLabel}', options.nextLabel)
+    .replace('{switchActionLabel}', options.switchActionLabel || '')
+    .replace('{switchContent}', options.hasSwitchButton ? '<button type="button"></button>' : '<button type="button" role="presentational"></button>');
 };
 DPGlobal.template = '<div class="' + classes.component + '">'+
                         '<div class="' + classes.days + '">'+
-                            '<table class=" table-condensed">'+
-                                createHead({ prevLabel: 'Previous month', nextLabel: 'Next month' }) +
+                            '<table class=" table-condensed" role="presentation">'+
+                                createHead({
+                                    prevLabel: 'Previous month',
+                                    nextLabel: 'Next month',
+                                    switchActionLabel: '- Switch to years mode',
+                                    hasSwitchButton: true
+                                }) +
                                 '<tbody></tbody>'+
                             '</table>'+
                         '</div>'+
                         '<div class="' + classes.months + '">'+
-                            '<table class="table-condensed">'+
-                                createHead({ prevLabel: 'Previous year', nextLabel: 'Next year' }) +
+                            '<table class="table-condensed" role="presentation">'+
+                                createHead({
+                                    prevLabel: 'Previous year',
+                                    nextLabel: 'Next year',
+                                    switchActionLabel: '- Switch to decades mode',
+                                    hasSwitchButton: true
+                                }) +
                                 DPGlobal.contTemplate+
                             '</table>'+
                         '</div>'+
                         '<div class="' + classes.years + '">'+
-                            '<table class="table-condensed">'+
-                                createHead({ prevLabel: 'Previous decade', nextLabel: 'Next decade' }) +
+                            '<table class="table-condensed" role="presentation">'+
+                                createHead({
+                                    prevLabel: 'Previous decade',
+                                    nextLabel: 'Next decade',
+                                    hasSwitchButton: false
+                                }) +
                                 DPGlobal.contTemplate+
                             '</table>'+
                         '</div>'+
@@ -211,7 +227,7 @@ var DatePicker = function(element, options) {
     for(var r = 0; r < 6; r++) {
         html += '<tr>';
         for(var c = 0; c < 7; c++) {
-            html += '<td class="' + classes.monthDay + '"><span>&nbsp;</span></td>';
+            html += '<td class="' + classes.monthDay + '"><button type="button">&nbsp;</button></td>';
         }
         html += '</tr>';
     }
@@ -220,7 +236,7 @@ var DatePicker = function(element, options) {
     html = '';
     var yearCont = this.picker.find('.' + classes.years + ' td');
     for (var i = -1; i < 11; i++) {
-        html += '<span class="' + classes.year + (i === -1 || i === 10 ? ' old' : '') + '"></span>';
+        html += '<button type="button" class="' + classes.year + (i === -1 || i === 10 ? ' old' : '') + '"></button>';
     }
     yearCont.html(html);
 
@@ -260,6 +276,52 @@ var DatePicker = function(element, options) {
         e.preventDefault();
         this.moveDate('prev');
     }.bind(this));
+
+    // Arrow keys to move between cells
+    var ARROW_KEYS = {
+        LEFT: 37,
+        RIGHT: 39,
+        UP: 38,
+        DOWN: 40
+    };
+    var ARROW_VALUES = Object.keys(ARROW_KEYS).map(function(k) {
+        return ARROW_KEYS[k];
+    });
+    this.element
+    .on('keydown', function(e) {
+        var btn = $(e.target);
+        var isCell = btn.is('td > button');
+        if (isCell && ARROW_VALUES.indexOf(e.which) > -1) {
+            e.preventDefault();
+            var cell = btn.parent()[0];
+            var table = btn.closest('table');
+            var col = cell.cellIndex;
+            var row = cell.parentNode.rowIndex;
+            // Move focus between cell buttons in the table
+            switch (e.which) {
+                case ARROW_KEYS.LEFT:
+                    col--;
+                    break;
+                case ARROW_KEYS.RIGHT:
+                    col++;
+                    break;
+                case ARROW_KEYS.UP:
+                    row--;
+                    break;
+                case ARROW_KEYS.DOWN:
+                    row++;
+                    break;
+            }
+            var maxRows = table.find('tr').length;
+            var maxCols = table.find('tr > td').length;
+            row = Math.max(2, Math.min(row, maxRows));
+            col = Math.max(0, Math.min(col, maxCols));
+            // Find and set focus
+            table
+            .find('tr:eq(' + row + ') td:eq(' + col + ') button')
+            .focus();
+        }
+    });
 
     /* Set-up view mode */
     this.minViewMode = options.minViewMode||this.element.data('date-minviewmode')||0;
@@ -457,7 +519,7 @@ DatePicker.prototype = {
         var html = '';
         var i = 0;
         while (i < 12) {
-            html += '<span class="' + classes.month + '">'+DPGlobal.dates.monthsShort[i++]+'</span>';
+            html += '<button type="button" class="' + classes.month + '">'+DPGlobal.dates.monthsShort[i++]+'</button>';
         }
         this.picker.find('.' + classes.months + ' td').append(html);
     },
@@ -499,7 +561,7 @@ DatePicker.prototype = {
 
             // Header
             this.picker
-            .find('.' + classes.days + ' th:eq(1)')
+            .find('.' + classes.days + ' th.switch > button')
             .html(DPGlobal.dates.months[month] + ' ' + year);
 
             // Calculate ending
@@ -532,7 +594,7 @@ DatePicker.prototype = {
                 dayTd
                 .attr('class', classes.monthDay + ' ' + clsName)
                 .data('date-time', prevMonth.toISOString())
-                .children('span').text(prevMonth.getDate());
+                .children('button').text(prevMonth.getDate());
 
                 this.picker.trigger(events.dayRendered, [dayTd]);
 
@@ -549,30 +611,30 @@ DatePicker.prototype = {
         var currentYear = this.date.getFullYear();
 
         var months = this.picker.find('.' + classes.months)
-                    .find('th:eq(1)')
+                    .find('th.switch > button')
                         .html(year)
                         .end()
-                    .find('span').removeClass(classes.active);
+                    .find('button').removeClass(classes.active);
         if (currentYear === year) {
             months.eq(this.date.getMonth()).addClass(classes.active);
         }
 
         year = parseInt(year/10, 10) * 10;
         var yearCont = this.picker.find('.' + classes.years)
-                            .find('th:eq(1)')
+                            .find('th.switch > button')
                                 .text(year + '-' + (year + 9))
                                 .end()
                             .find('td');
 
         year -= 1;
         var i;
-        var yearSpan = yearCont.find('span:first-child()');
+        var yearBtn = yearCont.find('button:first-child()');
         for (i = -1; i < 11; i++) {
-            yearSpan
+            yearBtn
             .text(year)
             .attr('class', classes.year + (i === -1 || i === 10 ? ' old' : '') + (currentYear === year ? ' ' + classes.active : ''));
             year += 1;
-            yearSpan = yearSpan.next();
+            yearBtn = yearBtn.next();
         }
     },
 
@@ -599,7 +661,7 @@ DatePicker.prototype = {
         /*jshint maxcomplexity:16, maxstatements:30*/
         e.stopPropagation();
         e.preventDefault();
-        var target = $(e.target).closest('span.month, span.year, td, th');
+        var target = $(e.target).closest('button.month, button.year, td, th');
         if (target.length === 1) {
             var month, year;
 
@@ -618,14 +680,13 @@ DatePicker.prototype = {
             }.bind(this);
 
             if (target.hasClass('switch')) {
-                    this.showMode(1);
+                this.showMode(1);
             }
-            else if (target.hasClass('prev') ||
-                target.hasClass('next')) {
-                    this.moveDate(target[0].className);
+            else if (target.hasClass('prev') || target.hasClass('next')) {
+                this.moveDate(target[0].className);
             }
             else if (target.hasClass(classes.month)) {
-                month = target.parent().find('span').index(target);
+                month = target.parent().find('button').index(target);
                 this.viewDate.setMonth(month);
                 completeMonthYear();
                 this._triggerViewDateChange();
@@ -668,7 +729,13 @@ DatePicker.prototype = {
         if (dir) {
             this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
         }
-        this.picker.find('>div').hide().filter('.' + classes.component + '-' + DPGlobal.modes[this.viewMode].clsName).show();
+        this.picker
+        .find('>div')
+        .hide()
+        .filter('.' + classes.component + '-' + DPGlobal.modes[this.viewMode].clsName)
+        .show()
+        .find('.switch > button')
+        .focus();
     }
 };
 

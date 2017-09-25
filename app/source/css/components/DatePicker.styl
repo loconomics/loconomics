@@ -54,6 +54,15 @@ $DatePicker-day-content-width = 28px;
         top -6px
         left 7px
 
+    // Reset button styles
+    button
+        width 100%
+        height 100%
+        border none
+        background transparent
+        padding: 0;
+        margin: 0;
+
     > div
         display none
 
@@ -80,7 +89,7 @@ $DatePicker-day-content-width = 28px;
         height $DatePicker-day-content-height
 
         &.day
-            span
+            button
                 display inline-block
                 width $DatePicker-day-content-width
                 line-height $DatePicker-day-content-height
@@ -103,19 +112,19 @@ $DatePicker-day-content-width = 28px;
             color #fff
             text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
 
-        &.active span
+        &.active button
             background-color: $brand-info-dark;
             border-radius: 100%;
 
         &.active:hover
-            span
+            button
                 background none
 
     td.day
         height $DatePicker-day-cell-height
 
-    span.month,
-    span.year
+    button.month,
+    button.year
         display block
         float left
         cursor pointer
@@ -146,11 +155,6 @@ $DatePicker-day-content-width = 28px;
         &.next
         &.prev
             font-size ($font-size-base * 1.5)
-            > button
-                width 100%
-                height 100%
-                border none
-                background transparent
 
     thead tr:first-child
         th
@@ -178,7 +182,7 @@ $DatePicker-day-content-width = 28px;
     /* Carets to visually notify 'clickable headers' */
     .DatePicker-days
     .DatePicker-months
-        th.switch:after
+        th.switch > button:after
             content: ''
             $caret(6px)
 
