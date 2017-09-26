@@ -166,7 +166,7 @@ var createHead = function(options) {
     .replace('{switchActionLabel}', options.switchActionLabel || '')
     .replace('{switchButtonStart}', options.hasSwitchButton ? '<button type="button">' : '<button type="button" role="presentational">');
 };
-DPGlobal.template = '<div class="' + classes.component + '">'+
+DPGlobal.template = '<div tabindex="-1" class="' + classes.component + '">'+
                         '<p class="sr-only ' + classes.instructions + '"' + ' aria-live="assertive"></p>' +
                         '<div class="' + classes.days + '">'+
                             '<table class=" table-condensed" role="presentation">'+
@@ -293,7 +293,8 @@ var DatePicker = function(element, options) {
         return ARROW_KEYS[k];
     });
     this.element
-    .on('keydown', function(e) {
+    .off('keydown.datepicker.arrows')
+    .on('keydown.datepicker.arrows', function(e) {
         var btn = $(e.target);
         var isCell = btn.is('td > button');
         if (isCell && ARROW_VALUES.indexOf(e.which) > -1) {
@@ -327,6 +328,16 @@ var DatePicker = function(element, options) {
             .focus();
         }
     });
+
+    // Esc key to close
+    var ESCAPE_KEY = 27;
+    this.element
+    .off('keydown.datepicker.esc')
+    .on('keydown.datepicker.esc', function(e) {
+        if (e.which == ESCAPE_KEY) {
+            this.hide();
+        }
+    }.bind(this));
 
     /* Set-up view mode */
     this.minViewMode = options.minViewMode||this.element.data('date-minviewmode')||0;
@@ -408,6 +419,8 @@ DatePicker.prototype = {
         });
     },
 
+    openerElement: null,
+
     show: function(e) {
         if (e) {
             // Cancel default
@@ -419,7 +432,12 @@ DatePicker.prototype = {
             this.picker.show();
             this.autoPlaceOn();
             this.autoHideOn();
+            this.openerElement = e.target;
         }
+        else {
+            this.openerElement = null;
+        }
+        this.picker.focus();
         // Accessibility: live instructions
         var $ins = this.element.find('.' + classes.instructions);
         // Important: right now, the calendar/picker may appear hidden (CSS), we need
@@ -433,8 +451,26 @@ DatePicker.prototype = {
         this.triggerShow();
     },
 
-    hide: function(){
-        this.picker.hide();
+    /**
+     * Hook to be replaced with a function that runs a custom hide logic.
+     * Must return true if the default logic don't want to be performed.
+     */
+    customHide: function() {
+        return false;
+    },
+
+    setCustomHide: function(fn) {
+        this.customHide = fn;
+    },
+
+    hide: function() {
+        if (!this.customHide()) {
+            this.picker.hide();
+        }
+        if (this.openerElement) {
+            // Restore focus
+            this.openerElement.focus();
+        }
         $(window).off('resize.datepicker', this.place);
         this.viewMode = this.startViewMode;
         this.showMode();

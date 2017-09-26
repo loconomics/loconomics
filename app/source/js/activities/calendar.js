@@ -88,20 +88,36 @@ var A = Activity.extend(function CalendarActivity() {
         }.bind(this)
     });
 
-    this.hideDatepicker = function() {
-        // Run datepicker close logic by calling 'hide', it fixes some bugs
-        this.$datepicker.datepicker('hide')
+    // Set-up our special hide logic for when running datepicker('hide')
+    var openerElement = null;
+    var thatDatepicker = this.$datepicker;
+    thatDatepicker.datepicker('setCustomHide', function() {
+        thatDatepicker.removeClass('is-visible');
+        this.picker.hide();
         // but keep the element itself visible, since we use container transition :-)
-        .children().show();
+        thatDatepicker.children().show();
+        setTimeout(function() {
+            if (openerElement) {
+                openerElement.focus();
+            }
+        }, 300);
+        return true;
+    });
+
+    this.hideDatepicker = function() {
+        this.$datepicker.datepicker('hide');
     };
 
     // Creating viewModel handlers to manage calendar
     this.viewModel.openDatePicker = function(d, e) {
-        this.$datepicker.toggleClass('is-visible');
-        this.hideDatepicker();
         if (this.$datepicker.hasClass('is-visible')) {
+            this.hideDatepicker();
+        }
+        else {
+            this.$datepicker.addClass('is-visible');
             this.$datepicker.datepicker('show');
         }
+        openerElement = e.target;
         e.preventDefault();
         e.stopPropagation();
     }.bind(this);
