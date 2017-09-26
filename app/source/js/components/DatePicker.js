@@ -50,8 +50,9 @@ var events = {
     viewDateChanged: 'viewDateChanged'
 };
 
-var calendarInstructions = 'Monthly calendar; navigate with Tab, press Enter to choose a date;' +
-    'arrow keys allowed to move between the grid of dates';
+var calendarInstructions = 'Expanded, navigate with Tab, press Enter to choose a date;' +
+    'arrow keys allowed to move between the monthly grid of dates';
+var hideNotification = 'Collapsed';
 
 var DPGlobal = {
     modes: [
@@ -166,7 +167,7 @@ var createHead = function(options) {
     .replace('{switchActionLabel}', options.switchActionLabel || '')
     .replace('{switchButtonStart}', options.hasSwitchButton ? '<button type="button">' : '<button type="button" role="presentational">');
 };
-DPGlobal.template = '<div tabindex="-1" class="' + classes.component + '">'+
+DPGlobal.template = '<div tabindex="-1" aria-label="Monthly calendar" role="application" class="' + classes.component + '">'+
                         '<p class="sr-only ' + classes.instructions + '"' + ' aria-live="assertive"></p>' +
                         '<div class="' + classes.days + '">'+
                             '<table class=" table-condensed" role="presentation">'+
@@ -375,7 +376,7 @@ var DatePicker = function(element, options) {
     this.fillDow();
     this.fillMonths();
     this.update();
-    this.showMode();
+    this.showMode(undefined, true);
 };
 
 DatePicker.prototype = {
@@ -386,8 +387,15 @@ DatePicker.prototype = {
         this.element.trigger(events.viewDateChanged, [{ viewDate: this.viewDate, viewMode: viewModeName }]);
     },
 
-    prepareOnShow: function() {
-
+    setNotification: function(text, delay) {
+        var $ins = this.element.find('.' + classes.instructions);
+        clearTimeout(this._setNotificationTimeout);
+        this._setNotificationTimeout = setTimeout(function() {
+            $ins.text(text);
+            this._setNotificationTimeout = setTimeout(function() {
+                $ins.text('');
+            }, 3000);
+        }.bind(this), delay);
     },
 
     autoHideOff: function() {
@@ -437,17 +445,12 @@ DatePicker.prototype = {
         else {
             this.openerElement = null;
         }
+        // Accessibility
         this.picker.focus();
-        // Accessibility: live instructions
-        var $ins = this.element.find('.' + classes.instructions);
         // Important: right now, the calendar/picker may appear hidden (CSS), we need
         // to delay it a bit or nothing will happen under some circustances.
-        setTimeout(function() {
-            $ins.text(calendarInstructions);
-            setTimeout(function() {
-                $ins.text('');
-            }, 3000);
-        }, 400);
+        this.setNotification(calendarInstructions, 400);
+
         this.triggerShow();
     },
 
@@ -473,7 +476,7 @@ DatePicker.prototype = {
         }
         $(window).off('resize.datepicker', this.place);
         this.viewMode = this.startViewMode;
-        this.showMode();
+        this.showMode(undefined, true);
         if (!this.isInput) {
             $(document).off('mousedown.datepicker', this.hide);
         }
@@ -482,6 +485,7 @@ DatePicker.prototype = {
             type: events.hide,
             date: this.date
         });
+        this.setNotification(hideNotification);
     },
 
     set: function() {
@@ -815,7 +819,7 @@ DatePicker.prototype = {
         e.preventDefault();
     },
 
-    showMode: function(dir) {
+    showMode: function(dir, doNotFocus) {
         if (dir) {
             this.viewMode = Math.max(this.minViewMode, Math.min(2, this.viewMode + dir));
         }
@@ -824,8 +828,9 @@ DatePicker.prototype = {
         .hide()
         .filter('.' + classes.component + '-' + DPGlobal.modes[this.viewMode].clsName)
         .show()
-        .find('.switch > button')
-        .focus();
+        .find('.switch > button');
+        if (!doNotFocus)
+            this.picker.focus();
     }
 };
 

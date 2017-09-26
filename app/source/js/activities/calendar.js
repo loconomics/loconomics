@@ -49,7 +49,7 @@ var A = Activity.extend(function CalendarActivity() {
 
                     // Update datepicker selected date on date change (from
                     // a different source than the datepicker itself
-                    this.$datepicker.removeClass('is-visible');
+                    this.hideDatepicker();
                     // Change not from the widget?
                     if (this.$datepicker.datepicker('getValue').toISOString() !== isoDate)
                         this.$datepicker.datepicker('setValue', date, true);
