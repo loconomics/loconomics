@@ -28,7 +28,13 @@ function ViewModel(params, refs) {
 
         // WITH PLUGIN:
         $location.geocomplete(options);
-        $location.on('geocode:result', params.onGeocodeResult);
+        $location.on('geocode:result', function(err, place) {
+            if(err)
+                return console.log(err);
+            if (place && place.geometry)
+                params.onGeocodeResult(place);
+    
+        });
 
         // WITHOUT PLUGIN: Calling direclty Google Maps API, core feature of the plugin
         /*
