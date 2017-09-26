@@ -92,7 +92,11 @@ var A = Activity.extend(function CalendarActivity() {
     var openerElement = null;
     var thatDatepicker = this.$datepicker;
     thatDatepicker.datepicker('setCustomHide', function() {
-        thatDatepicker.removeClass('is-visible');
+        thatDatepicker
+        .attr('hidden', 'hidden')
+        .one('transitionend', function() {
+            thatDatepicker.css('display', 'none');
+        });
         this.picker.hide();
         // but keep the element itself visible, since we use container transition :-)
         thatDatepicker.children().show();
@@ -110,12 +114,15 @@ var A = Activity.extend(function CalendarActivity() {
 
     // Creating viewModel handlers to manage calendar
     this.viewModel.openDatePicker = function(d, e) {
-        if (this.$datepicker.hasClass('is-visible')) {
+        if (!this.$datepicker.attr('hidden')) {
             this.hideDatepicker();
         }
         else {
-            this.$datepicker.addClass('is-visible');
-            this.$datepicker.datepicker('show');
+            this.$datepicker.css('display', 'block');
+            setTimeout(function() {
+                this.$datepicker.attr('hidden', null);
+                this.$datepicker.datepicker('show');
+            }.bind(this), 200);
         }
         openerElement = e.target;
         e.preventDefault();
