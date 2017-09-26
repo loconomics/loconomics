@@ -13,6 +13,7 @@ var A = Activity.extend(function BoardMemberNominationsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo' , helpLink: this.viewModel.helpLink
     });
+    this.title('Board nominations');
 });
 
 module.exports = A;

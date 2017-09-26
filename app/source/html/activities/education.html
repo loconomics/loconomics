@@ -21,34 +21,28 @@
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <div class="LightForm" >
-                    <div data-bind="visible: list().length">
-                        <ul data-bind="foreach: list" class="TilesList TilesList--openEnd">
-                            <li>
-                                <a class="InfoTile" href="/educationForm" data-bind="attr: { href: '/educationForm/' + educationID() }">
-                                    <div class="Tile-icon" aria-hidden="true">
-                                        <span class="fa ion ion-university" aria-hidden="true"></span>
-                                    </div>
-                                    <div class="Tile-content">
-                                        <div data-bind="text: institutionName"></div>
-                                        <em>
-                                            <span data-bind="text: degreeCertificate"></span><span data-bind="visible: degreeCertificate() && fieldOfStudy()">, </span>
-                                            <span data-bind="text: fieldOfStudy"></span>
-                                            <span data-bind="visible: fromYearAttended() || toYearAttended()"><span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span></span>
-                                        </em>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="CompactLinkTile">
-                        <a href="/educationForm">
-                            <div class="Tile-content text-muted">Add certificate or degree</div>
-                            <div class="Tile-icon text-muted">
-                                <span class="fa ion ion-plus"></span>
+                <div data-bind="visible: list().length">
+                    <ul data-bind="foreach: list" class="TilesList TilesList--openEnd">
+                        <li class="IconContentItem">
+                            <div class="Item-content">
+                                <p data-bind="text: institutionName"></p>
+                                <em>
+                                    <span data-bind="text: degreeCertificate"></span><span data-bind="visible: degreeCertificate() && fieldOfStudy()">, </span>
+                                    <span data-bind="text: fieldOfStudy"></span>
+                                    <span data-bind="visible: fromYearAttended() || toYearAttended()"><span data-bind="text: fromYearAttended"></span> - <span data-bind="text: toYearAttended"></span></span>
+                                </em>
                             </div>
-                        </a>
-                    </div>
+                            <div class="Item-action"> 
+                                <a class="btn btn-icon-link" data-bind="attr: { href: '/educationForm/' + educationID(),'aria-label': 'Edit '+ institutionName }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="IconContentItem">
+                    <a href="/educationForm">
+                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                        <div class="Item-content">Add certificate or degree</div>
+                    </a>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

@@ -4,7 +4,7 @@
     <div class="container"> 
         <div class="row"> 
             <div class="col-md-12 col-sm-reset">
-                <h1>Loconomics Blog</h1>  
+                <h1><icon-dec params="icon: 'ion-compose'"></icon-dec> <span data-bind="text: title"></span></h1>  
                 <div data-bind="visible: viewType() == 'blogView'">
                     <p style="text-align: center;">We try and cover topics that will help you be better at whatever you do. Have expertise you'd like to share as a guest blogger? <a href="/contactForm?subject=I'd%20like%20to%20be%20a%20guest%20blogger!" target="_blank" class="text-secondary">Send us a note!</a></p>
                     <div class="isolated inset">
@@ -22,11 +22,11 @@
                     <div data-bind="visible: filteredPostsBySearch().length > 0">
                         <ul class="CardsSummary" data-bind="foreach: filteredPostsBySearch">
                             <li class="CardsSummary-card" >
-                                <a href="/blog/" data-bind="attr: { href: urlPath() }">
                                 <h2 data-bind="text: title"></h2>
                                 <hr>
                                 <p data-bind="text: author"></p>
                                 <p data-bind="html: excerpt"></p>
+                                <a href="/blog/" data-bind="attr: { href: urlPath() }">Read more</a>
                                 </a>
                             </li>
                         </ul>

@@ -2,13 +2,14 @@
  **/
 'use strict';
 
-var Model = require('./Model'),
-    JobTitleSearchResult = require('./JobTitleSearchResult'),
-    ServiceProfessionalSearchResult = require('./ServiceProfessionalSearchResult'),
-    CategorySearchResult = require('./CategorySearchResult');
+var Model = require('./Model');
+var JobTitleSearchResult = require('./JobTitleSearchResult');
+var ServiceProfessionalSearchResult = require('./ServiceProfessionalSearchResult');
+var CategorySearchResult = require('./CategorySearchResult');
+var ko = require('knockout');
 
 function SearchResults(values) {
-//Calling Model and passing in the arrays using the defProperties method. The properties will be a ko observable using defProperties. 
+    //Calling Model and passing in the arrays using the defProperties method. The properties will be a ko observable using defProperties.
     Model(this);
 
     this.model.defProperties({
@@ -25,6 +26,10 @@ function SearchResults(values) {
             Model: CategorySearchResult
         },
     }, values);
+
+    this.length = ko.pureComputed(function() {
+        return this.jobTitles().length + this.serviceProfessionals().length + this.categories().length;
+    }, this);
 }
 
 module.exports = SearchResults;

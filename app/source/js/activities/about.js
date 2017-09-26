@@ -27,10 +27,19 @@ var A = Activity.extend(function AboutActivity() {
         shell.replaceState(null, null, '#!about/' + link);
     });
     this.title = ko.pureComputed(function() {
-        return shell === '#!about/press' ? 'Press' : shell == '#!about/careers' ? 'Careers' : 'About Loconomics cooperative';
+        var route = shell.currentRouteObservable();
+        var segment = route && route.segments && route.segments[0];
+        switch (segment) {
+            case 'press':
+                return 'Press';
+            case 'careers':
+                return 'Careers';
+            default:
+                return 'About Loconomics cooperative';
+        }
     }, this.viewModel);
 });
-
+// .match(/^ion-.*$/)
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
