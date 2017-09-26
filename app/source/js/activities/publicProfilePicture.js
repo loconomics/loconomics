@@ -1,0 +1,3 @@
+/**
+    publicProfilePicture activity
+**/

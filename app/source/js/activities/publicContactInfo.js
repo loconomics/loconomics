@@ -1,0 +1,3 @@
+/**
+    publicContactInfo activity
+**/

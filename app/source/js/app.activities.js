@@ -84,5 +84,10 @@ module.exports = {
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'userProfile': require('./activities/userProfile'),
     'upgrade': require('./activities/upgrade'),
-    'listingEditor': require('./activities/listingEditor')
+    'listingEditor': require('./activities/listingEditor'),
+    'publicContactInfo': require('./activities/publicContactInfo'),
+    'publicBio': require('./activities/publicBio'),
+    'publicProfilePicture': require('./activities/publicProfilePicture'),
+    'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
+    'serviceProfessionalBusinessWebsite': require('./activities/serviceProfessionalBusinessWebsite')
 };
