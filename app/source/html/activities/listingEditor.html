@@ -26,11 +26,7 @@
                 </div>
             </div>
             <div class="Listing-bookingInfo">
-                <h1>
-                    <span data-bind="text: profile().firstNameLastInitial()"></span>
-                    <br>
-                    <span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span>
-                </h1>
+                <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h1>
                 <p data-bind="visible: profile().businessName(), text: profile().businessName()"></p>
                 <div data-bind="with: selectedJobTitle">
                     <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'"></app-stars-rating>
@@ -148,6 +144,15 @@
                         <i class="ion-android-done"></i> <p data-bind="text: verification().name"></p>
                         </div>
                     </div>
+                </div>
+            </section>
+            <section id="listing-booking-policies" class="row" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Booking policies</h2>
+                    <a data-bind="attr: {href: '#!verifications','aria-label': 'View your verifications' }" class="btn btn-default pull-right">View</a>
+                </div>
+                <div data-bind="with: selectedJobTitle">
+                    <p data-bind="text: cancellationPolicyID"></p>
                 </div>
             </section>
             <section id="listing-about-service-professional" class="row" title="">
