@@ -34,7 +34,8 @@ var classes = {
     year: 'year',
     years: 'DatePicker-years',
     weekDays: 'DatePicker-weekDays',
-    active: 'active'
+    active: 'active',
+    instructions: 'DatePicker-instructions'
 };
 
 var events = {
@@ -48,6 +49,9 @@ var events = {
     // AND after is changed and calendar filled (fill method called, so DOM reflects the new viewDate).
     viewDateChanged: 'viewDateChanged'
 };
+
+var calendarInstructions = 'Monthly calendar; navigate with Tab, press Enter to choose a date;' +
+    'arrow keys allowed to move between the grid of dates';
 
 var DPGlobal = {
     modes: [
@@ -149,7 +153,7 @@ var DPGlobal = {
     headTemplate: '<thead>'+
                         '<tr>'+
                             '<th class="prev"><button type="button" aria-label="{prevLabel}">&lsaquo;</button></th>'+
-                            '<th colspan="5" class="switch">{switchContent} <span class="sr-only" aria-label="{switchActionLabel}"></span></th>'+
+                            '<th colspan="5" class="switch">{switchButtonStart}<span class="buttonLabel"></span> <span class="sr-only">{switchActionLabel}</span></button></th>'+
                             '<th class="next"><button type="button" aria-label="{nextLabel}">&rsaquo;</button></th>'+
                         '</tr>'+
                     '</thead>',
@@ -160,15 +164,16 @@ var createHead = function(options) {
     .replace('{prevLabel}', options.prevLabel)
     .replace('{nextLabel}', options.nextLabel)
     .replace('{switchActionLabel}', options.switchActionLabel || '')
-    .replace('{switchContent}', options.hasSwitchButton ? '<button type="button"></button>' : '<button type="button" role="presentational"></button>');
+    .replace('{switchButtonStart}', options.hasSwitchButton ? '<button type="button">' : '<button type="button" role="presentational">');
 };
 DPGlobal.template = '<div class="' + classes.component + '">'+
+                        '<p class="sr-only ' + classes.instructions + '"' + ' aria-live="assertive"></p>' +
                         '<div class="' + classes.days + '">'+
                             '<table class=" table-condensed" role="presentation">'+
                                 createHead({
                                     prevLabel: 'Previous month',
                                     nextLabel: 'Next month',
-                                    switchActionLabel: '- Switch to years mode',
+                                    switchActionLabel: '. Switch to years mode',
                                     hasSwitchButton: true
                                 }) +
                                 '<tbody></tbody>'+
@@ -179,7 +184,7 @@ DPGlobal.template = '<div class="' + classes.component + '">'+
                                 createHead({
                                     prevLabel: 'Previous year',
                                     nextLabel: 'Next year',
-                                    switchActionLabel: '- Switch to decades mode',
+                                    switchActionLabel: '. Switch to decades mode',
                                     hasSwitchButton: true
                                 }) +
                                 DPGlobal.contTemplate+
@@ -370,32 +375,62 @@ DatePicker.prototype = {
         this.element.trigger(events.viewDateChanged, [{ viewDate: this.viewDate, viewMode: viewModeName }]);
     },
 
-    show: function(e) {
-        this.picker.show();
-        this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
-        this.place();
-        $(window)
-            .off('resize.datepicker')
-            .on('resize.datepicker', $.proxy(this.place, this));
+    prepareOnShow: function() {
 
-        if (e) {
-            e.stopPropagation();
-            e.preventDefault();
-        }
-        if (!this.isInput) {
-        }
-        var that = this;
+    },
+
+    autoHideOff: function() {
+        $(document).off('mousedown.datepicker');
+    },
+    autoHideOn: function() {
         $(document)
         .off('mousedown.datepicker')
         .on('mousedown.datepicker', function(ev){
             if ($(ev.target).closest('.' + classes.component).length === 0) {
-                that.hide();
+                this.hide();
             }
-        });
+        }.bind(this));
+    },
+    autoPlaceOff: function() {
+        $(window).off('resize.datepicker');
+    },
+    autoPlaceOn: function() {
+        this.height = this.component ? this.component.outerHeight() : this.element.outerHeight();
+        this.place();
+        $(window)
+        .off('resize.datepicker')
+        .on('resize.datepicker', $.proxy(this.place, this));
+    },
+    triggerShow: function() {
         this.element.trigger({
             type: events.show,
             date: this.date
         });
+    },
+
+    show: function(e) {
+        if (e) {
+            // Cancel default
+            e.stopPropagation();
+            e.preventDefault();
+            // As an event handler, do standard 'show logic'; if calling
+            // 'show' from code directly, next features needs to be manually call,
+            // including to show the picker or run alternative logic for that
+            this.picker.show();
+            this.autoPlaceOn();
+            this.autoHideOn();
+        }
+        // Accessibility: live instructions
+        var $ins = this.element.find('.' + classes.instructions);
+        // Important: right now, the calendar/picker may appear hidden (CSS), we need
+        // to delay it a bit or nothing will happen under some circustances.
+        setTimeout(function() {
+            $ins.text(calendarInstructions);
+            setTimeout(function() {
+                $ins.text('');
+            }, 3000);
+        }, 400);
+        this.triggerShow();
     },
 
     hide: function(){
@@ -519,7 +554,10 @@ DatePicker.prototype = {
         var html = '';
         var i = 0;
         while (i < 12) {
-            html += '<button type="button" class="' + classes.month + '">'+DPGlobal.dates.monthsShort[i++]+'</button>';
+            html += '<button type="button" class="' + classes.month + '" aria-label="' +
+            DPGlobal.dates.months[i] + '">' +
+            DPGlobal.dates.monthsShort[i]+'</button>';
+            i++;
         }
         this.picker.find('.' + classes.months + ' td').append(html);
     },
@@ -535,7 +573,6 @@ DatePicker.prototype = {
         var prevMonth = new Date(year, month-1, 28,0,0,0,0),
             lastDayPrevMonth = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
         // L18N?
-        prevMonth.setDate(lastDayPrevMonth);
         prevMonth.setDate(lastDayPrevMonth - (prevMonth.getDay() - this.weekStart + 7)%7);
 
         // IMPORTANT: Avoid duplicated work, by checking we are still showing the same month,
@@ -561,7 +598,7 @@ DatePicker.prototype = {
 
             // Header
             this.picker
-            .find('.' + classes.days + ' th.switch > button')
+            .find('.' + classes.days + ' th.switch > button > .buttonLabel')
             .html(DPGlobal.dates.months[month] + ' ' + year);
 
             // Calculate ending
@@ -590,11 +627,28 @@ DatePicker.prototype = {
                     clsName += ' ' + classes.active;
                 }
 
+                // Display day of month number plus language for sr-only
+                var dayContent = $('<span></span>').text(prevMonth.getDate());
+                // For screen reader, content will read something like:
+                //  26, Tuesday. Select September 26 2017
+                var srTextTemplate = ', {weekDay}. Select {date}';
+                var srDateTemplate = '{month} {day} {year}';
+                var srDate = srDateTemplate
+                .replace('{month}', DPGlobal.dates.months[prevMonth.getMonth()])
+                .replace('{day}', prevMonth.getDate())
+                .replace('{year}', prevMonth.getFullYear());
+                var srText = srTextTemplate
+                .replace('{weekDay}', DPGlobal.dates.days[prevMonth.getDay()])
+                .replace('{date}', srDate);
+                $('<span class="sr-only"></span>')
+                .text(srText)
+                .appendTo(dayContent);
+
                 dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
                 dayTd
                 .attr('class', classes.monthDay + ' ' + clsName)
                 .data('date-time', prevMonth.toISOString())
-                .children('button').text(prevMonth.getDate());
+                .children('button').empty().append(dayContent);
 
                 this.picker.trigger(events.dayRendered, [dayTd]);
 
@@ -611,7 +665,7 @@ DatePicker.prototype = {
         var currentYear = this.date.getFullYear();
 
         var months = this.picker.find('.' + classes.months)
-                    .find('th.switch > button')
+                    .find('th.switch > button > .buttonLabel')
                         .html(year)
                         .end()
                     .find('button').removeClass(classes.active);
@@ -621,7 +675,7 @@ DatePicker.prototype = {
 
         year = parseInt(year/10, 10) * 10;
         var yearCont = this.picker.find('.' + classes.years)
-                            .find('th.switch > button')
+                            .find('th.switch > button > .buttonLabel')
                                 .text(year + '-' + (year + 9))
                                 .end()
                             .find('td');

@@ -10,14 +10,23 @@
                         <span class="fa ion ion-ios-settings" aria-hidden="true"></span>Availability <span hidden-xs hidden-sm>settings</span>
                     </a>
                 </div>
-                <h2 class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
+                <div class="SectionTitle SectionTitle--withBtn CalendarDateHeader">
                     <button type="button" class="btn btn-default fa ion ion-ios-arrow-left hidden-xs hidden-sm" data-bind="click: prevDate"><span class="sr-only">Previous date</span></button>
                     <button type="button" class="btn btn-link" data-bind="click: openDatePicker">
-                        <time data-bind="attr: { datetime: currentDate }, text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
-                        <span class="caret"></span>
+                        <!-- ARIA hidden for time element, because some browser+screen-readers don't read the content of <time>
+                            so ensuring no one does it (consistency) and using the same date-text in the sr-only label -->
+                        <span aria-hidden="true">
+                            <time aria-hidden="true" data-bind="attr: { datetime: currentDate },
+                                text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></time>
+                            <span class="caret" aria-hidden="true"></span>
+                        </span>
+                        <span class="sr-only">
+                            <span data-bind="text: currentDate, format: { type: 'datetime', format: 'dddd (M/D)' }"></span>
+                            - Press to change date
+                        </span>
                     </button>
                     <button type="button" class="btn btn-default fa ion ion-ios-arrow-right hidden-xs hidden-sm" data-bind="click: nextDate"><span class="sr-only">Next date</span></button>
-                </h2>
+                </div>
                 <div id="calendarDatePicker" class="calendar-placeholder" data-date="today"></div>
                 <!-- Daily View (appointments list) -->
                 <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>

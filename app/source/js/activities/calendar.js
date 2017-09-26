@@ -99,6 +99,9 @@ var A = Activity.extend(function CalendarActivity() {
     this.viewModel.openDatePicker = function(d, e) {
         this.$datepicker.toggleClass('is-visible');
         this.hideDatepicker();
+        if (this.$datepicker.hasClass('is-visible')) {
+            this.$datepicker.datepicker('show');
+        }
         e.preventDefault();
         e.stopPropagation();
     }.bind(this);
