@@ -1,6 +1,6 @@
 /**
     Listing Editor activity
-
+    TO-DO: create components and combine with listing activity
     Visualizes a listing of a user, or current user
 **/
 'use strict';
@@ -22,6 +22,12 @@ var A = Activity.extend(function ListingEditorActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title = ko.pureComputed(function() {
+        var user = this.user();
+        if (user) {
+            return user.profile().firstNameLastInitial() + ', ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName());
+        }
+    }, this.viewModel);
 
     this.registerHandler({
         event: 'layoutUpdate',
