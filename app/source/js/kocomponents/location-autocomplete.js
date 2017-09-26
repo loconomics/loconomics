@@ -10,14 +10,13 @@ var $ = require('jquery');
 var TAG_NAME = 'location-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/location-autocomplete.html');
 var googleMapReady = require('../utils/googleMapReady');
-require('geocomplete');
 var ko = require('knockout');
 
 function ViewModel(params, refs) {
     // LOCATION AUTOCOMPLETE:
     // Load Google Maps API with Places and prepare the location autocomplete
     var $location = $(refs.root.querySelector('[name=location]'));
-    googleMapReady(function(/*UNCOMMENT FOR USE THE 'WITHOUT PLUGIN' CODE:*//*google*/) {
+    googleMapReady(function(google) {
         var options = {
             types: ['geocode'],
             bounds: null,
@@ -26,18 +25,6 @@ function ViewModel(params, refs) {
             }
         };
 
-        // WITH PLUGIN:
-        $location.geocomplete(options);
-        $location.on('geocode:result', function(err, place) {
-            if(err)
-                return console.log(err);
-            if (place && place.geometry)
-                params.onGeocodeResult(place);
-    
-        });
-
-        // WITHOUT PLUGIN: Calling direclty Google Maps API, core feature of the plugin
-        /*
         var autocomplete = new google.maps.places.Autocomplete(
             $location.get(0), options
         );
@@ -47,14 +34,10 @@ function ViewModel(params, refs) {
             'place_changed',
             function() {
                 var place = autocomplete.getPlace();
-                if (place && place.geometry) {
-                    // Save to viewmodel
-                    vm.lat(place.geometry.location.lat());
-                    vm.lng(place.geometry.location.lng());
-                    console.log('LOCATION: ', place.geometry);
-                }
+                if (place && place.geometry)
+                    params.onGeocodeResult(place);
             }
-        );*/
+        );
     });
 }
 
