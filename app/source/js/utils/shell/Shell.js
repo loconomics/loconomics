@@ -8,7 +8,6 @@
     specified in the constructor settings for per-instance setup.
 **/
 var deps = require('./dependencies');
-var ko = require('knockout');
 
 /** Constructor **/
 
@@ -83,7 +82,6 @@ function Shell(settings) {
 
     // Access to the current route
     this.currentRoute = null;
-    this.currentRouteObservable = ko.observable();
     // Access to referrer/previous route
     this.referrerRoute = null;
 }
@@ -221,7 +219,6 @@ Shell.prototype._refreshReferrer = function() {
 };
 Shell.prototype._refreshCurrent = function() {
     this.currentRoute = this.parseUrl(this._getLocationRoutedUrl());
-    this.currentRouteObservable(this.currentRoute);
 };
 
 /**
@@ -252,7 +249,6 @@ Shell.prototype.replace = function replace(state) {
     }
     this.referrerRoute = this.currentRoute;
     this.currentRoute = state.route;
-    this.currentRouteObservable(this.currentRoute);
     //console.log('shell replace', state.route);
 
     // Access control

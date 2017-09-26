@@ -1,6 +1,6 @@
 <!-- Activity Signup -->
 <div data-activity="signup">
-    <h1 class="text-center" data-bind="text: title"></h1>
+    <h1 class="sr-only">Sign up for Loconomics</h1>
     <app-signup params="api: signup, onSignedUp: redirect, onSignUpError: focusWrongField">
     </app-signup>
     <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>

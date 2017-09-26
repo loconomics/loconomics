@@ -16,7 +16,6 @@ var A = Activity.extend(function UpgradeActivity() {
         leftAction: Activity.NavAction.menuIn,
         rightAction: Activity.NavAction.menuNewItem
     });
-    this.title('Become a member of Loconomics');
 });
 
 exports.init = A.init;

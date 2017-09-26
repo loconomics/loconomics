@@ -3,17 +3,16 @@
 **/
 'use strict';
 
-var Model = require('./Model');
-var PublicUserRating = require('./PublicUserRating');
-var PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary');
-var PublicUserStats = require('./PublicUserStats');
-var PublicUserJobStats = require('./PublicUserJobStats');
-var ko = require('knockout');
+var Model = require('./Model'),
+    PublicUserRating = require('./PublicUserRating'),
+    PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary'),
+    PublicUserStats = require('./PublicUserStats'),
+    PublicUserJobStats = require('./PublicUserJobStats');
 
 function ServiceProfessionalSearchResult(values) {
-
+    
     Model(this);
-
+    
     this.model.defProperties({
         userID: 0,
         jobTitleID: 0,
@@ -33,11 +32,6 @@ function ServiceProfessionalSearchResult(values) {
         jobStats: { Model: PublicUserJobStats },
         photoUrl: ''
     }, values);
-
-    var valueAsBoolean = function(a) { return !!a; };
-    this.fullName = ko.pureComputed(function() {
-        return [this.firstName(), this.lastName()].filter(valueAsBoolean).join(' ');
-    }, this);
 }
 
 module.exports = ServiceProfessionalSearchResult;

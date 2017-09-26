@@ -12,7 +12,6 @@ var A = Activity.extend(function HelpActivity() {
     this.viewModel = new ViewModel();
     this.accessLevel = null;    
     this.navBar = Activity.createSectionNavBar('Blog');
-    this.title('Loconomics blog');
     
     // TestingData
     //setSomeTestingData(this.viewModel);

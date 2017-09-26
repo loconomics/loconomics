@@ -26,9 +26,6 @@ var A = Activity.extend(function WelcomeActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
-    this.title = ko.pureComputed(function() {
-        return this.user.firstName() ? 'Welcome, ' + this.user.firstName() + '!' : ' Welcome!';
-    }, this.viewModel);
 });
 
 exports.init = A.init;

@@ -5,8 +5,114 @@
                $brand-secondary  url('../images/self-header.jpg') no-repeat center / cover
 **/
 
-@import 'SearchResultsPreview.styl'
-@import 'Result.styl'
+.SearchResultsPreview {
+    background-color: white;
+    display: block;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 7;
+    margin: 0 15px;
+    box-shadow: 0 1px 5px rgba(50,50,50,0.2);
+    border-top: 1px solid #e6e6e6;
+    border: 1px solid #c4c4c4;
+
+    @media $mediaMinSm {
+        margin: 0 10px;
+    }
+
+    li {
+        list-style: none;
+
+        a {
+            text-decoration: none;
+            // Make all box area clickable and focusable
+            display: block;
+        }
+
+        h2 {
+            padding-top: 5px;
+            font-size: 18px;
+            text-align: center;
+            margin: 10px 0;
+            color: $gray-dark;
+        }
+
+        ul {
+            width: 100%;
+            padding: 0;
+
+            .Result {
+                clearfix();
+                border-bottom: 1px solid $gray-background;
+                display: block;
+                height: auto;
+                clear: both;
+
+                .Result-info {
+                    width: 75%;
+                    float: left;
+                    padding-left: 15px;
+                }
+
+                .Result-name {
+                    color: $gray-dark;
+                    font-size: 15px;
+                    // Height paired with the usual button placed at right (thats why we set a percentage width at 'info')
+                    // that way it looks vertically centered with the button, both when there is description and when not.
+                    // Height of a usual .btn class
+                    line-height: 34px;
+                }
+
+                .Result-count {
+                    font-size: 15px;
+                    color: $gray;
+                }
+
+                .Result-description {
+                    display: block;
+                    font-size: 12px;
+                    color: $gray;
+                }
+
+                .btn-inline {
+                    width: 20%;
+                    float: right;
+                    margin-right: auto;
+
+                    // We are using the btn class at this element too to simulate
+                    // it, when is not one and what we have is a link wrapping this
+                    // and other content. We need to disabled the focus,hover,active
+                    // state styles for a good reason, and still being accessible:
+                    // prevent confusion about available link/button to click;
+                    // the area where this fake button is, is already clickable, focusable
+                    // and hightlighed
+                    &:active,
+                    &:focus,
+                    &:hover {
+                        outline: none !important;
+                    }
+                }
+
+                > a {
+                    cursor: pointer;
+                    clearfix();
+                    display: block;
+                    padding: 15px;
+                }
+            }
+
+            .Result:hover {
+                background-color: $gray-background;
+            }
+
+            a.Result {
+                cursor: pointer;
+            }
+        }
+    }
+}
 
 .SearchResults
     background-color $gray-background

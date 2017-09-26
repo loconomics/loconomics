@@ -11,7 +11,6 @@ var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
 var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
 var DEFAULT_BACK_TEXT = 'Back';
-require('../kocomponents/servicesOverview/attributes-combobox');
 
 var A = Activity.extend(function ServicesOverviewActivity() {
 
@@ -279,24 +278,31 @@ function AttributesCategoryVM(cat, userAtts) {
         });
     }, this);
 
+    this.attributeSearch = ko.observable('');
     var foundAttItem = function(att, item) {
         return item.name() === att.name;
     };
 
-    this.pushAttributeName = function(attName) {
-        var newOne = attName || '',
+    this.addAttribute = function() {
+        var newOne = this.attributeSearch() || '',
             isEmpty = /^\s*$/.test(newOne),
             wasFound = this.selectedAttributes().some(foundAttItem.bind(null, { name: newOne }));
         if (!isEmpty && !wasFound) {
             userAtts.proposedServiceAttributes.push(catID, newOne);
         }
-    }.bind(this);
 
-    this.pushAttribute = function(att) {
+        this.attributeSearch('');
+        this.autocompleteOpenedByUser(false);
+    };
+
+    this.selectAttribute = function(att) {
         if (att.serviceAttributeID()) {
             userAtts.serviceAttributes.push(catID, att.serviceAttributeID());
         }
-    };
+        else {
+            this.addAttribute();
+        }
+    }.bind(this);
 
     this.removeAttribute = function(att) {
         var id = att.serviceAttributeID();
@@ -304,5 +310,43 @@ function AttributesCategoryVM(cat, userAtts) {
             userAtts.serviceAttributes.remove(catID, id);
         else
             userAtts.proposedServiceAttributes.remove(catID, att.name());
+    }.bind(this);
+
+    // Available attributes filtered out by the search text
+    var textSearch = require('../utils/textSearch');
+    this.autocompleteAttributes = ko.computed(function() {
+        var s = this.attributeSearch(),
+            a = this.availableAttributes();
+
+        if (!s) {
+            return a;
+        }
+
+        var result = a.filter(function(att) {
+            return textSearch(s, att.name());
+        });
+
+        // Append the search text as a selectable option at the beggining of the list
+        result.unshift(new ServiceAttribute({
+            serviceAttributeID: 0,
+            name: 'Add new: ' + s
+        }));
+
+        return result;
+    }, this);
+
+    this.clearAttributeSearch = function() {
+        this.attributeSearch('');
+        this.autocompleteOpenedByUser(false);
+    }.bind(this);
+
+    this.autocompleteOpenedByUser = ko.observable();
+
+    this.showFullAutocomplete = function() {
+        this.autocompleteOpenedByUser(true);
+    }.bind(this);
+
+    this.hideFullAutocomplete = function() {
+        this.autocompleteOpenedByUser(false);
     }.bind(this);
 }

@@ -19,10 +19,6 @@ require('./utils/Function.prototype._delayed');
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
-// Polyfills for HTML5 DOM additions, used in components with vanilla javascript
-// (avoiding jQuery, it has equivalent methods)
-require('../../vendor/polyfills/Element.prototype.matches');
-require('../../vendor/polyfills/Element.prototype.closest');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 

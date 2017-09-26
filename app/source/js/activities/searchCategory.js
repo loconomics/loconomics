@@ -18,11 +18,6 @@ var A = Activity.extend(function SearchCategoryActivity() {
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
-
-    this.title = ko.computed(function() { 
-        var result = this.categorySearchResult();
-        return result && result.categoryName + ' Professionals'; 
-    }, this.viewModel);
 });
 
 exports.init = A.init;

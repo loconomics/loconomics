@@ -3,7 +3,7 @@
 <div class="SearchResults" data-activity="searchJobTitle" id="job-titles-results">
     <div data-bind="with: jobTitleSearchResult">
         <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
-            <h1 data-bind="text: $root.title"></h1>
+            <h1 data-bind="text: pluralName"></h1>
             <div class="SearchResultsBackground-text">
                 <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
                 <p><span data-bind="text: searchDescription"></span></p>

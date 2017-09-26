@@ -3,13 +3,15 @@
     //used to get apisearch results by term, lat, long,
 **/
 'use strict';
+var $ = require('jquery');
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 var SignupVM = require('../viewmodels/Signup');
+var snapPoints = require('../utils/snapPoints');
+var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
+var googleMapReady = require('../utils/googleMapReady');
+require('geocomplete');
 var user = require('../data/userProfile').data;
-var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
-
-var SIGNUP_ELEMENT_SELECTOR = '#learnMoreProfessionals-signup';
 
 var A = Activity.extend(function LearnMoreProfessionalsActivity() {
 
@@ -17,17 +19,114 @@ var A = Activity.extend(function LearnMoreProfessionalsActivity() {
     this.navBar = Activity.createSectionNavBar(null);
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
-    this.title('List your services');
     this.accessLevel = null;
     this.viewModel = new ViewModel(this.app);
     this.viewModel.nav = this.app.navBarBinding;
+    var $header = this.$header = $('.AppNav');
+
+    this.registerHandler({
+        target: this.$activity,
+        event: 'scroll-fixed-header',
+        handler: function(e, what) {
+            if (what === 'after') {
+                $header.addClass('is-fixed');
+            }
+            else {
+                $header.removeClass('is-fixed');
+            }
+        }
+    });
+
+    this.registerHandler({
+        target: this.$activity,
+        event: 'scroll-search',
+        handler: function(e, what) {
+            if (what === 'after') {
+                $header.addClass('is-search');
+            }
+            else {
+                $header.removeClass('is-search');
+            }
+        }
+    });
+    // LOCATION AUTOCOMPLETE:
+    // Load Google Maps API with Places and prepare the location autocomplete
+    var $location = this.$activity.find('[name=location]');
+    googleMapReady(function(/*UNCOMMENT FOR USE THE 'WITHOUT PLUGIN' CODE:*//*google*/) {
+        var vm = this.viewModel.search();
+        var options = {
+            types: ['geocode'],
+            bounds: null,
+            componentRestrictions: {
+                country: 'US'
+            }
+        };
+
+        // WITH PLUGIN:
+        $location.geocomplete(options);
+        $location.on('geocode:result', function(e, place) {
+            if (place && place.geometry) {
+                // Save to viewmodel
+                vm.lat(place.geometry.location.lat());
+                vm.lng(place.geometry.location.lng());
+                vm.city(place.formatted_address);
+                console.log('LOCATION: ', place);
+            }
+        });
+
+        // WITHOUT PLUGIN: Calling direclty Google Maps API, core feature of the plugin
+        /*
+        var autocomplete = new google.maps.places.Autocomplete(
+            $location.get(0), options
+        );
+
+        google.maps.event.addListener(
+            autocomplete,
+            'place_changed',
+            function() {
+                var place = autocomplete.getPlace();
+                if (place && place.geometry) {
+                    // Save to viewmodel
+                    vm.lat(place.geometry.location.lat());
+                    vm.lng(place.geometry.location.lng());
+                    console.log('LOCATION: ', place.geometry);
+                }
+            }
+        );*/
+    }.bind(this));
 });
 
 exports.init = A.init;
 
+A.prototype._registerSnapPoints = function() {
+
+    var $searchBox = this.$activity.find('[name=s]'),
+        // Calculate the position where search box is completely hidden, and get 1 on the worse case -- bad value coerced to 0,
+        // negative result because some lack of data (content hidden)
+        searchPoint = Math.max(1, (
+            // Top offset with the scrolling area plus current scrollTop to know the actual position inside the positioning context
+            // (is an issue if the section is showed with scroll applied on the activity)
+            $searchBox.offset().top + this.$activity.scrollTop() +
+            // Add the box height but sustract the header height because that is fixed and overlaps
+            $searchBox.outerHeight() - this.$header.outerHeight()
+        ) |0);
+
+    var pointsEvents = {
+        // Just after start scrolling
+        0: 'scroll-fixed-header'
+    };
+    pointsEvents[searchPoint] = 'scroll-search';
+
+    snapPoints(this.$activity, pointsEvents);
+};
+
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
+    if (!this._notFirstShow) {
+        this._registerSnapPoints();
+        this._notFirstShow = true;
+    }
     this.viewModel.reset();
 };
 
@@ -70,56 +169,45 @@ function ViewModel(app) {
 
     this.reset = function() {
         // Reset user values, no preset settings
+        this.search().searchTerm('');
         this.resetSignup();
     }.bind(this);
 
-    /**
-     * @member {KnockoutComputed<string>} suggestionButtonText Gives the text
-     * for each suggestion button based on the action triggered after select
-     * one
-     */
-    this.suggestionButtonText = ko.pureComputed(function() {
-        var anon = user.isAnonymous();
-        return anon ? 'Sign up' : 'Add';
-    }, this);
-
-    /**
-     * @method onSelectJobTitle
-     * Component event handler for selecting a suggested job-title:
-     * - It moves anonymous users to the Sign-up form integrated on this
-     *   activity, including the job-title for automatic addition.
-     * - It moves non-anonymous users to dashboard 'add job title' activity
-     *   to continue setting-up the selected one.
-     * @param {string} jobTitleName As typed by the user or selected value
-     * @param {Object} [jobTitle] Record for a selected job title; will be null
-     * when no one exists and just a typed name is included.
-     */
-    this.onSelectJobTitle = function(jobTitleName, jobTitle) {
-        var url;
-        if (jobTitle && jobTitle.jobTitleID) {
-            if (user.isAnonymous()) {
-                this.setSignupJobTitle(jobTitle.jobTitleID());
-                app.shell.scrollTo(SIGNUP_ELEMENT_SELECTOR, true);
-            }
-            else {
-                // For logged users, assist them to add the job title:
-                url = 'addJobTitles?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
-                app.shell.go(url);
-            }
+    // API entry-point for search component
+    this.search = ko.observable(new SearchJobTitlesVM(app));
+    this.search().onClickJobTitle = function(jobTitle, e) {
+        // For anonymous users, we just
+        // let the link to scroll down to sign-up form (hash link must be in place)
+        // setting up the jobTitleID value in the signup data
+        if (user.isAnonymous()) {
+            this.setSignupJobTitle(jobTitle.jobTitleID());
         }
         else {
-            if (user.isAnonymous()) {
-                this.setSignupJobTitle(null, jobTitleName);
-                app.shell.scrollTo(SIGNUP_ELEMENT_SELECTOR, true);
-            }
-            else {
-                // Go to addJobTitles
-                url = 'addJobTitles?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
-                app.shell.go(url);
-            }
+            // For logged users, assist them to add the job title:
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var url = 'addJobTitles?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
+            app.shell.go(url);
         }
-        return {
-            value: ActionForValue.clear
-        };
     }.bind(this);
+    this.search().onClickNoJobTitle = function(jobTitleName, e) {
+        // For anonymous users, we just
+        // let the link to scroll down to sign-up form (hash link must be in place)
+        // settingup the jobTitleName value in the signup data
+        // (and reset any previous ID just in case)
+        if (user.isAnonymous()) {
+            this.setSignupJobTitle(null, jobTitleName);
+        }
+        else {
+            // For logged users, assist them to add the job title:
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            // Go to addJobTitles
+            var url = 'addJobTitles?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
+            app.shell.go(url);
+        }
+    }.bind(this);
+    this.search().jobTitleHref('#learnMoreProfessionals-signup');
+    this.search().noJobTitleHref('#learnMoreProfessionals-signup');
 }

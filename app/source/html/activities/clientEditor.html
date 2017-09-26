@@ -11,7 +11,9 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h1><icon-dec params="icon: 'ion-android-contact'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <h1>
+                    <icon-dec params="icon: 'ion-android-contact'"></icon-dec> <span data-bind="text: title"></span>
+                </h1>
                 <form id="clientEditorForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="clientEditorFormInstructions"> 
                     <p id="clientEditorFormInstructions" class="help-block">Store your client's contact and other information here and create offerings only they can see.</p>
                     <div data-bind="css: { 'is-loading': isLoading }">

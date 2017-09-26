@@ -25,9 +25,6 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         helpLink: this.viewModel.helpLink
     });
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
-    this.title = ko.pureComputed(function() {
-        return this.isInOnboarding() ? ' Set your availability' : ' Availability settings';
-    }, this.viewModel);
 
     this.registerHandler({
         target: weeklySchedule,

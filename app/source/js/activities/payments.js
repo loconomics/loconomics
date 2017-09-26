@@ -11,7 +11,6 @@ var A = Activity.extend(function PaymentsActivity() {
     this.accessLevel = null;
     this.viewModel = {};
     this.navBar = Activity.createSectionNavBar('Payments');
-    this.title('Coming soon');
 });
 
 module.exports = A;

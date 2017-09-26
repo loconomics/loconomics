@@ -17,10 +17,6 @@ var A = Activity.extend(function SearchJobTitleActivity() {
     //pass in the app model so the view model can use it
     this.viewModel = new ViewModel();
     this.navBar = Activity.createSubsectionNavBar('Back');
-    this.title = ko.computed(function() { 
-        var result = this.jobTitleSearchResult();
-        return result && result.pluralName; 
-    }, this.viewModel);
 
 });
 

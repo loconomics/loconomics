@@ -16,7 +16,9 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <h1><icon-dec params="icon: 'ion-ios-close'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <h1>
+                    <icon-dec params="icon: 'ion-ios-close'"></icon-dec> <span data-bind="text: title"></span>
+                </h1>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>

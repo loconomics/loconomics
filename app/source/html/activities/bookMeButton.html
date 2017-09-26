@@ -13,13 +13,15 @@
                     </li>
                 </ul>
             </div>
+
             <div class="col-md-7 col-sm-reset ">
                 <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must specify pricing, locations, and any required credentials for your <span data-bind="text: jobTitleName"></span> services before adding scheduling to your website.</p>
                 <form class="container-fluid LightForm" role="form">
                     <div data-bind="visible: !bookMeButtonReady()">
                         <a class="btn btn-block btn-secondary"href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">Complete
-                            <span data-bind="text: jobTitleName"></span> listing</a>
+                            <span data-bind="text: jobTitleName"></span> profile</a>
+
                     </div>
                     <div data-bind="visible: bookMeButtonReady()">
                         <h2 class="SectionTitle">

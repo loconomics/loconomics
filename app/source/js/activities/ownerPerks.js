@@ -12,10 +12,10 @@ var A = Activity.extend(function OwnerPerksActivity() {
     this.viewModel = {
         helpLink: '/help/relatedArticles/201973183-owner-perks-and-benefits'
     };
+
     this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo', helpLink: this.viewModel.helpLink
     });
-    this.title('Owner perks & benefits');
 });
 
 module.exports = A;

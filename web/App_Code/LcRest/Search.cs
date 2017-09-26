@@ -32,13 +32,6 @@ namespace LcRest
             data.categories = CategorySearchResult.SearchBySearchTerm(SearchTerm, origLat, origLong, SearchDistance, locale);
             return data;
         }
-        #endregion
-
-        #region Defaults (front-end code has a copy of this)
-        public const decimal DEFAULT_LOCATION_LAT = 37.788479M;
-        public const decimal DEFAULT_LOCATION_LNG = -122.40297199999998M;
-        public const int DEFAULT_LOCATION_SEARCH_DISTANCE = 30;
-        public const string DEFAULT_LOCATION_CITY = "San Francisco, CA USA";
-        #endregion
+        #endregion  
     }
 }

@@ -40,6 +40,13 @@
         "Job Titles (item)": {
             "url": "/api/v1/en-US/job-titles/106",
             "get": { }
+        },
+        "Job Titles Autocomplete Search": {
+            "url": "/api/v1/en-US/job-titles/autocomplete",
+            "get": {
+                "search": "massag",
+                "api_comment": "The parameter 'term' is allowed too as an alias for 'search', just for easier integration with some UI components"
+            }
         }
     }
 *@
@@ -58,6 +65,12 @@
                     return item;
                 else
                     throw new HttpException(404, "Job Title not found.");
+            }
+            else if (UrlData[0].ToLower() == "autocomplete") {
+                
+                var search = Request["search"] ?? Request["term"];
+
+                return LcRest.PublicJobTitle.AutocompleteSearch(search, LcRest.Locale.Current);
             }
 
             throw new HttpException(404, "Not Found");

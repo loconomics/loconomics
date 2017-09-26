@@ -14,7 +14,6 @@ var A = Activity.extend(function SignupActivity() {
     // null for Logo
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
-    this.title('Welcome to Loconomics');
 
     /// ViewModel setup that requires an $activity reference
     // Focus first wrong field handler for the signup error event

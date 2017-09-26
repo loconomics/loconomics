@@ -91,6 +91,28 @@ namespace LcRest
             }
         }
 
+        /// <summary>
+        /// Search job titles by a partial text by singular or plural name, or alias,
+        /// and the given locale.
+        /// Just returns the ID as value and singular name as label, suitable for autocomplete components.
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="locale"></param>
+        /// <returns></returns>
+        public static IEnumerable<AutocompleteResult> AutocompleteSearch(string searchText, LcRest.Locale locale)
+        {
+            using (var db = new LcDatabase())
+            {
+                var sql = "EXEC SearchPositions @0, @1, @2";
+                return db.Query(sql, "%" + searchText + "%", locale.languageID, locale.countryID)
+                    .Select(job => new AutocompleteResult
+                    {
+                        value = job.PositionID,
+                        label = job.PositionSingular
+                    });
+            }
+        }
+
         public static IEnumerable<PublicJobTitle> SearchByCategory(string category, string city, Locale locale)
         {
             using (var db = new LcDatabase())

@@ -446,6 +446,33 @@ exports.registerAll = function(app) {
         viewModel: { createViewModel: function() { return new OnboardingProgressBarVM(app); } }
     });
 
+    /// search components
+    var SearchJobTitlesVM = require('./viewmodels/SearchJobTitlesVM');
+    ko.components.register('app-search-job-titles', {
+        template: { element: 'search-job-titles-template' },
+        // TODO Try with synchronous option to enable use of this component ( now used viewmodel and template directly)
+        //synchronous: true,
+        // TODO Implement geolocate code of learnMoreProfessionals as part of the component
+        viewModel: {
+            createViewModel: function(params/*, componentInfo*/) {
+                var view = new SearchJobTitlesVM(app);
+                if (params && params.api)
+                    params.api(view);
+
+                if (params)
+                    Object.keys(params).forEach(function(key) {
+                        if (ko.isObservable(view[key])) {
+                            view[key](ko.unwrap(params[key]));
+                            if (ko.isObservable(params[key]))
+                                view[key].subscribe(params[key]);
+                        }
+                    });
+
+                return view;
+            }
+        }
+    });
+
     /**
      * A dictionary of job titles with the name to display
      * as a key and the jobTitleID as the value.

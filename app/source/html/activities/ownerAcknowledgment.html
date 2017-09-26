@@ -10,7 +10,9 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h1 data-bind="text: title"></h1>
+                <h2 class="SectionTitle">
+                    <span>Cooperative Owner Disclosure</span>
+                </h2>
                 <div class="container-fluid">
                     <p>
                         <strong>Introduction</strong>
@@ -44,21 +46,22 @@
                         <li><strong>Pay User Fee.</strong> <a href="/userFees" target="_blank">Pay any User Fee</a> associated with use of the Platform, if applicable, as determined from time to time by the Board of Directors.</li>
                     </ul>
                 </div>
-                <form id="ownerAcknowledgment" class="container-fluid LightForm" data-bind="visible: !acknowledgment.isSigned()">
-                    <fieldset>
-                        <legend>Type your full name as acknowledgment</legend>
-                        <div class="form-group">
-                            <label for="ownerSignature">Signature</label>
-                            <input id="ownerSignature" type="text" class="form-control" data-bind="textInput: ownerFullName" placeholder="First and last name"/>
-                        </div>
-                    </fieldset>
+                <div class="container-fluid LightForm" data-bind="visible: !acknowledgment.isSigned()">
+                    <div class="form-group">
+                        <label>Type your full name as acknowledgment</label>
+                        <input type="text" class="form-control" data-bind="textInput: ownerFullName" placeholder="First and last name"/>
+                    </div>
                     <div class="LightForm-submitBar">
                         <button type="button" data-bind="click: acknowledge" class="btn btn-primary btn-block">Submit</button>
                     </div>
-                </form>
+                </div>
                 <div class="container-fluid LightForm" data-bind="visible: acknowledgment.isSigned">
                     <div class="form-group">
-                        <p>You submitted your acknowledgment of this disclosure on: <span data-bind="text: acknowledgment.dateAcknowledged, format: { type: 'datetime', format: 'MMMM Do, YYYY [at] h:mm a' }"></span> from IP Address: <span data-bind="text: acknowledgment.acknowledgedFromIP"></span></p>
+                        <label>You submitted your acknowledgment of this disclosure on:</label>
+                        <p>
+                            <span data-bind="text: acknowledgment.dateAcknowledged, format: { type: 'datetime', format: 'MMMM Do, YYYY [at] h:mm a' }"></span>
+                            from IP Address: <span data-bind="text: acknowledgment.acknowledgedFromIP"></span>
+                        </p>
                     </div>
                 </div>
             </div>

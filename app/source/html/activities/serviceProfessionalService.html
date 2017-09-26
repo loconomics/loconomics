@@ -15,9 +15,16 @@
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <p class="help-block" data-bind="visible: !$root.isSelectionMode()">Clients will be able to book the offerings you create here. Need to speak to clients first? Add a consultation.</p>
+                <p class="help-block">Clients will be able to book the offerings you create here. Need to speak to clients first? Add a consultation.</p>
+                <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">
+                    <span>Select a job title</span>
+                </h2>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div data-bind="visible: jobTitleID() > 0">
+                    <h2 class="Prompt" data-bind="visible: $root.isSelectionMode">
+                        What's <span class="hidden-xs">included</span> in <span data-bind="text: $root.clientName"></span>'s appointment?
+                    </h2>
+
                     <div class="ServiceListGroup" data-bind="foreach: serviceListGroups">
                         <h2 class="ServiceListGroup-title" data-bind="visible: title.length > 0, text: title"></h2>
                         <div data-bind="foreach: serviceLists()">

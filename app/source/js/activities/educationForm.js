@@ -17,14 +17,6 @@ var A = Activity.extend(function EducationFormActivity() {
         backLink: '/education' , helpLink: this.viewModel.helpLink
     });
     this.title('Add training or education');
-    this.title = ko.pureComputed(function() {
-        if (this.educationID() > 0){
-            return 'Edit training/education';
-        }
-        else {
-            return 'Add training or education';
-        }
-    }, this.viewModel);
 });
 
 exports.init = A.init;

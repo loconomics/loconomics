@@ -117,7 +117,7 @@ A.prototype.show = function show(state) {
                 this.viewModel.header('Edit client');
             } else {
                 this.viewModel.clientVersion(null);
-                this.viewModel.header('Deleted or unknown client');
+                this.viewModel.header('Unknow client or was deleted');
             }
         }.bind(this))
         .catch(function (err) {

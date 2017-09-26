@@ -27,10 +27,10 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     </script>
     <!-- End Google Analytics -->
-    <link href="assets/css/libs.min.201709111556.css" rel="stylesheet">
-    <link href="assets/css/app.min.201709111556.css" rel="stylesheet">
-    <script src="assets/js/common.min.201709111556.js"></script>
-    <script src="assets/js/app.min.201709111556.js"></script>
+    <link href="assets/css/libs.min.201709011929.css" rel="stylesheet">
+    <link href="assets/css/app.min.201709011929.css" rel="stylesheet">
+    <script src="assets/js/common.min.201709011929.js"></script>
+    <script src="assets/js/app.min.201709011929.js"></script>
   </head>
   
   <body> <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
@@ -2037,11 +2037,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
             <div class="LightForm col-md-7 col-sm-reset">
               <app-onboarding-progress-bar></app-onboarding-progress-bar>
                <h1>
-<<<<<<< HEAD
                     <icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec> 
-=======
-                    <icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
                     <span data-bind="text: title"></span>
                 </h1>
 
@@ -2065,7 +2061,6 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                 </h2>
 
               <div class="isolated inset">
-<<<<<<< HEAD
                 <!--<app-search-job-titles params="api: search"></app-search-job-titles>-->
                 <div data-bind="template: { name: 'search-job-titles-template', data: search() }"></div>
               </div>
@@ -2077,19 +2072,6 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   data-bind="event: { click: $root.remove }"><span class="fa ion ion-ios-minus"></span>
                         </a>
 
-=======
-                <job-title-autocomplete params="suggestionButtonText: 'Add', onSelect: onSelectJobTitle, id: 'addJobTitle-autocomplete'"></job-title-autocomplete>
-              </div>
-              <div class="ListView ListView--twolines ListView--textualmarker" data-bind="foreach: jobTitles">
-                <div class="ListView-item"> <span class="ListView-item-content">
-                            <p data-bind="text: label"></p>
-                        </span>
-
-                  <button type="button" class="btn btn-link ListView-item-action"
-                  data-bind="click: $root.remove"> <span class="fa ion ion-ios-minus"></span>
- <span class="sr-only">Remove <span data-bind="text: label"></span></span>
-                  </button>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
                 </div>
               </div>
               <div class="LightForm-submitBar">
@@ -2198,11 +2180,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
             </div>
           </div>
           <div class="LightForm-submitBar">
-<<<<<<< HEAD
             <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
-=======
-            <button type="submit" class="btn btn-primary btn-block" data-bind="click: save, text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
             <button type="button" class="btn btn-danger btn-block" data-bind="text: deleteText, disable: $root.isLocked, event: { click: confirmRemoval }, visible: !isNew()"></button>
           </div>
           </form>
@@ -4273,7 +4251,6 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   value="San Francisco, CA">
                 </div>
               </div>
-<<<<<<< HEAD
               <div class="form-group col-sm-7">
                 <label for="homeSearch" class="sr-only">Search</label>
                 <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
@@ -4341,10 +4318,6 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                     </ul>
                   </li>
                 </ul>
-=======
-              <div class="col-sm-7">
-                <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
               </div>
               </form>
           </div>
@@ -4593,16 +4566,10 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
             <p class="coop-tagline">Find clients, community, tools and resources. Grow and manage your business
               on your terms.</p>
-<<<<<<< HEAD
             <form id="coop-search" data-bind="submit: search" action="/"
             method="get" class="row" autocomplete="off">
               <!--<app-search-job-titles params="api: search"></app-search-job-titles>-->
               <div class="col-sm-12" data-bind="template: { name: 'search-job-titles-template', data: search() }"></div>
-=======
-            <form id="coop-search" class="row">
-              <!--class="col-sm-12" -->
-              <job-title-autocomplete params="suggestionButtonText: suggestionButtonText, onSelect: onSelectJobTitle, id: 'learnMoreProfessionals-autocomplete'"></job-title-autocomplete>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
             </form>
             <div class="coop-join-up"> <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
 
@@ -7090,7 +7057,6 @@ from
                   <div class="ServiceProfessionalResult-summary">
                       <div>
                          <h2>Provide services?</h2>
-<<<<<<< HEAD
                       </div>
                       <div>
                           <p>Your <span data-bind="text: singularName"></span> business</p>
@@ -7132,49 +7098,6 @@ from
                       <div>
                         <p>Your area</p>
                       </div>
-=======
-                      </div>
-                      <div>
-                          <p>Your <span data-bind="text: singularName"></span> business</p>
-                      </div>
-                      <div class="ServiceProfessionalInfo-meta">
-                        <app-stars-rating params="rating: '5.0', total: '74'">
-                        </app-stars-rating>
-                        <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (6)</span>
-                      </div>
-                      <div>
-                        <p>1 mile</p>
-                      </div>
-                </div>
-                </a>
-
-            <div class="ServiceProfessionalResult-description">
-              <p>Offers 8 services from $59</p>
-            </div>
-            <div class="ServiceProfessionalResult-actions"> <a href="/learnMoreProfessionals" class="btn btn-primary" style="font-size: 12px">List your services</a> 
-              <a
-              href="/learnMoreProfessionals">Learn more</a>
-            </div>
-          </li>
-          <li> <a href="mailto:%20?bcc=refer@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0D%0A%0D%0AI+just+wanted+to+share+with+you+a+new+app%2Fsite+for+local+services+that+could+really+help+you+with+your+business.+It%27s+cooperatively+owned+by+the+service+professionals%2C+which+sounds+pretty+cool.+%0D%0A%0D%0ACheck+them+out+here%3A%0D%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0D%0A%0D%0ACheers%21"
-            target="_blank">
-                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
-                  <div class="ServiceProfessionalResult-summary">
-                      <div>
-                         <h2>Know any?</h2>
-                      </div>
-                      <div>
-                          <p>Help us recruit <span data-bind="text: pluralName"></span>!</p>
-                      </div>
-                      <div class="ServiceProfessionalInfo-meta">
-                        <app-stars-rating params="rating: '5.0', total: '74'">
-                        </app-stars-rating>
-                        <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true"></i> (6)</span>
-                      </div>
-                      <div>
-                        <p>Your area</p>
-                      </div>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
                 </div>
                 </a>
 
@@ -7567,7 +7490,6 @@ from
                     </div>
                   </fieldset>
                   <fieldset>
-<<<<<<< HEAD
                     <legend>List details of your <span class="text-lowercase" data-bind="text: jobTitleName"> services</legend> 
                             <div data-bind="foreach: categoriesView">
                                 <div class="form-group">
@@ -7635,48 +7557,6 @@ from
         <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
       </div>
       </div>
-=======
-                    <legend>List details of your <span class="text-lowercase" data-bind="text: jobTitleName"> services</legend>
-                            <div data-bind="foreach: categoriesView">
-                                <div class="form-group">
-                                    <label data-bind="attr: { for: 'category' + category().serviceAttributeCategoryID() }, text: category().name"></label>
-                                    <servicesOverview-attributes-combobox params="
-                                        id: 'category' + category().serviceAttributeCategoryID(),
-                                        availableAttributes: availableAttributes,
-                                        isDisabled: $parent.isLocked,
-                                        onSelectAttribute: pushAttribute,
-                                        onSelectAttributeName: pushAttributeName
-                                        "></servicesOverview-attributes-combobox>
-                                </div>
-                                <ol class="TagsList" data-bind="foreach: selectedAttributes">
-                                    <li class="TagsList-item">
-                                        <span data-bind="text: name"></span>
-
-                      <button
-                      type="button" class="btn btn-link" data-bind="click: $parent.removeAttribute, disable: $parent.isLocked"> <i class="fa ion ion-ios-close-outline" aria-hidden="true"></i>
- <span class="sr-only">Remove</span>
-
-                        </button>
-                        </li>
-                        </ol>
-                </div>
-                <div class="form-group">
-                  <label for="experienceLevel">Experience level</label>
-                  <select id="experienceLevel" class="form-control"
-                  data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
-                </div>
-                </fieldset>
-                <div class="LightForm-submitBar">
-                  <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
-                </div>
-            </div>
-            </form>
-          </div>
-          <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
-            <app-inline-side-menu params="vocElement: 'marketplaceProfile', helpLink: helpLink"></app-inline-side-menu>
-          </div>
-        </div>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
       </div>
       </div>
       <!-- Activity Signup -->
@@ -7704,7 +7584,6 @@ from
               <li><a class="dropdown-item" href="#terms-background-check-policy">Background Check Policy</a>
               </li>
               <li><a class="dropdown-item" href="#terms-fees">Fees</a>
-<<<<<<< HEAD
               </li>
               <li><a class="dropdown-item" href="#terms-business-associate-agreement">Business Associate Agreement</a>
               </li>
@@ -7722,25 +7601,6 @@ from
               </li>
               <li><a href="#terms-business-associate-agreement">Business Associate Agreement</a>
               </li>
-=======
-              </li>
-              <li><a class="dropdown-item" href="#terms-business-associate-agreement">Business Associate Agreement</a>
-              </li>
-            </ul>
-          </div>
-          <div class="PageMenu-list">
-            <ul>
-              <li><a href="#terms-terms-of-service">Terms of Service</a>
-              </li>
-              <li><a href="#terms-privacy-policy">Privacy Policy</a>
-              </li>
-              <li><a href="#terms-background-check-policy">Background Check Policy</a>
-              </li>
-              <li><a href="#terms-fees">Fees</a>
-              </li>
-              <li><a href="#terms-business-associate-agreement">Business Associate Agreement</a>
-              </li>
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
             </ul>
           </div>
         </div>
@@ -11756,7 +11616,6 @@ The Parties agree that, in the event
             </ul>
         </div>
       </script>
-<<<<<<< HEAD
       <!-- search job titles -->
       <script type="text/html" id="search-job-titles-template">
         <div class="form-group">
@@ -11815,8 +11674,6 @@ The Parties agree that, in the event
             </ul>
         </div>
       </script>
-=======
->>>>>>> is528-Meet-WCAG-2.0-Level-AA
       <!-- Component Template select-jobtitle -->
       <script type="text/html" id="select-job-title-template">
         <div class="form-group">

@@ -183,15 +183,11 @@ public class RestUserJobProfile : RestWebPage
             }
 
             // Search
-            var jobTitle = LcRest.JobTitleSearchResult.SearchBySearchTerm(jobTitleName,
-                LcRest.Search.DEFAULT_LOCATION_LAT, 
-                LcRest.Search.DEFAULT_LOCATION_LNG,
-                LcRest.Search.DEFAULT_LOCATION_SEARCH_DISTANCE,
-                LcRest.Locale.Current).FirstOrDefault();
+            var jobTitle = LcRest.PublicJobTitle.AutocompleteSearch(jobTitleName, LcRest.Locale.Current).FirstOrDefault();
             if (jobTitle != null)
             {
                 // Use the first one
-                jobTitleID = jobTitle.jobTitleID;
+                jobTitleID = jobTitle.value;
                 jobTitleExists = true;
             }
             else

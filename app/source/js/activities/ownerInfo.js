@@ -13,8 +13,7 @@ var A = Activity.extend(function OwnerInfoActivity() {
     this.viewModel = new ViewModel();
 
     this.accessLevel = this.app.UserType.serviceProfessional;
-    // null for logo
-    this.navBar = Activity.createSectionNavBar(null);
+    this.navBar = Activity.createSectionNavBar('Cooperative');
     this.title('Cooperative');
 });
 

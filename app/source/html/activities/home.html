@@ -2,9 +2,9 @@
 <div data-activity="home">
     <div class="home-main">
         <div class="home-search">
-            <h1 class="home-title" data-bind="text: title"></h1>
-            <p class="home-tagline">Independent service professionals at your service.</p>
-            <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
+            <h1 class="home-title">Make life better.</h1>
+            <p class="home-tagline">Book local, independent service professionals safely and easily</p>
+           <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
                 <div class="form-group col-sm-5">
                     <label for="homeLocation" class="sr-only">Where?</label>
                     <div class="input-group input-group-lg">
@@ -12,8 +12,67 @@
                         <input type="text" name="location" class="form-control inset" id="homeLocation" value="San Francisco, CA">
                     </div>
                 </div>
-                <div class="col-sm-7">
-                    <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>
+                <div class="form-group col-sm-7">
+                    <label for="homeSearch" class="sr-only">Search</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon inset"><span class="fa ion ion-ios-search" aria-hidden="true"></span></span>
+                        <input type="text" data-bind="textInput: searchTerm" class="form-control inset" id="homeSearch" name="s" placeholder="Search services, e.g. Dog Walker, Tutor" >
+                    </div>
+                    <ul class="SearchResultsPreview" data-bind="visible: isSearchAutocompleteOpened">
+                        <li data-bind="visible: isLoading(), css: { 'is-loading': isLoading() }">
+                            <ul><li class="Result">
+                                <div class="Result-info">
+                                    <span class="Result-name">Searching...</span>
+                                </div>
+                                <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
+                            </li></ul>
+                        </li>
+                        <li data-bind="visible: searchResults.jobTitles().length && !isLoading()">
+                            <h2>Services</h2>
+                            <ul data-bind="foreach: searchResults.jobTitles">
+                                <li class="Result clearfix">
+                                    <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
+                                        <div class="Result-info">
+                                            <span class="Result-name" data-bind="text: pluralName"></span>
+                                            <span class="Result-count" data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you) </span>
+                                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                                        </div>
+                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li data-bind="visible: searchResults.serviceProfessionals().length && !isLoading()">
+                            <h2>Professionals</h2>
+                            <ul data-bind="foreach: searchResults.serviceProfessionals">
+                                <li class="Result clearfix">
+                                    <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
+                                        <div class="Result-info">
+                                            <span class="Result-name" data-bind="text: firstName"></span>
+                                            <span class="Result-name"  data-bind="text: lastName"></span>
+                                            <span class="Result-name"  data-bind="visible: businessName">(<span data-bind="text: businessName"></span>)</span>
+                                            <span class="Result-description" data-bind="text: allJobTitles"></span>
+                                        </div>
+                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li data-bind="visible: searchResults.categories().length && !isLoading()">
+                            <h2>Categories</h2>
+                            <ul data-bind="foreach: searchResults.categories">
+                                <li class="Result clearfix">
+                                    <a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/' + categoryID() + '/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}">
+                                        <div class="Result-info">
+                                            <span class="Result-name" data-bind="text: categoryName"></span>
+                                            <span class="Result-description" data-bind="text: searchDescription"></span>
+                                        </div>
+                                        <div class="btn btn-secondary btn-md btn-inline">Go</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </form>
         </div>
