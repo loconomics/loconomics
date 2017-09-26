@@ -587,8 +587,9 @@ DatePicker.prototype = {
      *
      * The elements generated are
      *   <span>Day of month number</span>
-     *   <span sr-only>Additional text for Screen Reader: weekday, 'select ', month date year</span>
+     *   <span sr-only>Additional text for Screen Reader: weekday
      *   <span tag aria-label>Empty content, label for aria and extra classes for visible tag</span>
+     *   <span sr-only>Additional text for Screen Reader: 'select ', month date year</span>
      */
     createDayContent: function(date) {
         var $content = $([]);
@@ -596,20 +597,20 @@ DatePicker.prototype = {
         $content = $content.add($('<span></span>').text(date.getDate()));
 
         // For screen reader, content will read something like:
-        //  26, Tuesday. Select September 26 2017
-        var srTextTemplate = ', {weekDay}. Select {date}';
-        var srDateTemplate = '{month} {day} {year}';
-        var srDate = srDateTemplate
+        //  26, Tuesday. [tag if any.] Select September 26 2017
+        // First screen reader part
+        $content = $content.add($('<span class="sr-only"></span>').text(' ' + DPGlobal.dates.days[date.getDay()]));
+
+        // Tag (between the two screen reader parts)
+        $content = $content.add($('<span aria-label=""></span>').addClass(classes.tag));
+
+        // Second screen reader part
+        var srTextTemplate = '. Select {month} {day} {year}';
+        var srText = srTextTemplate
         .replace('{month}', DPGlobal.dates.months[date.getMonth()])
         .replace('{day}', date.getDate())
         .replace('{year}', date.getFullYear());
-        var srText = srTextTemplate
-        .replace('{weekDay}', DPGlobal.dates.days[date.getDay()])
-        .replace('{date}', srDate);
         $content = $content.add($('<span class="sr-only"></span>').text(srText));
-
-        // Tag
-        $content = $content.add($('<span aria-label=""></span>').addClass(classes.tag));
 
         return $content;
     },
