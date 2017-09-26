@@ -89,5 +89,5 @@ module.exports = {
     'publicBio': require('./activities/publicBio'),
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
-    'serviceProfessionalBusinessWebsite': require('./activities/serviceProfessionalBusinessWebsite')
+    'serviceProfessionalWebsite': require('./activities/serviceProfessionalWebsite')
 };

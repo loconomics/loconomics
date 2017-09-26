@@ -1,3 +1,0 @@
-/**
-    serviceProfessionalBusinessWebsite activity
-**/
