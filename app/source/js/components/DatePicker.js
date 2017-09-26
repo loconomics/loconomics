@@ -35,7 +35,8 @@ var classes = {
     years: 'DatePicker-years',
     weekDays: 'DatePicker-weekDays',
     active: 'active',
-    instructions: 'DatePicker-instructions'
+    instructions: 'DatePicker-instructions',
+    tag: 'DatePicker-tag'
 };
 
 var events = {
@@ -580,6 +581,39 @@ DatePicker.prototype = {
         return this.picker.find('.' + classes.days + ' .' + classes.monthDay);
     },
 
+    /**
+     * Creates a jQuery DOM content for each day cell button in the monthly view
+     * @returns {jQuery}
+     *
+     * The elements generated are
+     *   <span>Day of month number</span>
+     *   <span sr-only>Additional text for Screen Reader: weekday, 'select ', month date year</span>
+     *   <span tag aria-label>Empty content, label for aria and extra classes for visible tag</span>
+     */
+    createDayContent: function(date) {
+        var $content = $([]);
+        // Display day of month number plus language for sr-only
+        $content = $content.add($('<span></span>').text(date.getDate()));
+
+        // For screen reader, content will read something like:
+        //  26, Tuesday. Select September 26 2017
+        var srTextTemplate = ', {weekDay}. Select {date}';
+        var srDateTemplate = '{month} {day} {year}';
+        var srDate = srDateTemplate
+        .replace('{month}', DPGlobal.dates.months[date.getMonth()])
+        .replace('{day}', date.getDate())
+        .replace('{year}', date.getFullYear());
+        var srText = srTextTemplate
+        .replace('{weekDay}', DPGlobal.dates.days[date.getDay()])
+        .replace('{date}', srDate);
+        $content = $content.add($('<span class="sr-only"></span>').text(srText));
+
+        // Tag
+        $content = $content.add($('<span aria-label=""></span>').addClass(classes.tag));
+
+        return $content;
+    },
+
     fillDow: function(){
         var dowCnt = this.weekStart;
         var html = '<tr class="' + classes.weekDays + '">';
@@ -667,22 +701,7 @@ DatePicker.prototype = {
                     clsName += ' ' + classes.active;
                 }
 
-                // Display day of month number plus language for sr-only
-                var dayContent = $('<span></span>').text(prevMonth.getDate());
-                // For screen reader, content will read something like:
-                //  26, Tuesday. Select September 26 2017
-                var srTextTemplate = ', {weekDay}. Select {date}';
-                var srDateTemplate = '{month} {day} {year}';
-                var srDate = srDateTemplate
-                .replace('{month}', DPGlobal.dates.months[prevMonth.getMonth()])
-                .replace('{day}', prevMonth.getDate())
-                .replace('{year}', prevMonth.getFullYear());
-                var srText = srTextTemplate
-                .replace('{weekDay}', DPGlobal.dates.days[prevMonth.getDay()])
-                .replace('{date}', srDate);
-                $('<span class="sr-only"></span>')
-                .text(srText)
-                .appendTo(dayContent);
+                var dayContent = this.createDayContent(prevMonth);
 
                 dayTd = weekTr.find('td:eq(' + currentWeekDayIndex + ')');
                 dayTd
