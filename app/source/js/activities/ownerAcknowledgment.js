@@ -17,6 +17,7 @@ var A = Activity.extend(function OwnerAcknowledgmentActivity() {
     this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo', helpLink: '/help/relatedArticles/201964153-how-owner-user-fees-work'
     });
+    this.title('Cooperative Owner Disclosure');
 });
 
 module.exports = A;
