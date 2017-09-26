@@ -59,15 +59,12 @@ var A = Activity.extend(function HomeActivity() {
         }
     });
 
-    viewModel.onGeocodeResult = function(e, place) {
-        console.log("Here");
-        if (place && place.geometry) {
-            // Save to viewmodel
-            viewModel.lat(place.geometry.location.lat());
-            viewModel.lng(place.geometry.location.lng());
-            viewModel.city(place.formatted_address);
-            console.log('LOCATION: ', place);
-        }
+    viewModel.onGeocodeResult = function(place) {
+        // Save to viewmodel
+        viewModel.lat(place.geometry.location.lat());
+        viewModel.lng(place.geometry.location.lng());
+        viewModel.city(place.formatted_address);
+        console.log('LOCATION: ', place);
     };
 });
 
