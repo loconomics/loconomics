@@ -22,15 +22,15 @@
                     <fieldset class="form-group">
                         <label for="serviceProfessionalProfileUrl">Your custom URL:</label>
                         <div class="input-group">
-                            <span class="input-group-addon" data-bind="text: marketplaceProfilePicture.customUrlDomainPrefix"></span>
-                            <input type="url" id="serviceProfessionalProfileUrl" class="form-control" data-bind="textInput: marketplaceProfilePicture.profile.serviceProfessionalProfileUrlSlug, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
+                            <span class="input-group-addon" data-bind="text: listingCustomURL.customUrlDomainPrefix"></span>
+                            <input type="text" id="serviceProfessionalProfileUrl" class="form-control" data-bind="textInput: listingCustomURL.profile.serviceProfessionalProfileUrlSlug, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
                         </div>
                     </fieldset>
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                     </div>
                     <div class="LightForm-submitBar">
-                        <button type="button" class="btn btn-default btn-block" data-bind="click: marketplaceProfilePicture.copyCustomUrl, text: marketplaceProfilePicture.copyCustomUrlButtonText, disable: isLocked"></button>
+                        <button type="button" class="btn btn-default btn-block" data-bind="click: listingCustomURL.copyCustomUrl, text: listingCustomURL.copyCustomUrlButtonText, disable: isLocked"></button>
                     </div>
                 </form>
             </div>

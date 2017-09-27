@@ -5,10 +5,10 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var marketplaceProfile = require('../data/marketplaceProfile');
-var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictureVM');
+var listing = require('../data/marketplaceProfile');
+var ListingVM = require('../viewmodels/MarketplaceProfileVM');
 
-var A = Activity.extend(function ServiceProfessionalCustomURL() {
+var A = Activity.extend(function ServiceProfessionalBusinessInfo() {
 
     Activity.apply(this, arguments);
 
@@ -25,7 +25,7 @@ var A = Activity.extend(function ServiceProfessionalCustomURL() {
         return " Your listing's custom URL";
     }, this.viewModel);
     this.registerHandler({
-        target: marketplaceProfile,
+        target: listing,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';
@@ -53,8 +53,7 @@ function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
 
-
-    this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
+    this.listingCustomURL = new ListingVM(app);
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -67,7 +66,7 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        this.marketplaceProfilePicture.save()
+        this.listingCustomURL.save()
         .then(function() {
             app.successSave();
         })
@@ -77,14 +76,14 @@ function ViewModel(app) {
     }.bind(this);
 
     this.discard = function() {
-        this.marketplaceProfilePicture.discard();
+        this.listingCustomURL.discard();
     };
     this.sync = function() {
-        this.marketplaceProfilePicture.sync();
+        this.listingCustomURL.sync();
     };
    
-    this.isLoading = this.marketplaceProfilePicture.isLoading;
-    this.isSaving = this.marketplaceProfilePicture.isSaving;
-    this.isSyncing = this.marketplaceProfilePicture.isSyncing;
-    this.isLocked = this.marketplaceProfilePicture.isLocked;
+    this.isLoading = this.listingCustomURL.isLoading;
+    this.isSaving = this.listingCustomURL.isSaving;
+    this.isSyncing = this.listingCustomURL.isSyncing;
+    this.isLocked = this.listingCustomURL.isLocked;
 }
