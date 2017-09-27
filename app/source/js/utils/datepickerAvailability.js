@@ -82,12 +82,12 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
                         ariaLabel = 'Schedule is fully booked';
                         break;
                     case 'medium':
-                        cls = 'text-success ion-ios-circle-outline';
-                        ariaLabel = 'Schedule is less than 50% booked';
-                        break;
-                    case 'low':
                         cls = 'text-warning ion-contrast';
                         ariaLabel = 'Schedule is more than 50% booked';
+                        break;
+                    case 'low':
+                        cls = 'text-success ion-ios-circle-outline';
+                        ariaLabel = 'Schedule is less than 50% booked';
                         break;
                     case 'none':
                         cls = 'text-danger ion-ios-close';

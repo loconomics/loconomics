@@ -88,6 +88,12 @@ var A = Activity.extend(function CalendarActivity() {
         }.bind(this)
     });
 
+    /* IMPORTANT:B1 iagosrl: I had to remove all this special hidding (and showing)
+        because has conflicts with accessibility/keyboard use and the attempts
+        to make it works with that (display:none on transitionend) was buggy,
+        with race conditions that make it fails.
+        CHECK that too the show logic is commented and some CSS for the
+        use of [hidden] to make a transition effect
     // Set-up our special hide logic for when running datepicker('hide')
     var isHiddingDatePicker = false;
     var isShowingDatePicker = false;
@@ -112,7 +118,7 @@ var A = Activity.extend(function CalendarActivity() {
             }
         }, 300);
         return true;
-    });
+    });*/
 
     this.hideDatepicker = function() {
         this.$datepicker.datepicker('hide');
@@ -120,6 +126,7 @@ var A = Activity.extend(function CalendarActivity() {
 
     // Creating viewModel handlers to manage calendar
     this.viewModel.openDatePicker = function(d, e) {
+        /*IMPORTANT:B1 (read details above)
         if (isShowingDatePicker || isHiddingDatePicker) return;
         if (!this.$datepicker.attr('hidden')) {
             this.hideDatepicker();
@@ -134,6 +141,10 @@ var A = Activity.extend(function CalendarActivity() {
             }.bind(this), 200);
         }
         openerElement = e.target;
+        */
+        // Alternative toggle show/hide
+        this.$datepicker.datepicker('toggle', e);
+
         e.preventDefault();
         e.stopPropagation();
     }.bind(this);

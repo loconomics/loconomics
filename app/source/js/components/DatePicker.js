@@ -404,8 +404,8 @@ DatePicker.prototype = {
     },
     autoHideOn: function() {
         $(document)
-        .off('mousedown.datepicker')
-        .on('mousedown.datepicker', function(ev){
+        .off('click.datepicker')
+        .on('click.datepicker', function(ev){
             if ($(ev.target).closest('.' + classes.component).length === 0) {
                 this.hide();
             }
@@ -429,6 +429,15 @@ DatePicker.prototype = {
     },
 
     openerElement: null,
+
+    toggle: function(e) {
+        if (this.picker.is(':visible')) {
+            this.hide(e);
+        }
+        else {
+            this.show(e);
+        }
+    },
 
     show: function(e) {
         if (e) {
