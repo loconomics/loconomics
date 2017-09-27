@@ -23,7 +23,7 @@ var A = Activity.extend(function PublicProfilePicture() {
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
     this.title = ko.pureComputed(function() {
-        return ' Your business website';
+        return ' Your profile picture';
     }, this.viewModel);
     this.registerHandler({
         target: marketplaceProfile,
