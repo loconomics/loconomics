@@ -27,6 +27,22 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Services', {
         helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
+            prefix = this.isNew() ? 'New ' : '',
+            postfix = this.client() ? (' only for ' + this.client().firstName()) : '';
+
+        if (this.isLoading()) {
+            return 'Loading...';
+        }
+        else if (this.serviceProfessionalServiceVersion()) {
+            return prefix + pricingName + postfix;
+        }
+        else {
+            return 'Unable to load service';
+        }
+
+    }, this.viewModel);
     /// Go out after save succesfully an item.
     /// Pricing is a plain object
     this.viewModel.onSave = function(pricing) {
@@ -215,23 +231,6 @@ function ViewModel(app) {
     }, this);
 
     this.client = ko.observable(null);
-
-    this.header = ko.pureComputed(function() {
-        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
-            prefix = this.isNew() ? 'New ' : '',
-            postfix = this.client() ? (' only for ' + this.client().fullName()) : '';
-
-        if (this.isLoading()) {
-            return 'Loading...';
-        }
-        else if (this.serviceProfessionalServiceVersion()) {
-            return prefix + pricingName + postfix;
-        }
-        else {
-            return 'Unable to load service';
-        }
-
-    }, this);
 
     // Quicker access in form, under a 'with'
     this.current = ko.pureComputed(function() {

@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 
 var $ = require('jquery');
+var ko = require('knockout');
 
 var A = Activity.extend(function TermsActivity() {
     
@@ -25,6 +26,24 @@ var A = Activity.extend(function TermsActivity() {
         var link = $(this).attr('href').replace(/^#terms-/, '');
         shell.replaceState(null, null, '#!terms/' + link);
     });
+    this.title = ko.pureComputed(function() {
+        var route = shell.currentRouteObservable();
+        var segment = route && route.segments && route.segments[0];
+        switch (segment) {
+            case 'privacy-policy':
+                return 'PRIVACY POLICY';
+            case 'background-check-policy':
+                return 'BACKGROUND CHECK AND LICENSE VERIFICATION POLICY';
+            case 'fees':
+                return 'FEES';
+            case 'business-associate-agreement':
+                return 'BUSINESS ASSOCIATE AGREEMENT';
+            case 'accessibility-policy':
+                return 'ACCESSIBILITY POLICY';
+            default:
+                return 'TERMS OF SERVICE';
+        }
+    }, this.viewModel);
 });
 
 exports.init = A.init;

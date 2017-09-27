@@ -31,7 +31,18 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
     this.title = ko.pureComputed(function() {
-        return this.isInOnboarding() ? 'Add your first ' + this.jobTitleName() + 'offering' : this.jobTitleName() + ' offerings';
+        if (this.isInOnboarding() && this.jobTitleName()) {
+            return 'Add your first ' + this.jobTitleName() + 'offering';
+        }
+        else if (this.jobTitleName() && !this.isSelectionMode()) {
+            return this.jobTitleName() + ' offerings';
+        }
+        else if (this.jobTitleName() && this.isSelectionMode()) {
+            return "What's included in " + this.clientName() + "'s " + this.jobTitleName() + ' appointment?';
+        }
+        else {
+            return 'Select a job title';
+        }
     }, this.viewModel);
 
     // On changing jobTitleID:

@@ -5,92 +5,71 @@
         <h1 data-bind="text: title"></h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle has-HelpPoint">Your preferences</h2>
-                <ul class="TilesList TilesList--openEnd">
-                    <li data-bind="visible: isServiceProfessional">
-                        <a class="InfoTile" href="/paymentAccount">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-cash" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Payout preferences</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/privacySettings">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-eye-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Privacy settings</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-
-                <h1 class="SectionTitle" data-bind="visible: isServiceProfessional">Billing</h1>
+                <h2 class="SectionTitle" data-bind="visible: isServiceProfessional">Payouts</h2>
                 <ul class="TilesList TilesList--openEnd" data-bind="visible: isServiceProfessional">
                     <li>
-                        <a class="InfoTile" href="/userFees">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="ion-levels" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content" data-bind="visible: !activeUserPaymentPlan.isNew()">
-                                <div>Plan: <strong data-bind="text: activeUserPaymentPlan.paymentPlan"></strong></div>
-                                <em>Billed to <span data-bind="text: activeUserPaymentPlan.paymentMethod"></em>
-                            </div>
-                            <div class="Tile-content" data-bind="visible: activeUserPaymentPlan.isNew">
-                                <p>Choose a plan</p>
-                            </div>
-                        </a>
-                    </li>
-                    <li data-bind="visible: !activeUserPaymentPlan.isNew()">
-                        <a class="InfoTile" href="/userFees">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa fa-dollar" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <div>Next payment: <span data-bind="text: activeUserPaymentPlan.nextPaymentAmount, format: { type: 'number', format: '$0,0.00' }"></span></div>
-                                <em>On <span data-bind="text: activeUserPaymentPlan.nextPaymentDueDate, format: { type: 'datetime', format: 'MMMM Do, YYYY' }"></span></em>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="InfoTile" href="/userFeePayments">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-card" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Payment history</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-                <h1 class="SectionTitle" data-bind="visible: isServiceProfessional">Payouts</h1>
-                <ul class="TilesList TilesList--openEnd" data-bind="visible: isServiceProfessional">
-                    <li>
-                        <a class="InfoTile" href="/paymentAccount">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-cash" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
+                        <a class="IconContentItem" href="/paymentAccount">
+                            <icon-dec params="icon: 'ion-cash'"></icon-dec>
+                            <div class="Item-content">
                                 <p>Payout preferences</p>
                             </div>
                         </a>
                     </li>
 <!--
                     <li>
-                        <a class="InfoTile" href="/userFees">
+                        <a class="IconContentItem" href="/userFees">
                             <div class="Tile-icon" aria-hidden="true">
                                 <span class="fa fa-bank" aria-hidden="true"></span>
                             </div>
-                            <div class="Tile-content">
+                            <div class="Item-content">
                                 <p>Payout history</p>
                             </div>
                         </a>
                     </li>
 -->
+                </ul>
+                <h2 class="SectionTitle" data-bind="visible: isServiceProfessional">Billing</h2>
+                <ul class="TilesList TilesList--openEnd" data-bind="visible: isServiceProfessional">
+                    <li>
+                        <a class="IconContentItem" href="/userFees">
+                            <icon-dec params="icon: 'ion-levels'"></icon-dec>
+                            <div class="Item-content" data-bind="visible: !activeUserPaymentPlan.isNew()">
+                                <div>Plan: <strong data-bind="text: activeUserPaymentPlan.paymentPlan"></strong></div>
+                                <em>Billed to <span data-bind="text: activeUserPaymentPlan.paymentMethod"></em>
+                            </div>
+                            <div class="Item-content" data-bind="visible: activeUserPaymentPlan.isNew">
+                                <p>Choose a plan</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li data-bind="visible: !activeUserPaymentPlan.isNew()">
+                        <a class="IconContentItem" href="/userFees">
+                            <icon-dec params="icon: 'fa-dollar'"></icon-dec>
+                            <div class="Item-content">
+                                <div>Next payment: <span data-bind="text: activeUserPaymentPlan.nextPaymentAmount, format: { type: 'number', format: '$0,0.00' }"></span></div>
+                                <em>On <span data-bind="text: activeUserPaymentPlan.nextPaymentDueDate, format: { type: 'datetime', format: 'MMMM Do, YYYY' }"></span></em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="IconContentItem" href="/userFeePayments">
+                            <icon-dec params="icon: 'ion-card'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Payment history</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <h2 class="SectionTitle has-HelpPoint">Your privacy</h2>
+                <ul class="TilesList TilesList--openEnd">
+                    <li>
+                        <a class="IconContentItem" href="/privacySettings">
+                            <icon-dec params="icon: 'ion-ios-eye-outline'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Privacy settings</p>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

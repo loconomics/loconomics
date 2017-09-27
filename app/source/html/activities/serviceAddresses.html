@@ -11,16 +11,8 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div class="OnboardingValueProp" data-bind="visible: showSupportingText">
-                    <div class="Icon-container">
-                        <span class="Tile-icon fa ion ion-ios-location-outline" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <h2>Where do you work as a <span data-bind="text: jobTitleName"></span>?</h2>
-                        <p>Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
-                    </div>
-                </div>
-                <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
+                <h1><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <p data-bind="visible: showSupportingText">Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
