@@ -665,14 +665,24 @@ DatePicker.prototype = {
         // week-day index (0 is Sunday), applying the weekStart offset option for
         // other locales.
         prevMonth.setDate(lastDayPrevMonth - lastDayWeekDay + this.weekStart);
+        /*
+            TODO WE SHOULD enable this and fix rendering: some cases like October 2017,
+            the month starts at the week start so makes no sense to display a previous
+            month week in the first row. BUT enabling this several things broke
+            at the rendering of date-cells; too, without this, a bug exists with
+            availability (does not load for that prevoius month week on that
+            specific cases)
         // We must start in the first day of the week for the closest day in current
         // month; usually is a date in the previous month, but sometimes the
         // first day of the current month starts exactly at the first week-day;
-        // we can know that by checking current prevMonth value and see if is the
+        // we can know that by checking current prevMonth+6 days and see if is the
         // last weekday (applying offset), then we can move it just one day forward
-        if (prevMonth.getDay() - this.weekStart === 6) {
-            prevMonth.setDate(prevMonth.getDate() + 1);
+        var prevMonthWeekEnd = new Date(prevMonth);
+        prevMonthWeekEnd.setDate(prevMonth.getDate() + 6);
+        if (prevMonthWeekEnd.getDay() - this.weekStart === 6) {
+            prevMonth.setDate(prevMonthWeekEnd.getDate() + 1);
         }
+        */
 
         // IMPORTANT: Avoid duplicated work, by checking we are still showing the same month,
         // so not need to 're-render' everything, only swap the active date
