@@ -32,7 +32,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.viewModel.navBar = this.navBar;
     this.title = ko.pureComputed(function() {
         if (this.isInOnboarding() && this.jobTitleName()) {
-            return 'Add your first ' + this.jobTitleName() + 'offering';
+            return 'Add your first ' + this.jobTitleName() + ' offering';
         }
         else if (this.jobTitleName() && !this.isSelectionMode()) {
             return this.jobTitleName() + ' offerings';

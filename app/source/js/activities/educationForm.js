@@ -16,7 +16,6 @@ var A = Activity.extend(function EducationFormActivity() {
     this.navBar = Activity.createSubsectionNavBar('Education', {
         backLink: '/education' , helpLink: this.viewModel.helpLink
     });
-    this.title('Add training or education');
     this.title = ko.pureComputed(function() {
         if (this.educationID() > 0){
             return 'Edit training/education';
