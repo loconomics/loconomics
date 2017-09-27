@@ -8,7 +8,7 @@ var ko = require('knockout');
 var userProfile = require('../data/userProfile');
 var onboarding = require('../data/onboarding');
 var homeAddress = require('../data/homeAddress');
-var marketplaceProfile = require('../data/marketplaceProfile');
+var listing = require('../data/marketplaceProfile');
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -57,10 +57,10 @@ var A = Activity.extend(function AboutMeActivity() {
     });
 
     this.registerHandler({
-        target: marketplaceProfile,
+        target: listing,
         event: 'error',
         handler: function(err) {
-            var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';
+            var msg = err.task === 'save' ? 'Unable to save your bio.' : 'Unable to load your bio.';
             this.app.modals.showError({
                 title: msg,
                 error: err
@@ -93,7 +93,7 @@ A.prototype.show = function show(state) {
 };
 
 var ContactInfoVM = require('../viewmodels/ContactInfoVM');
-var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictureVM');
+var ProfilePictureBioVM = require('../viewmodels/ProfilePictureBioVM');
 
 function ViewModel(app) {
 
@@ -106,11 +106,11 @@ function ViewModel(app) {
     this.isInOnboarding = onboarding.inProgress;
 
     this.contactInfo = new ContactInfoVM(app);
-    this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
+    this.profilePicture = new ProfilePictureBioVM(app);
 
     this.user = this.contactInfo.user;
 
-    var vms = [this.contactInfo, this.marketplaceProfilePicture];
+    var vms = [this.contactInfo, this.profilePicture];
 
     this.submitText = ko.pureComputed(function() {
         return (

@@ -1,8 +1,7 @@
 /**
-    MarketplaceProfilePicture ViewModel extends the MarketplaceProfileVM
-    to add the posibility to upload a profile photo additionally to other marketplace
-    profile changes.
-    REMEMBER: Even if the profile photo URL comes at a GET request to the marketplace profile REST API,
+    ProfilePictureBio ViewModel extends the ListingVM
+    to add the posibility to upload a profile photo and bio additionally to other listing changes.
+    REMEMBER: Even if the profile photo URL comes at a GET request to the listing REST API,
     the ability to upload a new photo exist at a different end-point in the API.
 **/
 // TODO Move file-upload request code into a driver / data module
@@ -10,16 +9,16 @@
 var $ = require('jquery');
 var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
-var MarketplaceProfileVM = require('./MarketplaceProfileVM');
+var ListingVM = require('./ListingVM');
 var user = require('../data/userProfile').data;
 var remote = require('../data/drivers/restClient');
 require('../kocomponents/button-file');
 require('jquery.fileupload-image');
 
-module.exports = function MarketplaceProfilePictureVM(app) {
+module.exports = function ProfilePictureBioVM(app) {
     //jshint maxstatements:30
     // Base class:
-    MarketplaceProfileVM.call(this, app);
+    ListingVM.call(this, app);
 
     this.user = user;
     this.photoUploadUrl = remote.baseUrl + 'me/profile-picture';
@@ -232,4 +231,4 @@ module.exports = function MarketplaceProfilePictureVM(app) {
 };
 
 // Base class
-module.exports._inherits(MarketplaceProfileVM);
+module.exports._inherits(ListingVM);
