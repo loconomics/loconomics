@@ -1,9 +1,6 @@
 /**
     publicContactInfo activity
 **/
-/**
-    publicBio activity
-**/
 
 'use strict';
 
