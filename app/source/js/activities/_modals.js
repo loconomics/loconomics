@@ -104,7 +104,7 @@ var A = Activity.extend(function _modalsActivity() {
         timePicker2: function() {
             // Like in book unavailable time at dateTimePicker component
             showTimePicker({
-                title: 'Book an unavailable time',
+                title: 'Schedule an unavailable time',
                 selectedTime: null,
                 unsetLabel: 'Cancel'
             });

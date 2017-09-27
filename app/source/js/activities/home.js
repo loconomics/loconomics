@@ -21,7 +21,7 @@ var A = Activity.extend(function HomeActivity() {
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
-    this.title('Find and book local services');
+    this.title('Find and schedule local services.');
     this.viewModel = new ViewModel(this.app.shell);
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height

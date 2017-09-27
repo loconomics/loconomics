@@ -109,7 +109,7 @@ function AppointmentCardViewModel(params) {
                     'Saving changes' :
                     v && v.areDifferent() ?
                         this.isNew() && this.isBooking() ?
-                            'Book' :
+                            'Schedule' :
                             'Save changes'
                         : 'Saved'
         );
