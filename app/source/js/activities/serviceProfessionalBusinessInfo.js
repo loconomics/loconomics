@@ -1,15 +1,15 @@
 /**
-    serviceProfessionalWebsite activity
+    serviceProfessionalBusinessInfo activity
 **/
 
 'use strict';
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var marketplaceProfile = require('../data/marketplaceProfile');
-var MarketplaceProfilePictureVM = require('../viewmodels/MarketplaceProfilePictureVM');
+var listing = require('../data/marketplaceProfile');
+var ListingVM = require('../viewmodels/MarketplaceProfileVM');
 
-var A = Activity.extend(function ServiceProfessionalWebsite() {
+var A = Activity.extend(function ServiceProfessionalBusinessInfo() {
 
     Activity.apply(this, arguments);
 
@@ -23,10 +23,10 @@ var A = Activity.extend(function ServiceProfessionalWebsite() {
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
     this.title = ko.pureComputed(function() {
-        return ' Your business website';
+        return ' Your business info';
     }, this.viewModel);
     this.registerHandler({
-        target: marketplaceProfile,
+        target: listing,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';
@@ -54,8 +54,7 @@ function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
 
-
-    this.marketplaceProfilePicture = new MarketplaceProfilePictureVM(app);
+    this.listingBusinessInfo = new ListingVM(app);
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -68,7 +67,7 @@ function ViewModel(app) {
     }, this);
 
     this.save = function() {
-        this.marketplaceProfilePicture.save()
+        this.listingBusinessInfo.save()
         .then(function() {
             app.successSave();
         })
@@ -78,14 +77,14 @@ function ViewModel(app) {
     }.bind(this);
 
     this.discard = function() {
-        this.marketplaceProfilePicture.discard();
+        this.listingBusinessInfo.discard();
     };
     this.sync = function() {
-        this.marketplaceProfilePicture.sync();
+        this.listingBusinessInfo.sync();
     };
    
-    this.isLoading = this.marketplaceProfilePicture.isLoading;
-    this.isSaving = this.marketplaceProfilePicture.isSaving;
-    this.isSyncing = this.marketplaceProfilePicture.isSyncing;
-    this.isLocked = this.marketplaceProfilePicture.isLocked;
+    this.isLoading = this.listingBusinessInfo.isLoading;
+    this.isSaving = this.listingBusinessInfo.isSaving;
+    this.isSyncing = this.listingBusinessInfo.isSyncing;
+    this.isLocked = this.listingBusinessInfo.isLocked;
 }

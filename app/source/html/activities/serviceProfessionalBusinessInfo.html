@@ -1,5 +1,5 @@
-<!-- Activity serviceProfessionalWebsite -->
-<div data-activity="serviceProfessionalWebsite">
+<!-- Activity serviceProfessionalBusinessInfo -->
+<div data-activity="serviceProfessionalBusinessInfo">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
@@ -14,15 +14,19 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <form id="businessWebsiteForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="businessWebsiteFormInstructions">
+                <form id="businessInfoForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="businessInfoFormInstructions">
                     <app-onboarding-progress-bar></app-onboarding-progress-bar>
                     <h1><icon-dec params="icon: 'ion-android-globe'"></icon-dec> <span data-bind="text: title"></span></h1>
                     <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                    <p id="businessWebsiteFormInstructions" class="help-block">List for your clients the website of your business where they can learn more about you and your services.</p>
+                    <p id="businessInfoFormInstructions" class="help-block">List for your clients the name and website of your business where they can learn more about you and your services.</p>
                     <fieldset>
                         <div class="form-group">
+                            <label for="businessName">Business name:</label>
+                            <input id="businessName" type="text" class="form-control" maxlength="145" data-bind="textInput: listingBusinessInfo.profile.businessName, disable: isLocked">
+                        </div>
+                        <div class="form-group">
                             <label for="serviceProfessionalWebsite-url">Your business website's URL:</label>
-                            <input type="url" id="serviceProfessionalWebsite-url" class="form-control" data-bind="textInput: marketplaceProfilePicture.profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
+                            <input type="url" id="serviceProfessionalWebsite-url" class="form-control" data-bind="textInput: listingBusinessInfo.profile.serviceProfessionalWebsiteUrl, disable: isLocked" placeholder="https://www.yourwebsite.com"/>
                         </div>
                     </fieldset>
                     <div class="LightForm-submitBar">
