@@ -1,5 +1,8 @@
 <label for="homeLocation" class="sr-only">Where?</label>
 <div class="input-group input-group-lg">
     <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
-    <input type="text" name="location" class="form-control inset" id="homeLocation" value="San Francisco, CA">
+    <input-autocomplete params="
+        value: value,
+        onSelect: onSelect
+    "></input-autocomplete>
 </div>
