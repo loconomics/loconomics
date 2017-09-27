@@ -28,7 +28,7 @@
                 <div class="CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
                     <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
                     <div data-bind="visible: isEmpty" class="isolated">
-                        No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a>
+                        No upcoming appointments...<a class="bookNow-link" href="/home">schedule one now!</a>
                     </div>
                     <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
                     <div class="CardsDeck-dots visible-xs visible-sm" data-bind="foreach: list, visible: currentIndex() > -1">

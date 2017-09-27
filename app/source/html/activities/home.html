@@ -2,8 +2,8 @@
 <div data-activity="home">
     <div class="home-main">
         <div class="home-search">
-            <h1 class="home-title">Make life better.</h1>
-            <p class="home-tagline">Book local, independent service professionals safely and easily</p>
+            <h1 class="home-title">Find and schedule local services.</h1>
+            <p class="home-tagline">Independent service professionals at your service.</p>
             <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
                 <div class="form-group col-sm-5">
                     <label for="homeLocation" class="sr-only">Where?</label>
@@ -23,8 +23,8 @@
                 <ul class="row list-unstyled">
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-ios-search"></i>
-                        <h3>Search and book</h3>
-                        <p>Find the perfect professional. Profiles include clear pricing and verified reviews.</p>
+                        <h3>Search &amp; schedule </h3>
+                        <p>Find the perfect professional. Listings include clear pricing and verified reviews.</p>
                     </li>
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-bowtie"></i>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="home-booking">
-            <h2 class="home-section-title">Why book on Loconomics?</h2>
+            <h2 class="home-section-title">Why Loconomics?</h2>
             <div class="home-section-listing">
                 <ul class="list-unstyled">
                     <li>
@@ -51,17 +51,17 @@
                     <li>
                         <i aria-hidden="true" class="fa ion ion-ios-search"></i>
                         <h3>All your needs</h3>
-                        <p>Book anything from house cleaning to reiki using the same simple booking process.</p>
+                        <p>Schedule anything from house cleaning to reiki using the same simple  process.</p>
                     </li>
                     <li>
                         <i aria-hidden="true" class="fa fa-calendar-o"></i>
                         <h3>Easy scheduling</h3>
-                        <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                        <p>Schedule and reschedule 24/7, receive reminders and even sync your calendar.</p>
                     </li>
-                    <li>
+                    <!-- <li>
                         <i aria-hidden="true" class="fa ion ion-card"></i>
-                        <h3>Payments handled</h3>
-                        <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
+                        <h3>Clear pricing</h3>
+                        <p>No awkward cash exchanges, pay professional directly with credit card.</p>
                     </li>
                     <li>
                         <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
@@ -72,7 +72,7 @@
                         <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
                         <h3>Favorites</h3>
                         <p>Easily store and share your favorite professionals with your favorite people.</p>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="home-booking-more">
@@ -87,49 +87,49 @@
                         <h3>Home Care</h3>
                         <div class="SearchCategoryBackground Icon-home"></div>
                         <p>Need some help around the house? Painters, housekeepers, handymen and more await you.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book home care professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule home care professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-children">
                         <h3>Child Care</h3>
                         <div class="SearchCategoryBackground Icon-child"></div>
                         <p>Give yourself a night out on the town, help your child learn a language, or play an instrument.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book child care professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule child care professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-pet">
                         <h3>Pet Care</h3>
                         <div class="SearchCategoryBackground Icon-pet"></div>
                         <p>Throw your dog a bone. Treat your pet to grooming services, walkers, sitters, and more.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book pet care professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule pet care professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-self">
                         <h3>Self Care</h3>
                         <div class="SearchCategoryBackground Icon-self"></div>
                         <p>You need a massage. Personal trainers, music teachers, and a number of therapists are here.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book self care professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule self care professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-transport">
                         <h3>Transport</h3>
                         <div class="SearchCategoryBackground Icon-transport"></div>
                         <p>Mechanics, bicycle repairers, and car detailers all ready to help you get where you need to go.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book transport care professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule transport care professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-office">
                         <h3>Office</h3>
                         <div class="SearchCategoryBackground Icon-office"></div>
                         <p>Tax season have you nervous? Get some help for your business or family matters.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book office professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule office professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-senior">
                         <h3>Senior Care</h3>
                         <div class="SearchCategoryBackground Icon-senior"></div>
                         <p>Do you or a family member need a little extra help around the house? Help make life easier.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book senior care professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule senior care professionals">View &amp; schedule</a>
                     </li>
                     <li class="SearchCategory-celebration">
                         <h3>Celebration</h3>
                         <div class="SearchCategoryBackground Icon-celebration"></div>
                         <p>Make your next celebration a real blowout with help from some very talented professionals.</p>
-                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and book celebration professionals">View and book</a>
+                        <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}" aria-label="View and schedule celebration professionals">View &amp; schedule</a>
                     </li>
                 </ul>
             </div>

@@ -53,9 +53,9 @@
                   <p><strong>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></strong></p>
             </div>
             <div class="ServiceProfessionalResult-actions">         
-                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request to book</a> 
-                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()" class="btn btn-primary">Book instantly</a> 
-                <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">See profile and reviews</a>
+                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request appointment</a> 
+                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()" class="btn btn-primary">Schedule instantly</a> 
+                <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">See listing and reviews</a>
             </div>
           </li>
         </ul>
