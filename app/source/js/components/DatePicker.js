@@ -645,10 +645,25 @@ DatePicker.prototype = {
             currentDate = this.date.valueOf();
 
         // Calculate first date to show, usually on previous month:
-        var prevMonth = new Date(year, month-1, 28,0,0,0,0),
-            lastDayPrevMonth = DPGlobal.getDaysInMonth(prevMonth.getFullYear(), prevMonth.getMonth());
-        // L18N?
-        prevMonth.setDate(lastDayPrevMonth - (prevMonth.getDay() - this.weekStart + 7)%7);
+        // We force a date in previous month; Date will fix negative month number
+        // to 12 and previous year (nice)
+        var prevMonth = new Date(year, month-1, 1,0,0,0,0);
+        // We detect how many days in the month and set that date.
+        var lastDayPrevMonth = DPGlobal.getDaysInMonth(year, prevMonth.getMonth());
+        prevMonth.setDate(lastDayPrevMonth);
+        var lastDayWeekDay = prevMonth.getDay();
+        // We need to choose the first day in the week, so we substract the
+        // week-day index (0 is Sunday), applying the weekStart offset option for
+        // other locales.
+        prevMonth.setDate(lastDayPrevMonth - lastDayWeekDay + this.weekStart);
+        // We must start in the first day of the week for the closest day in current
+        // month; usually is a date in the previous month, but sometimes the
+        // first day of the current month starts exactly at the first week-day;
+        // we can know that by checking current prevMonth value and see if is the
+        // last weekday (applying offset), then we can move it just one day forward
+        if (prevMonth.getDay() - this.weekStart === 6) {
+            prevMonth.setDate(prevMonth.getDate() + 1);
+        }
 
         // IMPORTANT: Avoid duplicated work, by checking we are still showing the same month,
         // so not need to 're-render' everything, only swap the active date
