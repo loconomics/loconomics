@@ -5,8 +5,6 @@
  */
 'use strict';
 
-var $ = require('jquery');
-
 var TAG_NAME = 'location-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/location-autocomplete.html');
 var googleMapReady = require('../utils/googleMapReady');
@@ -15,7 +13,8 @@ var ko = require('knockout');
 function ViewModel(params, refs) {
     // LOCATION AUTOCOMPLETE:
     // Load Google Maps API with Places and prepare the location autocomplete
-    var $location = $(refs.root.querySelector('[name=location]'));
+    var location = refs.root.querySelector('input');
+    console.log("location", refs.root);
     googleMapReady(function(google) {
         var options = {
             types: ['geocode'],
@@ -26,7 +25,7 @@ function ViewModel(params, refs) {
         };
 
         var autocomplete = new google.maps.places.Autocomplete(
-            $location.get(0), options
+            location, options
         );
 
         google.maps.event.addListener(
