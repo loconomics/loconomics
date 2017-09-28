@@ -10,24 +10,30 @@ var TEMPLATE = require('../../html/kocomponents/location-autocomplete.html');
 var googleMapReady = require('../utils/googleMapReady');
 var ko = require('knockout');
 
-function ViewModel(params, refs) {
-    // LOCATION AUTOCOMPLETE:
-    // Load Google Maps API with Places and prepare the location autocomplete
-    var location = refs.root.querySelector('input');
-    console.log("location", refs.root);
+function ViewModel(params) {
+    this.value = ko.observable(ko.unwrap(params.value));
+    this.suggestions = ko.observableArray();
+    this.onSelect = params.onSelect;
+    var self = this;
+    // Load Google Maps API with Places.
     googleMapReady(function(google) {
-        var options = {
-            types: ['geocode'],
-            bounds: null,
-            componentRestrictions: {
-                country: 'US'
-            }
-        };
+        var autocomplete = new google.maps.places.AutocompleteService();
+        self.value.subscribe(function(newValue) {
+            if(newValue)
+                autocomplete.getPlacePredictions({
+                    input: newValue,
+                    componentRestrictions: {
+                        country: 'US'
+                    }
+                }, function(results) {
+                    var suggestions = results.map(function(r) { return r.description; });
+                    self.suggestions(suggestions);
+                });
+            else
+                self.suggestions([]);
+        });
 
-        var autocomplete = new google.maps.places.Autocomplete(
-            location, options
-        );
-
+        /*
         google.maps.event.addListener(
             autocomplete,
             'place_changed',
@@ -36,25 +42,11 @@ function ViewModel(params, refs) {
                 if (place && place.geometry)
                     params.onGeocodeResult(place);
             }
-        );
+        );*/
     });
 }
 
-/**
- * Factory for the component view model instances that has access
- * to the component instance DOM elements.
- * @param {object} params Component parameters to pass it to ViewModel
- * @param {object} componentInfo Instance DOM elements
- * @param {HTMLElement} componentInfo.element the component element
- */
-var create = function(params, componentInfo) {
-    var refs = {
-        root: componentInfo.element
-    };
-    return new ViewModel(params, refs);
-};
-
 ko.components.register(TAG_NAME, {
     template: TEMPLATE,
-    viewModel: { createViewModel: create }
+    viewModel: ViewModel
 });
