@@ -21,9 +21,9 @@
         </nav> -->
         <section id="listing-editor-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
             <div class="Listing-professionalPic">
-                <div class="Avatar Avatar--primary Avatar--lg">
-                    <img data-bind="attr: {src: profile().photoUrl()}" alt="Image of service professional">
-                </div>
+                <a href="/publicProfilePicture" class="Avatar Avatar--primary Avatar--lg" aria-label="Edit your public profile photo">
+                    <img data-bind="attr: {src: profile().photoUrl()}" alt="Public profile photo of you" >
+                </a>
             </div>
             <div class="Listing-bookingInfo">
                 <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h1>
@@ -120,6 +120,14 @@
                 </div>
                 <ul class="list-unstyled" data-bind="template: { name: 'location-card-template', foreach: $root.serviceAddresses() }"></ul>
             </section>
+            <section id="listing-editor-weekly-schedule" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
+                <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
+                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Locations</h2>
+                    <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + jobTitleID(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + jobTitleID(),'aria-label': 'Add '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <ul class="list-unstyled" data-bind="template: { name: 'location-card-template', foreach: $root.serviceAddresses() }"></ul>
+            </section>
             <section id="listing-editor-credentials" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials</h2>
@@ -152,14 +160,15 @@
                     <a data-bind="attr: {href: '#!verifications','aria-label': 'View your verifications' }" class="btn btn-default pull-right">View</a>
                 </div>
                 <div data-bind="with: selectedJobTitle">
-                    <p data-bind="text: cancellationPolicyID"></p>
+                    <p data-bind="text: cancellationPolicy().cancellationPolicyID"></p>
+                    <p data-bind="text: cancellationPolicy().name"></p>
                 </div>
             </section>
             <section id="listing-editor-about-service-professional" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
-                    <a data-bind="visible: profile().publicBio, attr: {href: '#!aboutMe','aria-label': 'Edit your public bio' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !profile().publicBio, attr: {href: '#!aboutMe','aria-label': 'Add your public bio' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: profile().publicBio, attr: {href: '#!publicBio','aria-label': 'Edit your public bio' }" class="btn btn-default pull-right">Edit</a>
+                    <a data-bind="visible: !profile().publicBio, attr: {href: '#!publicBio','aria-label': 'Add your public bio' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-md-12 Listing-publicBio">
                     <p data-bind="text: profile().publicBio"></p>
