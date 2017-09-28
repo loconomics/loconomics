@@ -1,0 +1,145 @@
+/**
+ * @module kocomponents/tab-list
+ * @author iagosrl
+ * @overview Wraps a list of links that are enabled as tabs for the linked
+ * in-page elements. The content of the component is the children provided
+ * 'as is'.
+ * The active tab and panel will have
+ */
+'use strict';
+
+var TAG_NAME = 'tab-list';
+var TEMPLATE = require('../../html/kocomponents/tab-list.html');
+var ACTIVE_TAB_CLASS = 'active';
+
+var ko = require('knockout');
+var getObservable = require('../utils/getObservable');
+var $ = require('jquery');
+
+/**
+ * The component view model
+ * @class
+ * @param {Object} params
+ * @param {string} [prefix]
+ * @param {KnockoutObservable<string>} [active]
+ */
+function ViewModel(params) {
+    /**
+     * @member {string} prefix The prefix that each link has. Used both to filter
+     * which links are enabled as tabs and to provide a shortest name for each
+     * tab (prefix is removed from the link and the rest is the name)
+     */
+    this.prefix = ko.unwrap(params.prefix) || '';
+    /**
+     * @member {KnockoutObservable<string>} active Keep record of the active
+     * tab name and allows to bet read or written from outside.
+     */
+    this.active = getObservable(params.active);
+}
+
+/**
+ * Factory for the component view model instances that has access
+ * to the component instance DOM elements.
+ * @param {object} params Component parameters to pass it to ViewModel
+ * @param {object} componentInfo Instance DOM elements
+ * @param {HTMLElement} componentInfo.element the component element
+ * @param {Array<HTMLElement>} componentInfo.templateNodes elements passed in
+ * to the component by place them as children.
+ */
+var create = function(params, componentInfo) {
+    var vm = new ViewModel(params);
+    var $root = $(componentInfo.element);
+    var $tabLinks = $(componentInfo.templateNodes)
+    .find('a[href^="' + vm.prefix + '"]');
+    // Set-up ARIA attributes
+    $root.attr('role', 'tablist');
+    // Set-up each link
+    $tabLinks
+    .attr('role', 'tab')
+    .attr('tabindex', '-1')
+    .each(function(i, tabLink) {
+        tabLink = $(tabLink);
+        var link = tabLink.attr('href');
+        var id = link.replace(/^#/, '');
+        tabLink.attr('aria-controls', id);
+        // Set-up panel
+        $(link).attr('role', 'tabpanel');
+    });
+    // Catch link clicks and set active tab
+    $root.on('click', 'a[href]', function(e) {
+        var link = $(this).attr('href');
+        var isPrefix = link.indexOf(vm.prefix) === 0;
+        if (isPrefix) {
+            // Save which one is active
+            var tabName = isPrefix ? link.replace(vm.prefix, '') : link;
+            vm.active(tabName);
+            // Avoid standard behavior
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        }
+    });
+    // Switch active tab on change
+    var updateActive = function(tabName) {
+        if(!tabName) return;
+        // Get updated list of links from the component
+        // (previously, is filled in with the children nodes for set-up, but
+        // later needs to get new ones created by cloning that ones)
+        $tabLinks = $root
+        .find('a[href^="' + vm.prefix + '"]');
+        // Get fragment URL
+        var url = vm.prefix + tabName;
+        if (!/^#/.test(url)) {
+            url = '#' + url;
+        }
+        // Get new elements
+        var tab = $root.find('[href="' + url + '"]');
+        var panel = $(url);
+        if (tab.length) {
+            // Previous tab is disabled an new one make active, touching tab
+            // and panel; when tab/link is part of list, is useful to mark the
+            // container list-item too
+
+            // Disable previous one
+            var prevTab = $tabLinks
+            .filter('.' + ACTIVE_TAB_CLASS)
+            .removeClass(ACTIVE_TAB_CLASS)
+            .attr('aria-selected', null)
+            .attr('tabindex', '-1');
+            prevTab.parent('li')
+            .removeClass(ACTIVE_TAB_CLASS);
+            var prevUrl = prevTab.attr('href');
+            if (prevUrl) {
+                $(prevUrl)
+                .removeClass(ACTIVE_TAB_CLASS)
+                .attr('aria-selected', null)
+                .hide();
+            }
+            // Enable new ones
+            tab
+            .addClass(ACTIVE_TAB_CLASS)
+            .attr('aria-selected', 'true')
+            .attr('tabindex', '0');
+            tab.parent('li')
+            .addClass(ACTIVE_TAB_CLASS);
+            panel
+            .addClass(ACTIVE_TAB_CLASS)
+            .attr('aria-selected', 'true')
+            .show();
+        }
+    };
+    ko.computed(function() {
+        updateActive(vm.active());
+    });
+    // Forces an update of the 'active' when component is ready
+    vm.afterRender = function() {
+        updateActive(vm.active());
+    };
+    // Ready
+    return vm;
+};
+
+ko.components.register(TAG_NAME, {
+    template: TEMPLATE,
+    viewModel: { createViewModel: create },
+    synchronous: true
+});
