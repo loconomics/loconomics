@@ -6,7 +6,7 @@
             <p class="home-tagline">Book local, independent service professionals safely and easily</p>
             <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
                 <div class="form-group col-sm-5">
-                    <location-autocomplete params="onSelect: onGeocodeResult"></location-autocomplete>
+                    <location-autocomplete params="value: 'San Francisco, CA.', onSelect: onGeocodeResult"></location-autocomplete>
                 </div>
                 <div class="col-sm-7">
                     <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>
