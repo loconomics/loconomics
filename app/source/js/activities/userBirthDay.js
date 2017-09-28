@@ -8,7 +8,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var UserProfileVM = require('../viewmodels/UserProfileVM');
 
-var A = Activity.extend(function UserBirthDay() {
+var A = Activity.extend(function UserBirthday() {
 
     Activity.apply(this, arguments);
 
