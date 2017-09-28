@@ -89,8 +89,8 @@ Activity.prototype.show = function show(options) {
     // TODO: must keep viewState up to date using options/state.
     //console.log('Activity show', this.constructor.name);
     if (!this.__bindingDone) {
-        // Default viewModel
-        this.viewModel = this.viewModel || {};
+        // Default viewModel: the Activity instance (for more simple scenarios)
+        this.viewModel = this.viewModel || this;
         // Share title field with viewModel
         if (!this.viewModel.title) {
             this.viewModel.title = this.title;
