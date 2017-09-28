@@ -10,7 +10,6 @@ var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var userJobProfile = require('../data/userJobProfile');
-var cancellationPolicies = require('../data/cancellationPolicies');
 
 var A = Activity.extend(function BookingPoliciesActivity() {
 
