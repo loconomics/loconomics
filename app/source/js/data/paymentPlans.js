@@ -20,7 +20,7 @@ var data = [
     {//new PaymentPlan({
         paymentPlanID: '',
         name: 'Free',
-        summary: 'Always $0',
+        summary: '$0',
         description: require('../../html/parts/PaymentPlanFree.html')
     },
     {//new PaymentPlan({

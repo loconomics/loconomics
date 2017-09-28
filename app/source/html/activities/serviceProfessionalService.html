@@ -3,7 +3,7 @@
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
@@ -11,11 +11,11 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: title"></span></h1>  
+                <h1><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
-                <p class="help-block" data-bind="visible: !$root.isSelectionMode()">Clients will be able to book the offerings you create here. Need to speak to clients first? Add a consultation.</p>
+                <p class="help-block" data-bind="visible: !$root.isSelectionMode()">Clients will be able to schedule the offerings you create here. Need to speak to clients first? Add a consultation.</p>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div data-bind="visible: jobTitleID() > 0">
                     <div class="ServiceListGroup" data-bind="foreach: serviceListGroups">
@@ -33,7 +33,7 @@
                                                 <p data-bind="visible: sessionsAndDuration(), text: sessionsAndDuration"></p>
                                                 <p data-bind="text: offeringPrice"></p>
                                             </div>
-                                            <div class="Item-action"> 
+                                            <div class="Item-action">
                                                 <a class="btn btn-icon-link" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + id(),'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                                             </div>
                                         </div>
@@ -63,5 +63,5 @@
                 <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
