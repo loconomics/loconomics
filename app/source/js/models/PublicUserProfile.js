@@ -12,11 +12,11 @@ function PublicUserProfile(values) {
     
     this.model.defProperties({
         userID: 0,
-        firstName: 0,
-        lastName: 0,
-        secondLastName: 0,
-        businessName: 0,
-        publicBio: 0,
+        firstName: '',
+        lastName: '',
+        secondLastName: '',
+        businessName: '',
+        publicBio: '',
         serviceProfessionalProfileUrlSlug: null,
         serviceProfessionalWebsiteUrl: null,
         serviceProfessionalProfileUrl: null, // Server side generated

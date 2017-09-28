@@ -6,15 +6,17 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    PublicUserProfile = require('./PublicUserProfile'),
-    PublicUserRating = require('./PublicUserRating'),
-    PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary'),
-    PublicUserJobTitle = require('./PublicUserJobTitle'),
-    PublicUserStats = require('./PublicUserStats'),
-    UserEducation = require('./UserEducation'),
-    UserVerification = require('./UserVerification'),
-    ko = require('knockout');
+var ko = require('knockout');
+var Model = require('./Model');
+var PublicUserProfile = require('./PublicUserProfile');
+var PublicUserRating = require('./PublicUserRating');
+var PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary');
+var PublicUserJobTitle = require('./PublicUserJobTitle');
+var PublicUserStats = require('./PublicUserStats');
+var UserEducation = require('./UserEducation');
+var UserVerification = require('./UserVerification');
+var UserWeeklySchedule = require('./WeeklySchedule');
+var UserSchedulingPreferences = require('./SchedulingPreferences');
 
 function PublicUser(values) {
     
@@ -41,7 +43,9 @@ function PublicUser(values) {
         backgroundCheckPassed: null, // null, true, false
         // Utility data for ServiceProfessionalInfo; used to at /profile
         selectedJobTitleID: null,
-        isClientFavorite: false
+        isClientFavorite: false,
+        weeklySchedule: { Model: UserWeeklySchedule },
+        schedulingPreferences: { Model: UserSchedulingPreferences }
     }, values);
     
     // Utilities for ServiceProfessionalInfo; used to at /profile
