@@ -16,8 +16,15 @@ function ViewModel(params) {
     this.suggestions = ko.observableArray();
 
     var google = null;
-    this.onSelect  = function(selection) {
-        console.log('Selection', selection);
+    this.onSelect = function(text, result) {
+        console.log('Selection', text, result);
+        if (typeof(params.onSelect) === 'function') {
+            // TODO Get 'place' from result or another API
+            var place = null;
+            if (place) {
+                params.onSelect(place);
+            }
+        }
     };
 
     var self = this;
@@ -44,5 +51,6 @@ function ViewModel(params) {
 
 ko.components.register(TAG_NAME, {
     template: TEMPLATE,
-    viewModel: ViewModel
+    viewModel: ViewModel,
+    synchronous: true
 });
