@@ -7,7 +7,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 var moment = require('moment-timezone');
-var showTimePicker = require('./modals/timePicker').show;
+var showTimePicker = require('../modals/timePicker').show;
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');

@@ -31,7 +31,7 @@ var ga = require('./data/googleAnalytics');
 require('./locales/en-US-LC');
 
 var attachFastClick = require('fastclick').attach;
-var showError = require('../modals/error').show;
+var showError = require('./modals/error').show;
 
 /**
     A set of fixes/workarounds for Bootstrap behavior/plugins

@@ -19,7 +19,7 @@ var calendar = require('../data/calendar');
 var bookings = require('../data/bookings');
 var showNotification = require('../modals/notification').show;
 var showConfirm = require('../modals/confirm').show;
-var showTextEditor = require('./modals/textEditor').show;
+var showTextEditor = require('../modals/textEditor').show;
 var showError = require('../modals/error').show;
 
 var events = {

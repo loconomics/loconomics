@@ -8,7 +8,7 @@ var $ = require('jquery');
 var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var Activity = require('../components/Activity');
 var snapPoints = require('../utils/snapPoints');
-var showAnnouncement = require('./modals/announcement').show;
+var showAnnouncement = require('../modals/announcement').show;
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 var user = require('../data/userProfile').data;

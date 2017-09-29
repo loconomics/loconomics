@@ -14,7 +14,7 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var serviceAddresses = require('../data/serviceAddresses');
-var showTextEditor = require('./modals/textEditor').show;
+var showTextEditor = require('../modals/textEditor').show;
 var showError = require('../modals/error').show;
 
 // L18N
