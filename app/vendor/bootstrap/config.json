@@ -418,10 +418,9 @@
     "modal.js",
     "tooltip.js",
     "popover.js",
-    "tab.js",
     "affix.js",
     "collapse.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/docs/3.3/customize/?id=6d342b2ada0d9dd5846ab3be046f140c"
+  "customizerUrl": "https://getbootstrap.com/docs/3.3/customize/?id=23411fac009bb62c2b79327ef18df6de"
 }

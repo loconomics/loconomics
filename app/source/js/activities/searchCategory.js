@@ -19,9 +19,9 @@ var A = Activity.extend(function SearchCategoryActivity() {
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
 
-    this.title = ko.computed(function() { 
+    this.title = ko.computed(function() {
         var result = this.categorySearchResult();
-        return result && result.categoryName + ' Professionals'; 
+        return result && result.categoryName + ' Professionals';
     }, this.viewModel);
 });
 
@@ -36,9 +36,6 @@ A.prototype.show = function show(options) {
     var origLong = params[2] || '';
     var searchDistance = params[3] || '';
     this.viewModel.load(categoryID, origLat, origLong, searchDistance);
-//    var tabName = categoryID + '/' + origLat + '/' + origLong + '/' + searchDistance;
-//    var tab = this.$activity.find('[href="/searchCategory/' + tabName + '"]');
-//    if (tab.length) tab.tab('show');
 };
 
 function ViewModel() {
