@@ -12,6 +12,7 @@ var userLicensesCertifications = require('../data/userLicensesCertifications');
 var licenseCertification = require('../data/licenseCertification');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
 var $ = require('jquery');
+var showConfirm = require('../modals/confirm').show;
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
@@ -238,7 +239,7 @@ function ViewModel(app) {
 
     this.confirmRemoval = function() {
         // L18N
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',

@@ -3,9 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    ko = require('knockout');
+var Activity = require('../components/Activity');
+var ko = require('knockout');
 var education = require('../data/education');
+var showConfirm = require('../modals/confirm').show;
 
 var A = Activity.extend(function EducationFormActivity() {
 
@@ -148,7 +149,7 @@ function ViewModel(app) {
 
     this.confirmRemoval = function() {
         // L18N
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete',
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',

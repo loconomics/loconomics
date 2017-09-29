@@ -17,6 +17,7 @@ var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var showConfirm = require('../modals/confirm').show;
 
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
@@ -313,7 +314,7 @@ function ViewModel(app) {
     this.confirmRemoval = function() {
         // TODO Better l10n or replace by a new preset field on pricingType.deleteLabel
         var p = this.pricingType();
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete ' + (p && p.singularName()),
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',

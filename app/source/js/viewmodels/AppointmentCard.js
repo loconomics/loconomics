@@ -18,6 +18,7 @@ var Address = require('../models/Address');
 var calendar = require('../data/calendar');
 var bookings = require('../data/bookings');
 var showNotification = require('../modals/notification').show;
+var showConfirm = require('../modals/confirm').show;
 
 var events = {
     confirmed: 'confirmed',
@@ -235,7 +236,7 @@ function AppointmentCardViewModel(params) {
     this.confirmCancel = function confirmCancel() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
-            this.app.modals.confirm({
+            showConfirm({
                 title: 'Cancel',
                 message: 'Are you sure?',
                 yes: 'Yes',
@@ -388,7 +389,7 @@ function AppointmentCardViewModel(params) {
     };
 
     this.confirmCancelBookingByServiceProfessional = function() {
-        this.app.modals.confirm({
+        showConfirm({
             title: 'Cancel booking',
             message: 'Are you sure?',
             yes: 'Yes',

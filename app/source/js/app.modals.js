@@ -8,7 +8,6 @@
 'use strict';
 
 exports.showError = require('./modals/error').show;
-exports.confirm = require('./modals/confirm').show;
 exports.showTimePicker = require('./modals/timePicker').show;
 exports.showTextEditor = require('./modals/textEditor').show;
 exports.showAnnouncement = require('./modals/announcement').show;

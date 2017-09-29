@@ -5,6 +5,7 @@ var BaseClientBookingCardVM = require('../viewmodels/BaseClientBookingCardVM');
 var bookings = require('../data/bookings');
 var availability = require('../data/availability');
 var showNotification = require('../modals/notification').show;
+var showConfirm = require('../modals/confirm').show;
 
 function EditClientBookingCardVM(app) {
 
@@ -60,7 +61,7 @@ function EditClientBookingCardVM(app) {
     this.confirmCancel = function() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
-            app.modals.confirm({
+            showConfirm({
                 title: 'Cancel',
                 message: 'Are you sure?',
                 yes: 'Yes',
@@ -76,7 +77,7 @@ function EditClientBookingCardVM(app) {
         }
     };
     this.confirmCancelBookingByClient = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Cancel booking',
             message: 'Are you sure? Cancellation fees may apply.',
             yes: 'Yes',

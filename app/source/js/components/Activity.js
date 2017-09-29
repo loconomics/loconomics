@@ -8,6 +8,7 @@ var ko = require('knockout'),
     NavBar = require('../viewmodels/NavBar');
 
 require('../utils/Function.prototype._inherits');
+var showConfirm = require('../modals/confirm').show;
 
 /**
     Activity class definition
@@ -308,7 +309,7 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
             }
             else {
                 // TODO L18N
-                app.modals.confirm({
+                showConfirm({
                     title: 'Cancel',
                     message: 'Are you sure?',
                     yes: 'Yes',

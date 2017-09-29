@@ -14,6 +14,7 @@ var workPhotos = require('../data/workPhotos');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
 var showNotification = require('../modals/notification').show;
+var showConfirm = require('../modals/confirm').show;
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
@@ -343,7 +344,7 @@ function ViewModel(app) {
         var jid = this.jobTitleID();
         var jname = this.jobTitleName();
         if (jid) {
-            app.modals.confirm({
+            showConfirm({
                 title: 'Delete ' + jname + ' listing',
                 message: 'Are you sure you really want to delete your ' + jname +' listing?',
                 yes: 'Delete',

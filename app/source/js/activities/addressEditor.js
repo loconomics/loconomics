@@ -21,6 +21,7 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
+var showConfirm = require('../modals/confirm').show;
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -298,7 +299,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.confirmRemoval = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete location',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',

@@ -12,6 +12,7 @@ var serviceProfessionalServices = require('../data/serviceProfessionalServices')
 var userJobProfile = require('../data/userJobProfile');
 var pricingTypes = require('../data/pricingTypes');
 var ko = require('knockout');
+var showConfirm = require('../modals/confirm').show;
 
 var A = Activity.extend(function ClientEditionActivity() {
 
@@ -334,7 +335,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.confirmRemoval = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete client',
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
@@ -458,7 +459,7 @@ function ViewModel(app) {
 
             // Notify user
             var msg = 'We`ve found an existing record for {0}. Would you like to add him to your clients?'.replace(/\{0\}/g, user.firstName);
-            app.modals.confirm({
+            showConfirm({
                 title: 'client found at loconomics.com',
                 message: msg
             })
