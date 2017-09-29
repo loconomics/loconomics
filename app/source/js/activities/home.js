@@ -58,7 +58,7 @@ var A = Activity.extend(function HomeActivity() {
         }
     });
 
-    viewModel.onGeocodeResult = function(place) {
+    viewModel.onPlaceSelect = function(place) {
         // Save to viewmodel
         viewModel.lat(place.geometry.location.lat());
         viewModel.lng(place.geometry.location.lng());

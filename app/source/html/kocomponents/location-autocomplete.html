@@ -5,5 +5,13 @@
         value: value,
         suggestions: suggestions,
         onSelect: onSelect
-    "></input-autocomplete>
+    ">
+    <template slot="suggestions">
+        <ul data-bind="foreach: suggestions">
+            <li class="Result" data-input-autocomplete-suggestion
+                data-bind="attr: { id: $parent.id() + '-suggestion-' + $index() }, text: description">
+            </li>
+        </ul>
+    </template>
+    </input-autocomplete>
 </div>

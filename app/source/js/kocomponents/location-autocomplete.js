@@ -13,10 +13,17 @@ var ko = require('knockout');
 function ViewModel(params) {
     this.value = ko.observable(ko.unwrap(params.value));
     this.suggestions = ko.observableArray();
-    this.onSelect = params.onSelect;
+
+    var google = null;
+    this.onSelect  = function(selection) {
+        console.log('Selection', selection);
+    };
+
     var self = this;
     // Load Google Maps API with Places.
-    googleMapReady(function(google) {
+    googleMapReady(function(goog) {
+        google = goog;
+
         var autocomplete = new google.maps.places.AutocompleteService();
         self.value.subscribe(function(newValue) {
             if(newValue)
@@ -26,12 +33,15 @@ function ViewModel(params) {
                         country: 'US'
                     }
                 }, function(results) {
-                    var suggestions = results.map(function(r) { return r.description; });
-                    self.suggestions(suggestions);
+                    self.suggestions(results);
                 });
             else
                 self.suggestions([]);
         });
+
+        self.onSelect = function(selection) {
+            console.log("Selection", selection);
+        };
 
         /*
         google.maps.event.addListener(
@@ -40,7 +50,7 @@ function ViewModel(params) {
             function() {
                 var place = autocomplete.getPlace();
                 if (place && place.geometry)
-                    params.onGeocodeResult(place);
+                    params.onSelect(place);
             }
         );*/
     });
