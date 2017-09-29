@@ -10,7 +10,7 @@
         onSelect: onSelect
     ">
         <template slot="suggestions">
-            <ul data-bind="foreach: suggestions">
+            <ul data-bind="foreach: suggestions" class="list-unstyled">
                 <li class="Result" data-input-autocomplete-suggestion
                     data-bind="attr: { id: $parent.id() + '-suggestion-' + $index() }, text: description">
                 </li>
