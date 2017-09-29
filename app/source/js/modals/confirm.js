@@ -12,14 +12,14 @@
 // TODO jsdocs
 'use strict';
 
-var $ = require('jquery');
 require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
 var fixFocus = require('./utils/fixFocus');
+var TEMPLATE = require('../../html/modals/confirm.html');
+var createElement = require('./utils/createElement');
 
 exports.show = function (options) {
-
-    var modal = $('#confirmModal');
+    var modal = createElement(TEMPLATE);
     fixFocus(modal);
     var header = modal.find('#confirmModal-label');
     var body = modal.find('#confirmModal-body');
