@@ -498,7 +498,7 @@ function ViewModel(params, refs, children) {
             }
             else {
                 // Or get the literal text content of the element.
-                valEl.innerText;
+                return el.innerText;
             }
         }
         else {
