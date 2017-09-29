@@ -82,11 +82,6 @@ var app = {
     activities: require('./app.activities'),
 
     /**
-     * @deprecated See the module comment for more info
-     */
-    modals: require('./app.modals'),
-
-    /**
         Just redirect the better place for current user and state.
         NOTE: Its a delayed function, since on many contexts need to
         wait for the current 'routing' from end before do the new
