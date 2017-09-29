@@ -20,21 +20,28 @@ var $ = require('jquery');
  * The component view model
  * @class
  * @param {Object} params
- * @param {string} [prefix]
- * @param {KnockoutObservable<string>} [active]
+ * @param {string} [prefix] The prefix that each link has. Used both to filter
+ * which links are enabled as tabs and to provide a shortest name for each
+ * tab (prefix is removed from the link and the rest is the name)
+ * @param {KnockoutObservable<string>} [active] Keep record of the active
+ * tab name and allows to bet read or written from outside.
+ * @param {(KnockoutObservable<object>|KnockoutObservableArray)} data
+ * Arbitrary data or viewmodel from ouside that can be used in the provided
+ * children elements, usually an array to implement dynamic tabs.
  */
 function ViewModel(params) {
     /**
-     * @member {string} prefix The prefix that each link has. Used both to filter
-     * which links are enabled as tabs and to provide a shortest name for each
-     * tab (prefix is removed from the link and the rest is the name)
+     * @member {string} prefix
      */
     this.prefix = ko.unwrap(params.prefix) || '';
     /**
-     * @member {KnockoutObservable<string>} active Keep record of the active
-     * tab name and allows to bet read or written from outside.
+     * @member {KnockoutObservable<string>} active
      */
     this.active = getObservable(params.active);
+    /**
+     * @member {(KnockoutObservable<object>|KnockoutObservableArray)} data
+     */
+    this.data = getObservable(params.data);
 }
 
 /**
@@ -105,7 +112,7 @@ var create = function(params, componentInfo) {
             // Get new elements
             var tab = $root.find('[href="' + url + '"]');
             var panel = $(url);
-            if (tab.length) {
+            if (tab.length && panel.length) {
                 // Previous tab is disabled an new one make active, touching tab
                 // and panel; when tab/link is part of list, is useful to mark the
                 // container list-item too
@@ -136,6 +143,28 @@ var create = function(params, componentInfo) {
                 .addClass(ACTIVE_TAB_CLASS)
                 .attr('aria-selected', 'true')
                 .show();
+            }
+            else {
+                // Sometimes, the code that generates the panels is dynamic,
+                // maybe even inside another component, so a first call to this
+                // would lead to not founding the panel because is still not
+                // created, but will be in very short.
+                // To support that cases, we set-up a retry operation after a
+                // short period (enougth for that async operations), with care
+                // to prevent several retries and not retring when the active
+                // value has changed.
+                // Ideally, we should be able to detect a DOM change for the
+                // missing panel 'appearing' and do it at that point, but
+                // common situations for this are covered, or to provide some
+                // kind of feedback so is the external code that must manage the
+                // situation.
+                clearTimeout(updateActive.retry);
+                // Retry
+                updateActive.retry = setTimeout(function() {
+                    if (vm.active() === tabName) {
+                        updateActive(tabName);
+                    }
+                }, 60);
             }
         };
         ko.computed(function() {
