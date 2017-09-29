@@ -141,10 +141,10 @@ function ViewModel(shell) {
     }.bind(this);
 
     this.onPlaceSelect = function(place) {
+        console.log('LOCATION: ', place);
         // Save to viewmodel
         this.lat(place.geometry.location.lat());
         this.lng(place.geometry.location.lng());
         this.city(place.formatted_address);
-        console.log('LOCATION: ', place);
     }.bind(this);
 }
