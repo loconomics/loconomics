@@ -66,26 +66,26 @@ var create = function(params, componentInfo) {
         $(link).attr('role', 'tabpanel');
     });
     // Catch link clicks and set active tab
-    $root.on('click', 'a[href]', function(e) {
-        var link = $(this).attr('href');
+    var setElementAsActive = function(tabElement, e) {
+        var link = $(tabElement).attr('href');
         var isPrefix = link.indexOf(vm.prefix) === 0;
         if (isPrefix) {
             // Save which one is active
             var tabName = isPrefix ? link.replace(vm.prefix, '') : link;
             vm.active(tabName);
-            // Avoid standard behavior
-            e.preventDefault();
-            e.stopImmediatePropagation();
+            if (e) {
+                // Avoid standard behavior
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
         }
+    };
+    $root.on('click', 'a[href]', function(e) {
+        setElementAsActive(this, e);
     });
     // Switch active tab on change
     var updateActive = function(tabName) {
         if(!tabName) return;
-        // Get updated list of links from the component
-        // (previously, is filled in with the children nodes for set-up, but
-        // later needs to get new ones created by cloning that ones)
-        $tabLinks = $root
-        .find('a[href^="' + vm.prefix + '"]');
         // Get fragment URL
         var url = vm.prefix + tabName;
         if (!/^#/.test(url)) {
@@ -130,10 +130,57 @@ var create = function(params, componentInfo) {
     ko.computed(function() {
         updateActive(vm.active());
     });
-    // Forces an update of the 'active' when component is ready
+    /**
+     * @overview Run some logics after component was rendered (cannot be done
+     * before), this must be available at the viewModel.
+     * @private
+     */
     vm.afterRender = function() {
+        // Get updated list of links from the component
+        // (previously, is filled in with the children nodes for set-up, but
+        // later needs to get new ones created by cloning that ones)
+        // (this is in the closure, accessed by previous functions to manage
+        // change of the active tab)
+        $tabLinks = $root
+        .find('a[href^="' + vm.prefix + '"]');
+        // Forces an update of the 'active' when component is ready
         updateActive(vm.active());
     };
+    // Keyboard management
+    var goTabIndexOffset = function(indexOffset) {
+        var active = $tabLinks.filter('.' + ACTIVE_TAB_CLASS);
+        var index = $tabLinks.index(active);
+        var last = $tabLinks.length - 1;
+        index += indexOffset;
+        if (index < 0) {
+            index = last;
+        }
+        else if (index > last) {
+            index = 0;
+        }
+        var newTab = $tabLinks.eq(index);
+        setElementAsActive(newTab);
+        newTab.focus();
+    };
+    var goPrevious = function() {
+        goTabIndexOffset(-1);
+    };
+    var goNext = function() {
+        goTabIndexOffset(1);
+    };
+    // Arrow keys must move between tabs
+    var LEFT_KEY = 37;
+    var RIGHT_KEY = 39;
+    $root.on('keydown', function(e) {
+        switch (e.which) {
+            case LEFT_KEY:
+                goPrevious();
+                break;
+            case RIGHT_KEY:
+                goNext();
+                break;
+        }
+    });
     // Ready
     return vm;
 };
