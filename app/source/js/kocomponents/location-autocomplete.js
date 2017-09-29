@@ -9,6 +9,7 @@ var TAG_NAME = 'location-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/location-autocomplete.html');
 var googleMapReady = require('../utils/googleMapReady');
 var ko = require('knockout');
+require('./input-autocomplete');
 
 function ViewModel(params) {
     this.value = ko.observable(ko.unwrap(params.value));
@@ -38,21 +39,6 @@ function ViewModel(params) {
             else
                 self.suggestions([]);
         });
-
-        self.onSelect = function(selection) {
-            console.log("Selection", selection);
-        };
-
-        /*
-        google.maps.event.addListener(
-            autocomplete,
-            'place_changed',
-            function() {
-                var place = autocomplete.getPlace();
-                if (place && place.geometry)
-                    params.onSelect(place);
-            }
-        );*/
     });
 }
 
