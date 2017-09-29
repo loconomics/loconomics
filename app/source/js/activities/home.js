@@ -8,7 +8,7 @@ var $ = require('jquery');
 var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var Activity = require('../components/Activity');
 var snapPoints = require('../utils/snapPoints');
-
+var showAnnouncement = require('./modals/announcement').show;
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 var user = require('../data/userProfile').data;
@@ -140,7 +140,7 @@ A.prototype.show = function show(state) {
         // And of course we must not attempt that ones that are already users :-)
         var showIt = !localStorage.sanFranciscoLaunchPopup && user.isAnonymous();
         if (showIt) {
-            this.app.modals.showAnnouncement({
+            showAnnouncement({
                 message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
                 primaryButtonText: 'I\'m a service professional',
                 primaryButtonLink: '#!/learnMoreProfessionals',
