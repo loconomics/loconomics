@@ -58,14 +58,6 @@ var A = Activity.extend(function HomeActivity() {
             }
         }
     });
-
-    viewModel.onPlaceSelect = function(place) {
-        // Save to viewmodel
-        viewModel.lat(place.geometry.location.lat());
-        viewModel.lng(place.geometry.location.lng());
-        viewModel.city(place.formatted_address);
-        console.log('LOCATION: ', place);
-    };
 });
 
 exports.init = A.init;
@@ -147,5 +139,13 @@ function ViewModel(shell) {
         return {
             value: ActionForValue.clear
         };
+    }.bind(this);
+
+    this.onPlaceSelect = function(place) {
+        // Save to viewmodel
+        this.lat(place.geometry.location.lat());
+        this.lng(place.geometry.location.lng());
+        this.city(place.formatted_address);
+        console.log('LOCATION: ', place);
     }.bind(this);
 }
