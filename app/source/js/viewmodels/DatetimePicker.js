@@ -7,6 +7,7 @@ var ko = require('knockout'),
     $ = require('jquery'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 var moment = require('moment-timezone');
+var showTimePicker = require('./modals/timePicker').show;
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
@@ -161,7 +162,7 @@ function DatetimePickerVM(app, element) {
     }.bind(this);
 
     this.showTimePicker = function() {
-        app.modals.showTimePicker({
+        showTimePicker({
             title: 'Book an unavailable time',
             selectedTime: null,
             unsetLabel: 'Cancel'
