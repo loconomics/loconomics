@@ -12,11 +12,11 @@
 // TODO jsdocs
 'use strict';
 
-require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
 var fixFocus = require('./utils/fixFocus');
 var TEMPLATE = require('../../html/modals/confirm.html');
 var createElement = require('./utils/createElement');
+require('../utils/jquery.multiline');
 
 exports.show = function (options) {
     var modal = createElement(TEMPLATE);

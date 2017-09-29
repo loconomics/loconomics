@@ -15,14 +15,15 @@
 // TODO jsdocs
 'use strict';
 
-var $ = require('jquery');
-require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
 var fixFocus = require('./utils/fixFocus');
 var getErrorMessageFrom = require('./utils/getErrorMessageFrom');
+var TEMPLATE = require('../../html/modals/error.html');
+var createElement = require('./utils/createElement');
+require('../utils/jquery.multiline');
 
 exports.show = function (options) {
-    var modal = $('#errorModal');
+    var modal = createElement(TEMPLATE);
     fixFocus(modal);
     var header = modal.find('#errorModal-label');
     var body = modal.find('#errorModal-body');
