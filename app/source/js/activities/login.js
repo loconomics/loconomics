@@ -9,6 +9,7 @@ var ko = require('knockout'),
 var user = require('../data/userProfile').data;
 var auth = require('../data/auth');
 var onboarding = require('../data/onboarding');
+var showNotification = require('../modals/notification').show;
 
 var A = Activity.extend(function LoginActivity() {
 
@@ -216,7 +217,7 @@ function ViewModel(app) {
             password: this.validatedPassword.password(),
             token: this.resetToken()
         }).then(function(result) {
-            app.modals.showNotification({
+            showNotification({
                 title: 'Done!',
                 message: result.message
             });

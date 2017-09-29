@@ -9,6 +9,7 @@ var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 var bookings = require('../data/bookings');
 var availability = require('../data/availability');
+var showNotification = require('../modals/notification').show;
 
 // Functions to manage the lastBooking info, for save/restore state feature
 // IMPORTANT: initially used localforage, but this is cleared on a logout/login,
@@ -328,7 +329,7 @@ function NewClientBookingCardVM(app) {
             availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
             this.isDone(true);
 
-            app.modals.showNotification({
+            showNotification({
                 title: 'Done!',
                 message: 'Your booking was created!'
             })

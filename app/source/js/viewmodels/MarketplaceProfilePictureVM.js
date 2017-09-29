@@ -15,6 +15,7 @@ var user = require('../data/userProfile').data;
 var remote = require('../data/drivers/restClient');
 require('../kocomponents/button-file');
 require('jquery.fileupload-image');
+var showNotification = require('../modals/notification').show;
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30
@@ -152,7 +153,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
             });
         }
         else {
-            app.modals.showNotification({
+            showNotification({
                 message: 'Take photo is not supported on the web right now'
             });
         }

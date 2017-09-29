@@ -17,6 +17,7 @@ var Booking = require('../models/Booking');
 var Address = require('../models/Address');
 var calendar = require('../data/calendar');
 var bookings = require('../data/bookings');
+var showNotification = require('../modals/notification').show;
 
 var events = {
     confirmed: 'confirmed',
@@ -186,7 +187,7 @@ function AppointmentCardViewModel(params) {
 
             var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
-            app.modals.showNotification({
+            showNotification({
                 title: 'Confirmed!',
                 message: msg
             });
@@ -314,7 +315,7 @@ function AppointmentCardViewModel(params) {
 
         var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
-        app.modals.showNotification({
+        showNotification({
             title: 'Done!',
             message: msg
         })

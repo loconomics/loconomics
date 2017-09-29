@@ -13,6 +13,7 @@ var serviceProfessionalServices = require('../data/serviceProfessionalServices')
 var workPhotos = require('../data/workPhotos');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
+var showNotification = require('../modals/notification').show;
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
@@ -256,7 +257,7 @@ function ViewModel(app) {
                 });
                 // Per #1001, notify user about availability of bookMeNow button even with public marketplace profile
                 // disabled/hidden
-                app.modals.showNotification({
+                showNotification({
                     message: 'Clients will no longer be able to find you in the marketplace. However, any "book me now" links you have posted will still be active.',
                     buttonText: 'Got it!'
                 });

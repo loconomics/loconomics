@@ -4,6 +4,7 @@ var ko = require('knockout');
 var BaseClientBookingCardVM = require('../viewmodels/BaseClientBookingCardVM');
 var bookings = require('../data/bookings');
 var availability = require('../data/availability');
+var showNotification = require('../modals/notification').show;
 
 function EditClientBookingCardVM(app) {
 
@@ -128,7 +129,7 @@ function EditClientBookingCardVM(app) {
 
         var msg = 'You\'re all set! We\'ll notify {0} of your changes.'.replace('{0}', this.serviceProfessionalInfo().profile().firstName());
 
-        app.modals.showNotification({
+        showNotification({
             title: 'Done!',
             message: msg
         });

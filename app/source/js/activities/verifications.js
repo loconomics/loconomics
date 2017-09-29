@@ -7,6 +7,7 @@ var ko = require('knockout'),
     Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
 var userVerifications = require('../data/userVerifications');
+var showNotification = require('../modals/notification').show;
 
 var A = Activity.extend(function VerificationsActivity() {
 
@@ -29,20 +30,20 @@ var A = Activity.extend(function VerificationsActivity() {
         event: 'click',
         selector: '[href="#resendEmailConfirmation"]',
         handler: function() {
-            this.app.modals.showNotification({
+            showNotification({
                 message: 'TO-DO: resend email confirmation'
             });
-        }.bind(this)
+        }
     });
     this.registerHandler({
         target: this.$activity,
         event: 'click',
         selector: '[href="#connectWithFacebook"]',
         handler: function() {
-            this.app.modals.showNotification({
+            showNotification({
                 message: 'TO-DO: ask for connect with Facebook API'
             });
-        }.bind(this)
+        }
     });
 });
 
