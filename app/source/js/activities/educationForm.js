@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var education = require('../data/education');
 var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function EducationFormActivity() {
 
@@ -64,7 +65,7 @@ A.prototype.show = function show(state) {
             }
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             })
@@ -139,7 +140,7 @@ function ViewModel(app) {
             app.successSave();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while saving.',
                 error: err
             });
@@ -168,7 +169,7 @@ function ViewModel(app) {
             app.successSave();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while deleting.',
                 error: err
             });

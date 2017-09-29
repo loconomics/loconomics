@@ -12,6 +12,7 @@ var $ = require('jquery'),
     moment = require('moment'),
     createTimeSlots = require('./createTimeSlots');
 var availability = require('../data/availability');
+var showError = require('../modals/error').show;
 
 exports.create = function createDatepickerAvailability(app, $datepicker, isLoading) {
     // Cache DOM elements
@@ -100,7 +101,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             });
         })
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error loading availability',
                 error: err
             });

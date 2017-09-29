@@ -15,6 +15,7 @@ var bookings = require('../data/bookings');
 var users = require('../data/users');
 var messaging = require('../data/messaging');
 var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function DashboardActivity() {
 
@@ -35,11 +36,11 @@ var A = Activity.extend(function DashboardActivity() {
 
     this.prepareShowErrorFor = function prepareShowErrorFor(title) {
         return function(err) {
-            this.app.modals.showError({
+            showError({
                 title: title,
                 error: err
             });
-        }.bind(this);
+        };
     }.bind(this);
 
     this.getUserData = function(userID, jobTitleID) {

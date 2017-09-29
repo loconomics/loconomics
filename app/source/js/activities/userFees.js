@@ -10,6 +10,7 @@ var Address = require('../models/Address');
 var paymentPlans = require('../data/paymentPlans');
 var userPaymentPlan = require('../data/userPaymentPlan');
 var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function UserFeesActivity() {
 
@@ -101,7 +102,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(err) {
             this.isSaving(false);
-            app.modals.showError({ title: 'Error creating your subscription', error: err });
+            showError({ title: 'Error creating your subscription', error: err });
         }.bind(this));
     }.bind(this);
 

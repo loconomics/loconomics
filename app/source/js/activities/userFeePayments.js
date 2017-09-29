@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var userFeePayments = require('../data/userFeePayments');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function UserFeePaymentsActivity() {
 
@@ -31,11 +32,11 @@ A.prototype.show = function show(options) {
         this.viewModel.payments(threads());
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading payments',
             error: err
         });
-    }.bind(this));
+    });
 };
 
 function ViewModel() {

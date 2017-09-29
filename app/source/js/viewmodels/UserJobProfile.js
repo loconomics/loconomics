@@ -9,6 +9,7 @@ var ko = require('knockout'),
     UserJobTitle = require('../models/UserJobTitle');
 var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
 
 function UserJobProfileViewModel(app) {
 
@@ -61,7 +62,7 @@ function UserJobProfileViewModel(app) {
     }
 
     var showLoadingError = function showLoadingError(err) {
-        app.modals.showError({
+        showError({
             title: 'An error happening when loading your job profile.',
             error: err
         });

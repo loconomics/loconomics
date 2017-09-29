@@ -12,6 +12,7 @@ var WorkPhoto = require('../models/WorkPhoto'),
 require('jquery.fileupload-image');
 var workPhotos = require('../data/workPhotos');
 require('../kocomponents/button-file');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function WorkPhotosActivity() {
 
@@ -116,11 +117,11 @@ A.prototype.show = function show(options) {
             this.viewModel.list(workPhotos.asModel(list));
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });
-        }.bind(this));
+        });
     }
     else {
         this.viewModel.list([]);
@@ -168,7 +169,7 @@ function ViewModel(app) {
         .catch(function(err) {
             // A user abort gives no error or 'no image selected' on iOS 9/9.1
             if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                app.modals.showError({ error: err, title: 'Error getting photo.' });
+                showError({ error: err, title: 'Error getting photo.' });
             }
         });
     }.bind(this);
@@ -258,7 +259,7 @@ function ViewModel(app) {
             this.removedItems.removeAll();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error saving your photos',
                 error: err
             });

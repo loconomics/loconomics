@@ -16,6 +16,7 @@ var remote = require('../data/drivers/restClient');
 require('../kocomponents/button-file');
 require('jquery.fileupload-image');
 var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30
@@ -148,7 +149,7 @@ module.exports = function MarketplaceProfilePictureVM(app) {
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1
                 if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                    app.modals.showError({ error: err, title: 'Error getting photo.' });
+                    showError({ error: err, title: 'Error getting photo.' });
                 }
             });
         }

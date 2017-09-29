@@ -8,6 +8,7 @@ var $ = require('jquery'),
     Activity = require('../components/Activity'),
     textSearch = require('../utils/textSearch');
 var clients = require('../data/clients');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ClientsActivity() {
 
@@ -128,11 +129,11 @@ A.prototype.show = function show(state) {
     // Keep data updated:
     clients.sync()
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading the clients list',
             error: err
         });
-    }.bind(this));
+    });
 };
 
 function ViewModel(app) {
@@ -240,7 +241,7 @@ function ViewModel(app) {
                 this.publicSearchResults(r);
             }.bind(this))
             .catch(function(err) {
-                app.modals.showError({
+                showError({
                     title: 'There was an error when on remote clients search',
                     error: err
                 });

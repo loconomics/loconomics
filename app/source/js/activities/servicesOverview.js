@@ -12,6 +12,7 @@ var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
 var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
 var DEFAULT_BACK_TEXT = 'Back';
 require('../kocomponents/servicesOverview/attributes-combobox');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServicesOverviewActivity() {
 
@@ -45,11 +46,11 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                     this.updateNavBarState();
                 }.bind(this))
                 .catch(function(err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading the job title.',
                         error: err
                     });
-                }.bind(this));
+                });
 
 
                 // Services data
@@ -68,12 +69,12 @@ var A = Activity.extend(function ServicesOverviewActivity() {
                     this.viewModel.isLoadingUserJobTitle(false);
                 }.bind(this))
                 .catch(function(err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
                     this.viewModel.isLoadingUserJobTitle(false);
-                }.bind(this));
+                });
 
                 // Fix URL
                 // If the URL didn't included the jobTitleID, or is different,
@@ -229,7 +230,7 @@ function ViewModel(app) {
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);
-                app.modals.showError({ title: 'Error saving your Services Overview', error: err });
+                showError({ title: 'Error saving your Services Overview', error: err });
             }.bind(this));
         }
     }.bind(this);

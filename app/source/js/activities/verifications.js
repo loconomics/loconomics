@@ -8,6 +8,7 @@ var ko = require('knockout'),
 var user = require('../data/userProfile').data;
 var userVerifications = require('../data/userVerifications');
 var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function VerificationsActivity() {
 
@@ -57,7 +58,7 @@ A.prototype.show = function show(options) {
         this.viewModel.userVerifications(list());
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({ title: 'Error loading your verifications', error: err });
+        showError({ title: 'Error loading your verifications', error: err });
     }.bind(this));
 };
 

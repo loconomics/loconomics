@@ -31,6 +31,7 @@ var ga = require('./data/googleAnalytics');
 require('./locales/en-US-LC');
 
 var attachFastClick = require('fastclick').attach;
+var showError = require('../modals/error').show;
 
 /**
     A set of fixes/workarounds for Bootstrap behavior/plugins
@@ -345,7 +346,7 @@ var appInit = function appInit() {
     });
     // Catch errors on item/page loading, showing..
     app.shell.on('error', function(err) {
-        app.modals.showError({ error: err });
+        showError({ error: err });
     });
 
     // Scroll to element when clicking a usual fragment link (not a page link)
@@ -451,7 +452,7 @@ var appInit = function appInit() {
 
     // App init:
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });

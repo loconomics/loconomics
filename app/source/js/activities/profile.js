@@ -13,6 +13,7 @@ var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ProfileActivity() {
 
@@ -56,8 +57,8 @@ A.prototype.loadData = function(userID, jobTitleID) {
             }
         }.bind(this))
         .catch(function(err) {
-            this.app.modals.showError({ error: err, title: 'The user profile could not be loaded.' });
-        }.bind(this))
+            showError({ error: err, title: 'The user profile could not be loaded.' });
+        })
         .then(function() {
             // always
             this.viewModel.isLoading(false);

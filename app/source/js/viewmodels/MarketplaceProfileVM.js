@@ -59,7 +59,7 @@ module.exports = function MarketplaceProfileVM(app) {
         var url = this.customUrlDraft();
         var errMsg = clipboard.copy(url);
         if (errMsg) {
-            app.modals.showError({ error: errMsg });
+            showError({ error: errMsg });
         }
         else {
             this.copyCustomUrlButtonText('Copied!');

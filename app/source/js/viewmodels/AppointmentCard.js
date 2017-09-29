@@ -20,6 +20,7 @@ var bookings = require('../data/bookings');
 var showNotification = require('../modals/notification').show;
 var showConfirm = require('../modals/confirm').show;
 var showTextEditor = require('./modals/textEditor').show;
+var showError = require('../modals/error').show;
 
 var events = {
     confirmed: 'confirmed',
@@ -210,7 +211,7 @@ function AppointmentCardViewModel(params) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
                 // Show error
-                app.modals.showError({
+                showError({
                     title: 'There was an error saving the data.',
                     error: err
                 });
@@ -335,7 +336,7 @@ function AppointmentCardViewModel(params) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });
@@ -356,7 +357,7 @@ function AppointmentCardViewModel(params) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });
@@ -377,7 +378,7 @@ function AppointmentCardViewModel(params) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });
@@ -536,7 +537,7 @@ function AppointmentCardViewModel(params) {
         }.bind(this))
         .catch(function(err) {
             if (err) {
-                app.modals.showError({ error: err });
+                showError({ error: err });
             }
             // No error, do nothing just was dismissed
         });

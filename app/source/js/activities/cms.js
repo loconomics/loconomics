@@ -7,6 +7,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var clients = require('../data/clients');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function CmsActivity() {
 
@@ -28,11 +29,11 @@ A.prototype.show = function show(state) {
     // Keep data updated:
     clients.sync()
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading the clients list',
             error: err
         });
-    }.bind(this));
+    });
 };
 
 var numeral = require('numeral');

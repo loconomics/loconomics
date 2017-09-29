@@ -14,6 +14,7 @@ var datepickerAvailability = require('../utils/datepickerAvailability');
 
 var timeZoneList = require('../utils/timeZoneList');
 var availability = require('../data/availability');
+var showError = require('../modals/error').show;
 
 function DatetimePickerVM(app, element) {
     //jshint maxstatements: 40
@@ -209,11 +210,11 @@ function DatetimePickerVM(app, element) {
             }));*/
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error loading availability',
                 error: err
             });
-        }.bind(this))
+        })
         .then(function() {
             // Finally
             this.isLoading(false);

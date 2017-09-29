@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var ownerAcknowledgment = require('../data/ownerAcknowledgment');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function OwnerAcknowledgmentActivity() {
 
@@ -51,7 +52,7 @@ function ViewModel(app) {
             app.successSave();
         })
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error saving',
                 error: err
             });

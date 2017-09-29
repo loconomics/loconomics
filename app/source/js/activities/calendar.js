@@ -10,7 +10,7 @@ require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
 var user = require('../data/userProfile').data;
 var calendar = require('../data/calendar');
-
+var showError = require('../modals/error').show;
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function CalendarActivity() {
@@ -292,7 +292,7 @@ function ViewModel(app) {
             this.isLoading(false);
 
             var msg = 'Error loading calendar events.';
-            app.modals.showError({
+            showError({
                 title: msg,
                 error: err
             });

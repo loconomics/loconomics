@@ -9,6 +9,7 @@ var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var userJobProfile = require('../data/userJobProfile');
 var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -188,7 +189,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(error) {
             this.isSaving(false);
-            app.modals.showError({
+            showError({
                 title: 'Unable to add one or more job titles',
                 error: error
             });

@@ -9,6 +9,7 @@ var onboarding = require('../data/onboarding');
 var weeklySchedule = require('../data/weeklySchedule');
 var schedulingPreferences = require('../data/schedulingPreferences');
 var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
 
 // Components in use in the template
 require('../kocomponents/switch-checkbox');
@@ -34,11 +35,11 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your weekly schedule.' : 'Unable to load your weekly schedule.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 
     this.registerHandler({
@@ -46,11 +47,11 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save scheduling preferences.' : 'Unable to load scheduling preferences.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 

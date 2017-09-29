@@ -9,6 +9,7 @@ var userProfile = require('../data/userProfile');
 var onboarding = require('../data/onboarding');
 var homeAddress = require('../data/homeAddress');
 var marketplaceProfile = require('../data/marketplaceProfile');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function AboutMeActivity() {
 
@@ -37,11 +38,11 @@ var A = Activity.extend(function AboutMeActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save contact data.' : 'Unable to load contact data.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err
             });
-        }.bind(this)
+        }
     });
 
     this.registerHandler({
@@ -49,11 +50,11 @@ var A = Activity.extend(function AboutMeActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save address details.' : 'Unable to load address details.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err
             });
-        }.bind(this)
+        }
     });
 
     this.registerHandler({
@@ -61,11 +62,11 @@ var A = Activity.extend(function AboutMeActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your public data.' : 'Unable to load your public data.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err
             });
-        }.bind(this)
+        }
     });
 });
 

@@ -14,6 +14,7 @@ var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -91,7 +92,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
                     viewModel.client(client);
                 })
                 .catch(function(error) {
-                    app.modals.showError({ title: 'Unable to load client.', error: error });
+                    showError({ title: 'Unable to load client.', error: error });
                 });
             }
         }.bind(this)
