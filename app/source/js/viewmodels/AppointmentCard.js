@@ -19,6 +19,7 @@ var calendar = require('../data/calendar');
 var bookings = require('../data/bookings');
 var showNotification = require('../modals/notification').show;
 var showConfirm = require('../modals/confirm').show;
+var showTextEditor = require('./modals/textEditor').show;
 
 var events = {
     confirmed: 'confirmed',
@@ -526,7 +527,7 @@ function AppointmentCardViewModel(params) {
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
 
-        app.modals.showTextEditor({
+        showTextEditor({
             title: textFieldsHeaders[field],
             text: this.item()[field]()
         })

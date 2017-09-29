@@ -14,6 +14,7 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var serviceAddresses = require('../data/serviceAddresses');
+var showTextEditor = require('./modals/textEditor').show;
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -379,7 +380,7 @@ function BaseClientBookingCardVM(app) {
         return sp ? 'Add notes to ' + sp : 'Add notes';
     }, this);
     this.pickSpecialRequests = function() {
-        app.modals.showTextEditor({
+        showTextEditor({
             title: this.specialRequestsPlaceholder(),
             text: this.booking().specialRequests()
         })
