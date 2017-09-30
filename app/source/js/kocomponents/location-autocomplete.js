@@ -17,13 +17,15 @@ function ViewModel(params) {
 
     var google = null;
     this.onSelect = function(text, result) {
-        console.log('Selection', text, result);
         if (typeof(params.onSelect) === 'function') {
-            // TODO Get 'place' from result or another API
-            var place = null;
-            if (place) {
-                params.onSelect(place);
-            }
+            var placesService = new google.maps.places.PlacesService(document.querySelector('#google-maps-places-attribution'));
+            placesService.getDetails({
+                placeId: result.place_id
+            }, function(place) {
+                if (place) {
+                    params.onSelect(place);
+                }
+            });
         }
     };
 
