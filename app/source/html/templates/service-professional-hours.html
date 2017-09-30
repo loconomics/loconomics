@@ -1,0 +1,39 @@
+<!-- Knockout Template service-addresses -->
+<!-- service address template with closed list classes -->
+<script type="text/html" id="service-professional-hours-template">
+    <ul class="Listing-hours">
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Mondays', day: monday} }"></li>
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Tuesdays', day: tuesday} }"></li>
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Wednesdays', day: wednesday} }"></li>
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Thursdays', day: thursday} }"></li>
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Fridays', day: friday} }"></li>
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Saturdays', day: saturday} }"></li>
+        <li data-bind="template: { name: 'service-professional-hours-day-template', data: {dayLabel: 'Sundays', day: sunday} }"></li>
+        <li>
+            <div class="Listing-hoursDay">
+                <p><strong>All times <span data-bind="text: $root.timeZone"></span></strong></p>
+            </div>
+        </li>
+    </ul>
+</script>
+<script type="text/html" id="service-professional-hours-day-template">
+    <div class="Listing-hoursDay">
+        <p data-bind="text: dayLabel"></p>
+    </div>
+    <div class="Listing-hoursDayBlocks" data-bind="visible: day().length, template: { name: 'service-professional-hours-day-block-template', foreach: day }"></div>
+    <div class="Listing-hoursDayBlocks" data-bind="visible: !day().length && !$parent.isAllTime()">
+        <div class="Listing-hoursDayClosed">
+            <em>Closed</em>
+        </div>
+    </div>
+    <div class="Listing-hoursDayBlocks" data-bind="visible: !day().length && $parent.isAllTime">
+        <div class="Listing-hoursDayClosed">
+            <em>By request only</em>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="service-professional-hours-day-block-template">
+    <div class="Listing-hoursDayBlock">
+        <p><span data-bind="text: localStartTime, format: { type: 'datetime', format: 'LT' }"></span> - <span data-bind="text: localEndTime, format: { type: 'datetime', format: 'LT' }"></span></p>
+    </div>
+</script>
