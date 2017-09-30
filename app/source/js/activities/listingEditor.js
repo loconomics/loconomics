@@ -105,6 +105,16 @@ function ViewModel(app) {
     this.userID = ko.observable(null);
     this.reviews = new ReviewsVM();
     this.showMessageBar = ko.observable(false);
+    this.timeZone = ko.pureComputed(function(){
+        return this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone().replace('US/','');
+    }, this);
+    this.returnLinkGeneralActivity = ko.pureComputed(function(){
+        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+    }, this);
+    this.returnLinkJobTitleActivity = ko.pureComputed(function(){
+        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+    }, this);
+    
 
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently

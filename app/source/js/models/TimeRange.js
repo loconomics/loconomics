@@ -40,7 +40,7 @@ function TimeRange(values) {
     var convertToLocalTime = function(strTime) {
         var time = moment.duration(strTime);
         return moment().startOf('day').add(time);
-    }
+    };
     this.localStartTime = ko.pureComputed(function() {
         return convertToLocalTime(this.start());
     }, this);
