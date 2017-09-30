@@ -3,6 +3,10 @@ Listing
 **/
 
 .Listing {
+    > * ul {
+        padding-left: 2em;
+        list-style: none;
+    }
     .Listing-heading {
         display: table;
         background: white;
@@ -36,8 +40,45 @@ Listing
     }
     .Listing-publicBio {
         white-space: pre-line;
+        margin-left: 2em;
+    }
+    .Listing-overview {
+        white-space: pre-line;
+        margin-left: 2em;
+    }
+    .Listing-overviewAttributes {
+        padding-left: 0em;
+        ul {
+            padding-left: 1em;
+        }
     }
     section {
         margin-bottom: 2em;
+    }
+    .Listing-hours {
+        display: table;
+        padding: 0em;
+        @media $mediaMinMd {
+            padding-left: 2em;
+        }
+        > li {
+            display: table-row;
+        }
+        .Listing-hoursDay {
+            display: table-cell;
+        }
+        .Listing-hoursDayBlocks {
+            display: table-cell;
+            .Listing-hoursDayBlock {
+                display: block;
+                text-align: right;
+                margin-left: 3em;
+            }
+            .Listing-hoursDayClosed {
+            display: block;
+            text-align: center;
+            margin-left: 3em;
+            }
+        }
     }
 }

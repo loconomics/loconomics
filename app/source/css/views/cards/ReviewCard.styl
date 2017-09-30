@@ -1,14 +1,11 @@
 /**
-    OfferingCard
+    ReviewCard
 **/
-@import '../../components/Card.styl'
+@import '../../components/ListingCard.styl'
 
 .ReviewCard {
-    Card();
-    padding: 1em;
-    vertical-align: middle;
+    ListingCard();
     .Card-heading {
-        display: table;
         .Card-image {
             display: table-cell;
             vertical-align: middle;
@@ -16,39 +13,7 @@
             width: 5%;
         }
         .Card-title {
-            display: table-cell;
-            vertical-align: middle;
-            border-bottom: none;
             width: 90%;
-            h5 {
-                font-weight: 800;
-            }
-            h5,
-            p {
-                margin: 0em;
-            }
-        }
-        .Card-action {
-            width: 5%;
-            min-width: 48px;
-            min-height: 48px;
-            display: table-cell;
-            text-align: center;
-            vertical-align: middle;
-            // there are some problems with some icons (ionicons mainly) where
-            // even with enough space, gets cut on the edges; add a minimum gap
-            // to give them overflow space
-            padding: 0 1px;
-            i {
-                font-size: 1.5em;
-            }
-        }
-    }
-    .Card-description {
-        vertical-align: middle;
-        hr {
-            border-bottom: .2em solid $brand-primary;
-            margin: .5em -1em;
         }
     }
 }
