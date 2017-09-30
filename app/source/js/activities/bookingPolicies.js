@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
