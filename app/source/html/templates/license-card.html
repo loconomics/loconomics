@@ -1,12 +1,12 @@
 <script type="text/html" id="license-card-template">
-    <li class="col-xs-10 col-xs-offset-1 col-md-5 CredentialCard" data-bind="attr: { id: 'license' + userLicenseCertificationID() }">
+    <li class="col-xs-11 col-md-5 CredentialCard" data-bind="attr: { id: 'license' + userLicenseCertificationID() }">
         <div class="Card-heading">
             <div class="Card-title">
                 <h5 data-bind="text: licenseCertification().name"></h5>
                 <p data-bind="text: licenseCertification().authority"></p>
             </div>
             <div class="Card-action"> 
-                <a class="btn btn-icon-link" data-bind="attr: {href: '#!licensesCertificationsForm/' + jobTitleID() + '/' + userLicenseCertificationID(),'aria-label': 'Update '+ licenseCertification().name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                <a class="btn btn-icon-link" data-bind="attr: {href: '#!licensesCertificationsForm/' + jobTitleID() + '/' + userLicenseCertificationID() + $root.returnLinkGeneralActivity(),'aria-label': 'Update '+ licenseCertification().name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
             </div>
         </div>
         <div class="Card-description">
