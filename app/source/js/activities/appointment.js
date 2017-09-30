@@ -43,6 +43,12 @@ var A = Activity.extend(function AppointmentActivity() {
         leftAction: new Activity.NavAction(backActionSettings),
         rightAction: Activity.NavAction.goHelpIndex
     });
+    this.viewModel.cardTitle = ko.pureComputed(function() {
+        return this.appointmentCardView() &&
+            this.appointmentCardView().item() &&
+            this.appointmentCardView().item().summary() ||
+            'Appointment';
+    }, this.viewModel);
     this.title = ko.pureComputed(function() {
         return (
             this.currentID() == this.specialAppointmentIds.newBooking ?
@@ -50,7 +56,7 @@ var A = Activity.extend(function AppointmentActivity() {
                 this.currentID() == this.specialAppointmentIds.newEvent ?
                 'Add a calendar block' :
                 !this.isNewCard() ?
-                this.formattedCurrentDate() :
+                this.cardTitle() :
                 'Add'
         );
     }, this.viewModel);
