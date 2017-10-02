@@ -15,6 +15,7 @@ var ACTIVE_TAB_CLASS = 'active';
 var ko = require('knockout');
 var getObservable = require('../utils/getObservable');
 var $ = require('jquery');
+var escapeSelector = require('../utils/escapeSelector');
 
 /**
  * The component view model
@@ -68,7 +69,7 @@ var create = function(params, componentInfo) {
      */
     vm.afterRender = function() {
         var $tabLinks = $root
-        .find('a[href^="' + vm.prefix + '"]');
+        .find('a[href^="' + escapeSelector(vm.prefix) + '"]');
         // Set-up ARIA attributes
         $root.attr('role', 'tablist');
         // Set-up each link
@@ -115,7 +116,7 @@ var create = function(params, componentInfo) {
             .removeClass(ACTIVE_TAB_CLASS);
             var prevUrl = prevTab.attr('href');
             if (prevUrl) {
-                $(prevUrl)
+                $('#' + escapeSelector(prevUrl.substr(1)))
                 .removeClass(ACTIVE_TAB_CLASS)
                 .attr('aria-selected', null)
                 .hide();
@@ -159,8 +160,8 @@ var create = function(params, componentInfo) {
                 url = '#' + url;
             }
             // Get new elements
-            var tab = $root.find('[href="' + url + '"]');
-            var panel = $(url);
+            var tab = $root.find('[href="' + escapeSelector(url) + '"]');
+            var panel = $('#' + escapeSelector(url.substr(1)));
             if (tab.length && panel.length) {
                 // Previous tab is disabled an new one make active, touching tab
                 // and panel; when tab/link is part of list, is useful to mark the
