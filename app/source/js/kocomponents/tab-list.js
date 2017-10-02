@@ -101,9 +101,48 @@ var create = function(params, componentInfo) {
         $root.on('click', 'a[href]', function(e) {
             setElementAsActive(this, e);
         });
+        /**
+         * Disable the tab tagged in the DOM as active.
+         * @private
+         */
+        var disableActiveTab = function() {
+            var prevTab = $tabLinks
+            .filter('.' + ACTIVE_TAB_CLASS)
+            .removeClass(ACTIVE_TAB_CLASS)
+            .attr('aria-selected', null)
+            .attr('tabindex', '-1');
+            prevTab.parent('li')
+            .removeClass(ACTIVE_TAB_CLASS);
+            var prevUrl = prevTab.attr('href');
+            if (prevUrl) {
+                $(prevUrl)
+                .removeClass(ACTIVE_TAB_CLASS)
+                .attr('aria-selected', null)
+                .hide();
+            }
+            // To support the case of 'empty active', we should ensure first
+            // link is not focusable too, additionally to the (until now) active
+            // one
+            $tabLinks.first()
+            .attr('tabindex', '-1');
+        };
+        /**
+         * When the 'active' tab is an empty/non existent value,
+         * there is need for a special set-up:
+         * - Disable the active tab in the DOM (same as usual)
+         * - Make first tab link focusable, but not active; not doing this
+         * ends to make impossible to keyboard users to reach the tab list links
+         * @private
+         */
+        var onEmptyActive = function() {
+            disableActiveTab();
+            // Make first tab link focusable
+            $tabLinks.first()
+            .attr('tabindex', '0');
+        };
         // Switch active tab on change
         var updateActive = function(tabName) {
-            if(!tabName) return;
+            if(!tabName) return onEmptyActive();
             // Get fragment URL
             var url = vm.prefix + tabName;
             if (!/^#/.test(url)) {
@@ -118,20 +157,7 @@ var create = function(params, componentInfo) {
                 // container list-item too
 
                 // Disable previous one
-                var prevTab = $tabLinks
-                .filter('.' + ACTIVE_TAB_CLASS)
-                .removeClass(ACTIVE_TAB_CLASS)
-                .attr('aria-selected', null)
-                .attr('tabindex', '-1');
-                prevTab.parent('li')
-                .removeClass(ACTIVE_TAB_CLASS);
-                var prevUrl = prevTab.attr('href');
-                if (prevUrl) {
-                    $(prevUrl)
-                    .removeClass(ACTIVE_TAB_CLASS)
-                    .attr('aria-selected', null)
-                    .hide();
-                }
+                disableActiveTab();
                 // Enable new ones
                 tab
                 .addClass(ACTIVE_TAB_CLASS)
