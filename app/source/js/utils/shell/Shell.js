@@ -431,3 +431,25 @@ Shell.prototype.run = function run() {
     // Route to the current url/state
     this.replace();
 };
+
+/**
+ * Generates and returns an observable variable that updates when the active
+ * route changes, but limited to changes on the current route name
+ * (scoped to that, so views can get notified only on changes that affects them)
+ * @returns {KnockoutObservable<shell/route>}
+ */
+Shell.prototype.getCurrentObservableRoute = function() {
+    var route = this.currentRouteObservable;
+    var lastValue = route();
+    var scopedName = lastValue.name;
+    return ko.pureComputed(function() {
+        var updatedRoute = route();
+        if (updatedRoute.name === scopedName) {
+            lastValue = updatedRoute;
+            return updatedRoute;
+        }
+        else {
+            return lastValue;
+        }
+    });
+};

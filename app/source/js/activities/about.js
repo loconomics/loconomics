@@ -19,9 +19,10 @@ var A = Activity.extend(function AboutActivity() {
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
     var shell = this.app.shell;
+    var observableRoute = shell.getCurrentObservableRoute();
     this.activeTabName = ko.pureComputed({
         read: function() {
-            var route = shell.currentRouteObservable();
+            var route = observableRoute();
             return route && route.segments && route.segments[0];
         },
         write: function(tabName) {

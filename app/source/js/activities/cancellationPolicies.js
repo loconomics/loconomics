@@ -22,10 +22,11 @@ var A = Activity.extend(function CancellationPoliciesActivity() {
     this.title('Cancellation policies');
 
     var shell = this.app.shell;
+    var observableRoute = shell.getCurrentObservableRoute();
     /// Properties used in the view
     this.activeTabName = ko.pureComputed({
         read: function() {
-            var route = shell.currentRouteObservable();
+            var route = observableRoute();
             return route && route.segments && route.segments[0];
         },
         write: function(tabName) {

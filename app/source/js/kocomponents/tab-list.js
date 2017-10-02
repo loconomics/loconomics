@@ -120,29 +120,39 @@ var create = function(params, componentInfo) {
                 .attr('aria-selected', null)
                 .hide();
             }
-            // To support the case of 'empty active', we should ensure first
-            // link is not focusable too, additionally to the (until now) active
-            // one
-            $tabLinks.first()
-            .attr('tabindex', '-1');
         };
         /**
          * When the 'active' tab is an empty/non existent value,
-         * there is need for a special set-up:
-         * - Disable the active tab in the DOM (same as usual)
-         * - Make first tab link focusable, but not active; not doing this
-         * ends to make impossible to keyboard users to reach the tab list links
+         * there is a problem: is impossible to keyboard users to reach the tab
+         * list links, because all are `tabindex=-1`. An idea is to make the
+         * first one focusable but not selected, but screen readers still think
+         * is the selected one just when is focused, leading to a broken state.
+         * We need to actually select the first one, and we do it by finding
+         * and setting up 'active'.
          * @private
          */
         var onEmptyActive = function() {
             disableActiveTab();
             // Make first tab link focusable
-            $tabLinks.first()
-            .attr('tabindex', '0');
+            var url = $tabLinks.first().attr('href');
+            if (url) {
+                var name = url.replace(vm.prefix, '');
+                // Immediate change would lead to not detect change when inside
+                // a callback of changed 'active' (like initial value on some
+                // cases), so return the new name for that callback
+                vm.active(name);
+                return name;
+            }
         };
         // Switch active tab on change
         var updateActive = function(tabName) {
-            if(!tabName) return onEmptyActive();
+            if(!tabName) {
+                tabName = onEmptyActive();
+                // If impossible to find, there are not tabs or external bad
+                // set-up
+                console.error('Not found first tab or valid name/href for that one in tab-list, it can behaves wrongly for keyboard users');
+                if (!tabName) return;
+            }
             // Get fragment URL
             var url = vm.prefix + tabName;
             if (!/^#/.test(url)) {
