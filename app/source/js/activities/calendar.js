@@ -204,7 +204,7 @@ A.prototype.show = function show(options) {
 var Appointment = require('../models/Appointment'),
     TimeSlotViewModel = require('../viewmodels/TimeSlot');
 
-function ViewModel(app) {
+function ViewModel() {
 
     this.currentDate = ko.observable(getDateWithoutTime());
     var fullDayFree = [Appointment.newFreeSlot({ date: this.currentDate() })];

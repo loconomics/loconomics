@@ -96,7 +96,7 @@ A.prototype.show = function show(state) {
     this.viewModel.copyText('Copy');
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
     this.jobTitleName = ko.observable('Job Title');

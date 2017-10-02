@@ -56,7 +56,7 @@ var facebookMe = function() {
     }
 };
 
-function SignupVM(app) {
+function SignupVM() {
     //jshint maxstatements:55
 
     EventEmitter.call(this);

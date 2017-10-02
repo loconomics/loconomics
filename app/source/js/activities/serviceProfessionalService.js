@@ -81,8 +81,7 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.registerHandler({
         target: this.viewModel.clientID,
         handler: function(clientID) {
-            var viewModel = this.viewModel,
-                app = this.app;
+            var viewModel = this.viewModel;
 
             viewModel.client(null);
 

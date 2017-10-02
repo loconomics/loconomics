@@ -3,8 +3,9 @@
 var ko = require('knockout');
 var clipboard = require('../utils/clipboard');
 var marketplaceProfile = require('../data/marketplaceProfile');
+var showError = require('../modals/error').show;
 
-module.exports = function MarketplaceProfileVM(app) {
+module.exports = function MarketplaceProfileVM() {
 
     var profileVersion = marketplaceProfile.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
