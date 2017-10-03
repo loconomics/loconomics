@@ -38,7 +38,7 @@ function TimeSlotViewModel(params) {
         else {
             clickAction = '. Click to view details and make changes.';
         }
-        return this.summary() + ' from ' + start + ' until ' + end + clickAction;
+        return this.summary() + ', with total price of ' + this.price() + ', from ' + start + ' until ' + end + clickAction;
     }, this);
 }
 
