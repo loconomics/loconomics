@@ -1,0 +1,28 @@
+﻿@{
+    var sqlGetUsers = @"
+        SELECT userID FROM users
+        WHERE onboardingStep like 'paymentAccount'
+    ";
+    var sqlRemoveStep = @"
+        UPDATE users SET onboardingStep = null
+        WHERE onboardingStep like 'paymentAccount'
+    ";
+    var users = new List<int>();
+    using (var db = new LcDatabase())
+    {
+        foreach (var user in db.Query(sqlGetUsers))
+        {
+            users.Add((int)user);
+        }
+        db.Execute(sqlRemoveStep);
+    }
+}
+All users with an onboardingStep of 'paymentAccount' that now are done with onboarding
+and needs to be notified. Total of @users.Count :
+
+<ul>
+    @foreach(var user in users)
+    {
+        <li>@user</li>
+    }
+</ul>
