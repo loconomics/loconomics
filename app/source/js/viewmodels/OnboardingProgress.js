@@ -109,8 +109,7 @@ OnboardingProgress.steps = {
         'serviceAddresses',
         'bookingPolicies',
         'licensesCertifications',
-        'aboutMe',
-        'paymentAccount'
+        'aboutMe'
     ],
     definitions: {
         welcome: {},
@@ -128,7 +127,6 @@ OnboardingProgress.steps = {
         licensesCertifications: {
             jobTitleSpecific: true
         },
-        aboutMe: {},
-        paymentAccount: {}
+        aboutMe: {}
     }
 };
