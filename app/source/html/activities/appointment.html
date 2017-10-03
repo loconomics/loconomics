@@ -13,8 +13,9 @@
             <div class="col-md-7 col-sm-reset">
                     <h1 id="appointment-titleBar">
                         <span data-bind="text: title"></span>
-                        <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
-                        </span>
+                        <!-- Hidden edit button until implement accessible appointment card #644
+                            <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
+                        </span>-->
                     </h1>
                     <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                 <!--<div id="appointment-toolbar" class="hidden-xs hidden-sm container-fluid">
