@@ -7,6 +7,11 @@
         UPDATE users SET onboardingStep = null
         WHERE onboardingStep like 'paymentAccount'
     ";
+    var sqlMakeAlertOptional = @"
+        UPDATE alert SET Required=0
+        WHERE AlertID = 5
+    ";
+    var sqlCheckAll = "EXEC TestAllUsersAlerts";
     var users = new List<int>();
     using (var db = new LcDatabase())
     {
@@ -15,6 +20,8 @@
             users.Add((int)user);
         }
         db.Execute(sqlRemoveStep);
+        db.Execute(sqlMakeAlertOptional);
+        db.Execute(sqlCheckAll);
     }
 }
 All users with an onboardingStep of 'paymentAccount' that now are done with onboarding
