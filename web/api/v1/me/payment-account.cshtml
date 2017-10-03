@@ -1,4 +1,5 @@
-﻿@*
+﻿@using WebMatrix.WebData;
+@*
     Reading and updating the logged user Payment Account.
 
     Options:
@@ -16,6 +17,7 @@
         streetAddress:string
         birthDate:string
         agree:bool Must be true to accept the changes
+        isVenmo:bool
 
     - @Result LcRest.PaymentAccount
 
@@ -33,7 +35,8 @@
                 "postalCode": "90001",
                 "streetAddress": "There 2th",
                 "birthDate": "1985-04-20T00:00Z",
-                "agree": true
+                "agree": true,
+                "isVenmo": false
             }
         }
     }
@@ -45,14 +48,14 @@
         {
             return LcRest.PaymentAccount.Get(WebSecurity.CurrentUserId);
         }
-        
+
         public override dynamic Get()
         {
             if (UrlData.Count > 0) {
                 throw new HttpException(404, "Not found");
             }
-            
- 	        return GetData();
+
+            return GetData();
         }
 
         public override dynamic Put()
@@ -60,7 +63,7 @@
             if (UrlData.Count > 0) {
                 throw new HttpException(404, "Not found");
             }
-            
+
             var userId = WebSecurity.CurrentUserId;
 
             // Validation
@@ -78,6 +81,12 @@
             if (!Request["agree"].AsBool())
             {
                 ModelState.AddError("agree", "You must agree the terms of service");
+            }
+
+            if (!Request["isVenmo"].AsBool())
+            {
+                Validation.RequireField("routingNumber", LcRessources.RequiredField("ABA Routing Number"));
+                Validation.RequireField("accountNumber", LcRessources.RequiredField("Account Number"));
             }
 
             if (!Validation.IsValid() || !ModelState.IsValid)
@@ -101,7 +110,7 @@
             };
 
             LcRest.PaymentAccount.Set(data);
-            
+
             return GetData();
         }
     }

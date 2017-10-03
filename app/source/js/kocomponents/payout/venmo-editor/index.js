@@ -79,6 +79,7 @@ function ViewModel(params) {
         this.isSaving(true);
         // Save
         var rollbackData = paymentAccount.data.model.toPlainObject();
+        this.data.isVenmo(true);
         paymentAccount.data.model.updateWith(this.data);
         paymentAccount.save()
         .then(function() {
