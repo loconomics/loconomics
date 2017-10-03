@@ -23,6 +23,9 @@ var A = Activity.extend(function PaymentPreferenceActivity() {
         helpLink: this.helpLink
     });
     this.title = 'Payout preferences';
+    this.onSaved = function() {
+        this.app.successSave();
+    }.bind(this);
 });
 
 exports.init = A.init;

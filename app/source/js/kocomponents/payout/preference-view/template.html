@@ -13,10 +13,10 @@
     </div>
     <div class="PaddedBox-xs-only PaddedBox-sm-only" data-bind="if: editorPreferenceID">
         <!-- ko if:isDirectDepositEditorOpened -->
-        <payout-direct-deposit-editor params="data: getDataForEditor()"></payout-direct-deposit-editor>
+        <payout-direct-deposit-editor params="data: getDataForEditor(), onSaved: onSaved"></payout-direct-deposit-editor>
         <!-- /ko -->
         <!-- ko if:isVenmoEditorOpened -->
-        <payout-venmo-editor params="data: getDataForEditor()"></payout-venmo-editor>
+        <payout-venmo-editor params="data: getDataForEditor(), onSaved: onSaved"></payout-venmo-editor>
         <!-- /ko -->
         <div class="LightForm">
             <button type="button" class="btn btn-secondary btn-block" data-bind="click: openSelector">

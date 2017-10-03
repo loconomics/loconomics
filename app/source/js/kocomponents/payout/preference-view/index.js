@@ -17,17 +17,23 @@ require('../venmo-editor');
 var paymentAccount = require('../../../data/paymentAccount');
 var PaymentPreferenceOption = require('../../../models/PaymentPreferenceOption');
 var AvailableOptions = PaymentPreferenceOption.AvailableOptions;
+var showError = require('../../../modals/error').show;
 
 /**
  *
  * @class
  */
-function ViewModel() {
+function ViewModel(params) {
     /**
      * Component is ready (initialized and with data)
      * @member {KnockoutObservable<boolean>}
      */
     this.isReady = ko.observable(false);
+    /**
+     * Component was disposed (removed and waiting from GC)
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isDisposed = ko.observable(false);
     /**
      * Preference Option ID selected to make available in the editor component.
      * If null, no editor is displayed
@@ -138,22 +144,38 @@ function ViewModel() {
     this.getDataForEditor = function() {
         return this.paymentOptionData().model.clone();
     }.bind(this);
+    /**
+     * Tag instance as disposed to prevent pending async task from wasting time.
+     * Is called automatically by KO
+     */
+    this.dispose = function() {
+        this.isDisposed(true);
+    };
+
+    this.onSaved = ko.unwrap(params.onSaved);
 
     /**
      * Request to load the stored user data for current payment preference
      * @private
-     * // TODO Manage/notify errors
      */
     var load = function() {
         paymentAccount.load()
         .then(function(data) {
+            if (this.isDisposed()) return;
+
             this.paymentOptionData(data.model.clone());
             // If there is data with an active record, selector is hidden
             if (data && data.status()) {
                 this.isSelectorOpened(false);
             }
             this.isReady(true);
-        }.bind(this));
+        }.bind(this))
+        .catch(function(error) {
+            showError({
+                title: 'Error loading your payout preference',
+                error: error
+            });
+        });
     }.bind(this);
 
     /// Init

@@ -10,6 +10,7 @@ var template = require('./template.html');
 var ko = require('knockout');
 var PostalCodeVM = require('../../../viewmodels/PostalCode');
 var paymentAccount = require('../../../data/paymentAccount');
+var showError = require('../../../modals/error').show;
 
 /**
  *
@@ -18,6 +19,11 @@ var paymentAccount = require('../../../data/paymentAccount');
  * @param {models/PaymentAccount} params.data Data to display
  */
 function ViewModel(params) {
+    /**
+     * Component was disposed (removed and waiting from GC)
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isDisposed = ko.observable(false);
     /**
      * Data to edit
      * @member {models/PaymentAccount}
@@ -59,6 +65,16 @@ function ViewModel(params) {
             'Save';
     }, this);
 
+    /**
+     * Tag instance as disposed to prevent pending async task from wasting time.
+     * Is called automatically by KO
+     */
+    this.dispose = function() {
+        this.isDisposed(true);
+    };
+
+    this.onSaved = ko.unwrap(params.onSaved);
+
     this.save = function save() {
         this.isSaving(true);
         // Save
@@ -66,15 +82,24 @@ function ViewModel(params) {
         paymentAccount.data.model.updateWith(this.data);
         paymentAccount.save()
         .then(function() {
-            //app.successSave();
-            // TODO manage save, propagate
             this.isSaving(false);
+            if (this.isDisposed()) return;
+
+            if (this.onSaved) {
+                this.onSaved();
+            }
         }.bind(this))
-        .catch(function() {
+        .catch(function(error) {
             // Not saved, restore in memory data to the actually saved one
             paymentAccount.data.model.updateWith(rollbackData);
-            // TODO manage event, propagate
             this.isSaving(false);
+
+            if (this.isDisposed()) return;
+
+            showError({
+                title: 'Error saving your payout preference',
+                error: error
+            });
         }.bind(this));
     }.bind(this);
 
