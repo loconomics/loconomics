@@ -63,42 +63,36 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         link = '#!schedulingPreferences?mustReturn=1';
     }
 
-    var classNames = null;
-    if (Appointment.specialIds.free === apt.id()) {
-        classNames = 'Item--tag-gray-lighter ';
-    }
-    else if (apt.id() > 0 && apt.sourceBooking()) {
-        if (apt.sourceBooking().isRequest())
-            classNames = 'Item--tag-warning ';
-        else
-            classNames = 'Item--tag-primary ';
-    }
-    else {
-        // any block event, preparation time slots
-        classNames = 'Item--tag-danger ';
-    }
-
+    var classNames = '';
     var timeSlotSummary = '';
     if (Appointment.specialIds.free === apt.id()) {
+        classNames = 'Item--tag-gray-lighter ';
         timeSlotSummary = apt.summary();
     }
     else if (apt.id() > 0 && apt.sourceBooking()) {
         var clientID = apt.sourceBooking().clientUserID();
-        if (clientID == user.userID()) {
-            if (apt.sourceBooking().isRequest())
+        if (apt.sourceBooking().isRequest()) {
+            classNames = 'Item--tag-warning ';
+            if (clientID == user.userID()) {
                 timeSlotSummary = 'Request for ' + apt.summary() + ' by ' + ' professional';
-            else
-                timeSlotSummary = apt.summary() + ' by ' + ' professional';
+            }
+            else {
+                timeSlotSummary = 'Request for ' + apt.summary() + ' for ' + ' client';
+            }
         }
         else {
-            if (apt.sourceBooking().isRequest())
-                timeSlotSummary = 'Request for ' + apt.summary() + ' by ' + ' client';
-            else
+            classNames = 'Item--tag-primary ';
+            if (clientID == user.userID()) {
+                timeSlotSummary = apt.summary() + ' by ' + ' professional';
+            }
+            else {
                 timeSlotSummary = apt.summary() + ' for ' + ' client';
-        }  
+            }
+        }
     }
     else {
         // any block event, preparation time slots
+        classNames = 'Item--tag-danger ';
         timeSlotSummary = apt.summary();
     }
     return new TimeSlotViewModel({
