@@ -2,30 +2,27 @@
      <!-- categories internal menu -->
 <div data-activity="searchCategory">
     <div class="PageMenu">
-        <!-- Single button -->
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Change category <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Home Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Self Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Child Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Senior Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Pet Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Celebration</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Transport</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Office</a></li>
-          </ul>
-        </div>
-        <tab-list class="PageMenu-list" params="prefix: '#searchCategory-', active: activeTabName, data: $data">
-            <ul data-bind="foreach: data().categories">
+        <tab-list params="prefix: '#searchCategory-', active: activeTabName, data: $data">
+            <div class="PageMenu-list"><ul data-bind="foreach: data().categories">
                 <li><a data-bind="
                     attr: { href: '#searchCategory-' + id },
                     css: { active: $parents[1].categoryID() == id },
                     text: name"></a>
                 </li>
-            </ul>
+            </ul></div>
+            <!-- Single button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Change category <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" data-bind="foreach: data().categories">
+                    <li><a class="dropdown-item" data-bind="
+                        attr: { href: '#searchCategory-' + id },
+                        css: { active: $parents[1].categoryID() == id },
+                        text: name"></a>
+                    </li>
+                </ul>
+            </div>
         </tab-list>
     </div>
     <div class="SearchResults">
