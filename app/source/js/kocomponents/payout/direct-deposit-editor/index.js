@@ -78,9 +78,9 @@ function ViewModel(params) {
     this.save = function save() {
         this.isSaving(true);
         // Save
-        var rollbackData = paymentAccount.data.model.toPlainObject();
-        paymentAccount.data.model.updateWith(this.data);
-        paymentAccount.save()
+        var data = this.data.model.toPlainObject();
+        data.isVenmo = false;
+        paymentAccount.save(data)
         .then(function() {
             this.isSaving(false);
             if (this.isDisposed()) return;
@@ -90,8 +90,6 @@ function ViewModel(params) {
             }
         }.bind(this))
         .catch(function(error) {
-            // Not saved, restore in memory data to the actually saved one
-            paymentAccount.data.model.updateWith(rollbackData);
             this.isSaving(false);
 
             if (this.isDisposed()) return;

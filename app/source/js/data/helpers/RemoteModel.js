@@ -283,7 +283,12 @@ function RemoteModel(options) {
         }
     };
 
-    this.save = function save() {
+    /**
+     * @param {Object} [data] Optional plain data that wants to be saved that
+     * have proper structure; will default to the current copy of the data; must
+     * be supported by the implementation of the 'push' function
+     */
+    this.save = function save(data) {
         this.isSaving(true);
 
         // Preserve the timestamp after being saved
@@ -291,7 +296,7 @@ function RemoteModel(options) {
         // the version that created the new original
         var ts = this.data.model.dataTimestamp();
 
-        return this.push()
+        return this.push(data)
         .then(function (serverData) {
             // Ever deepCopy, since plain data from the server
             // cannot have circular references:
@@ -351,6 +356,25 @@ function RemoteModel(options) {
         // Avoid errors from throwing in the console,
         // the 'error' event is there to track anyone.
         .catch(function() {});
+    };
+
+    /**
+     * Provides a callback to receive plain data after any kind of update.
+     * Allows to dispose/cancel the subscription with the returned object
+     * @param {function<data, void>} cb
+     * @returns {Object} The method 'dispose' cancels any notification of changes.
+     */
+    this.subscribeDataChanges = function(cb) {
+        this.on('loaded', cb);
+        this.on('synced', cb);
+        this.on('saved', cb);
+        return {
+            dispose: function() {
+                this.removeListener('loaded', cb);
+                this.removeListener('synced', cb);
+                this.removeListener('saved', cb);
+            }.bind(this)
+        };
     };
 }
 

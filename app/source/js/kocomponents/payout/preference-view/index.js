@@ -14,6 +14,7 @@ require('../direct-deposit-viewer');
 require('../direct-deposit-editor');
 require('../venmo-viewer');
 require('../venmo-editor');
+var PaymentAccount = require('../../../models/PaymentAccount');
 var paymentAccount = require('../../../data/paymentAccount');
 var PaymentPreferenceOption = require('../../../models/PaymentPreferenceOption');
 var AvailableOptions = PaymentPreferenceOption.AvailableOptions;
@@ -144,30 +145,44 @@ function ViewModel(params) {
     this.getDataForEditor = function() {
         return this.paymentOptionData().model.clone();
     }.bind(this);
+
+    var dataChangeSubscription = null;
+
     /**
      * Tag instance as disposed to prevent pending async task from wasting time.
      * Is called automatically by KO
      */
     this.dispose = function() {
         this.isDisposed(true);
+        if (dataChangeSubscription) {
+            dataChangeSubscription.dispose();
+        }
     };
 
     this.onSaved = ko.unwrap(params.onSaved);
+
+    var onUpdatedData = function(data) {
+        if (this.isDisposed()) return;
+
+        this.paymentOptionData(new PaymentAccount(data));
+        // If there is data with an active record, selector is hidden
+        if (data && data.status) {
+            this.isSelectorOpened(false);
+        }
+    }.bind(this);
 
     /**
      * Request to load the stored user data for current payment preference
      * @private
      */
     var load = function() {
+        // First load; later subscribe to further changes
         paymentAccount.load()
         .then(function(data) {
             if (this.isDisposed()) return;
 
-            this.paymentOptionData(data.model.clone());
-            // If there is data with an active record, selector is hidden
-            if (data && data.status()) {
-                this.isSelectorOpened(false);
-            }
+            onUpdatedData(data.model.toPlainObject(true));
+            dataChangeSubscription = paymentAccount.subscribeDataChanges(onUpdatedData);
             this.isReady(true);
         }.bind(this))
         .catch(function(error) {
