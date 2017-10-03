@@ -3,14 +3,15 @@
         <div class="isolated top-only"><h2 class="SectionTitle">Choose a payout preference</h2></div>
         <payout-preferences-list params="selectItem: selectPreference"></payout-preferences-list>
     </div>
-    <!-- ko if:isDirectDepositViewerOpened -->
-    <payout-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payout-direct-deposit-viewer>
-    <!-- /ko -->
-    <!-- ko if:isVenmoViewerOpened -->
-    <payout-venmo-viewer params="data: paymentOptionData, requestEdit: openVenmoEditor, isEditorOpened: isVenmoEditorOpened()"></payout-venmo-viewer>
-    <!-- /ko -->
-
-    <div class="PaddedBox-xs-only PaddedBox-sm-only" data-bind="if: editorPreferenceID()">
+    <div data-bind="ifnot: isSelectorOpened() || editorPreferenceID()">
+        <!-- ko if:isDirectDepositViewerOpened -->
+        <payout-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payout-direct-deposit-viewer>
+        <!-- /ko -->
+        <!-- ko if:isVenmoViewerOpened -->
+        <payout-venmo-viewer params="data: paymentOptionData, requestEdit: openVenmoEditor, isEditorOpened: isVenmoEditorOpened()"></payout-venmo-viewer>
+        <!-- /ko -->
+    </div>
+    <div class="PaddedBox-xs-only PaddedBox-sm-only" data-bind="if: editorPreferenceID">
         <!-- ko if:isDirectDepositEditorOpened -->
         <payout-direct-deposit-editor params="data: getDataForEditor()"></payout-direct-deposit-editor>
         <!-- /ko -->
