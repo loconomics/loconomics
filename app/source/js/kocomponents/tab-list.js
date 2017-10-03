@@ -186,6 +186,19 @@ var create = function(params, componentInfo) {
                 .addClass(ACTIVE_TAB_CLASS)
                 .attr('aria-selected', 'true')
                 .show();
+                // With a small delay (let SR detects the change, start communicating
+                // the tab change), we focus the tab content, the first header
+                // if there is one.
+                setTimeout(function() {
+                    var h = panel.find('h1,h2,h3,h4,h5,h6');
+                    if (h.length) {
+                        h.first().attr('tabindex', '-1').focus();
+                    }
+                    else {
+                        // Focus container
+                        panel.attr('tabindex', '-1').focus();
+                    }
+                }, 1000);
             }
             else {
                 // Sometimes, the code that generates the panels is dynamic,
