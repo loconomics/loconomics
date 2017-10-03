@@ -1,17 +1,17 @@
 /** Calendar activity **/
 'use strict';
-
-var $ = require('jquery'),
-    moment = require('moment'),
-    ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
-
 require('../components/DatePicker');
+var $ = require('jquery');
+var moment = require('moment');
+var ko = require('knockout');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
 var datepickerAvailability = require('../utils/datepickerAvailability');
 var user = require('../data/userProfile').data;
 var calendar = require('../data/calendar');
 var showError = require('../modals/error').show;
 var Activity = require('../components/Activity');
+var Appointment = require('../models/Appointment');
+var TimeSlotViewModel = require('../viewmodels/TimeSlot');
 
 var A = Activity.extend(function CalendarActivity() {
 
@@ -200,9 +200,6 @@ A.prototype.show = function show(options) {
     // Force a refresh of tags
     this.tagAvailability(date, user.userID(), true);
 };
-
-var Appointment = require('../models/Appointment'),
-    TimeSlotViewModel = require('../viewmodels/TimeSlot');
 
 function ViewModel() {
 
