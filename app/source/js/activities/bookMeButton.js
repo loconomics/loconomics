@@ -9,6 +9,7 @@ var $ = require('jquery');
 var clipboard = require('../utils/clipboard');
 var marketplaceProfile = require('../data/marketplaceProfile');
 var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function BookMeButtonActivity() {
 
@@ -20,6 +21,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
     this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
         backLink: 'scheduling' , helpLink: this.viewModel.helpLink
     });
+    this.title('Add scheduling to your website');
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.
@@ -40,7 +42,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
         handler: function(err) {
             if (err && err.task === 'save') return;
             var msg = 'Error loading data to build the Button.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
@@ -63,7 +65,7 @@ var A = Activity.extend(function BookMeButtonActivity() {
                     this.viewModel.jobTitleName(job.jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
@@ -94,7 +96,7 @@ A.prototype.show = function show(state) {
     this.viewModel.copyText('Copy');
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
     this.jobTitleName = ko.observable('Job Title');
@@ -194,7 +196,7 @@ function ViewModel(app) {
         var text = this.buttonHtmlCode();
         var errMsg = clipboard.copy(text);
         if (errMsg) {
-            app.modals.showError({ error: errMsg });
+            showError({ error: errMsg });
         }
         else {
             this.copyText('Copied!');
@@ -216,7 +218,7 @@ function ViewModel(app) {
             }.bind(this))
             .catch(function(err) {
                 //this.isSaving(false);
-                app.modals.showError({ title: 'Error saving your "collect payment" preference', error: err });
+                showError({ title: 'Error saving your "collect payment" preference', error: err });
             }.bind(this));
         }
     }.bind(this);

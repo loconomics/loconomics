@@ -9,6 +9,10 @@ var onboarding = require('../data/onboarding');
 var weeklySchedule = require('../data/weeklySchedule');
 var schedulingPreferences = require('../data/schedulingPreferences');
 var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
+
+// Components in use in the template
+require('../kocomponents/switch-checkbox');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
 
@@ -22,17 +26,20 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         helpLink: this.viewModel.helpLink
     });
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
+    this.title = ko.pureComputed(function() {
+        return this.isInOnboarding() ? ' Set your availability' : ' Availability settings';
+    }, this.viewModel);
 
     this.registerHandler({
         target: weeklySchedule,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your weekly schedule.' : 'Unable to load your weekly schedule.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 
     this.registerHandler({
@@ -40,11 +47,11 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save scheduling preferences.' : 'Unable to load scheduling preferences.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 
@@ -215,4 +222,3 @@ function WeeklyScheduleVM() {
     this.timeZonesList = ko.observable(timeZoneList.getUserList());
     this.topUsTimeZones = ko.observable(timeZoneList.getTopUsZones());
 }
-

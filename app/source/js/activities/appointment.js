@@ -11,6 +11,7 @@ var $ = require('jquery'),
 
 var calendar = require('../data/calendar');
 require('../components/DatePicker');
+var showError = require('../modals/error').show;
 
 var Activity = require('../components/Activity');
 
@@ -42,6 +43,23 @@ var A = Activity.extend(function AppointmentActivity() {
         leftAction: new Activity.NavAction(backActionSettings),
         rightAction: Activity.NavAction.goHelpIndex
     });
+    this.viewModel.cardTitle = ko.pureComputed(function() {
+        return this.appointmentCardView() &&
+            this.appointmentCardView().item() &&
+            this.appointmentCardView().item().summary() ||
+            'Appointment';
+    }, this.viewModel);
+    this.title = ko.pureComputed(function() {
+        return (
+            this.currentID() == this.specialAppointmentIds.newBooking ?
+                'Add a new booking' :
+                this.currentID() == this.specialAppointmentIds.newEvent ?
+                'Add a calendar block' :
+                !this.isNewCard() ?
+                this.cardTitle() :
+                'Add'
+        );
+    }, this.viewModel);
 
     // NavBar must update depending on editMode state (to allow cancel and goBack)
     // and appointment date (on read-only, to go back to calendar on current date)
@@ -579,7 +597,7 @@ function ViewModel(app) {
                 this.isLoading(false);
 
                 var msg = 'Error loading calendar events.';
-                app.modals.showError({
+                showError({
                     title: msg,
                     error: err
                 });

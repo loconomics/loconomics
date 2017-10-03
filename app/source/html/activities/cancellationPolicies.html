@@ -1,7 +1,8 @@
 <!-- CancellationPolicies -->
 <div data-activity="cancellationPolicies">
+    <h1><icon-dec params="icon: 'ion-ios-close'"></icon-dec> <span data-bind="text: title"></span></h1>
     <!-- internal menu -->
-    <div class="PageMenu" id="cancellationPolicies-index"> 
+    <div class="PageMenu" id="cancellationPolicies-index">
         <!-- Single button -->
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -11,16 +12,16 @@
                 <li><a class="dropdown-item" href="#" data-bind="text: name, attr: { href: '#cancellationPolicies-' + cancellationPolicyID() }"></a></li>
             </ul>
         </div>
-        <div class="PageMenu-list">
-            <ul data-bind="foreach: policies">
-                <li><a href="#" data-bind="text: name, attr: { href: '#cancellationPolicies-' + cancellationPolicyID() }"></a></li>
+        <tab-list class="PageMenu-list" params="prefix: '#cancellationPolicies-', active: activeTabName, data: policies">
+            <ul data-bind="foreach: data">
+                <li><a data-bind="text: name, attr: { href: '#cancellationPolicies-' + cancellationPolicyID() }"></a></li>
             </ul>
-        </div>
+        </tab-list>
     </div>
     <!-- Tab panes -->
     <div class="limited-size-sm">
         <div class="tab-content" data-bind="foreach: policies">
-            <div role="tabpanel" class="tab-pane" data-bind="attr: { id: 'cancellationPolicies-' + cancellationPolicyID() }">
+            <div class="tab-pane" data-bind="attr: { id: 'cancellationPolicies-' + cancellationPolicyID() }">
                 <h2 class="SectionTitle">Cancellation Policy</h2>
                 <div class="PaddedBox-xs" data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: $data } }"></div>
             </div>

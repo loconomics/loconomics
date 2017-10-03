@@ -11,6 +11,8 @@ var WorkPhoto = require('../models/WorkPhoto'),
     photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
 var workPhotos = require('../data/workPhotos');
+require('../kocomponents/button-file');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function WorkPhotosActivity() {
 
@@ -22,6 +24,7 @@ var A = Activity.extend(function WorkPhotosActivity() {
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
+    this.title('Your work photos');
 
     // Event handlers for photo list management
     this.registerHandler({
@@ -36,47 +39,59 @@ var A = Activity.extend(function WorkPhotosActivity() {
 
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
-        var $input = this.$activity.find('#workPhotos-photoFile');//input[type=file]
-        // Constant size: is the maximum as defined in the CSS and server processing.
-        var PHOTO_WIDTH = 442;
-        var PHOTO_HEIGHT = 332;
-        $input.fileupload({
-            // Asigned per file uploaded:
-            //url: 'assigned per file uploaded',
-            //type: 'PUT',
-            //paramName: 'file',
-            dataType: 'json',
-            autoUpload: false,
-            acceptFileTypes: /(\.|\/)(jpe?g)$/i,
-            maxFileSize: 5000000, // 5MB
-            disableImageResize: true,
-            // // Enable image resizing, except for Android and Opera,
-            // // which actually support image resizing, but fail to
-            // // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            // .test(window.navigator.userAgent),
-            previewMaxWidth: PHOTO_WIDTH,
-            previewMaxHeight: PHOTO_HEIGHT,
-            previewCrop: false
-        })
-        .on('fileuploadprocessalways', function (e, data) {
-            var file = data.files[data.index];
-            if (file.error) {
-                // TODO Show preview error?
-                console.error('Photo Preview', file.error);
-            }
-            else if (file.preview) {
-                //this.viewModel.list()[data.index].localTempPhotoPreview(file.preview);
-                var newItem = new WorkPhoto({
-                    workPhotoID: 0,
-                    jobTitleID: this.viewModel.jobTitleID(),
-                    url: null,
-                    localTempFileData: data,
-                    localTempPhotoPreview: file.preview,
-                    caption: ''
-                });
-                this.viewModel.list.push(newItem);
-            }
+        this.viewModel.inputElement.subscribe(function(input) {
+            if (!input) return;
+            var $input = $(input);
+            // Constant size: is the maximum as defined in the CSS and server processing.
+            var PHOTO_WIDTH = 442;
+            var PHOTO_HEIGHT = 332;
+            $input.fileupload({
+                // Asigned per file uploaded:
+                //url: 'assigned per file uploaded',
+                //type: 'PUT',
+                //paramName: 'file',
+                dataType: 'json',
+                autoUpload: false,
+                acceptFileTypes: /(\.|\/)(jpe?g)$/i,
+                maxFileSize: 5000000, // 5MB
+                disableImageResize: true,
+                // // Enable image resizing, except for Android and Opera,
+                // // which actually support image resizing, but fail to
+                // // send Blob objects via XHR requests:
+                // disableImageResize: /Android(?!.*Chrome)|Opera/
+                // .test(window.navigator.userAgent),
+                previewMaxWidth: PHOTO_WIDTH,
+                previewMaxHeight: PHOTO_HEIGHT,
+                previewCrop: false
+            })
+            .on('fileuploadprocessalways', function (e, data) {
+                var file = data.files[data.index];
+                if (file.error) {
+                    // TODO Show preview error?
+                    console.error('Photo Preview', file.error);
+                }
+                else if (file.preview) {
+                    //this.viewModel.list()[data.index].localTempPhotoPreview(file.preview);
+                    var newItem = new WorkPhoto({
+                        workPhotoID: 0,
+                        jobTitleID: this.viewModel.jobTitleID(),
+                        url: null,
+                        localTempFileData: data,
+                        localTempPhotoPreview: file.preview,
+                        caption: ''
+                    });
+                    this.viewModel.list.push(newItem);
+
+                    // Usability/accessibility: after add a new item, move focus
+                    // to it's caption textbox.
+                    // Give a moment to allow DOM processing using a timeout
+                    setTimeout(function() {
+                        this.$activity
+                        .find('.WorkPhotos > li:last-child input[type=text]')
+                        .focus();
+                    }.bind(this));
+                }
+            }.bind(this));
         }.bind(this));
     }
 });
@@ -102,11 +117,11 @@ A.prototype.show = function show(options) {
             this.viewModel.list(workPhotos.asModel(list));
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });
-        }.bind(this));
+        });
     }
     else {
         this.viewModel.list([]);
@@ -123,6 +138,7 @@ function ViewModel(app) {
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
 
     this.state = workPhotos.state;
+    this.inputElement = ko.observable();
 
     this.saveBtnText = ko.pureComputed(function() {
         return this.state.isSaving() ? 'Saving..' : this.state.isLoading() ? 'Loading..' : this.state.isDeleting() ? 'Deleting..' : 'Save';
@@ -153,7 +169,7 @@ function ViewModel(app) {
         .catch(function(err) {
             // A user abort gives no error or 'no image selected' on iOS 9/9.1
             if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                app.modals.showError({ error: err, title: 'Error getting photo.' });
+                showError({ error: err, title: 'Error getting photo.' });
             }
         });
     }.bind(this);
@@ -243,7 +259,7 @@ function ViewModel(app) {
             this.removedItems.removeAll();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error saving your photos',
                 error: err
             });

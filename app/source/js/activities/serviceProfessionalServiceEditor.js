@@ -17,6 +17,8 @@ var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
@@ -27,6 +29,22 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Services', {
         helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
+            prefix = this.isNew() ? 'New ' : '',
+            postfix = this.client() ? (' only for ' + this.client().firstName()) : '';
+
+        if (this.isLoading()) {
+            return 'Loading...';
+        }
+        else if (this.serviceProfessionalServiceVersion()) {
+            return prefix + pricingName + postfix;
+        }
+        else {
+            return 'Unable to load service';
+        }
+
+    }, this.viewModel);
     /// Go out after save succesfully an item.
     /// Pricing is a plain object
     this.viewModel.onSave = function(pricing) {
@@ -109,7 +127,7 @@ A.prototype.show = function show(options) {
 
     var showLoadingError = function(error) {
         this.viewModel.isLoading(false);
-        this.app.modals.showError({
+        showError({
             title: 'Unable to load service',
             error: error
         })
@@ -216,23 +234,6 @@ function ViewModel(app) {
 
     this.client = ko.observable(null);
 
-    this.header = ko.pureComputed(function() {
-        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
-            prefix = this.isNew() ? 'New ' : '',
-            postfix = this.client() ? (' only for ' + this.client().fullName()) : '';
-
-        if (this.isLoading()) {
-            return 'Loading...';
-        }
-        else if (this.serviceProfessionalServiceVersion()) {
-            return prefix + pricingName + postfix;
-        }
-        else {
-            return 'Unable to load service';
-        }
-
-    }, this);
-
     // Quicker access in form, under a 'with'
     this.current = ko.pureComputed(function() {
         var t = this.pricingType(),
@@ -303,7 +304,7 @@ function ViewModel(app) {
             this.onSave(serverData);
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to save the service.',
                 error: err
             });
@@ -314,7 +315,7 @@ function ViewModel(app) {
     this.confirmRemoval = function() {
         // TODO Better l10n or replace by a new preset field on pricingType.deleteLabel
         var p = this.pricingType();
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete ' + (p && p.singularName()),
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
@@ -334,7 +335,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to delete the service.',
                 error: err
             });

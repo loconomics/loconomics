@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var userFeePayments = require('../data/userFeePayments');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function UserFeePaymentsActivity() {
 
@@ -17,6 +18,7 @@ var A = Activity.extend(function UserFeePaymentsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account', helpLink: this.viewModel.helpLink
     });
+    this.title('Payment history');
 });
 
 module.exports = A;
@@ -30,11 +32,11 @@ A.prototype.show = function show(options) {
         this.viewModel.payments(threads());
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading payments',
             error: err
         });
-    }.bind(this));
+    });
 };
 
 function ViewModel() {

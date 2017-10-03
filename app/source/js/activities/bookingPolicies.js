@@ -11,6 +11,7 @@ var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function BookingPoliciesActivity() {
 
@@ -21,6 +22,9 @@ var A = Activity.extend(function BookingPoliciesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: 'scheduling', helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        return this.jobTitleName() + ' booking policies';
+    }, this.viewModel);
 
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
@@ -38,7 +42,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
                     this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load listing details.',
                         error: err
                     });
@@ -54,7 +58,7 @@ var A = Activity.extend(function BookingPoliciesActivity() {
                     this.viewModel.instantBooking(userJobTitle.instantBooking());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load policies.',
                         error: err
                     });
@@ -183,7 +187,7 @@ function ViewModel(app) {
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);
-                app.modals.showError({ title: 'Unable to save booking policies', error: err });
+                showError({ title: 'Unable to save booking policies', error: err });
             }.bind(this));
         }
     }.bind(this);

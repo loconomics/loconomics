@@ -11,52 +11,66 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span data-bind="text: header"></span>
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                </h2>
-                <form class="container-fluid LightForm" role="form" data-bind="submit: save">
+                <h1><icon-dec params="icon: 'ion-android-contact'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <form id="clientEditorForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="clientEditorFormInstructions"> 
+                    <p id="clientEditorFormInstructions" class="help-block">Store your client's contact and other information here and create offerings only they can see.</p>
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                     </div>
                     <div data-bind="with: client()">
-                        <app-unlabeled-input params="placeholder: 'First name', value: firstName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
-                        <app-unlabeled-input params="placeholder: 'Last name', value: lastName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"></app-unlabeled-input>
-                        <div class="form-group">
-                            <div class="input-group" data-bind="css: { 'input-group': $root.validPhone() }">
-                                <input type="tel" class="form-control" data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }" placeholder="Mobile phone" aria-label="Mobile phone"/>
-                                <span class="input-group-btn" data-bind="visible: $root.validPhone()">
+                        <fieldset>
+                            <legend><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s contact information:</span><span data-bind="visible: !firstName()">Client's contact information:</span></legend>
+                            <div class="form-group">
+                                <label for="firstName">First name:</label>
+                                <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: firstName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last name:</label>
+                                <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: lastName, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone number:</label>
+                                <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }">
+                                <!-- <span class="input-group-btn" data-bind="visible: $root.validPhone()">
                                     <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info">
                                         <span class="sr-only">Call to this phone</span><span class="fa ion ion-ios-telephone-outline"></span>
                                     </a>
-                                </span>
+                                </span> -->
                             </div>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked() || $root.isReadOnly()" />
-                                Can receive SMS
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group" data-bind="css: { 'input-group': $root.validEmail() }">
-                                <input type="email" class="form-control"
-                                     data-bind="textInput: email, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"
-                                     placeholder="Email" aria-label="Email" />
-                                <span class="input-group-btn" data-bind="visible: $root.validEmail()">
+                            <div class="form-group">
+                                <label for="canReceiveSms">Does this number receive texts?</label>
+                                <input id="canReceiveSms" type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked() || $root.isReadOnly()">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" for="phone">Email address:</label>
+                                <input id="email" type="email" class="form-control" maxlength="145" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" 
+                                data-bind="textInput: email, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"/>
+                                <!-- <span class="input-group-btn" data-bind="visible: $root.validEmail()">
                                     <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info">
                                         <span class="sr-only">Write e-mail</span>
                                         <span class="fa ion ion-ios-at-outline"></span></a>
-                                </span>
+                                </span> -->
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" data-bind="value: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Birth Month (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" data-bind="value: birthMonthDay, options: $root.monthDays, optionsCaption: 'Birth Day (optional)', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
-                        </div>
-                        <textarea class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked" placeholder="Notes about client (only seen by you)"></textarea>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Additional information about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName(), text: 'this client:'"></span></legend>
+                            <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s birthday:</span><span data-bind="visible: !firstName()">Client's birthday:</span></label>    
+                            <div class="row">
+                                <div class="form-group col-sm-8">
+                                    <label for="selectedBirthMonth">Birth month:</label>
+                                    <select id="selectedBirthMonth" class="form-control" data-bind="textInput: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Select month', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="birthMonthDay">Birth day:</label>
+                                    <select id="birthMonthDay" class="form-control" data-bind="textInput: birthMonthDay, options: $root.monthDays, optionsCaption: 'Select day', disable: $root.isLocked() || $root.isReadOnly(), valueAllowUnset: true"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="notesAboutClient">Notes about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName()">client:</span></label>  
+                                <textarea id="notesAboutClient" class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
+                                <p id="notesAboutClientInstructions">These notes can only be seen by you.</p>
+                            </div>
+                        </fieldset>
                     </div>
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: $root.isLocked() || !unsavedChanges(), css: { 'btn-danger': isSaving() }"></button>

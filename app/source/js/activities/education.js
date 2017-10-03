@@ -5,6 +5,7 @@
 
 var Activity = require('../components/Activity');
 var education = require('../data/education');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function EducationActivity() {
 
@@ -16,6 +17,7 @@ var A = Activity.extend(function EducationActivity() {
     this.navBar = Activity.createSubsectionNavBar('Profile', {
         backLink: '/userProfile' , helpLink: this.viewModel.helpLink
     });
+    this.title('Education');
     // Share navBar with desktop nav through viewModel
     this.viewModel.navBar = this.navBar;
 });
@@ -28,7 +30,7 @@ A.prototype.show = function show(options) {
     // Request a sync and catch any error
     education.sync()
     .catch(function (err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading education information',
             error: err
         });

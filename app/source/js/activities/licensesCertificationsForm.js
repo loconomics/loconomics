@@ -11,6 +11,9 @@ var onboarding = require('../data/onboarding');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var licenseCertification = require('../data/licenseCertification');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
+var $ = require('jquery');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
@@ -22,52 +25,56 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
         backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
+    this.title('Your credentials');
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
 
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
-        var $input = this.$activity.find('#licensesCertificationsForm-photoFile');//input[type=file]
-        // Constant size: is the maximum as defined in the CSS and server processing.
-        var PHOTO_WIDTH = 442;
-        var PHOTO_HEIGHT = 332;
-        $input.fileupload({
-            // Asigned per file uploaded:
-            //url: 'assigned per file uploaded',
-            //type: 'PUT',
-            //paramName: 'file',
-            dataType: 'json',
-            autoUpload: false,
-            acceptFileTypes: /(\.|\/)(png|gif|tiff|pdf|jpe?g)$/i,
-            maxFileSize: 20000000, // 20MB
-            disableImageResize: true,
-            // // Enable image resizing, except for Android and Opera,
-            // // which actually support image resizing, but fail to
-            // // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            // .test(window.navigator.userAgent),
-            previewMaxWidth: PHOTO_WIDTH,
-            previewMaxHeight: PHOTO_HEIGHT,
-            previewCrop: true
-        })
-        .on('fileuploadadd', function (e, data) {
-            this.viewModel.item().localTempFileData(data);
-            if (!data.originalFiles.length ||
-                !/^image\//.test(data.originalFiles[0].type)) {
-                this.viewModel.item().localTempPhotoPreview(null);
-            }
-            this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
-        }.bind(this))
-        .on('fileuploadprocessalways', function (e, data) {
-            var file = data.files[data.index];
-            if (file.error) {
-                // TODO Show preview error?
-                this.viewModel.item().localTempPhotoPreview(null);
-                console.error('Photo Preview', file.error);
-            }
-            else if (file.preview) {
-                //this.viewModel.item().localTempFileData(data);
-                this.viewModel.item().localTempPhotoPreview(file.preview);
-            }
+        this.viewModel.inputElement.subscribe(function(input) {
+            if (!input) return;
+            var $input = $(input);
+            // Constant size: is the maximum as defined in the CSS and server processing.
+            var PHOTO_WIDTH = 442;
+            var PHOTO_HEIGHT = 332;
+            $input.fileupload({
+                // Asigned per file uploaded:
+                //url: 'assigned per file uploaded',
+                //type: 'PUT',
+                //paramName: 'file',
+                dataType: 'json',
+                autoUpload: false,
+                acceptFileTypes: /(\.|\/)(png|gif|tiff|pdf|jpe?g)$/i,
+                maxFileSize: 20000000, // 20MB
+                disableImageResize: true,
+                // // Enable image resizing, except for Android and Opera,
+                // // which actually support image resizing, but fail to
+                // // send Blob objects via XHR requests:
+                // disableImageResize: /Android(?!.*Chrome)|Opera/
+                // .test(window.navigator.userAgent),
+                previewMaxWidth: PHOTO_WIDTH,
+                previewMaxHeight: PHOTO_HEIGHT,
+                previewCrop: true
+            })
+            .on('fileuploadadd', function (e, data) {
+                this.viewModel.item().localTempFileData(data);
+                if (!data.originalFiles.length ||
+                    !/^image\//.test(data.originalFiles[0].type)) {
+                    this.viewModel.item().localTempPhotoPreview(null);
+                }
+                this.viewModel.item().localTempFileName(data.originalFiles[0] && data.originalFiles[0].name);
+            }.bind(this))
+            .on('fileuploadprocessalways', function (e, data) {
+                var file = data.files[data.index];
+                if (file.error) {
+                    // TODO Show preview error?
+                    this.viewModel.item().localTempPhotoPreview(null);
+                    console.error('Photo Preview', file.error);
+                }
+                else if (file.preview) {
+                    //this.viewModel.item().localTempFileData(data);
+                    this.viewModel.item().localTempPhotoPreview(file.preview);
+                }
+            }.bind(this));
         }.bind(this));
     }
 });
@@ -110,7 +117,7 @@ A.prototype.show = function show(state) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             })
@@ -132,7 +139,7 @@ A.prototype.show = function show(state) {
             this.viewModel.version(new ModelVersion(item));
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             })
@@ -152,6 +159,7 @@ function ViewModel(app) {
     this.licenseCertificationID = ko.observable(0);
     this.jobTitleID = ko.observable(0);
     this.jobTitleNamePlural = ko.observable();
+    this.inputElement = ko.observable();
     this.isLoading = ko.pureComputed(function() {
         return (
             userLicensesCertifications.state.isLoading()
@@ -222,7 +230,7 @@ function ViewModel(app) {
             }
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to save.',
                 error: err
             });
@@ -232,7 +240,7 @@ function ViewModel(app) {
 
     this.confirmRemoval = function() {
         // L18N
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
@@ -250,7 +258,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to delete.',
                 error: err
             });
@@ -272,12 +280,12 @@ function ViewModel(app) {
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1
                 if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                    app.modals.showError({ error: err, title: 'Error selecting photo.' });
+                    showError({ error: err, title: 'Error selecting photo.' });
                 }
             });
         }
         else {
-            app.modals.showError({ error: 'This feature is currently only available on mobile devices' });
+            showError({ error: 'This feature is currently only available on mobile devices' });
         }
     }.bind(this);
 

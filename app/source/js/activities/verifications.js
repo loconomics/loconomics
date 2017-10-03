@@ -7,6 +7,8 @@ var ko = require('knockout'),
     Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
 var userVerifications = require('../data/userVerifications');
+var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function VerificationsActivity() {
 
@@ -19,6 +21,7 @@ var A = Activity.extend(function VerificationsActivity() {
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
+    this.title('Verifications');
     // Share navBar with desktop nav through viewModel
     this.viewModel.navBar = this.navBar;
 
@@ -28,20 +31,20 @@ var A = Activity.extend(function VerificationsActivity() {
         event: 'click',
         selector: '[href="#resendEmailConfirmation"]',
         handler: function() {
-            this.app.modals.showNotification({
+            showNotification({
                 message: 'TO-DO: resend email confirmation'
             });
-        }.bind(this)
+        }
     });
     this.registerHandler({
         target: this.$activity,
         event: 'click',
         selector: '[href="#connectWithFacebook"]',
         handler: function() {
-            this.app.modals.showNotification({
+            showNotification({
                 message: 'TO-DO: ask for connect with Facebook API'
             });
-        }.bind(this)
+        }
     });
 });
 
@@ -55,7 +58,7 @@ A.prototype.show = function show(options) {
         this.viewModel.userVerifications(list());
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({ title: 'Error loading your verifications', error: err });
+        showError({ title: 'Error loading your verifications', error: err });
     }.bind(this));
 };
 

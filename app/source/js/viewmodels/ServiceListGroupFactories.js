@@ -40,7 +40,7 @@ ClientBookedServicesListGroup.prototype.listTitle = function(options) {
     var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services',
         postFix = this.isClientSpecific ? ' Just For You' : '';
 
-    return 'Select From ' + pricingTypeLabel + postFix;
+    return pricingTypeLabel + postFix;
 };
 
 /**
@@ -92,7 +92,7 @@ ProviderBookedServicesListGroup._inherits(ServiceListGroup);
 ProviderBookedServicesListGroup.prototype.listTitle = function(options) {
     var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services';
 
-    return 'Select From ' + pricingTypeLabel;
+    return pricingTypeLabel;
 };
 
 /**

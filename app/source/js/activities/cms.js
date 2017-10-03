@@ -7,6 +7,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var clients = require('../data/clients');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function CmsActivity() {
 
@@ -15,8 +16,9 @@ var A = Activity.extend(function CmsActivity() {
     this.viewModel = new ViewModel();
 
     this.accessLevel = this.app.UserType.loggedUser;
-
-    this.navBar = Activity.createSectionNavBar('Client Management');
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
+    this.title('Client manager');
 });
 
 exports.init = A.init;
@@ -27,11 +29,11 @@ A.prototype.show = function show(state) {
     // Keep data updated:
     clients.sync()
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading the clients list',
             error: err
         });
-    }.bind(this));
+    });
 };
 
 var numeral = require('numeral');

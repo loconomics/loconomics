@@ -154,7 +154,7 @@ exports.extend = function (app) {
             return data;
         }
         return null;
-    },
+    };
 
     /**
      * Detects parameters requesting a specific 'go back' behavior

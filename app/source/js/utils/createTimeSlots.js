@@ -32,7 +32,7 @@ exports.forRange = function forRange(from, to, size, duration, roundUp, includeE
         slots = [],
         now = new Date(),
         enought;
-    
+
     // Round up if required
     if (roundUp) {
         var r = moment(from);
@@ -48,7 +48,7 @@ exports.forRange = function forRange(from, to, size, duration, roundUp, includeE
         from = r.minutes(minutes).seconds(0).toDate();
         i = r;
     }
-    
+
     // end time included?
     if (includeEndTime) {
         // Since the later 'while loop' will stop before reach 'to',
@@ -72,7 +72,7 @@ exports.forRange = function forRange(from, to, size, duration, roundUp, includeE
         // Next slot
         i.add(size, 'minutes');
     }
-    
+
     return slots;
 };
 
@@ -110,27 +110,34 @@ exports.getTotalFreeMinutes = function getTotalFreeMinutes(list) {
 /**
     Get the availability tag for the given list of availabilitySlots
     based on a workday of 8 hours.
+
+    TODO Availabile time must be based not on fixed 8 hours but on real
+    proffesional availability; that needs the weeklySchedule, this solution
+    is too simplistic, prone to errors;
+    - the 'tags' are not precise.
+    - is not possible to clearly denote 100% free
+    - is not possible to clearly states not-available (none, as of no free
+        time regularly on this date, so different from all day scheduled)
 **/
 exports.getAvailabilityTag = function(list) {
     //jshint maxcomplexity:11
-    if (!list || list.length === 0) return 'none';
-    
+    if (!list || list.length === 0)
+        return 'none'; // not availability
+
     var minutes = exports.getTotalFreeMinutes(list);
-    
+
     var perc = (minutes / (8*60)) * 100,
         date = moment(list[0].startTime).startOf('day').toDate(),
         today = moment().startOf('day').toDate();
 
     if (date < today)
         return 'past';
-    else if (perc >= 100)
-        return 'full';
-    else if (perc >= 50)
-        return 'medium';
-    else if (perc > 0)
-        return 'low';
-    else // <= 0
-        return 'none';
+    else if (perc <= 0)
+        return 'full'; // fully scheduled
+    else if (perc < 50)
+        return 'medium'; // medium scheduled
+    else // if (perc >= 50)
+        return 'low'; // low scheduled or completely free
 };
 
 /**
@@ -174,7 +181,7 @@ exports.filterListBy = function filterListBy(list, start, end) {
         }
         // else continue iterating until reach something in the wanted range
     });
-    
+
     return result;
 };
 
@@ -198,12 +205,12 @@ exports.splitListInLocalDates = function filterListBy(list) {
             group = result[isostart] = [];
             lastIsodate = isostart;
         }
-        
+
         var end = moment(timeRange.endTime),
             endJustDate = end.startOf('day'),
             isoend = end.format(isodateFormat),
             nextDayStart = start.clone().startOf('day').add(1, 'day');
-        
+
         // Checks if different dates, but discard when ending is just
         // the beggining of next date because that's correct for a range
         // that goes to the end of the date (start of next date, to include last minutes)
@@ -237,7 +244,7 @@ exports.splitListInLocalDates = function filterListBy(list) {
                     availability: timeRange.availability
                 }];
             }
-            // Last fragment, from day beginning to the range ending 
+            // Last fragment, from day beginning to the range ending
             result[idate.format(isodateFormat)] = [{
                 startTime: idate.format(),
                 endTime: end.format(),
@@ -249,6 +256,6 @@ exports.splitListInLocalDates = function filterListBy(list) {
             group.push(timeRange);
         }
     });
-    
+
     return result;
 };

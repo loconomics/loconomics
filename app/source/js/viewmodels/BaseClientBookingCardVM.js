@@ -14,16 +14,18 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var serviceAddresses = require('../data/serviceAddresses');
+var showTextEditor = require('../modals/textEditor').show;
+var showError = require('../modals/error').show;
 
 // L18N
 // List of all possible steps by name providing the language for the UI
 var stepsLabels = {
-    services: 'Services',
-    selectLocation: 'Select a location',
-    selectTimes: 'Select preferred times',
-    selectTime: 'Select the time',
-    payment: 'Payment',
-    confirm: 'Confirm'
+    services: 'Select offering(s)',
+    selectLocation: 'Select location',
+    selectTimes: 'Select preferred time(s)',
+    selectTime: 'Select time',
+    payment: 'Complete payment',
+    confirm: 'Confirm booking'
 };
 
 function BaseClientBookingCardVM(app) {
@@ -237,8 +239,6 @@ function BaseClientBookingCardVM(app) {
     var setAddress = function(add) {
         if (!add || !this.booking()) return;
         this.booking().serviceAddress(add);
-        if (!this.isRestoring || !this.isRestoring())
-            this.nextStep();
     }.bind(this);
     // IMPORTANT: selection from one list must deselect from the other one
     this.serviceAddresses.selectedAddress.subscribe(function(add) {
@@ -290,7 +290,7 @@ function BaseClientBookingCardVM(app) {
         }.bind(this))
         .catch(function(err) {
             this.isLoadingServiceProfessionalInfo(false);
-            app.modals.showError({ error: err });
+            showError({ error: err });
         }.bind(this));
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
@@ -381,7 +381,7 @@ function BaseClientBookingCardVM(app) {
         return sp ? 'Add notes to ' + sp : 'Add notes';
     }, this);
     this.pickSpecialRequests = function() {
-        app.modals.showTextEditor({
+        showTextEditor({
             title: this.specialRequestsPlaceholder(),
             text: this.booking().specialRequests()
         })
@@ -390,7 +390,7 @@ function BaseClientBookingCardVM(app) {
         }.bind(this))
         .catch(function(err) {
             if (err) {
-                app.modals.showError({ error: err });
+                showError({ error: err });
             }
             // No error, do nothing just was dismissed
         });
@@ -520,7 +520,7 @@ BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
     }.bind(this))
     .catch(function(err) {
         this.isLoadingServiceAddresses(false);
-        this.app.modals.showError({ error: err });
+        showError({ error: err });
     }.bind(this));
 };
 

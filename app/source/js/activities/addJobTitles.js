@@ -4,11 +4,12 @@
 'use strict';
 
 var Activity = require('../components/Activity');
-var SearchJobTitlesVM = require('../viewmodels/SearchJobTitlesVM');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var userJobProfile = require('../data/userJobProfile');
+var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function AddJobTitlesActivity() {
 
@@ -19,6 +20,7 @@ var A = Activity.extend(function AddJobTitlesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
+    this.title('Create a new listing');
 });
 
 exports.init = A.init;
@@ -41,7 +43,6 @@ A.prototype.show = function show(options) {
     var s = options.route.query.s;
 
     // Reset
-    this.viewModel.searchText(s);
     this.viewModel.jobTitles.removeAll();
 
     this.updateNavBarState();
@@ -59,7 +60,6 @@ A.prototype.show = function show(options) {
                 value: +options.route.query.id,
                 label: s
             });
-            this.viewModel.searchText('');
         }
     }
 };
@@ -90,21 +90,22 @@ function ViewModel(app) {
         }
     };
 
-    // API entry-point for search component
-    this.search = ko.observable(new SearchJobTitlesVM(app));
-    this.search().onClickJobTitle = function(jobTitle) {
-        // Add to the list, if is not already in it
-        var item = {
-            value: jobTitle.jobTitleID(),
-            label: jobTitle.singularName()
+    this.onSelectJobTitle = function(value, jobTitle) {
+        if (jobTitle && jobTitle.jobTitleID) {
+            // Add to the list, if is not already in it
+            var item = {
+                value: jobTitle.jobTitleID(),
+                label: jobTitle.singularName()
+            };
+            this.addItem(item);
+        }
+        else {
+            this.addNewItem(value);
+        }
+        return {
+            value: ActionForValue.clear
         };
-        this.addItem(item);
     }.bind(this);
-    this.search().onClickNoJobTitle = function(jobTitleName) {
-        this.addNewItem(jobTitleName);
-    }.bind(this);
-    this.search().customResultsButtonText('Add');
-    this.searchText = this.search().searchTerm;
 
     this.submitText = ko.pureComputed(function() {
         return (
@@ -162,7 +163,6 @@ function ViewModel(app) {
             var onEnd = function onEnd() {
                 this.isSaving(false);
                 // Reset UI list
-                this.searchText('');
                 this.jobTitles.removeAll();
                 if (onboarding.inProgress()) {
                     onboarding.selectedJobTitleID(firstJobID);
@@ -188,9 +188,8 @@ function ViewModel(app) {
             }
         }.bind(this))
         .catch(function(error) {
-            this.searchText('');
             this.isSaving(false);
-            app.modals.showError({
+            showError({
                 title: 'Unable to add one or more job titles',
                 error: error
             });

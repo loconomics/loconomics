@@ -1,0 +1,59 @@
+/**
+    Item base class and mixim.
+
+    'Item-' works as namespace for generic children elements used in
+    based tile classes; names in use: Item-title, Item-content, Item-icon,
+    Item-subtitle.
+
+    Modifiers using 'Item-' as prefix, rather than subtiles names:
+    Item--tag-** (one per each $brand-colors)
+**/
+
+$Item-hgap = $grid-gap;
+
+Item() {
+    // The tile can be a link, a button
+    // or any other element, so ensure
+    // some details and resets
+    color: $body-copy-color;
+    display: table;
+    vertical-align: middle;
+    text-decoration: none !important;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    position: relative;
+    padding: 1em;
+}
+
+// Add style for a Item-content child with multiline and single-line
+// sub-childs with common styles and the given number of lines as height limit.
+Item-addContent($height-em) {
+    .Item-content {
+        white-space: normal;
+        word-wrap: break-word;
+        margin: 0;
+        height: $height-em;
+        overflow: hidden;
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        h3,
+        p {
+            margin: 0px;
+        }
+        h3 {
+            font-size: 22px;
+        }
+        p {
+            font-size: 16px;
+        }
+        // Setting margin for small screens since the items margin is auto there
+                //@media $mediaMaxXs {
+        @media (max-width: 520px) {
+            margin: 0 $grid-gap;
+        }
+    }
+}

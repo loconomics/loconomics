@@ -16,7 +16,9 @@ var A = Activity.extend(function MarketplaceProfileActivity() {
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSectionNavBar('Your Listings');
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
+    this.title('Your Listings');
 
     this.viewModel.showMarketplaceInfo(true);
     this.viewModel.baseUrl('/marketplaceJobtitles');

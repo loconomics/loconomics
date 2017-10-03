@@ -9,7 +9,6 @@ module.exports ={
     'css-libs': {
         src: [
             './vendor/bootstrap/css/bootstrap.css',
-            './vendor/bootstrap-switch/custom-css/bootstrap-switch.css',
             './vendor/font-awesome/css/font-awesome.css',
             './vendor/ionicons/css/ionicons.css'
         ],

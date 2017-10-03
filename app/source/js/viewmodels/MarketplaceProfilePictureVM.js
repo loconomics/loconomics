@@ -13,6 +13,10 @@ var photoTools = require('../utils/photoTools');
 var MarketplaceProfileVM = require('./MarketplaceProfileVM');
 var user = require('../data/userProfile').data;
 var remote = require('../data/drivers/restClient');
+require('../kocomponents/button-file');
+require('jquery.fileupload-image');
+var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 module.exports = function MarketplaceProfilePictureVM(app) {
     //jshint maxstatements:30
@@ -26,47 +30,53 @@ module.exports = function MarketplaceProfilePictureVM(app) {
     this.localPhotoData = ko.observable();
     this.localPhotoPreview = ko.observable();
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
+    this.inputElement = ko.observable();
 
     // NOTE: uploader options just for web uploads
     if (!this.takePhotoSupported()) {
-        this.uploaderOptions = {
-            url: this.photoUploadUrl,
-            dataType: 'json',
-            type: 'PUT',
-            paramName: this.photoUploadFieldName,
-            autoUpload: false,
-            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-            maxFileSize: 5000000, // 5MB
-            disableImageResize: true,
-            // // Enable image resizing, except for Android and Opera,
-            // // which actually support image resizing, but fail to
-            // // send Blob objects via XHR requests:
-            // disableImageResize: /Android(?!.*Chrome)|Opera/
-            // .test(window.navigator.userAgent),
-            previewMaxWidth: 120,
-            previewMaxHeight: 120,
-            previewCrop: true
-        };
-        this.uploaderEventHandlers = {
-            fileuploadadd: function (e, data) {
-                this.localPhotoData(data);
-                this.rotationAngle(0);
-            },
-            fileuploadprocessalways: function (e, data) {
-                var file = data.files[data.index];
-                if (file.error) {
-                    // TODO Show preview error?
-                    console.error('Photo Preview', file.error);
+        this.inputElement.subscribe(function(input) {
+            if (!input) return;
+            var $input = $(input);
+            var uploaderOptions = {
+                url: this.photoUploadUrl,
+                dataType: 'json',
+                type: 'PUT',
+                paramName: this.photoUploadFieldName,
+                autoUpload: false,
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                maxFileSize: 5000000, // 5MB
+                disableImageResize: true,
+                // // Enable image resizing, except for Android and Opera,
+                // // which actually support image resizing, but fail to
+                // // send Blob objects via XHR requests:
+                // disableImageResize: /Android(?!.*Chrome)|Opera/
+                // .test(window.navigator.userAgent),
+                previewMaxWidth: 120,
+                previewMaxHeight: 120,
+                previewCrop: true
+            };
+            var uploaderEventHandlers = {
+                fileuploadadd: function (e, data) {
+                    this.localPhotoData(data);
+                    this.rotationAngle(0);
+                },
+                fileuploadprocessalways: function (e, data) {
+                    var file = data.files[data.index];
+                    if (file.error) {
+                        // TODO Show preview error?
+                        console.error('Photo Preview', file.error);
+                    }
+                    else if (file.preview) {
+                        this.localPhotoPreview(file.preview);
+                    }
                 }
-                else if (file.preview) {
-                    this.localPhotoPreview(file.preview);
-                }
-            }
-        };
-    }
-    else {
-        this.uploaderOptions = null;
-        this.uploaderEventHandlers = null;
+            };
+            $input.fileupload(uploaderOptions);
+            var vm = this;
+            Object.keys(uploaderEventHandlers).forEach(function(eventName) {
+                $input.on(eventName, uploaderEventHandlers[eventName].bind(vm));
+            });
+        }.bind(this));
     }
 
     // Actions
@@ -139,12 +149,12 @@ module.exports = function MarketplaceProfilePictureVM(app) {
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1
                 if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                    app.modals.showError({ error: err, title: 'Error getting photo.' });
+                    showError({ error: err, title: 'Error getting photo.' });
                 }
             });
         }
         else {
-            app.modals.showNotification({
+            showNotification({
                 message: 'Take photo is not supported on the web right now'
             });
         }

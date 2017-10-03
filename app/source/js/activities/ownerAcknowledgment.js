@@ -6,6 +6,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var ownerAcknowledgment = require('../data/ownerAcknowledgment');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function OwnerAcknowledgmentActivity() {
 
@@ -17,6 +18,7 @@ var A = Activity.extend(function OwnerAcknowledgmentActivity() {
     this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo', helpLink: '/help/relatedArticles/201964153-how-owner-user-fees-work'
     });
+    this.title('Cooperative Owner Disclosure');
 });
 
 module.exports = A;
@@ -50,7 +52,7 @@ function ViewModel(app) {
             app.successSave();
         })
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error saving',
                 error: err
             });

@@ -7,6 +7,7 @@ var
     ko = require('knockout'),
     Activity = require('../components/Activity');
 var search = require('../data/search');
+require('../kocomponents/tab-list');
 
 var A = Activity.extend(function SearchCategoryActivity() {
 
@@ -18,11 +19,43 @@ var A = Activity.extend(function SearchCategoryActivity() {
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
+
+    this.title = ko.computed(function() {
+        var result = this.categorySearchResult();
+        return result && result.categoryName + ' Professionals';
+    }, this.viewModel);
+
+    this.getUrlForCategory = function(catID) {
+        var vm = this.viewModel;
+        return '/searchCategory/' + catID + '/' + vm.origLat() + '/' +
+            vm.origLong() + '/' + vm.searchDistance();
+    };
+    this.loadCategory = function(catID) {
+        var vm = this.viewModel;
+        return vm.load(catID, vm.origLat(), vm.origLong(), vm.searchDistance());
+    };
+
+    var shell = this.app.shell;
+    var observableRoute = shell.getCurrentObservableRoute();
+    this.viewModel.activeTabName = ko.pureComputed({
+        read: function() {
+            var route = observableRoute();
+            // searchCategoryID
+            return route && route.segments && route.segments[0];
+        },
+        write: function(tabName) {
+            this.loadCategory(tabName).then(function() {
+                setTimeout(function() {
+                    shell.replaceState(null, null, this.getUrlForCategory(tabName));
+                }.bind(this), 1);
+            }.bind(this));
+        },
+        owner: this
+    });
 });
 
 exports.init = A.init;
 
-// get jobTitleID from the URL that's passed in from the search results preview
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     var params = this.requestData.route.segments || [];
@@ -31,9 +64,6 @@ A.prototype.show = function show(options) {
     var origLong = params[2] || '';
     var searchDistance = params[3] || '';
     this.viewModel.load(categoryID, origLat, origLong, searchDistance);
-//    var tabName = categoryID + '/' + origLat + '/' + origLong + '/' + searchDistance;
-//    var tab = this.$activity.find('[href="/searchCategory/' + tabName + '"]');
-//    if (tab.length) tab.tab('show');
 };
 
 function ViewModel() {
@@ -98,5 +128,15 @@ function ViewModel() {
             loadData(categoryID, origLat, origLong, searchDistance)
         ]);
     };
-}
 
+    this.categories = [
+        { id: 1, name: 'Home Care' },
+        { id: 2, name: 'Self Care' },
+        { id: 3, name: 'Child Care' },
+        { id: 4, name: 'Senior Care' },
+        { id: 5, name: 'Pet Care' },
+        { id: 6, name: 'Celebration' },
+        { id: 7, name: 'Transport' },
+        { id: 8, name: 'Office' }
+    ];
+}

@@ -4,6 +4,10 @@ var ko = require('knockout');
 var BaseClientBookingCardVM = require('../viewmodels/BaseClientBookingCardVM');
 var bookings = require('../data/bookings');
 var availability = require('../data/availability');
+var showNotification = require('../modals/notification').show;
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
+var showError = require('../modals/error').show;
 
 function EditClientBookingCardVM(app) {
 
@@ -59,7 +63,7 @@ function EditClientBookingCardVM(app) {
     this.confirmCancel = function() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
-            app.modals.confirm({
+            showConfirm({
                 title: 'Cancel',
                 message: 'Are you sure?',
                 yes: 'Yes',
@@ -75,7 +79,7 @@ function EditClientBookingCardVM(app) {
         }
     };
     this.confirmCancelBookingByClient = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Cancel booking',
             message: 'Are you sure? Cancellation fees may apply.',
             yes: 'Yes',
@@ -107,7 +111,7 @@ function EditClientBookingCardVM(app) {
             }.bind(this))
             .catch(function(err) {
                 this.isLoadingBooking(false);
-                app.modals.showError({ error: err });
+                showError({ error: err });
             }.bind(this));
         }
     }.bind(this);
@@ -128,7 +132,7 @@ function EditClientBookingCardVM(app) {
 
         var msg = 'You\'re all set! We\'ll notify {0} of your changes.'.replace('{0}', this.serviceProfessionalInfo().profile().firstName());
 
-        app.modals.showNotification({
+        showNotification({
             title: 'Done!',
             message: msg
         });
@@ -150,7 +154,7 @@ function EditClientBookingCardVM(app) {
         .then(afterSaveBooking)
         .catch(function(err) {
             this.isSaving(false);
-            app.modals.showError({ error: err });
+            showError({ error: err });
         }.bind(this));
     }.bind(this);
 
@@ -169,7 +173,7 @@ function EditClientBookingCardVM(app) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });

@@ -4,9 +4,10 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    Activity = require('../components/Activity');
+var Activity = require('../components/Activity');
 var cancellationPolicies = require('../data/cancellationPolicies');
+var ko = require('knockout');
+require('../kocomponents/tab-list');
 
 var A = Activity.extend(function CancellationPoliciesActivity() {
 
@@ -18,15 +19,23 @@ var A = Activity.extend(function CancellationPoliciesActivity() {
     // null for logos
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
-    this.viewModel = new ViewModel(this.app);
+    this.title('Cancellation policies');
+
     var shell = this.app.shell;
-    this.$activity.find('#cancellationPolicies-index').on('click', 'a', function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        $(this).tab('show');
-        var link = $(this).attr('href').replace(/^#cancellationPolicies-/, '');
-        shell.replaceState(null, null, '#!cancellationPolicies/' + link);
+    var observableRoute = shell.getCurrentObservableRoute();
+    /// Properties used in the view
+    this.activeTabName = ko.pureComputed({
+        read: function() {
+            var route = observableRoute();
+            return route && route.segments && route.segments[0];
+        },
+        write: function(tabName) {
+            shell.replaceState(null, null, '#!cancellationPolicies/' + tabName);
+        },
+        owner: this
     });
+    this.isLoading = cancellationPolicies.state.isLoading;
+    this.policies = cancellationPolicies.list;
 });
 
 exports.init = A.init;
@@ -34,16 +43,6 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
-    var tabName = state && state.route.segments && state.route.segments[0];
-    var tab = this.$activity.find('[href="#cancellationPolicies-' + tabName + '"]');
-    if (tab.length) tab.tab('show');
-
     // Request to sync policies, just in case there are remote changes
     cancellationPolicies.sync();
 };
-
-function ViewModel() {
-    this.isLoading = cancellationPolicies.state.isLoading;
-    this.policies = cancellationPolicies.list;
-}
-

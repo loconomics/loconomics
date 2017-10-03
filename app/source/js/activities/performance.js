@@ -11,6 +11,7 @@ var A = Activity.extend(function PerformanceActivity() {
     this.accessLevel = null;
     this.viewModel = {};
     this.navBar = Activity.createSectionNavBar('Performance');
+    this.title('Coming soon');
 });
 
 module.exports = A;

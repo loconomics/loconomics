@@ -7,6 +7,7 @@ var ko = require('knockout');
 var Activity = require('../components/Activity');
 var UpcomingAppointmentsSummary = require('../models/UpcomingAppointmentsSummary');
 var bookings = require('../data/bookings');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function MyAppointmentsActivity() {
 
@@ -14,15 +15,16 @@ var A = Activity.extend(function MyAppointmentsActivity() {
 
     this.viewModel = new ViewModel();
     this.accessLevel = this.app.UserType.loggedUser;
-    this.navBar = Activity.createSectionNavBar('My appointments');
+    this.navBar = Activity.createSectionNavBar(null);
+    this.title('My appointments');
 
     this.prepareShowErrorFor = function prepareShowErrorFor(title) {
         return function(err) {
-            this.app.modals.showError({
+            showError({
                 title: title,
                 error: err
             });
-        }.bind(this);
+        };
     }.bind(this);
 });
 

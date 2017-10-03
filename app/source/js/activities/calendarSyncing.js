@@ -7,6 +7,7 @@ var Activity = require('../components/Activity'),
     $ = require('jquery'),
     ko = require('knockout');
 var calendarSyncing = require('../data/calendarSyncing');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function CalendarSyncingActivity() {
 
@@ -18,6 +19,7 @@ var A = Activity.extend(function CalendarSyncingActivity() {
     this.navBar = Activity.createSubsectionNavBar('Calendar', {
         backLink: 'calendar' , helpLink: this.viewModel.helpLink
     });
+    this.title('Syncing your calendars');
 
     // Adding auto-select behavior to the export URL
     this.registerHandler({
@@ -33,11 +35,11 @@ var A = Activity.extend(function CalendarSyncingActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving calendar syncing settings.' : 'Error loading calendar syncing settings.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 

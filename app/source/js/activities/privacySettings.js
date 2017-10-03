@@ -8,6 +8,7 @@ var ko = require('knockout');
 var user = require('../data/userProfile').data;
 var onboarding = require('../data/onboarding');
 var privacySettings = require('../data/privacySettings');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function PrivacySettingsActivity() {
 
@@ -25,17 +26,18 @@ var A = Activity.extend(function PrivacySettingsActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+    this.title('Privacy settings');
 
     this.registerHandler({
         target: privacySettings,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving privacy settings.' : 'Error loading privacy settings.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 

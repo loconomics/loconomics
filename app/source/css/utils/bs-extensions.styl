@@ -9,22 +9,19 @@
 // Added a new semantic color, 'secondary',
 // create the button for that
 @import '../../../vendor/bootstrap/styl/mixins/buttons.styl'
+
+enhancedOutline() {
+    outline: $focusOutline;
+}
+lightOutline() {
+    outline: $hoverOutline;
+}
+
 $btn-secondary-color = #fff
 $btn-secondary-bg = lighten($brand-secondary, 10%)
 $btn-secondary-border = lighten($brand-secondary-dark, 10%)
 .btn-secondary {
     button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  &:hover,
-  &:focus {
-      color: inherit;
-      text-decoration: none;
-      outline: none;
-  }
 }
 
 .btn-default {
@@ -59,34 +56,6 @@ a {
 }
 
 /**
-    To solve the usability and between-scripts interaction problems
-    of Bootstrap toggle buttons for radio and checkboxes, is better
-    replace the use of data-toggle="buttons" on .btn-groups > input[type=radio|checkbox]
-    by this utility class .ut-noRadioCheck.
-    The Boostrap code for the toggle-buttons breaks when used with other
-    scripts like Knockout; using Knockout to keep the 'active' class applied
-    on the label (with .btn class) fix interaction and this class
-    removes the native UI for the radio and checkbox if unwanted.
-**/
-.ut-noRadioCheck {
-    input[type="radio"],
-    input[type="checkbox"] {
-        position: absolute;
-        left: -99999px;
-        // Bootstrap uses the deprecated 'clip' trick rather than a negative position.
-        clip: rect(0px, 0px, 0px, 0px);
-    }
-
-    // Fix bug in iOS: span elements inside the label (used normally to set text programatically)
-    // make that it receive the first click/touch, not reacting the label and not setting the underground
-    // radio input, needing a long-tap to get enabled; gets solved making that span elements not able
-    // to react to events
-    label span {
-        pointer-events: none;
-    }
-}
-
-/**
     Overwritting buttons and form controls default style:
 **/
 // Flatty, square
@@ -98,17 +67,53 @@ a {
 .btn {
     border-radius: 0; // Or 1px so looks square but gets a smooth rendering??
     font-weight: 700;
-    &:hover,
+}
+// Form elements including buttons, both
+// standard elements (without class) and specific Bootstrap classes
+// must have better outline
+button,
+input,
+textarea,
+select,
+.btn,
+.form-control,
+// We need to be especific of next types because they have being specified
+// that way at Bootstrap styles
+input[type="file"],
+input[type="radio"],
+input[type="checkbox"] {
+    &:active,
     &:focus {
-        text-decoration: none;
-        outline: none;
+        enhancedOutline();
+    }
+    &:hover {
+        lightOutline();
     }
 }
-.btn-link {
+
+.btn-icon-link {
+  color: $body-copy-color;
+  font-weight: normal;
+  border-radius: 0;
+  background: transparent;
+}
+
+a {
+  color: $brand-primary;
+  text-decoration: none;
+  &:hover {
+      color: $brand-primary-dark;
+      lightOutline();
+  }
+  &:focus {
+      color: $brand-primary-dark;
+      enhancedOutline();
+  }
+}
+
+h1 {
     &:hover,
-    &:focus,
-    &:active{
-        text-decoration: none;
+    &:focus {
         outline: none;
     }
 }
@@ -121,6 +126,24 @@ a {
     &:active{
         color: $brand-secondary-dark;
     }
+}
+// For some weird reason, Bootstrap removes outline of dropdown-toggle links
+// (we add html to increase specifity)
+html .dropdown-toggle:focus {
+    enhancedOutline();
+}
+
+.btn-edit {
+
+}
+// New class btn-inline, mostly when a btn-link is needed inside a text
+// It's correctly aligned (because it's vertical padding increase line height)
+// and horizontal padding removed (preventing that the link keeps separated
+// from the text)
+.btn-inline {
+    padding-left: 0;
+    padding-right: 0;
+    vertical-align: baseline;
 }
 
 // New class btn-inline, mostly when a btn-link is needed inside a text
@@ -311,25 +334,6 @@ ResetSectionTitleMargin() {
     }
 }
 
-.bootstrap-switch {
-    border-color: $gray;
-    border-radius: 0px;
-}
-
-.bootstrap-switch-handle-on
-&.bootstrap-switch-primary {
-    background-color: $brand-success;
-    color: white;
-    border-radius: 0px;
-}
-.bootstrap-switch-handle-off
-&.bootstrap-switch-default {
-    background-color: $gray-background;
-    border-radius: 0px;
-}
-.bootstrap-switch-label {
-    border-radius: 0px;
-}
 .checkbox,
 .radio {
   margin-left: 15px;

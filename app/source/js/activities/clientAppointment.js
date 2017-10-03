@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var EditClientBookingCardVM = require('../viewmodels/EditClientBookingCardVM');
 var clientAppointments = require('../data/clientAppointments');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ClientAppointmentActivity() {
 
@@ -17,6 +18,7 @@ var A = Activity.extend(function ClientAppointmentActivity() {
     this.navBar = Activity.createSubsectionNavBar('', {
         backLink: '/myAppointments' , helpLink: this.viewModel.helpLink
     });
+    this.title('Your appoiontments');
 });
 
 exports.init = A.init;
@@ -78,11 +80,11 @@ function ViewModel(app) {
                 .then(updateListIndex);
             })
             .catch(function(err) {
-                app.modals.showError({
+                showError({
                     title: 'Error loading the appointment',
                     error: err
                 });
-            }.bind(this));
+            });
         }
         else {
             this.isLoading(true);
@@ -106,7 +108,7 @@ function ViewModel(app) {
             }.bind(this))
             .catch(function(err) {
                 this.isLoading(false);
-                app.modals.showError({
+                showError({
                     title: 'Error loading appointments',
                     error: err
                 });

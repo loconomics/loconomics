@@ -8,6 +8,7 @@ var ko = require('knockout');
 var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
 var paymentAccount = require('../data/paymentAccount');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function PaymentAccountActivity() {
 
@@ -28,11 +29,11 @@ var A = Activity.extend(function PaymentAccountActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your payment account.' : 'Unable to load your payment account.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 

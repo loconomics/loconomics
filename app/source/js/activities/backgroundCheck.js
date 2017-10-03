@@ -16,6 +16,8 @@ var A = Activity.extend(function BackgroundCheckActivity() {
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
         backLink: '/marketplaceProfile'
     });
+    this.title(' Your background checks');
+
 });
 
 exports.init = A.init;

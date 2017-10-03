@@ -5,16 +5,14 @@
 'use strict';
 var $ = require('jquery');
 
-var
-    SearchResults = require('../models/SearchResults'),
-    ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    snapPoints = require('../utils/snapPoints');
-
+var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
+var Activity = require('../components/Activity');
+var snapPoints = require('../utils/snapPoints');
+var showAnnouncement = require('../modals/announcement').show;
 var googleMapReady = require('../utils/googleMapReady');
 require('geocomplete');
 var user = require('../data/userProfile').data;
-var search = require('../data/search');
+var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -23,7 +21,8 @@ var A = Activity.extend(function HomeActivity() {
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
-    this.viewModel = new ViewModel();
+    this.title('Find and schedule local services.');
+    this.viewModel = new ViewModel(this.app.shell);
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
     this.$header = $('.AppNav');
@@ -141,7 +140,7 @@ A.prototype.show = function show(state) {
         // And of course we must not attempt that ones that are already users :-)
         var showIt = !localStorage.sanFranciscoLaunchPopup && user.isAnonymous();
         if (showIt) {
-            this.app.modals.showAnnouncement({
+            showAnnouncement({
                 message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
                 primaryButtonText: 'I\'m a service professional',
                 primaryButtonLink: '#!/learnMoreProfessionals',
@@ -157,59 +156,33 @@ A.prototype.show = function show(state) {
     this.viewModel.searchTerm('');
 };
 
+function ViewModel(shell) {
+    // Inherits
+    MarketplaceSearchVM.call(this);
 
-function ViewModel() {
-    this.isLoading = ko.observable(false);
-    //create an observable variable to hold the search term
-    this.searchTerm = ko.observable();
-    // Coordinates
-    this.lat = ko.observable(search.DEFAULT_LOCATION.lat);
-    this.lng = ko.observable(search.DEFAULT_LOCATION.lng);
-    this.city = ko.observable();
-    this.searchDistance = ko.observable(search.DEFAULT_LOCATION.searchDistance);
-    //create an object named SearchResults to hold the search results returned from the API
-    this.searchResults = new SearchResults();
+    this.getJobTitleUrl = function(id) {
+        return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
+    }.bind(this);
+    this.getServiceProfessionalUrl = function(id) {
+        return '/profile/' + id;
+    }.bind(this);
+    this.getSearchCategoryUrl = function(categoryID) {
+        return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
+    }.bind(this);
 
-    this.loadData = function(searchTerm, lat, lng) {
-        this.isLoading(true);
-
-        return search.byTerm(searchTerm, lat, lng)
-        .then(function(searchResults) {
-            if(searchResults){
-                //update searchResults object with all the data from the API
-                this.searchResults.model.updateWith(searchResults, true);
-            }
-            else {
-                this.searchResults.model.reset();
-            }
-            this.isLoading(false);
-        }.bind(this))
-        .catch(function(/*err*/) {
-            this.isLoading(false);
-        }.bind(this));
-    };
-    //creates a handler function for the html search button (event)
-    this.search = function() {
-        //creates a variable for the search term to check to see when a user enters more than 2 characters, we'll auto-load the data.
-        var s = this.searchTerm();
-        if(s && s.length > 2) {
-            this.loadData(s, this.lat(), this.lng());
+    this.onSelect = function(textValue, data) {
+        if (!data) return;
+        if (data.jobTitleID) {
+            shell.go(this.getJobTitleUrl(data.jobTitleID()));
         }
-        else{
-            this.searchResults.model.reset();
+        else if (data.userID) {
+            shell.go(this.getServiceProfessionalUrl(data.userID()));
         }
-    };
-    //anything that happens in the computed function after a timeout of 60 seconds, run the code
-    ko.computed(function(){
-        this.search();
-    //add ",this" for ko.computed functions to give context, when the search term changes, only run this function every 60 milliseconds
-    },this).extend({ rateLimit: { method: 'notifyAtFixedRate', timeout: 300 } });
-
-    this.isSearchAutocompleteOpened = ko.pureComputed(function() {
-        return (
-            this.searchResults.jobTitles().length ||
-            this.searchResults.serviceProfessionals().length ||
-            this.searchResults.categories().length
-        );
-    }, this);
+        else if (data.categoryID) {
+            shell.go(this.getSearchCategoryUrl(data.categoryID()));
+        }
+        return {
+            value: ActionForValue.clear
+        };
+    }.bind(this);
 }

@@ -5,7 +5,6 @@ var $ = require('jquery');
 // Make jquery reference global, may still be needed by some shimed plugins
 window.$ = window.jQuery = $;
 require('detect_swipe');
-require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
@@ -17,6 +16,12 @@ require('./utils/Function.prototype._delayed');
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
+// Polyfills for HTML5 DOM additions, used in components with vanilla javascript
+// (avoiding jQuery, it has equivalent methods)
+require('../../vendor/polyfills/Element.prototype.matches');
+require('../../vendor/polyfills/Element.prototype.closest');
+// Polyfill requestAnimationFrame, required for Android 4-4.3.
+require('requestAnimationFrame');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');
@@ -26,6 +31,7 @@ var ga = require('./data/googleAnalytics');
 require('./locales/en-US-LC');
 
 var attachFastClick = require('fastclick').attach;
+var showError = require('./modals/error').show;
 
 /**
     A set of fixes/workarounds for Bootstrap behavior/plugins
@@ -74,8 +80,6 @@ var app = {
 
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
-
-    modals: require('./app.modals'),
 
     /**
         Just redirect the better place for current user and state.
@@ -252,9 +256,7 @@ var appInit = function appInit() {
 
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
-    require('./utils/bootstrapSwitchBinding').plugIn(ko);
     require('./utils/pressEnterBindingHandler').plugIn(ko);
-    require('./utils/fileUploaderBindingHandler').plugIn(ko);
 
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -339,11 +341,57 @@ var appInit = function appInit() {
     });
     // Catch errors on item/page loading, showing..
     app.shell.on('error', function(err) {
-        app.modals.showError({ error: err });
+        showError({ error: err });
     });
 
     // Scroll to element when clicking a usual fragment link (not a page link)
     var scrollToElement = require('./utils/scrollToElement');
+    /// API adition to 'shell'
+    /**
+     * @method app.shell.scrollTo Makes the viewport and positioning elements
+     * to scroll to the top of the element identified by the given ID.
+     * @param {string} idOrHash The element ID; a fragment URL can be passed in
+     * to, is just the ID starting with hash character.
+     * @param {boolean} giveFocus Flag to optionally request to focus the
+     * element, making it the active element in the page.
+     */
+    app.shell.scrollTo = function(idOrHash, giveFocus) {
+        // Clean-up id
+        var id = idOrHash.replace(/^#/, '');
+        var hash = '#' + id;
+        // Locate target
+        var target = $(hash);
+        if (target.length) {
+            // Smooth scrolling with animation
+            var opts = { animation: { duration: 300 } };
+            // Special case: if we are at the home page, the special, fixed header
+            // must be an offset to avoid the content to fall behind it
+            // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
+            // the header is still not-fixed -scroll still at the top).
+            var act = target.closest('[data-activity]');
+            var isHome = act.data('activity') === 'home';
+            if (isHome) {
+                opts.topOffset = act.children('header').outerHeight();
+            }
+            scrollToElement(target, opts);
+
+            if (giveFocus) {
+                // Move focus too
+                var noTabindex = !target.attr('tabindex');
+                if (noTabindex) {
+                    // Set-up to allow programatic focus
+                    target.attr('tabindex', -1);
+                }
+                setTimeout(function(){
+                    target.focus();
+                    // reset tabindex
+                    if (noTabindex) {
+                        target.removeAttr('tabindex');
+                    }
+                }, 100);
+            }
+        }
+    };
     app.shell.on('fragmentNavigation', function(href) {
         // Check link, avoiding empty links
         // (href comes with the initial hash ever, so empty is just '#')
@@ -356,22 +404,7 @@ var appInit = function appInit() {
             );
         }
         else {
-            // Locate target
-            var target = $(href);
-            if (target.length) {
-                // Smooth scrolling with animation
-                var opts = { animation: { duration: 300 } };
-                // Special case: if we are at the home page, the special, fixed header
-                // must be an offset to avoid the content to fall behind it
-                // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
-                // the header is still not-fixed -scroll still at the top).
-                var act = target.closest('[data-activity]');
-                var isHome = act.data('activity') === 'home';
-                if (isHome) {
-                    opts.topOffset = act.children('header').outerHeight();
-                }
-                scrollToElement(target, opts);
-            }
+            app.shell.scrollTo(href, true);
         }
     });
 
@@ -414,7 +447,7 @@ var appInit = function appInit() {
 
     // App init:
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });

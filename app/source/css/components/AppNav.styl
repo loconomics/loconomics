@@ -16,10 +16,17 @@ $AppNav-brandHeight = 38px;
     top: 0px;
     position: absolute;
     
+    * > ul {
+      list-style: none;
+    }
+    * > li {
+      text-decoration: none;
+    }
     // Logo
     .navbar-brand {
         float: none;
-        display: inline-block;
+        background-position: center;
+        display: block;
         padding: 12px;
     
         // magic number! For some reason, the only line-height
@@ -61,6 +68,7 @@ $AppNav-brandHeight = 38px;
     .App-menus {
         // General menus container
         background: white;
+        margin-bottom: 0px;
         
         // Individual menus set-up
         > .navbar-collapse {
@@ -123,6 +131,7 @@ $AppNav-brandHeight = 38px;
             border-bottom: 1px solid White;
             color: White;
             font-size: 1.1em;
+            display: block;
             
             .App-menus-header-user {
                 text-align: center;
@@ -149,11 +158,9 @@ $AppNav-brandHeight = 38px;
                     overflow: hidden;
                 }
             }
-            a {
-                &:hover,
-                &:focus {
-                  text-decoration: none;    
-              }
+            &:hover,
+            &:focus {
+                text-decoration: none;    
             }
         }
         
@@ -346,7 +353,7 @@ $AppNav-brandHeight = 38px;
             .SmartNavBar-btn {
                 pointer-events: auto;
             }
-            h1 {
+            h1, .navbar-brand {
                 opacity: 0;
                 pointer-events: none;
             }
@@ -376,6 +383,7 @@ $AppNav-brandHeight = 38px;
   margin-right: 15px;
   padding-left: 0px;
   .App-menus-group-header {
+    font-size: 17px;
     margin-top: 20px;
     color: $gray-light;
     text-align: left;

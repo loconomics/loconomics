@@ -64,7 +64,7 @@ After the tests have been built, you can also run (and debug) them in the browse
 2. Use the same file name as the module you are testing, but change the suffix to ``.spec.js``.
 
 ## Database
-We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access from [@iagosrl](mailto:iago@loconomics.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com).
+We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access from [iago@loconomics.com](mailto:iago@loconomics.com) or [joshua.danielson@loconomics.com](mailto:joshua.danielson@loconomics.com).
 
 # Supported Browsers and Platforms
 | Browser | Supported Version |

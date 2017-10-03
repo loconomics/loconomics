@@ -12,6 +12,7 @@ var ko = require('knockout'),
     countriesOptions = require('./CountriesOptions');
 var auth = require('../data/auth');
 var onboarding = require('../data/onboarding');
+var showError = require('../modals/error').show;
 
 /**
  * Enum with valid values for profile type.
@@ -55,7 +56,7 @@ var facebookMe = function() {
     }
 };
 
-function SignupVM(app) {
+function SignupVM() {
     //jshint maxstatements:55
 
     EventEmitter.call(this);
@@ -268,7 +269,7 @@ else
 
                 var msg = err && err.errorMessage;
                 // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
-                app.modals.showError({
+                showError({
                     title: 'There was an error signing-up',
                     error: err
                 });

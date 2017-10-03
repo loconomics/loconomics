@@ -3,8 +3,9 @@
 var ko = require('knockout');
 var clipboard = require('../utils/clipboard');
 var marketplaceProfile = require('../data/marketplaceProfile');
+var showError = require('../modals/error').show;
 
-module.exports = function MarketplaceProfileVM(app) {
+module.exports = function MarketplaceProfileVM() {
 
     var profileVersion = marketplaceProfile.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
@@ -50,16 +51,16 @@ module.exports = function MarketplaceProfileVM(app) {
         return this.customUrlProtocol() + this.customUrlDomainPrefix() + this.profile.serviceProfessionalProfileUrlSlug();
     }, this);
     // Copy Custom URL
-    this.copyCustomUrlButtonText = ko.observable('Copy');
+    this.copyCustomUrlButtonText = ko.observable("Copy your listing's URL");
     this.profile.serviceProfessionalProfileUrlSlug.subscribe(function() {
         // On any change, restore copy label
-        this.copyCustomUrlButtonText('Copy');
+        this.copyCustomUrlButtonText("Copy your listing's URL");
     }.bind(this));
     this.copyCustomUrl = function() {
         var url = this.customUrlDraft();
         var errMsg = clipboard.copy(url);
         if (errMsg) {
-            app.modals.showError({ error: errMsg });
+            showError({ error: errMsg });
         }
         else {
             this.copyCustomUrlButtonText('Copied!');

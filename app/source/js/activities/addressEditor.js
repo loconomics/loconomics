@@ -21,6 +21,8 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -31,6 +33,7 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Locations', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
+    this.title('Edit location');
 
     // On changing jobTitleID:
     // - load job title name
@@ -45,11 +48,11 @@ var A = Activity.extend(function AddressEditorActivity() {
                     this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
-                }.bind(this));
+                });
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
@@ -123,25 +126,27 @@ A.prototype.show = function show(options) {
             if (addressVersion) {
                 this.viewModel.addressVersion(addressVersion);
 
-                var address = addressVersion.original,
-                    header = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Place of work' : 'Edit location';
+                var address = addressVersion.original;
+                var title = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Edit this place of work' : 'Edit this service area';
+                var formInstructions = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'This is an address of a location where clients come to receive your ' : "This is an area where you are willing to go to a client's home or business to perform your ";
 
-                this.viewModel.header(header);
+                this.title(title);
+                this.viewModel.formInstructions(formInstructions);
             }
             else {
                 this.viewModel.addressVersion(null);
-                this.viewModel.header('Unknown or deleted location');
+                this.title('Unknown or deleted location');
+                this.viewModel.formInstructions('');
             }
 
-            this.viewModel.subheader('');
             this.viewModel.postalCodeVM.onFormLoaded();
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });
-        }.bind(this));
+        });
     }
     else {
         // New address
@@ -149,21 +154,23 @@ A.prototype.show = function show(options) {
             jobTitleID: jobTitleID
         }));
 
-        this.viewModel.subheader('');
+        this.viewModel.formInstructions('');
         this.viewModel.postalCodeVM.onFormLoaded();
 
         switch (serviceType) {
             case 'serviceArea':
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
-                this.viewModel.header('Add an area where you work');
-                this.viewModel.subheader('Clients will be able to book your offerings at locations within this area.');
+                this.title('Add an area where you work');
+                this.viewModel.titleIcon('ion-pinpoint');
+                this.viewModel.formInstructions("Enter a zip code and a distance from that zip code to create an area where you are willing to go to a client's home or business to perform your ");
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a place where you work');
-                this.viewModel.subheader('Clients will be able to book your offerings at this location.');
+                this.title('Add a place where you work');
+                this.viewModel.titleIcon('ion-ios-location-outline');
+                this.viewModel.formInstructions('Enter the address of the location where clients come to receive your ');
                 break;
             case 'clientLocation':
                 // A service professional is adding a location to perform a service that belongs
@@ -171,12 +178,15 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().userID(clientUserID);
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a client location');
+                this.title('Add a client location');
+                this.viewModel.titleIcon('ion-ios-location-outline');
+                this.viewModel.formInstructions("Enter your client's address where you'll perform your ");
                 break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a location');
+                this.title('Add a location for your ');
+                this.viewModel.titleIcon('ion-ios-location-outline');
                 break;
         }
     }
@@ -188,8 +198,8 @@ function ViewModel(app) {
 
     this.isInOnboarding = onboarding.inProgress;
 
-    this.header = ko.observable('Edit location');
-    this.subheader = ko.observable('');
+    this.titleIcon = ko.observable('ion-ios-location-outline');
+    this.formInstructions = ko.observable('');
     // List of possible error messages registered
     // by name
     this.errorMessages = {
@@ -280,7 +290,7 @@ function ViewModel(app) {
                 this.onSave(serverData.addressID);
             }.bind(this))
             .catch(function(err) {
-                app.modals.showError({
+                showError({
                     title: 'There was an error while saving.',
                     error: err
                 });
@@ -290,7 +300,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.confirmRemoval = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete location',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
@@ -310,7 +320,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while deleting.',
                 error: err
             });

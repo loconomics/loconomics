@@ -3,19 +3,15 @@
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <h1 class="hidden-xs hidden-sm">Build &amp; maintain your client base</h1>
+            <h1 data-bind="text: title"></h1>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">Client manager</h2>
-                <ul class="TilesList">
-                    <li>
-                        <a class="LinkTile" href="/clients">
-                            <div class="Tile-content"><p>My clients</p></div>
-                            <div class="Tile-icon">
-                                <span class="fa ion ion-ios-arrow-right"></span>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <h2 class="SectionTitle">Your clients</h2>
+                <a class="LinkTile" href="/clients">
+                    <div class="Tile-content"><p>Current clients</p></div>
+                    <div class="Tile-icon">
+                    <span class="fa ion ion-ios-arrow-right"></span>
+                    </div>
+                </a>
                 <a class="CompactLinkTile" href="/clientEditor">
                     <div class="Tile-content text-muted">Add a new client</div>
                     <div class="Tile-icon text-muted">
@@ -23,7 +19,7 @@
                     </div>
                 </a>
                 <app-feedback-entry class="visible-xs visible-sm" params="section: 'cms'"></app-feedback-entry>
-            </div>   
+            </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                <app-inline-side-menu params="vocElement: 'cms'"></app-inline-side-menu>
             </div>

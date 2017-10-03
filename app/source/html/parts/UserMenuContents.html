@@ -1,14 +1,11 @@
-<li>
-    <h4 class="App-menus-group-header" data-bind="visible: isAnonymous">WELCOME</h4>
-</li>
-<li data-bind="visible: !isApp(), css: cssIfActive('downloadApp')" class="go-download">
-    <a href="/downloadApp">Download the app</a>
+<li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
+    <a href="/signup/client">Sign up</a>
 </li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('login')">
     <a href="/login">Log in</a>
 </li>
-<li data-bind="visible: isAnonymous, css: cssIfActive('signup')">
-    <a href="/signup/client">Sign up</a>
+<li data-bind="visible: !isApp(), css: cssIfActive('downloadApp')" class="go-download">
+    <a href="/downloadApp">Download the app</a>
 </li>
 <li data-bind="visible: isAnonymous, css: cssIfActive('home-hiw')">
     <a href="/home/home-hiw">How it works</a>
@@ -26,9 +23,7 @@
     <a data-bind="attr: { href: isInOnboarding() ? null : '/dashboard' }"><i class="fa fa-fw ion-stats-bars" aria-hidden="true"></i> Dashboard</a>
 </li>
 <li class="divider" data-bind="visible: !isServiceProfessional() && !isAnonymous()"></li>
-<li>
-    <h4 class="App-menus-group-header" data-bind="visible: isServiceProfessional">QUICK LINKS</h4>
-</li>
+<h2 class="App-menus-group-header" data-bind="visible: isServiceProfessional">QUICK LINKS</h2>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() == 'calendar' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/calendar' }"><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Calendar</a>
 </li>
@@ -58,9 +53,7 @@
 <li data-bind="visible: !isAnonymous() && !isServiceProfessional(), css: cssIfActive('help')" class="go-help">
     <a href="/help/categories/200474305-resources-for-clients"><i class="fa fa-fw ion-help-circled" aria-hidden="true"></i> Help</a>
 </li>
-<li>
-    <h4 class="App-menus-group-header" data-bind="visible: !isAnonymous()">FIND SERVICES</h4>
-</li>
+<h2 class="App-menus-group-header" data-bind="visible: !isAnonymous()">FIND SERVICES</h2>
 <li data-bind="visible: !isAnonymous(), css: cssIfActive('home')" class="go-marketplace">
     <a href="/home"><i class="fa fa-fw ion-search" aria-hidden="true"></i> Search marketplace</a>
 </li>

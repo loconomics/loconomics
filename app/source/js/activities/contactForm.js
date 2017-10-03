@@ -7,6 +7,7 @@ var Activity = require('../components/Activity'),
     VocElementEnum = require('../models/VocElementEnum');
 var onboarding = require('../data/onboarding');
 var feedback = require('../data/feedback');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ContactFormActivity() {
 
@@ -18,6 +19,7 @@ var A = Activity.extend(function ContactFormActivity() {
 
     this.navBar = Activity.createSubsectionNavBar('Back');
     this.navBar.rightAction(null);
+    this.title('Contact us');
 });
 
 exports.init = A.init;
@@ -95,7 +97,7 @@ function ViewModel(app) {
             this.message('');
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error sending your feedback',
                 error: err
             });

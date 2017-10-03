@@ -19,6 +19,10 @@ require('./utils/Function.prototype._delayed');
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
+// Polyfills for HTML5 DOM additions, used in components with vanilla javascript
+// (avoiding jQuery, it has equivalent methods)
+require('../../vendor/polyfills/Element.prototype.matches');
+require('../../vendor/polyfills/Element.prototype.closest');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 
@@ -30,13 +34,13 @@ var attachFastClick = require('fastclick').attach;
 /**
     App static class
 **/
-var app = {
-    modals: require('./app.modals'),
-};
+var app = {};
 
 /** Continue app creation with things that need a reference to the app **/
 
 require('./app-components').registerAll(app);
+
+var showError = require('./modals/error').show;
 
 /** App Init **/
 var appInit = function appInit() {
@@ -93,9 +97,8 @@ var appInit = function appInit() {
     };
     $(document).on('click', '[href^=#]', fragmentNavigationHandler);
 
-
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });

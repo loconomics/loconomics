@@ -1,0 +1,27 @@
+/**
+    IconContentItem: one line tile with text and an icon. Used for simple links or buttons.
+**/
+@import '../../components/Item.styl'
+
+.IconContentItem {
+    Item();
+    $height-em = 1.5em;
+    Item-addContent($height-em);
+    background-color: white;
+    &:hover {
+        outline-offset: -2px;
+    }
+    .Item-content {
+        width: 90%;
+    }
+    i {
+        float: left;
+        height: $height;
+        width: 10%;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 1.5em;
+        line-height: $height;
+    }
+}

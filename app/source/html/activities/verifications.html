@@ -14,9 +14,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Verifications</span>
-                </h2>
+                <h1 data-bind="text: title"></h1>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
@@ -39,12 +37,12 @@
                 <!-- TODO Implement verification actions
                 <div class="TilesList">
                 <button type="button" class="CompactLinkTile"
-                data-bind="popover: { content: facebookInfo, trigger: 'focus', container: '[data-activity=verifications]', placement: 'bottom', html: true }">
+                data-bind="popover: { content: facebookInfo, container: '[data-activity=verifications]', placement: 'bottom', html: true }">
                 <div class="Tile-content text-muted">Connect with Facebook</div>
                 <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
                 </button>
                 <button type="button" class="CompactLinkTile"
-                data-bind="popover: { content: emailInfo, trigger: 'focus', container: '[data-activity=verifications]', placement: 'bottom', html: true }">
+                data-bind="popover: { content: emailInfo, container: '[data-activity=verifications]', placement: 'bottom', html: true }">
                 <div class="Tile-content text-muted">Confirm e-mail address</div>
                 <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
                 </button>

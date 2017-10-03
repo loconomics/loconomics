@@ -7,6 +7,7 @@ var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
 var onboarding = require('../data/onboarding');
 var messaging = require('../data/messaging');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ConversationActivity() {
 
@@ -23,6 +24,7 @@ var A = Activity.extend(function ConversationActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
+    this.title('Conversation history');
 });
 
 exports.init = A.init;
@@ -55,7 +57,7 @@ A.prototype.show = function show(state) {
     if (threadID) {
         this.viewModel.thread.sync(threadID)
         .catch(function(err) {
-            this.app.modals.showError({
+            showError({
                 title: 'Error loading conversation',
                 error: err
             }).then(function() {
@@ -64,7 +66,7 @@ A.prototype.show = function show(state) {
         }.bind(this));
     }
     else {
-        this.app.modals.showError({
+        showError({
             title: 'Conversation Not Found'
         }).then(function() {
             this.app.shell.goBack();

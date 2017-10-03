@@ -7,12 +7,14 @@ var ko = require('knockout'),
     $ = require('jquery'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 var moment = require('moment-timezone');
+var showTimePicker = require('../modals/timePicker').show;
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
 
 var timeZoneList = require('../utils/timeZoneList');
 var availability = require('../data/availability');
+var showError = require('../modals/error').show;
 
 function DatetimePickerVM(app, element) {
     //jshint maxstatements: 40
@@ -161,7 +163,7 @@ function DatetimePickerVM(app, element) {
     }.bind(this);
 
     this.showTimePicker = function() {
-        app.modals.showTimePicker({
+        showTimePicker({
             title: 'Book an unavailable time',
             selectedTime: null,
             unsetLabel: 'Cancel'
@@ -208,11 +210,11 @@ function DatetimePickerVM(app, element) {
             }));*/
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error loading availability',
                 error: err
             });
-        }.bind(this))
+        })
         .then(function() {
             // Finally
             this.isLoading(false);

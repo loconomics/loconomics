@@ -3,7 +3,7 @@
     <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li data-bind="template: { name: 'desktop-back-button-template', data: navBar.leftAction() }"></li>
@@ -11,54 +11,45 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                <div class="OnboardingValueProp" data-bind="visible: showSupportingText">
-                    <div class="Icon-container">
-                        <span class="Tile-icon fa ion ion-ios-location-outline" aria-hidden="true"></span>
-                    </div>
-                    <div class="Tile-content">
-                        <h2>Where do you work as a <span data-bind="text: jobTitleName"></span>?</h2>
-                        <p>Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
-                    </div>
-                </div>
-                <h2 class="SectionTitle" data-bind="visible: headerText, text: headerText"></h2>
+                <h1><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <p data-bind="visible: showSupportingText">Tell clients where you're able to work. Do you work in specific neighborhoods? From an office or a studio? All of the above?</p>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
                 </div>
                 <app-job-titles-list params="jobTitles: jobTitles.userJobProfile, selectJobTitle: jobTitles.selectJobTitle" data-bind="visible: jobTitleID() === 0"></app-job-titles-list>
                 <div id="addressesListView">
-                    <!-- ko if: isInOnboarding --><div data-bind="template: { name: 'service-addresses-open-list-template', data: serviceAddresses }"></div><!-- /ko -->
-                    <!-- ko ifnot: isInOnboarding --><div data-bind="template: { name: 'service-addresses-template', data: serviceAddresses }"></div><!-- /ko -->
+                    <!-- ko if: isInOnboarding --><div data-bind="template: { name: 'address-open-list-template', data: serviceAddresses }"></div><!-- /ko -->
+                    <!-- ko ifnot: isInOnboarding --><div data-bind="template: { name: 'addresses-list-template', data: serviceAddresses }"></div><!-- /ko -->
                 </div>
-
                 <h2 class="SectionTitle" data-bind="visible: addMoreHeaderText, text: addMoreHeaderText"></h2>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
-                    <button type="button" class="CompactLinkTile" data-bind="click: addServiceLocation">
-                        <div class="Tile-content text-muted" data-bind="text: addLocationLabel"></div>
-                        <div class="Tile-icon text-muted">
-                            <span class="fa ion ion-plus"></span>
+                    <a class="IconContentItem" data-bind="attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceLocation' }">
+                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                        <div class="Item-content">
+                            <p>Add a new service location</p>
                         </div>
-                    </button>
-                    <button type="button" class="CompactLinkTile" data-bind="click: addServiceArea, visible: !serviceAddresses.isSelectionMode()">
-                        <div class="Tile-content text-muted" data-bind="text: addAreaLabel"></div>
-                        <div class="Tile-icon text-muted">
-                            <span class="fa ion ion-plus"></span>
+                    </a>
+                    <a class="IconContentItem" data-bind="visible: !serviceAddresses.isSelectionMode(),
+                        attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceArea' }">
+                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                        <div class="Item-content">
+                            <p>Add a new service area</p>
                         </div>
-                    </button>
+                    </a>
                 </div>
-
                 <div data-bind="visible: clientAddresses.isSelectionMode() && clientAddresses.hasAddresses()">
                     <h2 class="SectionTitle">Select a client location</h2>
-                    <div data-bind="template: { name: 'service-addresses-template', data: clientAddresses }"></div>
+                    <div data-bind="template: { name: 'addresses-list-template', data: clientAddresses }"></div>
                 </div>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID()">
-                    <button type="button" class="CompactLinkTile" data-bind="click: addClientLocation, visible: serviceAddresses.isSelectionMode() && clientUserID()">
-                        <div class="Tile-content text-muted">Add a client location</div>
-                        <div class="Tile-icon text-muted">
-                            <span class="fa ion ion-plus"></span>
+                    <a class="IconContentItem" data-bind="visible: serviceAddresses.isSelectionMode() && clientUserID(),
+                        attr: { href: '#!addressEditor/service/' +jobTitleID() + '/clientLocation/' + clientUserID() }">
+                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                        <div class="Item-content">
+                            <p>Add a new location for this client</p>
                         </div>
-                    </button>
+                    </a>
                 </div>
-
                 <div class="isolated inset" data-bind="visible: onboardingNextReady() && jobTitleID() !== 0">
                     <button type="button" class="btn btn-primary btn-block" data-bind="click: goNext">Save and continue</button>
                 </div>
@@ -68,4 +59,4 @@
             </div>
         </div>
     </div>
-</div>    
+</div>
