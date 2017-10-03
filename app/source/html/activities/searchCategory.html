@@ -26,7 +26,7 @@
         </tab-list>
     </div>
     <div class="SearchResults">
-        <div data-bind="attr: { id: 'searchCategory-' + categoryID() }">
+        <div data-bind="attr: { id: 'searchCategory-' + categoryID(), 'aria-busy': isLoading }">
             <div data-bind="with: categorySearchResult">
                 <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
                     <div class="SearchResultsBackground-text">
