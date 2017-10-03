@@ -1,11 +1,11 @@
 /**
  * Displays info about the user set-up for payment 'direct deposit'.
- * @module kocomponents/payment-direct-deposit-viewer
+ * @module kocomponents/payout-direct-deposit-viewer
  */
 'use strict';
 
-var TAG_NAME = 'payment-direct-deposit-viewer';
-var template = require('../../html/kocomponents/payment-direct-deposit-viewer.html');
+var TAG_NAME = 'payout-direct-deposit-viewer';
+var template = require('./template.html');
 
 var ko = require('knockout');
 

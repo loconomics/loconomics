@@ -5,7 +5,7 @@
 
 var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
-require('../kocomponents/payment-preference-view');
+require('../kocomponents/payout/preference-view');
 
 var A = Activity.extend(function PaymentPreferenceActivity() {
 

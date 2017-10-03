@@ -1,15 +1,15 @@
 /**
  * Lets edit info about the user set-up for payment 'direct deposit'.
- * @module kocomponents/payment-direct-deposit-editor
+ * @module kocomponents/payout-direct-deposit-editor
  */
 'use strict';
 
-var TAG_NAME = 'payment-direct-deposit-editor';
-var template = require('../../html/kocomponents/payment-direct-deposit-editor.html');
+var TAG_NAME = 'payout-direct-deposit-editor';
+var template = require('./template.html');
 
 var ko = require('knockout');
-var PostalCodeVM = require('../viewmodels/PostalCode');
-var paymentAccount = require('../data/paymentAccount');
+var PostalCodeVM = require('../../../viewmodels/PostalCode');
+var paymentAccount = require('../../../data/paymentAccount');
 
 /**
  *

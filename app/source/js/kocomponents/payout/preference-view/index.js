@@ -1,21 +1,21 @@
 /**
  * A view showing the user payment preference and letting him to select
  * and set-up a preference option.
- * @module kocomponents/payment-preferences-view
+ * @module kocomponents/payout-preferences-view
  */
 'use strict';
 
-var TAG_NAME = 'payment-preference-view';
-var template = require('../../html/kocomponents/payment-preference-view.html');
+var TAG_NAME = 'payout-preference-view';
+var template = require('./template.html');
 
 var ko = require('knockout');
-require('./payment-preferences-list');
-require('./payment-direct-deposit-viewer');
-require('./payment-direct-deposit-editor');
-require('./payment-venmo-viewer');
-require('./payment-venmo-editor');
-var paymentAccount = require('../data/paymentAccount');
-var PaymentPreferenceOption = require('../models/PaymentPreferenceOption');
+require('../preferences-list');
+require('../direct-deposit-viewer');
+require('../direct-deposit-editor');
+require('../venmo-viewer');
+require('../venmo-editor');
+var paymentAccount = require('../../../data/paymentAccount');
+var PaymentPreferenceOption = require('../../../models/PaymentPreferenceOption');
 var AvailableOptions = PaymentPreferenceOption.AvailableOptions;
 
 /**

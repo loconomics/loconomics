@@ -1,21 +1,21 @@
 <div data-bind="if: isReady">
     <div data-bind="if: isSelectorOpened">
         <div class="isolated top-only"><h2 class="SectionTitle">Choose a payout preference</h2></div>
-        <payment-preferences-list params="selectItem: selectPreference"></payment-preferences-list>
+        <payout-preferences-list params="selectItem: selectPreference"></payout-preferences-list>
     </div>
     <!-- ko if:isDirectDepositViewerOpened -->
-    <payment-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payment-direct-deposit-viewer>
+    <payout-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payout-direct-deposit-viewer>
     <!-- /ko -->
     <!-- ko if:isVenmoViewerOpened -->
-    <payment-venmo-viewer params="data: paymentOptionData, requestEdit: openVenmoEditor, isEditorOpened: isVenmoEditorOpened()"></payment-venmo-viewer>
+    <payout-venmo-viewer params="data: paymentOptionData, requestEdit: openVenmoEditor, isEditorOpened: isVenmoEditorOpened()"></payout-venmo-viewer>
     <!-- /ko -->
 
     <div class="PaddedBox-xs-only PaddedBox-sm-only" data-bind="if: editorPreferenceID()">
         <!-- ko if:isDirectDepositEditorOpened -->
-        <payment-direct-deposit-editor params="data: getDataForEditor()"></payment-direct-deposit-editor>
+        <payout-direct-deposit-editor params="data: getDataForEditor()"></payout-direct-deposit-editor>
         <!-- /ko -->
         <!-- ko if:isVenmoEditorOpened -->
-        <payment-venmo-editor params="data: getDataForEditor()"></payment-venmo-editor>
+        <payout-venmo-editor params="data: getDataForEditor()"></payout-venmo-editor>
         <!-- /ko -->
         <div class="LightForm">
             <button type="button" class="btn btn-secondary btn-block" data-bind="click: openSelector">

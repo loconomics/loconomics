@@ -1,11 +1,11 @@
 /**
  * Displays info about the user set-up for payment 'venmo'.
- * @module kocomponents/payment-venmo-viewer
+ * @module kocomponents/payout-venmo-viewer
  */
 'use strict';
 
-var TAG_NAME = 'payment-venmo-viewer';
-var template = require('../../html/kocomponents/payment-venmo-viewer.html');
+var TAG_NAME = 'payout-venmo-viewer';
+var template = require('./template.html');
 
 var ko = require('knockout');
 

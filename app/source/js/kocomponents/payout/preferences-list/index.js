@@ -1,14 +1,14 @@
 /**
  * A selectable list of available payment preferences options.
- * @module kocomponents/payment-preferences-list
+ * @module kocomponents/payout-preferences-list
  */
 'use strict';
 
-var TAG_NAME = 'payment-preferences-list';
-var template = require('../../html/kocomponents/payment-preferences-list.html');
+var TAG_NAME = 'payout-preferences-list';
+var template = require('./template.html');
 
 var ko = require('knockout');
-var PaymentPreferenceOption = require('../models/PaymentPreferenceOption');
+var PaymentPreferenceOption = require('../../../models/PaymentPreferenceOption');
 
 /**
  *

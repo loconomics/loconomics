@@ -1,15 +1,15 @@
 /**
  * Lets edit info about the user set-up for payment 'venmo'.
- * @module kocomponents/payment-venmo-editor
+ * @module kocomponents/payout-venmo-editor
  */
 'use strict';
 
-var TAG_NAME = 'payment-venmo-editor';
-var template = require('../../html/kocomponents/payment-venmo-editor.html');
+var TAG_NAME = 'payout-venmo-editor';
+var template = require('./template.html');
 
 var ko = require('knockout');
-var PostalCodeVM = require('../viewmodels/PostalCode');
-var paymentAccount = require('../data/paymentAccount');
+var PostalCodeVM = require('../../../viewmodels/PostalCode');
+var paymentAccount = require('../../../data/paymentAccount');
 
 /**
  *
