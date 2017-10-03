@@ -10,41 +10,35 @@ var numeral = require('numeral');
 var Appointment = require('../models/Appointment');
 var ko = require('knockout');
 var moment = require('moment');
+var user = require('../data/userProfile').data;
 
 function TimeSlotViewModel(params) {
     /*jshint maxcomplexity:9*/
 
     this.startTime = getObservable(params.startTime || null);
     this.endTime = getObservable(params.endTime || null);
-    this.subject = getObservable(params.subject || null);
-    this.description = getObservable(params.description || null);
+    this.summary = getObservable(params.summary || null);
     this.link = getObservable(params.link || null);
-    this.actionIcon = getObservable(params.actionIcon || null);
-    this.actionText = getObservable(params.actionText || null);
+    this.price = getObservable(params.price || null);
     this.classNames = getObservable(params.classNames || null);
-    this.apt = getObservable(params.apt);
+    this.apt = getObservable(params.apt || null);
 
     this.ariaLabel = ko.pureComputed(function(){
         var apt = this.apt();
         if (!apt) return '';
-
         var start = moment(this.startTime()).format('h:mma');
         var end = moment(this.endTime()).format('h:mma');
         var clickAction = '';
         if (Appointment.specialIds.free === apt.id()) {
-            clickAction = ' Click to add a new booking or calendar block';
+            clickAction = '. Click to add a new booking or calendar block.';
         }
-        else if (apt.id() > 0) {
-            // Is an event: a booking or any other type like calendar block
-            // or imported event
-            if (apt.sourceBooking()) {
-                clickAction = ' Click to see booking details';
-            }
-            else {
-                clickAction = ' Click to see event details';
-            }
+        else if (apt.id() > 0 && apt.sourceBooking().isRequest()) {
+            clickAction = '. Click to respond to request.';
         }
-        return this.subject() + ' from ' + start + ' until ' + end + clickAction;
+        else {
+            clickAction = '. Click to view details and make changes.';
+        }
+        return this.summary() + ' from ' + start + ' until ' + end + clickAction;
     }, this);
 }
 
@@ -55,7 +49,7 @@ module.exports = TimeSlotViewModel;
     a TimeSlot instance following UI criteria for preset values/setup.
 **/
 TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
-    /*jshint maxcomplexity:10 */
+    /*jshint maxcomplexity:12 */
     
     // Commented the option to detect and not link unavail slots:
     //var unavail = Appointment.specialIds.unavailable === apt.id();
@@ -71,30 +65,49 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
 
     var classNames = null;
     if (Appointment.specialIds.free === apt.id()) {
-        classNames = 'Tile--tag-gray-lighter ';
+        classNames = 'Item--tag-gray-lighter ';
     }
     else if (apt.id() > 0 && apt.sourceBooking()) {
         if (apt.sourceBooking().isRequest())
-            classNames = 'Tile--tag-warning ';
+            classNames = 'Item--tag-warning ';
         else
-            classNames = 'Tile--tag-primary ';
-
-        classNames += 'ItemAddonTile--largerContent ';
+            classNames = 'Item--tag-primary ';
     }
     else {
         // any block event, preparation time slots
-        classNames = 'Tile--tag-danger ';
+        classNames = 'Item--tag-danger ';
     }
 
+    var timeSlotSummary = '';
+    if (Appointment.specialIds.free === apt.id()) {
+        timeSlotSummary = apt.summary();
+    }
+    else if (apt.id() > 0 && apt.sourceBooking()) {
+        var clientID = apt.sourceBooking().clientUserID();
+        if (clientID == user.userID()) {
+            if (apt.sourceBooking().isRequest())
+                timeSlotSummary = 'Request for ' + apt.summary() + ' by ' + ' professional';
+            else
+                timeSlotSummary = apt.summary() + ' by ' + ' professional';
+        }
+        else {
+            if (apt.sourceBooking().isRequest())
+                timeSlotSummary = 'Request for ' + apt.summary() + ' by ' + ' client';
+            else
+                timeSlotSummary = apt.summary() + ' for ' + ' client';
+        }  
+    }
+    else {
+        // any block event, preparation time slots
+        timeSlotSummary = apt.summary();
+    }
     return new TimeSlotViewModel({
         startTime: apt.startTime,
         endTime: apt.endTime,
-        subject: apt.summary,
-        description: apt.description,
+        summary: timeSlotSummary,
         link: link,
         apt: apt,
-        actionIcon: (apt.sourceBooking() ? null : apt.sourceEvent() ? 'fa ion ion-ios-arrow-right' : !apt.id() ? 'fa ion ion-plus' : null),
-        actionText: (
+        price: (
             apt.sourceBooking() && 
             apt.sourceBooking().pricingSummary() ? 
             numeral(apt.sourceBooking().pricingSummary().totalPrice() || 0).format('$0.00') :
