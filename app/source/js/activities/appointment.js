@@ -1,18 +1,16 @@
 /** Calendar activity **/
 'use strict';
 
-var $ = require('jquery'),
-    moment = require('moment'),
-    Appointment = require('../models/Appointment'),
-    ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    AppointmentCardViewModel = require('../viewmodels/AppointmentCard'),
-    Listener = require('../utils/EventEmitterListener');
-
-var calendar = require('../data/calendar');
 require('../components/DatePicker');
+var $ = require('jquery');
+var moment = require('moment');
+var Appointment = require('../models/Appointment');
+var ko = require('knockout');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
+var AppointmentCardViewModel = require('../viewmodels/AppointmentCard');
+var Listener = require('../utils/EventEmitterListener');
+var calendar = require('../data/calendar');
 var showError = require('../modals/error').show;
-
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function AppointmentActivity() {

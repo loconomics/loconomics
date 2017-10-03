@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    moment = require('moment'),
-    ko = require('knockout');
+var Model = require('./Model');
+var moment = require('moment');
+var ko = require('knockout');
 
 function TimeRange(values) {
     Model(this);
