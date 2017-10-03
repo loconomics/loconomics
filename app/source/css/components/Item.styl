@@ -11,14 +11,14 @@
 
 $Item-hgap = $grid-gap;
 
-Item() {
+Item($height-em = 3.5em) {
     // The tile can be a link, a button
     // or any other element, so ensure
     // some details and resets
-    color: $body-copy-color;
     display: table;
     vertical-align: middle;
     text-decoration: none !important;
+    color: inherit;
     box-sizing: border-box;
     width: 100%;
     border: none;
@@ -26,11 +26,13 @@ Item() {
     text-align: left;
     position: relative;
     padding: 1em;
-}
-
-// Add style for a Item-content child with multiline and single-line
-// sub-childs with common styles and the given number of lines as height limit.
-Item-addContent($height-em) {
+    background-color: white;
+    &:hover {
+        outline-offset: -2px;
+    }
+    label {
+        font-weight: normal;
+    }
     .Item-content {
         white-space: normal;
         word-wrap: break-word;
@@ -54,6 +56,40 @@ Item-addContent($height-em) {
                 //@media $mediaMaxXs {
         @media (max-width: 520px) {
             margin: 0 $grid-gap;
+        }
+    }
+    a,
+    button,
+    .Item-action {
+        width: 5%;
+        height: $height-em;
+        min-width: 48px;
+        min-height: 48px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 1.5em;
+        }
+    }
+    .Item-icon {
+        width: 5%;
+        height: $height-em;
+        min-width: 48px;
+        min-height: 48px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 2em;
         }
     }
 }

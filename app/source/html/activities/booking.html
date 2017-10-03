@@ -86,7 +86,7 @@
                                 <ul class="TilesList" data-bind="foreach: serviceAddresses.serviceAreas">
                                     <li>
                                         <a class="IconContentItem" href="#" data-bind="click: $parent.addAddress">
-                                            <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                            <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                                             <div class="Item-content">
                                                 <p>Add your location within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: postalCode"></span></p>
                                             </div>
@@ -161,7 +161,7 @@
                                 </li>
                                 <li data-bind="visible: !(booking().serviceDate() && booking().serviceDate().startTime())">
                                     <button class="IconContentItem" type="button" data-bind="click: pickServiceDate">
-                                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                        <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                                         <div class="Item-content">
                                             <p>Select a day and time</p>
                                         </div>
@@ -180,7 +180,7 @@
                                 </li>
                                 <li data-bind="visible: booking().serviceDate() && !(booking().alternativeDate1() && booking().alternativeDate1().startTime())">
                                     <button class="IconContentItem" type="button" data-bind="click: pickAlternativeDate1">
-                                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                        <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                                         <div class="Item-content">
                                             <p>Select a second day and time</p>
                                         </div>
@@ -199,7 +199,7 @@
                                 </li>
                                 <li data-bind="visible: booking().serviceDate() && booking().alternativeDate1() && !(booking().alternativeDate2() && booking().alternativeDate2().startTime())">
                                     <button class="IconContentItem" type="button" data-bind="click: pickAlternativeDate2">
-                                        <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                                        <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                                         <div class="Item-content">
                                             <p>Select a third day and time</p>
                                         </div>
