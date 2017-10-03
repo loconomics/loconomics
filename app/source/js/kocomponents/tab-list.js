@@ -108,19 +108,25 @@ var create = function(params, componentInfo) {
          */
         var disableActiveTab = function() {
             var prevTab = $tabLinks
-            .filter('.' + ACTIVE_TAB_CLASS)
+            // At some dynamic cases, with active observable having a delayed
+            // writting because depends on an async task (happened at
+            // searchCategory) seems that the active element is not detected
+            // correctly, so rather than filter will apply to all tabs.
+            //.filter('.' + ACTIVE_TAB_CLASS)
             .removeClass(ACTIVE_TAB_CLASS)
             .attr('aria-selected', null)
             .attr('tabindex', '-1');
             prevTab.parent('li')
-            .removeClass(ACTIVE_TAB_CLASS);
-            var prevUrl = prevTab.attr('href');
-            if (prevUrl) {
-                $('#' + escapeSelector(prevUrl.substr(1)))
-                .removeClass(ACTIVE_TAB_CLASS)
-                .attr('aria-selected', null)
-                .hide();
-            }
+            .removeClass(ACTIVE_TAB_CLASS)
+            .each(function(i, tab) {
+                var prevUrl = tab.getAttribute('href');
+                if (prevUrl) {
+                    $('#' + escapeSelector(prevUrl.substr(1)))
+                    .removeClass(ACTIVE_TAB_CLASS)
+                    .attr('aria-selected', null)
+                    .hide();
+                }
+            });
         };
         /**
          * When the 'active' tab is an empty/non existent value,
