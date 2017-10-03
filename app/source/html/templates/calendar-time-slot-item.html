@@ -1,0 +1,15 @@
+<!-- Knockout Template calendar-time-slot-item -->
+<script type="text/html" id="calendar-time-slot-item-template">
+    <a class="CalendarTimeBlockItem" href="#" data-bind="css: classNames, attr: { href: link, 'aria-label': ariaLabel }">
+        <div class="Item-timeRange">
+            <div data-bind="text: startTime(), format: { type: 'datetime', format: 'h:mma' }"></div>
+            <div data-bind="text: endTime(), format: { type: 'datetime', format: 'h:mma' }"></div>
+        </div>
+        <div class="Item-content">
+            <p data-bind="text: summary"></p>
+        </div>
+        <div class="Item-price">
+            <p data-bind="visible: price, text: price"></p>
+        </div>
+    </a>
+</script>
