@@ -2138,7 +2138,7 @@ namespace LcRest
                     throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
-                string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(customer));
+                string eventSummary = String.Format("{0} services", booking.userJobTitle.jobTitleSingularName);
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");
@@ -2670,7 +2670,7 @@ namespace LcRest
                 }
 
                 // Event data
-                string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(provider));
+                string eventSummary = String.Format("{0} services", booking.userJobTitle.jobTitleSingularName);
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");
