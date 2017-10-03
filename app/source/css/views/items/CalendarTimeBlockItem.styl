@@ -1,0 +1,18 @@
+/**
+    TimeItem: Three lines tile of indented text
+    and action icon on the right.
+
+    Follows same indent as CompactLinkTile
+**/
+@import '../../components/Item.styl'
+
+.CalendarTimeBlockItem {
+    Item();
+    Item-addTagContentSupport(.6em, -.4em);
+    .Item-content {
+        width: 60%;
+        p {
+            padding-left: .2em;
+        }
+    }
+}

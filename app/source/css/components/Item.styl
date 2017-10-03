@@ -92,4 +92,54 @@ Item($height-em = 3.5em) {
             font-size: 2em;
         }
     }
+    .Item-price {
+        width: 20%;
+        height: $height-em;
+        text-align: right;
+        display: table-cell;
+        vertical-align: middle;
+        overflow: hidden;
+        p {
+            margin: 0em;
+        }
+    }
+    .Item-timeRange {
+        width: 20%;
+        text-align: right;
+        display: table-cell;
+        vertical-align: middle;
+        padding-right: .75em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+
+/** Add colored tags support, marking the content */
+Item-addTagContentSupport($vgap, $left = -6px) {
+
+    addTagFor($colorName, $color) {
+        &.Item--tag-{$colorName} {
+            .Item-content:before {
+                content: '';
+                position: absolute;
+                top: $vgap;
+                bottom: $vgap;
+                // NO left, because this way it keeps
+                // relative to the content (that may vary on Tiles)
+                // and using margin as a relative measure
+                margin-left: $left;
+                border-left: .2em solid $color;
+            }
+        }
+    }
+
+    for $color in $brand-colors {
+        addTagFor($color, $brand-colors[$color]);
+    }
+
+    for $color in $gray-colors {
+        addTagFor('gray-' + $color, $gray-colors[$color]);
+    }
 }
