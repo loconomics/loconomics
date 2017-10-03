@@ -6,6 +6,10 @@
 'use strict';
 
 var getObservable = require('../utils/getObservable');
+var numeral = require('numeral');
+var Appointment = require('../models/Appointment');
+var ko = require('knockout');
+var moment = require('moment');
 
 function TimeSlotViewModel(params) {
     /*jshint maxcomplexity:9*/
@@ -18,12 +22,33 @@ function TimeSlotViewModel(params) {
     this.actionIcon = getObservable(params.actionIcon || null);
     this.actionText = getObservable(params.actionText || null);
     this.classNames = getObservable(params.classNames || null);
+    this.apt = getObservable(params.apt);
+
+    this.ariaLabel = ko.pureComputed(function(){
+        var apt = this.apt();
+        if (!apt) return '';
+
+        var start = moment(this.startTime()).format('h:mma');
+        var end = moment(this.endTime()).format('h:mma');
+        var clickAction = '';
+        if (Appointment.specialIds.free === apt.id()) {
+            clickAction = ' Click to add a new booking or calendar block';
+        }
+        else if (apt.id() > 0) {
+            // Is an event: a booking or any other type like calendar block
+            // or imported event
+            if (apt.sourceBooking()) {
+                clickAction = ' Click to see booking details';
+            }
+            else {
+                clickAction = ' Click to see event details';
+            }
+        }
+        return this.subject() + ' from ' + start + ' until ' + end + clickAction;
+    }, this);
 }
 
 module.exports = TimeSlotViewModel;
-
-var numeral = require('numeral'),
-    Appointment = require('../models/Appointment');
 
 /**
     Static constructor to convert an Appointment model into 
@@ -67,6 +92,7 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         subject: apt.summary,
         description: apt.description,
         link: link,
+        apt: apt,
         actionIcon: (apt.sourceBooking() ? null : apt.sourceEvent() ? 'fa ion ion-ios-arrow-right' : !apt.id() ? 'fa ion ion-plus' : null),
         actionText: (
             apt.sourceBooking() && 
