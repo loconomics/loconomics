@@ -13,6 +13,7 @@ var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var showError = require('../modals/error').show;
 var paymentAccount = require('../data/paymentAccount');
+var payoutPreferenceRequired = require('../modals/payoutPreferenceRequired');
 
 var A = Activity.extend(function BookingPoliciesActivity() {
 
@@ -176,7 +177,7 @@ function ViewModel(app) {
             return paymentAccount.whenLoaded()
             .then(this.validate.bind(this));
         }
-        if (this.instantBooking() && !this.paymentAccount.data.isReady()) {
+        if (this.instantBooking() && !paymentAccount.data.isReady()) {
             return Promise.resolve(false);
         }
         return Promise.resolve(true);
@@ -218,12 +219,24 @@ function ViewModel(app) {
             }
             else {
                 // Direct user to set-up a payout preference
-                // TODO
+                payoutPreferenceRequired.show({
+                    reason: payoutPreferenceRequired.Reason.enablingInstantBooking
+                })
+                .then(function(done) {
+                    if (done) {
+                        performSave();
+                    }
+                })
+                .catch(function(err) {
+                    showError({
+                        title: 'Unable to set-up payout preference',
+                        error: err
+                    });
+                });
             }
         });
 
     }.bind(this);
 
     this.policies = cancellationPolicies.list;
-    this.paymentAccount = paymentAccount.data;
 }
