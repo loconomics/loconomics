@@ -19,6 +19,8 @@ function PaymentAccount(values) {
         postalCode: '',
         routingNumber: '',
         accountNumber: '',
+        // Just for form validation purposes only
+        accountNumberRepeated: '',
         ssn: '',
         stateProvinceCode: '',
         birthDate: '',
@@ -50,6 +52,15 @@ function PaymentAccount(values) {
     this.isReady = ko.pureComputed(function() {
         var s = this.status();
         return s && (s === 'active' || s === 'pending') || false;
+    }, this);
+    /**
+     * Whether the account number and the repeated account number are equals.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.areAccountNumbersEquals = ko.pureComputed(function() {
+        var a = this.accountNumber();
+        var r = this.accountNumberRepeated();
+        return a === r;
     }, this);
 }
 

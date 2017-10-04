@@ -76,6 +76,14 @@ function ViewModel(params) {
     this.onSaved = ko.unwrap(params.onSaved);
 
     this.save = function save() {
+        // Quick validation
+        if (!this.data.areAccountNumbersEquals()) {
+            showError({
+                title: 'Wrong account number',
+                message: '"Account number" and "Repeat account number" are not equals.'
+            });
+            return;
+        }
         this.isSaving(true);
         // Save
         var data = this.data.model.toPlainObject();
