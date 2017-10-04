@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="App" data-app-version="1.6.4" data-site-url=""
+<html lang="en" class="App" data-app-version="1.6.5" data-site-url=""
 data-facebook-language="en-US" data-facebook-appid="180579422039773" data-culture="en-US"
 data-app-id="com.loconomics.app" data-app-name="Loconomics">
   
@@ -27,10 +27,10 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     </script>
     <!-- End Google Analytics -->
-    <link href="assets/css/libs.min.201709111601.css" rel="stylesheet">
-    <link href="assets/css/app.min.201709111601.css" rel="stylesheet">
-    <script src="assets/js/common.min.201709111601.js"></script>
-    <script src="assets/js/app.min.201709111601.js"></script>
+    <link href="assets/css/libs.min.201709270926.css" rel="stylesheet">
+    <link href="assets/css/app.min.201709270926.css" rel="stylesheet">
+    <script src="assets/js/common.min.201709270926.js"></script>
+    <script src="assets/js/app.min.201709270926.js"></script>
   </head>
   
   <body> <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
@@ -1382,9 +1382,9 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
                   <p>Loconomics Cooperative's mission is to use technology, shared ownership,
                     and community to strengthen local economies.</p>
-                  <p>We provide tools, a marketplace, and community to our owners, empowering
-                    them to thrive in their work as local service professionals.</p>
-                  <p>We provide their clients an app where they can discover and directly book
+                  <p>We provide tools, marketing, and community to our owners, empowering them
+                    to thrive in their work as local service professionals.</p>
+                  <p>We provide their clients an app where they can discover and directly schedule
                     local service professionals safely and easily, without middle-men.</p>
                 </section>
                 <section id="about-coop-model">
@@ -2049,9 +2049,8 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                 <span
                 data-bind="visible: !isInOnboarding()">Add job titles</span>
                   </h2>
-                  <p>Clients will find you when searching by job title in our marketplace.
-                    It's best to keep it general, e.g. “photographer” rather than “product
-                    photographer.”</p>
+                  <p>Clients will find you when searching listings by job title. It's best
+                    to keep it general, e.g. “photographer” rather than “product photographer.”</p>
                   </span>
               </div>
                <h2 class="SectionTitle">
@@ -2241,8 +2240,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
           <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
               <ul>
-                <li> <a href="/marketplaceProfile">Marketplace profile</a>
-
+                <li> <a href="/marketplaceProfile"></a>Listing</a>
                 </li>
               </ul>
             </div>
@@ -3029,8 +3027,8 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                       <div>
                         <input id="instantBooking" name="bookingPolicy-policy" type="radio" data-bind="checked: instantBooking, value: true, disable: isLocked"
                         aria-describedby="instantBookingInstructions" />
-                        <label for="instantBooking">Instant booking</label>
-                        <p id="instantBookingInstructions" class="help-block">Clients love the ability to book <span class="text-lowercase" data-bind="text: jobTitleName"></span> services
+                        <label for="instantBooking">Instant scheduling</label>
+                        <p id="instantBookingInstructions" class="help-block">Clients love the ability to schedule <span class="text-lowercase" data-bind="text: jobTitleName"></span> services
                           on the spot, but this works only if you keep your calendar up-to-date.
                           You can <a href="/calendarSyncing">sync your calendars</a> to make this easier
                           for you.</p>
@@ -3112,7 +3110,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
                   <div class="LightForm-Section">
                     <div class="row">
-                      <label>Should we collect payment from clients when they book from your website?</label>
+                      <label>Should we collect payment from clients when they schedule from your website?</label>
                       <div
                       class="Select Select-block">
                         <select class="select-unstyled selectpicker" data-bind="value: collectPaymentAtBookMeButtonString, event: { change: save }">
@@ -3229,7 +3227,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                       type="url" class="form-control" data-bind="value: sync.icalImportUrl, disable: isLocked"
                       aria-describedby="calendarSync-icalImportUrl-instructions" />
                       <p id="calendarSync-icalImportUrl-instructions" class="help-block">Importing your calendar will block your Loconomics availability when you're
-                        busy so clients don't book you. <a href="/help/articles/205985385-how-do-i-import-and-sync-my-existing-calendar">Learn how to find your URL</a>.</p>
+                        busy so clients don't schedule you. <a href="/help/articles/205985385-how-do-i-import-and-sync-my-existing-calendar">Learn how to find your URL</a>.</p>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Import your calendar</button>
                   </div>
@@ -3327,7 +3325,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
               </div>
               <div class="CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': currentItem.isLoading() || isLoading() }">
                 <app-loading-spinner params="mod: 'floating bigger'"></app-loading-spinner>
-                <div data-bind="visible: isEmpty" class="isolated">No upcoming appointments...<a class="bookNow-link" href="/home">book one now!</a>
+                <div data-bind="visible: isEmpty" class="isolated">No upcoming appointments...<a class="bookNow-link" href="/home">schedule one now!</a>
 
                 </div>
                 <div data-bind="template: { name: 'client-appointment-card-template', data: currentItem }"></div>
@@ -4237,12 +4235,11 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
       <div data-activity="home">
         <div class="home-main">
           <div class="home-search">
-             <h1 class="home-title">Make life better.</h1>
+             <h1 class="home-title">Find and schedule local services.</h1>
 
-            <p class="home-tagline">Book local, independent service professionals safely and easily</p>
-            <form
-            id="home-search" data-bind="submit: search" action="/" method="get" class="row"
-            autocomplete="off">
+            <p class="home-tagline">Independent service professionals at your service.</p>
+            <form id="home-search"
+            data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
               <div class="form-group col-sm-5">
                 <label for="homeLocation" class="sr-only">Where?</label>
                 <div class="input-group input-group-lg"> <span class="input-group-addon inset"><span class="fa ion ion-ios-location-outline" aria-hidden="true"></span></span>
@@ -4254,7 +4251,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
               <div class="col-sm-7">
                 <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>
               </div>
-              </form>
+            </form>
           </div>
           <div id="home-hiw" class="home-hiw">
              <h2 class="home-section-title">How Loconomics works:</h2>
@@ -4263,9 +4260,9 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
               <ul class="row list-unstyled">
                 <li class="col-sm-4"> <i aria-hidden="true" class="fa ion ion-ios-search"></i>
 
-                   <h3>Search and book</h3>
+                   <h3>Search &amp; schedule </h3>
 
-                  <p>Find the perfect professional. Profiles include clear pricing and verified
+                  <p>Find the perfect professional. Listings include clear pricing and verified
                     reviews.</p>
                 </li>
                 <li class="col-sm-4"> <i aria-hidden="true" class="fa ion ion-bowtie"></i>
@@ -4286,7 +4283,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
             </div>
           </div>
           <div class="home-booking">
-             <h2 class="home-section-title">Why book on Loconomics?</h2>
+             <h2 class="home-section-title">Why Loconomics?</h2>
 
             <div class="home-section-listing">
               <ul class="list-unstyled">
@@ -4301,35 +4298,29 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
                    <h3>All your needs</h3>
 
-                  <p>Book anything from house cleaning to reiki using the same simple booking
-                    process.</p>
+                  <p>Schedule anything from house cleaning to reiki using the same simple process.</p>
                 </li>
                 <li> <i aria-hidden="true" class="fa fa-calendar-o"></i>
 
                    <h3>Easy scheduling</h3>
 
-                  <p>Book and reschedule 24/7, receive reminders and even sync your calendar.</p>
+                  <p>Schedule and reschedule 24/7, receive reminders and even sync your calendar.</p>
                 </li>
-                <li> <i aria-hidden="true" class="fa ion ion-card"></i>
-
-                   <h3>Payments handled</h3>
-
-                  <p>No awkward cash exchanges, pay with credit card and include optional gratuity.</p>
-                </li>
-                <li> <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
-
-                   <h3>Background check policy</h3>
-
-                  <p>Choose your comfort level when booking providers using our <a href="#!terms/background-check-policy"
-                    target="_blank">Background Check Policy</a>.</p>
-                </li>
-                <li> <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
-
-                   <h3>Favorites</h3>
-
-                  <p>Easily store and share your favorite professionals with your favorite
-                    people.</p>
-                </li>
+                <!-- <li>
+                        <i aria-hidden="true" class="fa ion ion-card"></i>
+                        <h3>Clear pricing</h3>
+                        <p>No awkward cash exchanges, pay professional directly with credit card.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
+                        <h3>Background check policy</h3>
+                        <p>Choose your comfort level when booking providers using our <a href="#!terms/background-check-policy" target="_blank">Background Check Policy</a>.</p>
+                    </li>
+                    <li>
+                        <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
+                        <h3>Favorites</h3>
+                        <p>Easily store and share your favorite professionals with your favorite people.</p>
+                    </li> -->
               </ul>
             </div>
             <div class="home-booking-more"> <a href="/about" class="btn btn-secondary btn-lg btn-block">Learn more</a>
@@ -4348,7 +4339,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Need some help around the house? Painters, housekeepers, handymen and
                     more await you.</p> <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/"
                   data-bind="attr: {href: '/searchCategory/1/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book home care professionals">View and book</a>
+                  aria-label="View and schedule home care professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-children">
@@ -4358,7 +4349,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Give yourself a night out on the town, help your child learn a language,
                     or play an instrument.</p> <a class="btn btn-secondary btn-block btn-lg"
                   href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book child care professionals">View and book</a>
+                  aria-label="View and schedule child care professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-pet">
@@ -4368,7 +4359,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Throw your dog a bone. Treat your pet to grooming services, walkers, sitters,
                     and more.</p> <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/"
                   data-bind="attr: {href: '/searchCategory/5/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book pet care professionals">View and book</a>
+                  aria-label="View and schedule pet care professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-self">
@@ -4378,7 +4369,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>You need a massage. Personal trainers, music teachers, and a number of
                     therapists are here.</p> <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/"
                   data-bind="attr: {href: '/searchCategory/2/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book self care professionals">View and book</a>
+                  aria-label="View and schedule self care professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-transport">
@@ -4388,7 +4379,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Mechanics, bicycle repairers, and car detailers all ready to help you
                     get where you need to go.</p> <a class="btn btn-secondary btn-block btn-lg"
                   href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book transport care professionals">View and book</a>
+                  aria-label="View and schedule transport care professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-office">
@@ -4398,7 +4389,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Tax season have you nervous? Get some help for your business or family
                     matters.</p> <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/"
                   data-bind="attr: {href: '/searchCategory/8/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book office professionals">View and book</a>
+                  aria-label="View and schedule office professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-senior">
@@ -4408,7 +4399,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Do you or a family member need a little extra help around the house? Help
                     make life easier.</p> <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/"
                   data-bind="attr: {href: '/searchCategory/4/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book senior care professionals">View and book</a>
+                  aria-label="View and schedule senior care professionals">View &amp; schedule</a>
 
                 </li>
                 <li class="SearchCategory-celebration">
@@ -4418,7 +4409,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                   <p>Make your next celebration a real blowout with help from some very talented
                     professionals.</p> <a class="btn btn-secondary btn-block btn-lg" href="/searchCategory/"
                   data-bind="attr: {href: '/searchCategory/6/' + $root.lat() + '/' + $root.lng() + '/' + $root.searchDistance()}"
-                  aria-label="View and book celebration professionals">View and book</a>
+                  aria-label="View and schedule celebration professionals">View &amp; schedule</a>
 
                 </li>
               </ul>
@@ -4499,8 +4490,8 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
           <div class="coop-search">
              <h1 class="coop-title">Work independently…together.</h1>
 
-            <p class="coop-tagline">Find clients, community, tools and resources. Grow and manage your business
-              on your terms.</p>
+            <p class="coop-tagline">Scheduling, marketing, invoicing, and client management tools. Grow and
+              manage your business on your terms.</p>
             <form id="coop-search" class="row">
               <!--class="col-sm-12" -->
               <job-title-autocomplete params="suggestionButtonText: suggestionButtonText, onSelect: onSelectJobTitle, id: 'learnMoreProfessionals-autocomplete'"></job-title-autocomplete>
@@ -4518,8 +4509,8 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
                    <h3>Free listing</h3>
 
-                  <p>Clients book you in our marketplace with 0% commissions. Your first listing
-                    is free.</p>
+                  <p>Clients find your listing using our search with 0% commissions. Your first
+                    listing is free.</p>
                 </li>
                 <li class="col-sm-4"> <i aria-hidden="true" class="fa fa-handshake-o"></i>
 
@@ -4561,8 +4552,8 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
                    <h3>Grow professionally</h3>
 
-                  <p>We offer workshops and assistance to help you become a better businessperson,
-                    keep up on trends, and be successful in what you do.</p>
+                  <p>Become a better businessperson, keep up on trends, and be successful in
+                    what you do.</p>
                 </li>
               </ul>
             </div>
@@ -4584,7 +4575,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
               <app-signup params="api: signup, onSignedUp: signupRedirect"></app-signup>
           </div>
           <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div> <a href="/addJobTitles" class="btn btn-default btn-add-profile"
-          data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
+          data-bind="visible: isClient() && !isServiceProfessional()">Add a listing</a>
 
         </div>
       </div>
@@ -5118,7 +5109,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
 
                 </div>
                 <div class="switchLine-switch">
-                  <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">Display listing at the marketplace</label>
+                  <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">Display listing in our search</label>
                   <label aria-hidden="true" for="marketplaceJobtitles-profileStatus-checkbox"> <strong data-bind="visible: isActiveStatus" class="text-success">ON</strong>
 
                     <strong
@@ -5390,7 +5381,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                 </div>
                 <div class="LightForm-Section">
                   <div class="row">
-                    <label>Who can book this service?</label>
+                    <label>Who can schedule this service?</label>
                     <div class="Select Select-block ">
                       <select class="select-unstyled selectpicker">
                         <option value="3">Anyone</option>
@@ -5973,7 +5964,7 @@ from
                 <span
                 data-bind="visible: !isInOnboarding()">Payout preferences</span>
                   </h2>
-                  <p>Payments from clients who book you through the marketplace go directly
+                  <p>Payments from clients who schedule you through your listing go directly
                     into your bank account or to Venmo. There's a small transaction fee of
                     2.9% plus $0.30.</p>
                   </span>
@@ -6285,7 +6276,7 @@ from
                         <a href="#" class="btn btn-default btn-lg btn-block" data-bind="attr: { href: $root.getSendMessageLink }">Message</a>
                     </div>
                     <div class="col-xs-6 col-sm-12 profile-book-btn">-->
-                <div class="col-xs-12 profile-book-btn"> <a href="#" class="btn btn-primary btn-lg btn-block" data-bind="attr: { href: $root.getBookLink }">Book</a>
+                <div class="col-xs-12 profile-book-btn"> <a href="#" class="btn btn-primary btn-lg btn-block" data-bind="attr: { href: $root.getBookLink }">Schedule</a>
 
                 </div>
               </div>
@@ -6608,7 +6599,8 @@ from
                 <span
                 data-bind="visible: !isInOnboarding()">Availability settings</span>
                   </h2>
-                  <p>Clients are more apt to book you if they know when you're generally free.</p>
+                  <p>Clients are more apt to schedule you if they know when you're generally
+                    free.</p>
                   </span>
               </div>
               <form data-bind="submit: save" class="LightForm">
@@ -6913,7 +6905,7 @@ from
                     <p><span data-bind="visible: serviceProfessionalsCount < 1 || averageHourlyRate < 1">&nbsp;</span>
 
                     </p> <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID + '/' + $root.origLat() + '/' + $root.origLong() + '/' + $root.searchDistance()}"
-                    class="btn btn-primary">View and book</a>
+                    class="btn btn-primary">View &amp; schedule</a>
 
                   </div>
                 </li>
@@ -6979,8 +6971,8 @@ from
               </p>
             </div>
             <div class="ServiceProfessionalResult-actions"> <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()"
-              class="btn btn-primary">Request to book</a>  <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()"
-              class="btn btn-primary">Book instantly</a>  <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">See profile and reviews</a>
+              class="btn btn-primary">Request appointment</a>  <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()"
+              class="btn btn-primary">Schedule instantly</a>  <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">See listing and reviews</a>
 
             </div>
           </li>
@@ -7144,9 +7136,10 @@ from
               <div data-bind="css: { 'is-loading': isLoading }">
                 <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
               </div>
-              <p class="help-block">Clients will be able to book the offerings you create here. Need to speak
-                to clients first? Add a consultation.</p>
-               <h2 class="SectionTitle" data-bind="visible: jobTitleID() === 0">
+              <p class="help-block">Clients will be able to schedule the offerings you create here. Need to
+                speak to clients first? Add a consultation.</p>
+               <h2 class="SectionTitle"
+              data-bind="visible: jobTitleID() === 0">
                     <span>Select a job title</span>
                 </h2>
 
@@ -7544,7 +7537,7 @@ from
                 <li>Your agreement that the Loconomics Service is provided “as is” and without
                   warranty (Section 21).</li>
                 <li>Your agreement that Loconomics has no liability regarding the Services
-                  booked through the Loconomics Service (Section 20).</li>
+                  scheduled through the Loconomics Service (Section 20).</li>
                 <li>Your consent to release Loconomics from liability based on claims between
                   Users (Section 17).</li>
                 <li>Your agreement to indemnify Loconomics from claims due to your use or
@@ -7694,11 +7687,11 @@ from
                 a single person performing Services; you may not have employees, agents,
                 or substitutes provide Services on your behalf.</p>
               <p>Service Professionals may choose to partner with other Service Professionals
-                using our group booking functionality to perform particular Services that
-                require more than one person. In such cases, Service Professionals must
-                still be individuals, not agencies or people acting on behalf of agencies.</p>
+                using our group scheduling functionality to perform particular Services
+                that require more than one person. In such cases, Service Professionals
+                must still be individuals, not agencies or people acting on behalf of agencies.</p>
               <p>Service Professionals must perform Services at the scheduled time and
-                as described to the Client when booking or, if you are unable to fulfill
+                as described to the Client when scheduling or, if you are unable to fulfill
                 Services at the scheduled time, you must promptly notify the Client and
                 cancel or reschedule using the Loconomics Service.</p>
               <p>Service Professionals are responsible for managing availability for online
@@ -7710,9 +7703,9 @@ from
                 reimbursable by federal and state health care programs agree:</p>
               <p>a) not to seek reimbursement from any third party payer (including, but
                 not limited to, Medicare or Medi-Cal) for any portion, in whole or in part,
-                of the Services booked through the Loconomics Service, and to accept as
-                payment in full the amount paid by Client for the Services at the time
-                of booking (or later, if so agreed);</p>
+                of the Services scheduled through the Loconomics Service, and to accept
+                as payment in full the amount paid by Client for the Services at the time
+                of scheduling (or later, if so agreed);</p>
               <p>b) not to offer Services at discounted or promotional pricing through
                 the Loconomics Service, and not to advertise any such discounts or promotions
                 through the Loconomics Service.</p>
@@ -7737,7 +7730,7 @@ from
                 Services performed by Service Professionals. You should make whatever investigation
                 you deem necessary or appropriate before hiring or engaging a Service Professional
                 (see also Section 19, “Background Checks”).</p>
-              <p>Clients are responsible for attending (if so agreed at the time of booking)
+              <p>Clients are responsible for attending (if so agreed at the time of scheduling)
                 all appointments made through the Loconomics Service or, if you are unable
                 to attend an appointment, to promptly notify the Service Professional and
                 cancel or reschedule using the Loconomics Service.</p>
@@ -7781,9 +7774,9 @@ from
                 payment of all such taxes, levies, or duties.<strong></strong>
 
               </p>
-              <p>Loconomics may charge a fee to Clients upon booking of Services through
+              <p>Loconomics may charge a fee to Clients upon scheduling of Services through
                 the Loconomics Service. Any “Booking Fee” will be disclosed at the time
-                the booking is made.</p>
+                the scheduling is made.</p>
               <p>Loconomics intentionally does not charge any Booking Fee for any mental
                 or health care Services regulated under federal or state law prohibiting
                 such fees. Should you feel a Booking Fee has been charged in error for
@@ -7808,26 +7801,26 @@ from
                 card or bank account details to Loconomics and the Payment Service Provider
                 “PSP” retained by Loconomics (currently, Braintree, a division of PayPal,
                 Inc.).</p>
-              <p>The cost of Services booked through the Loconomics Service, any agreed
+              <p>The cost of Services scheduled through the Loconomics Service, any agreed
                 out of pocket expenses owed to the Service Professional, any tip or gratuity,
                 if applicable, and any service fees owed to Loconomics for the use of the
                 Loconomics Service are collectively referred to as the “Payment Amount.”</p>
-              <p>When payment is required when booking Services, Loconomics will charge
+              <p>When payment is required when scheduling Services, Loconomics will charge
                 the Client's credit card the Payment Amount after the appointment for the
-                booked Services. Loconomics may also put a hold on the Client's credit
-                card for the Payment Amount at the time the appointment is booked through
+                scheduled Services. Loconomics may also put a hold on the Client's credit
+                card for the Payment Amount at the time the appointment is scheduled through
                 the Loconomics Service to ensure that payment can be taken at the appropriate
                 time. Certain Services may require that, by a clearly stated deadline,
                 a Client and/or Service Professional mark that Services are complete after
                 the appointment is finished and/or finalize a Payment Amount. Should the
                 User not complete the requested actions before the deadline, the User forfeits
                 their right to make any adjustments.</p>
-              <p>When payment is not required at the time of booking an appointment, the
-                Client agrees to pay the Service Professional the Payment Amount using
+              <p>When payment is not required at the time of scheduling an appointment,
+                the Client agrees to pay the Service Professional the Payment Amount using
                 the Service Professional's preferred payment option(s).</p>
               <p>Service Professionals may make bundles or packages available in which
                 Users can purchase multiple Services or sessions in a single transaction.
-                All sessions of the Services must be booked through the Loconomics Service.
+                All sessions of the Services must be scheduled through the Loconomics Service.
                 Service Professionals may set an expiration date for any bundle or package,
                 and any unused package value is lost as of the expiration date.</p>
               <p>Clients may have the option of choosing that the Services to be repeated
@@ -8206,12 +8199,12 @@ Loconomics
               </p>
               <p>You understand and agree that the Service Professional listed as the provider
                 of the Services is</p>
-              <p>a) solely responsible for redeeming the booked Services;</p>
+              <p>a) solely responsible for redeeming the scheduled Services;</p>
               <p>b) fully responsible for all Services they provide to you;</p>
               <p>c) liable for all damages or losses arising out of the Services provided.</p>
               <p>You further acknowledge and agree that Loconomics is not responsible for:</p>
               <p>a) any adjustments made by a Service Professional related to the price
-                of booked Services, or an appointment time or a Service;</p>
+                of scheduled Services, or an appointment time or a Service;</p>
               <p>b) any claims for injuries, illnesses, damages, liabilities, and costs
                 ("Liabilities") that you may suffer, directly or indirectly, in full or
                 in part, whether related to any Services.</p>
@@ -8264,7 +8257,7 @@ Loconomics
               <p>a) the results that may be obtained from use of the Loconomics Service;
                 or</p>
               <p>b) the accuracy, reliability, or content of any information, Services,
-                or Services booked through the Loconomics Service. The Loconomics Service
+                or Services scheduled through the Loconomics Service. The Loconomics Service
                 is made accessible on an "as is" and "as available" basis. Loconomics hereby
                 disclaims any representations, warranties and conditions, whether express
                 or implied, including those to title noninfringement, merchantability,
@@ -8287,14 +8280,15 @@ Loconomics
               <p>Each User hereby agrees and understands that:</p>
               <p>a) Loconomics does not sell, exchange, buy, or offer for sale, negotiate
                 or attempt to negotiate, a sale or exchange of any interest in any Services;</p>
-              <p>b) Information about booked Services is provided directly by the Service
+              <p>b) Information about scheduled Services is provided directly by the Service
                 Professional and not by Loconomics, and Loconomics does not engage in reviewing
-                information contained within booked Services in any manner;</p>
-              <p>c) The decision to book Services is entirely at the Client's discretion
-                and Loconomics does not induce or attempt to induce any User to book Services;</p>
+                information contained within scheduled Services in any manner;</p>
+              <p>c) The decision to schedule Services is entirely at the Client's discretion
+                and Loconomics does not induce or attempt to induce any User to schedule
+                Services;</p>
               <p>d) The prices listed by any Service Professional for Services may often
                 exclude sales tax or gratuity which may be added to the final sale price
-                at the time the booking is finalized; and</p>
+                at the time the scheduling is finalized; and</p>
               <p>e) Loconomics does not guarantee any price or Services offered by a Service
                 Professional.</p>
               <p>The Loconomics Service is controlled and offered by Loconomics from its
@@ -8327,7 +8321,7 @@ Loconomics
                 fees) accrued by Loconomics arising out of or connected with your attempt
                 to obtain reimbursement (whether or not actually obtained) from any third
                 party payer (including, but not limited to, Medicare or Medi-Cal) for Services
-                booked through the Loconomics Service;</p>
+                scheduled through the Loconomics Service;</p>
               <p>f) if you are a Service Professional, any claims, damages, obligations,
                 losses, liabilities, costs or debt, and expenses (including attorneys'
                 fees) accrued by Loconomics arising out of or connected with your offer
@@ -8480,8 +8474,8 @@ Loconomics
                   or Yelp data.</li>
                 <li>“Past Business Interaction Information,” which you can automatically import
                   by giving Loconomics permission to access your web, mobile or desktop email
-                  program, address book contacts, calendar program, or social network accounts
-                  such as Google, Facebook, LinkedIn, and FourSquare, or which Loconomics
+                  program, address schedule contacts, calendar program, or social network
+                  accounts such as Google, Facebook, LinkedIn, and FourSquare, or which Loconomics
                   receives through Service Professional use of the Loconomics Service.</li>
                 <li>“Taxpayer Information,” including social security number or taxpayer ID
                   number, to report income to tax authorities, as required by law.</li>
@@ -8694,11 +8688,11 @@ Loconomics uses a specific cookie in
               <p>f) If you are a Client:</p>
               <p>a. When a particular Service Professional is added to your Favorites Page,
                 that information will be made public and will enable other Users to search,
-                visit, or book appointments from your Favorites Page. Additionally, your
-                page will display your real name, partial name, or pseudonym, as well as
-                any other information you provide, including photographs, bios, and city
-                and state. You may, however, hide this information from the public by marking
-                your Favorite Page as “Private.”</p>
+                visit, or schedule appointments from your Favorites Page. Additionally,
+                your page will display your real name, partial name, or pseudonym, as well
+                as any other information you provide, including photographs, bios, and
+                city and state. You may, however, hide this information from the public
+                by marking your Favorite Page as “Private.”</p>
               <p>g) If you are a Service Professional:</p>
               <p>a. We may share some or all of your Personal Information, including but
                 not limited to Calendaring Program Information, Services, Ratings and Reviews,
@@ -8769,8 +8763,8 @@ By using the referral features on Loconomics,
                 text messages, we may still need to contact you with important transactional
                 information related to your account and your purchases. For example, even
                 if you have unsubscribed from our promotional email or text messages, we
-                will still send you confirmations when you book a service through the Loconomics
-                Service.</p>
+                will still send you confirmations when you schedule a service through the
+                Loconomics Service.</p>
               <p>You may manage how your browser handles cookies and related technologies
                 by adjusting its privacy and security settings. Browsers are different,
                 so refer to instructions related to your browser to learn about cookie-related
@@ -8995,7 +8989,7 @@ By using the referral features on Loconomics,
               </p>
               <p>Loconomics Cooperative has designed this Background Check and License
                 Verification Policy (this &#8220;Policy&#8221;) with the goal of helping
-                Clients feel at ease when booking Service Professionals, while creating
+                Clients feel at ease when scheduling Service Professionals, while creating
                 work opportunities for Service Professionals that may have been served
                 by our justice system. Loconomics intends to facilitate the provision of
                 Services in a manner that is both informed and fair. In most cases, Background
@@ -9448,9 +9442,9 @@ NEITHER
               <p> <strong>1. Client Booking Fees</strong>
 
               </p>
-              <p>Loconomics currently charges marketplace Clients a first-time booking
-                fee of 10% of the cost of booked services up to a maximum of $10.00 the
-                first time they book with each new Service Professional. There is no booking
+              <p>Loconomics currently charges Clients a first-time scheduling fee of 10%
+                of the cost of scheduled services up to a maximum of $10.00 the first time
+                they schedule with each new Service Professional. There is no scheduling
                 fees for subsequent bookings with the same Service Professional.</p>
               <p> <strong>2. Owner User Fees</strong>
 
@@ -11320,7 +11314,7 @@ The Parties agree that, in the event
         <div class="col-md-3">
             <div class="PaymentPlan">
                 <div class="PaymentPlan-heading">
-                    <h2>Always Free</h2>
+                    <h2>Free</h2>
                     <h1 class="price">
                         <span class="number">$0</span>
                         <span class="month">/mo</span>
@@ -11330,11 +11324,11 @@ The Parties agree that, in the event
                   <ul class="IconList">
         <li>
             <i class="ion-ios-list-outline" aria-hidden="true"></i>
-            <p>Find new clients with one marketplace listing</p>
+            <p>Find new clients with one listing</p>
         </li>
         <li>
             <i class="ion-cash" aria-hidden="true"></i>
-            <p>No hassle payments via direct deposit or Venmo</p>
+            <p>Invoice clients directly and get paid easily</p>
         </li>
         <li>
             <i class="ion-umbrella" aria-hidden="true"></i>
@@ -11377,12 +11371,8 @@ The Parties agree that, in the event
             <p>Meet & match with referral partners in the cooperative</p>
         </li>
         <li>
-            <i class="ion-ios-paper-outline" aria-hidden="true"></i>
-            <p>Expand your offerings with extra marketplace listings</p>
-        </li>
-        <li>
             <i class="ion-ios-cart-outline" aria-hidden="true"></i>
-            <p>Preferred listing placement in the marketplace</p>
+            <p>Preferred listing placement</p>
         </li>
         <li>
             <i class="ion-ios-color-filter-outline" aria-hidden="true"></i>
@@ -11410,7 +11400,7 @@ The Parties agree that, in the event
         </li>
         <li>
             <i class="ion-android-calendar" aria-hidden="true"></i>
-            <p>Get organized with our scheduling software</p>
+            <p>Get organized with our scheduling and client management software</p>
         </li>
         <li>
             <i class="ion-ios-pricetags-outline" aria-hidden="true"></i>
@@ -11418,7 +11408,7 @@ The Parties agree that, in the event
         </li>
         <li>
             <i class="ion-ios-bolt-outline" aria-hidden="true"></i>
-            <p>Increase your income & allow clients to book you instantly</p>
+            <p>Increase your income & allow clients to schedule you instantly</p>
         </li>
         <li>
             <i class="fa fa-vcard-o" aria-hidden="true"></i>

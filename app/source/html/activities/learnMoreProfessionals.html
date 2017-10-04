@@ -3,7 +3,7 @@
     <div role="main">
         <div class="coop-search">
             <h1 class="coop-title">Work independently…together.</h1>
-            <p class="coop-tagline">Find clients, community, tools and resources. Grow and manage your business on your terms.</p>
+            <p class="coop-tagline">Scheduling, marketing, invoicing, and client management tools. Grow and manage your business on your terms.</p>
             <form id="coop-search" class="row">
                 <!--class="col-sm-12" -->
                 <job-title-autocomplete params="suggestionButtonText: suggestionButtonText, onSelect: onSelectJobTitle, id: 'learnMoreProfessionals-autocomplete'"></job-title-autocomplete>
@@ -19,7 +19,7 @@
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-ios-list-outline"></i>
                         <h3>Free listing</h3>
-                        <p>Clients book you in our marketplace with 0% commissions. Your first listing is free.</p>
+                        <p>Clients find your listing using our search with 0% commissions. Your first listing is free.</p>
                     </li>
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa fa-handshake-o"></i>
@@ -51,7 +51,7 @@
                     <li class="col-sm-4">
                         <i aria-hidden="true" class="fa ion ion-arrow-graph-up-right"></i>
                         <h3>Grow professionally</h3>
-                        <p>We offer workshops and assistance to help you become a better businessperson, keep up on trends, and be successful in what you do.</p>
+                        <p>Become a better businessperson, keep up on trends, and be successful in what you do.</p>
                     </li>
                 </ul>
             </div>
@@ -71,7 +71,7 @@
                 </app-signup>
             </div>
             <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
-            <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
+            <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a listing</a>
         </div>
     </div>
     <div>@render('parts/WebsiteFooter.html')</div>

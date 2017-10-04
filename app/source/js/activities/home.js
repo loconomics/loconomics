@@ -20,9 +20,8 @@ var A = Activity.extend(function HomeActivity() {
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
-    this.title('Find and book local services');
-    var viewModel = new ViewModel(this.app.shell);
-    this.viewModel = viewModel;
+    this.title('Find and schedule local services.');
+    this.viewModel = new ViewModel(this.app.shell);
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
     this.$header = $('.AppNav');
@@ -142,7 +141,6 @@ function ViewModel(shell) {
     }.bind(this);
 
     this.onPlaceSelect = function(place) {
-        console.log('LOCATION: ', place);
         // Save to viewmodel
         this.lat(place.geometry.location.lat());
         this.lng(place.geometry.location.lng());
