@@ -68,20 +68,23 @@ var SGB = window.SGB || {};
     };
 
     SGB.selectSourceCode = function() {
-      var range,
-          selection;
 
+      var el = this.nextElementSibling;
+
+      var range;
+      var selection;
       if (doc.body.createTextRange) {
         range = doc.body.createTextRange();
-        range.moveToElementText(this.nextSibling);
+        range.moveToElementText(el);
         range.select();
       } else if (w.getSelection) {
         selection = w.getSelection();
         range = doc.createRange();
-        range.selectNodeContents(this.nextSibling);
+        range.selectNodeContents(el);
         selection.removeAllRanges();
         selection.addRange(range);
       }
+      document.execCommand('copy');
 
        _toggleClass(this, 'sg-btn--select-active');
     };
