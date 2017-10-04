@@ -1,11 +1,11 @@
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: list">
     <li>
-        <button class="LinkTile" type="button" data-bind="click: $parent.selectItem">
+        <a class="LinkTile" role="button" data-bind="click: $parent.selectItem">
             <div class="Tile-content">
                 <div data-bind="text: name"></div>
                 <em data-bind="text: description"></em>
             </div>
             <div class="Tile-icon"><span class="fa ion ion-ios-arrow-right"></span></div>
-        </button>
+        </a>
     </li>
 </ul>
