@@ -376,6 +376,33 @@ function RemoteModel(options) {
             }.bind(this)
         };
     };
+
+    /**
+     * Returns a promise that resolves immediatelly if there is some content
+     * loaded, waits to resolve when a pending loading ends or triggers a first
+     * time load and resolves when ends.
+     * Is a convenient and alternative API to load/sync that doesn't try to
+     * load at any time, just having some data is enough.
+     * @returns {Promise}
+     */
+    this.whenLoaded = function() {
+        // Something loaded?
+        if (this.cache.latest) {
+            return Promise.resolve();
+        }
+        else if (this.isLoading()) {
+            // Is on the works, wait for 'load' to be called
+            return new Promise(function(resolve) {
+                this.on('loaded', function() {
+                    resolve();
+                });
+            }.bind(this));
+        }
+        else {
+            // Request a load and wait for it (no returning data, just ending)
+            return this.load().then(function() {});
+        }
+    };
 }
 
 module.exports = RemoteModel;
