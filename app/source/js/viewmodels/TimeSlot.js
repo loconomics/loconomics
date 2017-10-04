@@ -28,17 +28,24 @@ function TimeSlotViewModel(params) {
         if (!apt) return '';
         var start = moment(this.startTime()).format('h:mma');
         var end = moment(this.endTime()).format('h:mma');
+        var labelSummary = '';
         var clickAction = '';
         if (Appointment.specialIds.free === apt.id()) {
             clickAction = '. Click to add a new booking or calendar block.';
+            labelSummary = this.summary();
         }
         else if (apt.id() > 0 && apt.sourceBooking().isRequest()) {
             clickAction = '. Click to respond to request.';
+            labelSummary = this.summary() + ', with total price of ' + this.price();
+        }
+        else if (apt.id() > 0 && apt.sourceBooking().isConfirmed()) {
+            clickAction = '. Click to view booking details.';
+            labelSummary = this.summary() + ', with total price of ' + this.price();
         }
         else {
             clickAction = '. Click to view details and make changes.';
         }
-        return this.summary() + ', with total price of ' + this.price() + ', from ' + start + ' until ' + end + clickAction;
+        return labelSummary + ', from ' + start + ' until ' + end + clickAction;
     }, this);
 }
 
