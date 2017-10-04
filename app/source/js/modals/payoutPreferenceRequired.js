@@ -23,11 +23,11 @@ exports.Reason = {
 var getTextForReason = function(reason) {
     switch (reason) {
         case exports.Reason.enablingInstantBooking:
-            return 'You need to enable payments to allow instant booking.';
+            return 'To enable instant booking, you must first set up your preference for payouts.';
         case exports.Reason.acceptBookingRequest:
-            return 'You need to enable payments to accept this booking request';
+            return 'To accept this booking request, you must first set up your preference for payouts.';
         default:
-            return 'This is required to start accepting payments.';
+            return 'Setting up your payout preference is required to start accepting payments.';
     }
 };
 
