@@ -172,15 +172,10 @@ function ViewModel(app) {
      * @returns {Promise<boolean>} Whether satisfy validation or not
      */
     this.validateInstantBooking = function() {
-        if (paymentAccount.isLoading()) {
-            // Validation can only being performed on loaded payment account data
-            return paymentAccount.whenLoaded()
-            .then(this.validate.bind(this));
-        }
-        if (this.instantBooking() && !paymentAccount.data.isReady()) {
-            return Promise.resolve(false);
-        }
-        return Promise.resolve(true);
+        return paymentAccount.whenLoaded()
+        .then(function() {
+            return this.instantBooking() && !paymentAccount.data.isReady();
+        }.bind(this));
     };
 
     var performSave = function() {
