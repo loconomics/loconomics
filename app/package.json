@@ -31,7 +31,6 @@
     "es6-promise": "~4.1.1",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
-    "geocomplete": "^1.6.5",
     "grunt": "^1.0.1",
     "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
     "grunt-browserify": "^5.0.0",
@@ -119,5 +118,8 @@
         "jquery"
       ]
     }
+  },
+  "dependencies": {
+    "grunt-cli": "^1.2.0"
   }
 }

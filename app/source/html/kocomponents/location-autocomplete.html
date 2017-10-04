@@ -1,0 +1,21 @@
+<div class="form-group">
+    <label for="homeLocation" class="sr-only">Where?</label>
+    <input-autocomplete params="
+        id: 'homeLocation',
+        name: 'location',
+        icon: 'ion-ios-location-outline',
+        size: 'lg',
+        value: value,
+        suggestions: suggestions,
+        onSelect: onSelect
+    ">
+        <template slot="suggestions">
+            <ul data-bind="foreach: suggestions" class="list-unstyled">
+                <li class="Result" data-input-autocomplete-suggestion
+                    data-bind="attr: { id: $parent.id() + '-suggestion-' + $index() }, text: description">
+                </li>
+            </ul>
+        </template>
+    </input-autocomplete>
+    <div id="google-maps-places-attribution"></div>
+</div>
