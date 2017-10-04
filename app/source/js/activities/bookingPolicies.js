@@ -174,7 +174,7 @@ function ViewModel(app) {
     this.validateInstantBooking = function() {
         return paymentAccount.whenLoaded()
         .then(function() {
-            return this.instantBooking() && !paymentAccount.data.isReady();
+            return !this.instantBooking() || paymentAccount.data.isReady();
         }.bind(this));
     };
 
