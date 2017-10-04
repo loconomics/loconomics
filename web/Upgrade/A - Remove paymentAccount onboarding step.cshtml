@@ -50,17 +50,15 @@ BEGIN
 	EXEC dbo.TestProfileActivation @UserID
 END
     ";
-    var sqlCheckAll = "EXEC TestAllUsersAlerts";
     var users = new List<int>();
     using (var db = new LcDatabase())
     {
         foreach (var user in db.Query(sqlGetUsers))
         {
-            users.Add((int)user);
+            users.Add((int)(user.userID));
         }
         db.Execute(sqlRemoveStep);
         db.Execute(sqlUpgradeTestAlertPayment);
-        db.Execute(sqlCheckAll);
     }
 }
 All users with an onboardingStep of 'paymentAccount' that now are done with onboarding

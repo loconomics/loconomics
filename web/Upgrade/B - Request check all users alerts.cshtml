@@ -1,0 +1,7 @@
+﻿@{
+    var sqlCheckAll = "EXEC TestAllUsersAlerts";
+    using (var db = new LcDatabase())
+    {
+        db.Execute(sqlCheckAll);
+    }
+}
