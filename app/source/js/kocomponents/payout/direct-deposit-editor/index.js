@@ -79,8 +79,8 @@ function ViewModel(params) {
         // Quick validation
         if (!this.data.areAccountNumbersEquals()) {
             showError({
-                title: 'Wrong account number',
-                message: '"Account number" and "Repeat account number" are not equals.'
+                title: 'Review your account number',
+                message: '"Account number" and "Confirm account number" fields do not match.'
             });
             return;
         }
