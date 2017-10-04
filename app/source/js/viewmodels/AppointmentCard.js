@@ -21,6 +21,8 @@ var showNotification = require('../modals/notification').show;
 var showConfirm = require('../modals/confirm').show;
 var showTextEditor = require('../modals/textEditor').show;
 var showError = require('../modals/error').show;
+var paymentAccount = require('../data/paymentAccount');
+var payoutPreferenceRequired = require('../modals/payoutPreferenceRequired');
 
 var events = {
     confirmed: 'confirmed',
@@ -410,8 +412,47 @@ function AppointmentCardViewModel(params) {
             return this.selectedRequestDateType() === ko.unwrap(dateType);
         }, this);
     }.bind(this);
+    /**
+     * It validates if professional has set-up a payout preference, only if
+     * done it can accept a booking request
+     * @returns {Promise<boolean>} Whether satisfy validation or not
+     */
+    this.validatePayoutPreference = function() {
+        return paymentAccount.whenLoaded()
+        .then(function() {
+            return paymentAccount.data.isReady();
+        }.bind(this));
+    };
     this.setSelectedRequestDateType = function(dateType) {
-        this.selectedRequestDateType(dateType);
+        if (dateType) {
+            var performSelection = function() {
+                this.selectedRequestDateType(dateType);
+            }.bind(this);
+
+            this.validatePayoutPreference()
+            .then(function(isValid) {
+                if (isValid) {
+                    performSelection();
+                }
+                else {
+                    // Direct user to set-up a payout preference
+                    payoutPreferenceRequired.show({
+                        reason: payoutPreferenceRequired.Reason.acceptBookingRequest
+                    })
+                    .then(function(done) {
+                        if (done) {
+                            performSelection();
+                        }
+                    })
+                    .catch(function(err) {
+                        showError({
+                            title: 'Unable to set-up payout preference',
+                            error: err
+                        });
+                    });
+                }
+            });
+        }
     }.bind(this);
 
     this.performSelectedBookingRequestAnswer = function() {
@@ -574,7 +615,10 @@ AppointmentCardViewModel._inherits(EventEmitter);
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:23,maxstatements:40 */
+    /*jshint maxcomplexity:23,maxstatements:43 */
+
+    // on init
+    paymentAccount.sync();
 
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)

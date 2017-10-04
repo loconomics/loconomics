@@ -19,8 +19,8 @@ var api = new RemoteModel({
     fetch: function fetch() {
         return remote.get('me/payment-account');
     },
-    push: function push() {
-        return remote.put('me/payment-account', this.data.model.toPlainObject());
+    push: function push(data) {
+        return remote.put('me/payment-account', data || this.data.model.toPlainObject());
     }
 });
 module.exports = api;

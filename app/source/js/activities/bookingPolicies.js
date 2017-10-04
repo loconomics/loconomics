@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
@@ -12,6 +12,8 @@ var cancellationPolicies = require('../data/cancellationPolicies');
 var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var showError = require('../modals/error').show;
+var paymentAccount = require('../data/paymentAccount');
+var payoutPreferenceRequired = require('../modals/payoutPreferenceRequired');
 
 var A = Activity.extend(function BookingPoliciesActivity() {
 
@@ -114,6 +116,7 @@ A.prototype.show = function show(state) {
 
     // Request to sync policies, just in case there are remote changes
     cancellationPolicies.sync();
+    paymentAccount.sync();
     if (!jid) {
         // Load titles to display for selection
         this.viewModel.jobTitles.sync();
@@ -164,7 +167,18 @@ function ViewModel(app) {
         );
     }, this);
 
-    this.save = function() {
+    /**
+     * It validates if instantBooking is allowed prior save
+     * @returns {Promise<boolean>} Whether satisfy validation or not
+     */
+    this.validateInstantBooking = function() {
+        return paymentAccount.whenLoaded()
+        .then(function() {
+            return !this.instantBooking() || paymentAccount.data.isReady();
+        }.bind(this));
+    };
+
+    var performSave = function() {
         var ujt = this.userJobTitle();
         if (ujt) {
             this.isSaving(true);
@@ -192,6 +206,32 @@ function ViewModel(app) {
         }
     }.bind(this);
 
+    this.save = function() {
+        this.validateInstantBooking()
+        .then(function(isValid) {
+            if (isValid) {
+                performSave();
+            }
+            else {
+                // Direct user to set-up a payout preference
+                payoutPreferenceRequired.show({
+                    reason: payoutPreferenceRequired.Reason.enablingInstantBooking
+                })
+                .then(function(done) {
+                    if (done) {
+                        performSave();
+                    }
+                })
+                .catch(function(err) {
+                    showError({
+                        title: 'Unable to set-up payout preference',
+                        error: err
+                    });
+                });
+            }
+        });
+
+    }.bind(this);
+
     this.policies = cancellationPolicies.list;
 }
-

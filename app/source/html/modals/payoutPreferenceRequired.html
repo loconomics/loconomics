@@ -1,0 +1,16 @@
+<div id="payoutPreferenceRequiredModal" class="modal fade" tabindex="-1" role="dialog"
+    data-backdrop="static"
+    aria-labelledby="payoutPreferenceRequiredModal-label" aria-describedby="payoutPreferenceRequiredModal-content" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title" id="payoutPreferenceRequiredModal-label">Enter payout preference</h2>
+            </div>
+            <div class="modal-body LightForm" id="payoutPreferenceRequiredModal-content">
+                <p id="payoutPreferenceRequiredModal-body" data-bind="text: description"></p>
+                <payout-preference-view params="onSaved: onSaved"></payout-preference-view>
+            </div>
+        </div>
+    </div>
+</div>

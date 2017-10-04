@@ -249,34 +249,46 @@ namespace LcRest
                 return null;
             }
 
+            // Pre paymentEnabled Checks
+            booking.instantBooking = booking.userJobTitle.instantBooking;
+
             // Payment is required for client bookings, and based on preference for bookNow bookings.
             // That's excludes service professional bookings too from require payment (is not a client booking).
             // IMPORTANT: After bug found at #1002, paymentEnabled can be changed to false later if the pricing/services attached sum zero,
             // so nothing need to be charged, no payment to be collected.
+            // TOO: From issue #564, Epic #563, payment can be enabled without requiring an active
+            // MarketplacePaymentAccount when the professional preference is 'booking request', 
+            // that means we must forbide booking when is InstantBooking and not payment account is active.
             booking.paymentEnabled = false;
             if (booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking)
             {
                 booking.paymentEnabled = GetCollectPaymentAtBookMeButtonPreference(jobTitleID);
-                if (booking.paymentEnabled && !IsMarketplacePaymentAccountActive(serviceProfessionalID))
+                if (booking.paymentEnabled &&
+                    booking.instantBooking &&
+                    !IsMarketplacePaymentAccountActive(serviceProfessionalID))
                 {
-                    // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
+                    // Cannot create booking, payment required, is not ready, and instant booking wanted,
+                    // then return null as meaning 'not found'
                     return null;
                 }
             }
             else if (!isServiceProfessionalBooking)
             {
-                booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
-                if (!booking.paymentEnabled)
+                var accountActive = IsMarketplacePaymentAccountActive(serviceProfessionalID);
+                // We require an active account for instant booking; for requests it doesn't matters because
+                // we will ask professional to enable their account before accept the request.
+                if (!accountActive && booking.instantBooking)
                 {
                     // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
                     return null;
                 }
+                // Payment is required for clients
+                booking.paymentEnabled = true;
             }
 
             // Checks:
             booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
             booking.cancellationPolicyID = booking.userJobTitle.cancellationPolicyID;
-            booking.instantBooking = booking.userJobTitle.instantBooking;
             booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);
         
             // Fees:

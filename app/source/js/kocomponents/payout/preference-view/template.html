@@ -1,0 +1,27 @@
+<div data-bind="if: isReady">
+    <div data-bind="if: isSelectorOpened">
+        <div class="isolated top-only"><h2 class="SectionTitle">Choose a payout preference</h2></div>
+        <payout-preferences-list params="selectItem: selectPreference"></payout-preferences-list>
+    </div>
+    <div data-bind="ifnot: isSelectorOpened() || editorPreferenceID()">
+        <!-- ko if:isDirectDepositViewerOpened -->
+        <payout-direct-deposit-viewer params="data: paymentOptionData, requestEdit: openDirectDepositEditor, isEditorOpened: isDirectDepositEditorOpened()"></payout-direct-deposit-viewer>
+        <!-- /ko -->
+        <!-- ko if:isVenmoViewerOpened -->
+        <payout-venmo-viewer params="data: paymentOptionData, requestEdit: openVenmoEditor, isEditorOpened: isVenmoEditorOpened()"></payout-venmo-viewer>
+        <!-- /ko -->
+    </div>
+    <div class="PaddedBox-xs-only PaddedBox-sm-only" data-bind="if: editorPreferenceID">
+        <!-- ko if:isDirectDepositEditorOpened -->
+        <payout-direct-deposit-editor params="data: getDataForEditor(), onSaved: onSaved"></payout-direct-deposit-editor>
+        <!-- /ko -->
+        <!-- ko if:isVenmoEditorOpened -->
+        <payout-venmo-editor params="data: getDataForEditor(), onSaved: onSaved"></payout-venmo-editor>
+        <!-- /ko -->
+        <div class="LightForm">
+            <button type="button" class="btn btn-secondary btn-block" data-bind="click: openSelector">
+                Change payout preference
+            </button>
+        </div>
+    </div>
+</div>

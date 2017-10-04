@@ -36,7 +36,7 @@ var alertPresets = {
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/paymentAccount?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/paymentPreference?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
         },
         pricingdetails: {
             label: 'Create a bookable offering',

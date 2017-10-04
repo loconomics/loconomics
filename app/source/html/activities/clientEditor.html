@@ -30,7 +30,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="phone">Phone number:</label>
-                                <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }">
+                                <input id="phone" type="tel" class="form-control" required data-bind="textInput: phone, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }">
                                 <!-- <span class="input-group-btn" data-bind="visible: $root.validPhone()">
                                     <a href="#" data-bind="attr: { href: 'tel:' + $root.validPhone() }" class="btn btn-info">
                                         <span class="sr-only">Call to this phone</span><span class="fa ion ion-ios-telephone-outline"></span>
