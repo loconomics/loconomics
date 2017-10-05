@@ -21,12 +21,14 @@ var markdown = require( "markdown" ).markdown;
         var baseFileList = fs.readdirSync(markupDirectory + dirName + '/');
         return baseFileList.map(function(currentFile) {
             var currentDocumentationFile = currentFile.replace(/.html/i, '.md');
+            var content = fs.readFileSync(markupDirectory + dirName + '/' + currentFile);
+            var doc = markdown.toHTML(fs.readFileSync(docDirectory + dirName + '/' + currentDocumentationFile, 'utf8'));
             return {
                 title: currentFile.split('.', 1)[0],
-                type: 'base',
+                type: dirName,
                 fileName: currentFile,
-                content: fs.readFileSync(markupDirectory + dirName + '/' + currentFile),
-                documentation: fs.readFileSync(docDirectory + dirName + '/' + currentDocumentationFile)
+                content: content,
+                documentation: doc
             };
         });
     };
