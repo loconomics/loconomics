@@ -1,5 +1,7 @@
 /*jslint node: true, plusplus: true, vars: true*/
 /*globals require, module, console */
+var markdown = require( "markdown" ).markdown;
+
 (function (exports) {
     'use strict';
 
@@ -11,41 +13,35 @@
         app = express(),
         server;
 
-    // Index
-    app.get('/', function (req, res) {
-        var pageBuilder = handlebars.compile(baseTemplate),
-            markupDirectory = './markup/',
-            docDirectory = './doc/',
-            baseFileList = fs.readdirSync(markupDirectory + 'base/'),
-            patternFileList =  fs.readdirSync(markupDirectory + 'patterns/'),
-            vm = {base: [], patterns: []},
-            fileIndex;
+    var pageBuilder = handlebars.compile(baseTemplate);
+    var markupDirectory = './markup/';
+    var docDirectory = './doc/';
 
-        for (fileIndex = 0; fileIndex < baseFileList.length; fileIndex++) {
-            var currentFile = baseFileList[fileIndex];
+    var readFilesIn = function(dirName) {
+        var baseFileList = fs.readdirSync(markupDirectory + dirName + '/');
+        return baseFileList.map(function(currentFile) {
             var currentDocumentationFile = currentFile.replace(/.html/i, '.md');
-
-            vm.base.push({
+            return {
                 title: currentFile.split('.', 1)[0],
                 type: 'base',
                 fileName: currentFile,
-                content: fs.readFileSync(markupDirectory + 'base/' + currentFile),
-                documentation: fs.readFileSync(docDirectory + 'base/' + currentDocumentationFile)
-            });
-        }
+                content: fs.readFileSync(markupDirectory + dirName + '/' + currentFile),
+                documentation: fs.readFileSync(docDirectory + dirName + '/' + currentDocumentationFile)
+            };
+        });
+    };
 
-        for (fileIndex = 0; fileIndex < patternFileList.length; fileIndex++) {
-            var currentFile = patternFileList[fileIndex];
-            var currentDocumentationFile = currentFile.replace(/.html/i, '.md');
+    // Index
+    app.get('/', function (req, res) {
 
-            vm.patterns.push({
-                title: currentFile.split('.', 1)[0],
-                type: 'patterns',
-                fileName: currentFile,
-                content: fs.readFileSync(markupDirectory + 'patterns/' + currentFile),
-                documentation: fs.readFileSync(docDirectory + 'patterns/' + currentDocumentationFile)
-            });
-        }
+        var vm = {
+            base: [],
+            patterns: []
+        };
+
+        Object.keys(vm).forEach(function(dirName) {
+            vm[dirName] = readFilesIn(dirName);
+        });
 
         res.writeHead(200, {'Context-Type': 'text/html'});
         res.write(pageBuilder(vm));
