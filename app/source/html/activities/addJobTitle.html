@@ -1,0 +1,34 @@
+<div data-activity="addJobTitle"  class="Boxes-sm animated">
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
+    <div class="container">
+        <div class="row">
+            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
+                <ul>
+                    <li>
+                        <a href="#" data-shell="goBack"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Back</a>
+                    </li>
+                </ul>
+            </div>
+            <app-onboarding-progress-bar></app-onboarding-progress-bar>
+            <h1><icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
+            <p class="help-block">Clients will find you when searching listings by job title. It's best to keep it general, e.g. “photographer” rather than “product photographer.”</p>
+            <div class="LightForm col-md-7 col-sm-reset">
+                <div class="isolated inset">
+                    <job-title-autocomplete params="suggestionButtonText: 'Add',
+                        onSelect: onSelectJobTitle,
+                        id: 'addJobTitle-autocomplete'"></job-title-autocomplete>
+                </div>
+                <div class="LightForm-submitBar" data-bind="if: selectedJobTitle">
+                    <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText,
+                        disable: isLocked(),
+                        css: { 'btn-danger': isSaving() },
+                        click: save"></button>
+                </div>
+            </div>
+            <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+                <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

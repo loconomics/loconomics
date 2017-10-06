@@ -46,6 +46,7 @@ module.exports = {
     'ownerInfo': require('./activities/ownerInfo'),
     'privacySettings': require('./activities/privacySettings'),
     'addJobTitles': require('./activities/addJobTitles'),
+    'addJobTitle': require('./activities/addJobTitle'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'marketplaceProfile': require('./activities/marketplaceProfile'),
     'marketplaceJobtitles': require('./activities/marketplaceJobtitles'),
