@@ -129,3 +129,19 @@ exports.serviceProfessionalsByJobTitle = function(jobTitleID, lat, lng, searchDi
     });
     return exports.serviceProfessionalsByJobTitle.latestRequest;
 };
+
+/**
+ * Retrieves information for a job title search
+ * @param {string} searchTerm job title search term to retrieve
+ * @returns {Promise}
+ */
+exports.jobTitleAutocomplete = function(searchTerm) {
+    if (exports.jobTitleAutocomplete.latestRequest) {
+        exports.jobTitleAutocomplete.latestRequest.xhr.abort();
+    }
+
+    exports.jobTitleAutocomplete.latestRequest = remote.get('search/job-titles/autocomplete', {
+        searchTerm: searchTerm
+    });
+    return exports.jobTitleAutocomplete.latestRequest;
+};
