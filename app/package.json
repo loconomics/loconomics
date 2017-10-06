@@ -21,6 +21,8 @@
   },
   "private": true,
   "devDependencies": {
+    "babel-preset-env": "^1.6.0",
+    "babelify": "^7.3.0",
     "bliss": "~1.0.1",
     "blueimp-file-upload": "^9.18.0",
     "browserify": "^14.4.0",
@@ -34,6 +36,7 @@
     "grunt": "^1.0.1",
     "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
     "grunt-browserify": "^5.0.0",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "1.x",
     "grunt-contrib-concat": "1.x",
     "grunt-contrib-connect": "1.x",
@@ -76,7 +79,8 @@
   "browserify": {
     "transform": [
       "browserify-shim",
-      "stringify"
+      "stringify",
+      "babelify"
     ]
   },
   "stringify": "./grunt/stringify.settings.js",
@@ -118,8 +122,5 @@
         "jquery"
       ]
     }
-  },
-  "dependencies": {
-    "grunt-cli": "^1.2.0"
   }
 }
