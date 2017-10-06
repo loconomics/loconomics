@@ -50,6 +50,37 @@ namespace LcRest
         #endregion
 
         #region Fetch
+        public static dynamic SearchByJobTitleAutocomplete(string searchTerm, Locale locale)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(@"
+                DECLARE @searchTerm AS varchar(150)
+                SET @searchTerm = @0
+                DECLARE @LanguageID int  
+                SET @LanguageID = @1
+                DECLARE @CountryID int
+                SET @CountryID = @2
+
+                SELECT TOP 25
+                PositionID as jobTitleID
+                ,PositionSingular as jobTitleSingularName
+                ,PositionDescription as jobTitleDescription
+                FROM
+                positions
+                WHERE
+                LanguageID = @LanguageID
+                AND CountryID = @CountryID
+                AND (PositionSingular like '%' + @searchTerm + '%'
+                OR PositionDescription like '%' + @searchTerm + '%'
+                OR GovPositionDescription like '%' + @searchTerm + '%'
+                OR PositionSearchDescription like '%' + @searchTerm + '%'
+                OR Aliases like '%' + @searchTerm + '%')
+                ORDER BY
+                DisplayRank, PositionSingular
+                ",searchTerm, locale.languageID, locale.countryID);
+            }
+        }
         public static JobTitleSearchResult SearchByJobTitleID(int jobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)
         {
             using (var db = new LcDatabase())
