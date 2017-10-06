@@ -96,14 +96,14 @@ OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
 // Definitions of the steps for 'welcome' onboarding, for any relevant set-up needed
 // on there, like if they need a jobTitleID
 // IMPORTANT: A server side feature at sign-up depends strictly on the order
-// of the first three steps, to skip the addJobTitles when a jobTitle is
+// of the first three steps, to skip the addJobTitle when a jobTitle is
 // given in the process, so move directly into schedulingPreferences.
 // If this changes, the server must be udpated properly or some steps
 // may end being skipt wrongly
 OnboardingProgress.steps = {
     names: [
         'welcome',
-        'addJobTitles',
+        'addJobTitle',
         'schedulingPreferences',
         'serviceProfessionalService',
         'serviceAddresses',
@@ -113,7 +113,7 @@ OnboardingProgress.steps = {
     ],
     definitions: {
         welcome: {},
-        addJobTitles: {},
+        addJobTitle: {},
         schedulingPreferences: {},
         serviceProfessionalService: {
             jobTitleSpecific: true

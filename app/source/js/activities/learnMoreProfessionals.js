@@ -103,7 +103,7 @@ function ViewModel(app) {
             }
             else {
                 // For logged users, assist them to add the job title:
-                url = 'addJobTitles?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
+                url = 'addJobTitle?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
                 app.shell.go(url);
             }
         }
@@ -113,8 +113,8 @@ function ViewModel(app) {
                 app.shell.scrollTo(SIGNUP_ELEMENT_SELECTOR, true);
             }
             else {
-                // Go to addJobTitles
-                url = 'addJobTitles?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
+                // Go to addJobTitle
+                url = 'addJobTitle?s=' + encodeURIComponent(jobTitleName) + '&autoAddNew=true';
                 app.shell.go(url);
             }
         }

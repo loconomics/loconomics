@@ -46,10 +46,6 @@ api.setStep = function(stepName) {
     return false;
 };
 
-api.skipToAddJobTitles = function() {
-    this.setStep(OnboardingProgress.steps.names[1]);
-};
-
 // Update the given navbar with the current onboarding information (only if in progress)
 api.updateNavBar = function(navBar) {
     var yep = this.inProgress();

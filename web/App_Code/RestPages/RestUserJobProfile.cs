@@ -233,8 +233,8 @@ public class RestUserJobProfile : RestWebPage
             if (!user.isServiceProfessional)
             {
                 LcAuth.BecomeProvider(userID);
-                // Set onboarding step as done for 'add job titles' to avoid display that screen again to the user:
-                LcData.UserInfo.SetOnboardingStep(userID, "addJobTitles");
+                // Set onboarding step as done for 'add job title' to avoid display that screen again to the user:
+                LcData.UserInfo.SetOnboardingStep(userID, "addJobTitle");
                 // Send email as provider
                 LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
             }
