@@ -9,6 +9,7 @@ var Activity = require('../components/Activity'),
     textSearch = require('../utils/textSearch');
 
 var messaging = require('../data/messaging');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function InboxActivity() {
 
@@ -32,11 +33,11 @@ A.prototype.show = function show(options) {
         this.viewModel.sourceThreads(threads());
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading messages',
             error: err
         });
-    }.bind(this));
+    });
 };
 
 function ViewModel(app) {

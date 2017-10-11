@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <div class="SmartNavView">
-                    <div class="SmartNavContent container-fluid">
+                    <form id="workPhotosForm" class="SmartNavContent container-fluid">
                         <h1><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
                         <ul class="list-unstyled WorkPhotos"
                             data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
@@ -24,9 +24,8 @@
                                     <img alt="Work photo" class="WorkPhotos-img" data-bind="attr: { src: url, alt: caption, style: photoRotationStyle, hidden: localTempPhotoPreview }" />
                                     <div data-label="Work photo" class="WorkPhotos-img" data-bind="domElement: localTempPhotoPreview, attr: { style: photoRotationStyle, hidden: !localTempPhotoPreview() }"></div>
                                 </div>
-                                <label data-bind="attr: { 'for': 'workPhotos-item-' + $index() }" class="sr-only">Photo caption</label>
-                                <input class="form-control" type="text" placeholder="Photo caption"
-                                    data-bind="textInput: caption, disable: $parent.state.isLocked, attr: { 'id': 'workPhotos-item-' + $index() }"/>
+                                <label data-bind="attr: { 'for': 'workPhotos-item-' + $index() }">Photo caption</label>
+                                <input class="form-control" type="text" required data-bind="textInput: caption, disable: $parent.state.isLocked, attr: { 'id': 'workPhotos-item-' + $index(), name: 'photoCaption-' + $index() }"/>
                                 <div class="WorkPhotos-toolbar">
                                     <button type="button" class="btn btn-link WorkPhotos-rotateBtn" data-bind="click: $root.rotateImg">
                                         <span class="glyphicon glyphicon-repeat"></span>
@@ -61,9 +60,9 @@
                             </button-file>
                         </div>
                         <div class="LightForm-submitBar" data-bind="visible: list().length || removedItems().length">
-                            <button type="button" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="click: save, text: saveBtnText, disable: state.isLocked">Save</button>
                         </div>
-                    </div>
+                    </form>
                     <div class="ActionSheetBackdrop"></div>
                     <div class="ActionSheet" id="workPhotos-photoSheet" hidden="hidden">
                         <ul>

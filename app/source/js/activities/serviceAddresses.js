@@ -10,6 +10,7 @@ var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
 var clientAddresses = require('../data/clientAddresses');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -26,7 +27,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
 
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
-    
+
     this.title = ko.pureComputed(function() {
         if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
             return 'Where do you work as a ' + this.jobTitleName() + '?';
@@ -70,11 +71,11 @@ var A = Activity.extend(function ServiceAddressesActivity() {
                     }
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 /// Rewrite URL
                 // IMPORTANT: When in isSelectionMode, pushState cannot be use

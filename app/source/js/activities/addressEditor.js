@@ -21,6 +21,8 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -46,11 +48,11 @@ var A = Activity.extend(function AddressEditorActivity() {
                     this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
-                }.bind(this));
+                });
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
@@ -140,11 +142,11 @@ A.prototype.show = function show(options) {
             this.viewModel.postalCodeVM.onFormLoaded();
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });
-        }.bind(this));
+        });
     }
     else {
         // New address
@@ -288,7 +290,7 @@ function ViewModel(app) {
                 this.onSave(serverData.addressID);
             }.bind(this))
             .catch(function(err) {
-                app.modals.showError({
+                showError({
                     title: 'There was an error while saving.',
                     error: err
                 });
@@ -298,7 +300,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.confirmRemoval = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete location',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
@@ -318,7 +320,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while deleting.',
                 error: err
             });

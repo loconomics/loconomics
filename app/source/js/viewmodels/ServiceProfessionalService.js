@@ -10,6 +10,7 @@ var EventEmitter = require('events').EventEmitter;
 var jobTitles = require('../data/jobTitles');
 var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var showError = require('../modals/error').show;
 
 function ServiceProfessionalServiceViewModel(app) {
     // jshint maxstatements:100
@@ -235,7 +236,7 @@ function ServiceProfessionalServiceViewModel(app) {
         }.bind(this))
         .catch(function (err) {
             this.isLoading(false);
-            app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });

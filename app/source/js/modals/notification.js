@@ -12,14 +12,14 @@
 // TODO jsdocs
 'use strict';
 
-var $ = require('jquery');
-require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
 var fixFocus = require('./utils/fixFocus');
+var TEMPLATE = require('../../html/modals/notification.html');
+var createElement = require('./utils/createElement');
+require('../utils/jquery.multiline');
 
 exports.show = function (options) {
-
-    var modal = $('#notificationModal');
+    var modal = createElement(TEMPLATE);
     fixFocus(modal);
     var header = modal.find('#notificationModal-label');
     var button = modal.find('#notificationModal-button');

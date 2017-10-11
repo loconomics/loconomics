@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout'),
-    moment = require('moment');
+var Model = require('./Model');
+var ko = require('knockout');
+var moment = require('moment');
 
 module.exports = function EventDates(values) {
     

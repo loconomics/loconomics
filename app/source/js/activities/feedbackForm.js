@@ -9,6 +9,7 @@ var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
 var feedback = require('../data/feedback');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function FeedbackFormActivity() {
 
@@ -128,7 +129,7 @@ function ViewModel(app) {
             this.becomeCollaborator(false);
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error sending your feedback',
                 error: err
             });

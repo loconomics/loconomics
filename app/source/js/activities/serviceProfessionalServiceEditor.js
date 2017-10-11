@@ -17,6 +17,8 @@ var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
@@ -125,7 +127,7 @@ A.prototype.show = function show(options) {
 
     var showLoadingError = function(error) {
         this.viewModel.isLoading(false);
-        this.app.modals.showError({
+        showError({
             title: 'Unable to load service',
             error: error
         })
@@ -302,7 +304,7 @@ function ViewModel(app) {
             this.onSave(serverData);
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to save the service.',
                 error: err
             });
@@ -313,7 +315,7 @@ function ViewModel(app) {
     this.confirmRemoval = function() {
         // TODO Better l10n or replace by a new preset field on pricingType.deleteLabel
         var p = this.pricingType();
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete ' + (p && p.singularName()),
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
@@ -333,7 +335,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to delete the service.',
                 error: err
             });

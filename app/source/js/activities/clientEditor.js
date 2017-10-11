@@ -12,6 +12,8 @@ var serviceProfessionalServices = require('../data/serviceProfessionalServices')
 var userJobProfile = require('../data/userJobProfile');
 var pricingTypes = require('../data/pricingTypes');
 var ko = require('knockout');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ClientEditionActivity() {
 
@@ -104,11 +106,11 @@ A.prototype.show = function show(state) {
 
         /*this.viewModel.client.sync(clientID)
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'Error loading client data',
                 error: err
             });
-        }.bind(this));*/
+        });*/
 
         clients.createItemVersion(clientID)
         .then(function (clientVersion) {
@@ -121,11 +123,11 @@ A.prototype.show = function show(state) {
             }
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'Error loading client data',
                 error: err
             });
-        }.bind(this));
+        });
     }
     else {
 
@@ -270,7 +272,7 @@ function ViewModel(app) {
                 messageName = view.client() ? ' for ' + view.client().firstName() : '',
                 message = messagePrefix + messageName + '.';
 
-            app.modals.showError({
+            showError({
                 title: message,
                 error: error
             });
@@ -325,7 +327,7 @@ function ViewModel(app) {
             this.onSave(serverData.clientUserID);
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while saving.',
                 error: err
             });
@@ -334,7 +336,7 @@ function ViewModel(app) {
     }.bind(this);
 
     this.confirmRemoval = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete client',
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
@@ -354,7 +356,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while deleting.',
                 error: err
             });
@@ -458,7 +460,7 @@ function ViewModel(app) {
 
             // Notify user
             var msg = 'We`ve found an existing record for {0}. Would you like to add him to your clients?'.replace(/\{0\}/g, user.firstName);
-            app.modals.confirm({
+            showConfirm({
                 title: 'client found at loconomics.com',
                 message: msg
             })

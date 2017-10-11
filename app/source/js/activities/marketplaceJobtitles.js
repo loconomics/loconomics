@@ -13,6 +13,9 @@ var serviceProfessionalServices = require('../data/serviceProfessionalServices')
 var workPhotos = require('../data/workPhotos');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
+var showNotification = require('../modals/notification').show;
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
@@ -45,11 +48,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     this.viewModel.userJobTitle(job.userJobTitle);
                 }.bind(this))
                 .catch(function(err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error loading your listing.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 /* NOTE: job title comes in the previous userJobProfile call, so is no need to duplicate the task
                 ////////////
@@ -62,11 +65,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
                 .catch(function(err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading the job title.',
                         error: err
                     });
-                }.bind(this));*/
+                });*/
 
                 ////////////
                 // Addresses
@@ -78,11 +81,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error loading your locations.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 ////////////
                 // Pricing/Services
@@ -94,11 +97,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error loading your offerings.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 ////////////
                 // Work Photos
@@ -109,11 +112,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
 
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while your work photos.',
                         error: err
                     });
-                }.bind(this));
+                });
                 ////////////
                 // Submitted Licenses
                 userLicensesCertifications.getList(jobTitleID)
@@ -122,11 +125,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     this.viewModel.submittedUserLicensesCertifications(userLicensesCertifications.asModel(list));
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
-                }.bind(this));
+                });
                 // Get required licenses for the Job title ID - an object, not a list
                 jobTitleLicenses.getItem(jobTitleID)
                 .then(function(item) {
@@ -134,11 +137,11 @@ var A = Activity.extend(function MarketplaceJobtitlesActivity() {
                     this.viewModel.jobTitleApplicableLicences(item);
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
-                }.bind(this));
+                });
             }
             else {
                 this.viewModel.addresses([]);
@@ -244,7 +247,7 @@ function ViewModel(app) {
                 // Push change to back-end
                 userJobProfile.reactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
-                    app.modals.showError({ title: 'Error enabling your listing', error: err });
+                    showError({ title: 'Error enabling your listing', error: err });
                 });
             }
             else if (v === false && status === UserJobTitle.status.on) {
@@ -252,11 +255,11 @@ function ViewModel(app) {
                 // Push change to back-end
                 userJobProfile.deactivateUserJobTitle(this.jobTitleID())
                 .catch(function(err) {
-                    app.modals.showError({ title: 'Error disabling your listing', error: err });
+                    showError({ title: 'Error disabling your listing', error: err });
                 });
                 // Per #1001, notify user about availability of bookMeNow button even with public marketplace profile
                 // disabled/hidden
-                app.modals.showNotification({
+                showNotification({
                     message: 'Clients will no longer be able to find you in the marketplace. However, any "book me now" links you have posted will still be active.',
                     buttonText: 'Got it!'
                 });
@@ -342,7 +345,7 @@ function ViewModel(app) {
         var jid = this.jobTitleID();
         var jname = this.jobTitleName();
         if (jid) {
-            app.modals.confirm({
+            showConfirm({
                 title: 'Delete ' + jname + ' listing',
                 message: 'Are you sure you really want to delete your ' + jname +' listing?',
                 yes: 'Delete',
@@ -353,7 +356,7 @@ function ViewModel(app) {
             })
             .catch(function(err) {
                 if (err) {
-                    app.modals.showError({ error: err, title: 'Error while deleting your listing' });
+                    showError({ error: err, title: 'Error while deleting your listing' });
                 }
             });
         }

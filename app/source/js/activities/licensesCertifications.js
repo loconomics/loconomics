@@ -12,6 +12,7 @@ var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
 var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
 var DEFAULT_BACK_TEXT = 'Back';
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function LicensesCertificationsActivity() {
 
@@ -46,11 +47,11 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                     this.updateNavBarState();
                 }.bind(this))
                 .catch(function(err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load listing details.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 // Get data for the Job title ID
                 userLicensesCertifications.getList(jobTitleID)
@@ -59,11 +60,11 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                     this.viewModel.submittedUserLicensesCertifications(userLicensesCertifications.asModel(list));
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load submitted licenses and credentials.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 // Get required licenses for the Job title ID - an object, not a list
                 jobTitleLicenses.getItem(jobTitleID)
@@ -78,11 +79,11 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                     }
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load license requirements.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 // Fix URL
                 // If the URL didn't included the jobTitleID, or is different,

@@ -12,13 +12,14 @@
 // TODO jsdocs
 'use strict';
 
-var $ = require('jquery');
-require('../utils/jquery.multiline');
 var ariaHideElements = require('./utils/ariaHideElements');
 var fixFocus = require('./utils/fixFocus');
+var TEMPLATE = require('../../html/modals/announcement.html');
+var createElement = require('./utils/createElement');
+require('../utils/jquery.multiline');
 
 exports.show = function showAnnouncementModal(options) {
-    var modal = $('#announcementModal');
+    var modal = createElement(TEMPLATE);
     fixFocus(modal);
     var primaryBtn = modal.find('#announcementModal-primaryBtn');
     var secondaryBtn = modal.find('#announcementModal-secondaryBtn');

@@ -23,8 +23,8 @@ $DatePicker-day-cell-height = 48px;
 // no slightly differences between browsers, and mostly at 1x screens
 // We have 3 rows of month-years while 6 rows of days plus weekDay header
 $DatePicker-monthYear-cell-height = (($DatePicker-day-cell-height * 6 + $DatePicker-weekDay-cell-height) / 3);
-$DatePicker-day-content-height = 28px;
-$DatePicker-day-content-width = 28px;
+$DatePicker-day-content-height = 24px;
+$DatePicker-day-content-width = 24px;
 
 .DatePicker
     top 0
@@ -54,6 +54,16 @@ $DatePicker-day-content-width = 28px;
         top -6px
         left 7px
 
+    // Reset button styles
+    button
+        display block
+        width 100%
+        height 100%
+        border none
+        background transparent
+        padding: 0;
+        margin: 0;
+
     > div
         display none
 
@@ -77,13 +87,11 @@ $DatePicker-day-content-width = 28px;
         text-align center
         // A minimum size
         width $DatePicker-day-content-width
-        height $DatePicker-day-content-height
+        height 40px
 
         &.day
-            span
-                display inline-block
-                width $DatePicker-day-content-width
-                line-height $DatePicker-day-content-height
+            width $DatePicker-day-content-width
+            button
                 font-size 17px
 
             &:hover
@@ -103,19 +111,30 @@ $DatePicker-day-content-width = 28px;
             color #fff
             text-shadow 0 -1px 0 rgba(0, 0, 0, 0.25)
 
-        &.active span
+        &.active button > span:first-child
             background-color: $brand-info-dark;
             border-radius: 100%;
+            width: $DatePicker-day-content-height;
+            height: $DatePicker-day-content-width;
+            display: inline-block;
+            margin: auto;
+            line-height: 1.4;
 
         &.active:hover
-            span
+            button
                 background none
+
+    th
+        padding: 0 !important;
+        button
+            padding: 0;
 
     td.day
         height $DatePicker-day-cell-height
+        padding: 0 !important;
 
-    span.month,
-    span.year
+    button.month,
+    button.year
         display block
         float left
         cursor pointer
@@ -146,11 +165,6 @@ $DatePicker-day-content-width = 28px;
         &.next
         &.prev
             font-size ($font-size-base * 1.5)
-            > button
-                width 100%
-                height 100%
-                border none
-                background transparent
 
     thead tr:first-child
         th
@@ -178,7 +192,7 @@ $DatePicker-day-content-width = 28px;
     /* Carets to visually notify 'clickable headers' */
     .DatePicker-days
     .DatePicker-months
-        th.switch:after
+        th.switch > button:after
             content: ''
             $caret(6px)
 
@@ -195,43 +209,33 @@ $DatePicker-day-content-width = 28px;
             // General styles to be ready for tags
             // IMPORTANT: changes to this sizing needs changes to months/years
             // in this style modifier and take care of general cell height
-            padding: 3px 5px 14px !important;
             border-bottom 1px solid $gray-lighter
             position: relative;
+            > button
+                padding: 0 !important;
+                line-height: 1;
+                position: relative;
 
-            &:after
-              content ''
-              display block
-              margin auto
-              border-radius 100%
-              position absolute
-              left 0
-              right 0
-              bottom 7px
-              width 6px
-              height 6px
+                > span:first-child
+                    display: block;
+                    position: absolute;
+                    top: 5px;
+                    left: 0;
+                    right: 0;
 
-            // Possible tags
-            &.tag-muted
-              color $gray-lighter
-              &:after
-                  background $gray-lighter
-
-            // This tag is empty: &.tag-blank
-            &.tag-dark
-                &:after
-                    background Black
-
-            for $color in $brand-colors
-                &.tag-{$color}
-                    &:after
-                        background $brand-colors[$color]
+                > .DatePicker-tag
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 5px;
+                    font-size: 18px;
 
             // Tag in days of other months get even more muted:
             &.old
             &.new
                 &:after
-                    opacity .5
+                    opacity .8
 
     $.DatePicker-hasLegend
         border-bottom 1px solid $gray-lighter

@@ -8,11 +8,10 @@ var $ = require('jquery');
 var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var Activity = require('../components/Activity');
 var snapPoints = require('../utils/snapPoints');
-
-var googleMapReady = require('../utils/googleMapReady');
-require('geocomplete');
+var showAnnouncement = require('../modals/announcement').show;
 var user = require('../data/userProfile').data;
 var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
+require('../kocomponents/location-autocomplete');
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -21,7 +20,7 @@ var A = Activity.extend(function HomeActivity() {
     var navBar = this.navBar;
     navBar.additionalNavClasses('AppNav--home');
     this.accessLevel = null;
-    this.title('Find and book local services');
+    this.title('Find and schedule local services.');
     this.viewModel = new ViewModel(this.app.shell);
     this.viewModel.nav = this.app.navBarBinding;
     // We need a reference to later calculate snap-point based on Nav height
@@ -57,51 +56,6 @@ var A = Activity.extend(function HomeActivity() {
                 //$header.removeClass('is-search');
             }
         }
-    });
-    // LOCATION AUTOCOMPLETE:
-    // Load Google Maps API with Places and prepare the location autocomplete
-    var $location = this.$activity.find('[name=location]');
-    var vm = this.viewModel;
-    googleMapReady(function(/*UNCOMMENT FOR USE THE 'WITHOUT PLUGIN' CODE:*//*google*/) {
-        var options = {
-            types: ['geocode'],
-            bounds: null,
-            componentRestrictions: {
-                country: 'US'
-            }
-        };
-
-        // WITH PLUGIN:
-        $location.geocomplete(options);
-        $location.on('geocode:result', function(e, place) {
-            if (place && place.geometry) {
-                // Save to viewmodel
-                vm.lat(place.geometry.location.lat());
-                vm.lng(place.geometry.location.lng());
-                vm.city(place.formatted_address);
-                console.log('LOCATION: ', place);
-            }
-        });
-
-        // WITHOUT PLUGIN: Calling direclty Google Maps API, core feature of the plugin
-        /*
-        var autocomplete = new google.maps.places.Autocomplete(
-            $location.get(0), options
-        );
-
-        google.maps.event.addListener(
-            autocomplete,
-            'place_changed',
-            function() {
-                var place = autocomplete.getPlace();
-                if (place && place.geometry) {
-                    // Save to viewmodel
-                    vm.lat(place.geometry.location.lat());
-                    vm.lng(place.geometry.location.lng());
-                    console.log('LOCATION: ', place.geometry);
-                }
-            }
-        );*/
     });
 });
 
@@ -140,7 +94,7 @@ A.prototype.show = function show(state) {
         // And of course we must not attempt that ones that are already users :-)
         var showIt = !localStorage.sanFranciscoLaunchPopup && user.isAnonymous();
         if (showIt) {
-            this.app.modals.showAnnouncement({
+            showAnnouncement({
                 message: 'We\'re an app for booking local services that\'s cooperatively owned by service professionals. Right now we\'re busy recruiting service professional owners in San Francisco and Oakland. Click below to learn more.',
                 primaryButtonText: 'I\'m a service professional',
                 primaryButtonLink: '#!/learnMoreProfessionals',
@@ -184,5 +138,12 @@ function ViewModel(shell) {
         return {
             value: ActionForValue.clear
         };
+    }.bind(this);
+
+    this.onPlaceSelect = function(place) {
+        // Save to viewmodel
+        this.lat(place.geometry.location.lat());
+        this.lng(place.geometry.location.lng());
+        this.city(place.formatted_address);
     }.bind(this);
 }

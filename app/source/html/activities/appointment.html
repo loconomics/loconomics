@@ -13,21 +13,17 @@
             <div class="col-md-7 col-sm-reset">
                     <h1 id="appointment-titleBar">
                         <span data-bind="text: title"></span>
-                        <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
-                        </span>
+                        <!-- Hidden edit button until implement accessible appointment card #644
+                            <span class="pull-right visible-xs visible-sm"><button class="btn btn-default btn-editCard" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
+                        </span>-->
                     </h1>
                     <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                <div id="appointment-toolbar" class="hidden-xs hidden-sm container-fluid">
-                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-left" data-bind="visible: !isNewCard() && !editMode(), click: goPrevious"></button>
-                    <button class="btn btn-default fa fa-lg ion ion-ios-arrow-right" data-bind="visible: !isNewCard() && !editMode(), click: goNext"></button>
-                    <!--<button class="btn btn-default pull-right" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>-->
-                </div>
+                <!--<div id="appointment-toolbar" class="hidden-xs hidden-sm container-fluid">
+                    <button class="btn btn-default pull-right" data-bind="visible: isEditButtonVisible, click: appointmentCardView() && appointmentCardView().edit">Edit</button>
+                </div>-->
                 <!-- Appointment View (cards) -->
-                <div id="calendarAppointmentView" class="container-fluid CardsDeck CardsDeck--dotsSlider" data-bind="event: { swipeleft: goNext, swiperight: goPrevious }, css: { 'is-loading': isLoading() }">
+                <div id="calendarAppointmentView" class="container-fluid CardsDeck" data-bind="css: { 'is-loading': isLoading() }">
                     <app-appointment-card params="sourceItem: currentAppointment, editMode: editMode, isLoading: isLoading, app: app, api: appointmentCardView"></app-appointment-card>
-                    <div class="CardsDeck-dots" data-bind="foreach: appointments">
-                        <span data-bind="css: { 'is-active': ($index() == $parent.currentIndex()) }"></span>
-                    </div>
                 </div>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

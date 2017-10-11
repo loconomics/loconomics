@@ -11,6 +11,7 @@
 var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
 var bookings = require('../data/bookings');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ViewBookingActivity() {
 
@@ -36,7 +37,7 @@ A.prototype.show = function show(state) {
         }
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Booking',
             error: err
         }).then(function() {

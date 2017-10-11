@@ -7,27 +7,9 @@
 @import '../../components/Item.styl'
 
 .ListingSummaryItem {
-    Item();
+    Item(2.5em);
     $height-em = 2.5em;
-    Item-addContent($height);
     .Item-content {
         width: 95%;
-    }
-    a,
-    button {
-        width: 5%;
-        height: $height-em;
-        min-width: 48px;
-        min-height: 48px;
-        display: table-cell;
-        text-align: right;
-        vertical-align: middle;
-        // there are some problems with some icons (ionicons mainly) where
-        // even with enough space, gets cut on the edges; add a minimum gap
-        // to give them overflow space
-        padding: 0 1px;
-        i {
-            font-size: 1.5em;
-        }
     }
 }

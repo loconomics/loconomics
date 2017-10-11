@@ -34,13 +34,13 @@ var attachFastClick = require('fastclick').attach;
 /**
     App static class
 **/
-var app = {
-    modals: require('./app.modals'),
-};
+var app = {};
 
 /** Continue app creation with things that need a reference to the app **/
 
 require('./app-components').registerAll(app);
+
+var showError = require('./modals/error').show;
 
 /** App Init **/
 var appInit = function appInit() {
@@ -97,9 +97,8 @@ var appInit = function appInit() {
     };
     $(document).on('click', '[href^=#]', fragmentNavigationHandler);
 
-
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });

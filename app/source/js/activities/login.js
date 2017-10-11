@@ -9,6 +9,8 @@ var ko = require('knockout'),
 var user = require('../data/userProfile').data;
 var auth = require('../data/auth');
 var onboarding = require('../data/onboarding');
+var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function LoginActivity() {
 
@@ -148,7 +150,7 @@ function ViewModel(app) {
             this.password.error() ||
             !this.username() ||
             !this.password()) {
-            app.modals.showError({
+            showError({
                 title: 'Validation',
                 error: 'Type a valid e-mail and a password'
             });
@@ -178,7 +180,7 @@ function ViewModel(app) {
             var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
                 err && err.statusText ||
                 'Invalid username or password';
-            app.modals.showError({
+            showError({
                 title: 'Error logging in',
                 error: msg
             });
@@ -194,7 +196,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(error) {
             this.isWorking(false);
-            app.modals.showError({
+            showError({
                 title: 'Error requesting a password reset',
                 error: error
             });
@@ -203,7 +205,7 @@ function ViewModel(app) {
 
     this.confirmReset = function confirmReset() {
         if (!this.validatedPassword.isValid()) {
-            app.modals.showError({
+            showError({
                 title: 'Validation',
                 error: 'Please create a valid password'
             });
@@ -216,7 +218,7 @@ function ViewModel(app) {
             password: this.validatedPassword.password(),
             token: this.resetToken()
         }).then(function(result) {
-            app.modals.showNotification({
+            showNotification({
                 title: 'Done!',
                 message: result.message
             });
@@ -225,7 +227,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(error) {
             this.isWorking(false);
-            app.modals.showError({
+            showError({
                 title: 'Error resetting the password',
                 error: error
             });
@@ -256,7 +258,7 @@ function ViewModel(app) {
             var msg = err && err.responseJSON && err.responseJSON.errorMessage ||
                 err && err.statusText ||
                 'Invalid Facebook login';
-            app.modals.showError({
+            showError({
                 title: 'Error logging in',
                 error: msg
             });

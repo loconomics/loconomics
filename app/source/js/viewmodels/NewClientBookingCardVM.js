@@ -9,6 +9,8 @@ var Address = require('../models/Address');
 var EventDates = require('../models/EventDates');
 var bookings = require('../data/bookings');
 var availability = require('../data/availability');
+var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 // Functions to manage the lastBooking info, for save/restore state feature
 // IMPORTANT: initially used localforage, but this is cleared on a logout/login,
@@ -290,7 +292,7 @@ function NewClientBookingCardVM(app) {
         }.bind(this))
         .catch(function(err) {
             this.isLoadingNewBooking(false);
-            app.modals.showError({ error: err });
+            showError({ error: err });
         }.bind(this));
     }.bind(this);
 
@@ -328,7 +330,7 @@ function NewClientBookingCardVM(app) {
             availability.clearUserCache(this.originalBooking().serviceProfessionalUserID());
             this.isDone(true);
 
-            app.modals.showNotification({
+            showNotification({
                 title: 'Done!',
                 message: 'Your booking was created!'
             })
@@ -339,7 +341,7 @@ function NewClientBookingCardVM(app) {
         // error handling
         var onerror = function(err) {
             this.isSaving(false);
-            app.modals.showError({ error: err });
+            showError({ error: err });
         }.bind(this);
 
         // If anonymous, must pass the signup, and only after save booking

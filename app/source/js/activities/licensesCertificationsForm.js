@@ -12,6 +12,8 @@ var userLicensesCertifications = require('../data/userLicensesCertifications');
 var licenseCertification = require('../data/licenseCertification');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
 var $ = require('jquery');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function LicensesCertificationsFormActivity() {
 
@@ -115,7 +117,7 @@ A.prototype.show = function show(state) {
             this.viewModel.version(new ModelVersion(new UserLicenseCertification(data)));
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             })
@@ -137,7 +139,7 @@ A.prototype.show = function show(state) {
             this.viewModel.version(new ModelVersion(item));
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             })
@@ -228,7 +230,7 @@ function ViewModel(app) {
             }
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to save.',
                 error: err
             });
@@ -238,7 +240,7 @@ function ViewModel(app) {
 
     this.confirmRemoval = function() {
         // L18N
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
@@ -256,7 +258,7 @@ function ViewModel(app) {
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to delete.',
                 error: err
             });
@@ -278,12 +280,12 @@ function ViewModel(app) {
             .catch(function(err) {
                 // A user abort gives no error or 'no image selected' on iOS 9/9.1
                 if (err && err !== 'no image selected' && err !== 'has no access to camera') {
-                    app.modals.showError({ error: err, title: 'Error selecting photo.' });
+                    showError({ error: err, title: 'Error selecting photo.' });
                 }
             });
         }
         else {
-            app.modals.showError({ error: 'This feature is currently only available on mobile devices' });
+            showError({ error: 'This feature is currently only available on mobile devices' });
         }
     }.bind(this);
 

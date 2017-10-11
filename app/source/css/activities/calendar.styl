@@ -49,12 +49,6 @@
     }
 
     .CalendarDateHeader {
-        button {
-            &:hover,
-            &:focus {
-                outline: none;
-            }
-        }
         .btn-link {
             text-align: left;
         }
@@ -123,15 +117,16 @@
         }
 
         /** smooth transition and visible state **/
-        opacity: 0;
-        transform: translateY(-15px);
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
         transition: 500ms all;
-        pointer-events: none;
 
-        &.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
+        &[hidden] {
+            display: block;
+            opacity: 0;
+            transform: translateY(-15px);
+            pointer-events: none;
         }
     }
 }

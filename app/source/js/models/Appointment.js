@@ -1,12 +1,12 @@
 /** Appointment model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    moment = require('moment'),
-    PricingSummaryDetail = require('./PricingSummaryDetail'),
-    CalendarEvent = require('./CalendarEvent'),
-    Booking = require('./Booking');
+var ko = require('knockout');
+var Model = require('./Model');
+var moment = require('moment');
+var PricingSummaryDetail = require('./PricingSummaryDetail');
+var CalendarEvent = require('./CalendarEvent');
+var Booking = require('./Booking');
 var Address = require('./Address');
 
 function Appointment(values) {

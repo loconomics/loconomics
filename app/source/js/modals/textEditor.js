@@ -13,14 +13,14 @@
 'use strict';
 
 var ko = require('knockout');
-var $ = require('jquery');
 var ariaHideElements = require('./utils/ariaHideElements');
 var fixFocus = require('./utils/fixFocus');
+var TEMPLATE = require('../../html/modals/textEditor.html');
+var createElement = require('./utils/createElement');
 
 exports.show = function showTextEditor(options) {
     //jshint maxcomplexity:10
-
-    var modal = $('#textEditorModal');
+    var modal = createElement(TEMPLATE);
     var vm = modal.data('viewmodel');
     fixFocus(modal);
 

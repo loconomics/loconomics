@@ -3,9 +3,11 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    ko = require('knockout');
+var Activity = require('../components/Activity');
+var ko = require('knockout');
 var education = require('../data/education');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function EducationFormActivity() {
 
@@ -16,7 +18,6 @@ var A = Activity.extend(function EducationFormActivity() {
     this.navBar = Activity.createSubsectionNavBar('Education', {
         backLink: '/education' , helpLink: this.viewModel.helpLink
     });
-    this.title('Add training or education');
     this.title = ko.pureComputed(function() {
         if (this.educationID() > 0){
             return 'Edit training/education';
@@ -64,7 +65,7 @@ A.prototype.show = function show(state) {
             }
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             })
@@ -139,7 +140,7 @@ function ViewModel(app) {
             app.successSave();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while saving.',
                 error: err
             });
@@ -149,7 +150,7 @@ function ViewModel(app) {
 
     this.confirmRemoval = function() {
         // L18N
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete',
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
@@ -168,7 +169,7 @@ function ViewModel(app) {
             app.successSave();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while deleting.',
                 error: err
             });

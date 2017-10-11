@@ -8,6 +8,7 @@ var ko = require('knockout'),
     NavBar = require('../viewmodels/NavBar');
 
 require('../utils/Function.prototype._inherits');
+var showConfirm = require('../modals/confirm').show;
 
 /**
     Activity class definition
@@ -41,6 +42,13 @@ function Activity($activity, app) {
     });
 
     /**
+     * When the activity is being shown (just at ending of method 'show'),
+     * false for hidden (restored at ending of method 'hide')
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isShown = ko.observable(false);
+
+    /**
      * Observable property to allow each activity to set-up a title.
      * This first value is a placeholder, can be replaced by a constant string
      * or a computed at the activity constructor (before first 'show').
@@ -49,7 +57,7 @@ function Activity($activity, app) {
     this.title = ko.observable('');
 
     // Knockout binding of viewState delayed to first show
-    // to avoid problems with subclasses replacing the viewState
+    // to avoid problems with subclasses replacing the viewModel property
 }
 
 module.exports = Activity;
@@ -89,8 +97,8 @@ Activity.prototype.show = function show(options) {
     // TODO: must keep viewState up to date using options/state.
     //console.log('Activity show', this.constructor.name);
     if (!this.__bindingDone) {
-        // Default viewModel
-        this.viewModel = this.viewModel || {};
+        // Default viewModel: the Activity instance (for more simple scenarios)
+        this.viewModel = this.viewModel || this;
         // Share title field with viewModel
         if (!this.viewModel.title) {
             this.viewModel.title = this.title;
@@ -160,6 +168,8 @@ Activity.prototype.show = function show(options) {
     // Scroll to top immediately, if wanted by the activity (defaults to true):
     if (this.resetScroll)
         this.$activity.scrollTop(0);
+
+    this.isShown(true);
 };
 
 /**
@@ -168,7 +178,6 @@ Activity.prototype.show = function show(options) {
     from the current view.
 **/
 Activity.prototype.hide = function hide() {
-
     // Disable registered handlers
     if (this._handlers) {
         this._handlers.forEach(function(settings) {
@@ -196,6 +205,8 @@ Activity.prototype.hide = function hide() {
 
         this._handlersAreConnected = false;
     }
+
+    this.isShown(false);
 };
 
 /**
@@ -308,7 +319,7 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
             }
             else {
                 // TODO L18N
-                app.modals.confirm({
+                showConfirm({
                     title: 'Cancel',
                     message: 'Are you sure?',
                     yes: 'Yes',

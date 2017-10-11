@@ -14,6 +14,8 @@ var PostalCodeVM = require('../viewmodels/PostalCode');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var serviceAddresses = require('../data/serviceAddresses');
+var showTextEditor = require('../modals/textEditor').show;
+var showError = require('../modals/error').show;
 
 // L18N
 // List of all possible steps by name providing the language for the UI
@@ -288,7 +290,7 @@ function BaseClientBookingCardVM(app) {
         }.bind(this))
         .catch(function(err) {
             this.isLoadingServiceProfessionalInfo(false);
-            app.modals.showError({ error: err });
+            showError({ error: err });
         }.bind(this));
     }, this).extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
@@ -379,7 +381,7 @@ function BaseClientBookingCardVM(app) {
         return sp ? 'Add notes to ' + sp : 'Add notes';
     }, this);
     this.pickSpecialRequests = function() {
-        app.modals.showTextEditor({
+        showTextEditor({
             title: this.specialRequestsPlaceholder(),
             text: this.booking().specialRequests()
         })
@@ -388,7 +390,7 @@ function BaseClientBookingCardVM(app) {
         }.bind(this))
         .catch(function(err) {
             if (err) {
-                app.modals.showError({ error: err });
+                showError({ error: err });
             }
             // No error, do nothing just was dismissed
         });
@@ -518,7 +520,7 @@ BaseClientBookingCardVM.prototype.loadServiceAddresses = function() {
     }.bind(this))
     .catch(function(err) {
         this.isLoadingServiceAddresses(false);
-        this.app.modals.showError({ error: err });
+        showError({ error: err });
     }.bind(this));
 };
 

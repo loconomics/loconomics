@@ -2,71 +2,63 @@
      <!-- categories internal menu -->
 <div data-activity="searchCategory">
     <div class="PageMenu">
-        <!-- Single button -->
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Change category <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Home Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Self Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Child Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Senior Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Pet Care</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Celebration</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Transport</a></li>
-            <li><a class="dropdown-item" href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}">Office</a></li>
-          </ul>
-        </div>    
-        <div class="PageMenu-list">
-            <ul>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/1' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==1}">Home Care</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/2' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==2}">Self Care</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/3' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==3}">Child Care</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/4' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==4}">Senior Care</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/5' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==5}">Pet Care</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/6' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==6}">Celebration</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/7' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==7}">Transport</a></li>
-                <li><a href="/searchCategory/" data-bind="attr: {href: '/searchCategory/8' + '/' + origLat() + '/' + origLong() + '/' + searchDistance()}, css: {'active': categoryID()==8}">Office</a></li>
+        <tab-list params="prefix: '#searchCategory-', active: activeTabName, data: $data">
+            <div class="PageMenu-list"><ul data-bind="foreach: data().categories">
+                <li><a data-bind="
+                    attr: { href: '#searchCategory-' + id },
+                    css: { active: $parents[1].categoryID() == id },
+                    text: name"></a>
+                </li>
+            </ul></div>
+            <!-- Single button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Change category <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" data-bind="foreach: data().categories">
+                    <li><a class="dropdown-item" data-bind="
+                        attr: { href: '#searchCategory-' + id },
+                        css: { active: $parents[1].categoryID() == id },
+                        text: name"></a>
+                    </li>
+                </ul>
+            </div>
+        </tab-list>
+    </div>
+    <div class="SearchResults">
+        <div data-bind="attr: { id: 'searchCategory-' + categoryID(), 'aria-busy': isLoading }">
+            <div data-bind="with: categorySearchResult">
+                <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
+                    <div class="SearchResultsBackground-text">
+                        <h1 data-bind="text: $root.title"></h1>
+                        <p data-bind="visible: serviceProfessionalsCount() > 0">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
+                        <p><span data-bind="text: searchDescription"></span></p>
+                    </div>
+                </div>
+            </div>
+            <ul data-bind="foreach: jobTitleSearchResult">
+                <li>
+                    <div class="CategoryResult-summary">
+                        <div>
+                            <h2><span data-bind="text: pluralName"></span></h2>
+                        </div>
+                        <div class="ServiceProfessionalInfo-meta">
+                            <app-stars-rating data-bind="visible: totalRatings" params="rating: averageRating, total: totalRatings" class="text-secondary"></app-stars-rating>
+                        </div>
+                    </div>
+                    <div class="CategoryResult-description">
+                        <span data-bind="text: searchDescription"></span>
+                    </div>
+                    <div class="ServiceProfessionalResult-actions">
+                        <p><strong data-bind="visible: serviceProfessionalsCount > 0 && averageHourlyRate > 0">
+                        <span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> from <span class="FromPrice">$<span  data-bind="text: averageHourlyRate"></span>/hour</span>
+                        </strong></p>
+                        <p><span data-bind="visible: serviceProfessionalsCount < 1 || averageHourlyRate < 1">&nbsp;</span>
+                        </p>
+                        <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID + '/' + $root.origLat() + '/' + $root.origLong() + '/' + $root.searchDistance()}" class="btn btn-primary">View &amp; schedule</a>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>
-    <div class="SearchResults">
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="categories-home">
-                <div data-bind="with: categorySearchResult">
-                    <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
-                        <div class="SearchResultsBackground-text">
-                            <h1 data-bind="text: $root.title"></h1>
-                            <p data-bind="visible: serviceProfessionalsCount() > 0">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>                    
-                            <p><span data-bind="text: searchDescription"></span></p>
-                        </div>
-                    </div>
-                 </div>
-                 <ul data-bind="foreach: jobTitleSearchResult">
-                   <li>
-                       <div class="CategoryResult-summary">
-                         <div>
-                           <h2><span data-bind="text: pluralName"></span></h2>
-                         </div>
-                         <div class="ServiceProfessionalInfo-meta">
-                           <app-stars-rating data-bind="visible: totalRatings" params="rating: averageRating, total: totalRatings" class="text-secondary"></app-stars-rating>
-                         </div>
-                       </div>
-                       <div class="CategoryResult-description">
-                           <span data-bind="text: searchDescription"></span>
-                       </div>    
-                       <div class="ServiceProfessionalResult-actions">
-                         <p><strong data-bind="visible: serviceProfessionalsCount > 0 && averageHourlyRate > 0">
-                           <span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> from <span class="FromPrice">$<span  data-bind="text: averageHourlyRate"></span>/hour</span>
-                         </strong></p>
-                         <p><span data-bind="visible: serviceProfessionalsCount < 1 || averageHourlyRate < 1">&nbsp;</span>
-                         </p>
-                           <a href="/searchJobTitle/" data-bind="attr: {href: '/searchJobTitle/' + jobTitleID + '/' + $root.origLat() + '/' + $root.origLong() + '/' + $root.searchDistance()}" class="btn btn-primary">View and book</a>
-                      </div>
-                  </li>
-                </ul>
-            </div>
-        </div>
-    </div>    
 </div>

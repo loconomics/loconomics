@@ -12,6 +12,7 @@ var $ = require('jquery'),
     moment = require('moment'),
     createTimeSlots = require('./createTimeSlots');
 var availability = require('../data/availability');
+var showError = require('../modals/error').show;
 
 exports.create = function createDatepickerAvailability(app, $datepicker, isLoading) {
     // Cache DOM elements
@@ -60,41 +61,47 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             // Iterate every day element, and use its date avail from the result
             daysElements.each(function() {
                 // jshint maxcomplexity:10
-                var $dateTd = $(this),
-                    id = $dateTd.data('date-time'),
-                    timeRangeList = byDate[moment(id).format('YYYY-MM-DD')];
+                var $dateTd = $(this);
+                var id = $dateTd.data('date-time');
+                var timeRangeList = byDate[moment(id).format('YYYY-MM-DD')];
+                var $dateTag = $dateTd.find('.DatePicker-tag');
 
                 // Integrity check to avoid edge case exceptions
                 // ('must' not happens, but stronger code)
                 if (!id || !timeRangeList) return;
 
-                // Remove any previous 'tag-' class from the cell classNames and keep for later change
-                var cellClass = $dateTd.attr('class').replace(/(^|\s)tag-[^\s]+/, '');
-
                 // Set a date cell class based on its availability
                 var cls = '';
+                var ariaLabel = '';
                 switch(createTimeSlots.getAvailabilityTag(timeRangeList)) {
                     case 'past':
-                        cls = 'tag-muted';
+                        cls = 'text-muted';
+                        ariaLabel = 'Past date';
                         break;
                     case 'full':
-                        cls = 'tag-blank';
+                        cls = 'text-muted ion-ios-circle-filled';
+                        ariaLabel = 'Schedule is fully booked';
                         break;
                     case 'medium':
-                        cls = 'tag-dark';
+                        cls = 'text-warning ion-contrast';
+                        ariaLabel = 'Schedule is more than 50% booked';
                         break;
                     case 'low':
-                        cls = 'tag-warning';
+                        cls = 'text-success ion-ios-circle-outline';
+                        ariaLabel = 'Schedule is less than 50% booked';
                         break;
                     case 'none':
-                        cls = 'tag-danger';
+                        cls = 'text-danger ion-ios-close';
+                        ariaLabel = 'Schedule is blocked';
                         break;
                 }
-                $dateTd.attr('class', cellClass + ' ' + cls);
+                $dateTag
+                .attr('class', 'DatePicker-tag ' + cls)
+                .attr('aria-label', ariaLabel);
             });
         })
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error loading availability',
                 error: err
             });

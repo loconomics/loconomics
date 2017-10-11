@@ -3,9 +3,9 @@
 var ko = require('knockout');
 var clipboard = require('../utils/clipboard');
 var listing = require('../data/marketplaceProfile');
+var showError = require('../modals/error').show;
 
 module.exports = function ListingVM(app) {
-
     var profileVersion = listing.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
@@ -76,7 +76,7 @@ module.exports = function ListingVM(app) {
         var url = this.customUrlDraft();
         var errMsg = clipboard.copy(url);
         if (errMsg) {
-            app.modals.showError({ error: errMsg });
+            showError({ error: errMsg });
         }
         else {
             this.copyCustomUrlButtonText('Copied!');

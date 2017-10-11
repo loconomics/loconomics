@@ -209,12 +209,6 @@ exports.registerAll = function(app) {
         }
     });
 
-    /// feedback-entry
-    ko.components.register('app-time-slot-tile', {
-        template: { element: 'time-slot-tile-template' },
-        viewModel: require('./viewmodels/TimeSlot')
-    });
-
     /// loading-spinner
     ko.components.register('app-loading-spinner', {
         template: { element: 'loading-spinner-template' },

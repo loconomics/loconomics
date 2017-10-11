@@ -20,6 +20,8 @@ require('es6-promise').polyfill();
 // (avoiding jQuery, it has equivalent methods)
 require('../../vendor/polyfills/Element.prototype.matches');
 require('../../vendor/polyfills/Element.prototype.closest');
+// Polyfill requestAnimationFrame, required for Android 4-4.3.
+require('requestAnimationFrame');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');
@@ -29,6 +31,7 @@ var ga = require('./data/googleAnalytics');
 require('./locales/en-US-LC');
 
 var attachFastClick = require('fastclick').attach;
+var showError = require('./modals/error').show;
 
 /**
     A set of fixes/workarounds for Bootstrap behavior/plugins
@@ -77,11 +80,6 @@ var app = {
 
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
-
-    /**
-     * @deprecated See the module comment for more info
-     */
-    modals: require('./app.modals'),
 
     /**
         Just redirect the better place for current user and state.
@@ -343,7 +341,7 @@ var appInit = function appInit() {
     });
     // Catch errors on item/page loading, showing..
     app.shell.on('error', function(err) {
-        app.modals.showError({ error: err });
+        showError({ error: err });
     });
 
     // Scroll to element when clicking a usual fragment link (not a page link)
@@ -449,7 +447,7 @@ var appInit = function appInit() {
 
     // App init:
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });

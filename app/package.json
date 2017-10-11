@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.6.3",
+  "version": "1.6.6",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -31,7 +31,6 @@
     "es6-promise": "~4.1.1",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
-    "geocomplete": "^1.6.5",
     "grunt": "^1.0.1",
     "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
     "grunt-browserify": "^5.0.0",
@@ -91,7 +90,8 @@
     "ko/formatBinding": "./vendor/iagosrl/ko/formatBinding",
     "ko/domElementBinding": "./vendor/iagosrl/ko/domElementBinding",
     "layoutUpdateEvent": "./vendor/iagosrl/layoutUpdateEvent",
-    "iagosrl/throttle": "./vendor/iagosrl/throttle"
+    "iagosrl/throttle": "./vendor/iagosrl/throttle",
+    "requestAnimationFrame": "./vendor/darius/requestAnimationFrame.js"
   },
   "browserify-shim": {
     "bootstrap": {
@@ -118,5 +118,8 @@
         "jquery"
       ]
     }
+  },
+  "dependencies": {
+    "grunt-cli": "^1.2.0"
   }
 }
