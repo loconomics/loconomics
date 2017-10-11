@@ -90,5 +90,6 @@ module.exports = {
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
     'serviceProfessionalBusinessInfo': require('./activities/serviceProfessionalBusinessInfo'),
-    'userBirthday': require('./activities/userBirthday')
+    'userBirthday': require('./activities/userBirthday'),
+    'listing': require('./activities/listing')
 };
