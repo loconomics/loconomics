@@ -33,13 +33,14 @@
                 <p><span data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl()"></span><span class="text-muted" data-bind="visible: !profile().serviceProfessionalWebsiteUrl()"><em>Your business website</em></span></p>
                 <a data-bind="attr: {href: '#!serviceProfessionalBusinessInfo' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your your business info">Edit business info</a>
                 <div data-bind="with: selectedJobTitle">
-                    <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'"></app-stars-rating>
                     <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
-                        <p>Experience: <span data-bind="text: name"></span></p>
+                        <p>
+                            Experience: 
+                            <span data-bind="text: name"></span> 
+                            <a class="btn btn-icon-link" data-bind="attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your experience level' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                        </p>
                     </div>
                 </div>
-                <button class="btn btn-secondary" data-bind="attr: { href: $root.getBookLink, 'aria-label': 'Book ' + profile().firstNameLastInitial() + '&#8217;s' + ' services' }">Book</button>
-                <p>Response time <span data-bind="text: stats() && stats().responseTimeText"></span></p>
             </div>
         </section>
         <div class="container">
@@ -72,7 +73,7 @@
                     <a data-bind="visible: !publicServices(), attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
                 </div>
                 <!-- <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>  -->
-                <ul data-bind="template: { name: 'offering-card-template', foreach: publicServices() }"></ul>
+                <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
             </section>
             <section id="listing-editor-reviews" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
@@ -129,7 +130,7 @@
                     <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Add</a>
                 </div>
-                <ul data-bind="template: { name: 'location-card-template', foreach: $root.serviceAddresses() }"></ul>
+                <ul data-bind="template: { name: 'location-card-edit-template', foreach: $root.serviceAddresses() }"></ul>
             </section>
             <section id="listing-editor-credentials" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
@@ -138,10 +139,10 @@
                     <a data-bind="visible: !licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
-                    <ul data-bind="template: { name: 'license-card-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
+                    <ul data-bind="template: { name: 'license-card-edit-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
                 </div>
                 <div data-bind="visible: education().length">
-                    <ul data-bind="template: { name: 'education-card-template', foreach: education }"></ul>
+                    <ul data-bind="template: { name: 'education-card-edit-template', foreach: education }"></ul>
                 </div>
             </section>
             <section id="listing-editor-verifications" class="row" title="">
