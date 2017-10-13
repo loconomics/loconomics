@@ -57,10 +57,12 @@ module.exports = function EventDates(values) {
         return moment(this.endTime()).locale('en-US-LC').format('LT');
         
     }, this);
+        
+    this.displayedTimeZone = ko.pureComputed(function() {
+        return moment().tz(this.timeZone()).format('z');
+    }, this);
     
     this.displayedTimeRange = ko.pureComputed(function() {
-        
-        return this.displayedStartTime() + '-' + this.displayedEndTime();
-        
+        return this.displayedStartTime() + '-' + this.displayedEndTime() + ' ' + this.displayedTimeZone();
     }, this);
 };
