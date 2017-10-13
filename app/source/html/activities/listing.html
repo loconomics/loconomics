@@ -8,18 +8,20 @@
     </app-message-bar>
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <div data-bind="with: user">
-        <!-- <nav id="listing-editor-navigation" class="row" title="Listing shortcuts">
+        <nav id="listing-navigation" class="PageMenu" title="Listing shortcuts">
+            <div class="PageMenu-list">
             <ul>
-                <li data-bind="visible: $root.hasServicesOverview"><a href="#listing-editor-services-overview">Overview</a></li>
-                <li><a href="listing-editor-offerings">Offerings</a></li>
-                <li><a href="#listing-editor-reviews">Reviews</a></li>
-                <li><a href="#listing-editor-photos">Photos</a></li>
-                <li><a href="#listing-editor-locations">Location</a></li>
-                <li><a href="#listing-editor-credentials">Credentials</a></li>
-                <li><a href="#listing-editor-about-service-professional">About</a></li>
+                <li data-bind="visible: $root.hasServicesOverview"><a href="#listing-services-overview">Overview</a></li>
+                <li><a href="#listing-offerings">Offerings</a></li>
+                <li><a href="#listing-reviews">Reviews</a></li>
+                <li><a href="#listing-photos">Photos</a></li>
+                <li><a href="#listing-location">Location</a></li>
+                <li><a href="#listing-credentials">Credentials</a></li>
+                <li><a href="#listing-about-service-professional">About</a></li>
             </ul>
-        </nav> -->
-        <section id="listing-editor-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
+        </div>
+        </nav>
+        <section id="listing-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
             <div class="Listing-professionalPic">
                 <div class="Avatar Avatar--primary Avatar--lg">
                     <img data-bind="attr: {src: profile().photoUrl()}" alt="Public profile photo of you" >
@@ -41,7 +43,7 @@
             </div>
         </section>
         <div class="container">
-            <section id="listing-editor-services-overview" class="row" data-bind="with: selectedJobTitle" title="">
+            <section id="listing-services-overview" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview of services</h2>
                 </div>
@@ -59,7 +61,7 @@
                     </ul>
                 </div>
             </section>
-            <section id="listing-editor-offerings" class="row" data-bind="with: selectedJobTitle" title="">
+            <section id="listing-offerings" class="row" data-bind="with: selectedJobTitle" title="">
                 <div data-bind="visible: clientSpecificServices().length > 0" class="col-xs-12 col-md-12 SectionHeading">
                     <h2 ><icon-dec params="icon: 'ion-ios-eye-outline'"></icon-dec> VIP offerings for you</h2>
                     <ul data-bind="template: { name: 'offering-card-template', foreach: clientSpecificServices() }"></ul>
@@ -70,7 +72,7 @@
                 <!-- <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>  -->
                 <ul data-bind="template: { name: 'offering-card-template', foreach: publicServices() }"></ul>
             </section>
-            <section id="listing-editor-reviews" class="row" data-bind="with: selectedJobTitle" title="">
+            <section id="listing-reviews" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-chatboxes-outline'"></icon-dec> Reviews (<span data-bind="text: rating() && rating().totalRatings"></span>) <app-stars-rating params="rating: rating() && rating().ratingAverage, size: 'sm'"></app-stars-rating></h2>
                 </div>
@@ -96,7 +98,7 @@
                     </div>
                 </div>
             </section>
-            <section id="listing-editor-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
+            <section id="listing-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
                 </div>
@@ -110,19 +112,19 @@
                     <button class="btn btn-primary" data-bind="text: $root.viewMoreWorkPhotosLabel, click: $root.viewAllPhotos"></button>
                 </div>
             </section>
-            <section id="listing-editor-hours" class="row" title="">
+            <section id="listing-hours" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec> Hours</h2>
                 </div>
                 <div class="col-xs-12 col-md-12" data-bind="template: { name: 'service-professional-hours-template', data: weeklySchedule() }"></div>
             </section>
-            <section id="listing-editor-weekly-schedule" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
+            <section id="listing-location" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
-                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Locations</h2>
+                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location</h2>
                 </div>
                 <ul data-bind="template: { name: 'location-card-template', foreach: $root.serviceAddresses() }"></ul>
             </section>
-            <section id="listing-editor-credentials" class="row" title="">
+            <section id="listing-credentials" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials</h2>
                 </div>
@@ -133,19 +135,17 @@
                     <ul data-bind="template: { name: 'education-card-template', foreach: education }"></ul>
                 </div>
             </section>
-            <section id="listing-editor-verifications" class="row" title="">
+            <section id="listing-verifications" class="row" data-bind="visible: verifications().length" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Verifications</h2>
                 </div>
-                <div data-bind="visible: verifications().length">
-                    <div class="row" data-bind="foreach: verifications">
-                        <div class="col-xs-6 col-sm-3">
-                        <i class="ion-android-done"></i> <p data-bind="text: verification().name"></p>
-                        </div>
+                <div class="row" data-bind="foreach: verifications">
+                    <div class="col-xs-6 col-sm-3">
+                    <i class="ion-android-done"></i> <p data-bind="text: verification().name"></p>
                     </div>
                 </div>
             </section>
-            <section id="listing-editor-booking-policies" class="row" data-bind="with: selectedJobTitle" title="">
+            <section id="listing-booking-policies" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Booking policies</h2>
                 </div>
@@ -165,7 +165,7 @@
                     <p data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: cancellationPolicy() } }"></p>
                 </div>
             </section>
-            <section id="listing-editor-about-service-professional" class="row" title="">
+            <section id="listing-about-service-professional" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
                 </div>

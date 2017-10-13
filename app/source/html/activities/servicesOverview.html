@@ -33,7 +33,11 @@
                             </div>
                         </fieldset>
                         <fieldset>
-                            <legend>List details of your <span  class="text-lowercase" data-bind="text: jobTitleName"> services</legend>
+                            <legend>List details of your <span  class="text-lowercase" data-bind="text: jobTitleName"></span> services</legend>
+                            <div class="form-group">
+                                <label for="experienceLevel">Experience level</label>
+                                <select id="experienceLevel"class="form-control" data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
+                            </div>
                             <div data-bind="foreach: categoriesView">
                                 <div class="form-group">
                                     <label data-bind="attr: { for: 'category' + category().serviceAttributeCategoryID() }, text: category().name"></label>
@@ -54,10 +58,6 @@
                                         </button>
                                     </li>
                                 </ol>
-                            </div>
-                            <div class="form-group">
-                                <label for="experienceLevel">Experience level</label>
-                                <select id="experienceLevel"class="form-control" data-bind="options: jobTitleServiceAttributes.experienceLevels, optionsText: 'name', optionsValue: 'experienceLevelID', optionsCaption: 'Select your experience level', value: serviceAttributes.experienceLevelID, valueAllowUnset: true, disable: isLocked"></select>
                             </div>
                         </fieldset>
                         <div class="LightForm-submitBar">

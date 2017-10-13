@@ -8,17 +8,6 @@
     </app-message-bar>
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <div data-bind="with: user">
-        <!-- <nav id="listing-editor-navigation" class="row" title="Listing shortcuts">
-            <ul>
-                <li data-bind="visible: $root.hasServicesOverview"><a href="#listing-editor-services-overview">Overview</a></li>
-                <li><a href="listing-editor-offerings">Offerings</a></li>
-                <li><a href="#listing-editor-reviews">Reviews</a></li>
-                <li><a href="#listing-editor-photos">Photos</a></li>
-                <li><a href="#listing-editor-locations">Location</a></li>
-                <li><a href="#listing-editor-credentials">Credentials</a></li>
-                <li><a href="#listing-editor-about-service-professional">About</a></li>
-            </ul>
-        </nav> -->
         <section id="listing-editor-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
             <div class="Listing-professionalPic">
                 <div class="Avatar Avatar--primary Avatar--lg">
@@ -65,41 +54,13 @@
                 </div>
             </section>
             <section id="listing-editor-offerings" class="row" data-bind="with: selectedJobTitle" title="">
-                <!-- <h2 data-bind="visible: clientSpecificServices().length > 0"><i class="ion-social-usd-outline"></i> Offerings Only For You</h2>
-                <div class="row" data-bind="template: { name: 'listing-editor-offering-template', foreach: clientSpecificServices() }"></div> -->
                 <div class="col-xs-12 col-md-12 SectionHeading">
-                    <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings<span class="text-danger" data-bind="visible: publicServices()"><em> (REQUIRED)</em></span></h2>
+                    <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings  <span class="label label-danger" data-bind="visible: !publicServices()">Required</span></h2>
                     <a data-bind="visible: publicServices(), attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
                     <a data-bind="visible: !publicServices(), attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
                 </div>
                 <!-- <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>  -->
                 <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
-            </section>
-            <section id="listing-editor-reviews" class="row" data-bind="with: selectedJobTitle" title="">
-                <div class="col-xs-12 col-md-12 SectionHeading">
-                    <h2><icon-dec params="icon: 'ion-ios-chatboxes-outline'"></icon-dec> Reviews (<span data-bind="text: rating() && rating().totalRatings"></span>) <app-stars-rating params="rating: rating() && rating().ratingAverage, size: 'sm'"></app-stars-rating></h2>
-                </div>
-                <div class="col-xs-12 col-md-12">
-                    <h3>Summary</h3>
-                    <div class="row">
-                        <p class="col-xs-5 col-md-2" aria-describedby="rating1stars">Quality of Work</p>
-                        <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating1, size: 'xs'"></app-stars-rating>
-                    </div>    
-                    <div class="row">
-                        <p class="col-xs-5 col-md-2" aria-describedby="rating2stars">Environment</p>
-                        <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating2, size: 'xs'"></app-stars-rating>
-                    </div>    
-                    <div class="row">
-                        <p class="col-xs-5 col-md-2" aria-describedby="rating3stars">Professionalism</p>
-                        <app-stars-rating id="rating3stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating3, size: 'xs'"></app-stars-rating>
-                    </div>
-                </div>
-                <div class="row" data-bind="visible: $root.reviews.list().length">
-                    <ul data-bind="template: { name: 'review-card-template', foreach: $root.reviews.list() }"></ul>
-                    <div class="col-xs-12 col-md-12 text-center" data-bind="visible: !$root.reviews.endReached()">
-                        <button class="btn btn-primary" data-bind="click: $root.reviews.loadOlder">View more reviews</button>
-                    </div>
-                </div>
             </section>
             <section id="listing-editor-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
@@ -119,14 +80,14 @@
             </section>
             <section id="listing-editor-hours" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
-                    <h2><icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec> Hours</h2>
+                    <h2><icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec> Hours  <span class="label label-danger" data-bind="visible: !weeklySchedule()">Required</span></h2>
                     <a data-bind="attr: {href: '#!schedulingPreferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Edit your hours and scheduling preferences' }" class="btn btn-default pull-right">Edit</a>
                 </div>
                 <div class="col-xs-12 col-md-12" data-bind="template: { name: 'service-professional-hours-template', data: weeklySchedule() }"></div>
             </section>
             <section id="listing-editor-weekly-schedule" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
-                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Locations</h2>
+                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location  <span class="label label-danger" data-bind="visible: !$root.serviceAddresses().length">Required</span></h2>
                     <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Add</a>
                 </div>
