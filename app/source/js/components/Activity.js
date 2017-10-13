@@ -381,3 +381,7 @@ Activity.extend = function extendsActivity(ClassFn) {
 
     return ClassFn;
 };
+
+Activity.init = function($activity, app, name) {
+    return createSingleton(this, $activity, app, name);
+};
