@@ -18,14 +18,15 @@ var A = Activity.extend(function ListingEditorActivity() {
 
     Activity.apply(this, arguments);
 
-    this.accessLevel = null;
+    this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    // null for logo
-    this.navBar = Activity.createSectionNavBar(null);
+    this.navBar = Activity.createSubsectionNavBar('Your listings', {
+        backLink: '/marketplaceProfile' , helpLink: this.viewModel.helpLink
+    });
     this.title = ko.pureComputed(function() {
         var user = this.user();
         if (user) {
-            return user.profile().firstNameLastInitial() + ', ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName());
+            return 'Edit your ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName()) + ' listing';
         }
     }, this.viewModel);
 
@@ -100,6 +101,7 @@ A.prototype.hide = function() {
 
 function ViewModel(app) {
     //jshint maxstatements:40
+    this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
     this.userID = ko.observable(null);
