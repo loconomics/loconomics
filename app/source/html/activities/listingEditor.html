@@ -148,6 +148,9 @@
                 </div>
                 <p class="Listing-publicBio" data-bind="text: profile().publicBio"></p>
             </section>
+            <section id="listing-editor-delete-listing" class="row" title="">
+                <button type="button" class="btn btn-danger" data-bind="click: $root.deleteJobTitle">Delete your <span data-bind="text: $root.jobTitleName"></span> listing</button>
+            </section>
         </div>
     </div>
 </div>

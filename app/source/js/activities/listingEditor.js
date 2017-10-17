@@ -13,6 +13,9 @@ var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
+var userJobProfile = require('../data/userJobProfile');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ListingEditorActivity() {
 
@@ -57,13 +60,30 @@ A.prototype.loadData = function(userID, jobTitleID) {
         .then(function(jobTitleID) {
             // For service professionals:
             if (jobTitleID) {
+                ////////////
+                // User Job Title
+                // Get data for the Job Title and User Profile
+                userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //jobTitles.getJobTitle(jobTitleID)
+                .then(function(job) {
+                    // Fill the job title record
+                    this.viewModel.jobTitle(job.jobTitle);
+                    this.viewModel.userJobTitle(job.userJobTitle);
+                }.bind(this))
+                .catch(function(err) {
+                    showError({
+                        title: 'There was an error loading your listing.',
+                        error: err
+                    });
+                });
+
                 this.viewModel.user().selectedJobTitleID(jobTitleID);
                 // Load extra job data (reviews)
                 this.viewModel.reviews.load({ limit: 2 });
             }
         }.bind(this))
         .catch(function(err) {
-            this.app.modals.showError({ error: err, title: 'The user profile could not be loaded.' });
+            showError({ error: err, title: 'The user profile could not be loaded.' });
         }.bind(this))
         .then(function() {
             // always
@@ -90,6 +110,7 @@ A.prototype.show = function show(options) {
     this.viewModel.refreshTs(new Date());
     this.viewModel.userID(userID);
     this.viewModel.showMessageBar(true);
+    this.viewModel.jobTitleID(jobTitleID);
 };
 
 A.prototype.hide = function() {
@@ -105,6 +126,12 @@ function ViewModel(app) {
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
     this.userID = ko.observable(null);
+    this.jobTitleID = ko.observable(0);
+    this.jobTitle = ko.observable(null);
+    this.userJobTitle = ko.observable(null);
+    this.jobTitleName = ko.pureComputed(function() {
+        return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
+    }, this);
     this.reviews = new ReviewsVM();
     this.showMessageBar = ko.observable(false);
     this.timeZone = ko.pureComputed(function(){
@@ -269,6 +296,27 @@ function ViewModel(app) {
     this.messageBarTone = ko.pureComputed(function() {
         return this.listingIsActive() ? MessageBar.tones.success : MessageBar.tones.warning;
     }, this);
+
+    this.deleteJobTitle = function() {
+        var jid = this.jobTitleID();
+        var jname = this.jobTitleName();
+        if (jid) {
+            showConfirm({
+                title: 'Delete ' + jname + ' listing',
+                message: 'Are you sure you really want to delete your ' + jname +' listing?',
+                yes: 'Delete',
+                no: 'Keep'
+            }).then(function() {
+                app.shell.goBack();
+                return userJobProfile.deleteUserJobTitle(jid);
+            })
+            .catch(function(err) {
+                if (err) {
+                    showError({ error: err, title: 'Error while deleting your listing' });
+                }
+            });
+        }
+    }.bind(this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');
