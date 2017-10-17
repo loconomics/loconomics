@@ -16,6 +16,7 @@ var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 var userJobProfile = require('../data/userJobProfile');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
+var showNotification = require('../modals/notification').show;
 
 var A = Activity.extend(function ListingEditorActivity() {
 
@@ -121,7 +122,7 @@ A.prototype.hide = function() {
 
 
 function ViewModel(app) {
-    //jshint maxstatements:40
+    //jshint maxstatements:45
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
@@ -317,6 +318,57 @@ function ViewModel(app) {
             });
         }
     }.bind(this);
+    var UserJobTitle = require('../models/UserJobTitle');
+
+    this.isToggleReady = ko.pureComputed(function() {
+        return this.userJobTitle() && this.userJobTitle().isComplete();
+    }, this);
+
+    this.isActiveStatus = ko.pureComputed({
+        read: function() {
+            var j = this.userJobTitle();
+            return j && j.statusID() === UserJobTitle.status.on || false;
+        },
+        write: function(v) {
+            var status = this.userJobTitle() && this.userJobTitle().statusID();
+            if (v === true && status === UserJobTitle.status.off) {
+                this.userJobTitle().statusID(UserJobTitle.status.on);
+                // Push change to back-end
+                userJobProfile.reactivateUserJobTitle(this.jobTitleID())
+                .catch(function(err) {
+                    showError({ title: 'Error enabling your listing', error: err });
+                });
+            }
+            else if (v === false && status === UserJobTitle.status.on) {
+                this.userJobTitle().statusID(UserJobTitle.status.off);
+                // Push change to back-end
+                userJobProfile.deactivateUserJobTitle(this.jobTitleID())
+                .catch(function(err) {
+                    showError({ title: 'Error disabling your listing', error: err });
+                });
+                // Per #1001, notify user about availability of bookMeNow button even with public marketplace profile
+                // disabled/hidden
+                showNotification({
+                    message: 'Clients will no longer be able to find you in the marketplace. However, any "book me now" links you have posted will still be active.',
+                    buttonText: 'Got it!'
+                });
+            }
+        },
+        owner: this
+    });
+
+    this.statusLabel = ko.pureComputed(function() {
+        var statusID = this.userJobTitle() && this.userJobTitle().statusID();
+        switch (statusID) {
+            case UserJobTitle.status.on:
+                return 'This listing is active';
+            case UserJobTitle.status.off:
+                return 'This listing is inactive';
+            //case UserJobTitle.status.incomplete:
+            default:
+                return 'Steps Remaining';
+        }
+    }, this);
 }
 
 var PublicUserReview = require('../models/PublicUserReview');

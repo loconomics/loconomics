@@ -6,6 +6,23 @@
             <button data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</button>
         </p>
     </app-message-bar>
+    <div class="col-md-7 col-sm-reset">
+        <div class="switchLine" data-bind="visible: isToggleReady">
+            <div class="switchLine-label">
+                <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
+            </div>
+            <div class="switchLine-switch">
+                <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">
+                    Display listing in our search
+                </label>
+                <label aria-hidden="true" for="marketplaceJobtitles-profileStatus-checkbox">
+                    <strong data-bind="visible: isActiveStatus" class="text-success">ON</strong>
+                    <strong data-bind="visible: !isActiveStatus()" class="text-danger">OFF</strong>
+                </label>
+                <switch-checkbox params="id: 'marketplaceJobtitles-profileStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
+            </div>
+        </div>
+    </div>
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <div data-bind="with: user">
         <section id="listing-editor-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
