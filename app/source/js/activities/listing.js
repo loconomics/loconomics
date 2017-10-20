@@ -13,6 +13,7 @@ var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
+var PublicUserReview = require('../models/PublicUserReview');
 
 var A = Activity.extend(function ListingActivity() {
 
@@ -219,12 +220,25 @@ function ViewModel(app) {
     }, this);
 
     this.hasServicesOverview = ko.pureComputed(function() {
-        var jobTitle = this.user() && this.user().selectedJobTitle(),
-            hasIntro = jobTitle && jobTitle.hasIntro(),
-            hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
-
+        var jobTitle = this.user() && this.user().selectedJobTitle();
+        var hasIntro = jobTitle && jobTitle.hasIntro();
+        var hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
         return hasIntro || hasAttributes;
     }, this);
+
+    this.hasVIPOfferingsForClient = ko.pureComputed(function(){
+        return this.selectedJobTitle() && this.selectedJobTitle().clientSpecificServices().length;
+    }, this);
+    
+    this.hasCredentials = ko.pureComputed(function(){
+        var hasEducation = this.user() && this.user().education().length;
+        var hasLicenseCertification = this.selectedJobTitle() && this.selectedJobTitle().licensesCertifications().length;
+        return hasEducation || hasLicenseCertification;
+    }, this);
+    
+    this.hasReviews = ko.pureComputed(function(){
+        return this.selectedJobTitle().rating() && this.selectedJobTitle().rating().totalRatings().length;
+    }, this); 
 
     this.jobTitleSingularName = ko.pureComputed(function() {
         return this.selectedJobTitle().jobTitleSingularName();
@@ -262,7 +276,6 @@ function ViewModel(app) {
     }, this);
 }
 
-var PublicUserReview = require('../models/PublicUserReview');
 function ReviewsVM() {
     this.userID = ko.observable(null);
     this.jobTitleID = ko.observable(null);
