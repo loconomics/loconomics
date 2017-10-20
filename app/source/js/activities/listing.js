@@ -107,14 +107,7 @@ function ViewModel(app) {
     this.showMessageBar = ko.observable(false);
     this.timeZone = ko.pureComputed(function(){
         return this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone().replace('US/','');
-    }, this);
-    this.returnLinkGeneralActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
-    }, this);
-    this.returnLinkJobTitleActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
-    }, this);
-    
+    }, this);    
 
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
@@ -242,7 +235,7 @@ function ViewModel(app) {
     }, this);
 
     this.editListing = function() {
-        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
+        app.shell.go('/listingEditor/' + this.selectedJobTitle().jobTitleID());
     }.bind(this);
 
     this.listingIsActive = ko.pureComputed(function() {
