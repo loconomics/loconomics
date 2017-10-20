@@ -390,6 +390,7 @@
     "responsive-utilities.less",
     "input-groups.less",
     "navs.less",
+    "labels.less",
     "badges.less",
     "alerts.less",
     "responsive-embed.less",
@@ -411,5 +412,5 @@
     "collapse.js",
     "transition.js"
   ],
-  "customizerUrl": "https://getbootstrap.com/docs/3.3/customize/?id=5d014033e1ab9d6611be02d765ef7ae2"
+  "customizerUrl": "https://getbootstrap.com/docs/3.3/customize/?id=48b2f61de38c594e5fe04df6a9521137"
 }

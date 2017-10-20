@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.3/customize/?id=5d014033e1ab9d6611be02d765ef7ae2)
- * Config saved to config.json and https://gist.github.com/5d014033e1ab9d6611be02d765ef7ae2
+ * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.3/customize/?id=48b2f61de38c594e5fe04df6a9521137)
+ * Config saved to config.json and https://gist.github.com/48b2f61de38c594e5fe04df6a9521137
  */
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -3063,6 +3063,73 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-top: -1px;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
+}
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+a.label:hover,
+a.label:focus {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.label:empty {
+  display: none;
+}
+.btn .label {
+  position: relative;
+  top: -1px;
+}
+.label-default {
+  background-color: #777777;
+}
+.label-default[href]:hover,
+.label-default[href]:focus {
+  background-color: #5e5e5e;
+}
+.label-primary {
+  background-color: #007a7c;
+}
+.label-primary[href]:hover,
+.label-primary[href]:focus {
+  background-color: #004849;
+}
+.label-success {
+  background-color: #00aa55;
+}
+.label-success[href]:hover,
+.label-success[href]:focus {
+  background-color: #00773c;
+}
+.label-info {
+  background-color: #2176ae;
+}
+.label-info[href]:hover,
+.label-info[href]:focus {
+  background-color: #195983;
+}
+.label-warning {
+  background-color: #f9dc5c;
+}
+.label-warning[href]:hover,
+.label-warning[href]:focus {
+  background-color: #f7d12b;
+}
+.label-danger {
+  background-color: #ff0000;
+}
+.label-danger[href]:hover,
+.label-danger[href]:focus {
+  background-color: #cc0000;
 }
 .badge {
   display: inline-block;
