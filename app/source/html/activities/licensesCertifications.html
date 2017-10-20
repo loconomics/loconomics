@@ -7,7 +7,7 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: !isInOnboarding()">
                 <ul>
                     <li>
-                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                        <a href="/listingEditor/" data-bind="attr: {href: '/listingEditor/' + jobTitleID()}">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
                             <span data-bind="text: jobTitleName"></span>
                         </a>
@@ -26,7 +26,7 @@
                         <p>Our records indicate credentials are legally required to provide <span data-bind="text: jobTitleName"></span> services in your area. See our <a href="/terms/background-check-policy" target="_blank">License Verification Policy</a> for more info.</p>
                     </span>
                 </div>
-                <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications()">
+                <h2 class="SectionTitle" data-bind="visible: submittedUserLicensesCertifications().length">
                     <span>Your <span data-bind="text: jobTitleName"></span> credentials</span>
                 </h2>
                 <div data-bind="css: { 'is-loading': isLoading }">
