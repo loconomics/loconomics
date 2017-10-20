@@ -235,10 +235,6 @@ function ViewModel(app) {
         var hasLicenseCertification = this.selectedJobTitle() && this.selectedJobTitle().licensesCertifications().length;
         return hasEducation || hasLicenseCertification;
     }, this);
-    
-    this.hasReviews = ko.pureComputed(function(){
-        return this.selectedJobTitle().rating() && this.selectedJobTitle().rating().totalRatings().length;
-    }, this); 
 
     this.jobTitleSingularName = ko.pureComputed(function() {
         return this.selectedJobTitle().jobTitleSingularName();
