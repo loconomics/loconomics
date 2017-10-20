@@ -11,12 +11,13 @@ var Activity = require('../components/Activity');
 var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
-var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
 var userJobProfile = require('../data/userJobProfile');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
+var userLicensesCertifications = require('../data/userLicensesCertifications');
+var AlertLink = require('../viewmodels/AlertLink');
 
 var A = Activity.extend(function ListingEditorActivity() {
 
@@ -77,7 +78,19 @@ A.prototype.loadData = function(userID, jobTitleID) {
                         error: err
                     });
                 });
-
+                ////////////
+                // Submitted Licenses
+                userLicensesCertifications.getList(jobTitleID)
+                .then(function(list) {
+                    // Save for use in the view
+                    this.viewModel.submittedUserLicensesCertifications(userLicensesCertifications.asModel(list));
+                }.bind(this))
+                .catch(function (err) {
+                    showError({
+                        title: 'There was an error while loading.',
+                        error: err
+                    });
+                });
                 this.viewModel.user().selectedJobTitleID(jobTitleID);
                 // Load extra job data (reviews)
                 this.viewModel.reviews.load({ limit: 2 });
@@ -110,19 +123,11 @@ A.prototype.show = function show(options) {
     this.viewModel.reviews.reset(userID, jobTitleID);
     this.viewModel.refreshTs(new Date());
     this.viewModel.userID(userID);
-    this.viewModel.showMessageBar(true);
     this.viewModel.jobTitleID(jobTitleID);
 };
 
-A.prototype.hide = function() {
-    Activity.prototype.hide.call(this);
-
-    this.viewModel.showMessageBar(false);
-};
-
-
 function ViewModel(app) {
-    //jshint maxstatements:45
+    //jshint maxstatements:50
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
@@ -130,21 +135,26 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
+
     this.jobTitleName = ko.pureComputed(function() {
         return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
     }, this);
     this.reviews = new ReviewsVM();
-    this.showMessageBar = ko.observable(false);
+
     this.timeZone = ko.pureComputed(function(){
         return this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone().replace('US/','');
     }, this);
+
     this.returnLinkGeneralActivity = ko.pureComputed(function(){
         return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
+
     this.returnLinkJobTitleActivity = ko.pureComputed(function(){
         return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
-    
+
+     /// Related models information
+     this.submittedUserLicensesCertifications = ko.observableArray([]);
 
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
@@ -154,7 +164,6 @@ function ViewModel(app) {
     this.reset = function() {
         this.user(null);
         this.userID(null);
-        this.showMessageBar(false);
     };
 
     /// Work Photos utils
@@ -256,10 +265,9 @@ function ViewModel(app) {
     }, this);
 
     this.hasServicesOverview = ko.pureComputed(function() {
-        var jobTitle = this.user() && this.user().selectedJobTitle(),
-            hasIntro = jobTitle && jobTitle.hasIntro(),
-            hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
-
+        var jobTitle = this.user() && this.user().selectedJobTitle();
+        var hasIntro = jobTitle && jobTitle.hasIntro();
+        var hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
         return hasIntro || hasAttributes;
     }, this);
 
@@ -269,33 +277,6 @@ function ViewModel(app) {
 
     this.selectedJobTitle = ko.pureComputed(function() {
         return (this.user() && this.user().selectedJobTitle()) || new PublicUserJobTitle();
-    }, this);
-
-    this.editListing = function() {
-        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
-    }.bind(this);
-
-    this.listingIsActive = ko.pureComputed(function() {
-        return this.selectedJobTitle().isActive();
-    }, this);
-
-    this.isOwnProfile = ko.pureComputed(function() {
-        var profileOwnerUserID = this.userID();
-
-        if(user.isAnonymous() || profileOwnerUserID === null) {
-            return false;
-        }
-        else {
-            return profileOwnerUserID == user.userID();
-        }
-    }, this);
-
-    this.isMessageBarVisible = ko.pureComputed(function() {
-        return this.isOwnProfile() && this.showMessageBar();
-    }, this);
-
-    this.messageBarTone = ko.pureComputed(function() {
-        return this.listingIsActive() ? MessageBar.tones.success : MessageBar.tones.warning;
     }, this);
 
     this.deleteJobTitle = function() {
@@ -318,6 +299,7 @@ function ViewModel(app) {
             });
         }
     }.bind(this);
+
     var UserJobTitle = require('../models/UserJobTitle');
 
     this.isToggleReady = ko.pureComputed(function() {
@@ -366,8 +348,17 @@ function ViewModel(app) {
                 return 'This listing is inactive';
             //case UserJobTitle.status.incomplete:
             default:
-                return 'Steps Remaining';
+                return "You're almost there!";
         }
+    }, this);
+    this.requiredAlertLinks = ko.pureComputed(function() {
+        var userJobTitle = this.userJobTitle(),
+            jobTitleID = userJobTitle && userJobTitle.jobTitleID(),
+            requiredAlerts = (userJobTitle && userJobTitle.requiredAlerts()) || [];
+
+        return requiredAlerts.map(function(profileAlert) {
+            return AlertLink.fromProfileAlert(profileAlert, { jobTitleID: jobTitleID });
+        });
     }, this);
 }
 

@@ -1,29 +1,44 @@
 <!-- Activity listing -->
 <div data-activity="listingEditor" class="Listing" data-bind="css: { 'is-loading': isLoading }">
-    <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
-        <p class="small">
-            <span data-bind="text: jobTitle"></span> listing is <span data-bind="ifnot:isActive">inactive.</span><span data-bind="if:isActive">active.</span>
-            <button data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</button>
-        </p>
-    </app-message-bar>
-    <div class="col-md-7 col-sm-reset">
-        <div class="switchLine" data-bind="visible: isToggleReady">
-            <div class="switchLine-label">
-                <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
-            </div>
-            <div class="switchLine-switch">
-                <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">
-                    Display listing in our search
-                </label>
-                <label aria-hidden="true" for="marketplaceJobtitles-profileStatus-checkbox">
-                    <strong data-bind="visible: isActiveStatus" class="text-success">ON</strong>
-                    <strong data-bind="visible: !isActiveStatus()" class="text-danger">OFF</strong>
-                </label>
-                <switch-checkbox params="id: 'marketplaceJobtitles-profileStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
+    <div class="col-xs-12 col-md-12 col-sm-reset Listing-editorHeader">
+        <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
+        <div class="Listing-title">
+            <h1 data-bind="text: title"></h1>
+        </div>
+        <div class="Listing-switch">
+            <div class="switchLine" data-bind="visible: isToggleReady">
+                <div class="switchLine-label">
+                    <strong data-bind="text: statusLabel, css: { 'text-success': isActiveStatus, 'text-danger': !isActiveStatus() }"></strong>
+                </div>
+                <div class="switchLine-switch">
+                    <label for="marketplaceJobtitles-profileStatus-checkbox" class="sr-only">
+                        Display listing in our search
+                    </label>
+                    <label aria-hidden="true" for="marketplaceJobtitles-profileStatus-checkbox">
+                        <strong data-bind="visible: isActiveStatus" class="text-success">ON</strong>
+                        <strong data-bind="visible: !isActiveStatus()" class="text-danger">OFF</strong>
+                    </label>
+                    <switch-checkbox params="id: 'marketplaceJobtitles-profileStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
+                </div>
             </div>
         </div>
     </div>
-    <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
+    <!-- ko ifnot: isToggleReady -->
+    <div class="Listing-alerts" data-bind="">
+        <h2 data-bind="text: statusLabel"></h2>
+        <p>Please finish these steps to activate your listing:</p>
+        <ol class="TilesList" data-bind="foreach: { data: requiredAlertLinks, as: 'alertLink' }">
+            <li class="col-xs-12 col-md-6">
+                <a class="AlertItem" data-bind="attr: { href: alertLink.href() }">
+                    <div class="Item-content">
+                        <p data-bind="text: ($index() + 1) + '. ' + alertLink.label()"></p>
+                    </div>
+                    <icon-dec class="Item-action"params="icon: 'ion-plus'"></icon-dec>
+                </a>
+            </li>
+        </ol>
+    </div>
+    <!-- /ko -->
     <div data-bind="with: user">
         <section id="listing-editor-service-professional-info" class="col-xs-12 col-md-12 Listing-heading" title="Information about service professional">
             <div class="Listing-professionalPic">
@@ -54,7 +69,7 @@
                 <div class="col-xs-12 col-md-12 SectionHeading" >
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview of services</h2>
                     <a data-bind="visible: $root.hasServicesOverview, attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the overview of your services' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.hasServicesOverview, attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add an overview of your '+ jobTitleSingularName() + ' services' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: !$root.hasServicesOverview(), attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add an overview of your '+ jobTitleSingularName() + ' services' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-md-12" data-bind="visible: $root.hasServicesOverview">
                     <p class="Listing-overview" data-bind="text: intro, visible: hasIntro"></p>
@@ -72,11 +87,10 @@
             </section>
             <section id="listing-editor-offerings" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading">
-                    <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings  <span class="label label-danger" data-bind="visible: !publicServices()">Required</span></h2>
+                    <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings  <span class="label label-danger" data-bind="visible: !publicServices().length">Required</span></h2>
                     <a data-bind="visible: publicServices(), attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
                     <a data-bind="visible: !publicServices(), attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
                 </div>
-                <!-- <div data-bind="template: { name: 'offerings-select-template', data: serviceProfessionalServices }"></div>  -->
                 <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
             </section>
             <section id="listing-editor-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
@@ -102,7 +116,7 @@
                 </div>
                 <div class="col-xs-12 col-md-12" data-bind="template: { name: 'service-professional-hours-template', data: weeklySchedule() }"></div>
             </section>
-            <section id="listing-editor-weekly-schedule" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
+            <section id="listing-editor-weekly-schedule" class="row" title="">
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location  <span class="label label-danger" data-bind="visible: !$root.serviceAddresses().length">Required</span></h2>
                     <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
@@ -114,10 +128,11 @@
                 <div class="col-xs-12 col-md-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials</h2>
                     <a data-bind="visible: licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(), 'aria-label': 'Edit your '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
                 </div>
+                <div data-bind="visible: selectedJobTitle() && !$root.submittedUserLicensesCertifications().length && !selectedJobTitle().serviceAddresses().length">Add a location to determine credentials needed.</div>
                 <div data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
-                    <ul data-bind="template: { name: 'license-card-edit-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
+                    <ul data-bind="template: { name: 'license-card-edit-template', foreach: selectedJobTitle() && $root.submittedUserLicensesCertifications }"></ul>
                 </div>
                 <div data-bind="visible: education().length">
                     <ul data-bind="template: { name: 'education-card-edit-template', foreach: education }"></ul>
@@ -166,7 +181,7 @@
                 <p class="Listing-publicBio" data-bind="text: profile().publicBio"></p>
             </section>
             <section id="listing-editor-delete-listing" class="row" title="">
-                <button type="button" class="btn btn-danger" data-bind="click: $root.deleteJobTitle">Delete your <span data-bind="text: $root.jobTitleName"></span> listing</button>
+                <button type="button" class="btn btn-danger center-block" data-bind="click: $root.deleteJobTitle">Delete your <span data-bind="text: $root.jobTitleName"></span> listing</button>
             </section>
         </div>
     </div>
