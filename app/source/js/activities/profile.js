@@ -227,7 +227,7 @@ function ViewModel(app) {
     }, this);
 
     this.editListing = function() {
-        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
+        app.shell.go('/listingEditor/' + this.selectedJobTitle().jobTitleID());
     }.bind(this);
 
     this.listingIsActive = ko.pureComputed(function() {

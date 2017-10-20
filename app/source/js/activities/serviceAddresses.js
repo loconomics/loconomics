@@ -166,7 +166,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
         var jid = this.viewModel.jobTitleID(),
             jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
-            url = this.mustReturnTo || (jid && '/marketplaceJobtitles/' + jid || '/scheduling');
+            url = this.mustReturnTo || (jid && '/listingEditor/' + jid || '/schedulingPreferences');
 
         this.navBar.leftAction().link(url);
         this.navBar.leftAction().text(this.requestData.navTitle || jname);

@@ -20,55 +20,55 @@ var RouteParser = require('../utils/Router').RouteParser;
 var alertPresets = {
         positionservices: {
             label: 'Add details to your listing',
-            route: new RouteParser('/servicesOverview/:jobTitleID')
+            route: new RouteParser('/servicesOverview/:jobTitleID&returnText=Back to listing')
         },
         availability: {
-            label: 'When can you be booked?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            label: 'What hours do you work?',
+            route: new RouteParser('/schedulingPreferences?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
         },
         personalinfo: {
-            label: 'How do we reach you?',
-            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            label: 'How do clients reach you?',
+            route: new RouteParser('/publicContactInfo?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/publicProfilePicture?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/paymentPreference?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/payoutPreference?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
         },
         pricingdetails: {
             label: 'Create a bookable offering',
-            route: new RouteParser('/serviceProfessionalService/:jobTitleID')
+            route: new RouteParser('/serviceProfessionalService/:jobTitleID&returnText=Back to listing')
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/publicBio?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing&returnText=Back to listing')
         },
         professionallicense: {
-            label: 'Verify your professional license or certification',
-            route: new RouteParser('/licensesCertifications/:jobTitleID')
+            label: 'Submit required credentials',
+            route: new RouteParser('/licensesCertifications/:jobTitleID&returnText=Back to listing')
         },
         location: {
             label: 'Where do you work?',
-            route: new RouteParser('/serviceAddresses/:jobTitleID')
+            route: new RouteParser('/serviceAddresses/:jobTitleID&returnText=Back to listing')
         },
         'add-education': {
             label: 'Add training or education',
-            route: new RouteParser('/education?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/education?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
         },
         verifyemail: {
               label: 'Verify your account (check your e-mail)',
-              route: new RouteParser('/verifications?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+              route: new RouteParser('/verifications?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
         },
         showcasework: {
             label: 'Add photos of your work',
-            route: new RouteParser('/workPhotos/:jobTitleID')
+            route: new RouteParser('/workPhotos/:jobTitleID&returnText=Back to listing')
         },
         'required-professionallicense': {
               label: 'Verify your professional license or certification',
-              route: new RouteParser('/licensesCertifications/:jobTitleID')
+              route: new RouteParser('/licensesCertifications/:jobTitleID&returnText=Back to listing')
         }
     },
     undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };
