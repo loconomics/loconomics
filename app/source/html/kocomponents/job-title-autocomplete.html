@@ -2,17 +2,9 @@
     <label class="sr-only" data-bind="attr: { id: id }">Job title</label>
     <input-autocomplete params="id: id, name: 'jobTitle', icon: 'ion-ios-search',
         placeholder: 'Search for your profession', size: 'lg',
-        value: value, suggestions: suggestions, isBusy: isLoading,
+        value: value, suggestions: suggestions,
         onSelect: onSelect,
         extraData: { suggestionButtonText: suggestionButtonText }">
-        <template slot="isBusy">
-            <div class="Result">
-                <div class="Result-info">
-                    <span class="Result-name">Searching...</span>
-                </div>
-                <span class="text-secondary"><app-loading-spinner params="mod: 'big'"></app-loading-spinner></span>
-            </div>
-        </template>
         <template slot="suggestions">
             <div class="SearchResultsPreview">
                 <h3 class="SearchResultsPreview-h">Sounds like you?</h3>
