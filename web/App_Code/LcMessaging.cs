@@ -804,12 +804,13 @@ public class LcMessaging
             {
                 subject = info.booking.paymentCollected ? "Client has paid in full and service professional has been paid in full" : "Booking completed";
                 CreateBookingMessage(info, (int)MessageType.BookingCompleted, (int)MessageThreadStatus.Responded, info.booking.serviceProfessionalUserID, subject, true);
-                // TODO: Wrong if-if chain, second one replace first without clear flow, and looks like a bug.
+                // Send email to CLIENT
                 if (flags.sendReviewReminderToClient)
                 {
                     subject = "Thank you and request to review my services";
                     sendToClient("BookingCompleted");
                 }
+                // Send email to PROFESSIONAL
                 if (flags.hipaa && info.booking.paymentCollected)
                 {
                     subject = "Your payment has been sent";
