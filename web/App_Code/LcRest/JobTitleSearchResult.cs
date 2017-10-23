@@ -63,22 +63,22 @@ namespace LcRest
                 SET @CountryID = @2
 
                 SELECT TOP 25
-                PositionID as jobTitleID
-                ,PositionSingular as jobTitleSingularName
-                ,PositionDescription as jobTitleDescription
+                    PositionID as jobTitleID
+                    ,PositionSingular as singularName
+                    ,PositionDescription as description
                 FROM
-                positions
+                    positions
                 WHERE
-                LanguageID = @LanguageID
-                AND CountryID = @CountryID
-                AND (PositionSingular like '%' + @searchTerm + '%'
-                OR PositionDescription like '%' + @searchTerm + '%'
-                OR GovPositionDescription like '%' + @searchTerm + '%'
-                OR PositionSearchDescription like '%' + @searchTerm + '%'
-                OR Aliases like '%' + @searchTerm + '%')
+                    LanguageID = @LanguageID
+                    AND CountryID = @CountryID
+                    AND (PositionSingular like '%' + @searchTerm + '%'
+                    OR PositionDescription like '%' + @searchTerm + '%'
+                    OR GovPositionDescription like '%' + @searchTerm + '%'
+                    OR PositionSearchDescription like '%' + @searchTerm + '%'
+                    OR Aliases like '%' + @searchTerm + '%')
                 ORDER BY
-                DisplayRank, PositionSingular
-                ",searchTerm, locale.languageID, locale.countryID);
+                    DisplayRank, PositionSingular
+                ", searchTerm, locale.languageID, locale.countryID);
             }
         }
         public static JobTitleSearchResult SearchByJobTitleID(int jobTitleID, decimal origLat, decimal origLong, int SearchDistance, Locale locale)

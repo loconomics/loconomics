@@ -2,7 +2,7 @@
     <label class="sr-only" data-bind="attr: { id: id }">Job title</label>
     <input-autocomplete params="id: id, name: 'jobTitle', icon: 'ion-ios-search',
         placeholder: 'Search for your profession', size: 'lg',
-        value: value, suggestions: searchResults, isBusy: isLoading,
+        value: value, suggestions: suggestions, isBusy: isLoading,
         onSelect: onSelect,
         extraData: { suggestionButtonText: suggestionButtonText }">
         <template slot="isBusy">
@@ -17,10 +17,10 @@
             <div class="SearchResultsPreview">
                 <h3 class="SearchResultsPreview-h">Sounds like you?</h3>
                 <div data-bind="if: suggestions().jobTitles().length">
-                    <ul data-bind="foreach: suggestions().jobTitles">
+                    <ul data-bind="foreach: suggestions().jobTitles()">
                         <li class="Result" data-bind="attr: {
                                 id: $parent.id() + '-suggestion-' + $index(),
-                                'data-input-autocomplete-suggestion': pluralName
+                                'data-input-autocomplete-suggestion': singularName
                             }">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: singularName"></span>
