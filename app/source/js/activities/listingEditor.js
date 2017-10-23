@@ -46,11 +46,11 @@ var A = Activity.extend(function ListingEditorActivity() {
 
 exports.init = A.init;
 
-A.prototype.loadData = function(userID, jobTitleID) {
+A.prototype.loadData = function(jobTitleID) {
     this.viewModel.reset();
-    if (userID) {
+    if (user.userID()) {
         this.viewModel.isLoading(true);
-        users.getUser(userID, { includeFullJobTitleID: -1 })
+        users.getUser(user.userID(), { includeFullJobTitleID: -1 })
         .then(function(data) {
             var pu = new PublicUser(data);
             this.viewModel.user(pu);
@@ -105,21 +105,17 @@ A.prototype.loadData = function(userID, jobTitleID) {
 };
 
 /**
-    Parameters: /{userID:int}/{jobTitleID:int}
+    Parameters: /{jobTitleID:int}
     Both are optional.
-    If no userID, the current user profile is showed
     If not jobTitleID, the first one is returned
 **/
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     var params = options.route && options.route.segments;
-    // Get requested userID or the current user profile
-    var userID = (params[0] |0) || user.userID();
-    var jobTitleID = params[1] |0;
-    this.loadData(userID, jobTitleID);
+    var jobTitleID = params[0] |0;
+    this.loadData(jobTitleID);
     this.viewModel.refreshTs(new Date());
-    this.viewModel.userID(userID);
     this.viewModel.jobTitleID(jobTitleID);
 };
 
@@ -128,7 +124,6 @@ function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
-    this.userID = ko.observable(null);
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
@@ -142,11 +137,11 @@ function ViewModel(app) {
     }, this);
 
     this.returnLinkGeneralActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + user.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
     this.returnLinkJobTitleActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + user.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
      /// Related models information
@@ -159,7 +154,6 @@ function ViewModel(app) {
 
     this.reset = function() {
         this.user(null);
-        this.userID(null);
     };
 
     /// Work Photos utils
