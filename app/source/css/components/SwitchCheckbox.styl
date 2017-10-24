@@ -15,14 +15,14 @@
 $SwitchCheckbox-width = 3em;
 $SwitchCheckbox-height = 2em;
 $SwitchCheckbox-padding = 2px;
-$SwitchCheckbox-offset = 1px;
+$SwitchCheckbox-offset = 0px;
 $SwitchCheckbox-markerWidth = $SwitchCheckbox-height;
-$SwitchCheckbox-middlePosition = 1em;
+$SwitchCheckbox-middlePosition = 1.5em;
 $SwitchCheckbox-borderColor = $gray-light;
 $SwitchCheckbox-markerColor = #fff;
-$SwitchCheckbox-checkedColor = $brand-primary;
-$SwitchCheckbox-uncheckedColor = $gray-background;
-$SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
+$SwitchCheckbox-checkedColor = $brand-success;
+$SwitchCheckbox-uncheckedColor = $gray-light;
+$SwitchCheckbox-borderRadius = 1em; // Like in bs-buttons
 
 .SwitchCheckbox {
     // Positioning context for children
@@ -83,10 +83,12 @@ $SwitchCheckbox-borderRadius = 4px; // Like in bs-buttons
         width: $SwitchCheckbox-markerWidth;
         background-color: $SwitchCheckbox-markerColor;
         border-radius: $SwitchCheckbox-borderRadius;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         transition: margin 0.4s;
     }
-
+    input:hover,
+    input:active {
+            outline: none !important;
+    }
     input:checked + .SwitchCheckbox-drawer {
         background-color: $SwitchCheckbox-checkedColor;
     }
