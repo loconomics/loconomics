@@ -9,6 +9,8 @@ Listing
     }
     .Listing-editorHeader {
         display: table
+        background-color: $brand-primary;
+        color: white;
         .Listing-title {
             @media $mediaMinSm {
                 display: table-cell;
@@ -23,9 +25,27 @@ Listing
         }
     }
     .Listing-alerts {
-        background: $gray-background;
+        background-color: $brand-primary;
+        color: white;
         text-align: left;
         padding: 1rem;
+        .TilesList {
+            > *:after {
+                border-bottom-color: white;
+                @media $mediaMinMd {
+                    border-bottom: none !important;
+                    border-right: 1px solid white;
+                    left: auto;
+                    right: 0;
+                    top: 0.3em;
+                    bottom: 0.3em;
+                }
+            }   
+        }
+        .AlertItem {
+            background-color: $brand-primary;
+            color: white;
+        }
     }
     .Listing-heading {
         display: table;
@@ -58,13 +78,8 @@ Listing
             }
         }
     }
-    .Listing-publicBio {
+   .Listing-userText {
         white-space: pre-line;
-        margin-left: 2em;
-    }
-    .Listing-overview {
-        white-space: pre-line;
-        margin-left: 2em;
     }
     .Listing-overviewAttributes {
         padding-left: 0em;
