@@ -24,7 +24,7 @@
 
     EXAMPLES {
         
-        "Search Job Titles, Service Professionals, and Categories by Search Term": {
+        "Search Job Titles, Service Professionals, and Categories by Search Term and Location": {
             "url": "/api/v1/en-US/search",
             "get": {
                 "searchTerm": "cleaner",
@@ -34,7 +34,7 @@
             }
         },       
 
-        "Search Service Professionals by Search Term": {
+        "Search Service Professionals by Search Term and Location": {
             "url": "/api/v1/en-US/search/service-professionals",
             "get": {
                 "searchTerm": "Joshua",
@@ -44,7 +44,7 @@
             }
         },
 
-        "Search Service Professionals by Job TitleID": {
+        "Search Service Professionals by Job TitleID and Location": {
             "url": "/api/v1/en-US/search/service-professionals/by-job-title",
             "get": {
                 "jobTitleID": "106",
@@ -54,8 +54,14 @@
             }
         },
 
+        "Search Job Titles Autocomplete by Search Term": {
+            "url": "/api/v1/en-US/search/job-titles/autocomplete",
+            "get": {
+                "searchTerm": "cleaner"
+            }
+        },
 
-        "Search Job Titles by Search Term": {
+        "Search Job Titles by Search Term and Location": {
             "url": "/api/v1/en-US/search/job-titles",
             "get": {
                 "searchTerm": "cleaner",
@@ -65,7 +71,7 @@
             }
         },
         
-        "Search Job Title info by jobTitleID": {
+        "Search Job Title info by jobTitleID and Location": {
             "url": "/api/v1/en-US/search/job-titles/106",
             "get": {
                 "origLat": "37.788479",
@@ -74,7 +80,7 @@
             }
         },
 
-        "Search Job Titles by CategoryID": {
+        "Search Job Titles by CategoryID and Location": {
             "url": "/api/v1/en-US/search/job-titles/by-category",
             "get": {
                 "categoryID": "1",
@@ -85,7 +91,7 @@
         },
 
         
-        "Search Categories by Search Term": {
+        "Search Categories by Search Term and Location": {
             "url": "/api/v1/en-US/search/categories",
             "get": {
                 "searchTerm": "home",
@@ -95,7 +101,7 @@
             }
         },   
         
-        "Search Category info by CategoryID": {
+        "Search Category info by CategoryID and Location": {
             "url": "/api/v1/en-US/search/categories/1",
             "get": {
                 "origLat": "37.788479",
@@ -154,6 +160,7 @@
                         }
                         break;
                     }
+                   
                     // /search/job-titles**
                     case "job-titles":
                     {
@@ -182,6 +189,12 @@
                             var lng = Request["origLong"].AsDecimal();
                             var dist = Request["searchDistance"].AsInt();
                             return LcRest.JobTitleSearchResult.SearchByCategoryID(s, lat, lng, dist, LcRest.Locale.Current);
+                        }
+                        // /search/job-titles/autocomplete
+                        else if (UrlData.Count == 2 && UrlData[1] == "autocomplete")
+                        {
+                            var s = Request["searchTerm"];
+                            return LcRest.JobTitleSearchResult.SearchByJobTitleAutocomplete(s, LcRest.Locale.Current);
                         }
                         break;
                     }

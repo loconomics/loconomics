@@ -10,7 +10,8 @@ var Activity = require('../components/Activity');
 var snapPoints = require('../utils/snapPoints');
 var showAnnouncement = require('../modals/announcement').show;
 var user = require('../data/userProfile').data;
-var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
+//var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
+var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
 require('../kocomponents/location-autocomplete');
 
 var A = Activity.extend(function HomeActivity() {
@@ -63,17 +64,16 @@ exports.init = A.init;
 
 A.prototype._registerSnapPoints = function() {
 
-    var $searchBox = this.$activity.find('#homeSearch'),
-        // Calculate the position where search box is completely hidden, and get 1 on the worse case -- bad value coerced to 0,
-        // negative result because some lack of data (content hidden)
-        searchPoint = Math.max(1, (
-            // Top offset with the scrolling area plus current scrollTop to know the actual position inside the positioning context
-            // (is an issue if the section is showed with scroll applied on the activity)
-            $searchBox.offset().top + this.$activity.scrollTop() +
-            // Add the box height but sustract the header height because that is fixed and overlaps
-            $searchBox.outerHeight() - this.$header.outerHeight()
-        ) |0);
-
+    var $searchBox = this.$activity.find('#home-jobTitleAutocomplete'); //homeSearch');
+    // Calculate the position where search box is completely hidden, and get 1 on the worse case -- bad value coerced to 0,
+    // negative result because some lack of data (content hidden)
+    var searchPoint = Math.max(1, (
+        // Top offset with the scrolling area plus current scrollTop to know the actual position inside the positioning context
+        // (is an issue if the section is showed with scroll applied on the activity)
+        $searchBox.offset().top + this.$activity.scrollTop() +
+        // Add the box height but sustract the header height because that is fixed and overlaps
+        $searchBox.outerHeight() - this.$header.outerHeight()
+    ) |0);
     var pointsEvents = {
         // Just after start scrolling
         0: 'scroll-fixed-header'
