@@ -1,9 +1,10 @@
 <!-- Activity listing -->
 <div data-activity="listing" class="Listing" data-bind="css: { 'is-loading': isLoading }">
     <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
-        <p class="small">
-            <span data-bind="text: jobTitle"></span> listing is <span data-bind="ifnot:isActive">inactive.</span><span data-bind="if:isActive">active.</span>
-            <button data-bind="click: editListing" class="btn btn-sm btn-default"><span class="fa ion ion-edit"></span> Edit</button>
+        <p>
+            <span data-bind="ifnot:isActive"><icon-dec class="text-danger" params="icon: 'ion-alert-circled'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>inactive.</strong></span>
+            <span data-bind="if:isActive"><icon-dec class="text-success" params="icon: 'ion-ios-checkmark'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>active.</strong></span>
+            <button data-bind="click: editListing" class="btn btn-default"> Edit</button>
         </p>
     </app-message-bar>
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
@@ -50,7 +51,7 @@
                     <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview of services</h2>
                 </div>
                 <div class="col-xs-12 col-sm-12">
-                    <p class="Listing-overview" data-bind="text: intro, visible: hasIntro"></p>
+                    <p class="Listing-userText" data-bind="text: intro, visible: hasIntro"></p>
                     <ul class="Listing-overviewAttributes" data-bind="foreach: serviceAttributes().serviceAttributes">
                         <li class="col-xs-12 col-md-4">
                             <h5 class="text-uppercase"  data-bind="text: name"></h5>
@@ -134,7 +135,7 @@
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
                     <h3>Professional credentials</h3>
-                    <p>These are verified according to our <a href="#!terms/background-check-policy" target="_blank">Background check and license verification policy</a>.</p>
+                    <p>These are verified according to our <a href="#!terms/background-check-policy" target="_blank">Background Check and License Verification policy</a>.</p>
                     <ul data-bind="template: { name: 'license-card-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="visible: education().length">
@@ -167,7 +168,7 @@
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
                 </div>
-                <p class="Listing-publicBio" data-bind="text: profile().publicBio"></p>
+                <p class="Listing-userText" data-bind="text: profile().publicBio"></p>
             </section>
         </div>
     </div>
