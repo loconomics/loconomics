@@ -20,55 +20,55 @@ var RouteParser = require('../utils/Router').RouteParser;
 var alertPresets = {
         positionservices: {
             label: 'Add details to your listing',
-            route: new RouteParser('/servicesOverview/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/servicesOverview/:jobTitleID')
         },
         availability: {
             label: 'What hours do you work?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/schedulingPreferences?mustReturn=listingEditor/:jobTitleID')
         },
         personalinfo: {
             label: 'How do clients reach you?',
-            route: new RouteParser('/publicContactInfo?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/publicContactInfo?mustReturn=listingEditor/:jobTitleID')
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/publicProfilePicture?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/publicProfilePicture?mustReturn=listingEditor/:jobTitleID')
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/payoutPreference?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/payoutPreference?mustReturn=listingEditor/:jobTitleID')
         },
         pricingdetails: {
             label: 'Create a bookable offering',
-            route: new RouteParser('/serviceProfessionalService/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/serviceProfessionalService/:jobTitleID')
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/publicBio?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing&returnText=Back to listing')
+            route: new RouteParser('/publicBio?mustReturn=listingEditor/:jobTitleID')
         },
         professionallicense: {
             label: 'Submit required credentials',
-            route: new RouteParser('/licensesCertifications/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/licensesCertifications/:jobTitleID')
         },
         location: {
             label: 'Where do you work?',
-            route: new RouteParser('/serviceAddresses/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/serviceAddresses/:jobTitleID')
         },
         'add-education': {
             label: 'Add training or education',
-            route: new RouteParser('/education?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/education?mustReturn=listingEditor/:jobTitleID')
         },
         verifyemail: {
               label: 'Verify your account (check your e-mail)',
-              route: new RouteParser('/verifications?mustReturn=listingEditor/:jobTitleID&returnText=Back to listing')
+              route: new RouteParser('/verifications?mustReturn=listingEditor/:jobTitleID')
         },
         showcasework: {
             label: 'Add photos of your work',
-            route: new RouteParser('/workPhotos/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/workPhotos/:jobTitleID')
         },
         'required-professionallicense': {
               label: 'Verify your professional license or certification',
-              route: new RouteParser('/licensesCertifications/:jobTitleID&returnText=Back to listing')
+              route: new RouteParser('/licensesCertifications/:jobTitleID')
         }
     },
     undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };

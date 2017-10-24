@@ -120,7 +120,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    //jshint maxstatements:50
+    //jshint maxstatements:40
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
@@ -137,11 +137,11 @@ function ViewModel(app) {
     }, this);
 
     this.returnLinkGeneralActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + user.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
     this.returnLinkJobTitleActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + user.userID() + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
      /// Related models information
