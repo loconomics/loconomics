@@ -48,7 +48,6 @@ module.exports = {
     'addJobTitles': require('./activities/addJobTitles'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'marketplaceProfile': require('./activities/marketplaceProfile'),
-    'marketplaceJobtitles': require('./activities/marketplaceJobtitles'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
