@@ -71,6 +71,7 @@ namespace LcRest
                 WHERE
                     LanguageID = @LanguageID
                     AND CountryID = @CountryID
+                    AND Approved = 1 
                     AND (PositionSingular like '%' + @searchTerm + '%'
                     OR PositionDescription like '%' + @searchTerm + '%'
                     OR GovPositionDescription like '%' + @searchTerm + '%'
