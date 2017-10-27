@@ -137,11 +137,11 @@ function ViewModel(app) {
     }, this);
 
     this.returnLinkGeneralActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        return this.user() && this.selectedJobTitle() && '?mustReturn=listingEditor/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
     this.returnLinkJobTitleActivity = ko.pureComputed(function(){
-        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + '/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
+        return this.user() && this.selectedJobTitle() && this.selectedJobTitle().jobTitleID() + '?mustReturn=listingEditor/' + this.selectedJobTitle().jobTitleID() + '&returnText=Edit listing';
     }, this);
 
      /// Related models information
