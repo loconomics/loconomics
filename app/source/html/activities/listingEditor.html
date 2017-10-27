@@ -142,10 +142,14 @@
                     <a data-bind="visible: licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(), 'aria-label': 'Edit your '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
                 </div>
-                <div class="col-xs-12 col-sm-12">
-                    <em data-bind="visible: selectedJobTitle() && !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: selectedJobTitle() && !selectedJobTitle().serviceAddresses().length"><a data-bind="attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
-                    <h3 data-bind="visible: selectedJobTitle() && $root.submittedUserLicensesCertifications().length">Professional credentials</h3>
-                    <ul data-bind="template: { name: 'license-card-edit-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
+                <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
+                    <div class="col-xs-12 SectionHeading">
+                        <h3 data-bind="visible: $root.submittedUserLicensesCertifications().length">Professional credentials</h3>
+                        <a data-bind="visible: $root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Edit</a>
+                        <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
+                    </div>
+                    <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
+                    <ul data-bind="template: { name: 'license-card-edit-template', foreach: $root.submittedUserLicensesCertifications }"></ul>
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="visible: education().length">
                     <h3>Education credentials</h3>
