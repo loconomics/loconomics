@@ -1,7 +1,7 @@
 <!-- Activity listing -->
 <div data-activity="listingEditor" class="Listing" data-bind="css: { 'is-loading': isLoading }">
+    <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
     <div class="col-xs-12 col-sm-12 col-sm-reset Listing-editorHeader">
-        <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
         <div class="Listing-title">
             <h1 data-bind="text: title"></h1>
         </div>
@@ -53,8 +53,8 @@
                 <div data-bind="with: selectedJobTitle">
                     <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
                         <p>
-                            Experience: 
-                            <span data-bind="text: name"></span> 
+                            Experience:
+                            <span data-bind="text: name"></span>
                             <a class="btn btn-icon-link" data-bind="attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your experience level' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
                         </p>
                     </div>
@@ -92,10 +92,10 @@
                     <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings  <span class="label label-danger" data-bind="visible: !publicServices().length">Required</span></h2>
                     <a data-bind="visible: publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Edit offerings">Edit</a>
                     <a data-bind="visible: !publicServices().length, attr: {href: '#!serviceProfessionalService/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add your  '+ jobTitleSingularName() + ' offerings' }" class="btn btn-default pull-right" aria-label="Add offerings">Add</a>
-                </div>       
-                <div class="col-xs-12 col-sm-12">      
+                </div>
+                <div class="col-xs-12 col-sm-12">
                     <em data-bind="visible: !publicServices().length" class="text-muted">List here what <span data-bind="text: jobTitleSingularName()"></span> services you offer along with descriptions and pricing. You must add at least one for your listing to be active in the marketplace.</em>
-                </div>   
+                </div>
                 <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
             </section>
             <section id="listing-editor-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
@@ -120,7 +120,7 @@
                     <a data-bind="visible: weeklySchedule(), attr: {href: '#!schedulingPreferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Edit your hours and scheduling preferences' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !weeklySchedule(), attr: {href: '#!schedulingPreferences' + $root.returnLinkGeneralActivity(),'aria-label': 'Add your hours and scheduling preferences' }" class="btn btn-default pull-right">Add</a>
                 </div>
-                <div class="col-xs-12 col-sm-12"> 
+                <div class="col-xs-12 col-sm-12">
                     <em data-bind="visible: !weeklySchedule()" class="text-muted">When can clients book you?</em>
                     <div data-bind="template: { name: 'service-professional-hours-template', data: weeklySchedule() }"></div>
                 </div>
@@ -130,10 +130,10 @@
                     <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location  <span class="label label-danger" data-bind="visible: !$root.serviceAddresses().length">Required</span></h2>
                     <a data-bind="visible: $root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.serviceAddresses().length, attr: {href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' locations' }" class="btn btn-default pull-right">Add</a>
-                </div>    
-                <div class="col-xs-12 col-sm-12">      
+                </div>
+                <div class="col-xs-12 col-sm-12">
                     <em data-bind="visible: !$root.serviceAddresses().length" class="text-muted">Add a location or service area where you clients can book your <span data-bind="text: jobTitleSingularName()"></span> offerings. You must add one for your listing to be active in the marketplace.</em>
-                </div>  
+                </div>
                 <ul data-bind="template: { name: 'location-card-edit-template', foreach: $root.serviceAddresses() }"></ul>
             </section>
             <section id="listing-editor-credentials-verifications" class="row" title="">
