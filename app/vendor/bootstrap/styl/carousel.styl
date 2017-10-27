@@ -1,7 +1,9 @@
 // from https://github.com/maxmx/bootstrap-stylus/blob/master/bootstrap/carousel.styl
-//
+// **MANUALLY EDITED**
 // Carousel
 // --------------------------------------------------
+// @iagosrl: manually removed the use of gradients that were not working and causing
+// optimization errors (cssmin level2 warnings because of incorrect CSS syntax)
 
 // Wrapper for the slide container and indicators
 .carousel
@@ -96,14 +98,9 @@
   // We can't have this transition here because WebKit cancels the carousel
   // animation if you trip this while in the middle of another animation.
 
-  // Set gradients for backgrounds
-  &.left
-    gradient-horizontal(rgba(0, 0, 0, .5), rgba(0, 0, 0, .0001))
-
   &.right
     left auto
     right 0
-    gradient-horizontal(rgba(0, 0, 0, .0001), rgba(0, 0, 0, .5))
 
   // Hover/focus state
   &:hover,
