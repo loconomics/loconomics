@@ -268,7 +268,7 @@ exports.extend = function (app) {
     app.performsNavBarBack = function performsNavBarBack(options) {
         var nav = this.navBar(),
             left = nav && nav.leftAction(),
-            $btn = $('body > .AppNav .SmartNavBar-edge.left > a.SmartNavBar-btn');
+            $btn = $('.AppNav .SmartNavBar-edge.left > a.SmartNavBar-btn');
 
         // There is an action, trigger like a click so all the handlers
         // attached on spare places do their work:

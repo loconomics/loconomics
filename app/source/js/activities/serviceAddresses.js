@@ -11,6 +11,8 @@ var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
 var clientAddresses = require('../data/clientAddresses');
 var showError = require('../modals/error').show;
+var UserJobProfile = require('../viewmodels/UserJobProfile');
+var ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -33,13 +35,13 @@ var A = Activity.extend(function ServiceAddressesActivity() {
             return 'Where do you work as a ' + this.jobTitleName() + '?';
         }
         else if (this.isInOnboarding()) {
-            return 'Locations for your listing';
+            return 'Location for your listing';
         }
         else if(this.serviceAddresses.isSelectionMode()) {
             return 'Choose a place for this booking';
         }
         else {
-            return 'Locations';
+            return 'Location';
         }
     }, this.viewModel);
 
@@ -228,9 +230,6 @@ A.prototype.show = function show(options) {
         this.viewModel.jobTitles.sync();
     }
 };
-
-var UserJobProfile = require('../viewmodels/UserJobProfile'),
-    ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 function ViewModel(app) {
     // jshint maxstatements:70
