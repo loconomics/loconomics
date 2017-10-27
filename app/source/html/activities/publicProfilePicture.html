@@ -13,9 +13,10 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-md-7 col-sm-reset"> 
+            <div class="col-md-7 col-sm-reset">
                 <h1><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
-                <form id="profileForm" class="container-fluid LightForm" role="form" aria-describedby="profileFormInstructions">
+                <form id="profileForm" class="container-fluid LightForm" role="form" aria-describedby="profileFormInstructions"
+                    data-bind="event: { submit: save }">
                     <!-- ko with: profilePicture -->
                     <fieldset class="LightForm-tool">
                         <p class="help-block"><span data-bind="visible: user.isServiceProfessional()">Upload a clear, professional-looking photo of you for clients to see.</span><span data-bind="visible: !user.isServiceProfessional()">Upload a clear photo of you for service professionals to see.</span></p>
@@ -56,4 +57,4 @@
             </li>
         </ul>
     </div>
-</div>    
+</div>
