@@ -14,7 +14,7 @@
 @import 'nib';
 @import '../bs-mixims/caret.styl';
 
-$DatePicker-weekDay-cell-height = 30px;
+$DatePicker-weekDay-cell-height = 2.1429rem;
 // Recommended touch accessible button height
 $DatePicker-day-cell-height = 48px;
 // Whole height must kept consistent when changing modes
@@ -23,36 +23,36 @@ $DatePicker-day-cell-height = 48px;
 // no slightly differences between browsers, and mostly at 1x screens
 // We have 3 rows of month-years while 6 rows of days plus weekDay header
 $DatePicker-monthYear-cell-height = (($DatePicker-day-cell-height * 6 + $DatePicker-weekDay-cell-height) / 3);
-$DatePicker-day-content-height = 24px;
-$DatePicker-day-content-width = 24px;
+$DatePicker-day-content-height =  1.7143rem;
+$DatePicker-day-content-width =  1.7143rem;
 
 .DatePicker
     top 0
     left 0
     padding 0 // There is enough cell padding and any extra make it strange with the new borders
     margin 0
-    border-radius 4px
+    border-radius 0.2857em
 
     &:before
         content ''
         display inline-block
-        border-left 7px solid transparent
-        border-right 7px solid transparent
-        border-bottom 7px solid #ccc
+        border-left 0.5000rem solid transparent
+        border-right 0.5000rem solid transparent
+        border-bottom 0.5000rem solid #ccc
         border-bottom-color rgba(0, 0, 0, 0.2)
         position absolute
         top -7px
-        left 6px
+        left 0.4286rem
 
     &:after
         content ''
         display inline-block
-        border-left 6px solid transparent
-        border-right 6px solid transparent
-        border-bottom 6px solid white
+        border-left 0.4286rem solid transparent
+        border-right 0.4286rem solid transparent
+        border-bottom 0.4286rem solid white
         position absolute
         top -6px
-        left 7px
+        left 0.5000rem
 
     // Reset button styles
     button
@@ -75,11 +75,11 @@ $DatePicker-day-content-width = 24px;
         background-color: white;
         tbody tr
             td
-                padding: 5px;
+                padding: 0.3571em;
 
     .DatePicker-weekDays th
         height $DatePicker-weekDay-cell-height
-        border-radius 4px
+        border-radius 0.2857em
         vertical-align bottom
         padding-bottom 0 !important
 
@@ -87,12 +87,12 @@ $DatePicker-day-content-width = 24px;
         text-align center
         // A minimum size
         width $DatePicker-day-content-width
-        height 40px
+        height 2.8571rem
 
         &.day
             width $DatePicker-day-content-width
             button
-                font-size 17px
+                font-size 1.2143rem
 
             &:hover
                 background $gray-lighter
@@ -209,7 +209,7 @@ $DatePicker-day-content-width = 24px;
             // General styles to be ready for tags
             // IMPORTANT: changes to this sizing needs changes to months/years
             // in this style modifier and take care of general cell height
-            border-bottom 1px solid $gray-lighter
+            border-bottom 0.0714rem solid $gray-lighter
             position: relative;
             > button
                 padding: 0 !important;
@@ -219,7 +219,7 @@ $DatePicker-day-content-width = 24px;
                 > span:first-child
                     display: block;
                     position: absolute;
-                    top: 5px;
+                    top: 0.3571rem;
                     left: 0;
                     right: 0;
 
@@ -228,8 +228,8 @@ $DatePicker-day-content-width = 24px;
                     position: absolute;
                     left: 0;
                     right: 0;
-                    bottom: 5px;
-                    font-size: 18px;
+                    bottom: 0.3571rem;
+                    font-size: 1.2857rem;
 
             // Tag in days of other months get even more muted:
             &.old
@@ -238,7 +238,7 @@ $DatePicker-day-content-width = 24px;
                     opacity .8
 
     $.DatePicker-hasLegend
-        border-bottom 1px solid $gray-lighter
+        border-bottom 0.0714rem solid $gray-lighter
 
 /*
     TODO TOREVIEW: Adapt with other name?
@@ -248,5 +248,5 @@ $DatePicker-day-content-width = 24px;
         .add-on i
             display block
             cursor pointer
-            width 16px
-            height 16px
+            width 1.1429rem
+            height 1.1429rem

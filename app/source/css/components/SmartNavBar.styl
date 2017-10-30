@@ -20,12 +20,12 @@
 @import 'nib';
 @import '../utils/styleguideVars.styl';
 
-$SmartNavBar-borderSize = 1px
+$SmartNavBar-borderSize = 0.0714rem
 $SmartNavBar-height = $app-navbar-height;
 $SmartNavBar-lateralGap = $container-padding-left; //9px;
-$SmartNavBar-headerFontSize = 18px;
-$SmartNavBar-buttonFontSize = 15px;
-$SmartNavBar-buttonHeaderFontSize = 15px;
+$SmartNavBar-headerFontSize = 1.2857rem;
+$SmartNavBar-buttonFontSize = 1.0714rem;
+$SmartNavBar-buttonHeaderFontSize = 1.0714rem;
 $SmartNavBar-buttonMaxWidth = none; // 140px;
 $SmartNavBar-bgColor = White; //rgba(248, 248, 248, 0.9);
 $SmartNavBar-borderColor = $gray-light; //rgb(200, 199, 204);
@@ -49,13 +49,13 @@ $SmartNavBar-disabledButtonColor = $text-muted; //rgb(200, 199, 204);
 
     /* Problematic, for now, before confirm any problemm, go with simple border
     // Creating the bottom-border with a gradient to avoid
-    // problem with Retina screens doubling the 1px border.
+    // problem with Retina screens doubling the 0.0714rem border.
     background-image: linear-gradient(0deg, $SmartNavBar-borderColor, $SmartNavBar-borderColor 50%, transparent 50%);
-    background-size: 100% 1px;
+    background-size: 100% 0.0714rem;
     background-repeat: no-repeat;
     background-position: bottom;
     */
-    border-bottom: 1px solid $SmartNavBar-borderColor;
+    border-bottom: 0.0714rem solid $SmartNavBar-borderColor;
 
     z-index: 500; // Higher even than menus
     user-select: none;

@@ -16,14 +16,14 @@
 @import './SearchBar.styl';
 
 $LargeNavBar-height = $big-navbar-height
-$LargeNavBar-vGap = 2px
+$LargeNavBar-vGap = 0.1429rem
 $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
 
 .LargeNavBar {
     height $LargeNavBar-height
     width: 100%;
     background-color: white;
-    border-bottom: 1px solid $gray-light;
+    border-bottom: 0.0714rem solid $gray-light;
     margin-bottom: 0;
     position: relative;
     z-index: 250;
@@ -54,7 +54,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     // Navbar left with auto size, just the needed minimum size for one line
     // Search bar.
     .LargeNavBar-searchBar {
-        border-left 1px solid $border-color
+        border-left 0.0714rem solid $border-color
         SearchBar($LargeNavBar-contentHeight)
     }
     // Brand
@@ -66,14 +66,14 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
     }
     // Links
     .LargeNavBar-navBar {
-        padding 0px
+        padding 0em
         float right
         & > li {
             display: inline-block;
             height: $LargeNavBar-contentHeight;
-            line-height: 26px;
+            line-height: 1.8571rem;
             width: auto;
-            //border-left 1px solid $border-color
+            //border-left 0.0714rem solid $border-color
             padding: 0;
             white-space: nowrap;
             vertical-align: top;
@@ -95,7 +95,7 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                 border: none;
                 padding-top 0
                 padding-bottom 0
-                font-size 16px;
+                font-size 1.1429rem;
                 &:hover
                 &:focus {
                     background-color transparent
@@ -121,21 +121,21 @@ $LargeNavBar-contentHeight = $LargeNavBar-height - ($LargeNavBar-vGap * 2)
                 .go-dashboard > a
                 .go-onboarding > a
                 .go-logout > a {
-                    padding-left: 10px;
-                    padding-bottom: 10px;
+                    padding-left: 0.7143em;
+                    padding-bottom: 0.7143em;
                     &:hover,
                     &:focus {
-                        padding-left: 17px;
+                        padding-left: 1.2143em;
                     }
                 }
                 &.Category-menu {
                     > li {
                         text-align: center;
-                        border-bottom: 1px solid $gray-background;
+                        border-bottom: 0.0714rem solid $gray-background;
                         > a {
                             white-space: normal;
                             font-size: inherit;
-                            padding: 10px 0px;
+                            padding: 0.7143em 0em;
                         }
                     }
                     > li:last-child {

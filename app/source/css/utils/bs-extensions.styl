@@ -55,7 +55,7 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
     TODO: Use variables from Bootstrap rather than static values
 **/
 .form-control-static {
-    padding: 7px 13px;
+    padding: 0.5000em 0.9286em;
 }
 
 /**
@@ -68,7 +68,7 @@ $btn-secondary-border = lighten($brand-secondary-dark, 10%)
 .input-group > .form-control,
 // All buttons
 .btn {
-    border-radius: 0; // Or 1px so looks square but gets a smooth rendering??
+    border-radius: 0; // Or 0.0714rem so looks square but gets a smooth rendering??
     font-weight: 700;
 }
 // Form elements including buttons, both
@@ -238,7 +238,7 @@ col-reset() {
 // NOTE: is not technically a Bootstrap extension, and size is targetting specially
 // ion icons (that do not resize very well on every size) but usable fa icons too.
 .fa-xl {
-    font-size: 25px;
+    font-size: 1.7857rem;
 }
 
 // Removing padding from the container class with additional complementary class
@@ -286,15 +286,15 @@ ResetSectionTitleMargin() {
 // custom styles for dropdown-menus across app
 .dropdown-menu {
   float: left;
-  margin-top: 0px;
+  margin-top: 0em;
   background-color: #fff;
   -webkit-box-shadow: 0 1.5px 0 0 $gray-background;
   box-shadow: 0 1.5px 0 0 $gray-background;
-  border-radius: 0px;
+  border-radius: 0em;
 
   .App-menus-group-header {
-        padding: 0px 10px 10px;
-        border-bottom: 1px solid $gray-light;
+        padding: 0em 0.7143em 0.7143em;
+        border-bottom: 0.0714rem solid $gray-light;
         color: $gray-light;
         font-size: 1.1em;
   }
@@ -307,14 +307,14 @@ ResetSectionTitleMargin() {
         > a {
         color: $gray;
         font-size: 1.1em;
-        padding: 10px 10px 10px 40px;
+        padding: 0.7143em 0.7143em 0.7143em 2.8571em;
         margin: 0;
 
         // icons
         > i {
             color: $gray;
             font-size: 1.5em;
-            margin-right: 5px;
+            margin-right: 0.3571em;
         }
 
         &:hover,
@@ -339,17 +339,17 @@ ResetSectionTitleMargin() {
 
 .checkbox,
 .radio {
-  margin-left: 15px;
+  margin-left: 1.0714em;
 }
 .well {
-    margin: 15px 35px;
-    padding: 20px 20px -5px 20px;
+    margin: 1.0714em 2.5000em;
+    padding: 1.4286em 1.4286em -5px 1.4286em;
     background-color: #FFFFA5;
     border: none;
 
     .list-group {
-      margin-bottom: 0px;
-      padding-left: 20px;
+      margin-bottom: 0em;
+      padding-left: 1.4286em;
     }
 }
 
@@ -357,7 +357,7 @@ ResetSectionTitleMargin() {
 .modal .modal-header .close {
     margin-top: -10px;
     margin-right: -12px;
-    padding: 8px 12px;
+    padding: 0.5714em 0.8571em;
 }
 // TODO: make this cross browser, not just webkit specific (and standard/future-proof if possible)
 input[type=number]::-webkit-inner-spin-button,
@@ -370,7 +370,7 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: white;
 }
 .icon-secure {
-    font-size: 29px !important;
-    top: 27px;
+    font-size: 2.0714rem !important;
+    top: 1.9286rem;
 }
 

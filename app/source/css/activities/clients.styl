@@ -5,14 +5,14 @@
 
 [data-activity=clients] {
     
-    $indexWidth = 25px;
-    $fullIndexWidth = 32px;
+    $indexWidth = 1.7857rem;
+    $fullIndexWidth = 2.2857rem;
     $indexTop = 100px;
     
     #clientsActivityTitle {
         position: absolute;
-        left: 0px;
-        right: 0px;
+        left: 0em;
+        right: 0em;
         z-index: 100;
         margin: 0 !important;
     }
@@ -27,7 +27,7 @@
         // Scroll context must be carefully placed in a sibling elements that acts as container for
         // all the other parts of the Activity.
         position: absolute;
-        right: 0px;
+        right: 0em;
         top: $indexTop;
         // reset container-fluid pad
         padding-left: 0;
@@ -44,7 +44,7 @@
             a {
                 text-align: center;
                 font-weight: bold;
-                padding: 3px 6px 3px 15px;
+                padding: 0.2143em 0.4286em 0.2143em 1.0714em;
                 width: 100%;
                 border: none;
                 border-radius: 0;
@@ -77,7 +77,7 @@
         padding-left: 0;
         padding-right: 0;
         // reseting container* gaps
-        top: 38px;
+        top: 2.7143rem;
         // IMPORTANT: If needed, use padding for left positioning to allow negative margin on the list
         left: 0;
         right: $fullIndexWidth;

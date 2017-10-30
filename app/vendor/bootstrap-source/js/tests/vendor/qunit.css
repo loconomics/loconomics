@@ -72,7 +72,7 @@
 	padding: 0.5em 1em 0.5em 1em;
 	background-color: #2B81AF;
 	color: #FFF;
-	text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 1px;
+	text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 0.0714em;
 }
 
 #qunit-modulefilter-container {
@@ -99,7 +99,7 @@
 
 #qunit-tests li {
 	padding: 0.4em 1em 0.4em 1em;
-	border-bottom: 1px solid #FFF;
+	border-bottom: 0.0714rem solid #FFF;
 	list-style-position: inside;
 }
 
@@ -263,7 +263,7 @@
 	color: #2B81AF;
 	background-color: #D2E0E6;
 
-	border-bottom: 1px solid #FFF;
+	border-bottom: 0.0714rem solid #FFF;
 }
 #qunit-testresult .module-name {
 	font-weight: 700;

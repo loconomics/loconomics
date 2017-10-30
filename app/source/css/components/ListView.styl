@@ -8,17 +8,17 @@
 */
 
 /* Component vars */
-$heightLimit = 33px;
-$markerIconSize = 24px;
-$markerWidth = 28px;
-$actionWidth = 40px;
-$iconSize = 14px;
+$heightLimit = 2.3571rem;
+$markerIconSize =  1.7143rem;
+$markerWidth = 2.0000rem;
+$actionWidth = 2.8571rem;
+$iconSize = 1.0000rem;
 /* Used the same gap as buttons, equals
     to the implicit gap in $actionWidth
     and heights,
     H for Horizontal and V for Vertical */
-$contentHGap = 12px;
-$contentVGap = 6px;
+$contentHGap = 0.8571rem;
+$contentVGap = 0.4286rem;
     
 .ListView {
     /** Base styles and elements */
@@ -28,7 +28,7 @@ $contentVGap = 6px;
     .ListView-item {
         position: relative;
         max-width: 100%;
-        border-bottom: 1px solid $gray-background;
+        border-bottom: 0.0714rem solid $gray-background;
         
         .ListView-item-marker,
         .ListView-item-content,
@@ -44,9 +44,9 @@ $contentVGap = 6px;
         .ListView-item-marker {
             width: $markerWidth;
             position: absolute;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
+            top: 0em;
+            bottom: 0em;
+            left: 0em;
             text-align: center;
             padding: 0;
 
@@ -104,9 +104,9 @@ $contentVGap = 6px;
             width: $actionWidth;
             overflow: hidden;
             position: absolute;
-            top: 0px;
-            bottom: 0px;
-            right: 0px;
+            top: 0em;
+            bottom: 0em;
+            right: 0em;
             padding: $contentVGap $contentHGap;
             
             .glyphicon, .fa, .ion {
@@ -122,8 +122,8 @@ $contentVGap = 6px;
     
     .ListView-divider {
         // Like SectionTitle right now:
-        font-size: 17px;
-        padding: 7px 14px;
+        font-size: 1.2143rem;
+        padding: 0.5000em 1.0000em;
         margin: 0;
         text-align: center;
         font-weight: normal;
@@ -147,7 +147,7 @@ $contentVGap = 6px;
 .ListView--twolines {
     $heightLimit = 52px;
     /* heightLimit without container paddings */
-    $internalHeight = 40px;
+    $internalHeight = 2.8571rem;
     
     .ListView-item {
     
@@ -180,7 +180,7 @@ $contentVGap = 6px;
         }
         
         .ListView-item-action {
-            $action-button-padding = 12px; /* from Bootstrap btn-link styles 2x6padding */
+            $action-button-padding = 0.8571em; /* from Bootstrap btn-link styles 2x6padding */
             line-height: ($heightLimit - $action-button-padding);
         }
     }
@@ -228,7 +228,7 @@ $markerWidthLarge = 64px;
         .ListView-item-tagged:before {
             content: '';
             display: block;
-            border-right: 2px solid $gray-light;
+            border-right: 0.1429rem solid $gray-light;
             position: absolute;
             top: 0;
             bottom: 0;
@@ -295,8 +295,8 @@ $actionWidthLarge = 60px;
             &:before {
                 content: '';
                 position: absolute;
-                top: 0px;
-                bottom: 0px;
+                top: 0em;
+                bottom: 0em;
                 right: 100%;
                 width: 2em;
                 background-image: linear-gradient(to left, White, rgba(255, 255, 255, 0));

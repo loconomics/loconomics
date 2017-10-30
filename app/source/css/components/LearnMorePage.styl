@@ -15,10 +15,10 @@
     // NOTE: all activities are absolute positioned, so is already a positioning context
 
     [role=main] {
-        $arrowSize = 30px;
-        $sectionTitleFontSize = 32px;
+        $arrowSize = 2.1429rem;
+        $sectionTitleFontSize = 2.2857rem;
         $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);
-        $sectionTitleFontSizeSmall = 28px;
+        $sectionTitleFontSizeSmall = 2.0000rem;
         $sectionTitleLineHeightSmall = ceil($sectionTitleFontSizeSmall * 1.1);
 
         .coop-section-title {
@@ -61,7 +61,7 @@
         }
 
         .coop-search {
-            padding-top: $LargeNavBar-height + 32px;
+            padding-top: $LargeNavBar-height + 2.2857rem;
             background: no-repeat center / cover;
             background-image:
               linear-gradient(
@@ -78,13 +78,13 @@
                 text-align: center
 
                 @media $mediaMaxSm {
-                    font-size: 38px;
+                    font-size: 2.7143rem;
                 }
             }
 
             .coop-tagline {
                 color: White;
-                font-size: 24px;
+                font-size:  1.7143rem;
                 margin: 0.5em auto;
                 text-align: center;
             }
@@ -96,12 +96,12 @@
             }
 
             form {
-                margin: 40px auto;
+                margin: 2.8571em auto;
                 max-width: 450px;
 
                 .form-control {
                     background: White;
-                    font-size: 17px;
+                    font-size: 1.2143rem;
                 }
 
                 .form-control:focus {
@@ -110,13 +110,13 @@
                   border-right-color: transparent;
                 }
 
-                // Reduce column gaps by a 20px in total
+                // Reduce column gaps by a 1.4286rem in total
                 // for sizes bigger than XS (so keep standar in phone where
                 // forms goes vertical)
                 @media $mediaMinSm {
                     > * {
-                        padding-left: 10px;
-                        padding-right: 10px;
+                        padding-left: 0.7143em;
+                        padding-right: 0.7143em;
                     }
                 }
             }
@@ -133,7 +133,7 @@
             $iconsSize = 90px;
 
             ul {
-                margin-top: ($iconsSize / 2) + 18px;
+                margin-top: ($iconsSize / 2) + 1.2857rem;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
 
@@ -144,7 +144,7 @@
 
             h3 {
                 font-weight: bold;
-                font-size: 22px;
+                font-size: 1.5714rem;
             }
 
             // icons
@@ -165,7 +165,7 @@
             color: white;
             background: $brand-secondary;
             down-arrow($arrowSize, 0, none, $brand-secondary, center);
-            padding-top: 40px;
+            padding-top: 2.8571em;
 
             $iconsSize = 90px;
 
@@ -174,24 +174,24 @@
             }
 
             ul {
-                margin-top: ($iconsSize / 2) + 18px;
+                margin-top: ($iconsSize / 2) + 1.2857rem;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
 
                 @media (max-width: 520px) {
-                    margin-top: 0px;
+                    margin-top: 0em;
                 }
 
                 > li {
                   margin-top: (0 - $iconsSize / 2);
 
                   @media (max-width: 520px) {
-                    margin-top: 30px;
+                    margin-top: 2.1429em;
                   }
 
 
                   @media $mediaMaxXs {
-                      margin-top: 0px;
+                      margin-top: 0em;
                   }
                 }
             }
@@ -203,13 +203,13 @@
 
             h3 {
                 font-weight: bold;
-                font-size: 22px;
+                font-size: 1.5714rem;
             }
 
             // icons
             i {
                 background: $brand-secondary;
-                border: 2px solid white;
+                border: 0.1429rem solid white;
                 font-size: floor($iconsSize / 1.60);
                 border-radius: 50%;
                 width: $iconsSize;
@@ -223,7 +223,7 @@
         .coop-pricing {
             background: white;
             text-align: center;
-            padding-top: 40px;
+            padding-top: 2.8571em;
 
             h2 {
                 color: $gray;
@@ -283,8 +283,8 @@
         }
 
         .coop-signup {
-            padding-top: 32px;
-            padding-bottom: 32px;
+            padding-top: 2.2857em;
+            padding-bottom: 2.2857em;
             background: no-repeat center / cover;
             background-image:
               linear-gradient(
@@ -301,13 +301,13 @@
                 text-align: center
 
                 @media $mediaMaxSm {
-                    font-size: 38px;
+                    font-size: 2.7143rem;
                 }
             }
 
             .coop-tagline {
                 color: White;
-                font-size: 24px;
+                font-size:  1.7143rem;
                 margin: 0.5em auto;
                 text-align: center;
             }
@@ -322,7 +322,7 @@
                 display: block;
                 height: 56px;
                 width: 300px
-                font-size: 24px;
+                font-size:  1.7143rem;
                 color: white;
                 border-color: white;
                 margin: auto;
@@ -339,27 +339,27 @@
                 }
             }
             .SignupLogin {
-                margin-left: 10px;
-                margin-right: 10px;
+                margin-left: 0.7143em;
+                margin-right: 0.7143em;
                 .LeadContent {
                     background: white;
-                    padding-bottom: 32px;
+                    padding-bottom: 2.2857em;
                     border: none;
                     color: $gray;
-                    margin-bottom: 30px;
+                    margin-bottom: 2.1429em;
                     .btn-default {
                         color: $gray;
                         border-color: $gray;
                     }
                     .form-control-feedback {
-                        font-size: 26px;
+                        font-size: 1.8571rem;
                     }
                     .icon-right {
                         margin-top: -33px;
                     }
                     .form-control {
-                        height: 40px;
-                        font-size: 14px;
+                        height: 2.8571rem;
+                        font-size: 1.0000rem;
                     }
 
                     .form-help-cue {

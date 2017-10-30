@@ -4,7 +4,7 @@
 @import 'Tile.styl'
 @import 'CompactLinkTile.styl'
 
-ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 11px) {
+ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 0.7857rem) {
     .Tile-marker {
         float: left;
         width: $markerWidth;
@@ -31,7 +31,7 @@ ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 11px) {
     i.Tile-marker {
         height: $internalHeight;
         line-height: $internalHeight;        
-        font-size: 24px;
+        font-size:  1.7143rem;
         text-align: center;
         vertical-align: middle;
         padding-left: $markerGap;
@@ -48,7 +48,7 @@ ItemTile-addMarker($internalHeight, $markerWidth = 70px, $markerGap = 11px) {
 
     // 2 lines:
     $internalHeight = line-height-computed * 2;
-    $vgap = 18px;
+    $vgap = 1.2857rem;
     $heightLimit = $internalHeight + ($vgap * 2);
     
     Tile-addTagContentSupport($vgap)

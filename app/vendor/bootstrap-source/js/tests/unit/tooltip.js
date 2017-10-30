@@ -424,8 +424,8 @@ $(function () {
     assert.expect(2)
     var styles = '<style>'
         + 'body { padding-top: 100px; }'
-        + '#section { height: 300px; border: 1px solid red; padding-top: 50px }'
-        + 'div[rel="tooltip"] { width: 150px; border: 1px solid blue; }'
+        + '#section { height: 300px; border: 0.0714rem solid red; padding-top: 50px }'
+        + 'div[rel="tooltip"] { width: 150px; border: 0.0714rem solid blue; }'
         + '</style>'
     var $styles = $(styles).appendTo('head')
 
@@ -449,8 +449,8 @@ $(function () {
   QUnit.test('should position tip on top if viewport has enough space and is not parent', function (assert) {
     assert.expect(2)
     var styles = '<style>'
-        + '#section { height: 300px; border: 1px solid red; margin-top: 100px; }'
-        + 'div[rel="tooltip"] { width: 150px; border: 1px solid blue; }'
+        + '#section { height: 300px; border: 0.0714rem solid red; margin-top: 100px; }'
+        + 'div[rel="tooltip"] { width: 150px; border: 0.0714rem solid blue; }'
         + '</style>'
     var $styles = $(styles).appendTo('head')
 
@@ -475,8 +475,8 @@ $(function () {
     assert.expect(2)
     var styles = '<style>'
         + 'body { padding-top: 100px; }'
-        + '#section { height: 300px; border: 1px solid red; }'
-        + 'div[rel="tooltip"] { width: 150px; border: 1px solid blue; }'
+        + '#section { height: 300px; border: 0.0714rem solid red; }'
+        + 'div[rel="tooltip"] { width: 150px; border: 0.0714rem solid blue; }'
         + '</style>'
     var $styles = $(styles).appendTo('head')
 
@@ -1085,7 +1085,7 @@ $(function () {
     var styles = '<style>'
         + '.tooltip, .tooltip *, .tooltip *:before, .tooltip *:after { box-sizing: border-box; }'
         + '.tooltip { position: absolute; display: block; font-size: 12px; line-height: 1.4; }'
-        + '.tooltip .tooltip-inner { max-width: 200px; padding: 3px 8px; font-family: Helvetica; text-align: center; }'
+        + '.tooltip .tooltip-inner { max-width: 200px; padding: 0.2143em 8px; font-family: Helvetica; text-align: center; }'
         + '#trigger-parent {'
         + '  position: fixed;'
         + '  top: 100px;'
@@ -1191,7 +1191,7 @@ $(function () {
         + '.tooltip, .tooltip *, .tooltip *:before, .tooltip *:after { box-sizing: border-box; }'
         + '.tooltip { position: absolute; }'
         + '.tooltip-arrow { position: absolute; width: 0; height: 0; }'
-        + '.tooltip .tooltip-inner { max-width: 200px; padding: 3px 8px; }'
+        + '.tooltip .tooltip-inner { max-width: 200px; padding: 0.2143em 8px; }'
         + '</style>'
     var $styles = $(styles).appendTo('head')
 

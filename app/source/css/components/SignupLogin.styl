@@ -12,32 +12,32 @@
     // the element didn't take enought height and ending showing up a weird black background under the DownloadApp element
     position: relative;
     z-index: 1;
-    top: 0px;
+    top: 0em;
 
     .LeadContent {
-        margin: 0px auto 0px auto;
+        margin: 0em auto 0em auto;
         background: white;
-        padding: 32px;
+        padding: 2.2857em;
         color: $gray;
         h2 {
-            margin-top: 0px;
-            margin-bottom: 15px;
+            margin-top: 0em;
+            margin-bottom: 1.0714em;
         }
         @media $mediaMinSm {
             max-width: 450px;
-            margin: 30px auto;
-            border: 1px solid #ccc;
+            margin: 2.1429em auto;
+            border: 0.0714rem solid #ccc;
         }
     }
     .btn {
         font-weight: normal;
     }
     .btn-lg {
-        padding: 22px 10px;
-        font-size: 16px;
+        padding: 1.5714em 0.7143em;
+        font-size: 1.1429rem;
     }
     .btn-default {
-        border: 1px solid $gray;
+        border: 0.0714rem solid $gray;
         color: $gray;
         margin-top: -4px;
         &:hover,
@@ -50,30 +50,30 @@
     .btn-facebook,
     .btn-email {
         > .fa {
-            font-size: 29px !important;
+            font-size: 2.0714rem !important;
             // Setting a consistent width so both buttons icons
             // are aligned ant their texts. If no, one icon
             // is 25 and other 36.
-            width: 38px;
+            width: 2.7143rem;
         }
     }
     .fa {
-        font-size: 18px;
-        padding-left: 15px;
+        font-size: 1.2857rem;
+        padding-left: 1.0714em;
         margin-top: -4px;
     }
     .icon-right {
-        padding-left: 0px;
-        padding-right: 15px;
+        padding-left: 0em;
+        padding-right: 1.0714em;
         margin-top: -28px;
     }
     .form-control {
-        height: 40px;
-        font-size: 13px;
+        height: 2.8571rem;
+        font-size: 0.9286rem;
         font-weight: normal;
         color: $gray;
         border: none;
-        border-bottom: 1px solid $gray-light;
+        border-bottom: 0.0714rem solid $gray-light;
 
         &:disabled {
             background-color: white;
@@ -90,8 +90,8 @@
 
         &:focus {
             box-shadow: none;
-            border-bottom: 1px solid $brand-primary;
-            box-shadow: 0px 1px 0px $brand-primary;
+            border-bottom: 0.0714rem solid $brand-primary;
+            box-shadow: 0em 0.0714em 0em $brand-primary;
             transition-duration: .3s;
         }
     }
@@ -114,14 +114,14 @@
     }
 
     .form-group {
-        margin-right: 0px;
-        margin-left: 0px;
+        margin-right: 0em;
+        margin-left: 0em;
         &.has-feedback {
             .form-control {
                 padding-right: 50px;
             }
             label~.form-control-feedback{
-                top 0px;
+                top 0em;
             }
         }
     }
@@ -131,7 +131,7 @@
 
     .is-valid {
         input {
-            border-bottom: 1px solid $brand-success !important;
+            border-bottom: 0.0714rem solid $brand-success !important;
             transition-duration: .7s;
         }
 
@@ -161,7 +161,7 @@
             background-color: white
 
             .ValidatedPassword-requirements {
-                padding: 0 12px 6px 12px
+                padding: 0 0.8571em 0.4286em 0.8571em
                 color: $gray
 
                 .fa {
@@ -208,11 +208,11 @@
     }
 
     .SignupLogin-loginReminder {
-        margin-top: 25px;
-        margin-bottom: 25px;
+        margin-top: 1.7857em;
+        margin-bottom: 1.7857em;
 
         .btn {
-            margin: 0 15px;
+            margin: 0 1.0714em;
         }
     }
 
@@ -222,7 +222,7 @@
         white-space: nowrap;
         width: 100%;
         &:before, &:after {
-            border-top: 1px solid rgb(204,204,204);
+            border-top: 0.0714rem solid rgb(204,204,204);
             content: '';
             display: table-cell;
             position: relative;

@@ -6,10 +6,10 @@
 @import 'Tile.styl'
 
 CompactLinkTile-addIcon($vgap) {
-    $iconWidth = 22px;
+    $iconWidth = 1.5714rem;
 
     // Left space for the icon and small gap:
-    padding-right: ($iconWidth + 4px + $Tile-hgap);
+    padding-right: ($iconWidth + 0.2857rem + $Tile-hgap);
 
     .Tile-icon {
         position: absolute;
@@ -22,7 +22,7 @@ CompactLinkTile-addIcon($vgap) {
         // there are some problems with some icons (ionicons mainly) where
         // even with enough space, gets cut on the edges; add a minimum gap
         // to give them overflow space
-        padding: 0 1px;
+        padding: 0 0.0714em;
         text-align: right;
 
         // Fix ionicons ridiculous size, setting the same as line-height
@@ -33,13 +33,13 @@ CompactLinkTile-addIcon($vgap) {
     }
 }
 
-$CompactLinkTile-indentSize = 30px;
+$CompactLinkTile-indentSize = 2.1429rem;
 
 .CompactLinkTile {
 
     Tile()
 
-    $vgap = 10px;
+    $vgap = 0.7143rem;
 
     Tile-addTagContentSupport($vgap)
 
@@ -65,7 +65,7 @@ $CompactLinkTile-indentSize = 30px;
 
     Tile()
 
-    $vgap = 20px;
+    $vgap = 1.4286rem;
 
     Tile-addTagContentSupport($vgap)
 
@@ -73,7 +73,7 @@ $CompactLinkTile-indentSize = 30px;
 
     .Tile-content {
       height: 60px;
-      padding-top: 10px;
+      padding-top: 0.7143em;
     }
 
     CompactLinkTile-addIcon($vgap);

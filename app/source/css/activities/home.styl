@@ -17,12 +17,12 @@
     // NOTE: all activities are absolute positioned, so is already a positioning context
 
     .home-main {
-        $arrowSize = 30px;
-        $sectionTitleFontSize = 32px;
+        $arrowSize = 2.1429rem;
+        $sectionTitleFontSize = 2.2857rem;
         $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);
-        $sectionTitleFontSizeSmall = 28px;
+        $sectionTitleFontSizeSmall = 2.0000rem;
         $sectionTitleLineHeightSmall = ceil($sectionTitleFontSizeSmall * 1.1);
-        $categoriesLineheight = 23px;
+        $categoriesLineheight = 1.6429rem;
 
         .home-section-title {
             color: White;
@@ -40,7 +40,7 @@
         }
 
         .home-search {
-            padding-top: $LargeNavBar-height + 32px;
+            padding-top: $LargeNavBar-height + 2.2857rem;
             background: no-repeat center / cover;
             background-image:
               linear-gradient(
@@ -57,13 +57,13 @@
                 text-align: center
 
                 @media $mediaMaxSm {
-                    font-size: 38px;
+                    font-size: 2.7143rem;
                 }
             }
 
             .home-tagline {
                 color: White;
-                font-size: 24px;
+                font-size:  1.7143rem;
                 margin: 0.5em auto;
                 text-align: center;
             }
@@ -75,12 +75,12 @@
             }
 
             form {
-                margin: 40px auto;
+                margin: 2.8571em auto;
                 max-width: 700px;
 
                 .form-control {
                     background: White;
-                    font-size: 17px;
+                    font-size: 1.2143rem;
                 }
 
                 .form-control:focus {
@@ -89,13 +89,13 @@
                   border-right-color: transparent;
                 }
 
-                // Reduce column gaps by a 20px in total
+                // Reduce column gaps by a 1.4286rem in total
                 // for sizes bigger than XS (so keep standar in phone where
                 // forms goes vertical)
                 @media $mediaMinSm {
                     > * {
-                        padding-left: 10px;
-                        padding-right: 10px;
+                        padding-left: 0.7143em;
+                        padding-right: 0.7143em;
                     }
                 }
             }
@@ -112,7 +112,7 @@
             $iconsSize = 90px;
 
             ul {
-                margin-top: ($iconsSize / 2) + 18px;
+                margin-top: ($iconsSize / 2) + 1.2857em;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
 
@@ -123,7 +123,7 @@
 
             h3 {
                 font-weight: bold;
-                font-size: 22px;
+                font-size: 1.5714rem;
             }
 
             // icons
@@ -145,7 +145,7 @@
 
             background: $brand-secondary-background;
             text-align: center;
-            padding-top: 40px;
+            padding-top: 2.8571em;
 
             down-arrow($arrowSize, 0, none, $brand-secondary, center);
 
@@ -153,7 +153,7 @@
                 color: $gray;
                 text-align: center;
                 margin: 0 auto;
-                padding-bottom: 10px;
+                padding-bottom: 0.7143em;
                 // 3 boxes limit: UPDATE on each size or margin change
                 max-width: 1200px;
 
@@ -163,7 +163,7 @@
                     display: inline-block;
                     width: $boxSize;
                     margin: $boxMargin;
-                    padding: 16px;
+                    padding: 1.1429em;
                     vertical-align: middle;
 
                     // On small sizes 2 columns does not fits so
@@ -186,7 +186,7 @@
                     }
 
                     h3 {
-                        font-size: 15px;
+                        font-size: 1.0714em;
                         font-weight: bold;
                     }
                 }
@@ -232,7 +232,7 @@
 
             background: $gray-background;
             text-align: center;
-            padding-top: 40px;
+            padding-top: 2.8571em;
 
             h2 {
                 color: $gray;
@@ -242,7 +242,7 @@
                 color: $gray;
                 text-align: center;
                 margin: 0 auto;
-                padding-bottom: 10px;
+                padding-bottom: 0.7143em;
                 // 4 boxes limit: UPDATE on each size or margin change
                 max-width: 1200px;
 
@@ -255,7 +255,7 @@
                     margin: $boxMargin;
                     vertical-align: middle;
                     box-shadow: 0 1.5px 0 0 rgba(0,0,0,.1);
-                    padding: 12px;
+                    padding: 0.8571em;
 
                     /* DISABLED, background does not looks good, and not so needed
                     // For a small size where only one card fits the space (~pixels)
@@ -310,13 +310,13 @@
                     }
 
                     h3 {
-                        font-size: 20px;
+                        font-size: 1.4286rem;
                         font-weight: bold;
                     }
 
                     h4 {
                         color: white;
-                        font-size: 16px;
+                        font-size: 1.1429rem;
                         font-weight: bold;
                     }
 
@@ -331,9 +331,9 @@
                     }
 
                     p {
-                        margin: 0px 0px 30px;
+                        margin: 0em 0em 2.1429em;
                         color: $gray-dark;
-                        font-size: 16px;
+                        font-size: 1.1429rem;
                         line-height: $categoriesLineheight;
                         // In case there are less than 4 lines
                         min-height: $categoriesLineheight * 4;
@@ -350,7 +350,7 @@
 
                     // icons
                     .SearchCategoryBackground {
-                        margin: 0px 8px 12px 8px;
+                        margin: 0em 0.5714em 0.8571em 0.5714em;
                         display: inline-block;
                         width: 96px;
                         height: 96px;

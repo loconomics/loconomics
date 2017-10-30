@@ -36,9 +36,9 @@
 
     //== padding
     $padding-none =	0px
-    $margin-none = 0px
-    $margin10 = 10px
-    $margin5 = 5px
+    $margin-none = 0em
+    $margin10 = 0.7143em
+    $margin5 = 0.3571em
 
 
     //== Colors
@@ -81,7 +81,7 @@
             width 100%
         
     .profile
-        margin-top 40px
+        margin-top 2.8571em
 
     //panels
     .panel
@@ -91,7 +91,7 @@
     .panel-content section
         background-color $loco-common
         padding 0.1px $margin10 
-        margin 0 0px $margin10 0
+        margin 0 0em $margin10 0
         position $position-relative
         border-bottom $border-default #e8eaeb
     .panel-content article
@@ -103,11 +103,11 @@
 
     .page-wrapper
       background-color #ecf0f1
-      padding-bottom 40px
+      padding-bottom 2.8571em
 
     .form-wrapper
       background-color $loco-common
-      font-size 16px
+      font-size 1.1429rem
       border-bottom $border-default #e8eaeb
 
 
@@ -116,7 +116,7 @@
 
     .profilename 
       display $display-inline-block
-      height 20px
+      height 1.4286em
       overflow hidden  
       vertical-align sub
       width 64px
@@ -149,10 +149,10 @@
         padding-bottom $margin10
 
     .pad20b 
-        padding-bottom 20px !important
+        padding-bottom 1.4286em !important
 
     .pad20t 
-        padding-top 20px !important	
+        padding-top 1.4286em !important	
 
     .bold 
         font-weight bold
@@ -176,19 +176,19 @@
         margin-bottom $margin-none !important
 
     .margin20b 
-        margin-bottom 20px !important
+        margin-bottom 1.4286em !important
 
     .border-right-blue
-      border-right 2px solid $loco-primary
+      border-right 0.1429rem solid $loco-primary
 
     .border-right-red
-      border-right 2px solid $loco-secondary
+      border-right 0.1429rem solid $loco-secondary
 
     .border-right-grey
-      border-right 2px solid $loco-info
+      border-right 0.1429rem solid $loco-info
 
     .border-right-yellow
-      border-right 2px solid $loco-warning
+      border-right 0.1429rem solid $loco-warning
 
     .border-bottom
       border-bottom $border-default $loco-primary
@@ -200,7 +200,7 @@
       border-bottom $border-default $loco-infolight
 
     .border-none
-      border 0px !important
+      border 0em !important
 
     .pos-relative
       position $position-relative
@@ -208,10 +208,10 @@
         float none
 
     .sm-icons
-        font-size 28px
+        font-size 2.0000rem
         
         .h4
-            font-size: 16px !important;
+            font-size: 1.1429rem !important;
 
         & :hover
             color $loco-infolight
@@ -223,7 +223,7 @@
             
     .user-in-card
         
-        margin-bottom 15px
+        margin-bottom 1.0714em
         
         h3
             white-space nowrap
@@ -232,27 +232,27 @@
             
         h5
             // two lines only
-            height 32px
+            height 2.2857rem
             overflow hidden
 
     .editpen
       border $border-default $loco-primary
       border-radius: 50%;
       display $display-block
-      height 22px
+      height 1.5714rem
       padding 0 $margin5
-      width 22px
+      width 1.5714rem
 
     .about
       display none
       
     .user-review
-        top: 8px;
+        top: 0.5714rem;
         position: relative;
   
     .profile-book-btn
         @media $mediaMinSm
-            margin-top 10px
+            margin-top 0.7143em
       
     ///
     // Customized.styl
@@ -260,18 +260,18 @@
       display inline-block
       cursor pointer
       position relative
-      margin-right 15px
-      font-size 13px
+      margin-right 1.0714em
+      font-size 0.9286rem
       &:before
         content ""
         display inline-block
-        width 19px
-        height 19px
+        width 1.3571rem
+        height 1.3571rem
         position absolute
         left 0
-        bottom 1px
+        bottom 0.0714rem
         background-color #FFF
-        border 2px solid #4c4c4c
+        border 0.1429rem solid #4c4c4c
 
 
     .wrapper
@@ -285,41 +285,41 @@
     .radio
       label
         &:before
-          border-radius 8px
+          border-radius 0.5714rem
 
     .checkbox
       label
-        margin-bottom 0px
+        margin-bottom 0em
         &:before
-          border-radius 2px
+          border-radius 0.1429rem
 
     input[type=radio]:checked
       & + label
         &:before
           content "\2022"
           color #00989a
-          font-size 30px
+          font-size 2.1429rem
           text-align center
-          line-height 18px
-          border 2px solid #00989a
+          line-height 1.2857rem
+          border 0.1429rem solid #00989a
 
     input[type=checkbox]:checked
       & + label
         &:before
           content "\2713"
-          font-size 22px
+          font-size 1.5714rem
           color #00989a
           text-align center
           font-weight bold
-          line-height 8px
-          border 2px solid #00989a
+          line-height 0.5714rem
+          border 0.1429rem solid #00989a
           
     .profile-otherJobTitles
         > a
             color: $brand-primary;
-            font-size 14px !important
+            font-size 1.0000rem !important
             display inline-block
-            padding 2px 5px
+            padding 0.1429em 0.3571em
             &:after
                 content: ', '
             &:last-child:after
@@ -329,31 +329,31 @@
     // media-queries.styl
     @media (min-width: 1920px) and (max-width: 2560px)
         .pad5r
-            padding-right: 15px;
+            padding-right: 1.0714em;
 
         .pad5l
-            padding-left: 15px;
+            padding-left: 1.0714em;
 
       @media (min-width: 2560px) and (max-width: 2880px)
         .pad5r
-            padding-right: 15px;
+            padding-right: 1.0714em;
 
         .pad5l
-            padding-left: 15px;
+            padding-left: 1.0714em;
 
       @media (min-width: 1024px) and (max-width: 1920px)
         .searchbar
             min-width: 400px;
 
         .pad5r
-            padding-right: 15px;
+            padding-right: 1.0714em;
 
         .pad5l
-            padding-left: 15px;
+            padding-left: 1.0714em;
 
      @media (min-width: 768px) and (max-width: 1023px)
         .nav > li > a
-            padding 15px 7px
+            padding 1.0714em 0.5000em
 
         .searchbar
             min-width 190px
@@ -361,7 +361,7 @@
                 width 85%
 
         .sm-icons
-            font-size 22px
+            font-size 1.5714rem
 
      @media (max-width: 767px)
         .form-wrapper
@@ -378,13 +378,13 @@
             text-align center
 
         .profile h2
-            font-size 16px
+            font-size 1.1429rem
             font-weight 600
-            margin-top: 25px;
-            margin-bottom: 5px;
+            margin-top: 1.7857em;
+            margin-bottom: 0.3571em;
 
         .profile h4
-            font-size 14px !important
+            font-size 1.0000rem !important
             font-weight 400
 
         .profile .star
@@ -398,6 +398,6 @@
 
         .about,
         .about .sm-icons
-            margin-top: 10px;
+            margin-top: 0.7143em;
             display: block;
 

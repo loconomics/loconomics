@@ -55,18 +55,18 @@
               linear-gradient(transparent, transparent),
               url('../images/logo-white.svg');
             background-size: 200px;
-            margin: 20px $grid-gap;
+            margin: 1.4286rem $grid-gap;
             @media $mediaMaxSm {
                 background-position: center;
-                margin: 0px; 20px;
+                margin: 0em; 1.4286em;
                 height: 50px;
                 background-size: 100px;
             }
         }
         
         .landingpage-copy {
-            margin-bottom: 30px;
-            padding: 30px; 0px; 30px; 30px;
+            margin-bottom: 2.1429em;
+            padding: 2.1429em; 0em; 2.1429em; 2.1429em;
             background: rgba(0, 152, 154, 0.75); 
 
             @media $mediaMaxSm {
@@ -76,15 +76,15 @@
             }
 
             @media $mediaMaxXs {
-                padding: 15px;
+                padding: 1.0714em;
             }
         }
         .landingpage-copyBackground {
             background: none;            
             @media $mediaMaxSm {
-                padding: 20px; 0px; 0px; 0px;
+                padding: 1.4286em; 0em; 0em; 0em;
                 background: rgba(0, 152, 154, 0.75);   
-                margin-top: 10px;
+                margin-top: 0.7143em;
                 h1 {
                     margin-top:0px;
                     font-size:21px;
@@ -92,7 +92,7 @@
             }                     
         }
         .landingpage-background {
-            padding-top: 30px;
+            padding-top: 2.1429em;
             background: no-repeat center / cover;
             background-image:
               url('../images/golden-gate-bridge-388917_1920.jpg');
@@ -101,39 +101,39 @@
             -o-background-size: cover;
             background-size: cover;
             @media $mediaMaxSm {
-                padding-top: 0px;
+                padding-top: 0em;
             }
           }
         .landingpage-
         .landingpage-title {
             color: white;
-            font-size: 38px;
+            font-size: 2.7143rem;
             font-weight: bold;
             text-align: left;
             @media $mediaMaxSm {
-                font-size: 24px;
+                font-size:  1.7143rem;
             }
         }
         .landingpage-tagline {
             color: white;
-            font-size: 24px;
+            font-size:  1.7143rem;
             text-align: left;
             @media $mediaMaxSm {
-                font-size: 16px;
+                font-size: 1.1429rem;
             }
         }
         .landingpage-proposition {
             color: white;
-            font-size: 18px;
+            font-size: 1.2857rem;
             text-align: left;
             display: block;
             .fa,
             p {
                 display: inline-block;
-                margin-right: 5px;
-                font-size: 22px;
+                margin-right: 0.3571em;
+                font-size: 1.5714rem;
                 @media $mediaMaxSm {
-                    font-size: 16px;
+                    font-size: 1.1429rem;
                 }
             }
         }
@@ -151,11 +151,11 @@
             }
 
             #job-title-selection {
-                margin: 10px;
+                margin: 0.7143em;
                 button {
-                    padding: 5px;
-                    margin: 2px;
-                    border-width: 2px;
+                    padding: 0.3571em;
+                    margin: 0.1429em;
+                    border-width: 0.1429rem;
                     font-weight: 600;
                 }
             }
@@ -165,12 +165,12 @@
             }
         }
         form {
-            margin: 0 auto 40px;
+            margin: 0 auto 2.8571em;
             max-width: 450px;
 
             .form-control {
                 background: White;
-                font-size: 17px;
+                font-size: 1.2143rem;
             }
 
             .form-control:focus {
@@ -179,13 +179,13 @@
               border-right-color: transparent;
             }
 
-            // Reduce column gaps by a 20px in total
+            // Reduce column gaps by a 1.4286em in total
             // for sizes bigger than XS (so keep standar in phone where
             // forms goes vertical)
             @media $mediaMinSm {
                 > * {
-                    padding-left: 10px;
-                    padding-right: 10px;
+                    padding-left: 0.7143em;
+                    padding-right: 0.7143em;
                 }
             }
         }
@@ -195,27 +195,27 @@
             text-align: center;
             color: white;
             background: $brand-secondary;
-            padding-top: 40px;
+            padding-top: 2.8571em;
             $iconsSize = 90px;
             .landingpage-title {
               color: white;
               text-align: center;
             }
             ul {
-                margin-top: ($iconsSize / 2) + 18px;
+                margin-top: ($iconsSize / 2) + 1.2857rem;
                 margin-bottom: 0;
                 padding-bottom: ($iconsSize / 2);
 
                 @media (max-width: 520px) {
-                    margin-top: 0px;
+                    margin-top: 0em;
                 }
                 > li {
                   margin-top: (0 - $iconsSize / 2);
                   @media (max-width: 520px) {
-                    margin-top: 30px;
+                    margin-top: 2.1429em;
                   }
                   @media $mediaMaxXs {
-                      margin-top: 0px;
+                      margin-top: 0em;
                   }
                 }
             }
@@ -224,12 +224,12 @@
             }
             h3 {
                 font-weight: bold;
-                font-size: 22px;
+                font-size: 1.5714rem;
             }
             // icons
             i {
                 background: $brand-secondary;
-                border: 2px solid white;
+                border: 0.1429rem solid white;
                 font-size: floor($iconsSize / 1.60);
                 border-radius: 50%;
                 width: $iconsSize;

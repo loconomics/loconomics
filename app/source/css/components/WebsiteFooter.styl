@@ -3,13 +3,13 @@
     with a collection of links and copyright notice.
 **/
 .WebsiteFooter {
-    $footerFontSize = 16px;
-    $footerMiniFontSize = 14px;
+    $footerFontSize = 1.1429rem;
+    $footerMiniFontSize = 1.0000rem;
     
     background: $gray-light;
     margin: 0 auto;
     display: block;
-    padding: 10px;
+    padding: 0.7143em;
     text-align: center;
     
     &,
@@ -25,12 +25,12 @@
             
             a {
                 font-size: $footerFontSize;
-                padding: 20px 26px;
+                padding: 1.4286em 1.8571em;
                 display: inline-block;
                 
                 @media $mediaMaxXs {
                     font-size: $footerMiniFontSize;
-                    padding: 4px 16px;
+                    padding: 0.2857em 1.1429em;
                 }
             }
         }
@@ -38,12 +38,12 @@
 
     .WebsiteFooter-social {
         &.WebsiteFooter-social--on-top {
-            margin-top: 24px;
+            margin-top: 1.7143em;
         }
         
         h2 {
             display: inline-block;
-            padding-right: 10px;
+            padding-right: 0.7143em;
             font-size: $footerFontSize;
             vertical-align: middle;
             
@@ -59,11 +59,11 @@
                 display: inline-block;
 
                 a {
-                    padding: 6px;
+                    padding: 0.4286em;
                     display: inline-block;
                     
                     i {
-                        font-size: 25px;
+                        font-size: 1.7857rem;
                         vertical-align: middle;
                     }
                 }
@@ -72,7 +72,7 @@
     }
 
     .WebsiteFooter-copyright {
-        padding: 20px 0;
+        padding: 1.4286em 0;
         font-size: $footerFontSize;
         @media $mediaMaxXs {
             font-size: $footerMiniFontSize;

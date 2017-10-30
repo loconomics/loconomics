@@ -49,8 +49,8 @@ $SmartNavBar-height = 44px;
     to { transform: translateX(0); }
 }
 @keyframes slin-scrollMask {
-    from { transform: translateX(100%); box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2); }
-    to { transform: translateX(0); box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.02); }
+    from { transform: translateX(100%); box-shadow: -10px 0 0.7143rem -5px rgba(0, 0, 0, 0.2); }
+    to { transform: translateX(0); box-shadow: -10px 0 0.7143rem -5px rgba(0, 0, 0, 0.02); }
 }
 @keyframes slin-textbox {
     from { transform: translateX(60%); opacity: 0; }
@@ -87,8 +87,8 @@ $SmartNavBar-height = 44px;
     to { transform: translateX(100%); }
 }
 @keyframes srout-scrollMask {
-    from { transform: translateX(0); -webkit-box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.02); }
-    to { transform: translateX(100%); -webkit-box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.2); }
+    from { transform: translateX(0); -webkit-box-shadow: -10px 0 0.7143rem -5px rgba(0, 0, 0, 0.02); }
+    to { transform: translateX(100%); -webkit-box-shadow: -10px 0 0.7143rem -5px rgba(0, 0, 0, 0.2); }
 }
 @keyframes srout-textbox {
     from { transform: translateX(0); opacity: 1; }
@@ -155,7 +155,7 @@ SmartNavBar-reset() {
     padding-top: 0;
     background-color: rgba(248, 248, 248, 0.9);
     background-image: linear-gradient(0deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
-    background-size: 100% 1px;
+    background-size: 100% 0.0714rem;
     background-repeat: no-repeat;
     background-position: bottom;
     z-index: 10;
@@ -168,7 +168,7 @@ SmartNavBar-reset() {
         position: absolute;
         top: 0;
         display: inline-block;
-        font-size: 17px;
+        font-size: 1.2143rem;
         color: rgb(21, 125, 251);
         padding: 0;
         font-weight: 300;
@@ -194,16 +194,16 @@ SmartNavBar-reset() {
     }
     
     button.arrow {
-        background-size: 24px $SmartNavBar-height;
+        background-size:  1.7143rem $SmartNavBar-height;
         background-repeat: no-repeat;
     }
     button.left {
         left:0;
-        padding-left: 9px;
+        padding-left: 0.6429em;
     }
     
     button.left.arrow {
-        padding-left: 23px;
+        padding-left: 1.6429em;
         // change image
         background-image: url(../img/backBtn.svg);
         background-position: left bottom;
@@ -212,10 +212,10 @@ SmartNavBar-reset() {
     button.right {
         right:0;
         text-align: right;
-        padding-right: 9px;
+        padding-right: 0.6429em;
     }
     button.right.arrow {
-        padding-right: 23px;
+        padding-right: 1.6429em;
         // change image
         background-image: url(../img/nextBtn.svg);
         background-position: right bottom;
@@ -224,7 +224,7 @@ SmartNavBar-reset() {
     h1 {
         display: block;
         padding: 0;
-        font-size: 17px;
+        font-size: 1.2143rem;
         white-space: nowrap;
         text-overflow: ellipsis;
         text-align: center;
@@ -378,7 +378,7 @@ SmartNavBar-reset() {
     }
     .scroll {
         width: 100%;
-        padding-right: 20px;
+        padding-right: 1.4286em;
         height: 100%;
         background-color: rgb(255, 255, 255);
         overflow: auto;
@@ -393,7 +393,7 @@ SmartNavBar-reset() {
         top: $SmartNavBar-height;
         bottom: 0;
         background-color: rgb(255, 255, 255);
-        box-shadow: -10px 0 10px -5px rgba(0, 0, 0, 0.1);
+        box-shadow: -10px 0 0.7143rem -5px rgba(0, 0, 0, 0.1);
     }
 }
 
@@ -416,7 +416,7 @@ SmartNavBar-reset() {
     text-align: center;
     background-color: rgba(248, 248, 248, 0.9);
     background-image: linear-gradient(180deg, rgb(200, 199, 204), rgb(200, 199, 204) 50%, transparent 50%);
-    background-size: 100% 1px;
+    background-size: 100% 0.0714rem;
     background-repeat: no-repeat;
     background-position: top center;
     z-index: 100;
@@ -425,9 +425,9 @@ SmartNavBar-reset() {
         display: inline-block;
         width: 64px;
         text-align: center;
-        font-size: 10px;
+        font-size: 0.7143rem;
         line-height: 1em;
-        padding: 6px 0 0 0;
+        padding: 0.4286em 0 0 0;
         margin: 0;
         color: rgb(111, 111, 116);
     }
@@ -437,9 +437,9 @@ SmartNavBar-reset() {
     button .btn-icon {
         display: inline-block;
         background-color: rgb(111, 111, 116);
-        height: 24px;
-        width: 24px;
-        margin-bottom: 2px;
+        height:  1.7143rem;
+        width:  1.7143rem;
+        margin-bottom: 0.1429rem;
     }
     button.active .btn-icon {
         background-color:rgb(21, 125, 251);

@@ -39,7 +39,7 @@
         > span {
             display: table-cell;
             vertical-align: middle;
-            padding: 10px;
+            padding: 0.7143em;
         }
     }
     
@@ -47,10 +47,10 @@
     &.animated {
 
         .booking-steps {
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            right: 0px;
+            top: 0em;
+            bottom: 0em;
+            left: 0em;
+            right: 0em;
             position: absolute;
 
             .booking-step {
@@ -61,10 +61,10 @@
                 transition-duration: 200ms, 200ms;
                 transition-timing-function: $cubic-easing, $cubic-easing;
                 transition-delay: 150ms;
-                top: 0px;
-                bottom: 0px;
-                left: 0px;
-                right: 0px;
+                top: 0em;
+                bottom: 0em;
+                left: 0em;
+                right: 0em;
                 overflow: auto;
 
                 &[hidden] {
@@ -83,10 +83,10 @@
             // in the same place and width as set by its column set-up
             > .container {
                 position: absolute;
-                left: 0px;
-                right: 0px;
-                top: 0px;
-                bottom: 0px;
+                left: 0em;
+                right: 0em;
+                top: 0em;
+                bottom: 0em;
             }
             
             // Sidebar ever on top of content (for translated, hidden steps)
@@ -99,16 +99,16 @@
             .booking-steps {
                 float: none;
                 width: auto;
-                padding-right: 0px;
-                padding-left: 0px;
-                margin-left: 15px;
+                padding-right: 0em;
+                padding-left: 0em;
+                margin-left: 1.0714em;
                 left: 25%;
                 
                 .booking-step {
                     // HACK: Because of the outline at Boxes, can get cut
                     // on horizontal edges because the overflow and sizing
                     // we add an additional pixel to hold that outline
-                    padding: 0px 1px;
+                    padding: 0em 0.0714em;
                     
                     &[hidden] {
                         // Fixed movement, a percentage can get too bigger on some screens

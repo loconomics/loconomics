@@ -37,26 +37,26 @@
 .ActionSheet {
     position: absolute;
     bottom: 0;
-    left: 15px;
-    right: 15px;
+    left: 1.0714rem;
+    right: 1.0714rem;
     text-align: center;
     //max-width: 600px;
     margin: 0 auto;
     z-index: 90900;
     // With padding, so height increases and percentage transform works
-    padding-bottom: 20px;
+    padding-bottom: 1.4286em;
 
     > ul {
         padding: 0;
         margin: 0;
         background: rgba(255,255,255,0.9);
-        border-radius: 10px;
+        border-radius: 0.7143em;
         overflow: hidden;
         
         &.ActionSheet-close {
             background: White;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 0.7143em;
         }
     }
 
@@ -72,8 +72,8 @@
         
         > a {
             display: block;
-            padding: 10px;
-            font-size: 16px;
+            padding: 0.7143em;
+            font-size: 1.1429rem;
             
             &:hover,
             &:active,
@@ -85,7 +85,7 @@
         }
         
         + li {
-            border-top: 1px solid $gray-lighter;
+            border-top: 0.0714rem solid $gray-lighter;
         }
     }
     

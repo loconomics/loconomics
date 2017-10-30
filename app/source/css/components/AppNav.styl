@@ -4,16 +4,16 @@
 @import "nib";
 
 $AppNav-brandWidth = 100px;
-$AppNav-brandHeight = 38px;
+$AppNav-brandHeight = 2.7143rem;
 
 /**
     Sidebar
 **/
 .AppNav {
     
-    left: 0px;
-    right: 0px;
-    top: 0px;
+    left: 0em;
+    right: 0em;
+    top: 0em;
     position: absolute;
     
     * > ul {
@@ -27,11 +27,11 @@ $AppNav-brandHeight = 38px;
         float: none;
         background-position: center;
         display: block;
-        padding: 12px;
+        padding: 0.8571em;
     
         // magic number! For some reason, the only line-height
         // that limits the full height to the navbar-height (44px now)
-        line-height: 13px;
+        line-height: 0.9286rem;
 
         text-indent: -99999px;
         // manually vertical 'visually' centering (depends on icon)
@@ -42,7 +42,7 @@ $AppNav-brandHeight = 38px;
           linear-gradient(transparent, transparent),
           url('../images/logo.svg');
         min-width: 100px;
-        min-height: 39px;
+        min-height: 2.7857rem;
         height: $app-navbar-height;
         @media $media-big-navbar {
             height: $big-navbar-height;
@@ -68,7 +68,7 @@ $AppNav-brandHeight = 38px;
     .App-menus {
         // General menus container
         background: white;
-        margin-bottom: 0px;
+        margin-bottom: 0em;
         
         // Individual menus set-up
         > .navbar-collapse {
@@ -99,15 +99,15 @@ $AppNav-brandHeight = 38px;
           }
           
           a {               
-            padding: 10px 10px 10px 20px;
+            padding: 0.7143em 0.7143em 0.7143em 1.4286em;
             text-align: right;            
             &:hover,
             &:focus {
-              padding-left: 12px;
+              padding-left: 0.8571em;
             } 
           }
           i {
-            margin-left: 5px;   
+            margin-left: 0.3571em;   
           }
         }
         
@@ -127,8 +127,8 @@ $AppNav-brandHeight = 38px;
         
         .App-menus-header {
             margin: 0 (0 - $container-padding-right) 0 (0 - $container-padding-left);
-            padding: 15px;
-            border-bottom: 1px solid White;
+            padding: 1.0714em;
+            border-bottom: 0.0714rem solid White;
             color: White;
             font-size: 1.1em;
             display: block;
@@ -137,7 +137,7 @@ $AppNav-brandHeight = 38px;
                 text-align: center;
                 font-size: 1.1em;
                 display: block;
-                margin: 10px 0 0 0;
+                margin: 0.7143em 0 0 0;
                 color: white;
                 text-decoration: none;                
             }
@@ -152,7 +152,7 @@ $AppNav-brandHeight = 38px;
                     width: 80px;
                     height: 80px;
                     display: inline-block;
-                    border: 3px solid White;
+                    border: 0.2143rem solid White;
                     border-radius: 100%;
                     background: white;
                     overflow: hidden;
@@ -165,27 +165,27 @@ $AppNav-brandHeight = 38px;
         }
         
         .App-menus-group-header {    
-            padding: 0px 10px 10px;
-            border-bottom: 1px solid $gray-light;
+            padding: 0em 0.7143em 0.7143em;
+            border-bottom: 0.0714rem solid $gray-light;
             color: $gray-light;            
             font-size: 1.1em;
         }
         // Main nav and its content
         .navbar-nav {
 
-            padding-top: 10px;
+            padding-top: 0.7143em;
             
             a {
                 color: $gray-lighter;        
                 font-size: 1.1em;               
-                padding: 10px 10px 10px 40px;
+                padding: 0.7143em 0.7143em 0.7143em 2.8571em;
                 margin: 0;
                    
               // icons
                 > i {
                     color: $gray-lighter;
                     font-size: 1.5em;      
-                    margin-right: 5px;
+                    margin-right: 0.3571em;
                 }
                 
                 &:hover,
@@ -203,12 +203,12 @@ $AppNav-brandHeight = 38px;
             
             .go-dashboard > a
             .go-logout > a {
-              padding-left: 10px;
-              padding-bottom: 15px;
+              padding-left: 0.7143em;
+              padding-bottom: 1.0714em;
               
               &:hover,
               &:focus {
-                padding-left: 17px;
+                padding-left: 1.2143em;
               }    
             }
             
@@ -250,7 +250,7 @@ $AppNav-brandHeight = 38px;
         // the general size (2em->30px) looks missaligned the bars, increasing a pixel
         // looks fine
         .ion-navicon {
-            font-size: 31px;
+            font-size: 2.2143rem;
         }
     }
 
@@ -378,32 +378,32 @@ $AppNav-brandHeight = 38px;
 
 .SideMenu {
   background: $gray-background;
-  padding-bottom: 20px;
+  padding-bottom: 1.4286em;
   text-align: left;  
-  margin-right: 15px;
-  padding-left: 0px;
+  margin-right: 1.0714em;
+  padding-left: 0em;
   .App-menus-group-header {
-    font-size: 17px;
-    margin-top: 20px;
+    font-size: 1.2143rem;
+    margin-top: 1.4286em;
     color: $gray-light;
     text-align: left;
-    border-bottom: 1px solid $gray-light;     
+    border-bottom: 0.0714rem solid $gray-light;     
   }
   .navbar-nav {
     margin: 0;
   }
   .nav {
       a {               
-        padding: 10px 20px 10px 25px;
+        padding: 0.7143em 1.4286em 0.7143em 1.7857em;
         text-align: left; 
         color: $gray-dark;
-        font-size: 18px;
+        font-size: 1.2857rem;
 
         &:hover,
         &:focus {
           color: $brand-secondary-dark !important;
           font-weight: 500;
-          padding-left: 22px;
+          padding-left: 1.5714em;
           background-color: transparent;   
           > i {
             color: $brand-secondary-dark !important;
@@ -414,8 +414,8 @@ $AppNav-brandHeight = 38px;
       }
 
       i {
-        margin-left: 5px;  
-        font-size: 18px;
+        margin-left: 0.3571em;  
+        font-size: 1.2857rem;
       }
   }
 }
@@ -427,13 +427,13 @@ $AppNav-brandHeight = 38px;
       display: block;
       width: 100% !important;
       list-style: none;
-      margin-top: 20px;
-      margin-bottom: 10px;
+      margin-top: 1.4286em;
+      margin-bottom: 0.7143em;
       line-height: 1.1;
-      padding-left: 5px;
+      padding-left: 0.3571em;
 
       li {
-        font-size: 18px;
+        font-size: 1.2857rem;
         color: $gray;
         text-decoration: none; 
         display: inline;
@@ -451,8 +451,8 @@ $AppNav-brandHeight = 38px;
     > button {
         position: absolute; 
         display: inline-block;
-        top: 15px;
-        right: 25px;
+        top: 1.0714rem;
+        right: 1.7857rem;
     }
 }
 

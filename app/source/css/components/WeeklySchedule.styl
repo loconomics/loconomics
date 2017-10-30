@@ -9,8 +9,8 @@
     // units and doesn't count for some visual extra spacing
     // It's actually 3em that means 42px from base-font-size plus a visual gap
     $switchWidth = 44px;
-    $gapWithSwitch = 14px;
-    $addRemBtn-width = 40px;
+    $gapWithSwitch = 1.0000rem;
+    $addRemBtn-width = 2.8571rem;
     $timeSelectorsIndent = $switchWidth - $addRemBtn-width;
 
     // Center the container, make it uses just the needed width
@@ -25,7 +25,7 @@
 
     .WeeklySchedule-weekDay {
 
-        margin-bottom: 14px;
+        margin-bottom: 1.0000em;
 
         /* Scheme
             .WeeklySchedule-weekDay
@@ -44,7 +44,7 @@
         .WeeklySchedule-weekDay-switch {
             // Small margin between switch and timeSelectors, like the
             // margin labels have but that need to be reset for internal label
-            margin-bottom: 5px;
+            margin-bottom: 0.3571em;
             > label {
                 margin-bottom: 0;
                 line-height: $SwitchCheckbox-height;
@@ -77,21 +77,21 @@
             // it fits one row in a screen size of 320px (original iPhone).
             .WeeklySchedule-weekDay-timeRange {
                 .btn + select {
-                    margin-left: 6px;
+                    margin-left: 0.4286em;
                 }
 
-                margin-bottom: 2px;
+                margin-bottom: 0.1429em;
 
                 select {
                     width: auto;
                     display: inline-block;
                     // Fix the total height and the strange margin added
                     vertical-align: middle;
-                    // 4px horizontal is OK in iPhone: enought padding without requiring 2 lines,
+                    // 0.2857em horizontal is OK in iPhone: enought padding without requiring 2 lines,
                     // while in Chrome and Firefox, for some reason, they add an additional internal
                     // gap between padding and the beggining of the text. Thats make it a bit wider
                     // in Chrome/Android, but not enought to have problems from 320px screen width.
-                    padding: 6px 4px;
+                    padding: 0.4286em 0.2857em;
                 }
             }
 
