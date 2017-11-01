@@ -118,7 +118,7 @@ function ViewModel(shell) {
         return '/searchJobTitle/' + id + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
     }.bind(this);
     this.getServiceProfessionalUrl = function(id) {
-        return '/profile/' + id;
+        return '/listing/' + id;
     }.bind(this);
     this.getSearchCategoryUrl = function(categoryID) {
         return '/searchCategory/' + categoryID + '/' + this.lat() + '/' + this.lng() + '/' + this.searchDistance();
