@@ -86,11 +86,11 @@
                     <div class="row">
                         <p class="col-xs-5 col-md-2" aria-describedby="rating1stars">Quality of Work</p>
                         <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating1, size: 'xs'"></app-stars-rating>
-                    </div>    
+                    </div>
                     <div class="row">
                         <p class="col-xs-5 col-md-2" aria-describedby="rating2stars">Environment</p>
                         <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating2, size: 'xs'"></app-stars-rating>
-                    </div>    
+                    </div>
                     <div class="row">
                         <p class="col-xs-5 col-md-2" aria-describedby="rating3stars">Professionalism</p>
                         <app-stars-rating id="rating3stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating3, size: 'xs'"></app-stars-rating>
@@ -148,27 +148,33 @@
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Booking policies</h2>
                 </div>
-                <div class="col-xs-12 col-md-6">
-                    <h3><span data-bind="text: $parent.profile().firstName"></span>'s scheduling policy</h3>
-                    <div data-bind="visible: !instantBooking()">
-                        <strong>Acceptance required</strong>
-                        <p>You can request up to three times for your appointment. <span data-bind="text: $parent.profile().firstName"></span> will then approve one of them within 18 hours or let you know their unavailable.</p>
+                <div class="container-fluid">
+                    <div class="col-xs-12 col-md-6">
+                        <h3><span data-bind="text: $parent.profile().firstName"></span>'s scheduling policy</h3>
+                        <div data-bind="visible: !instantBooking()">
+                            <strong>Acceptance required</strong>
+                            <p>You can request up to three times for your appointment. <span data-bind="text: $parent.profile().firstName"></span> will then approve one of them within 18 hours or let you know their unavailable.</p>
+                        </div>
+                        <div data-bind="visible: instantBooking()">
+                            <strong>Instant scheduling</strong>
+                            <p>When scheduling offerings with <span data-bind="text: $parent.profile().firstName"></span>, your appointment is confirmed instantly.</p>
+                        </div>
                     </div>
-                    <div data-bind="visible: instantBooking()">
-                        <strong>Instant scheduling</strong>
-                        <p>When scheduling offerings with <span data-bind="text: $parent.profile().firstName"></span>, your appointment is confirmed instantly.</p>
+                    <div class="col-xs-12 col-md-6">
+                        <h3><span data-bind="text: $parent.profile().firstName"></span>'s cancellation policy</h3>
+                        <p data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: cancellationPolicy() } }"></p>
                     </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    <h3><span data-bind="text: $parent.profile().firstName"></span>'s cancellation policy</h3>
-                    <p data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: cancellationPolicy() } }"></p>
                 </div>
             </section>
             <section id="listing-about-service-professional" class="row" data-bind="visible: profile().publicBio" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
                 </div>
-                <p class="Listing-userText" data-bind="text: profile().publicBio"></p>
+                <div class="container-fluid">
+                    <div class="col-xs-12">
+                        <p class="Listing-userText" data-bind="text: profile().publicBio"></p>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
