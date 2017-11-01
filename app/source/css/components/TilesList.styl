@@ -1,7 +1,7 @@
 /**
     TilesList: class to hold a list of tiles of any kind
     replacing default list styles, adding separators.
-    
+
     To be use in any element, but more semantic on ul/ol elements.
     NOTE: any inmediate child element is styled, no need for a .Tile class name
     on each
@@ -13,11 +13,11 @@
     margin-top: 0;
     margin-bottom: 0;
     background-color: white;
-    
+
     > * {
         position: relative;
     }
-    
+
     > *:after {
         border-bottom: 1px solid $gray-lighter !important;
         content: "";
@@ -27,14 +27,13 @@
         left: $Tile-hgap;
         right: $Tile-hgap;
     }
-    
+
     // openEnd modifier: remove border from last element
     // so the ending is left open; useful when the last
     // list in a page or next element has already a line or backgroud
     &.TilesList--openEnd {
         > *:last-child::after {
             border-bottom: none !important;
-            border-right: none !important;
         }
     }
 }
