@@ -165,31 +165,35 @@
                     <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Booking policies</h2>
                     <a data-bind="attr: {href: '#!bookingPolicies/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your ' + jobTitleSingularName() + ' booking policies' }" class="btn btn-default pull-right">Edit</a>
                 </div>
-                <div class="col-xs-12 col-md-6">
-                    <h3>Your instant booking policy</h3>
-                    <div data-bind="visible: !instantBooking()">
-                        <strong>Acceptance required</strong>
-                        <p>Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: jobTitleSingularName()"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
+                <div class="container-fluid">
+                    <div class="col-xs-12 col-md-6">
+                        <h3>Your instant booking policy</h3>
+                        <div data-bind="visible: !instantBooking()">
+                            <strong>Acceptance required</strong>
+                            <p>Clients will choose up to three times for their appointment when booking your <span class="text-lowercase" data-bind="text: jobTitleSingularName()"></span> offerings. You'll then have to approve one of them within 18 hours. We recommend this if you're using another scheduler software.</p>
+                        </div>
+                        <div data-bind="visible: instantBooking()">
+                            <strong>Instant booking</strong>
+                            <p>Clients love the ability to book <span class="text-lowercase" data-bind="text: jobTitleSingularName()"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a data-bind="attr: {href: '#!calendarSyncing' + $root.returnLinkGeneralActivity() }">sync your calendars</a> to make this easier for you.</p>
+                        </div>
                     </div>
-                    <div data-bind="visible: instantBooking()">
-                        <strong>Instant booking</strong>
-                        <p>Clients love the ability to book <span class="text-lowercase" data-bind="text: jobTitleSingularName()"></span> services on the spot, but this works only if you keep your calendar up-to-date. You can <a data-bind="attr: {href: '#!calendarSyncing' + $root.returnLinkGeneralActivity() }">sync your calendars</a> to make this easier for you.</p>
+                    <div class="col-xs-12 col-md-6">
+                        <h3> Your cancellation policy</h3>
+                        <span data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: cancellationPolicy() } }"></span>
                     </div>
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    <h3> Your cancellation policy</h3>
-                    <span data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: cancellationPolicy() } }"></span>
                 </div>
             </section>
             <section id="listing-editor-about-service-professional" class="row" title="">
-                <div class="col-xs-12 col-sm-12 SectionHeading">
+                <div class="col-xs-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
                     <a data-bind="visible: profile().publicBio, attr: {href: '#!publicBio' + $root.returnLinkGeneralActivity(),'aria-label': 'Edit your public bio' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !profile().publicBio, attr: {href: '#!publicBio' + $root.returnLinkGeneralActivity(),'aria-label': 'Add your public bio' }" class="btn btn-default pull-right">Add</a>
                 </div>
-                <div class="col-xs-12 col-sm-12">
-                    <em data-bind="visible: !profile().publicBio()" class="text-muted">Tell potential clients and the Loconomics community a little bit about yourself outside of you work.</em>
-                    <p data-bind="text: profile().publicBio" class="Listing-userText"></p>
+                <div class="container-fluid">
+                    <div class="col-xs-12">
+                        <em data-bind="visible: !profile().publicBio()" class="text-muted">Tell potential clients and the Loconomics community a little bit about yourself outside of you work.</em>
+                        <p data-bind="text: profile().publicBio" class="Listing-userText"></p>
+                    </div>
                 </div>
             </section>
             <section id="listing-editor-delete-listing" class="row" title="">
