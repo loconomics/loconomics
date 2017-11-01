@@ -86,8 +86,14 @@ $SwitchCheckbox-borderRadius = 1em; // Like in bs-buttons
         transition: margin 0.4s;
     }
     input:hover,
-    input:active {
+    input:active,
+    input:focus {
             outline: none !important;
+            box-shadow: 0 0px 2px 2px $brand-secondary-dark;
+            border-radius: $SwitchCheckbox-borderRadius;
+    }
+    input:focus {
+        box-shadow: 0 0px 4px 4px $brand-secondary-dark;
     }
     input:checked + .SwitchCheckbox-drawer {
         background-color: $SwitchCheckbox-checkedColor;
