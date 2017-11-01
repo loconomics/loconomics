@@ -39,7 +39,7 @@ module.exports = function ListingVM(app) {
             app.successSave();
         })
         .catch(function(error) {
-            this.app.modals.showError({
+            showError({
                 title: 'Unable to save your data.',
                 error: error
             });
@@ -49,7 +49,7 @@ module.exports = function ListingVM(app) {
         this.discard();
         return listing.load()
         .catch(function(error) {
-            this.app.modals.showError({
+            showError({
                 title: 'Unable to load your data.',
                 error: error
             });

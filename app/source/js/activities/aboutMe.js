@@ -62,7 +62,7 @@ var A = Activity.extend(function AboutMeActivity() {
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your bio.' : 'Unable to load your bio.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err
             });
