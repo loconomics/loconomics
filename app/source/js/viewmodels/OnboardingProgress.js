@@ -103,16 +103,17 @@ OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
 OnboardingProgress.steps = {
     names: [
         'welcome',
+        'publicContactInfo',
         'addJobTitles',
         'schedulingPreferences',
         'serviceProfessionalService',
         'serviceAddresses',
         'bookingPolicies',
-        'licensesCertifications',
-        'aboutMe'
+        'licensesCertifications'
     ],
     definitions: {
         welcome: {},
+        publicContactInfo: {},
         addJobTitles: {},
         schedulingPreferences: {},
         serviceProfessionalService: {
@@ -126,7 +127,6 @@ OnboardingProgress.steps = {
         },
         licensesCertifications: {
             jobTitleSpecific: true
-        },
-        aboutMe: {}
+        }
     }
 };
