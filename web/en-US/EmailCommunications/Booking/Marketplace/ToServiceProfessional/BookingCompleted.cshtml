@@ -1,5 +1,4 @@
-@* Email with updated information about a Booking Request, mainly to communicate to the
-    provider that a request was done (BookingRequestStatusID:2, but also generate content for other statuses)
+@* Email with updated information about a Booking that was complete, meaning a review of client can be done and payment is on the works.
 
     Sender e-mail: automated@@loconomics.com
     Sender name: Loconomics Marketplace
@@ -67,8 +66,16 @@
                             <tr>
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.serviceProfessional.firstName),</td>
                             </tr>
+                            @if (info.flags.sendReviewReminderToClient)
+                            {
                             <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope all went well with your <strong>@info.userJobTitle.jobTitleSingularName</strong> services today with @(info.client.firstName). To keep our community strong and balanced, we&rsquo;d love it if you&rsquo;d complete a review to help your fellow service professionals in working with @(info.client.firstName). It shouldn&rsquo;t take more than a couple minutes.<strong>We&rsquo;ve also charged @(info.client.firstName)&rsquo;s credit card so you should receive your payment within 2 to 3 business days.</strong></td>
+                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">We hope all went well with your <strong>@info.userJobTitle.jobTitleSingularName</strong> services today with @(info.client.firstName). To keep our community strong and balanced, we&rsquo;d love it if you&rsquo;d complete a review to help your fellow service professionals in working with @(info.client.firstName). It shouldn&rsquo;t take more than a couple minutes.
+                                
+                                @if (info.booking.paymentCollected)
+                                {
+                                    <strong>We&rsquo;ve also charged @(info.client.firstName)&rsquo;s credit card so you should receive your payment within 2 to 3 business days.
+                                    </strong></td>
+                                }
                             </tr>
                             <tr>
                                 <td align="center">
@@ -86,6 +93,21 @@
                                     </table>
                                 </td>
                             </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">
+                                        We hope all went well with your services with @(info.client.firstName).
+                                        @if (info.booking.paymentCollected)
+                                        {
+                                            <span>
+                                                We & rsquo; ve charged @(info.client.firstName) & rsquo; s credit card so you should receive your payment within 2 to 3 business days.
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
                             <tr>                               
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">At your service,<br><br>The Loconomics team</td>
                             </tr>
