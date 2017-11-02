@@ -10,6 +10,7 @@
     
     - PUT:
         publicBio:string Editable
+        businessName:string Editable
         serviceProfessionalProfileUrlSlug:string Editable Desired URL slug/fragment for a custom URL belonging to loconomics.com
                                             The full URL generated, using this or the fallback, can be queried
                                             in the read-only serviceProfessionalProfileUrl property.
@@ -18,6 +19,7 @@
     - @Result {
         userID:int Auto
         publicBio:string Editable
+        businessName:string Editable
         serviceProfessionalProfileUrlSlug:string Editable
         serviceProfessionalProfileUrl:string Computed It's the complete loconomics.com custom URL using the serviceProfessionalProfileUrlSlug,
                                         or the standard URL Loconomics provides to the service professional if he/she has not choosen a slug.
@@ -33,6 +35,7 @@
             "get": { },
             "put": {
                 "publicBio": "I have little to tell. That's all.",
+                "businessName": "Great business name",
                 "serviceProfessionalProfileUrlSlug": "my-custom-loconomics-url",
                 "serviceProfessionalWebsiteUrl": "http://loconomics.com"
             }
@@ -66,6 +69,7 @@
             
             // Validation
             Validation.Add("publicBio", Validator.StringLength(4000, 0, "Public Bio must be fewer than 4000 characters"));
+            Validation.Add("businessName", Validator.StringLength(145, 0, "Business name must be fewer than 145 characters"));
             Validation.Add("serviceProfessionalProfileUrlSlug", Validator.Regex(@"^[a-zA-Z][\w\-]*$", "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"));
             // IMPORTANT: Limiting custom URL (that goes on top of loconomics.com/the-custom-url) to 80 characters as maximum
             // just to avoid excesive URLs that hide part of the loconomics.com. On database, the limit is excesive higher right now with 2078
@@ -111,6 +115,7 @@
             var profile = new LcRest.MarketplaceProfile {
                 userID = userID,
                 publicBio = Request.Form["publicBio"],
+                businessName = Request.Form["businessName"],
                 serviceProfessionalProfileUrlSlug = profileUrlSlug,
                 serviceProfessionalWebsiteUrl = webUrl
             };

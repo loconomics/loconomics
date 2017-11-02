@@ -12,9 +12,9 @@
       </div>
         <ul data-bind="foreach: serviceProfessionalSearchResult">
           <li>
-            <a href="/profile/" data-bind="attr: {href: '/profile/' + userID()}">
+            <a data-bind="attr: { href: '/listing/' + userID() }">
               <div class="Avatar Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
-              </div>          
+              </div>
               <div class="ServiceProfessionalResult-summary">
                   <div>
                      <h2>
@@ -52,17 +52,17 @@
             <div class="ServiceProfessionalResult-description">
                   <p><strong>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></strong></p>
             </div>
-            <div class="ServiceProfessionalResult-actions">         
-                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: !instantBooking()" class="btn btn-primary">Request appointment</a> 
-                <a href="/profile/" data-bind="attr: {href: '/booking/' + userID() + '/' + jobTitleID()}, visible: instantBooking()" class="btn btn-primary">Schedule instantly</a> 
-                <a href="/profile/" data-bind="attr: {href: '/profile/' + userID() + '/' + jobTitleID()}">See listing and reviews</a>
+            <div class="ServiceProfessionalResult-actions">
+                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }, visible: !instantBooking()" class="btn btn-primary">Request appointment</a>
+                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }, visible: instantBooking()" class="btn btn-primary">Schedule instantly</a>
+                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }">See listing and reviews</a>
             </div>
           </li>
         </ul>
         <ul data-bind="with: jobTitleSearchResult">
-            <li>               
+            <li>
                 <a href="/learnMoreProfessionals">
-                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
+                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>
                   <div class="ServiceProfessionalResult-summary">
                       <div>
                          <h2>Provide services?</h2>
@@ -83,14 +83,14 @@
                 <div class="ServiceProfessionalResult-description">
                       <p>Offers 8 services from $59</p>
                 </div>
-                <div class="ServiceProfessionalResult-actions">         
-                    <a href="/learnMoreProfessionals" class="btn btn-primary" style="font-size: 12px">List your services</a> 
+                <div class="ServiceProfessionalResult-actions">
+                    <a href="/learnMoreProfessionals" class="btn btn-primary" style="font-size: 12px">List your services</a>
                     <a href="/learnMoreProfessionals">Learn more</a>
                 </div>
             </li>
             <li>
                 <a href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0D%0A%0D%0AI+just+wanted+to+share+with+you+a+new+app%2Fsite+for+local+services+that+could+really+help+you+with+your+business.+It%27s+cooperatively+owned+by+the+service+professionals%2C+which+sounds+pretty+cool.+%0D%0A%0D%0ACheck+them+out+here%3A%0D%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0D%0A%0D%0ACheers%21" target="_blank">
-                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>          
+                  <div class="Avatar Avatar--sm Avatar--upperLeft"><img class="Avatar-default"></div>
                   <div class="ServiceProfessionalResult-summary">
                       <div>
                          <h2>Know any?</h2>
@@ -111,8 +111,8 @@
                 <div class="ServiceProfessionalResult-description">
                       <p>We'll help them with their business.</p>
                 </div>
-                <div class="ServiceProfessionalResult-actions">         
-                    <a class="btn btn-block btn-secondary" href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0A%0AI%20just%20wanted%20to%20share%20with%20you%20a%20new%20app%2Fsite%20for%20local%20services%20that%20could%20really%20help%20you%20with%20your%20business.%20It's%20cooperatively%20owned%20by%20the%20service%20professionals%2C%20which%20sounds%20pretty%20cool.%20%0A%0ACheck%20them%20out%20here%3A%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0A%0ACheers!" target="_blank">Refer <span data-bind="text: pluralName"></span></a> 
+                <div class="ServiceProfessionalResult-actions">
+                    <a class="btn btn-block btn-secondary" href="mailto:%20?bcc=refer@@loconomics.com&subject=Check%20out%20Loconomics%20Cooperative&amp;body=Hi%2C%0A%0AI%20just%20wanted%20to%20share%20with%20you%20a%20new%20app%2Fsite%20for%20local%20services%20that%20could%20really%20help%20you%20with%20your%20business.%20It's%20cooperatively%20owned%20by%20the%20service%20professionals%2C%20which%20sounds%20pretty%20cool.%20%0A%0ACheck%20them%20out%20here%3A%0Ahttps%3A%2F%2Floconomics.com%2Frefer%0A%0ACheers!" target="_blank">Refer <span data-bind="text: pluralName"></span></a>
                     <a href="/learnMoreProfessionals">Learn more</a>
                 </div>
             </li>

@@ -1,0 +1,119 @@
+/**
+Listing
+**/
+
+.Listing {
+    > * ul {
+        padding-left: 2em;
+        list-style: none;
+    }
+    .Listing-editorHeader {
+        display: table
+        background-color: $brand-primary;
+        color: white;
+        .Listing-title {
+            @media $mediaMinSm {
+                display: table-cell;
+                width: 50%;
+            }
+        }
+        .Listing-switch {
+            @media $mediaMinSm {
+                display: table-cell;
+                width: 50%;
+            }
+        }
+    }
+    .Listing-alerts {
+        background-color: $brand-primary;
+        color: white;
+        text-align: left;
+        padding: 1rem;
+        .TilesList {
+            > *:after {
+                border-bottom-color: white;
+                @media $mediaMinMd {
+                    border-bottom: none !important;
+                    border-right: 1px solid white;
+                    left: auto;
+                    right: 0;
+                    top: 0.3em;
+                    bottom: 0.3em;
+                }
+            }   
+        }
+        .AlertItem {
+            background-color: $brand-primary;
+            color: white;
+        }
+    }
+    .Listing-heading {
+        display: table;
+        background: white;
+        padding 3em;
+        border-bottom: .02em solid $brand-primary;
+        margin-bottom: 1.5em;
+        .Listing-professionalPic {
+            vertical-align: middle;
+            text-align: center;
+            @media $mediaMinSm {
+                display: table-cell;
+                width: 50%;
+            }
+            .Avatar--lg,
+            img {
+                height: 12em;
+                width: 12em;
+            }
+        }
+        .Listing-bookingInfo {
+            vertical-align: middle;
+            text-align: center;
+            @media $mediaMinSm {
+                display: table-cell;
+                width: 50%;
+            }
+            button {
+                width: 50%;
+            }
+        }
+    }
+   .Listing-userText {
+        white-space: pre-line;
+    }
+    .Listing-overviewAttributes {
+        padding-left: 0em;
+        ul {
+            padding-left: 1em;
+        }
+    }
+    section {
+        margin-bottom: 2em;
+    }
+    .Listing-hours {
+        display: table;
+        padding: 0em;
+        @media $mediaMinMd {
+            padding-left: 2em;
+        }
+        > li {
+            display: table-row;
+        }
+        .Listing-hoursDay {
+            display: table-cell;
+        }
+        .Listing-hoursDayBlocks {
+            display: table-cell;
+            .Listing-hoursDayBlock {
+                display: block;
+                text-align: right;
+                margin-left: 3em;
+            }
+            .Listing-hoursDayClosed {
+            display: block;
+            text-align: center;
+            margin-left: 3em;
+            }
+        }
+    }
+}

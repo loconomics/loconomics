@@ -21,7 +21,7 @@ var A = Activity.extend(function MarketplaceProfileActivity() {
     this.title('Your Listings');
 
     this.viewModel.showMarketplaceInfo(true);
-    this.viewModel.baseUrl('/marketplaceJobtitles');
+    this.viewModel.baseUrl('/listingEditor');
 });
 
 exports.init = A.init;

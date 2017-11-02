@@ -1,0 +1,18 @@
+
+<script type="text/html" id="review-card-template">
+    <li class="col-xs-11 col-sm-5 ReviewCard" data-bind="attr: { id: 'review' + bookingID() }">
+        <div class="Card-heading">
+            <div class="Card-image">
+                <img class="Avatar Avatar--primary Avatar--xs" data-bind="attr: { src: reviewerPhotoUrl(), alt: 'Photo of ' + reviewerName() }">
+            </div>
+            <div class="Card-title">
+                <h5 data-bind="text: reviewerName"></h5>
+                <p>Client since <span data-bind="text: reviewerUserSince, format: { type: 'datetime', format: 'MMMM YYYY' }"></span></p>
+            </div>
+        </div>
+        <div data-bind="visible: publicReview" class="Card-description">
+            <hr>
+            <p data-bind="text: publicReview"></p>
+        </div>
+    </li>
+</script>

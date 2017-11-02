@@ -21,7 +21,8 @@ function PublicUserReview(values) {
         serviceHours: null,
         helpfulReviewCount: 0,
         updatedDate: null,
-        reviewerName: ''
+        reviewerName: '',
+        reviewerPhotoUrl: ''
     }, values);
 }
 

@@ -6,7 +6,7 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                        <a href="/listingEditor/" data-bind="attr: {href: '/listingEditor/' + jobTitleID()}">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
                             <span data-bind="text: jobTitleName"></span>
                         </a>
@@ -18,7 +18,7 @@
                 <p data-bind="visible: !bookMeButtonReady()" class="OnboardingTip PaddedBox-xs">You must specify pricing, locations, and any required credentials for your <span data-bind="text: jobTitleName"></span> services before adding scheduling to your website.</p>
                 <form class="container-fluid LightForm" role="form">
                     <div data-bind="visible: !bookMeButtonReady()">
-                        <a class="btn btn-block btn-secondary"href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">Complete
+                        <a class="btn btn-block btn-secondary"href="/listingEditor/" data-bind="attr: {href: '/listingEditor/' + jobTitleID()}">Complete
                             <span data-bind="text: jobTitleName"></span> listing</a>
                     </div>
                     <div data-bind="visible: bookMeButtonReady()">
