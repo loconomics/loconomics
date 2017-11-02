@@ -8,19 +8,26 @@ Listing
         list-style: none;
     }
     .Listing-editorHeader {
-        display: table
         background-color: $brand-primary;
         color: white;
-        .Listing-title {
-            @media $mediaMinSm {
-                display: table-cell;
-                width: 50%;
-            }
+        a {
+            color: white;
+            font-size: 1.5rem;
+            padding-top: 1em;
         }
-        .Listing-switch {
-            @media $mediaMinSm {
-                display: table-cell;
-                width: 50%;
+        .Listing-editorInfo {
+            display: table;
+            .Listing-title {
+                @media $mediaMinSm {
+                    display: table-cell;
+                    width: 50%;
+                }
+            }
+            .Listing-switch {
+                @media $mediaMinSm {
+                    display: table-cell;
+                    width: 50%;
+                }
             }
         }
     }
@@ -48,12 +55,13 @@ Listing
         }
     }
     .Listing-heading {
-        display: table;
         background: white;
         padding 3em;
         border-bottom: .02em solid $brand-primary;
         margin-bottom: 1.5em;
-        .Listing-professionalPic {
+        .Listing-professionalInfo {
+            display: table;
+            .Listing-professionalPic {
             vertical-align: middle;
             text-align: center;
             @media $mediaMinSm {
@@ -65,18 +73,19 @@ Listing
                 height: 12em;
                 width: 12em;
             }
-        }
-        .Listing-bookingInfo {
-            vertical-align: middle;
-            text-align: center;
-            @media $mediaMinSm {
-                display: table-cell;
-                width: 50%;
             }
-            button {
-                width: 50%;
+            .Listing-bookingInfo {
+                vertical-align: middle;
+                text-align: center;
+                @media $mediaMinSm {
+                    display: table-cell;
+                    width: 50%;
+                }
+                button {
+                    width: 50%;
+                }
             }
-        }
+        }     
     }
    .Listing-userText {
         white-space: pre-line;
