@@ -43,27 +43,50 @@
                             <tr>
                                 <td align="left" style="font-size: 24px; text-align: left; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;" class="padding-copy">Hi, @(info.client.firstName),</td>
                             </tr>
-                            <tr>
-                                <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I hope you enjoyed my services today. If you did, I&rsquo;d appreciate it if you&rsquo;d complete a review to help me build my reputation and refer me to any friends who would benefit from my services. It shouldn&rsquo;t take more than a couple minutes.</td>
-                            </tr>
-                            <tr>
-
-                            <tr>
-                                <td align="center">
-                                    <!-- BULLETPROOF BUTTON -->
-                                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
-                                        <tr>
-                                            <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
-                                                <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
-                                                    <tr>
-                                                        <td align="center"><a href="@(info.viewServiceProfessionalReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review my Services</a></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
+                            @if (info.flags.sendReviewReminderToClient)
+                            {
+                                <tr>
+                                    <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">I hope you enjoyed my <strong>@info.userJobTitle.jobTitleSingularName</strong> services today. If you did, I&rsquo;d love it if you&rsquo;d complete a review to help me build my reputation and refer me to any friends who would enjoy my services. It shouldn&rsquo;t take more than a couple minutes.</td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <!-- BULLETPROOF BUTTON -->
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
+                                            <tr>
+                                                <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
+                                                    <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
+                                                        <tr>
+                                                            <td align="center"><a href="@(info.viewServiceProfessionalReviewForm)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Review my Services</a></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                            @if (!info.flags.sendReviewReminderToClient)
+                            {
+                                <tr>
+                                    <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">Thanks for booking your appointment with me. I appreciate having you as a client. Please contact me with any follow-up questions, and I hope to see you soon.</td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <!-- BULLETPROOF BUTTON -->
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="mobile-button-container">
+                                            <tr>
+                                                <td align="center" style="padding: 25px 0 0 0;" class="padding-copy">
+                                                    <table border="0" cellspacing="0" cellpadding="0" class="responsive-table">
+                                                        <tr>
+                                                            <td align="center"><a href="@(info.newServiceProfessionalBooking)" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; color: #ffffff; text-decoration: none; background-color: #ff6765; border-top: 15px solid #ff6765; border-bottom: 15px solid #ff6765; border-left: 25px solid #ff6765; border-right: 25px solid #ff6765; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; display: inline-block;" class="mobile-button">Make Another Booking</a></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
                             <tr>                               
                                 <td align="left" style="padding: 20px 0 0 0; text-align: left; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;" class="padding-copy">With gratitude,<br><br>@(info.serviceProfessional.firstName)<br>@(info.serviceProfessional.businessName)<br><img src="@(LcUrl.AppUrl)img/email/ion-ios-telephone-outline.png" alt="Telephone:" width="20" height="20" border="0" style="padding: 0px 0 0 0;" class="padding-copy"> @(info.serviceProfessional.phone)<br></td>
                             </tr>
