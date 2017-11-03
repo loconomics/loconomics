@@ -1,3 +1,5 @@
+var getObservable = require('../../utils/getObservable');
+
 'use strict';
 
 var TAG_NAME = 'icon-checkbox';
@@ -7,11 +9,14 @@ var ko = require('knockout');
 
 function ViewModel(params) {
 
-    this.value = params.value;
+    this.value = getObservable(params.value);
     this.label = params.label;
 
     this.iconClass = ko.pureComputed(function() {
-        return 'icon';
+        var icon = 'fa ion ion-android-checkbox-outline';
+        if (!this.value())
+            icon += '-blank';
+        return icon;
     }, this);
 
 }
