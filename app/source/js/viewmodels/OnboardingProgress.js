@@ -105,7 +105,6 @@ OnboardingProgress.steps = {
         'welcome',
         'publicContactInfo',
         'addJobTitle',
-        'schedulingPreferences',
         'serviceProfessionalService',
         'serviceAddresses',
         'licensesCertifications'
@@ -114,7 +113,6 @@ OnboardingProgress.steps = {
         welcome: {},
         publicContactInfo: {},
         addJobTitle: {},
-        schedulingPreferences: {},
         serviceProfessionalService: {
             jobTitleSpecific: true
         },

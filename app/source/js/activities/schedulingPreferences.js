@@ -5,7 +5,6 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var onboarding = require('../data/onboarding');
 var weeklySchedule = require('../data/weeklySchedule');
 var schedulingPreferences = require('../data/schedulingPreferences');
 var userJobProfile = require('../data/userJobProfile');
@@ -26,9 +25,7 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         helpLink: this.viewModel.helpLink
     });
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
-    this.title = ko.pureComputed(function() {
-        return this.isInOnboarding() ? ' Set your availability' : ' Availability settings';
-    }, this.viewModel);
+    this.title('Availability settings');
 
     this.registerHandler({
         target: weeklySchedule,
@@ -58,12 +55,6 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-
-    if (!onboarding.updateNavBar(this.navBar)) {
-        // Reset
-        this.navBar.model.updateWith(this.defaultNavBar, true);
-    }
-
     // Touch desktop navigation too
     var info = this.app.getReturnRequestInfo(this.requestData);
     this.viewModel.goBackLink(info && info.link || '/calendar');
@@ -91,8 +82,6 @@ function ViewModel(app) {
     this.goBackLink = ko.observable('');
     this.goBackLabel = ko.observable('');
 
-    this.isInOnboarding = onboarding.inProgress;
-
     this.schedulingPreferences = new SchedulingPreferencesVM();
     this.weeklySchedule = new WeeklyScheduleVM();
 
@@ -106,12 +95,7 @@ function ViewModel(app) {
             // force a refresh of that data
             userJobProfile.clearCache();
             userJobProfile.syncList();
-            // Move forward:
-            if (onboarding.inProgress()) {
-                onboarding.goNext();
-            } else {
-                app.successSave();
-            }
+            app.successSave();
         })
         .catch(function() {
             // catch error, managed on event
@@ -135,13 +119,11 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            onboarding.inProgress() ?
-                'Save and continue' :
-                this.isLoading() ?
-                    'loading...' :
-                    this.isSaving() ?
-                        'Saving...' :
-                        'Save'
+            this.isLoading() ?
+                'loading...' :
+                this.isSaving() ?
+                    'Saving...' :
+                    'Save'
         );
     }, this);
 }
