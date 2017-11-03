@@ -108,7 +108,6 @@ OnboardingProgress.steps = {
         'schedulingPreferences',
         'serviceProfessionalService',
         'serviceAddresses',
-        'bookingPolicies',
         'licensesCertifications'
     ],
     definitions: {
@@ -120,9 +119,6 @@ OnboardingProgress.steps = {
             jobTitleSpecific: true
         },
         serviceAddresses: {
-            jobTitleSpecific: true
-        },
-        bookingPolicies: {
             jobTitleSpecific: true
         },
         licensesCertifications: {
