@@ -1,0 +1,36 @@
+﻿@*
+  As of issue #611 and Epic #402, Professionals are enforced to next Booking Policies
+    - CancellationPolicyID set to `3` "Flexible"
+    - InstantBooking set to `false` "Acceptance required"
+
+  And as of #328, user must have a payed membership of type Growth, Pro or Pro Annual to be
+  allowed to edit them.
+
+  Then, here we check all uses that are not in one of that memberships and has not the new default
+    policies to report their IDs and policies, and restore them to default values, since they are
+    too 'enforced' values for non members.
+
+*@
+@{
+    dynamic results = null;
+    using (var db = new LcDatabase())
+    {
+        // Get current ones non-default values for non-members
+        results = db.Query(@"
+            SELECT userprofilepositions.*
+            FROM userprofilepositions INNER JOIN users ON userprofilepositions.userID = users.userID
+            WHERE (CancellationPolicyID <> 3 OR InstantBooking = 1) AND users.OwnerStatusID <> 2
+        ");
+        // Change to default values
+        db.Execute(@"
+            UPDATE userprofilepositions
+            SET CancellationPolicyID = 3, InstantBooking = 0
+            FROM userprofilepositions INNER JOIN users ON userprofilepositions.userID = users.userID
+            WHERE (CancellationPolicyID <> 3 OR InstantBooking = 1) AND users.OwnerStatusID <> 2
+        ");
+    }
+}
+<h1>Proffesionals and listings that are not members and had not allowed booking policies #402 #328</h1>
+<p>
+    @ObjectInfo.Print(results)
+</p>
