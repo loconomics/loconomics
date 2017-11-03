@@ -199,6 +199,22 @@ public static class LcAuthHelper
     const string SERVICE_PROFESSIONAL_TYPE = "SERVICE-PROFESSIONAL";
 
     /// <summary>
+    /// Sets the OnboardingStep of the user to 'welcome', so can start the onboarding process
+    /// </summary>
+    /// <param name="userID"></param>
+    private static void StartOnboardingForUser(int userID)
+    {
+        using (var db = new LcDatabase())
+        {
+            db.Execute(@"
+                UPDATE Users SET 
+                OnboardingStep = 'welcome'
+                WHERE UserID = @0
+            ", userID);
+        }
+    }
+
+    /// <summary>
     /// Signup with fields:
     /// - email [required]
     /// - password [required when no facebookUserID is given]
@@ -326,10 +342,16 @@ public static class LcAuthHelper
                     {
                         logged = Login(email, password, false, returnProfile, true);
                         userID = logged.userID;
-                        // throw exception on error
+                        // Ensure we set-up the onboarding even if already exists, and set-up
+                        // as a professional if requested
+                        // Next code will throw exception on error
                         if (isServiceProfessional)
                         {
                             LcAuth.BecomeProvider(userID);
+                        }
+                        else
+                        {
+                            StartOnboardingForUser(userID);
                         }
                     }
                     catch (HttpException)
@@ -363,6 +385,7 @@ public static class LcAuthHelper
                         {
                             WebSecurity.CreateAccount(email, LcAuth.GeneratePassword(), true);
                         }
+                        StartOnboardingForUser(userID);
                         // send email to let him to confirm it owns the given e-mail
                         LcMessaging.SendWelcomeCustomer(userID, email);
                         // Not valid after all, just communicate was was done and needs to do to active its account:
@@ -422,6 +445,7 @@ public static class LcAuthHelper
                             LcRest.Address.SetAddress(address);
                         }
                     }
+                    StartOnboardingForUser(userID);
                 }
 
                 // SIGNUP
