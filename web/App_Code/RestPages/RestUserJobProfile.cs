@@ -160,8 +160,6 @@ public class RestUserJobProfile : RestWebPage
     /// <summary>
     /// Process a request to create a user job title given a jobTitleID or as
     /// fallback a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result).
-    /// Some preferences are not allowed in this step and enforced to default values; depending on the membership plan,
-    /// the user can change it later (booking policies).
     /// </summary>
     /// <param name="userID"></param>
     /// <param name="jobTitleID"></param>
@@ -225,10 +223,9 @@ public class RestUserJobProfile : RestWebPage
                 userID = userID,
                 jobTitleID = jobTitleID,
                 intro = data.intro,
+                cancellationPolicyID = data.policyID,
                 collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton,
-                // Enforced Booking Policies to default ones.
-                cancellationPolicyID = LcRest.CancellationPolicy.DefaultCancellationPolicyID, //data.policyID,
-                instantBooking = false // data.instantBooking
+                instantBooking = data.instantBooking
             });
 
             // If user is just a client, needs to become a professional

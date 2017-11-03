@@ -218,8 +218,27 @@ namespace LcRest
         }
         #endregion
 
+        #region Validations
+        /// <summary>
+        /// Checks that the user has choosen allowed values for Booking Policies, and update
+        /// current instance properly.
+        /// For non-members, policies are restricted to default values.
+        /// </summary>
+        private void ValidateAndFixBookingPolicies()
+        {
+            var isMember = UserProfile.Get(userID).owner.status == LcEnum.OwnerStatus.active;
+            if (!isMember)
+            {
+                // Enforce default policies
+                instantBooking = true;
+                cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
+            }
+        }
+        #endregion
+
         public static void Create(UserJobTitle userJobTitle)
         {
+            userJobTitle.ValidateAndFixBookingPolicies();
             using (var db = new LcDatabase())
             {
                 var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7",
@@ -241,6 +260,7 @@ namespace LcRest
 
         public static bool Update(UserJobTitle userJobTitle)
         {
+            userJobTitle.ValidateAndFixBookingPolicies();
             var sqlUpdate = @"
                 UPDATE  UserProfilePositions
                 SET     PositionIntro = @4,
