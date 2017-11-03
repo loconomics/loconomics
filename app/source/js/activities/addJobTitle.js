@@ -128,7 +128,8 @@ function ViewModel(app) {
                     onboarding.goNext();
                 }
                 else {
-                    app.successSave();
+                    // Go to edit the just added listing
+                    app.shell.go('/listingEditor/' + result.jobTitleID());
                 }
             }.bind(this);
             if (becomingProfessional) {
