@@ -31,6 +31,8 @@ exports.ActionForValue = require('./input-autocomplete').ActionForValue;
  * Text for an optional button displayed on each suggestion; it doesn't trigger
  * anything different than select the suggestion, but gives a hint to user
  * for the action after select it.
+ * @param {(string|KnockoutObservable<string>)} [params.label=Job title]
+ * The label text for the input-autocomplete.
  */
 function ViewModel(params) {
     // Observables for parameters and results, and auto-search all comes from:
@@ -73,7 +75,7 @@ function ViewModel(params) {
     /// Members based on params
     // Configurable per use case, or automatic if empty
     /**
-     * @member {(KnockoutObservable<string>|string)}
+     * @member {KnockoutObservable<string>}
      * Let's indicate what text will contain each button that appears near
      * a suggestion, as a hint for the user of the action that will trigger
      * when selecting it. The button will be hidden if no text (default).
@@ -83,9 +85,13 @@ function ViewModel(params) {
      */
     this.suggestionButtonText = getObservable(params.suggestionButtonText);
     /**
-     * @member {(KnockoutObservable<string>|string)} id An unique ID for the input.
+     * @member {KnockoutObservable<string>} id An unique ID for the input.
      */
     this.id = getObservable(params.id);
+    /**
+     * @member {KnockoutObservable<string>} label
+     */
+    this.label = getObservable(params.label || 'Job title');
  }
 
 ko.components.register(TAG_NAME, {
