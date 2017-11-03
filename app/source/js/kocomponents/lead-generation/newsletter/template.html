@@ -1,0 +1,18 @@
+<form id="newsletterSignupForm" class="LightForm" data-bind="visible: !submitted(), with: data" aria-describedby="newsletterSignupFormInstructions">
+    <fieldset>
+        <legend>Stay informed</legend>
+        <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
+            <label for="signupNewsletterEmail">Email address</label>
+            <div data-bind="template: { name: 'signup-field', data: { id: 'signupNewsletterEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="isServiceProfessional">I offer local services</label>
+            <input id="isServiceProfessional" type="checkbox" data-bind="checked: user.isServiceProfessional, disable: isLocked">
+        </div>
+        <button type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save" aria-label="Sign up for newsletter"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
+        <p id="newsletterSignupFormInstructions" class="help-block" data-bind="visible: searchFailure">Be the first to know when Loconomics is in <span data-bind="text: searchCity">San Francisco</span>.</p>
+        <p id="newsletterSignupFormInstructions" class="help-block" data-bind="visible: !searchFailure()">Spam-free information – you can unsubscribe at any time.</p>
+    </fieldset>
+</form>
+<p id="newsletterSignupFormThankYou" data-bind="visible: submitted">Thanks, we'll keep you in the loop!</p>
