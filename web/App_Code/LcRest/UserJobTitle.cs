@@ -230,7 +230,7 @@ namespace LcRest
             if (!isMember)
             {
                 // Enforce default policies
-                instantBooking = true;
+                instantBooking = false;
                 cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
             }
         }
