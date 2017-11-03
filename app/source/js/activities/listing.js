@@ -1,7 +1,7 @@
 /**
-    Provile activity
-
-    Visualizes the public profile of a user, or current user
+    Listing Editor activity
+    TO-DO: create components and combine with listing activity
+    Visualizes a listing of a user, or current user
 **/
 'use strict';
 
@@ -13,9 +13,10 @@ var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var MessageBar = require('../components/MessageBar');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
+var ReviewsVM = require('../viewmodels/ReviewsVM');
 var showError = require('../modals/error').show;
 
-var A = Activity.extend(function ProfileActivity() {
+var A = Activity.extend(function ListingActivity() {
 
     Activity.apply(this, arguments);
 
@@ -23,6 +24,12 @@ var A = Activity.extend(function ProfileActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
+    this.title = ko.pureComputed(function() {
+        var user = this.user();
+        if (user) {
+            return user.profile().firstNameLastInitial() + ', ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName());
+        }
+    }, this.viewModel);
 
     this.registerHandler({
         event: 'layoutUpdate',
@@ -58,7 +65,7 @@ A.prototype.loadData = function(userID, jobTitleID) {
         }.bind(this))
         .catch(function(err) {
             showError({ error: err, title: 'The user profile could not be loaded.' });
-        })
+        }.bind(this))
         .then(function() {
             // always
             this.viewModel.isLoading(false);
@@ -100,6 +107,9 @@ function ViewModel(app) {
     this.userID = ko.observable(null);
     this.reviews = new ReviewsVM();
     this.showMessageBar = ko.observable(false);
+    this.timeZone = ko.pureComputed(function(){
+        return this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone().replace('US/','');
+    }, this);
 
     // Just a timestamp to notice that a request to refresh UI happens
     // Is updated on 'show' and layoutUpdate (when inside this UI) currently
@@ -211,11 +221,20 @@ function ViewModel(app) {
     }, this);
 
     this.hasServicesOverview = ko.pureComputed(function() {
-        var jobTitle = this.user() && this.user().selectedJobTitle(),
-            hasIntro = jobTitle && jobTitle.hasIntro(),
-            hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
-
+        var jobTitle = this.user() && this.user().selectedJobTitle();
+        var hasIntro = jobTitle && jobTitle.hasIntro();
+        var hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
         return hasIntro || hasAttributes;
+    }, this);
+
+    this.hasVIPOfferingsForClient = ko.pureComputed(function(){
+        return this.selectedJobTitle() && this.selectedJobTitle().clientSpecificServices().length;
+    }, this);
+
+    this.hasCredentials = ko.pureComputed(function(){
+        var hasEducation = this.user() && this.user().education().length;
+        var hasLicenseCertification = this.selectedJobTitle() && this.selectedJobTitle().licensesCertifications().length;
+        return hasEducation || hasLicenseCertification;
     }, this);
 
     this.jobTitleSingularName = ko.pureComputed(function() {
@@ -227,7 +246,7 @@ function ViewModel(app) {
     }, this);
 
     this.editListing = function() {
-        app.shell.go('/marketplaceJobtitles/' + this.selectedJobTitle().jobTitleID());
+        app.shell.go('/listingEditor/' + this.selectedJobTitle().jobTitleID());
     }.bind(this);
 
     this.listingIsActive = ko.pureComputed(function() {
@@ -252,89 +271,4 @@ function ViewModel(app) {
     this.messageBarTone = ko.pureComputed(function() {
         return this.listingIsActive() ? MessageBar.tones.success : MessageBar.tones.warning;
     }, this);
-}
-
-var PublicUserReview = require('../models/PublicUserReview');
-function ReviewsVM() {
-    this.userID = ko.observable(null);
-    this.jobTitleID = ko.observable(null);
-    this.list = ko.observableArray([]);
-    this.isLoading = ko.observable(false);
-    this.endReached = ko.observable(false);
-    var currentXhr = null;
-
-    this.reset = function reset(userID, jobTitleID) {
-        this.list([]);
-        if (userID)
-            this.userID(userID);
-        this.jobTitleID(jobTitleID);
-        this.endReached(false);
-        if (currentXhr && currentXhr.abort) {
-            currentXhr.abort();
-        }
-    };
-
-    this.load = function loadReviews(options) {
-        options = options || {};
-        if (this.isLoading() || this.endReached() || !this.userID()) return;
-        this.isLoading(true);
-        var task = users.getReviews(this.userID(), this.jobTitleID(), options)
-        .then(function(newData) {
-            //jshint maxcomplexity:8
-            if (newData && newData.length) {
-                if (newData.length < (options.limit || 20)) {
-                    this.endReached(true);
-                }
-                // convert the newData to Model instances
-                newData = newData.map(function(d) { return new PublicUserReview(d); });
-                var list = this.list();
-                if (options.since && options.until) {
-                    // Insert in the middle
-                    // TODO Unused situation right now, not supported in the UI
-                    throw new Error('UNSUPPORTED SET-UP: since and until parameters at the same time');
-                }
-                else if (options.since) {
-                    // We 'suppose' that a 'since' request from the previous first item (descending order) was performed
-                    // so we add the newData to the beggining of the list
-                    list = newData.concat.apply(newData, list);
-                }
-                else if (options.until) {
-                    // We 'suppose' that an 'until' request from the previous last item  (descending order) was performed
-                    // so we add the newData to the ending of the list
-                    list.push.apply(list, newData);
-                }
-                else {
-                    // Just new, to replace, data
-                    list = newData;
-                }
-                this.list(list);
-            }
-            else {
-                this.endReached(true);
-            }
-            this.isLoading(false);
-            currentXhr = null;
-        }.bind(this))
-        .catch(function(err) {
-            this.isLoading(false);
-            currentXhr = null;
-            if (err && err.statusText !== 'abort') {
-                console.error('Error loading user reviews', err);
-                throw err;
-            }
-        }.bind(this));
-        currentXhr = task.xhr;
-        return task;
-    }.bind(this);
-
-    this.loadOlder = function loadOlderReviews() {
-        var l = this.list();
-        var last = l[l.length - 1];
-        return this.load({ limit: 10, until: last && last.updatedDate() });
-    }.bind(this);
-
-    this.loadNewer = function loadOlderReviews() {
-        var first = this.list()[0];
-        return this.load({ limit: 10, since: first && first.updatedDate() });
-    }.bind(this);
 }

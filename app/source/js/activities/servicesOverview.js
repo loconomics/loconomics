@@ -9,7 +9,7 @@ var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
-var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_LINK = '/listingEditor';
 var DEFAULT_BACK_TEXT = 'Back';
 require('../kocomponents/servicesOverview/attributes-combobox');
 var showError = require('../modals/error').show;

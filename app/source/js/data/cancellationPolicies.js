@@ -12,30 +12,30 @@ var session = require('./session');
 
 // PRESET
 var data = [
-    new CancellationPolicy({
+    {
         cancellationPolicyID: 3,
         name: 'Flexible',
         description: 'No cancellation fees if changed or cancelled at least 24 hours in advance, otherwise a cancellation fee of 50% the price of booked services apply (including no-shows).',
         hoursRequired: 24,
         cancellationFeeBefore: 0,
         cancellationFeeAfter: 0.5
-    }),
-    new CancellationPolicy({
+    },
+    {
         cancellationPolicyID: 2,
         name: 'Moderate',
         description: 'No cancellation fees if changed or cancelled at least 24 hours in advance, otherwise a cancellation fee of 100% the price of booked services apply (including no-shows).',
         hoursRequired: 24,
         cancellationFeeBefore: 0,
         cancellationFeeAfter: 1.0
-    }),
-    new CancellationPolicy({
+    },
+    {
         cancellationPolicyID: 1,
         name: 'Strict',
         description: 'Cancellation fees of 50% of the price of booked services up to 5 days before the booking start time and 100% after.',
         hoursRequired: 120,
         cancellationFeeBefore: 0.5,
         cancellationFeeAfter: 1.0
-    })
+    }
 ];
 
 var api = new ListRemoteModel({
@@ -54,9 +54,9 @@ session.on.cacheCleaningRequested.subscribe(function() {
 });
 
 // Replace cached list with preset data
-api.list(data);
+api.list = data;
 
 // Replace getList to just return the preset
 api.getList = function() {
-    return Promise.resolve(data);
+    return Promise.resolve(api.list);
 };

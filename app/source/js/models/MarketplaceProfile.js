@@ -11,6 +11,7 @@ function MarketplaceProfile(values) {
         userID: 0,
         
         publicBio: '',
+        businessName: '',
         serviceProfessionalProfileUrlSlug: '',
         // This is a server-side computed variable (read-only for the user) for a Loconomics address
         // created using the serviceProfessionalProfileUrlSlug if any or the fallback system URL.

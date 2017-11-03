@@ -4,7 +4,8 @@ module.exports = {
     options: {
         // Remove all but first 'banner' comment
         specialComments: 1,
-        report: 'min'
+        report: 'min',
+        level: 2
     },
     app: {
         files: {

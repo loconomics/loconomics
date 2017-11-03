@@ -20,6 +20,7 @@ function Appointment(values) {
 
         startTime: null,
         endTime: null,
+        timeZone: '',
 
         // CommonEvent fields:
         summary: 'New booking',
@@ -80,15 +81,15 @@ function Appointment(values) {
     }, this);
 
     this.displayedEndTime = ko.pureComputed(function() {
-
         return moment(this.endTime()).locale('en-US-LC').format('LT');
-
     }, this);
-
+    
+    this.displayedTimeZone = ko.pureComputed(function() {
+        return this.timeZone() && moment().tz(this.timeZone()).format('z');
+    }, this);
+    
     this.displayedTimeRange = ko.pureComputed(function() {
-
-        return this.displayedStartTime() + '-' + this.displayedEndTime();
-
+        return this.displayedStartTime() + '-' + this.displayedEndTime() + ' ' + this.displayedTimeZone();
     }, this);
 
     this.itStarted = ko.pureComputed(function() {
@@ -150,6 +151,7 @@ Appointment.fromCalendarEvent = function fromCalendarEvent(event) {
     apt.id(event.calendarEventID());
     apt.startTime(event.startTime());
     apt.endTime(event.endTime());
+    apt.timeZone(event.timeZone());
     apt.summary(event.summary());
     apt.description(event.description());
     apt.isAllDay(event.isAllDay());
@@ -170,6 +172,7 @@ Appointment.fromBooking = function fromBooking(booking, event) {
             calendarEventID: booking.serviceDateID(),
             startTime: booking.serviceDate().startTime(),
             endTime: booking.serviceDate().endTime(),
+            timeZone: booking.serviceDate().timeZone(),
             readOnly: true
         });
     }

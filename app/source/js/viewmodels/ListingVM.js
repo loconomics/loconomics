@@ -2,12 +2,11 @@
 // IMPORTANT: it requires access to DOM with jQuery in order to the COPY LINK to work on browsers
 var ko = require('knockout');
 var clipboard = require('../utils/clipboard');
-var marketplaceProfile = require('../data/marketplaceProfile');
+var listing = require('../data/marketplaceProfile');
 var showError = require('../modals/error').show;
 
-module.exports = function MarketplaceProfileVM() {
-
-    var profileVersion = marketplaceProfile.newVersion();
+module.exports = function ListingVM(app) {
+    var profileVersion = listing.newVersion();
     profileVersion.isObsolete.subscribe(function(itIs) {
         if (itIs) {
             // new version from server while editing
@@ -25,9 +24,9 @@ module.exports = function MarketplaceProfileVM() {
     // Actual data for the form:
     this.profile = profileVersion.version;
 
-    this.isLoading = marketplaceProfile.isLoading;
-    this.isSaving = marketplaceProfile.isSaving;
-    this.isLocked = marketplaceProfile.isLocked;
+    this.isLoading = listing.isLoading;
+    this.isSaving = listing.isSaving;
+    this.isLocked = listing.isLocked;
 
     this.discard = function discard() {
         profileVersion.pull({ evenIfNewer: true });
@@ -35,10 +34,27 @@ module.exports = function MarketplaceProfileVM() {
     }.bind(this);
 
     this.save = function save() {
-        return profileVersion.pushSave();
+        return profileVersion.pushSave()
+        .then(function() {
+            app.successSave();
+        })
+        .catch(function(error) {
+            showError({
+                title: 'Unable to save your data.',
+                error: error
+            });
+        });
     };
-
-    this.sync = marketplaceProfile.sync.bind(marketplaceProfile);
+    this.sync = function() {
+        this.discard();
+        return listing.load()
+        .catch(function(error) {
+            showError({
+                title: 'Unable to load your data.',
+                error: error
+            });
+        });
+    };
 
     /// Utilities
     // Custom URL
@@ -66,4 +82,13 @@ module.exports = function MarketplaceProfileVM() {
             this.copyCustomUrlButtonText('Copied!');
         }
     }.bind(this);
+    this.submitText = ko.pureComputed(function() {
+        return (
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving...' :
+                    'Save'
+        );
+    }, this);
 };

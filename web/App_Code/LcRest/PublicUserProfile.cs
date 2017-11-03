@@ -125,9 +125,9 @@ namespace LcRest
             ,isProvider as isServiceProfessional
             ,isCustomer as isClient
 
-            ,CASE WHEN PC.Active = 1 THEN UP.email ELSE null END as Email
-            ,CASE WHEN PC.Active = 1 THEN Users.MobilePhone ELSE null END As phone
-            ,CASE WHEN PC.Active = 1 THEN providerWebsiteUrl ELSE null END as serviceProfessionalWebsiteUrl
+            ,CASE WHEN PC.Active = 1 OR @0 = @1 THEN UP.email ELSE null END as Email
+            ,CASE WHEN PC.Active = 1 OR @0 = @1 THEN Users.MobilePhone ELSE null END As phone
+            ,CASE WHEN PC.Active = 1 OR @0 = @1 THEN providerWebsiteUrl ELSE null END as serviceProfessionalWebsiteUrl
             
             ,providerProfileUrl as serviceProfessionalProfileUrlSlug
 

@@ -10,9 +10,16 @@ var TAG_NAME = 'job-title-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/job-title-autocomplete.html');
 
 var ko = require('knockout');
-var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var getObservable = require('../utils/getObservable');
 exports.ActionForValue = require('./input-autocomplete').ActionForValue;
+var JobTitleSearchResult = require('../models/JobTitleSearchResult');
+var search = require('../data/search');
+
+/**
+ * Minimun text length required to perform a search
+ * @type {number}
+ */
+var MIN_LENGTH = 3;
 
 /**
  * The component view model
@@ -35,20 +42,35 @@ exports.ActionForValue = require('./input-autocomplete').ActionForValue;
  * The label text for the input-autocomplete.
  */
 function ViewModel(params) {
-    // Observables for parameters and results, and auto-search all comes from:
-    // Inherits
-    MarketplaceSearchVM.call(this);
+    this.isLoading = ko.observable(false);
+    //create an observable variable to hold the search term
+    this.value = ko.observable();
 
-    /// Overwritting
-    // We replace the internal 'length' that counts how many results there are,
-    // by one that returns almost 1 if there is valid query; this allow us
+    /**
+     * @member {KnockoutComputed<string>} queryTerm Gets a valid query term to
+     * perform a search, otherwise null.
+     * It's valid if there is a value and meets the minimum length.
+     */
+    this.queryTerm = ko.pureComputed(function() {
+        var s = this.value();
+        return s && s.length >= MIN_LENGTH ? s : null;
+    }, this);
+
+    /**
+     * @member {Object}
+     * Object.jobTitles {KnockoutObservableArray<JobTitleSearchResult>}
+     */
+    this.suggestions = {
+        jobTitles: ko.observableArray([])
+    };
+    // We create a custom 'length' property for suggestions, so it
+    // returns almost 1 if there is valid query; this allow us
     // to ever show a suggestion to add user typed query even if there are not
     // result, as far as it meets the minimum query lenght (implicit by the
     // the result of the inherit 'queryTerm').
-    var internalResultsLength = this.searchResults.length;
-    this.searchResults.length = ko.pureComputed(function() {
+    this.suggestions.length = ko.pureComputed(function() {
         var hasQuery = !!this.queryTerm();
-        return Math.max(hasQuery ? 1 : 0, internalResultsLength());
+        return Math.max(hasQuery ? 1 : 0, this.suggestions.jobTitles().length);
     }, this);
 
     /// Out parameters: allows to expose some internal values externally, but
@@ -92,6 +114,48 @@ function ViewModel(params) {
      * @member {KnockoutObservable<string>} label
      */
     this.label = getObservable(params.label || 'Job title');
+
+    /// Performing search
+    /**
+     * Performs an API search by term
+     * @private
+     * @param {string} searchTerm
+     */
+    var loadSuggestions = function() {
+        var s = this.value();
+        if(!s) {
+            this.suggestions.jobTitles.removeAll();
+            return;
+        }
+
+        this.isLoading(true);
+
+        return search.jobTitleAutocomplete(s)
+        .then(function(results) {
+            if(results) {
+                this.suggestions.jobTitles(results.map(function(item) {
+                    return new JobTitleSearchResult(item);
+                }));
+            }
+            else {
+                this.suggestions.jobTitles.removeAll();
+            }
+            this.isLoading(false);
+        }.bind(this))
+        .catch(function(err) {
+            this.isLoading(false);
+            if (err && err.statusText === 'abort') return null;
+        }.bind(this));
+    }.bind(this);
+
+    // Auto-search on user typing but throttling it to prevent too much requests
+    // that undermine performance.
+    // It performs the search one has passed a timeout from latest keystroke
+    ko.computed(function() {
+        loadSuggestions();
+    })
+    //.extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 120 } });
+    .extend({ rateLimit: { timeout: 120 } });
  }
 
 ko.components.register(TAG_NAME, {

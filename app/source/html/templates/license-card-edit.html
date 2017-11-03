@@ -1,0 +1,17 @@
+<script type="text/html" id="license-card-edit-template">
+    <li class="col-xs-11 col-sm-5 CredentialCard" data-bind="attr: { id: 'license' + userLicenseCertificationID() }">
+        <div class="Card-heading">
+            <div class="Card-title">
+                <h5 data-bind="text: licenseCertification().name"></h5>
+                <p data-bind="text: licenseCertification().authority"></p>
+            </div>
+            <div class="Card-action"> 
+                <a class="btn btn-icon-link" data-bind="attr: {href: '#!licensesCertificationsForm/' + jobTitleID() + '/' + userLicenseCertificationID() + $root.returnLinkGeneralActivity(),'aria-label': 'Update '+ licenseCertification().name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+            </div>
+        </div>
+        <div class="Card-description">
+            <hr>
+            <p><em><span> Status:</span> <strong data-bind="text: status, css: { 'text-success': statusID() === 1, 'text-warning': statusID() === 2 || statusID() === 3 || statusID() === 6, 'text-danger': statusID() === 4}"></strong><span data-bind="visible: statusID() === 1 || statusID() === 6">  (Expiry date: <span data-bind="text: expirationDate, format: { type: 'datetime', format: 'L', 'default': 'does not expire' }"></span>)</span></p>
+        </div>
+    </li>
+</script>

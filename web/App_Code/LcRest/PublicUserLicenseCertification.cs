@@ -13,6 +13,7 @@ namespace LcRest
         #region Fields
         public int userID;
         public int jobTitleID;
+        public int userLicenseCertificationID;
         public int licenseCertificationID;
         public string licenseCertificationNumber;
         public string licenseCertificationUrl;
@@ -47,6 +48,7 @@ namespace LcRest
             {           
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
+                userLicenseCertificationID = record.userLicenseCertificationID,
                 licenseCertificationID = record.licenseCertificationID,
                 licenseCertificationNumber = record.licenseCertificationNumber,
                 licenseCertificationUrl = record.licenseCertificationUrl,
@@ -80,6 +82,7 @@ namespace LcRest
             SELECT               
                 V.ProviderUserID As userID
                 ,V.PositionID As jobTitleID
+                ,V.userLicenseCertificationID
                 ,V.licenseCertificationID
                 ,V.licenseCertificationNumber
                 ,V.licenseCertificationUrl

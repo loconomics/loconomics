@@ -12,11 +12,11 @@ function PublicUserProfile(values) {
     
     this.model.defProperties({
         userID: 0,
-        firstName: 0,
-        lastName: 0,
-        secondLastName: 0,
-        businessName: 0,
-        publicBio: 0,
+        firstName: '',
+        lastName: '',
+        secondLastName: '',
+        businessName: '',
+        publicBio: '',
         serviceProfessionalProfileUrlSlug: null,
         serviceProfessionalWebsiteUrl: null,
         serviceProfessionalProfileUrl: null, // Server side generated
@@ -38,6 +38,17 @@ function PublicUserProfile(values) {
         
         return nameParts.join(' ');
     }, this);
+    
+    this.firstNameLastInitial = ko.pureComputed(function() {
+        var nameParts = [this.firstName()];
+        if (this.lastName())
+            nameParts.push(this.lastName().substring(0, 1) + '.');
+        if (this.secondLastName())
+            nameParts.push(this.secondLastName().substring(0, 1) + '.');
+        
+        return nameParts.join(' ');
+    }, this);
+    
     
     // The businessName or the fullName; it's the best choice to expose a service-professional name
     this.publicName = ko.pureComputed(function() {
