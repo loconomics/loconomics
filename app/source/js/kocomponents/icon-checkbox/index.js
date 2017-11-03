@@ -5,6 +5,18 @@ var template = require('./template.html');
 
 var ko = require('knockout');
 
+function ViewModel(params) {
+
+    this.value = params.value;
+    this.label = params.label;
+
+    this.iconClass = ko.pureComputed(function() {
+        return 'icon';
+    }, this);
+
+}
+
 ko.components.register(TAG_NAME, {
-    template: template
+    template: template,
+    viewModel: ViewModel
 });
