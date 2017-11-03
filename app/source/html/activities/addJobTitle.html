@@ -12,12 +12,13 @@
             </div>
             <app-onboarding-progress-bar></app-onboarding-progress-bar>
             <h1><icon-dec params="icon: 'ion-ios-list-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
-            <p class="help-block">Clients will find you when searching listings by job title. It's best to keep it general, e.g. “photographer” rather than “product photographer.”</p>
-            <div class="LightForm col-md-7 col-sm-reset">
+            <form id="addJobTitleForm" role="form" data-bind="submit: save" class="LightForm col-md-7 col-sm-reset" aria-describedby="addJobTitleFormInstructions">
+                <p id="addJobTitleFormInstructions" class="help-block">Clients will find you when searching listings by job title. It's best to keep it general, e.g. “photographer” rather than “product photographer.”</p>
                 <div class="isolated inset">
                     <job-title-autocomplete params="suggestionButtonText: 'Add',
                         onSelect: onSelectJobTitle,
-                        id: 'addJobTitle-autocomplete'"></job-title-autocomplete>
+                        label: 'Search and select a job title',
+                        id: 'jobTitleToAdd'"></job-title-autocomplete>
                 </div>
                 <div class="LightForm-submitBar" data-bind="if: selectedJobTitle">
                     <button type="button" class="btn btn-primary btn-block" data-bind="text: submitText,
@@ -25,7 +26,7 @@
                         css: { 'btn-danger': isSaving() },
                         click: save"></button>
                 </div>
-            </div>
+            </form>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
                 <app-inline-side-menu params="vocElement: 'scheduling', helpLink: helpLink"></app-inline-side-menu>
             </div>
