@@ -10,6 +10,7 @@ var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
 var showTextEditor = require('../modals/textEditor').show;
 var showTimePicker = require('../modals/timePicker').show;
+require('../kocomponents/icon-checkbox');
 
 var A = Activity.extend(function _modalsActivity() {
 
