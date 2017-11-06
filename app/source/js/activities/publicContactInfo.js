@@ -17,8 +17,9 @@ var A = Activity.extend(function PublicContactInfo() {
     this.accessLevel = this.app.UserType.loggedUser;
 
     // Defaults settings for navBar.
+    var backLink = user.isServiceProfessional() ? '/listingEditor' : '/userProfile';
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
-        backLink: '/listingEditor', helpLink: this.viewModel.helpLink
+        backLink: backLink, helpLink: this.viewModel.helpLink
     });
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
