@@ -8,38 +8,13 @@ var homeAddress = require('../data/homeAddress');
 
 module.exports = function ContactInfoVM() {
 
-    this.user = user;
-
-    this.headerText = ko.pureComputed(function() {
-        return onboarding.inProgress() ?
-            'How can we reach you?' :
-            'Contact information';
-    });
-
     // List of possible error messages registered
     // by name
     this.errorMessages = {
         postalCode: ko.observable('')
     };
 
-    // User Profile
-    var profileVersion = userProfile.newVersion();
-    profileVersion.isObsolete.subscribe(function(itIs) {
-        if (itIs) {
-            // new version from server while editing
-            // FUTURE: warn about a new remote version asking
-            // confirmation to load them or discard and overwrite them;
-            // the same is need on save(), and on server response
-            // with a 509:Conflict status (its body must contain the
-            // server version).
-            // Right now, just overwrite current changes with
-            // remote ones:
-            profileVersion.pull({ evenIfNewer: true });
-        }
-    });
 
-    // Actual data for the form:
-    this.profile = profileVersion.version;
 
     // TODO l10n
     this.months = ko.observableArray([

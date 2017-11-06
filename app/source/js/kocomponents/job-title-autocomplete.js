@@ -40,6 +40,8 @@ var MIN_LENGTH = 3;
  * for the action after select it.
  * @param {(string|KnockoutObservable<string>)} [params.label=Job title]
  * The label text for the input-autocomplete.
+ * @param {(boolean|KnockoutObservable<boolean>)} [params.visuallyHiddenLabel=false]
+ * Whether the label should be visually hidden (hidden but available to screen readers) or not.
  */
 function ViewModel(params) {
     this.isLoading = ko.observable(false);
@@ -114,6 +116,10 @@ function ViewModel(params) {
      * @member {KnockoutObservable<string>} label
      */
     this.label = getObservable(params.label || 'Job title');
+    /**
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.visuallyHiddenLabel = getObservable(params.visuallyHiddenLabel);
 
     /// Performing search
     /**
