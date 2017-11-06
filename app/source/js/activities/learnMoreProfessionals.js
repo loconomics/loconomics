@@ -103,7 +103,9 @@ function ViewModel(app) {
             }
             else {
                 // For logged users, assist them to add the job title:
-                url = 'addJobTitle?s=' + encodeURIComponent(jobTitle.singularName()) + '&id=' + encodeURIComponent(jobTitle.jobTitleID());
+                url = 'addJobTitle?s=' + encodeURIComponent(jobTitle.singularName()) +
+                    '&id=' + encodeURIComponent(jobTitle.jobTitleID()) +
+                    "&autoAddNew=true";
                 app.shell.go(url);
             }
         }

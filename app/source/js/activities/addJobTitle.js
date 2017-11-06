@@ -1,5 +1,11 @@
 /**
     AddJobTitle activity
+
+    As incoming params, accepts a route.query with
+    - s {string} Proposed name of a job title
+    - [id] {number} A valid jobTitleID
+    - autoAddNew {boolean} Must be true in order to allow an 's' and 'id', it
+    makes the form to auto submit with the given values.
 **/
 'use strict';
 
@@ -42,29 +48,25 @@ A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
 
-    // Allow to preset an incoming value
-    var s = options.route.query.s;
-
+    // Check if we are in onboarding and a jobTitle was already added in the sign-up
+    // then we can skip this step
+    if (onboarding.inProgress() && onboarding.selectedJobTitleID()) {
+        onboarding.goNext();
+        return;
+    }
     // Reset
     this.updateNavBarState();
 
-    // Allow auto add the search text as new proposed job-title
-    if (options.route.query.autoAddNew === 'true') {
+    // Allow to preset an incoming value
+    var s = options.route.query.s;
+    if (s && options.route.query.autoAddNew === 'true') {
+        // Add to the form
         this.viewModel.selectedJobTitle({
-            value: 0,
+            value: options.route.query.id |0,
             label: s
         });
-    }
-    else if (options.route.query.id) {
-        // An ID is passed in and added with the text (if any)
-        // as a valid presset job-title ID/name (is not validated at frontend
-        // to don't delay, server will double check anyway).
-        if (s) {
-            this.viewModel.selectedJobTitle({
-                value: +options.route.query.id,
-                label: s
-            });
-        }
+        // and submit it
+        this.viewModel.save();
     }
 };
 
