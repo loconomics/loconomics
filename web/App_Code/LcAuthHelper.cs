@@ -480,7 +480,8 @@ public static class LcAuthHelper
                     }
                 }
 
-                var registered = LcAuth.RegisterUser(email, firstName, lastName, password, isServiceProfessional, utm, -1, null, phone, device);
+                var registered = LcAuth.RegisterUser(email, firstName, lastName, password,
+                    isServiceProfessional, utm, -1, null, phone, device, countryID);
                 if (!String.IsNullOrEmpty(postalCode))
                 {
                     // Set address
@@ -585,8 +586,13 @@ public static class LcAuthHelper
             facebookUser.last_name,
             LcAuth.GeneratePassword(),
             isProvider,
-            Request.Url.Query
+            Request.Url.Query,
             //,facebookUser.gender
+            -1,
+            null,
+            null,
+            null,
+            0
         );
         LcAuth.ConnectWithFacebookAccount(result.userID, facebookUser.id);
         LcAuth.SendRegisterUserEmail(result);

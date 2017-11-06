@@ -60,11 +60,12 @@ public static class LcAuth
         string lastname,
         string password,
         bool isProvider,
-        string marketingSource = null,
-        int genderID = -1,
-        string aboutMe = null,
-        string phone = null,
-        string signupDevice = null
+        string marketingSource,
+        int genderID,
+        string aboutMe,
+        string phone,
+        string signupDevice,
+        int countryID
     )
     {
         // Check password validity.
@@ -112,7 +113,8 @@ public static class LcAuth
                 // TODO:CONFIRM: SQL executed inside a procedure is inside the transaction? Some errors on testing showed that maybe not, and that's a problem.
                 db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6,@7",
                     userid, firstname, lastname,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    LcData.GetCurrentLanguageID(),
+                    countryID > 0 ? countryID : LcData.GetCurrentCountryID(),
                     genderID, aboutMe, phone
                 );
 
