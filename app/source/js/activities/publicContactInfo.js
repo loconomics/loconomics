@@ -1,12 +1,13 @@
 /**
     publicContactInfo activity
 **/
-
 'use strict';
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var ContactInfoVM = require('../viewmodels/ContactInfoVM');
+var userProfile = require('../data/userProfile');
+var user = userProfile.data;
+var onboarding = require('../data/onboarding');
 
 var A = Activity.extend(function PublicContactInfo() {
 
@@ -14,7 +15,7 @@ var A = Activity.extend(function PublicContactInfo() {
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-    
+
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
         backLink: '/listingEditor', helpLink: this.viewModel.helpLink
@@ -31,6 +32,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
+    onboarding.updateNavBar(this.navBar);
+
     // Discard any previous unsaved edit
     this.viewModel.discard();
 
@@ -41,41 +44,67 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
-    
-    this.contactInfo = new ContactInfoVM(app);
+    this.isServiceProfessional = user.isServiceProfessional;
+    this.isInOnboarding = onboarding.inProgress;
 
-    this.user = this.contactInfo.user;
+    // User Profile
+    var profileVersion = userProfile.newVersion();
+    profileVersion.isObsolete.subscribe(function(itIs) {
+        if (itIs) {
+            // new version from server while editing
+            // FUTURE: warn about a new remote version asking
+            // confirmation to load them or discard and overwrite them;
+            // the same is need on save(), and on server response
+            // with a 509:Conflict status (its body must contain the
+            // server version).
+            // Right now, just overwrite current changes with
+            // remote ones:
+            profileVersion.pull({ evenIfNewer: true });
+        }
+    });
+
+    // Actual data for the form:
+    this.profile = profileVersion.version;
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ?
-                'Loading...' :
+            onboarding.inProgress() ?
+                'Save and continue' :
                 this.isSaving() ?
                     'Saving...' :
                     'Save'
         );
     }, this);
 
-    this.save = function() {
-        this.contactInfo.save()
+    // States
+    this.isLoading = userProfile.isLoading;
+    this.isSaving = userProfile.isSaving;
+    this.isSyncing = userProfile.isSyncing;
+    this.isLocked = userProfile.isLocked;
+
+    // Actions
+
+    this.discard = function discard() {
+        profileVersion.pull({ evenIfNewer: true });
+    }.bind(this);
+
+    this.sync = function sync() {
+        userProfile.sync();
+    };
+
+    this.save = function save() {
+        return profileVersion.pushSave()
         .then(function() {
-            app.successSave();
+            if (onboarding.inProgress()) {
+                onboarding.goNext();
+            }
+            else {
+                app.successSave();
+            }
         })
         .catch(function() {
             // catch error, managed on event
         });
     }.bind(this);
-
-    this.discard = function() {
-        this.contactInfo.discard();
-    };
-    this.sync = function() {
-        this.contactInfo.sync();
-    };
-   
-    this.isLoading = this.contactInfo.isLoading;
-    this.isSaving = this.contactInfo.isSaving;
-    this.isSyncing = this.contactInfo.isSyncing;
-    this.isLocked = this.contactInfo.isLocked;
 }
 

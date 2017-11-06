@@ -1,6 +1,7 @@
 <!-- Activity publicContactInfo -->
 <div data-activity="publicContactInfo">
-    <app-inline-user-menu></app-inline-user-menu>
+    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
+    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
         <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
@@ -13,13 +14,20 @@
                     </li>
                 </ul>
             </div>
+            <app-onboarding-progress-bar></app-onboarding-progress-bar>
+            <h1><icon-dec params="icon: 'ion-ios-telephone-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
             <div class="col-md-7 col-sm-reset">
                 <form id="publicContactInfoForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="publicContactInfoInstructions">
-                    <app-onboarding-progress-bar></app-onboarding-progress-bar>
-                    <h1><icon-dec params="icon: 'ion-ios-telephone-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
                     <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                    <p id="publicContactInfoInstructions" class="help-block"><span data-bind="visible: user.isServiceProfessional()">Only your first name and last name's initial will be shown on your listing. After an appointment is scheduled, the client will see your full name and phone number so they can reach you regarding the appointment.</span><span data-bind="visible: !user.isServiceProfessional()">Only your first name and last name's initial will be shown on your profile and reviews you make. After an appointment is scheduled, the service professional will see your full name and phone number so they can reach you regarding your appointment.</span></p>    
-                    <!-- ko with: contactInfo -->
+                    <p id="publicContactInfoInstructions" class="help-block">
+                        <span data-bind="visible: isServiceProfessional()">
+                            Only your first name and last name's initial will be shown on your listing. After an appointment is scheduled,
+                            the client will see your full name and phone number so they can reach you regarding the appointment.
+                        </span>
+                        <span data-bind="visible: !isServiceProfessional()">
+                            Only your first name and last name's initial will be shown on your profile and reviews you make. After an appointment is scheduled, the service professional will see your full name and phone number so they can reach you regarding your appointment.
+                        </span>
+                    </p>
                     <fieldset>
                         <div class="form-group">
                             <label for="firstName">First name:</label>
@@ -39,7 +47,6 @@
                             <p id="canReceiveSmsInstructions" class="help-block">We may send text notifications about appointments. You can cancel these anytime.</p>
                         </div>
                     </fieldset>
-                    <!-- /ko -->
                     <div class="LightForm-submitBar">
                         <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                     </div>
@@ -50,5 +57,4 @@
             </div>
         </div>
     </div>
-</div>  
-    
+</div>
