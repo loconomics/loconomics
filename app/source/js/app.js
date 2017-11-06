@@ -504,6 +504,7 @@ var appInit = function appInit() {
         try {
             // Set-up onboarding and current step, if any
             onboarding.init(app);
+            onboarding.isServiceProfessional(user.isServiceProfessional());
             onboarding.setStep(user.onboardingStep() || null);
         }
         catch(ex) {
