@@ -1,15 +1,13 @@
 <div class="AppNav" data-bind="attr: { hidden: navBar() && navBar().hidden() }, css: navBar() && navBar().additionalNavClasses()">
-    <nav id="mainMobileNav" role="navigation" class="SmartNavBar visible-xs visible-sm" aria-label="Main Navigation">
+    <nav id="mobileMainNav" role="navigation" class="SmartNavBar visible-xs visible-sm" aria-label="Main Navigation">
         <smart-nav-bar-action params="action: 'leftAction', navBar: navBar" class="SmartNavBar-edge left"></smart-nav-bar-action>
-        <h1 data-bind="text: navBar() && navBar().title()"></h1>
         <a data-bind="visible: navBar() && navBar().title() === null" class="navbar-brand" href="/home" aria-label="Loconomics Home Page"></a>
         <div class="SmartNavBar-notification bg-info"></div>
         <smart-nav-bar-action params="action: 'rightAction', navBar: navBar" class="SmartNavBar-edge right"></smart-nav-bar-action>
     </nav>
     <nav id="mainLargeScreenNav" role="navigation" class="hidden-xs hidden-sm" aria-label="Main Navigation">@render('parts/LargeNavBar.html')</nav>
-    <nav>
-    <ul class="App-menus">
-        <li id="menuIn" role="navigation" class="navbar-collapse collapse hidden-md hidden-lg" aria-labelledby="mainMenuHeaderMobile">
+    <ul id="mobileMainMenu" role="menu" class="App-menus" aria-label="Main menu">
+        <li id="menuIn" role="navigation" class="navbar-collapse collapse hidden-md hidden-lg">
             <a href="/publicProfilePicture" class="App-menus-header" data-bind="visible: !isAnonymous()" title="Edit public profile photo">
                 <span class="App-menus-header-photo" data-bind="visible: !isAnonymous()"><img data-bind="attr: { src: photoUrl }" alt="Public user profile photo"/></span>
                 <span class="App-menus-header-user" data-bind="text: userName, visible: !isAnonymous()"></span>
