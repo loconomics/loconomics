@@ -7,7 +7,7 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var userProfile = require('../data/userProfile');
-var user = userProfile.user;
+var user = userProfile.data;
 
 var A = Activity.extend(function UserBirthDay() {
 
