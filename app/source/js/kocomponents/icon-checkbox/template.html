@@ -1,5 +1,7 @@
-<div class="loconomics-checkbox">
-    <input type="checkbox" data-bind="checked: value">
-    <span data-bind="css: iconClass"></span>
-    <label data-bind="text: label"></label>
+<div class="IconCheckbox">
+    <input type="checkbox" data-bind="checked: value, attr: { id: id }, enable: enable">
+    <label data-bind="attr: { for: id }">
+        <i aria-hidden="true" data-bind="css: iconClass"></i>
+        <span data-bind="text: label"></span>
+    </label>
 </div>
