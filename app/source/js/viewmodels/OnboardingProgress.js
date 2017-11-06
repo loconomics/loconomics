@@ -20,24 +20,30 @@ var STEPS = {
     serviceAddresses: {
         serviceProfessionalOnly: true,
         jobTitleSpecific: true
+    },
+    listingEditor: {
+        serviceProfessionalOnly: true,
+        jobTitleSpecific: true
+    },
+    home: {
+        clientOnly: true
     }
 };
 
-var getProfessionalSteps = function() {
-    return Object.keys(STEPS)
-    .map(function(stepName) {
-        return stepName;
-    });
-};
-var getClientSteps = function() {
-    return Object.keys(STEPS)
-    .filter(function(stepName) {
-        return !STEPS[stepName].serviceProfessionalOnly;
-    })
-    .map(function(stepName) {
-        return stepName;
-    });
-};
+var PROFESSIONAL_STEPS = Object.keys(STEPS)
+.filter(function(stepName) {
+    return !STEPS[stepName].clientOnly;
+})
+.map(function(stepName) {
+    return stepName;
+});
+var CLIENT_STEPS = Object.keys(STEPS)
+.filter(function(stepName) {
+    return !STEPS[stepName].serviceProfessionalOnly;
+})
+.map(function(stepName) {
+    return stepName;
+});
 
 function OnboardingProgress(values) {
     var stepNumberFinished = -1;
@@ -52,7 +58,7 @@ function OnboardingProgress(values) {
     }, values);
 
     this.stepNames = ko.pureComputed(function() {
-        return this.isServiceProfessional() ? getProfessionalSteps() : getClientSteps();
+        return this.isServiceProfessional() ? PROFESSIONAL_STEPS : CLIENT_STEPS;
     }, this);
 
     this.totalSteps = ko.pureComputed(function() {
