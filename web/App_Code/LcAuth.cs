@@ -196,7 +196,7 @@ public static class LcAuth
         return WebSecurity.ChangePassword(email, currentPassword, newPassword);
     }
 
-    public static void BecomeProvider(int userID, Database db = null)
+    public static void BecomeProvider(int userID, Database db = null, bool perserveOnboardingStep = false)
     {
         var ownDb = db == null;
         if (ownDb)
@@ -207,13 +207,15 @@ public static class LcAuth
         // Provider profiles must have a BookCode, so generate one
         // (but not replace if one exists)
         var bookCode = LcData.UserInfo.GenerateBookCode(userID);
-        
-        db.Execute(@"UPDATE Users SET 
-            IsProvider = 1,
-            OnboardingStep = 'welcome',
+
+        var sql = @"UPDATE Users SET 
+            IsProvider = 1," + 
+            (perserveOnboardingStep ? "" : " OnboardingStep = 'welcome', ") + @"
             BookCode = @1
             WHERE UserID = @0
-        ", userID, bookCode);
+        ";
+
+        db.Execute(sql, userID, bookCode);
 
         if (ownDb)
         {
