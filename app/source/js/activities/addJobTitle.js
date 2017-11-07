@@ -51,7 +51,9 @@ A.prototype.show = function show(options) {
     // Check if we are in onboarding and a jobTitle was already added in the sign-up
     // then we can skip this step
     if (onboarding.inProgress() && onboarding.selectedJobTitleID()) {
-        onboarding.goNext();
+        setTimeout(function() {
+            onboarding.goNext();
+        }, 10);
         return;
     }
     // Reset

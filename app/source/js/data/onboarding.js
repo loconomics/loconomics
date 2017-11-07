@@ -26,10 +26,32 @@ api.currentActivity = ko.observable('');
 // TODO: Rething to refactor this; will require decoupling app.shell
 api.init = function init(app) {
     api.app = app;
-    api.currentActivity(app.shell.currentRoute.name);
+    api.currentActivity(app.shell.currentRoute && app.shell.currentRoute.name);
     app.shell.on(app.shell.events.itemReady, function() {
         api.currentActivity(app.shell.currentRoute.name);
     });
+};
+
+/**
+ * Set-up the onboarding with preset data after a signup or restoring a session.
+ * @param {Object} options
+ * @param {string} options.step The step where the user left the process or starts with.
+ * @param {number} [options.jobTitleID] The jobTitleID selected at a previous
+ * signup form or saved after the addJobTitle step.
+ * @param {boolean} [options.isServiceProfessional] It set-ups the equivalent flag
+ * and when value is 'true', it skips the 'welcome' step (that has the
+ * selector buttons for the type of profile) in case that's the current one.
+ */
+api.setup = function(options) {
+    var step = options.step;
+    if (options.isServiceProfessional === true && options.step === 'welcome') {
+        step = api.stepAfter(step).stepName();
+    }
+    api.isServiceProfessional(options.isServiceProfessional);
+    if (options.jobTitleID |0 > 0) {
+        api.selectedJobTitleID(options.jobTitleID);
+    }
+    api.setStep(step);
 };
 
 // Extended with new methods
@@ -115,23 +137,12 @@ var persistLocalJobTitleID = function(jobTitleID) {
     return local.setItem(LOCAL_JOBTITLEID_KEY, jobTitleID);
 };
 /**
- * Get local copy of the ID for resuming onboarding.
- * @private
- * @returns {Promise<number>}
+ * Get the jobTitleID stored locally after a sign-up or in course onboarding,
+ * needed to restore the onboarding process correctly.
+ * @returns {Promise<number>} The jobTitleID
  */
-var getLocalJobTitleID = function() {
+api.getLocalJobTitleID = function() {
     return local.getItem(LOCAL_JOBTITLEID_KEY);
 };
 // At any point that selected job title ID is changed, we persist it
 api.selectedJobTitleID.subscribe(persistLocalJobTitleID);
-/**
- * Request to recover the selectedJobTitleID value from local store.
- * When this ends, the value is in place, ready to resume onboarding.
- * @returns {Promise<int>} A copy of the jobTitleID
- */
-api.recoverLocalJobTitleID = function() {
-    return getLocalJobTitleID().then(function(id) {
-        api.selectedJobTitleID(id);
-        return id;
-    });
-};

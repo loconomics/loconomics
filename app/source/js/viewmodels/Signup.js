@@ -237,8 +237,11 @@ else
 
                 // Start onboarding
                 if (onboarding) {
-                    onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
-                    onboarding.setStep(signupData.onboardingStep);
+                    onboarding.setup({
+                        isServiceProfessional: signupData.profile.isServiceProfessional,
+                        jobTitleID: signupData.onboardingJobTitleID,
+                        step: signupData.onboardingStep
+                    });
                 }
 
                 // Emit event before resetting data (to prevent some

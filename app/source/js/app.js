@@ -494,48 +494,48 @@ var appInit = function appInit() {
 
     /**
      * Initializes the onboarding data module, getting locally stored user
-     * data if is a logged user, and resume the onboarding process
-     * when required
+     * data if is a logged user
      * IMPORTANT: preloadUserProfile must be called before this,
      * that will update the global 'user' with the onboardingStep we need here.
      */
     var setupOnboarding = function() {
-
-        try {
-            // Set-up onboarding and current step, if any
-            onboarding.init(app);
-            onboarding.isServiceProfessional(user.isServiceProfessional());
-            onboarding.setStep(user.onboardingStep() || null);
-        }
-        catch(ex) {
-            return Promise.reject(ex);
-        }
-
         // Workaround #374: because the onboarding selectedJobTitleID is not stored
         // on server or at local profile, we need an speciallized method. This ensures
         // that the value is set in place when the async task ends, no further action is required.
         // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
         // is recommended (see #396)
-        return onboarding.recoverLocalJobTitleID()
-        .then(function() {
+        return onboarding.getLocalJobTitleID()
+        .then(function(jobTitleID) {
             // Now we are ready with values in place
             // Resume onboarding
-            /*
-                IMPORTANT: Exception: if the page is loading coming from itself,
-                like from a target=_blank link, does not redirect to
-                avoid to break the proposal of the link (like a help or FAQ link
-                on onboarding)
-
-                We check that there is a referrer (so comes from a link) and it shares the origin
-                (be aware that referrer includes origin+pathname, we just look for same origin).
-            */
-            var r = window.document.referrer,
-                fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
-
-            if (!fromItSelf) {
-                onboarding.goIfEnabled();
-            }
+            // Set-up onboarding and current step, if any
+            onboarding.init(app);
+            onboarding.setup({
+                isServiceProfessional: user.isServiceProfessional(),
+                jobTitleID: jobTitleID,
+                step: user.onboardingStep() || null
+            });
         });
+    };
+    /**
+     * When onboarding is in progress, redirects to the saved step
+     */
+    var resumeOnboarding = function() {
+        /*
+            IMPORTANT: Exception: if the page is loading coming from itself,
+            like from a target=_blank link, does not redirect to
+            avoid to break the proposal of the link (like a help or FAQ link
+            on onboarding)
+
+            We check that there is a referrer (so comes from a link) and it shares the origin
+            (be aware that referrer includes origin+pathname, we just look for same origin).
+        */
+        var r = window.document.referrer;
+        var fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
+
+        if (!fromItSelf) {
+            onboarding.goIfEnabled();
+        }
     };
 
     /**
@@ -586,9 +586,10 @@ var appInit = function appInit() {
     var session = require('./data/session');
     session.restore()
     .then(preloadUserProfile)
+    .then(setupOnboarding)
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
-    .then(setupOnboarding)
+    .then(resumeOnboarding)
     .then(setAppAsReady)
     .catch(alertError);
 

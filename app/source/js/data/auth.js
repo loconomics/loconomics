@@ -13,8 +13,8 @@ var userProfile = require('./userProfile');
 
 /**
  * @callback LocalLoginCb
- * @param {Credentials} credentials Response data from login/signup
- * @returns {Promise<Credentials>}
+ * @param {UserAuthKey} credentials Response data from login/signup
+ * @returns {Promise<UserAuthKey>}
  */
 
 /**
@@ -56,7 +56,7 @@ var performLocalLogin = function (username) {
  * the provided credentials.
  * @param {string} username
  * @param {string} password
- * @returns {Promise<LoggedData>}
+ * @returns {Promise<UserAuthKey>}
  */
 exports.login = function (username, password) {
 
@@ -75,7 +75,7 @@ exports.login = function (username, password) {
  * Performs a login attempt with the API by using
  * a Facebook accessToken.
  * @param {string} accessToken Token given by the Facebook API
- * @returns {Promise<LoggedData>}
+ * @returns {Promise<UserAuthKey>}
  */
 exports.facebookLogin = function (accessToken) {
 
@@ -123,6 +123,7 @@ exports.logout = function logout() {
  * @param {string} [facebookAccessToken]
  * @param {string} [profileType=client] Closed enumeration allowing
  * 'service-professional' and 'client'
+ * @returns {Promise<UserAuthKey>}
  */
 exports.signup = function (data) {
 
