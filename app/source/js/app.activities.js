@@ -77,7 +77,6 @@ module.exports = {
     'ownerPerks': require('./activities/ownerPerks'),
     'cancellationPolicies': require('./activities/cancellationPolicies'),
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
-    'onboardingSuccess': require('./activities/onboardingSuccess'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'userProfile': require('./activities/userProfile'),
