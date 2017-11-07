@@ -9,6 +9,7 @@ var NavAction = require('../viewmodels/NavAction');
 var ko = require('knockout');
 var userProfile = require('./userProfile');
 var local = require('./drivers/localforage');
+var onboardingSuccessModal = require('../modals/onboardingSuccess');
 
 var NAVBAR_TITLE = 'Create your first listing';
 
@@ -86,12 +87,17 @@ api.goCurrentStep = function() {
 
 api.goNext = function goNext() {
     var url;
+    var showOnboardingSuccess = false;
 
     if(this.isAtCurrentStep()) {
         this.incrementStep();
         userProfile.saveOnboardingStep(this.stepName());
 
         url = this.isFinished() ? this.stepAfterFinish() : this.stepUrl();
+        // When onboarding finishes, we will prepare to display a 'success' message
+        if (this.isFinished()) {
+            showOnboardingSuccess = true;
+        }
     }
     else {
         url = this.stepAfter(api.currentActivity()).stepUrl();
@@ -99,6 +105,13 @@ api.goNext = function goNext() {
 
     // replaceState flag is true, preventing browser back button to move between onboarding steps
     this.app.shell.go(url, null, true);
+
+    // Display modal with notification when required
+    if (showOnboardingSuccess) {
+        onboardingSuccessModal.show({
+            isServiceProfessional: this.isServiceProfessional()
+        });
+    }
 };
 
 api.isAtCurrentStep = ko.pureComputed(function() {
