@@ -91,7 +91,7 @@ api.goNext = function goNext() {
         this.incrementStep();
         userProfile.saveOnboardingStep(this.stepName());
 
-        url = this.isFinished() ? '/onboardingSuccess' : this.stepUrl();
+        url = this.isFinished() ? this.stepAfterFinish() : this.stepUrl();
     }
     else {
         url = this.stepAfter(api.currentActivity()).stepUrl();

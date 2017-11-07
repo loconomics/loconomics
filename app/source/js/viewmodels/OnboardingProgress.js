@@ -20,15 +20,10 @@ var STEPS = {
     serviceAddresses: {
         serviceProfessionalOnly: true,
         jobTitleSpecific: true
-    },
-    listingEditor: {
-        serviceProfessionalOnly: true,
-        jobTitleSpecific: true
-    },
-    home: {
-        clientOnly: true
     }
 };
+var PROFESSIONAL_FINISH_STEP = 'listingEditor';
+var CLIENT_FINISH_STEP = 'home';
 
 var PROFESSIONAL_STEPS = Object.keys(STEPS)
 .filter(function(stepName) {
@@ -59,6 +54,14 @@ function OnboardingProgress(values) {
 
     this.stepNames = ko.pureComputed(function() {
         return this.isServiceProfessional() ? PROFESSIONAL_STEPS : CLIENT_STEPS;
+    }, this);
+    /**
+     * Gives the name of the step (activity) that should be navigated after finishing
+     * the onboarding.
+     * @member {KnockoutComputed<string>}
+     */
+    this.stepAfterFinish = ko.pureComputed(function() {
+        return this.isServiceProfessional() ? PROFESSIONAL_FINISH_STEP : CLIENT_FINISH_STEP;
     }, this);
 
     this.totalSteps = ko.pureComputed(function() {
