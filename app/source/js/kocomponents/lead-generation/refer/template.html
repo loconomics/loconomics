@@ -1,12 +1,19 @@
-<form id="referProfessionalsForm" class="LightForm" data-bind="with: data" aria-describedby="referProfessionalsFormInstructions">
+<form id="referProfessionalsForm" style="padding: 0em 1.5em" data-bind="with: data" aria-describedby="referProfessionalsFormInstructions">
     <fieldset id="referProfessionalsForm-StepOne" class="refer-step" data-bind="attr: { hidden: !isAtStepOne() }, css: { 'is-loading': isLoadingStepOne }">
         <legend>Make an introduction</legend>
-        <div class="form-group has-feedback" data-bind="visible: submitted(), css: { 'has-error': email.error }">
-            <label for="referrerEmail">Your email address</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
+        <label for="referrerEmail">Your email address</label>
+        <div class="input-group" style="margin-bottom: 0.625em;" data-bind="css: { 'has-error': email.error }">
+            <div style="height: 3em; 
+            border: 0.0625rem solid lightgray;" data-bind="template: { name: 'signup-field', data: { id: 'referrerEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid form-control inset': isEmailValid}, disable: emailIsLocked">
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-secondary ion-arrow-right-c" style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save"  aria-label="Continue to the next step"></button>
             </div>
         </div>
-        <button type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save" aria-label="Continue to the next step"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
+        <div class="form-group">
+            <input id="isServiceProfessional" type="checkbox" data-bind="checked: user.isServiceProfessional, disable: isLocked">
+            <label for="isServiceProfessional" style="margin-left: 0.1875em;">I also offer local services</label>
+        </div>
         <p id="referProfessionalsFormInstructions" class="help-block" data-bind="visible: !submitted()">Know a service professional in your community who could benefit from the power of Loconomics?</p>
     </fieldset>
     <fieldset id="referProfessionalsForm-StepTwo" class="refer-step" data-bind="attr: { hidden: !isAtStepTwo() }, css: { 'is-loading': isLoadingStepTwo }">
@@ -19,7 +26,7 @@
             <label for="referrerLastName">Your last name</label>
             <div data-bind="template: { name: 'signup-field', data: { id: 'referrerLastName', name: 'lastName', field: lastName,  placeholder: '', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
         </div>
-        <button type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save" aria-label="Continue to the next step"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
+        <button type="submit" class="btn btn-secondary" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save">Continue</button>
     </fieldset>
     <fieldset id="referProfessionalsForm-StepThree" class="refer-step" data-bind="attr: { hidden: !isAtStepThree() }, css: { 'is-loading': isLoadingStepThree }">
         <legend data-bind="visible: !submitted()">Who's the service professional?</legend>
@@ -39,6 +46,6 @@
             <div data-bind="template: { name: 'signup-field', data: { id: 'referredPhoneNumber', name: 'phone', field: phone, placeholder: '', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
         </div>
         <p id="referredProfessionalFormInstructions" class="help-block">Fear not, we will not spam.</p>
+        <button type="submit" class="btn btn-secondary" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save">Make introduction</button>
     </fieldset>
-    <button type="submit" class="btn btn-secondary btn-md btn-inline" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save" aria-label="Make introduction"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
 </form>
