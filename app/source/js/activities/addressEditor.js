@@ -76,7 +76,13 @@ var A = Activity.extend(function AddressEditorActivity() {
             this.app.shell.goBack(this.requestData);
         }
         else if (onboarding.inProgress()) {
+            // Per #712, we move to next onboarding step directly from editor
+            // but implementation details at onboarding complicate this a bit,
+            // so just go back and then move next
             this.app.shell.goBack();
+            setTimeout(function() {
+                onboarding.goNext();
+            }, 100);
         }
         else {
             this.app.successSave();
