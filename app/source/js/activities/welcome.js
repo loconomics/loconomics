@@ -59,6 +59,7 @@ function ViewModel() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
     this.startProffesionalOnboarding = function startOnboarding() {
+        userProfile.becomeServiceProfessional();
         onboarding.isServiceProfessional(true);
         onboarding.goNext();
     };
