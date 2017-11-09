@@ -117,12 +117,14 @@ exports.logout = function logout() {
  * Facebook credentials
  * @param {string} [data.firstName]
  * @param {string} [data.lastName]
- * @param {string} [data.phone]
- * @param {string} [data.device]
- * @param {string} [facebookUserID]
- * @param {string} [facebookAccessToken]
- * @param {string} [profileType=client] Closed enumeration allowing
+ * @param {number} [data.countryID]
+ * @param {string} [data.facebookUserID]
+ * @param {string} [data.facebookAccessToken]
+ * @param {string} [data.profileType=client] Closed enumeration allowing
  * 'service-professional' and 'client'
+ * @param {string} [data.confirmationCode]
+ * @param {number} [data.jobTitleID]
+ * @param {string} [data.jobTitleName]
  * @returns {Promise<UserAuthKey>}
  */
 exports.signup = function (data) {

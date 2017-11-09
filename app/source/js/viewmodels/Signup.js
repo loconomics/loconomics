@@ -4,12 +4,12 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    EventEmitter = require('events').EventEmitter,
-    ValidatedPasswordViewModel = require('./ValidatedPassword'),
-    Field = require('./Field'),
-    fb = require('../utils/facebookUtils'),
-    countriesOptions = require('./CountriesOptions');
+var ko = require('knockout');
+var EventEmitter = require('events').EventEmitter;
+var ValidatedPasswordViewModel = require('./ValidatedPassword');
+var Field = require('./Field');
+var fb = require('../utils/facebookUtils');
+var countriesOptions = require('./CountriesOptions');
 var auth = require('../data/auth');
 var onboarding = require('../data/onboarding');
 var showError = require('../modals/error').show;
@@ -63,16 +63,16 @@ function SignupVM() {
 
     fb.load(); // load FB asynchronously, if it hasn't already been loaded
 
-    this.confirmationCode = ko.observable(null);
+    // First and last names available currently only to catch
+    // the data from Facebook Connect; they are optional in the API
+    // and not used in the front-end now.
     this.firstName = new Field();
     this.lastName = new Field();
-    this.phone = new Field();
-    this.postalCode = new Field();
+
+    this.confirmationCode = ko.observable(null);
     this.countriesOptions = countriesOptions();
     this.country = new Field();
     this.country(countriesOptions.unitedStates);
-    this.referralCode = new Field();
-    this.device = new Field();
 
     this.facebookUserID = ko.observable();
     this.facebookAccessToken = ko.observable();
@@ -93,57 +93,9 @@ function SignupVM() {
     this.isCountryVisible = ko.observable(true);
     this.isEmailSignupDisplayed = ko.observable(false);
 
-    this.isFirstNameValid = ko.pureComputed(function() {
-        // \p{L} the Unicode Characterset not supported by JS
-        var firstNameRegex = /^(\S{2,}\s*)+$/;
-        return firstNameRegex.test(this.firstName());
-    }, this);
-
-    this.isLastNameValid = ko.pureComputed(function() {
-        var lastNameRegex = /^(\S{2,}\s*)+$/;
-        return lastNameRegex.test(this.lastName());
-    }, this);
-
-    this.isPostalCodeValid = ko.pureComputed(function() {
-        var postalCodeRegex = /^\d{5}([\-]?\d{4})?$/;
-        return postalCodeRegex.test(this.postalCode());
-    }, this);
-
-/*
-// Phone validation: valid North America patterns, 10 to 14 digits
-var testData = [
-    '(123) 456-7890',
-    '123-456-7890',
-    '123.456.7890',
-    '1234567890',
-    '(123) 456-78901',
-    '123-456-789012',
-    '123.456.7890123',
-    '12345678901234'
-];
-var rValidChars = /[\d\(\)\-\.\ ]+/;
-var rValidPatterns = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
-var r = rValidPatterns;
-var testResults = testData.map(n => r.test(n));
-if (!testResults.reduce((ok, r) => ok ? r : false))
-    console.error('Some test failed', testResults);
-else
-    console.info('Success');
-*/
-
-    this.isPhoneValid = ko.pureComputed(function() {
-        var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
-        return phoneRegex.test(this.phone());
-    }, this);
-
     this.isEmailValid = ko.pureComputed(function() {
         var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         return emailRegex.test(this.email());
-    }, this);
-
-    this.isReferralCodeValid = ko.pureComputed(function() {
-        var referralCodeRegex = /^.{3,}$/;
-        return referralCodeRegex.test(this.referralCode());
     }, this);
 
     this.signupError = ko.observable('');
@@ -163,11 +115,7 @@ else
         this.confirmationCode(null);
         this.firstName('');
         this.lastName('');
-        this.phone('');
-        this.postalCode('');
         this.country(countriesOptions.unitedStates);
-        this.referralCode('');
-        this.device('');
         this.facebookUserID('');
         this.facebookAccessToken('');
         this.email('');
@@ -215,11 +163,7 @@ else
             password: this.validatedPassword.password(),
             firstName: this.firstName(),
             lastName: this.lastName(),
-            phone: this.phone(),
-            postalCode: this.postalCode(),
             countryID: this.country().id,
-            referralCode: this.referralCode(),
-            device: this.device(),
             facebookUserID: this.facebookUserID(),
             facebookAccessToken: this.facebookAccessToken(),
             profileType: this.profile(),
@@ -309,10 +253,6 @@ else
 
     this.forServiceProfessional = ko.pureComputed(function() {
         return this.profile() === profileType.serviceProfessional;
-    }, this);
-
-    this.forClient = ko.pureComputed(function() {
-        return !this.forServiceProfessional();
     }, this);
 
     this.facebook = function() {
