@@ -8,13 +8,13 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var UserProfileVM = require('../viewmodels/UserProfileVM');
 
-var A = Activity.extend(function UserBirthday() {
+var A = Activity.extend(function UserBirthDay() {
 
     Activity.apply(this, arguments);
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-    
+
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
         backLink: '/listingEditor', helpLink: this.viewModel.helpLink
@@ -41,7 +41,7 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
-    
+
     this.userProfile = new UserProfileVM(app);
 
     this.user = this.userProfile.user;
@@ -72,7 +72,7 @@ function ViewModel(app) {
     this.sync = function() {
         this.userProfile.sync();
     };
-   
+
     this.isLoading = this.userProfile.isLoading;
     this.isSaving = this.userProfile.isSaving;
     this.isSyncing = this.userProfile.isSyncing;

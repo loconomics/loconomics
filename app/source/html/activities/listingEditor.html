@@ -1,62 +1,72 @@
 <!-- Activity listing -->
 <div data-activity="listingEditor" class="Listing" data-bind="css: { 'is-loading': isLoading }">
     <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
-    <div class="col-xs-12 col-sm-12 col-sm-reset Listing-editorHeader">
-        <div class="Listing-title">
-            <h1 data-bind="text: title"></h1>
-        </div>
-        <div class="Listing-switch">
-            <div class="switchLine" data-bind="visible: isToggleReady">
-                <div class="switchLine-label">
-                    <strong data-bind="text: statusLabel"></strong>
-                </div>
-                <div class="switchLine-switch">
-                    <label aria-hidden="true" for="listingStatus-checkbox">
-                        <strong data-bind="visible: isActiveStatus">ON</strong>
-                        <strong data-bind="visible: !isActiveStatus()">OFF</strong>
-                    </label>
-                    <switch-checkbox params="id: 'listingStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
+    <div class="col-xs-12 col-sm-reset Listing-editorHeader">
+        <a class="col-xs-2 hidden-xs hidden-sm" href="/marketplaceProfile">
+            <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
+            <span> Your listings</span>
+        </a>
+        <div class="Listing-editorInfo col-xs-12 col-md-10 col-lg-8">
+            <div class="Listing-title">
+                <h1 data-bind="text: title"></h1>
+            </div>
+            <div class="Listing-switch">
+                <div class="switchLine" data-bind="visible: isToggleReady">
+                    <div class="switchLine-label">
+                        <strong data-bind="text: statusLabel"></strong>
+                    </div>
+                    <div class="switchLine-switch">
+                        <label aria-hidden="true" for="listingStatus-checkbox">
+                            <strong data-bind="visible: isActiveStatus">ON</strong>
+                            <strong data-bind="visible: !isActiveStatus()">OFF</strong>
+                        </label>
+                        <switch-checkbox params="id: 'listingStatus-checkbox', checked: isActiveStatus"></switch-checkbox>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- ko ifnot: isToggleReady -->
     <div class="col-xs-12 col-sm-12 Listing-alerts">
-        <h2 data-bind="text: statusLabel"></h2>
-        <p>Please finish these steps to activate your listing:</p>
-        <ul class="TilesList TilesList--openEnd" data-bind="foreach: { data: requiredAlertLinks, as: 'alertLink' }">
-            <li class="col-xs-12 col-md-6">
-                <a class="AlertItem" data-bind="attr: { href: alertLink.href() }">
-                    <div class="Item-content">
-                        <p data-bind="text: ($index() + 1) + '. ' + alertLink.label()"></p>
-                    </div>
-                    <icon-dec class="Item-action" params="icon: 'ion-plus'"></icon-dec>
-                </a>
-            </li>
-        </ul>
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+            <h2 data-bind="text: statusLabel"></h2>
+            <p>Please finish these steps to activate your listing:</p>
+            <ul class="TilesList TilesList--openEnd" data-bind="foreach: { data: requiredAlertLinks, as: 'alertLink' }">
+                <li class="col-xs-12 col-md-6">
+                    <a class="AlertItem" data-bind="attr: { href: alertLink.href() }">
+                        <div class="Item-content">
+                            <p data-bind="text: ($index() + 1) + '. ' + alertLink.label()"></p>
+                        </div>
+                        <icon-dec class="Item-action" params="icon: 'ion-plus'"></icon-dec>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <!-- /ko -->
     <div data-bind="with: user">
         <section id="listing-editor-service-professional-info" class="col-xs-12 col-sm-12 Listing-heading" title="Information about service professional">
-            <div class="Listing-professionalPic">
-                <div class="Avatar Avatar--primary Avatar--lg">
-                    <img data-bind="attr: {src: profile().photoUrl()}" alt="Public profile photo of you" >
+            <div class="Listing-professionalInfo col-xs-12 col-sm-6 col-sm-offset-3">
+                <div class="Listing-professionalPic">
+                    <div class="Avatar Avatar--primary Avatar--lg">
+                        <img data-bind="attr: {src: profile().photoUrl()}" alt="Public profile photo of you" >
+                    </div>
+                    <br>
+                    <a data-bind="attr: {href: '#!publicProfilePicture' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your public profile photo">Edit photo</a>
                 </div>
-                <br>
-                <a data-bind="attr: {href: '#!publicProfilePicture' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your public profile photo">Edit photo</a>
-            </div>
-            <div class="Listing-bookingInfo">
-                <h2><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h2>
-                <p><span data-bind="visible: profile().businessName(), text: profile().businessName()"></span><span class="text-muted" data-bind="visible: !profile().businessName()"><em>Your business name</em></span></p>
-                <p><span data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl()"></span><span class="text-muted" data-bind="visible: !profile().serviceProfessionalWebsiteUrl()"><em>Your business website</em></span></p>
-                <a data-bind="attr: {href: '#!serviceProfessionalBusinessInfo' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your your business info">Edit business info</a>
-                <div data-bind="with: selectedJobTitle">
-                    <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
-                        <p>
-                            Experience:
-                            <span data-bind="text: name"></span>
-                            <a class="btn btn-icon-link" data-bind="attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your experience level' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
-                        </p>
+                <div class="Listing-bookingInfo">
+                    <h2><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h2>
+                    <p><span data-bind="visible: profile().businessName(), text: profile().businessName()"></span><span class="text-muted" data-bind="visible: !profile().businessName()"><em>Your business name</em></span></p>
+                    <p><span data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl()"></span><span class="text-muted" data-bind="visible: !profile().serviceProfessionalWebsiteUrl()"><em>Your business website</em></span></p>
+                    <a data-bind="attr: {href: '#!serviceProfessionalBusinessInfo' + $root.returnLinkGeneralActivity() }" class="btn btn-default" aria-label="Edit your your business info">Edit business info</a>
+                    <div data-bind="with: selectedJobTitle">
+                        <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
+                            <p>
+                                Experience:
+                                <span data-bind="text: name"></span>
+                                <a class="btn btn-icon-link" data-bind="attr: {href: '#!servicesOverview/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your experience level' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -98,11 +108,14 @@
                 </div>
                 <ul data-bind="template: { name: 'offering-card-edit-template', foreach: publicServices() }"></ul>
             </section>
-            <section id="listing-editor-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
+            <section id="listing-editor-photos" class="row" data-bind="with: selectedJobTitle" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
                     <a data-bind="visible: $root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit the photos of your '+ jobTitleSingularName() + ' work' }" class="btn btn-default pull-right">Edit</a>
                     <a data-bind="visible: !$root.workPhotos().length, attr: {href: '#!workPhotos/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add photos your '+ jobTitleSingularName() + ' work' }" class="btn btn-default pull-right">Add</a>
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <em data-bind="visible: !$root.workPhotos().length" class="text-muted">Upload here some photos you think clients will want to see pertaining to your <span data-bind="text: jobTitleSingularName()"></span> work.</em>
                 </div>
                 <div class="row" data-bind="foreach: $root.workPhotos">
                     <figure class="col-xs-12 col-sm-6">

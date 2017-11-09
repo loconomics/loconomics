@@ -25,24 +25,26 @@
             </div>
         </nav>
         <section id="listing-service-professional-info" class="col-xs-12 col-sm-12 Listing-heading" title="Information about service professional">
-            <div class="Listing-professionalPic">
-                <div class="Avatar Avatar--primary Avatar--lg">
-                    <img data-bind="attr: {src: profile().photoUrl(), alt: 'Photo of ' + profile().firstNameLastInitial() }">
-                </div>
-                <br>
-            </div>
-            <div class="Listing-bookingInfo">
-                <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h1>
-                <p data-bind="visible: profile().businessName(), text: profile().businessName()"></p>
-                <a data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl(), attr: { href: profile().serviceProfessionalWebsiteUrl() }" target="_blank"></a>
-                <div data-bind="with: selectedJobTitle">
-                    <app-stars-rating data-bind="visible: rating() && rating().ratingAverage" params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'"></app-stars-rating>
-                    <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
-                        <p>Experience: <span data-bind="text: name"></span></p>
+            <div class="Listing-professionalInfo col-xs-12 col-sm-6 col-sm-offset-3">
+                <div class="Listing-professionalPic">
+                    <div class="Avatar Avatar--primary Avatar--lg">
+                        <img data-bind="attr: {src: profile().photoUrl(), alt: 'Photo of ' + profile().firstNameLastInitial() }">
                     </div>
+                    <br>
                 </div>
-                <button class="btn btn-secondary" data-bind="attr: { href: $root.getBookLink, 'aria-label': 'Book ' + profile().firstNameLastInitial() + '&#8217;s' + ' services' }">Schedule</button>
-                <p>Response time <span data-bind="text: stats() && stats().responseTimeText"></span></p>
+                <div class="Listing-bookingInfo">
+                    <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h1>
+                    <p data-bind="visible: profile().businessName(), text: profile().businessName()"></p>
+                    <a data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl(), attr: { href: profile().serviceProfessionalWebsiteUrl() }" target="_blank"></a>
+                    <div data-bind="with: selectedJobTitle">
+                        <app-stars-rating data-bind="visible: rating() && rating().ratingAverage" params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'"></app-stars-rating>
+                        <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
+                            <p>Experience: <span data-bind="text: name"></span></p>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" data-bind="attr: { href: $root.getBookLink, 'aria-label': 'Book ' + profile().firstNameLastInitial() + '&#8217;s' + ' services' }">Schedule</button>
+                    <p>Response time <span data-bind="text: stats() && stats().responseTimeText"></span></p>
+                </div>
             </div>
         </section>
         <div class="container">
