@@ -1,110 +1,122 @@
 <!-- Search Job Title activity -->
-
-<div class="SearchResults" data-activity="searchJobTitle" id="job-titles-results">
-    <div data-bind="with: jobTitleSearchResult">
-        <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
-            <h1 data-bind="text: $root.title"></h1>
-            <div class="SearchResultsBackground-text">
-                <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
-                <p><span data-bind="text: searchDescription"></span></p>
+<div data-activity="searchJobTitle" id="job-titles-results">
+    <section class="SearchResults">
+        <div data-bind="with: jobTitleSearchResult">
+            <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
+                <h1 data-bind="text: $root.title"></h1>
+                <div class="SearchResultsBackground-text">
+                    <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
+                    <p><span data-bind="text: searchDescription"></span></p>
+                </div>
             </div>
         </div>
-      </div>
         <ul data-bind="foreach: serviceProfessionalSearchResult">
-          <li>
-            <a data-bind="attr: { href: '/listing/' + userID() }">
-              <div class="Avatar Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
-              </div>
-              <div class="ServiceProfessionalResult-summary">
-                  <div>
-                     <h2>
-                        <span data-bind="text: firstName"></span>
-                        <span data-bind="text: lastInitial"></span>
-                     </h2>
-                  </div>
-                  <div>
-                    <p>
-                        <span data-bind="text: businessName"></span>
-                    </p>
-                  </div>
-                  <div class="ServiceProfessionalInfo-meta">
-                    <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings">
-                    </app-stars-rating>
-                    <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)
-                    </span>
-    <!--
-                    <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
-                    <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
-    -->
-                  </div>
-                  <div>
-                    <p>
-                        <span data-bind="text: distance"></span> miles
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                        <span data-bind="visible: !businessName()">&nbsp;</span>
-                    </p>
-                  </div>
+            <li>
+                <a data-bind="attr: { href: '/listing/' + userID() }">
+                    <div class="Avatar Avatar--sm Avatar--upperLeft"><img data-bind="attr: {src: photoUrl}">
+                    </div>
+                    <div class="ServiceProfessionalResult-summary">
+                        <div>
+                            <h2>
+                            <span data-bind="text: firstName"></span>
+                            <span data-bind="text: lastInitial"></span>
+                            </h2>
+                        </div>
+                        <div>
+                        <p>
+                            <span data-bind="text: businessName"></span>
+                        </p>
+                        </div>
+                        <div class="ServiceProfessionalInfo-meta">
+                        <app-stars-rating params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings">
+                        </app-stars-rating>
+                        <span class="ServiceProfessionalResult-verificationsRating"><i class="fa ion ion-ribbon-b" aria-hidden="true" data-bind="attr: { 'aria-description': (verificationsSummary() && verificationsSummary().total || 0) + 'verifications' }"></i> (<span data-bind="text: verificationsSummary() && verificationsSummary().total"></span>)
+                        </span>
+        <!--
+                        <span class="BackgroundCheckRating"><i class="fa ion" aria-hidden="true" data-bind="attr: { 'aria-description': 'Background Check: ' + backgroundCheckLabel }, css: { 'ion-ios-checkmark': backgroundCheckPassed, 'ion-android-alert': backgroundCheckPassed() === false }"></i></span>
+                        <span class="ServiceProfessionalInfo-favorite"><i class="fa ion" aria-hidden="true" data-bind="css: { 'ion-ios-heart': isClientFavorite, 'ion-ios-heart-outline': !isClientFavorite() }, attr: { 'aria-description': isClientFavorite() ? 'Favorite' : '' }"></i></span>
+        -->
+                        </div>
+                        <div>
+                        <p>
+                            <span data-bind="text: distance"></span> miles
+                        </p>
+                        </div>
+                        <div>
+                        <p>
+                            <span data-bind="visible: !businessName()">&nbsp;</span>
+                        </p>
+                        </div>
+                    </div>
+                </a>
+                <div class="ServiceProfessionalResult-description">
+                        <p><strong>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></strong></p>
                 </div>
-              </a>
-            <div class="ServiceProfessionalResult-description">
-                  <p><strong>Offers <span data-bind="text: jobStats().servicesCount"></span> service<span data-bind="visible: jobStats().servicesCount() > 1">s</span> <span data-bind="visible: jobStats().servicesCount() > 1">from</span><span data-bind="visible: jobStats().servicesCount() === 1">for</span> <span class="FromPrice" data-bind="text: jobStats().minServiceValue"></span></strong></p>
-            </div>
-            <div class="ServiceProfessionalResult-actions">
-                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }, visible: !instantBooking()" class="btn btn-primary">Request appointment</a>
-                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }, visible: instantBooking()" class="btn btn-primary">Schedule instantly</a>
-                <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }">See listing and reviews</a>
-            </div>
-          </li>
-        </ul>
-        <ul data-bind="with: jobTitleSearchResult">
-            <li>
-                <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
-                    <fieldset>
-                        <legend>Stay informed</legend>
-                        <label for="signupNewsletterEmail">Email address</label>
-                        <div class="input-group" style="margin-bottom: 0.625em;" data-bind="css: { 'has-error': field.error }">
-                            <input class="form-control inset"  style="height: 3em; 
-                            border: 0.0625rem solid lightgray;" data-bind="textInput: field,
-                                attr: { placeholder: $data.placeholder, type: type, name: name, id: $data.id},
-                                popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' },
-                                disable: $parent.isLocked, event: $data.inputEvent">
-                            <div class="input-group-btn">
-                                <button type="submit" class="btn btn-secondary ion-arrow-right-c"  style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input id="isServiceProfessional" type="checkbox" data-bind="">
-                            <label for="isServiceProfessional" style="margin-left: 0.1875em;">I offer local services</label>
-                        </div>
-                        <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Spam-free information – you can unsubscribe at any time.</p>
-                    </fieldset>
-                </form>
-            </li>
-            <li>
-                <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
-                    <fieldset>
-                        <legend>Make an introduction</legend>
-                        <label for="signupNewsletterEmail">Your email address</label>
-                        <div class="input-group" style="margin-bottom: 0.625em;" data-bind="css: { 'has-error': field.error }">
-                            <input class="form-control inset" style="height: 3em; 
-                            border: 0.0625rem solid lightgray;" data-bind="textInput: field,
-                                attr: { placeholder: $data.placeholder, type: type, name: name, id: $data.id},
-                                popover: { content: field.error(), trigger: 'focus', container: 'body', placement: 'top' },
-                                disable: $parent.isLocked, event: $data.inputEvent">
-                            <div class="input-group-btn">
-                                <button type="submit" class="btn btn-secondary ion-arrow-right-c" style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input id="isServiceProfessional" type="checkbox" data-bind="">
-                            <label for="isServiceProfessional" style="margin-left: 0.1875em;">I also offer local services</label>
-                        </div>
-                        <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Know a service professional in your community who could benefit from the power of Loconomics?</p>
-                    </fieldset>
-                </form>
+                <div class="ServiceProfessionalResult-actions">
+                    <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }, visible: !instantBooking()" class="btn btn-primary">Request appointment</a>
+                    <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }, visible: instantBooking()" class="btn btn-primary">Schedule instantly</a>
+                    <a data-bind="attr: { href: '/listing/' + userID() + '/' + jobTitleID() }">See listing and reviews</a>
+                </div>
             </li>
         </ul>
+    </section>
+    <section class="LeadGeneration">
+        <h2>Loconomics helps your community thrive</h2>
+        <div class="col-sm-4">
+            <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
+            <h3>No middle-men</h3>
+            <p>We connect you with professionals in your community without commissions. 100% of your dollars stay local.</p>
+        </div>
+        <div class="col-sm-4">
+            <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
+            <h3>Supports small business</h3>
+            <p>Professionals on Loconomics are their own boss and masters in their field. Help support their ambition.</p>
+        </div>
+        <div class="col-sm-4">
+            <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
+            <h3>Environmentally friendly</h3>
+            <p>Spend your hard-earned cash on services that enrich the lives of you and your community. Stop buying stuff.</p>
+        </div>
+        <h2>Help Loconomics grow</h2>
+        <div class="col-xs-12 col-lg-5 col-lg-offset-1">
+            <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
+                <fieldset>
+                    <legend>Stay informed</legend>
+                    <label for="signupNewsletterEmail">Email address</label>
+                    <div class="input-group" style="margin-bottom: 0.625em;" data-bind="">
+                        <input class="form-control inset"  style="height: 3em; 
+                        border: 0.0625rem solid lightgray;" data-bind="">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-secondary ion-arrow-right-c"  style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input id="isServiceProfessional" type="checkbox" data-bind="">
+                        <label for="isServiceProfessional" style="margin-left: 0.1875em;">I offer local services</label>
+                    </div>
+                    <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Spam-free information – you can unsubscribe at any time.</p>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-xs-12 col-lg-5 col-lg-offset-1">
+            <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
+                <fieldset>
+                    <legend>Make an introduction</legend>
+                    <label for="signupNewsletterEmail">Your email address</label>
+                    <div class="input-group" style="margin-bottom: 0.625em;" data-bind="">
+                        <input class="form-control inset" style="height: 3em; 
+                        border: 0.0625rem solid lightgray;" data-bind="">
+                        <div class="input-group-btn">
+                            <button type="submit" class="btn btn-secondary ion-arrow-right-c" style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input id="isServiceProfessional" type="checkbox" data-bind="">
+                        <label for="isServiceProfessional" style="margin-left: 0.1875em;">I also offer local services</label>
+                    </div>
+                    <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Know a service professional in your community who could benefit from the power of Loconomics?</p>
+                </fieldset>
+            </form>
+        </div>
+    </section>
 </div>
