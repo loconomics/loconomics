@@ -222,9 +222,11 @@ public static class LcAuthHelper
     /// - countryID [optional defaults to COUNTRY_CODE_USA]
     /// - profileType [optional defaults to client]
     /// - utm [optional, not a named form parameter but the whole query string]
-    /// - firstName [optional]
-    /// - lastName [optional]
+    /// - firstName [optional except atBooking]
+    /// - lastName [optional except atBooking]
+    /// - phone [optional except atBooking]
     /// - returnProfile [optional defaults to false] Returns the user profile in a property of the result
+    /// - atBooking [optional]
     /// </summary>
     /// <param name="page"></param>
     /// <returns></returns>
@@ -242,6 +244,7 @@ public static class LcAuthHelper
         var facebookUserID = Request.Form["facebookUserID"].AsLong(0);
         var facebookAccessToken = Request.Form["facebookAccessToken"];
         var email = Request.Form["email"];
+        var atBooking = Request.Form["atBooking"].AsBool();
 
         //
         // Conditional validations
@@ -266,6 +269,14 @@ public static class LcAuthHelper
             }
         }
 
+        // For a signup at a client booking, we require more fields
+        if (atBooking)
+        {
+            page.Validation.RequireField("phone", "You must specify your mobile phone number.");
+            page.Validation.RequireField("firstName", "You must specify your first name.");
+            page.Validation.RequireField("lastName", "You must specify your last name.");
+        }
+
         if (page.Validation.IsValid())
         {
             // TODO To use countryCode for a more 'open' public REST API, where 'code' is a well know ISO 2-letters CODE
@@ -276,6 +287,7 @@ public static class LcAuthHelper
             var password = useFacebookConnect ? LcAuth.GeneratePassword() : Request.Form["password"];
             var firstName = Request.Form["firstName"];
             var lastName = Request.Form["lastName"];
+            var phone = Request.Form["phone"];
             var returnProfile = Request.Form["returnProfile"].AsBool();
 
             var utm = Request.Url.Query;
@@ -391,15 +403,13 @@ public static class LcAuthHelper
                 // Update account data with the extra information.
                 using (var db = new LcDatabase())
                 {
-                    if (!String.IsNullOrWhiteSpace(firstName) || !String.IsNullOrWhiteSpace(lastName))
-                    {
-                        db.Execute(@"
-                            UPDATE users SET
-                                firstName = coalesce(@1, firstName),
-                                lastName = coalesce(@2, lastName)
-                            WHERE userID = @0
-                        ", userID, firstName, lastName);
-                    }
+                    db.Execute(@"
+                        UPDATE users SET
+                            firstName = coalesce(@1, firstName),
+                            lastName = coalesce(@2, lastName),
+                            mobilePhone = coalesce(@3, mobilePhone)
+                        WHERE userID = @0
+                    ", userID, firstName, lastName, phone);
                     // Create a home address record almost with the country
                     var home = LcRest.Address.GetHomeAddress(userID);
                     home.countryCode = LcRest.Locale.GetCountryCodeByID(countryID);
@@ -420,9 +430,10 @@ public static class LcAuthHelper
                     <dt>Country:</dt><dd>{5}</dd>
                     <dt>Email:</dt><dd>{3}</dd>
                     <dt>UserID:</dt><dd>{4}</dd>
+                    <dt>Phone:</dt><dd>{6}</dd>
                     </dl>
                     </body></html>
-                ", profileTypeStr, firstName, lastName, email, logged.userID, countryID));
+                ", profileTypeStr, firstName, lastName, email, logged.userID, countryID, phone));
 
                 return logged;
             }
@@ -438,7 +449,7 @@ public static class LcAuthHelper
                 }
 
                 var registered = LcAuth.RegisterUser(email, firstName, lastName, password,
-                    isServiceProfessional, utm, -1, null, null, null, countryID);
+                    isServiceProfessional, utm, -1, null, phone, null, countryID);
 
                 // Create a home address record almost with the country
                 var home = LcRest.Address.GetHomeAddress(registered.UserID);
@@ -465,9 +476,10 @@ public static class LcAuthHelper
                     <dt>Country:</dt><dd>{5}</dd>
                     <dt>Email:</dt><dd>{3}</dd>
                     <dt>UserID:</dt><dd>{4}</dd>
+                    <dt>Phone:</dt><dd>{6}</dd>
                     </dl>
                     </body></html>
-                ", profileTypeStr, firstName, lastName, email, registered.UserID, countryID));
+                ", profileTypeStr, firstName, lastName, email, registered.UserID, countryID, phone));
 
                 // Auto login:
                 return Login(email, password, false, returnProfile, true);

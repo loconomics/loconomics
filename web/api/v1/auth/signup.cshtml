@@ -11,8 +11,10 @@
     - POST:
         - email:string
         - password:string
-        - firstName:string Optional
-        - lastName:string Optional
+        - atBooking:bool Optional
+        - firstName:string Optional except atBooking
+        - lastName:string Optional except atBooking
+        - phone:string Optional except atBooking
         - facebookUserID:string Allows to sign-in without password but with a valid Facebook Account
         - facebookAccessToken:string If facebookUserID is used, the access token is required to validate the account
         - returnProfile:bool as in Login
@@ -36,8 +38,10 @@
             "post": {
                  "email": "some user email",
                  "password": "",
+                 "atBooking": true,
                  "firstName": "John",
                  "lastName": "Smith",
+                 "phone": "1234",
                  "profileType": "service-professional",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
@@ -49,7 +53,7 @@
         },
         "Facebook Signup (quick signup that will retrieve basic user data from Facebook, server2server)": {
             "url": "/api/v1/en-US/auth/signup/facebook",
-            "post": {                
+            "post": {
                 "accessToken": "Facebook Access Token",
                 "profileType": "service-professional",
                 "returnProfile": true
