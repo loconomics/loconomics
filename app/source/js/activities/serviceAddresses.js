@@ -239,18 +239,6 @@ function ViewModel(app) {
 
     this.serviceAddresses = new ServiceAddresses();
 
-    this.addMoreHeaderText = ko.pureComputed(function() {
-        if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
-            return 'Add at least one for your listing';
-        }
-        else if (this.isInOnboarding()) {
-            return 'Want to add any more?';
-        }
-        else {
-            return '';
-        }
-    }, this);
-
     this.addLocationLabel = ko.pureComputed(function() {
         return this.isInOnboarding() ? 'Place clients come to see you' :
                                        'Add a service location';

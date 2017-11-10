@@ -11,14 +11,15 @@
     - POST:
         - email:string
         - password:string
-        - firstName:string
-        - lastName:string,
-        - phone:string,
-        - referralCode:string,
-        - device:string,
+        - atBooking:bool Optional
+        - firstName:string Optional except atBooking
+        - lastName:string Optional except atBooking
+        - phone:string Optional except atBooking
         - facebookUserID:string Allows to sign-in without password but with a valid Facebook Account
         - facebookAccessToken:string If facebookUserID is used, the access token is required to validate the account
         - returnProfile:bool as in Login
+        - jobTitleID:int Optional, allows to create a listing along with the signup
+        - jobTitleName:string Optional, allows to create a listing along with the signup, if the given name is found or valid as a new one
         - profileType:string Enumeration: 'service-professional', 'client'
             NOTE: Currently allowed: 'freelancer', 'freelance', 'provider' as aliases,
                 any other value or not value will create a 'client' profile.
@@ -37,16 +38,16 @@
             "post": {
                  "email": "some user email",
                  "password": "",
+                 "atBooking": true,
                  "firstName": "John",
                  "lastName": "Smith",
                  "phone": "1234",
-                 "postalCode": "90001",
-                 "referralCode": "",
-                 "device": "ios",
                  "profileType": "service-professional",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
                  "returnProfile": false,
+                 "jobTitleID": null,
+                 "jobTitleName": null,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
         },
@@ -98,26 +99,16 @@
                         // create job title for the given name.
                         // In that cases, throwing an error will stop sign-up but account already exists
                         // so attempts after may fail and the problem is not easy to fix by the user,
-                        // is better to left the original onboarding to happening, leading user to 
-                        // the addJobTitle step that will throw detailed error messages if user
+                        // is better to left the onboarding to happening, leading user to 
+                        // the addJobTitle step at some point that will throw detailed error messages if user
                         // try the same input --is not the perfect usability that extra on that cases
                         // but more reasonable than left the user thinking couldn't create the account
                         // when is already set-up
                         try
                         {
                             var userJobTitle = userJobTitleApi.Create(userID, jobTitleID, jobTitleName);
-                            // Everything fine, update Onboarding step to 
-                            // next after 'add job titles' (that is the first, after a zero-welcome step)
-                            ret.onboardingStep = "schedulingPreferences";
                             // Set the selected/created jobTitleID (#374)
                             ret.onboardingJobTitleID = userJobTitle.jobTitleID;
-                            // Additionally, update the step at the profile (it's value is used
-                            // at 'resuming onboarding' at the app start-up; this is related to 
-                            // the fix for #381)
-                            if (ret.profile != null)
-                            {
-                                ret.profile.onboardingStep = ret.onboardingStep;
-                            }
                         }
                         catch { }
                     }

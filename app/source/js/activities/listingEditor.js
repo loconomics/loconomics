@@ -133,7 +133,8 @@ function ViewModel(app) {
     }, this);
 
     this.timeZone = ko.pureComputed(function(){
-        return this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone().replace('US/','');
+        var tz = this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone();
+        return tz && tz.replace('US/', '') || '';
     }, this);
 
     this.returnLinkGeneralActivity = ko.pureComputed(function(){

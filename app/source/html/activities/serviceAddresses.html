@@ -21,7 +21,6 @@
                     <!-- ko if: isInOnboarding --><div data-bind="template: { name: 'address-open-list-template', data: serviceAddresses }"></div><!-- /ko -->
                     <!-- ko ifnot: isInOnboarding --><div data-bind="template: { name: 'addresses-list-template', data: serviceAddresses }"></div><!-- /ko -->
                 </div>
-                <h2 class="SectionTitle" data-bind="visible: addMoreHeaderText, text: addMoreHeaderText"></h2>
                 <div class="TilesList TilesList--openEnd" data-bind="visible: jobTitleID() && !serviceAddresses.hasAddresses()">
                     <a class="IconContentItem" data-bind="attr: { href: '#!addressEditor/service/' + jobTitleID() + '/serviceLocation' }">
                         <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
