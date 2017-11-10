@@ -10,11 +10,12 @@ var ko = require('knockout');
 function ViewModel(params) {
 
     this.value = getObservable(params.value);
+    this.selected = getObservable(params.selected);
     this.label = params.label;
 
     this.iconClass = ko.pureComputed(function() {
         var icon = 'fa ion ion-android-radio-button-';
-        if (this.value())
+        if (this.value() == this.selected())
             icon += '-on';
         else
             icon += '-off';
