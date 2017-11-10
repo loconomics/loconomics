@@ -159,7 +159,7 @@ public class RestUserJobProfile : RestWebPage
 
     /// <summary>
     /// Process a request to create a user job title given a jobTitleID or as
-    /// fallback a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result)
+    /// fallback a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result).
     /// </summary>
     /// <param name="userID"></param>
     /// <param name="jobTitleID"></param>
@@ -222,10 +222,10 @@ public class RestUserJobProfile : RestWebPage
             {
                 userID = userID,
                 jobTitleID = jobTitleID,
-                cancellationPolicyID = data.policyID,
                 intro = data.intro,
-                instantBooking = data.instantBooking,
-                collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton
+                cancellationPolicyID = data.policyID,
+                collectPaymentAtBookMeButton = data.collectPaymentAtBookMeButton,
+                instantBooking = data.instantBooking
             });
 
             // If user is just a client, needs to become a professional
@@ -233,8 +233,8 @@ public class RestUserJobProfile : RestWebPage
             if (!user.isServiceProfessional)
             {
                 LcAuth.BecomeProvider(userID);
-                // Set onboarding step as done for 'add job titles' to avoid display that screen again to the user:
-                LcData.UserInfo.SetOnboardingStep(userID, "addJobTitles");
+                // Set onboarding step as done for 'add job title' to avoid display that screen again to the user:
+                LcData.UserInfo.SetOnboardingStep(userID, "addJobTitle");
                 // Send email as provider
                 LcMessaging.SendWelcomeProvider(userID, WebSecurity.CurrentUserName);
             }

@@ -5,7 +5,6 @@
 
 var ko = require('knockout');
 var Activity = require('../components/Activity');
-var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
@@ -19,14 +18,12 @@ var A = Activity.extend(function BookingPoliciesActivity() {
 
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: 'scheduling', helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar('Listing', {
+        backLink: 'listingEditor', helpLink: this.viewModel.helpLink
     });
     this.title = ko.pureComputed(function() {
         return this.jobTitleName() + ' booking policies';
     }, this.viewModel);
-
-    this.defaultNavBar = this.navBar.model.toPlainObject(true);
 
     // On changing jobTitleID:
     // - load job title name
@@ -90,14 +87,6 @@ var A = Activity.extend(function BookingPoliciesActivity() {
 
 exports.init = A.init;
 
-A.prototype.updateNavBarState = function updateNavBarState() {
-
-    if (!onboarding.updateNavBar(this.navBar)) {
-        // Reset
-        this.navBar.model.updateWith(this.defaultNavBar, true);
-    }
-};
-
 A.prototype.show = function show(state) {
     // Reset
     this.viewModel.jobTitleID(null);
@@ -105,8 +94,6 @@ A.prototype.show = function show(state) {
     this.viewModel.instantBooking(null);
 
     Activity.prototype.show.call(this, state);
-
-    this.updateNavBarState();
 
     var params = state && state.route && state.route.segments;
     var jid = params[0] |0;
@@ -126,8 +113,6 @@ var UserJobProfile = require('../viewmodels/UserJobProfile');
 function ViewModel(app) {
 
     this.helpLink = '/help/sections/202884403-Setting-Your-Booking-Policies';
-
-    this.isInOnboarding = onboarding.inProgress;
 
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
@@ -155,13 +140,11 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            onboarding.inProgress() ?
-                'Save and continue' :
-                this.isLoading() ?
-                    'loading...' :
-                    this.isSaving() ?
-                        'saving...' :
-                        'Save'
+            this.isLoading() ?
+                'loading...' :
+                this.isSaving() ?
+                    'saving...' :
+                    'Save'
         );
     }, this);
 
@@ -188,14 +171,7 @@ function ViewModel(app) {
             userJobProfile.setUserJobTitle(plain)
             .then(function() {
                 this.isSaving(false);
-                // Move forward:
-                if (onboarding.inProgress()) {
-                    // Ensure we keep the same jobTitleID in next steps as here:
-                    onboarding.selectedJobTitleID(this.jobTitleID());
-                    onboarding.goNext();
-                } else {
-                    app.successSave();
-                }
+                app.successSave();
             }.bind(this))
             .catch(function(err) {
                 this.isSaving(false);

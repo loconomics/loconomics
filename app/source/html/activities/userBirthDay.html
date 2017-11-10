@@ -1,5 +1,5 @@
-<!-- Activity userBirthday -->
-<div data-activity="userBirthday">
+<!-- Activity userBirthDay -->
+<div data-activity="userBirthDay">
         <app-inline-user-menu></app-inline-user-menu>
         <div class="container">
             <div class="row">
@@ -19,7 +19,6 @@
                         <h1><icon-dec params="icon: 'fa-birthday-cake'"></icon-dec> <span data-bind="text: title"></span></h1>
                         <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
                         <p id="userBirthDayFormInstructions" class="help-block">Some service professionals offer birthday specials for their clients.</p>
-                        <!-- ko with: userProfile -->
                         <fieldset>
                             <label for="selectedBirthMonth birthMonthDay">Birthday:</label>
                             <div>
@@ -33,7 +32,6 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <!-- /ko -->
                         <div class="LightForm-submitBar">
                             <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked"></button>
                         </div>
@@ -44,5 +42,4 @@
                 </div>
             </div>
         </div>
-    </div>  
-        
+    </div>

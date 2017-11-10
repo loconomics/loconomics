@@ -1,12 +1,16 @@
 /**
     publicContactInfo activity
 **/
-
 'use strict';
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var ContactInfoVM = require('../viewmodels/ContactInfoVM');
+var userProfile = require('../data/userProfile');
+var user = userProfile.data;
+var onboarding = require('../data/onboarding');
+var countriesOptions = require('../viewmodels/CountriesOptions');
+var phoneValidationRegex = require('../utils/phoneValidationRegex');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function PublicContactInfo() {
 
@@ -14,10 +18,11 @@ var A = Activity.extend(function PublicContactInfo() {
 
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-    
+
     // Defaults settings for navBar.
+    var backLink = user.isServiceProfessional() ? '/listingEditor' : '/userProfile';
     this.navBar = Activity.createSubsectionNavBar('Edit listing', {
-        backLink: '/listingEditor', helpLink: this.viewModel.helpLink
+        backLink: backLink, helpLink: this.viewModel.helpLink
     });
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
@@ -31,6 +36,8 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
+    onboarding.updateNavBar(this.navBar);
+
     // Discard any previous unsaved edit
     this.viewModel.discard();
 
@@ -41,41 +48,142 @@ A.prototype.show = function show(state) {
 function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201967756-telling-the-community-about-yourself';
-    
-    this.contactInfo = new ContactInfoVM(app);
+    this.isServiceProfessional = user.isServiceProfessional;
+    this.isInOnboarding = onboarding.inProgress;
 
-    this.user = this.contactInfo.user;
+    // User Profile
+    var profileVersion = userProfile.newVersion();
+    profileVersion.isObsolete.subscribe(function(itIs) {
+        if (itIs) {
+            // new version from server while editing
+            // FUTURE: warn about a new remote version asking
+            // confirmation to load them or discard and overwrite them;
+            // the same is need on save(), and on server response
+            // with a 509:Conflict status (its body must contain the
+            // server version).
+            // Right now, just overwrite current changes with
+            // remote ones:
+            profileVersion.pull({ evenIfNewer: true });
+        }
+    });
+
+    // Actual data for the form:
+    this.profile = profileVersion.version;
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ?
-                'Loading...' :
+            onboarding.inProgress() ?
+                'Save and continue' :
                 this.isSaving() ?
                     'Saving...' :
                     'Save'
         );
     }, this);
 
-    this.save = function() {
-        this.contactInfo.save()
-        .then(function() {
-            app.successSave();
-        })
-        .catch(function() {
-            // catch error, managed on event
-        });
+    // Validations
+    this.isFirstNameValid = ko.pureComputed(function() {
+        // \p{L} the Unicode Characterset not supported by JS
+        var firstNameRegex = /^(\S{2,}\s*)+$/;
+        return firstNameRegex.test(this.profile.firstName());
+    }, this);
+    this.isLastNameValid = ko.pureComputed(function() {
+        var lastNameRegex = /^(\S{2,}\s*)+$/;
+        return lastNameRegex.test(this.profile.lastName());
+    }, this);
+    this.isPhoneValid = ko.pureComputed(function() {
+        var isUSA = this.profile.countryID() === countriesOptions.unitedStates.id;
+        var phoneRegex = isUSA ? phoneValidationRegex.NORTH_AMERICA_PATTERN : phoneValidationRegex.GENERAL_VALID_CHARS;
+        return phoneRegex.test(this.profile.phone());
+    }, this);
+    this.isFormValidated = ko.observable(false);
+    /**
+     * @typedef {Object} ValidationErrorsDictionary
+     * @property {Array<string>} FieldKey Every property matches a field name and
+     * contains all errors for it, then there is not a list of properties since
+     * is dynamic
+     */
+    /**
+     * @typedef BadRequesResult
+     * @property {string} errorMessage
+     * @property {string} errorSource
+     * @property {Array<ValidationErrorsDictionary>} errors
+     */
+    /**
+     * Checks validation rules for each field, returning the list of errors
+     * per field in the same format as a server 'Bad Request' or null if success
+     * @returns {BadRequestResult}
+     */
+    this.validate = function() {
+        var errors = {};
+        if (!this.isFirstNameValid()) {
+            errors.firstName = 'First name is two short';
+        }
+        if (!this.isLastNameValid()) {
+            errors.lastName = 'Last name is too short';
+        }
+        if (!this.isPhoneValid()) {
+            errors.phone = this.profile.phone() ? 'Given phone is not valid' : 'Phone is required';
+        }
+        this.isFormValidated(true);
+        if (Object.keys(errors).length === 0) {
+            return null;
+        }
+        else {
+            return {
+                errorMessage: 'Please fix these issues and try again:',
+                errorSource: 'validation',
+                errors: errors
+            };
+        }
+    };
+
+    // States
+    this.isLoading = userProfile.isLoading;
+    this.isSaving = userProfile.isSaving;
+    this.isSyncing = userProfile.isSyncing;
+    this.isLocked = userProfile.isLocked;
+
+    // Actions
+
+    this.discard = function discard() {
+        profileVersion.pull({ evenIfNewer: true });
     }.bind(this);
 
-    this.discard = function() {
-        this.contactInfo.discard();
+    this.sync = function sync() {
+        return userProfile.load()
+        .catch(function(err) {
+            return showError({
+                title: 'Unable to load your contact info',
+                error: err
+            });
+        });
     };
-    this.sync = function() {
-        this.contactInfo.sync();
-    };
-   
-    this.isLoading = this.contactInfo.isLoading;
-    this.isSaving = this.contactInfo.isSaving;
-    this.isSyncing = this.contactInfo.isSyncing;
-    this.isLocked = this.contactInfo.isLocked;
+
+    this.save = function save() {
+        var errors = this.validate();
+        if (!errors) {
+            return profileVersion.pushSave()
+            .then(function() {
+                if (onboarding.inProgress()) {
+                    onboarding.goNext();
+                }
+                else {
+                    app.successSave();
+                }
+            })
+            .catch(function(err) {
+                return showError({
+                    title: 'Unable to save your contact info',
+                    error: err
+                });
+            });
+        }
+        else {
+            return showError({
+                title: 'Unable to save your contact info',
+                error: errors
+            });
+        }
+    }.bind(this);
 }
 

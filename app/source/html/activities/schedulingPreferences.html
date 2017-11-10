@@ -1,10 +1,9 @@
 <!-- SchedulingPreferences activity -->
 <div data-activity="schedulingPreferences" class="Boxes-sm animated">
-    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
-    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="" data-bind="attr: { href: goBackLink }">
@@ -14,7 +13,6 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <h1><icon-dec params="icon: 'ion-ios-settings'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <p>Clients are more apt to schedule you if they know when you're generally free.</p>
                 <form data-bind="submit: save" class="LightForm">

@@ -108,7 +108,8 @@ function ViewModel(app) {
     this.reviews = new ReviewsVM();
     this.showMessageBar = ko.observable(false);
     this.timeZone = ko.pureComputed(function(){
-        return this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone().replace('US/','');
+        var tz = this.user() && this.user().weeklySchedule() && this.user().weeklySchedule().timeZone();
+        return tz && tz.replace('US/', '') || '';
     }, this);
 
     // Just a timestamp to notice that a request to refresh UI happens
