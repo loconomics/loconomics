@@ -54,6 +54,7 @@ function NewClientBookingCardVM(app) {
     this.paymentMethod = ko.observable(null); // InputPaymentMethod
     /// Signup
     this.signupVM = new SignupVM(app);
+    this.signupVM.atBooking(true);
     // States
     this.isLoadingNewBooking = ko.observable(false);
     this.isRestoring = ko.observable(false);
@@ -83,6 +84,7 @@ function NewClientBookingCardVM(app) {
         this.makeRepeatBooking(false);
 
         this.signupVM.reset();
+        this.signupVM.atBooking(true);
 
         this.isSaving(false);
         this.isDone(false);

@@ -118,6 +118,7 @@ exports.logout = function logout() {
  * @param {string} [data.firstName]
  * @param {string} [data.lastName]
  * @param {number} [data.countryID]
+ * @param {string} [data.phone]
  * @param {string} [data.facebookUserID]
  * @param {string} [data.facebookAccessToken]
  * @param {string} [data.profileType=client] Closed enumeration allowing

@@ -63,11 +63,22 @@ function SignupVM() {
 
     fb.load(); // load FB asynchronously, if it hasn't already been loaded
 
+    /**
+     * Let's mark if sign-up is embedded into a booking being done by a new
+     * user or not.
+     * The value is sent to server, and when enabled makes required the fields:
+     * firstName, lastName, phone
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.atBooking = ko.observable(false);
     // First and last names available currently only to catch
-    // the data from Facebook Connect; they are optional in the API
-    // and not used in the front-end now.
+    // the data from Facebook Connect and when atBooking; they don't exist
+    // in the standard front-end now, where are optional data for teh API,
+    // and only front-end exists when atBooking=true
     this.firstName = new Field();
     this.lastName = new Field();
+    // Required only for atBooking=true
+    this.phone = new Field();
 
     this.confirmationCode = ko.observable(null);
     this.countriesOptions = countriesOptions();
@@ -93,6 +104,44 @@ function SignupVM() {
     this.isCountryVisible = ko.observable(true);
     this.isEmailSignupDisplayed = ko.observable(false);
 
+    this.isFirstNameValid = ko.pureComputed(function() {
+        // \p{L} the Unicode Characterset not supported by JS
+        var firstNameRegex = /^(\S{2,}\s*)+$/;
+        return firstNameRegex.test(this.firstName());
+    }, this);
+
+    this.isLastNameValid = ko.pureComputed(function() {
+        var lastNameRegex = /^(\S{2,}\s*)+$/;
+        return lastNameRegex.test(this.lastName());
+    }, this);
+
+/*
+// Phone validation: valid North America patterns, 10 to 14 digits
+var testData = [
+    '(123) 456-7890',
+    '123-456-7890',
+    '123.456.7890',
+    '1234567890',
+    '(123) 456-78901',
+    '123-456-789012',
+    '123.456.7890123',
+    '12345678901234'
+];
+var rValidChars = /[\d\(\)\-\.\ ]+/;
+var rValidPatterns = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
+var r = rValidPatterns;
+var testResults = testData.map(n => r.test(n));
+if (!testResults.reduce((ok, r) => ok ? r : false))
+    console.error('Some test failed', testResults);
+else
+    console.info('Success');
+*/
+
+    this.isPhoneValid = ko.pureComputed(function() {
+        var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
+        return phoneRegex.test(this.phone());
+    }, this);
+
     this.isEmailValid = ko.pureComputed(function() {
         var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         return emailRegex.test(this.email());
@@ -112,9 +161,11 @@ function SignupVM() {
     this.emailIsLocked = ko.observable(false);
 
     this.reset = function() {
+        this.atBooking(false);
         this.confirmationCode(null);
         this.firstName('');
         this.lastName('');
+        this.phone('');
         this.country(countriesOptions.unitedStates);
         this.facebookUserID('');
         this.facebookAccessToken('');
@@ -160,9 +211,11 @@ function SignupVM() {
         var plainData = {
             confirmationCode: this.confirmationCode(),
             email: this.email(),
+            atBooking: this.atBooking(),
             password: this.validatedPassword.password(),
             firstName: this.firstName(),
             lastName: this.lastName(),
+            phone: this.phone(),
             countryID: this.country().id,
             facebookUserID: this.facebookUserID(),
             facebookAccessToken: this.facebookAccessToken(),
