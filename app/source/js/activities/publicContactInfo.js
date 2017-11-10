@@ -8,6 +8,9 @@ var ko = require('knockout');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
+var countriesOptions = require('../viewmodels/CountriesOptions');
+var phoneValidationRegex = require('../utils/phoneValidationRegex');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function PublicContactInfo() {
 
@@ -77,6 +80,63 @@ function ViewModel(app) {
         );
     }, this);
 
+    // Validations
+    this.isFirstNameValid = ko.pureComputed(function() {
+        // \p{L} the Unicode Characterset not supported by JS
+        var firstNameRegex = /^(\S{2,}\s*)+$/;
+        return firstNameRegex.test(this.profile.firstName());
+    }, this);
+    this.isLastNameValid = ko.pureComputed(function() {
+        var lastNameRegex = /^(\S{2,}\s*)+$/;
+        return lastNameRegex.test(this.profile.lastName());
+    }, this);
+    this.isPhoneValid = ko.pureComputed(function() {
+        var isUSA = this.profile.countryID() === countriesOptions.unitedStates.id;
+        var phoneRegex = isUSA ? phoneValidationRegex.NORTH_AMERICA_PATTERN : phoneValidationRegex.GENERAL_VALID_CHARS;
+        return phoneRegex.test(this.profile.phone());
+    }, this);
+    this.isFormValidated = ko.observable(false);
+    /**
+     * @typedef {Object} ValidationErrorsDictionary
+     * @property {Array<string>} FieldKey Every property matches a field name and
+     * contains all errors for it, then there is not a list of properties since
+     * is dynamic
+     */
+    /**
+     * @typedef BadRequesResult
+     * @property {string} errorMessage
+     * @property {string} errorSource
+     * @property {Array<ValidationErrorsDictionary>} errors
+     */
+    /**
+     * Checks validation rules for each field, returning the list of errors
+     * per field in the same format as a server 'Bad Request' or null if success
+     * @returns {BadRequestResult}
+     */
+    this.validate = function() {
+        var errors = {};
+        if (!this.isFirstNameValid()) {
+            errors.firstName = 'First name is two short';
+        }
+        if (!this.isLastNameValid()) {
+            errors.lastName = 'Last name is too short';
+        }
+        if (!this.isPhoneValid()) {
+            errors.phone = this.profile.phone() ? 'Given phone is not valid' : 'Phone is required';
+        }
+        this.isFormValidated(true);
+        if (Object.keys(errors).length === 0) {
+            return null;
+        }
+        else {
+            return {
+                errorMessage: 'Please fix these issues and try again:',
+                errorSource: 'validation',
+                errors: errors
+            };
+        }
+    };
+
     // States
     this.isLoading = userProfile.isLoading;
     this.isSaving = userProfile.isSaving;
@@ -90,22 +150,40 @@ function ViewModel(app) {
     }.bind(this);
 
     this.sync = function sync() {
-        userProfile.sync();
+        return userProfile.load()
+        .catch(function(err) {
+            return showError({
+                title: 'Unable to load your contact info',
+                error: err
+            });
+        });
     };
 
     this.save = function save() {
-        return profileVersion.pushSave()
-        .then(function() {
-            if (onboarding.inProgress()) {
-                onboarding.goNext();
-            }
-            else {
-                app.successSave();
-            }
-        })
-        .catch(function() {
-            // catch error, managed on event
-        });
+        var errors = this.validate();
+        if (!errors) {
+            return profileVersion.pushSave()
+            .then(function() {
+                if (onboarding.inProgress()) {
+                    onboarding.goNext();
+                }
+                else {
+                    app.successSave();
+                }
+            })
+            .catch(function(err) {
+                return showError({
+                    title: 'Unable to save your contact info',
+                    error: err
+                });
+            });
+        }
+        else {
+            return showError({
+                title: 'Unable to save your contact info',
+                error: errors
+            });
+        }
     }.bind(this);
 }
 

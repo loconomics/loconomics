@@ -29,15 +29,15 @@
                         </span>
                     </p>
                     <fieldset>
-                        <div class="form-group">
+                        <div class="form-group" data-bind="css: { 'has-error': isFormValidated() && !isFirstNameValid() }">
                             <label for="firstName">First name:</label>
                             <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: profile.firstName, disable: isLocked">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-bind="css: { 'has-error': isFormValidated() &&!isLastNameValid() }">
                             <label for="lastName">Last name:</label>
                             <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: profile.lastName, disable: isLocked">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" data-bind="css: { 'has-error': isFormValidated() &&!isPhoneValid() }">
                             <label for="phone">Phone number:</label>
                             <input id="phone" type="tel" class="form-control" required maxlength="145" data-bind="textInput: profile.phone, disable: isLocked">
                         </div>
