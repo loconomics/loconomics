@@ -45,7 +45,7 @@ module.exports = {
     'bookMeButton': require('./activities/bookMeButton'),
     'ownerInfo': require('./activities/ownerInfo'),
     'privacySettings': require('./activities/privacySettings'),
-    'addJobTitles': require('./activities/addJobTitles'),
+    'addJobTitle': require('./activities/addJobTitle'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
     'marketplaceProfile': require('./activities/marketplaceProfile'),
     'servicesOverview': require('./activities/servicesOverview'),
@@ -77,7 +77,6 @@ module.exports = {
     'ownerPerks': require('./activities/ownerPerks'),
     'cancellationPolicies': require('./activities/cancellationPolicies'),
     'mockupHouseCleanerServiceEditor': require('./activities/mockupHouseCleanerServiceEditor'),
-    'onboardingSuccess': require('./activities/onboardingSuccess'),
     'userFeePayments': require('./activities/userFeePayments'),
     'ownerAcknowledgment': require('./activities/ownerAcknowledgment'),
     'userProfile': require('./activities/userProfile'),
@@ -88,6 +87,6 @@ module.exports = {
     'publicProfilePicture': require('./activities/publicProfilePicture'),
     'serviceProfessionalCustomURL': require('./activities/serviceProfessionalCustomURL'),
     'serviceProfessionalBusinessInfo': require('./activities/serviceProfessionalBusinessInfo'),
-    'userBirthday': require('./activities/userBirthday'),
+    'userBirthDay': require('./activities/userBirthDay'),
     'listing': require('./activities/listing')
 };
