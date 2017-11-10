@@ -3,7 +3,7 @@
 
 var ko = require('knockout');
 var Model = require('./Model');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var PricingSummaryDetail = require('./PricingSummaryDetail');
 var CalendarEvent = require('./CalendarEvent');
 var Booking = require('./Booking');
@@ -83,11 +83,11 @@ function Appointment(values) {
     this.displayedEndTime = ko.pureComputed(function() {
         return moment(this.endTime()).locale('en-US-LC').format('LT');
     }, this);
-    
+
     this.displayedTimeZone = ko.pureComputed(function() {
         return this.timeZone() && moment().tz(this.timeZone()).format('z');
     }, this);
-    
+
     this.displayedTimeRange = ko.pureComputed(function() {
         return this.displayedStartTime() + '-' + this.displayedEndTime() + ' ' + this.displayedTimeZone();
     }, this);
