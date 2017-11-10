@@ -4,7 +4,7 @@
     <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
     <div class="container">
         <div class="row">
-            <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <div data-bind="visible: !isInOnboarding()"  class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
                         <a href="/listingEditor" data-bind="attr: { href: navBar.leftAction().link }">
