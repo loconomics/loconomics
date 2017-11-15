@@ -6,7 +6,12 @@
             <p class="coop-tagline">Scheduling, marketing, invoicing, and client management tools. Grow and manage your business on your terms.</p>
             <form id="coop-search" class="row">
                 <!--class="col-sm-12" -->
-                <job-title-autocomplete params="suggestionButtonText: suggestionButtonText, onSelect: onSelectJobTitle, id: 'learnMoreProfessionals-autocomplete', visuallyHiddenLabel: true"></job-title-autocomplete>
+                <job-title-autocomplete params="
+                    target: 'addJobTitle',
+                    suggestionButtonText: suggestionButtonText,
+                    onSelect: onSelectJobTitle,
+                    id: 'learnMoreProfessionals-autocomplete',
+                    visuallyHiddenLabel: true"></job-title-autocomplete>
             </form>
             <div class="coop-join-up">
                 <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>

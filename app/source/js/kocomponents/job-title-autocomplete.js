@@ -22,6 +22,15 @@ var search = require('../data/search');
 var MIN_LENGTH = 3;
 
 /**
+ * @enum {string} Available targets for the autocomplete, that slightly changes
+ * the UI of suggestions to better accomodate well defined use cases.
+ */
+var Target = {
+    search: 'search',
+    addJobTitle: 'addJobTitle'
+};
+
+/**
  * The component view model
  * @class
  * @param {Object} params
@@ -42,6 +51,9 @@ var MIN_LENGTH = 3;
  * The label text for the input-autocomplete.
  * @param {(boolean|KnockoutObservable<boolean>)} [params.visuallyHiddenLabel=false]
  * Whether the label should be visually hidden (hidden but available to screen readers) or not.
+ * @param {(Target|KnockoutObservable<Target>)} [params.target=Target.search] Which use
+ * is targetting the autocomplete instance: searching for job titles or displaying
+ * suggestions to a proffesional that is adding a job title to its listing.
  */
 function ViewModel(params) {
     this.isLoading = ko.observable(false);
@@ -66,13 +78,20 @@ function ViewModel(params) {
         jobTitles: ko.observableArray([])
     };
     // We create a custom 'length' property for suggestions, so it
-    // returns almost 1 if there is valid query; this allow us
+    // returns almost 1 if there is valid query when in 'addJobTitle' target;
+    // this allow us
     // to ever show a suggestion to add user typed query even if there are not
     // result, as far as it meets the minimum query lenght (implicit by the
     // the result of the inherit 'queryTerm').
     this.suggestions.length = ko.pureComputed(function() {
-        var hasQuery = !!this.queryTerm();
-        return Math.max(hasQuery ? 1 : 0, this.suggestions.jobTitles().length);
+        var count = this.suggestions.jobTitles().length;
+        if (!this.isAddJobTitle()) {
+            return count;
+        }
+        else {
+            var hasQuery = !!this.queryTerm();
+            return Math.max(hasQuery ? 1 : 0, this.suggestions.jobTitles().length);
+        }
     }, this);
 
     /// Out parameters: allows to expose some internal values externally, but
@@ -120,6 +139,18 @@ function ViewModel(params) {
      * @member {KnockoutObservable<boolean>}
      */
     this.visuallyHiddenLabel = getObservable(params.visuallyHiddenLabel);
+    /**
+     * @member {Target}
+     */
+    this.target = getObservable(params.target);
+    /**
+     * Whether we are in target 'addJobTitle' mode.
+     * Anything else is managed as default target 'search'
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.isAddJobTitle = ko.pureComputed(function() {
+        return this.target() === Target.addJobTitle;
+    }, this);
 
     /// Performing search
     /**
@@ -169,3 +200,5 @@ ko.components.register(TAG_NAME, {
     viewModel: ViewModel,
     synchronous: true
 });
+
+exports.Target = Target;
