@@ -70,6 +70,7 @@ namespace LcRest
                 return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID + "?v=" + updatedDate.ToString("s");
             }
         }
+        public bool hasUploadedPhoto;
 
         public DateTime createdDate;
         public DateTime updatedDate;
@@ -86,6 +87,7 @@ namespace LcRest
                 serviceProfessionalProfileUrlSlug = record.serviceProfessionalProfileUrlSlug,
                 serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
                 bookCode = record.bookCode,
+                hasUploadedPhoto = record.hasUploadedPhoto,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
@@ -111,6 +113,7 @@ namespace LcRest
             ,providerProfileUrl as serviceProfessionalProfileUrlSlug
             ,providerWebsiteUrl as serviceProfessionalWebsiteUrl
             ,bookCode   
+            ,CASE WHEN Users.Photo IS NULL THEN Cast(0 as bit) ELSE Cast(1 as bit) END As hasUploadedPhoto
                         
             ,createdDate
             ,updatedDate
