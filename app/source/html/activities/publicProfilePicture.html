@@ -26,7 +26,7 @@
                         <div data-bind="visible: localPhotoPreview">
                             <div class="Avatar Avatar--lg" data-bind="domElement: localPhotoPreview, attr: { style: photoRotationStyle }"></div>
                         </div>
-                        <button type="button" class="btn btn-default btn-block" data-bind="visible: profile.hasUploadedPhoto, disable: isLocked, click: rotatePhoto"><span class="ion-ios-refresh-empty" aria-hidden="true"></span><span> Rotate photo</span></button>
+                        <button type="button" class="btn btn-default btn-block" data-bind="visible: hasPhoto, disable: isLocked, click: rotatePhoto"><span class="ion-ios-refresh-empty" aria-hidden="true"></span><span> Rotate photo</span></button>
                         <button type="button" class="btn btn-default btn-block"
                             data-bind="visible: takePhotoSupported, disable: isLocked"
                             data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">

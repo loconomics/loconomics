@@ -18,7 +18,7 @@ var showNotification = require('../modals/notification').show;
 var showError = require('../modals/error').show;
 
 module.exports = function ProfilePictureBioVM(app) {
-    //jshint maxstatements:30
+    //jshint maxstatements:36
     // Base class:
     ListingVM.call(this, app);
 
@@ -31,8 +31,28 @@ module.exports = function ProfilePictureBioVM(app) {
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
     this.inputElement = ko.observable();
 
+    /**
+     * Whether there is a preview being displayed currently, independently
+     * of the source for it.
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.hasPreview = ko.pureComputed(function() {
+        return !!(this.localPhotoPreview() || this.previewPhotoUrl());
+    }, this);
+    /**
+     * Whether the user has picked a photo for upload or has a previously
+     * uploaded photo
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.hasPhoto = ko.pureComputed(function() {
+        return this.hasPreview() || this.profile.hasUploadedPhoto();
+    }, this);
+    /**
+     * Text for the 'upload photo' button
+     * @member {KnockoutComputed<string>}
+     */
     this.uploadButtonText = ko.pureComputed(function() {
-        return this.profile.hasUploadedPhoto() ? 'Change photo' : 'Upload photo';
+        return this.hasPhoto() ? 'Change photo' : 'Upload photo';
     }, this);
 
     // NOTE: uploader options just for web uploads
