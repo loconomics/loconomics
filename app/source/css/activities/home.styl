@@ -139,15 +139,13 @@
         }
 
         // Why book on Loconomics section
-        .home-booking {
+        .home-community {
             $boxSize = 340px;
             $boxMargin = 1.5%;
 
-            background: white;
+            background: $gray-background;
             text-align: center;
             padding-top: 40px;
-
-            down-arrow($arrowSize, 0, none, white, center);
 
             .home-section-title {
                 color: $gray;
@@ -207,29 +205,14 @@
                     display: block;
                 }
             }
-
-            .home-booking-more {
-                width: $boxSize;
-                margin: auto;
-                padding-bottom: 2em;
-
-                @media $mediaMaxXs {
-                    width: auto;
-                    display: block;
-                    margin: 0 $grid-gap;
-
-                    > .btn {
-                        max-width: $boxSize;
-                        margin: 0 auto;
-                    }
-                }
-
-                .btn {
-                    border-color: White;
-                }
-            }
         }
+        .home-lead-generation {
+            $boxSize = 340px;
+            $boxMargin = 1.5%;
 
+            background: $gray-background;
+            text-align: center;
+        }
         .home-categories {
             $boxSize = 240px;
             $boxMargin = 1.5%;
