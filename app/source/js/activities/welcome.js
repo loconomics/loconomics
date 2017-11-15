@@ -46,6 +46,16 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     this.updateNavBarState();
+
+    // Country specific code:
+    // If the user is non for the current country set-up (fixed as USA for now #728)
+    // we are displaying a notice of non-availability while skipping onboarding
+    // steps; to prevent they get trapped in onboarding forever #722, we should
+    // immediately finish it.
+    if (!user.isUSUser()) {
+        onboarding.finish();
+        userProfile.saveOnboardingStep(onboarding.stepName());
+    }
 };
 
 function ViewModel() {
