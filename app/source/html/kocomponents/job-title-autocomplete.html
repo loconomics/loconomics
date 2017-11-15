@@ -1,13 +1,15 @@
 <div class="form-group">
     <label data-bind="attr: { for: id }, text: label, css: { 'sr-only': visuallyHiddenLabel }"></label>
     <input-autocomplete params="id: id, name: 'jobTitle', icon: 'ion-ios-search',
-        placeholder: 'Search for your profession', size: 'lg',
-        value: value, suggestions: suggestions,
+        placeholder: isAddJobTitle() ? 'Search for your profession' : 'Search for professionals',
+        size: 'lg',
+        value: value,
+        suggestions: suggestions,
         onSelect: onSelect,
-        extraData: { suggestionButtonText: suggestionButtonText }">
+        extraData: { suggestionButtonText: suggestionButtonText, isAddJobTitle: isAddJobTitle }">
         <template slot="suggestions">
             <div class="SearchResultsPreview">
-                <h3 class="SearchResultsPreview-h">Sound like you?</h3>
+                <h3 data-bind="if: extraData.isAddJobTitle" class="SearchResultsPreview-h">Sound like you?</h3>
                 <div data-bind="if: suggestions().jobTitles().length">
                     <ul data-bind="foreach: suggestions().jobTitles()">
                         <li class="Result" data-bind="attr: {
@@ -16,13 +18,13 @@
                             }">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: singularName"></span>
-                                <span class="Result-description" data-bind="text: description"></span>
+                                <span class="Result-description" data-bind="text: $parent.extraData.isAddJobTitle() ? description : searchDescription"></span>
                             </div>
                             <div aria-hidden="true" class="btn btn-secondary btn-md btn-inline"
                                 data-bind="visible: $parent.extraData.suggestionButtonText, text: $parent.extraData.suggestionButtonText"></div>
                         </li>
                     </ul>
-                    <ul>
+                    <ul data-bind="if: extraData.isAddJobTitle">
                         <li class="Result" data-bind="attr: {
                                 id: id() + '-suggestion-new',
                                 'data-input-autocomplete-suggestion': value
@@ -36,7 +38,7 @@
                         </li>
                     </ul>
                 </div>
-                <div data-bind="ifnot: suggestions().jobTitles().length">
+                <div data-bind="if: suggestions().jobTitles().length === 0 && extraData.isAddJobTitle()">
                     <ul>
                         <li class="Result" data-bind="attr: {
                                 id: id() + '-suggestion-new',

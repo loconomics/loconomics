@@ -66,6 +66,7 @@ namespace LcRest
                     PositionID as jobTitleID
                     ,PositionSingular as singularName
                     ,PositionDescription as description
+                    ,PositionSearchDescription as searchDescription
                 FROM
                     positions
                 WHERE
