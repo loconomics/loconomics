@@ -439,7 +439,7 @@
                                         </div>
                                     </fieldset>
                                 </li>
-                                <li data-bind="if: booking().paymentEnabled()">
+                                <li data-bind="if: booking().paymentEnabled() && booking().pricingSummary().totalPrice() > 0">
                                     <fieldset>
                                         <legend class"text-center">Payment:</legend>
                                         <div class="BookingSummaryItem">
