@@ -123,13 +123,14 @@ api.isAtCurrentStep = ko.pureComputed(function() {
     and redirects to the current step, or do nothing.
 **/
 api.goIfEnabled = function() {
-    if (this.inProgress() && !api.isAtCurrentStep()) {
+    var inProgress = this.inProgress();
+    if (inProgress && !api.isAtCurrentStep()) {
         // Go to the step URL if we are NOT already there, by checking name to
         // not overwrite additional details, like a jobTitleID at the URL
         api.app.shell.go(api.stepUrl());
     }
 
-    return this.inProgress();
+    return inProgress;
 };
 
 /// Workaround for #374:
