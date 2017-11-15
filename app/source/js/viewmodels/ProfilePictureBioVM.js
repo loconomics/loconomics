@@ -31,6 +31,10 @@ module.exports = function ProfilePictureBioVM(app) {
     this.takePhotoSupported = ko.observable(photoTools.takePhotoSupported());
     this.inputElement = ko.observable();
 
+    this.uploadButtonText = ko.pureComputed(function() {
+        return this.profile.hasUploadedPhoto() ? 'Change photo' : 'Upload photo';
+    }, this);
+
     // NOTE: uploader options just for web uploads
     if (!this.takePhotoSupported()) {
         this.inputElement.subscribe(function(input) {

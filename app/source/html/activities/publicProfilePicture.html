@@ -26,14 +26,26 @@
                         <div data-bind="visible: localPhotoPreview">
                             <div class="Avatar Avatar--lg" data-bind="domElement: localPhotoPreview, attr: { style: photoRotationStyle }"></div>
                         </div>
-                        <button type="button" class="btn btn-default btn-block" data-bind="disable: isLocked, click: rotatePhoto"><span class="ion-ios-refresh-empty" aria-hidden="true"></span><span> Rotate photo</span></button>
-                        <button type="button" class="btn btn-default btn-block" data-bind="visible: takePhotoSupported, disable: isLocked" data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet"><span class="fa ion ion-ios-camera-outline fa-lg" aria-hidden="true"></span><span>Change photo</span></button>
-                        <button-file class="btn btn-default btn-block" data-bind="visible: !takePhotoSupported()" params="disabled: isLocked, id: 'profilePicture-photoFile', inputElement: inputElement, accept: 'image/*'"><label for="profilePicture-photoFile"><icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec><span>Change photo</span></label></button-file>
+                        <button type="button" class="btn btn-default btn-block" data-bind="visible: profile.hasUploadedPhoto, disable: isLocked, click: rotatePhoto"><span class="ion-ios-refresh-empty" aria-hidden="true"></span><span> Rotate photo</span></button>
+                        <button type="button" class="btn btn-default btn-block"
+                            data-bind="visible: takePhotoSupported, disable: isLocked"
+                            data-toggle="ActionSheet" data-target="profilePictureBio-photoSheet">
+                            <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+                            <span data-bind="text: uploadButtonText"></span>
+                        </button>
+                        <button-file class="btn btn-default btn-block"
+                            data-bind="visible: !takePhotoSupported()"
+                            params="disabled: isLocked, id: 'profilePicture-photoFile', inputElement: inputElement, accept: 'image/*'">
+                            <label for="profilePicture-photoFile">
+                                <icon-dec params="icon: 'ion-ios-camera-outline fa-lg'"></icon-dec>
+                                <span data-bind="text: $parentContext.$parent.uploadButtonText"></span>
+                            </label>
+                        </button-file>
                         <div class="LightForm-submitBar">
                             <button type="submit" class="btn btn-primary btn-block" data-bind="text: $root.submitText, disable: isLocked"></button>
                         </div>
                     </fieldset>
-                <!-- /ko -->
+                    <!-- /ko -->
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
