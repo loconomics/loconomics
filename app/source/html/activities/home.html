@@ -1,7 +1,7 @@
 <!-- Home activity (aka search) -->
 <div data-activity="home">
     <div class="home-main">
-        <div class="home-search">
+        <section class="home-search">
             <h1 class="home-title" data-bind="text: title"></h1>
             <p class="home-tagline">Independent service professionals at your service.</p>
             <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
@@ -13,8 +13,8 @@
                     <job-title-autocomplete params="suggestionButtonText: 'Go', onSelect: onSelect, id: 'home-jobTitleAutocomplete'"></job-title-autocomplete>
                 </div>
             </form>
-        </div>
-        <div id="home-hiw" class="home-hiw">
+        </section>
+        <section id="home-hiw" class="home-hiw">
             <h2 class="home-section-title">How Loconomics works:</h2>
             <div class="container home-section-listing">
                 <ul class="row list-unstyled">
@@ -35,48 +35,8 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="home-booking">
-            <h2 class="home-section-title">Why Loconomics?</h2>
-            <div class="home-section-listing">
-                <ul class="list-unstyled">
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
-                        <h3>Worker-owned</h3>
-                        <p>Loconomics is owned by the professionals providing you great service. No middle-men.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-search"></i>
-                        <h3>All your needs</h3>
-                        <p>Schedule anything from house cleaning to reiki using the same simple  process.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa fa-calendar-o"></i>
-                        <h3>Easy scheduling</h3>
-                        <p>Schedule and reschedule 24/7, receive reminders and even sync your calendar.</p>
-                    </li>
-                    <!-- <li>
-                        <i aria-hidden="true" class="fa ion ion-card"></i>
-                        <h3>Clear pricing</h3>
-                        <p>No awkward cash exchanges, pay professional directly with credit card.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
-                        <h3>Background check policy</h3>
-                        <p>Choose your comfort level when booking providers using our <a href="#!terms/background-check-policy" target="_blank">Background Check Policy</a>.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
-                        <h3>Favorites</h3>
-                        <p>Easily store and share your favorite professionals with your favorite people.</p>
-                    </li> -->
-                </ul>
-            </div>
-            <div class="home-booking-more">
-                <a href="/about" class="btn btn-secondary btn-lg btn-block">Learn more</a>
-            </div>
-        </div>
-       <div id="home-categories" class="home-categories">
+        </section>
+        <section id="home-categories" class="home-categories">
             <h2 class="home-section-title">Browse by category</h2>
             <div class="home-section-listing">
                 <ul class="list-unstyled">
@@ -130,7 +90,73 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </section>
+        <section class="home-booking">
+            <h2 class="home-section-title">Help your community thrive</h2>
+            <div class="home-section-listing">
+                <ul class="list-unstyled">
+                    <li>
+                        <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
+                        <h3>No middle-men</h3>
+                        <p>Your local professionals own Loconomics. 100% of your dollars stay local. No commissions.</p>
+                    </li>
+                    <li>
+                        <icon-dec params="icon: 'ion-android-home'"></icon-dec>
+                        <h3>Support small business</h3>
+                        <p>Professionals are their own boss and masters in their field. Help support their ambition.</p>
+                    </li>
+                    <li>
+                        <icon-dec params="icon: 'ion-earth'"></icon-dec>
+                        <h3>Environmentally friendly</h3>
+                        <p>Enrich the lives of you and your community by purchasing services. Stop buying stuff.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="home-booking">
+            <ul class="list-unstyled">          
+                    <li class="col-xs-12 col-md-3 col-md-offset-3">
+                        <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
+                            <fieldset>
+                                <legend>Stay informed</legend>
+                                <label for="signupNewsletterEmail">Email address</label>
+                                <div class="input-group" style="margin-bottom: 0.625em;" data-bind="">
+                                    <input class="form-control inset"  style="height: 3em; 
+                                    border: 0.0625rem solid lightgray;" data-bind="">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-secondary ion-arrow-right-c"  style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input id="isServiceProfessional" type="checkbox" data-bind="">
+                                    <label for="isServiceProfessional" style="margin-left: 0.1875em;">I offer local services</label>
+                                </div>
+                                <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Spam-free information – you can unsubscribe at any time.</p>
+                            </fieldset>
+                        </form>
+                    </li>
+                    <li class="col-xs-12 col-md-3">
+                        <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
+                            <fieldset>
+                                <legend>Make an introduction</legend>
+                                <label for="signupNewsletterEmail">Your email address</label>
+                                <div class="input-group" style="margin-bottom: 0.625em;" data-bind="">
+                                    <input class="form-control inset" style="height: 3em; 
+                                    border: 0.0625rem solid lightgray;" data-bind="">
+                                    <div class="input-group-btn">
+                                        <button type="submit" class="btn btn-secondary ion-arrow-right-c" style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input id="isServiceProfessional" type="checkbox" data-bind="">
+                                    <label for="isServiceProfessional" style="margin-left: 0.1875em;">I also offer local services</label>
+                                </div>
+                                <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Know a service professional in your community who could benefit from the power of Loconomics?</p>
+                            </fieldset>
+                        </form>
+                    </li>
+                </ul>
+        </section>
     </div>
     <div>@render('parts/WebsiteFooter.html')</div>
 </div>

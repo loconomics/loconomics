@@ -4,9 +4,13 @@
         <div data-bind="with: jobTitleSearchResult">
             <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
                 <h1 data-bind="text: $root.title"></h1>
-                <div class="SearchResultsBackground-text">
-                    <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
-                    <p><span data-bind="text: searchDescription"></span></p>
+                <div class="SearchResultsBackground-text" data-bind="visible: serviceProfessionalsCount">
+                    <p>(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
+                    <p data-bind="text: searchDescription"></p>
+                </div>
+                <p>We don't yet have <span data-bind="text: pluralName"></span> in your area. Help us grow by introducing us to professionals or signing up for our newsletter.</p>
+                <div class="SearchResultsBackground-text" data-bind="visible: !serviceProfessionalsCount()">
+                    <p>We don't yet have <span data-bind="text: pluralName"></span> in your area. Help us grow by introducing us to professionals or signing up for our newsletter.</p>
                 </div>
             </div>
         </div>
@@ -59,26 +63,51 @@
                 </div>
             </li>
         </ul>
+        <ul>
+            <li>
+                <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
+                    <fieldset>
+                        <legend>Stay informed</legend>
+                        <label for="signupNewsletterEmail">Email address</label>
+                        <div class="input-group" style="margin-bottom: 0.625em;" data-bind="">
+                            <input class="form-control inset"  style="height: 3em; 
+                            border: 0.0625rem solid lightgray;" data-bind="">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-secondary ion-arrow-right-c"  style="border: 0.4rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input id="isServiceProfessional" type="checkbox" data-bind="">
+                            <label for="isServiceProfessional" style="margin-left: 0.1875em;">I offer local services</label>
+                        </div>
+                        <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Spam-free information – you can unsubscribe at any time.</p>
+                    </fieldset>
+                </form>
+            </li>
+            <li>
+                <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
+                    <fieldset>
+                        <legend>Make an introduction</legend>
+                        <label for="signupNewsletterEmail">Your email address</label>
+                        <div class="input-group" style="margin-bottom: 0.625em;" data-bind="">
+                            <input class="form-control inset" style="height: 3em; 
+                            border: 0.0625rem solid lightgray;" data-bind="">
+                            <div class="input-group-btn">
+                                <button type="submit" class="btn btn-secondary ion-arrow-right-c" style="border: 0.4rem solid #d75560; margin-left: 0.25em;" data-bind="" aria-label="Sign up for newsletter"></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input id="isServiceProfessional" type="checkbox" data-bind="">
+                            <label for="isServiceProfessional" style="margin-left: 0.1875em;">I also offer local services</label>
+                        </div>
+                        <p id="newsletterSignupFormInstructions" class="help-block" data-bind="">Know a service professional in your community who could benefit from the power of Loconomics?</p>
+                    </fieldset>
+                </form>
+            </li>
+        </ul>
     </section>
-    <section class="LeadGeneration">
-        <h2>Loconomics helps your community thrive</h2>
-        <div class="col-sm-4">
-            <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
-            <h3>No middle-men</h3>
-            <p>We connect you with professionals in your community without commissions. 100% of your dollars stay local.</p>
-        </div>
-        <div class="col-sm-4">
-            <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
-            <h3>Supports small business</h3>
-            <p>Professionals on Loconomics are their own boss and masters in their field. Help support their ambition.</p>
-        </div>
-        <div class="col-sm-4">
-            <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
-            <h3>Environmentally friendly</h3>
-            <p>Spend your hard-earned cash on services that enrich the lives of you and your community. Stop buying stuff.</p>
-        </div>
-        <h2>Help Loconomics grow</h2>
-        <div class="col-xs-12 col-lg-5 col-lg-offset-1">
+    <section>
+        <div class="col-xs-12 col-md-6">
             <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
                 <fieldset>
                     <legend>Stay informed</legend>
@@ -98,7 +127,7 @@
                 </fieldset>
             </form>
         </div>
-        <div class="col-xs-12 col-lg-5 col-lg-offset-1">
+        <div class="col-xs-12 col-md-6">
             <form id="newsletterSignupForm" style="padding: 0em 1.5em" data-bind="" aria-describedby="newsletterSignupFormInstructions">
                 <fieldset>
                     <legend>Make an introduction</legend>

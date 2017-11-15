@@ -143,11 +143,15 @@
             $boxSize = 340px;
             $boxMargin = 1.5%;
 
-            background: $brand-secondary-background;
+            background: white;
             text-align: center;
             padding-top: 40px;
 
-            down-arrow($arrowSize, 0, none, $brand-secondary, center);
+            down-arrow($arrowSize, 0, none, white, center);
+
+            .home-section-title {
+                color: $gray;
+            }
 
             ul {
                 color: $gray;
@@ -198,7 +202,7 @@
 
                 // icons
                 i {
-                    color: $brand-secondary;
+                    color: $gray;
                     font-size: 3em;
                     display: block;
                 }
@@ -230,12 +234,14 @@
             $boxSize = 240px;
             $boxMargin = 1.5%;
 
-            background: $gray-background;
+            background: $brand-secondary-background;
             text-align: center;
             padding-top: 40px;
+            
+            down-arrow($arrowSize, 0, none, $brand-secondary, center);
 
             h2 {
-                color: $gray;
+                color: white;
             }
 
             ul {
