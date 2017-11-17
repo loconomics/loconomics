@@ -8,7 +8,15 @@ namespace LcRest
     public class LeadGeneration
     {
         #region Newsletter
-        public static void PostNewsletter(string email, bool isServiceProfessional, string marketingSource, Locale locale)
+        /// <summary>
+        /// Creates a new user from a subscription request (newsletter, referral), that has not active account
+        /// (no password, no TOU accepted).
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="isServiceProfessional"></param>
+        /// <param name="marketingSource"></param>
+        /// <param name="locale"></param>
+        public static int SubscribeNewUser(string email, bool isServiceProfessional, string marketingSource, Locale locale)
         {
             var emailExists = Client.CheckEmailAvailability(email) > 0;
 
@@ -17,13 +25,10 @@ namespace LcRest
                 throw new Exception("Email is already registered, please log-in or request a password reset");
             }
 
-            var additionalSource = "&lead-generation=newsletter";
-            var utm = (marketingSource ?? "") + additionalSource;
-            var userID = 0;
-
             using (var db = new LcDatabase())
             {
-                userID = (int)db.QueryValue(@"
+                // If success, it returns the userID otherwise zero
+                return (int)db.QueryValue(@"
                     DECLARE @UserID int
 
                     BEGIN TRANSACTION
@@ -91,12 +96,10 @@ namespace LcRest
                 ",
                 email,
                 isServiceProfessional,
-                utm,
+                marketingSource,
                 locale.languageID,
                 locale.countryID);
             }
-
-            //LcMessaging.SendNewsletterSubscription(userID, email);
         }
         #endregion
     }

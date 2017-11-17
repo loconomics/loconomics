@@ -77,8 +77,18 @@
                     var email = Request.Form["email"];
                     var isServiceProfessional = Request.Form["isServiceProfessional"].AsBool();
                     var marketingSource = Request.Url.Query;
-                    LcRest.LeadGeneration.PostNewsletter(email, isServiceProfessional, marketingSource, LcRest.Locale.Current);
-                    return "OK";
+                    var additionalSource = "&lead-generation=newsletter";
+                    marketingSource = (marketingSource ?? "") + additionalSource;
+                    var userID = LcRest.LeadGeneration.SubscribeNewUser(email, isServiceProfessional, marketingSource, LcRest.Locale.Current);
+                    if (userID > 0)
+                    {
+                        //LcMessaging.SendNewsletterSubscription(userID, email);
+                        return "OK";
+                    }
+                    else
+                    {
+                        throw new HttpException(500, "Subscription failed");
+                    }
                 }
                 else
                 {
