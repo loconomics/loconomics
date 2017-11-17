@@ -1,13 +1,12 @@
-<form id="referProfessionalsForm" style="padding: 0em 1.5em" data-bind="with: data" aria-describedby="referProfessionalsFormInstructions">
+<form id="referProfessionalsForm" data-bind="with: data" aria-describedby="referProfessionalsFormInstructions">
     <fieldset id="referProfessionalsForm-StepOne" class="refer-step" data-bind="attr: { hidden: !isAtStepOne() }, css: { 'is-loading': isLoadingStepOne }">
         <legend>Make an introduction</legend>
         <label for="referrerEmail">Your email address</label>
-        <div class="input-group" style="margin-bottom: 0.625em;" data-bind="css: { 'has-error': email.error }">
-            <div style="height: 3em; 
-            border: 0.0625rem solid lightgray;" data-bind="template: { name: 'signup-field', data: { id: 'referrerEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid form-control inset': isEmailValid}, disable: emailIsLocked">
+        <div class="input-group" data-bind="css: { 'has-error': email.error }">
+            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid form-control inset': isEmailValid}, disable: emailIsLocked">
             </div>
             <div class="input-group-btn">
-                <button type="submit" class="btn btn-secondary ion-arrow-right-c" style="border: 0.1875rem solid #d75560; margin-left: 0.25em;" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save"  aria-label="Continue to the next step"></button>
+                <button type="submit" class="btn btn-secondary ion-arrow-right-c"  data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save"  aria-label="Continue to the next step"></button>
             </div>
         </div>
         <div class="form-group">
