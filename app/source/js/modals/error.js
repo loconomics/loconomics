@@ -1,18 +1,6 @@
 /**
-    Show an error modal to notify the user.
-    @param options:Object {
-        message:string DEPRECATED. Optional. Informative error message.
-        error:string Optional. Error/Exception/XHR object, used to auto
-            generate the error message. It takes precedence over 'message'
-            option, discarding an error object/string is passed.
-            It replaces 'message' since can do the same and more.
-        title:string Optional. The text to show in the modal's header,
-            with fallback to the Modal's default title.
-    }
-    @returns Promise. It resolves when the modal is dismissed/closed.
-    No formal rejection happens.
-**/
-// TODO jsdocs
+ * Show an error modal to notify the user.
+ */
 'use strict';
 
 var ariaHideElements = require('./utils/ariaHideElements');
@@ -22,6 +10,19 @@ var TEMPLATE = require('../../html/modals/error.html');
 var createElement = require('./utils/createElement');
 require('../utils/jquery.multiline');
 
+/**
+ * Display a modal with an error message
+ * @param {Object} options
+ * @param {(string|Exception|Error|Object)} [options.error='There was an error'] Error message
+ * or error object that will be analyzed to extract an error
+ * message (@see /utils/getErrorMessageFrom for object patterns supported).
+ * @param {string} [options.title='There was an error'] Text for the modal title bar.
+ * @returns {Promise<string,any>} It resolves when the modal is closed returning
+ * the error text that was displayed (usefull when the message was inferred from
+ * a given object and want to be persisted or displayed in an additional way
+ * after the modal). It rejects only on internal errors at displaying the
+ * modal, errors at set-up throws.
+ */
 exports.show = function (options) {
     var modal = createElement(TEMPLATE);
     fixFocus(modal);
@@ -51,7 +52,7 @@ exports.show = function (options) {
         .off('hide.bs.modal')
         .on('hide.bs.modal', function() {
             handle.revert();
-            resolve();
+            resolve(msg);
         });
     });
 };
