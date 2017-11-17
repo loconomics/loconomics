@@ -26,7 +26,7 @@ namespace LcRest
                 userID = (int)db.QueryValue(@"
                     DECLARE @UserID int
 
-                    BEGIN TRANSACTION;
+                    BEGIN TRANSACTION
 
                     -- Create UserProfile record to save email and generate UserID
                     INSERT INTO UserProfile (
@@ -81,8 +81,12 @@ namespace LcRest
 
                     -- NOTE: since there is no Membership record with password, is not an actual Loconomics User Account
                     -- just what we need on this case
+                    
+                    IF @@ERROR <> 0
+                        ROLLBACK TRANSACTION
+                    ELSE
+                        COMMIT TRANSACTION
 
-                    COMMIT TRANSACTION;
                     SELECT @UserID
                 ",
                 email,
