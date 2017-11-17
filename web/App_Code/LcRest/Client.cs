@@ -508,7 +508,10 @@ namespace LcRest
                     -- just what we need on this case
                 END
 
-                COMMIT TRANSACTION
+                IF @@ERROR <> 0
+                    ROLLBACK TRANSACTION
+                ELSE
+                    COMMIT TRANSACTION
 
                 SELECT @UserID
             ",
