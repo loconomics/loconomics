@@ -8,9 +8,8 @@
                     <p>(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
                     <p data-bind="text: searchDescription"></p>
                 </div>
-                <p>We don't yet have <span data-bind="text: pluralName"></span> in your area. Help us grow by introducing us to professionals or signing up for our newsletter.</p>
                 <div class="SearchResultsBackground-text" data-bind="visible: !serviceProfessionalsCount()">
-                    <p>We don't yet have <span data-bind="text: pluralName"></span> in your area. Help us grow by introducing us to professionals or signing up for our newsletter.</p>
+                    <p data-bind="text: $root.searchFailureMessage"></p>
                 </div>
             </div>
         </div>

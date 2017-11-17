@@ -21,7 +21,10 @@ var A = Activity.extend(function SearchJobTitleActivity() {
         var result = this.jobTitleSearchResult();
         return result && result.pluralName; 
     }, this.viewModel);
-
+    this.searchFailureMessage = ko.computed(function() { 
+        var result = this.jobTitleSearchResult();
+        return result && "We don't yet have " + result.pluralName + ' in your area. Help us grow by introducing us to professionals or signing up for our newsletter.'; 
+    }, this.viewModel);
 });
 
 exports.init = A.init;
