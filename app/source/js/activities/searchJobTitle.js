@@ -3,11 +3,11 @@
 **/
 'use strict';
 
-var
-    ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult'),
-    ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 var search = require('../data/search');
+require('../kocomponents/lead-generation/newsletter');
 
 var A = Activity.extend(function SearchJobTitleActivity() {
 
@@ -17,13 +17,13 @@ var A = Activity.extend(function SearchJobTitleActivity() {
     //pass in the app model so the view model can use it
     this.viewModel = new ViewModel();
     this.navBar = Activity.createSubsectionNavBar('Back');
-    this.title = ko.computed(function() { 
+    this.title = ko.computed(function() {
         var result = this.jobTitleSearchResult();
-        return result && result.pluralName; 
+        return result && result.pluralName;
     }, this.viewModel);
-    this.searchFailureMessage = ko.computed(function() { 
+    this.searchFailureMessage = ko.computed(function() {
         var result = this.jobTitleSearchResult();
-        return result && "We don't yet have " + result.pluralName + ' in your area. Help us grow by introducing us to professionals or signing up for our newsletter.'; 
+        return result && "We don't yet have " + result.pluralName + ' in your area. Help us grow by introducing us to professionals or signing up for our newsletter.';
     }, this.viewModel);
 });
 
