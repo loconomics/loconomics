@@ -43,12 +43,21 @@ function ViewModel() {
      */
     this.isSaving = ko.observable(false);
     /**
-     * When edition must be locked because of in progress operations.
-     * Just an alias for saving in this case, but expected to be used properly
-     * at the data-binds
+     * When edition must be locked because of in progress operations,
+     * and too after isDone.
      * @member {KnockoutComputed<boolean>}
      */
-    this.isLocked = this.isSaving;
+    this.isLocked = ko.pureComputed(function() {
+        return this.isSaving() || this.isDone();
+    }, this);
+    /**
+     * Whether the email has a valid format
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.isEmailValid = ko.pureComputed(function() {
+        var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        return emailRegex.test(this.email());
+    }, this);
 
     /// Methods
     /**
@@ -77,7 +86,7 @@ function ViewModel() {
             .then(function(errorMessage) {
                 this.errorMessage(errorMessage);
             }.bind(this));
-        });
+        }.bind(this));
     }.bind(this);
 }
 
