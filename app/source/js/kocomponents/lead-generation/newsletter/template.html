@@ -1,10 +1,14 @@
 <form id="newsletterSignupForm" class="LeadGeneration" aria-describedby="newsletterSignupFormInstructions">
     <fieldset>
-        <div class="col-xs-12">
+        <div class="col-xs-12" data-bind="visible: !isDone()">
             <legend>Stay informed</legend>
             <label for="signupNewsletterEmail">Email address</label>
         </div>
-        <div class="col-xs-9 col-md-10" data-bind="css: { 'has-error': errorMessage }">
+        <div class="col-xs-12" data-bind="visible: isDone()">
+            <legend>Thank you</legend>
+            <p id="newsletterSignupFormThankYou">We'll keep you in the loop!</p>
+        </div>
+        <div class="col-xs-9 col-sm-10 col-md-9" data-bind="visible: !isDone(), css: { 'has-error': errorMessage }">
             <div class="form-group" data-bind="css: { 'has-error': errorMessage, 'has-feedback': isEmailValid }">
                 <input class="form-control"
                     id="signupNewsletterEmail"
@@ -16,12 +20,12 @@
                         disable: isLocked,
                         css: { 'is-valid': isEmailValid }
                     " />
-                <i class="form-control-feedback text-muted ion-android-done"
+                <i class="form-control-feedback text-success ion-android-done"
                     data-bind="visible: isEmailValid"
                     aria-hidden="true"></i>
             </div>
         </div>
-        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+        <div class="col-xs-3 col-sm-2 col-md-3 col-lg-2" data-bind="visible: !isDone()">
             <button type="submit" class="btn btn-secondary btn-block"
                 data-bind="disable: isLocked, click: save"
                 aria-label="Sign up for newsletter">
@@ -29,11 +33,10 @@
                 <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync'"></icon-dec>
             </button>
         </div>
-        <div class="checkbox-inline">
+        <div class="checkbox-inline col-xs-10 col-offset-1" data-bind="visible: !isDone()">
             <input id="newsletterSignupForm-isServiceProfessional" type="checkbox" data-bind="checked: isServiceProfessional, disable: isLocked">
             <label for="newsletterSignupForm-isServiceProfessional">I offer local services</label>
         </div>
         <p id="newsletterSignupFormInstructions" class="help-block col-xs-12" data-bind="visible: !isDone()">Spam-free information – you can unsubscribe at any time.</p>
-        <p id="newsletterSignupFormThankYou" data-bind="visible: isDone">Thanks, we'll keep you in the loop!</p>
     </fieldset>
 </form>
