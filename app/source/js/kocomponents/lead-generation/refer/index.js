@@ -9,6 +9,7 @@ var TAG_NAME = 'lead-generation-refer';
 var TEMPLATE = require('./template.html');
 
 var ko = require('knockout');
+require('../../../utils/autofocusBindingHandler');
 var leadGenerationApi = require('../../../data/leadGeneration');
 var showError = require('../../../modals/error').show;
 var user = require('../../../data/userProfile').data;
@@ -25,6 +26,7 @@ var LATEST_STEP = 3;
  * @class
  */
 function ViewModel() {
+    //jshint maxstatements: 40
     /**
      * Holds a list of objects with a 'dispose' methods that need to be called
      * when disposing the component (see `dispose` method).
@@ -121,6 +123,14 @@ function ViewModel() {
      * @member {KnockoutComputed<boolean>}
      */
     this.isLocked = this.isSaving;
+    /**
+     * Whether the email has a valid format
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.isEmailValid = ko.pureComputed(function() {
+        var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        return emailRegex.test(this.email());
+    }, this);
 
     /// Manage data
     this.resetForm = function() {
@@ -129,7 +139,7 @@ function ViewModel() {
         this.lastName('');
         this.phone('');
         this.isServiceProfessional(false);
-    };
+    }.bind(this);
     /**
      * Automatically sets the 'isDone' flag to false whenever the form data
      * for last step is changed (after success request, the flag is set to
@@ -145,7 +155,7 @@ function ViewModel() {
         this.phone();
         // Reset flag
         this.isDone(false);
-    }));
+    }, this));
 
     /// Save methods and common utilities
     /**
@@ -174,6 +184,7 @@ function ViewModel() {
         }
         else {
             // Next step
+            this.resetForm();
             this.currentStep(step + 1);
         }
     }.bind(this);

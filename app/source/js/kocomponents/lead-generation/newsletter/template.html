@@ -16,7 +16,7 @@
             <legend>Stay informed</legend>
             <label for="signupNewsletterEmail">Email address</label>
         </div>
-        <div class="col-xs-9 col-sm-10 col-md-9" data-bind="css: { 'has-error': errorMessage }">
+        <div class="col-xs-9 col-sm-10 col-md-9">
             <div class="form-group" data-bind="css: { 'has-error': errorMessage, 'has-feedback': isEmailValid }">
                 <input class="form-control"
                     id="signupNewsletterEmail"
@@ -38,7 +38,7 @@
                 data-bind="disable: isLocked, click: save"
                 aria-label="Sign up for newsletter">
                 <icon-dec data-bind="visible: !isSaving()" params="icon: 'ion-arrow-right-c'"></icon-dec>
-                <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync'"></icon-dec>
+                <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync fa-spin'"></icon-dec>
             </button>
         </div>
         <div class="checkbox-inline col-xs-10 col-offset-1">

@@ -1,65 +1,144 @@
-<form id="referProfessionalForm" data-bind="with: data" class="LeadGeneration" aria-describedby="referProfessionalFormInstructions">
-    <fieldset id="referProfessionalsForm-StepOne" class="refer-step" data-bind="attr: { hidden: !isAtStepOne() }, css: { 'is-loading': isLoadingStepOne }">
+<form id="referProfessionalForm" class="LeadGeneration" aria-describedby="referProfessionalFormInstructions">
+    <fieldset id="referProfessionalsForm-StepOne" class="refer-step"
+        data-bind="visible: isAtStepOne, if: isAtStepOne, css: { 'has-error': errorMessage }">
         <div class="col-xs-12">
             <legend>Make an introduction</legend>
             <label for="referrerEmailAddress">Your email address</label>
         </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerEmailAddress', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid form-control': isEmailValid}, disable: emailIsLocked">
+        <div class="form-group has-feedback col-xs-9 col-md-10">
+            <div class="form-group" data-bind="css: { 'has-feedback': isEmailValid }">
+                <input class="form-control"
+                    id="referrerEmailAddress"
+                    type="email"
+                    placeholder="example@address.com"
+                    data-bind="
+                        textInput: email,
+                        popover: { content: errorMessage, trigger: 'focus', container: 'body', placement: 'top' },
+                        disable: isLocked,
+                        css: { 'is-valid': isEmailValid }
+                    " />
+                <i class="form-control-feedback text-success ion-android-done"
+                    data-bind="visible: isEmailValid"
+                    aria-hidden="true"></i>
             </div>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <button type="submit" class="btn btn-secondary btn-block" data-bind="text: disable: $parent.isLocked, click: $parent.save" aria-label="Continue to step two"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
+            <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: saveStepOne" aria-label="Continue to step two">
+                <icon-dec data-bind="visible: !isSaving()" params="icon: 'ion-arrow-right-c'"></icon-dec>
+                <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync fa-spin'"></icon-dec>
+            </button>
         </div>
         <div class="checkbox-inline">
-            <input id="isServiceProfessional" type="checkbox" data-bind="checked: user.isServiceProfessional, disable: isLocked">
+            <input id="isServiceProfessional" type="checkbox" data-bind="checked: isServiceProfessional, disable: isLocked">
             <label for="isServiceProfessional">I also offer local services</label>
         </div>
         <p id="referProfessionalFormInstructions" class="help-block col-xs-12">Know a service professional in your community who could benefit from the power of Loconomics?</p>
     </fieldset>
-    <fieldset id="referProfessionalsForm-StepTwo" class="refer-step" data-bind="attr: { hidden: !isAtStepTwo() }, css: { 'is-loading': isLoadingStepTwo }">
+    <fieldset id="referProfessionalsForm-StepTwo" class="refer-step"
+        data-bind="visible: isAtStepTwo, if: isAtStepTwo, autofocus: isAtStepTwo, css: { 'has-error': errorMessage }">
         <div class="col-xs-12">
             <legend>Your name</legend>
         </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
+        <div class="form-group has-feedback col-xs-9 col-md-10">
             <label for="referrerFirstName">Your first name</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerFirstName', name: 'firstName', field: firstName,  placeholder: '', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
+            <div class="form-group">
+                <input class="form-control"
+                    id="referrerFirstName"
+                    type="text"
+                    data-bind="
+                        textInput: firstName,
+                        disable: isLocked
+                    " />
+            </div>
         </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
+        <div class="form-group has-feedback col-xs-9 col-md-10">
             <label for="referrerLastName">Your last name</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerLastName', name: 'lastName', field: lastName,  placeholder: '', type: 'text'} }, css: {'is-valid form-control': isLastNameValid}"></div>
+            <div class="form-group">
+                <input class="form-control"
+                    id="referrerLastName"
+                    type="text"
+                    data-bind="
+                        textInput: lastName,
+                        disable: isLocked
+                    " />
+            </div>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <button type="submit" class="btn btn-secondary btn-block" data-bind="text: disable: $parent.isLocked, click: $parent.save" aria-label="Continue to next step"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
+            <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: saveStepTwo"
+                aria-label="Continue to next step">
+                <icon-dec data-bind="visible: !isSaving()" params="icon: 'ion-arrow-right-c'"></icon-dec>
+                <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync fa-spin'"></icon-dec>
+            </button>
         </div>
-        <p id="" class="help-block col-xs-12">We'll need your name so we can say who's referring them.</p>
+        <p class="help-block col-xs-12">We'll need your name so we can say who's referring them.</p>
     </fieldset>
-    <fieldset id="referProfessionalsForm-StepThree" class="refer-step" data-bind="attr: { hidden: !isAtStepThree() }, css: { 'is-loading': isLoadingStepThree }">
+    <fieldset id="referProfessionalsForm-StepThree" class="refer-step"
+        data-bind="visible: isAtStepThree, if: isAtStepThree, autofocus: isAtStepThree, css: { 'has-error': errorMessage }">
         <div class="col-xs-12">
-            <legend data-bind="visible: !submitted()">Who's the service professional?</legend>
-            <legend data-bind="visible: submitted">You're amazing – thanks! Know another?</legend>
+            <legend data-bind="visible: !isDone()">Who's the service professional?</legend>
+            <legend data-bind="visible: isDone, autofocus: isDone">You're amazing – thanks! Know another?</legend>
         </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
+        <div class="form-group has-feedback col-xs-9 col-md-10">
             <label for="referredFirstName">Their first name</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerFirstName', name: 'firstName', field: firstName,  placeholder: '', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
-        </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
-            <label for="referredLastName">Their last name</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referrerLastName', name: 'lastName', field: lastName,  placeholder: '', type: 'text'} }, css: {'is-valid form-control': isLastNameValid}"></div>
-        </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
-            <label for="referredLastName">Their email address</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referredEmailAddress', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid form-control': isEmailValid}, disable: emailIsLocked">
+            <div class="form-group">
+                <input class="form-control"
+                    id="referredFirstName"
+                    type="text"
+                    data-bind="
+                        textInput: firstName,
+                        disable: isLocked
+                    " />
             </div>
         </div>
-        <div class="form-group has-feedback col-xs-9 col-md-10" data-bind="css: { 'has-error': email.error }">
+        <div class="form-group has-feedback col-xs-9 col-md-10">
+            <label for="referredLastName">Their last name</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="referredLastName"
+                    type="text"
+                    data-bind="
+                        textInput: lastName,
+                        disable: isLocked
+                    " />
+            </div>
+        </div>
+        <div class="form-group has-feedback col-xs-9 col-md-10">
+            <label for="referredLastName">Their email address</label>
+            <div class="form-group" data-bind="css: { 'has-feedback': isEmailValid }">
+                <input class="form-control"
+                    id="referredEmailAddress"
+                    type="email"
+                    placeholder="example@address.com"
+                    data-bind="
+                        textInput: email,
+                        popover: { content: errorMessage, trigger: 'focus', container: 'body', placement: 'top' },
+                        disable: isLocked,
+                        css: { 'is-valid': isEmailValid }
+                    " />
+                <i class="form-control-feedback text-success ion-android-done"
+                    data-bind="visible: isEmailValid"
+                    aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="form-group has-feedback col-xs-9 col-md-10">
             <label for="referredPhoneNumber">Their phone number</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referredPhoneNumber', name: 'phone', field: phone, placeholder: '', type: 'tel' } }, css: {'is-valid': isPhoneValid }">
+            <div class="form-group">
+                <input class="form-control"
+                    id="referredPhoneNumber"
+                    type="tel"
+                    data-bind="
+                        textInput: phone,
+                        disable: isLocked
+                    " />
             </div>
         </div>
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <button type="submit" class="btn btn-secondary btn-block" data-bind="text: disable: $parent.isLocked, click: $parent.save" aria-label="Make the introduction"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
+            <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: saveStepThree"
+                aria-label="Make the introduction">
+                <icon-dec data-bind="visible: !isSaving()" params="icon: 'ion-arrow-right-c'"></icon-dec>
+                <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync fa-spin'"></icon-dec>
+            </button>
         </div>
-        <p id="" class="help-block col-xs-12">Fear not, we will not spam.</p>
+        <p class="help-block col-xs-12">Fear not, we will not spam.</p>
     </fieldset>
 </form>
