@@ -63,6 +63,6 @@ exports.updateSubscription = function(data) {
  * It's required for anonymous users
  * @returns {Promise}
  */
-exports.subscribeReferral = function(data) {
+exports.referAServiceProfessional = function(data) {
     return remote.post('lead-generation/referral/refer', data);
 };
