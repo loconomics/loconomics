@@ -8,6 +8,7 @@ var TAG_NAME = 'lead-generation-newsletter';
 var template = require('./template.html');
 
 var ko = require('knockout');
+require('../../../utils/autofocusBindingHandler');
 var leadGenerationApi = require('../../../data/leadGeneration');
 var showError = require('../../../modals/error').show;
 var user = require('../../../data/userProfile').data;
