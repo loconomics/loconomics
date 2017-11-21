@@ -7,6 +7,7 @@ var ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSear
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 var search = require('../data/search');
+var user = require('../data/userProfile').data;
 require('../kocomponents/lead-generation/newsletter');
 require('../kocomponents/lead-generation/refer');
 
@@ -21,10 +22,6 @@ var A = Activity.extend(function SearchJobTitleActivity() {
     this.title = ko.computed(function() {
         var result = this.jobTitleSearchResult();
         return result && result.pluralName;
-    }, this.viewModel);
-    this.searchFailureMessage = ko.computed(function() {
-        var result = this.jobTitleSearchResult();
-        return result && "We don't yet have " + result.pluralName + ' in your area. Help us grow by introducing us to professionals or signing up for our newsletter.';
     }, this.viewModel);
 });
 
@@ -43,6 +40,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel() {
+    this.isAnonymous = user.isAnonymous;
     this.isLoading = ko.observable(false);
     this.isJobTitleLoading = ko.observable(false);
     //create an observable variable to hold the search term
@@ -85,4 +83,9 @@ function ViewModel() {
             this.isLoading(false);
         }.bind(this));
     };
+    this.searchFailureMessage = ko.computed(function() {
+        var result = this.jobTitleSearchResult();
+        var name = result && ko.unwrap(result.pluralName);
+        return result && "We don't yet have " + name + ' in your area. Help us grow by introducing us to professionals or signing up for our newsletter.';
+    },this);
 }

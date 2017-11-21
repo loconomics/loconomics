@@ -113,6 +113,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(shell) {
+    this.isAnonymous = user.isAnonymous;
     // Inherits
     MarketplaceSearchVM.call(this);
 
