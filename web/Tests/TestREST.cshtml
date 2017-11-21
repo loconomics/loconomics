@@ -1071,6 +1071,38 @@
         "User Fee Payments": {
             "url": "/api/v1/en-US/me/fee-payments",
             "get": {}
+        },
+
+        "Lead Generation: subscribe to newsletter": {
+            "url": "/api/v1/en-US/lead-generation/newsletter/subscribe",
+            "post": {
+                "email": "user@test.one",
+                "isServiceProfessional": true
+            }
+        },
+        "Lead Generation: subscribe to provide referrals": {
+            "url": "/api/v1/en-US/lead-generation/referral/subscribe",
+            "post": {
+                "email": "user@test.one",
+                "isServiceProfessional": true
+            },
+            "put": {
+                "userID": 123,
+                "email": "user@test.one",
+                "firstName": "User",
+                "lastName": "Test"
+            }
+        },
+        "Lead Generation: refer a professional": {
+            "url": "/api/v1/en-US/lead-generation/referral/refer",
+            "post": {
+                "email": "service@professional.test",
+                "firstName": "Service",
+                "lastname": "Professional",
+                "phone": "123456789",
+                "referredByUserID": 123,
+                "referredByEmail": "user@test.one"
+            }
         }
     };
 

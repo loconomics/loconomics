@@ -41,8 +41,8 @@ var authKeyFromCredentials = function(credentials) {
  * Clear the authorization value for all future requests
  */
 rest.clearAuthorization = function() {
-    if (rest.exraHeaders) {
-        delete rest.exraHeaders.Authorization;
+    if (rest.extraHeaders) {
+        delete rest.extraHeaders.Authorization;
     }
 };
 

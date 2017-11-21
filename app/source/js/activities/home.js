@@ -13,6 +13,8 @@ var user = require('../data/userProfile').data;
 //var ActionForValue = require('../kocomponents/home/search-box').ActionForValue;
 var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
 require('../kocomponents/location-autocomplete');
+require('../kocomponents/lead-generation/newsletter');
+require('../kocomponents/lead-generation/refer');
 
 var A = Activity.extend(function HomeActivity() {
 
@@ -111,6 +113,7 @@ A.prototype.show = function show(state) {
 };
 
 function ViewModel(shell) {
+    this.isAnonymous = user.isAnonymous;
     // Inherits
     MarketplaceSearchVM.call(this);
 

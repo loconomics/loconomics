@@ -127,7 +127,7 @@ function ViewModel(app) {
     };
 
     this.loginButtonText = ko.pureComputed(function() {
-        return this.isWorking() ? 'Logging you in...' : 'Log in';
+        return this.isWorking() ? 'Signing you in...' : 'Sign in';
     }, this);
     this.requestResetButtonText = ko.pureComputed(function() {
         return this.isWorking() ? 'Requesting a reset code...' : 'Reset my password';
@@ -137,7 +137,7 @@ function ViewModel(app) {
     }, this);
 
     this.facebookButtonText = ko.pureComputed(function() {
-        return fb.isReady() ? 'Log in with Facebook' : 'Loading Facebook...';
+        return fb.isReady() ? 'Sign in with Facebook' : 'Loading Facebook...';
     }, this);
 
     this.enableFacebookButton = ko.pureComputed(function() {
