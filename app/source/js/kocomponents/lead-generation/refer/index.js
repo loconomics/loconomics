@@ -19,7 +19,7 @@ var user = require('../../../data/userProfile').data;
  * new professionals.
  * @const {number}
  */
-var LATEST_STEP = 3;
+var LAST_STEP = 3;
 
 /**
  *
@@ -156,6 +156,24 @@ function ViewModel() {
         // Reset flag
         this.isDone(false);
     }, this));
+    /**
+     * Automatically move user to the last step if is a logged user, or to
+     * first one if has logged off without starting the process before.
+     * @private
+     */
+    this.disposables.push(ko.computed(function() {
+        if (user.isAnonymous()) {
+            // User is or goes anonymous (logout), set at first step,
+            // except there is 'referrer' data already
+            if (!this.referredByUserID()) {
+                this.currentStep(1);
+            }
+        }
+        else {
+            // If is a logged user, or has logged, move to last step
+            this.currentStep(LAST_STEP);
+        }
+    }, this));
 
     /// Save methods and common utilities
     /**
@@ -175,7 +193,7 @@ function ViewModel() {
         this.isSaving(false);
         // Move next step
         var step = this.currentStep();
-        if (step === LATEST_STEP) {
+        if (step === LAST_STEP) {
             // Last step ('refer professional') can be repeated endlessly,
             // but need to reset current values
             this.resetForm();
