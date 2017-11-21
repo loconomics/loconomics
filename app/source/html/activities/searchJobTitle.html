@@ -8,8 +8,8 @@
                     <p>(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
                     <p data-bind="text: searchDescription"></p>
                 </div>
-                <div class="SearchResultsBackground-text" data-bind="visible: !serviceProfessionalsCount()">
-                    <p data-bind="text: $root.searchFailureMessage"></p>
+                <div class="SearchResultsBackground-text" data-bind="visible: !serviceProfessionalsCount">
+                    <p><span data-bind="text: $root.searchFailureMessage"></span></p>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
             </li>
         </ul>
         <ul>
-            <li>
+            <li data-bind="visible: isAnonymous()">
                 <lead-generation-newsletter></lead-generation-newsletter>
             </li>
             <li>
