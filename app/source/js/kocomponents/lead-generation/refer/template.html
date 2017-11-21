@@ -2,9 +2,9 @@
     <fieldset id="referProfessionalsForm-StepOne" class="refer-step"
         data-bind="visible: isAtStepOne() && !isAnonymous(), if: isAtStepOne">
         <div class="col-xs-12">
-            <legend>Make an introduction</legend>
-            <p>Your email addressKnow a service professional in your community who could benefit from the power of Loconomics?</p>
-            <button class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: ''">Start introduction</button>
+            <legend>Know a professional?</legend>
+            <p class="LeadGeneration-loggedInMessage">Know a service professional in your community who could benefit from the power of Loconomics?</p>
+            <button class="btn btn-secondary btn-block btn-lg LeadGeneration-buttonLarge" data-bind="disable: isLocked, click: goStepTwo">Introduce us</button>
         </div>
     </fieldset>
     <fieldset id="referProfessionalsForm-StepOne" class="refer-step"
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="col-xs-3 col-sm-2 col-md-3 col-lg-2">
-            <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: saveStepOne" aria-label="Continue to step two">
+            <button type="submit" class="btn btn-secondary btn-block LeadGeneration-buttonSmall" data-bind="disable: isLocked, click: saveStepOne" aria-label="Continue to step two">
                 <icon-dec data-bind="visible: !isSaving()" params="icon: 'ion-arrow-right-c'"></icon-dec>
                 <icon-dec data-bind="visible: isSaving()" params="icon: 'ion-android-sync fa-spin'"></icon-dec>
             </button>
@@ -65,7 +65,7 @@
                     disable: isLocked
                 " />
         </div>
-        <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: saveStepTwo">
+        <button type="submit" class="btn btn-secondary btn-block btn-lg LeadGeneration-buttonLarge" data-bind="disable: isLocked, click: saveStepTwo">
             <span data-bind="visible: !isSaving()">Continue</span>
             <span data-bind="visible: isSaving()">Saving</span>
         </button>
@@ -127,7 +127,7 @@
                     " />
             </div>
         </div>
-        <button type="submit" class="btn btn-secondary btn-block" data-bind="disable: isLocked, click: saveStepThree">Make introduction
+        <button type="submit" class="btn btn-secondary btn-block btn-lg LeadGeneration-buttonLarge" data-bind="disable: isLocked, click: saveStepThree">Make introduction
         </button>
         <p class="help-block">Fear not, we will not spam.</p>
     </fieldset>
