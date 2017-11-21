@@ -10,6 +10,7 @@ var template = require('./template.html');
 var ko = require('knockout');
 var leadGenerationApi = require('../../../data/leadGeneration');
 var showError = require('../../../modals/error').show;
+var user = require('../../../data/userProfile').data;
 
 /**
  *
@@ -25,6 +26,10 @@ function ViewModel() {
      * @member {KnockoutObservable<boolean>}
      */
     this.isServiceProfessional = ko.observable(false);
+    /**
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isAnonymous = user.isAnonymous;
 
     /// Statuses
     /**

@@ -1,11 +1,17 @@
 <form id="newsletterSignupForm" class="LeadGeneration" aria-describedby="newsletterSignupFormInstructions">
+    <fieldset data-bind="visible: !isAnonymous(), ifnot: isAnonymous">
+        <div class="col-xs-12">
+            <legend>Stay informed</legend>
+            <p>You can subscribe or unsubscribe to Loconomics information <a class="btn btn-link btn-inline" href="/privacySettings">righ at the privacy settings</a>.</p>
+        </div>
+    </fieldset>
     <fieldset data-bind="visible: isDone, if: isDone">
         <div class="col-xs-12">
             <legend>Thank you</legend>
             <p id="newsletterSignupFormThankYou">We'll keep you in the loop!</p>
         </div>
     </fieldset>
-    <fieldset data-bind="visible: !isDone(), ifnot: isDone">
+    <fieldset data-bind="visible: !isDone() && isAnonymous(), if: !isDone() && isAnonymous()">
         <div class="col-xs-12">
             <legend>Stay informed</legend>
             <label for="signupNewsletterEmail">Email address</label>
