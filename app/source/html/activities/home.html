@@ -115,10 +115,10 @@
         </section>
         <section class="home-lead-generation clearfix">
             <ul class="list-unstyled">
-                <li class="col-xs-12 col-md-4 col-md-offset-2">
+                <li data-bind="visible: isAnonymous()" class="col-xs-12 col-md-4 col-md-offset-2">
                     <lead-generation-newsletter></lead-generation-newsletter>
                 </li>
-                <li class="col-xs-12 col-md-4">
+                <li data-bind="css: {'col-md-offset-4':!isAnonymous()}" class="col-xs-12 col-md-4">
                     <lead-generation-refer></lead-generation-refer>
                 </li>
             </ul>
