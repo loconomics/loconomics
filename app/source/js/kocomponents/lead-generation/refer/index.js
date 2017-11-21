@@ -157,21 +157,16 @@ function ViewModel() {
         this.isDone(false);
     }, this));
     /**
-     * Automatically move user to the last step if is a logged user, or to
-     * first one if has logged off without starting the process before.
-     * @private
+     * Automatically fills in the name of the logged user when reaching the
+     * step 2; nothing for anonymous users
+     * @private.
      */
     this.disposables.push(ko.computed(function() {
-        if (user.isAnonymous()) {
-            // User is or goes anonymous (logout), set at first step,
-            // except there is 'referrer' data already
-            if (!this.referredByUserID()) {
-                this.currentStep(1);
-            }
-        }
-        else {
-            // If is a logged user, or has logged, move to last step
-            this.currentStep(LAST_STEP);
+        // Detect when goes to step two being a logged use
+        if (!user.isAnonymous() && this.currentStep() === 2) {
+            // Fill in name, if any
+            this.firstName(user.firstName());
+            this.lastName(user.lastName());
         }
     }, this));
 
@@ -278,6 +273,15 @@ function ViewModel() {
         return leadGenerationApi.referAServiceProfessional(data)
         .then(onSuccessSave)
         .catch(onSaveError);
+    }.bind(this);
+    /**
+     * Allows to move to second step without completing the first one, only
+     * for logged users that actually don't need to first step.
+     */
+    this.goStepTwo = function() {
+        if (!user.isAnonymous()) {
+            this.currentStep(2);
+        }
     }.bind(this);
 }
 
