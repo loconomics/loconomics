@@ -52,19 +52,21 @@
 
         ## REST API
         PUT /lead-generation/referral/subscribe
-        - userID:int
-        - email:string
+        - userID:int [Required for anonymous user]
+        - email:string [Required for anonymous user]
         - firstName:string
         - lastName:string
 
         ## Restrictions
         - Only available to anonymous users (UI should prevent allowing this request to logged users)
         - All input data is required
-        - Check that userID and email exists and matches the same user (it prevents from sending random IDs in the request, since this calls are anonymous, and we cannot validate a user session for the subscribed client because is not an active and password enabled account still).
+        - **For anonymous users:** Check that userID and email exists and matches the same user (it prevents from sending random IDs in the request, since this calls are anonymous, and we cannot validate a user session for the subscribed client because is not an active and
+          password enabled  account still).
+        - **For logged users:** values userID and email are not required and not used on this case, we use the the userID of the logged user.
 
         ## Storage
         Update [users] Where
-        - userID = data.userID
+        - userID = [when anonymous] data.userID [when logged user] context.user.userID
         Set:
         - isServiceProfessional: data.isServiceProfessional
         - firstName: data.firstName
@@ -275,21 +277,30 @@
 
         private dynamic UpdateSubscription()
         {
-            if (WebSecurity.IsAuthenticated)
+            if (!WebSecurity.IsAuthenticated)
             {
-                throw new HttpException(400, "You are already logged in!");
+                Validation.RequireField("userID", LcRessources.RequiredField("User identification"));
+                // Only validate if email is given, here we don't need format validation since the proposal is to compare if the value
+                // exists and matches same record as userID
+                Validation.RequireField("email", LcRessources.RequiredField("E-mail"));
             }
-            Validation.RequireField("userID", LcRessources.RequiredField("User identification"));
-            // Only validate if email is given, here we don't need format validation since the proposal is to compare if the value
-            // exists and matches same record as userID
-            Validation.RequireField("email", LcRessources.RequiredField("E-mail"));
             Validation.RequireField("firstName", LcRessources.RequiredField("First name"));
             Validation.RequireField("lastName", LcRessources.RequiredField("Second name"));
 
             if (Validation.IsValid() && ModelState.IsValid)
             {
-                var userID = Request.Form["userID"].AsInt();
-                var email = Request.Form["email"];
+                var userID = 0;
+                var email = "";
+                if (WebSecurity.IsAuthenticated)
+                {
+                    userID = WebSecurity.CurrentUserId;
+                    email = WebSecurity.CurrentUserName;
+                }
+                else
+                {
+                    userID = Request.Form["userID"].AsInt();
+                    email = Request.Form["email"];
+                }
                 var firstName = Request.Form["firstName"];
                 var lastName = Request.Form["lastName"];
 
