@@ -8,6 +8,7 @@ var ko = require('knockout');
 var Activity = require('../components/Activity');
 var search = require('../data/search');
 require('../kocomponents/lead-generation/newsletter');
+require('../kocomponents/lead-generation/refer');
 
 var A = Activity.extend(function SearchJobTitleActivity() {
 

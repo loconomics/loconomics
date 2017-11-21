@@ -14,6 +14,7 @@ var user = require('../data/userProfile').data;
 var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
 require('../kocomponents/location-autocomplete');
 require('../kocomponents/lead-generation/newsletter');
+require('../kocomponents/lead-generation/refer');
 
 var A = Activity.extend(function HomeActivity() {
 

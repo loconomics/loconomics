@@ -1,26 +1,3 @@
-    <fieldset id="referProfessionalsForm-StepThree" class="refer-step" data-bind="attr: { hidden: !isAtStepThree() }, css: { 'is-loading': isLoadingStepThree }">
-        <legend data-bind="visible: !submitted()">Who's the service professional?</legend>
-        <legend data-bind="visible: submitted">You're amazing – thanks! Know another?</legend>
-        <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-            <label for="referredFirstName">Their first name</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referredFirstName', name: 'firstName', field: firstName,  placeholder: '', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
-        </div>
-        <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-            <label for="referredEmail">Their email address</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referredEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
-            </div>
-        </div>
-        <p>and/or</p>
-        <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-            <label for="signupNewsletterEmail">Their phone number</label>
-            <div data-bind="template: { name: 'signup-field', data: { id: 'referredPhoneNumber', name: 'phone', field: phone, placeholder: '', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
-        </div>
-        <p id="referredProfessionalFormInstructions" class="help-block">Fear not, we will not spam.</p>
-        <button type="submit" class="btn btn-secondary" data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save">Make introduction</button>
-    </fieldset>
-</form>
-
-
 <form id="referProfessionalForm" data-bind="with: data" class="LeadGeneration" aria-describedby="referProfessionalFormInstructions">
     <fieldset id="referProfessionalsForm-StepOne" class="refer-step" data-bind="attr: { hidden: !isAtStepOne() }, css: { 'is-loading': isLoadingStepOne }">
         <div class="col-xs-12">
@@ -56,7 +33,7 @@
             <button type="submit" class="btn btn-secondary btn-block" data-bind="text: disable: $parent.isLocked, click: $parent.save" aria-label="Continue to next step"><icon-dec params="icon: 'ion-arrow-right-c'"></icon-dec></button>
         </div>
         <p id="" class="help-block col-xs-12">We'll need your name so we can say who's referring them.</p>
-    </fieldset>    
+    </fieldset>
     <fieldset id="referProfessionalsForm-StepThree" class="refer-step" data-bind="attr: { hidden: !isAtStepThree() }, css: { 'is-loading': isLoadingStepThree }">
         <div class="col-xs-12">
             <legend data-bind="visible: !submitted()">Who's the service professional?</legend>
