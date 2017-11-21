@@ -200,7 +200,7 @@
                 <div class="col-xs-12 SectionHeading">
                     <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
                     <a data-bind="visible: profile().publicBio, attr: {href: '#!publicBio' + $root.returnLinkGeneralActivity(),'aria-label': 'Edit your public bio' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !profile().publicBio, attr: {href: '#!publicBio' + $root.returnLinkGeneralActivity(),'aria-label': 'Add your public bio' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="visible: !profile().publicBio(), attr: {href: '#!publicBio' + $root.returnLinkGeneralActivity(),'aria-label': 'Add your public bio' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="container-fluid">
                     <div class="col-xs-12">
