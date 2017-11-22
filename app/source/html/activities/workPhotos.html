@@ -18,7 +18,7 @@
                     <form id="workPhotosForm" class="SmartNavContent container-fluid">
                         <h1><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
                         <ul class="list-unstyled WorkPhotos"
-                            data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
+                            data-bind="foreach: list">
                             <li>
                                 <div class="WorkPhotos-imgBtn">
                                     <img alt="Work photo" class="WorkPhotos-img" data-bind="attr: { src: url, alt: caption, style: photoRotationStyle, hidden: localTempPhotoPreview }" />
@@ -31,13 +31,6 @@
                                         <span class="glyphicon glyphicon-repeat"></span>
                                         <span>Rotate</span>
                                     </button>
-                                    <!-- Needed as a link with #move, setting role=button for accessibility; if can be changed to real button, the best -->
-                                    <!--TEMPORARLY REMOVED move button (defeats all the purpose of using sortable binding rather than foreach)
-                                        but we need to research a way to make it accessible
-                                    <a href="#move" role="button" class="btn btn-link WorkPhotos-moveBtn">
-                                        <span class="glyphicon glyphicon-move"></span>
-                                        <span>Move</span>
-                                    </a>-->
                                     <button type="button" class="btn btn-link WorkPhotos-removeBtn" data-bind="click: $root.removeImg">
                                         <span class="glyphicon glyphicon-remove"></span>
                                         <span>Delete</span>

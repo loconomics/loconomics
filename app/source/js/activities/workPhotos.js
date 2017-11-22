@@ -3,12 +3,12 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var $ = require('jquery');
+var Activity = require('../components/Activity');
 
-var WorkPhoto = require('../models/WorkPhoto'),
-    photoTools = require('../utils/photoTools');
+var WorkPhoto = require('../models/WorkPhoto');
+var photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
 var workPhotos = require('../data/workPhotos');
 require('../kocomponents/button-file');
@@ -25,17 +25,6 @@ var A = Activity.extend(function WorkPhotosActivity() {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
     this.title('Your work photos');
-
-    // Event handlers for photo list management
-    this.registerHandler({
-        target: this.$activity,
-        selector: '.WorkPhotos-imgBtn',
-        event: 'click mouseenter mouseleave',
-        handler: function(event) {
-            if (!this.viewModel.state.isLocked())
-                $(event.target).closest('li').toggleClass('is-selected', event.type === 'mouseenter' || event.type === 'click');
-        }.bind(this)
-    });
 
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
@@ -209,26 +198,6 @@ function ViewModel(app) {
         }
         else {
             return Promise.reject('Take photo is not supported on the web right now');
-        }
-    };
-
-    this.updateSort = function(info) {
-        /* info {
-            item: Model,
-            sourceIndex: 0,
-            targetIndex: 1,
-            sourceParent: observableArray, // The list
-            targetParent: observableArray, // The same as sourceParent in this case
-            sourceparentNode: domElement
-        }
-        */
-        // Rather than try to update only affected indexes (the targetIndex and everything
-        // after it), update all items to keep the rankPosition sane (edge cases like deletions
-        // or server side bigger rankPositions could complicate that minor optimization, so just
-        // all is less problem and is still quick).
-        var list = info.sourceParent();
-        for (var i = 0, l = list.length; i < l; i++) {
-            list[i].rankPosition(i + 1);
         }
     };
 
