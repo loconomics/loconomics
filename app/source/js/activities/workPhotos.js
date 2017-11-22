@@ -212,26 +212,6 @@ function ViewModel(app) {
         }
     };
 
-    this.updateSort = function(info) {
-        /* info {
-            item: Model,
-            sourceIndex: 0,
-            targetIndex: 1,
-            sourceParent: observableArray, // The list
-            targetParent: observableArray, // The same as sourceParent in this case
-            sourceparentNode: domElement
-        }
-        */
-        // Rather than try to update only affected indexes (the targetIndex and everything
-        // after it), update all items to keep the rankPosition sane (edge cases like deletions
-        // or server side bigger rankPositions could complicate that minor optimization, so just
-        // all is less problem and is still quick).
-        var list = info.sourceParent();
-        for (var i = 0, l = list.length; i < l; i++) {
-            list[i].rankPosition(i + 1);
-        }
-    };
-
     // Delete on remote REST API all the registered items for deletion
     var remoteDeleteFlaggedItems = function() {
         return this.removedItems().reduce(function(cur, next) {
