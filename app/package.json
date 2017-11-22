@@ -15,10 +15,7 @@
     "watch": "grunt watch",
     "build": "grunt"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:joshdanielson/Loconomics.git"
-  },
+  "repository": "loconomics/loconomics",
   "private": true,
   "devDependencies": {
     "bliss": "~1.0.1",
