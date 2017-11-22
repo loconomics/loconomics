@@ -14,17 +14,18 @@
         border: 0.0625rem solid $gray-light;
     }
     .form-group {
-        margin-bottom: .5em;    
+        margin-bottom: .5em;
     }
     .LeadGeneration-buttonSmall {
         margin-left: 1em;
     }
     .LeadGeneration-buttonLarge {
         margin: 1em auto;
-        width: 75%;
+        min-width: 75%;
+        width: auto;
     }
     .LeadGeneration-loggedInMessage {
-        font-size: 1.2em;    
+        font-size: 1.2em;
     }
     .col-xs-3,
     .col-xs-9,
@@ -43,7 +44,8 @@
     }
     .col-xs-3 {
         .btn-secondary {
-            width: 60%;
+            min-width: 60%;
+            width: auto;
         }
     }
 }
