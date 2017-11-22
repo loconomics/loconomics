@@ -13,6 +13,7 @@ namespace LcEnum
         suspended = 3,
         unauthorized = 4,
         revoked = 5,
-        serviceProfessionalClient = 6
+        serviceProfessionalClient = 6,
+        subscriber = -1
     }
 }
