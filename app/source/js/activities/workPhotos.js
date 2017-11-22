@@ -3,12 +3,12 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var $ = require('jquery');
+var Activity = require('../components/Activity');
 
-var WorkPhoto = require('../models/WorkPhoto'),
-    photoTools = require('../utils/photoTools');
+var WorkPhoto = require('../models/WorkPhoto');
+var photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
 var workPhotos = require('../data/workPhotos');
 require('../kocomponents/button-file');
@@ -25,17 +25,6 @@ var A = Activity.extend(function WorkPhotosActivity() {
         backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
     });
     this.title('Your work photos');
-
-    // Event handlers for photo list management
-    this.registerHandler({
-        target: this.$activity,
-        selector: '.WorkPhotos-imgBtn',
-        event: 'click mouseenter mouseleave',
-        handler: function(event) {
-            if (!this.viewModel.state.isLocked())
-                $(event.target).closest('li').toggleClass('is-selected', event.type === 'mouseenter' || event.type === 'click');
-        }.bind(this)
-    });
 
     if (!photoTools.takePhotoSupported()) {
         // Web version to pick a photo/file
