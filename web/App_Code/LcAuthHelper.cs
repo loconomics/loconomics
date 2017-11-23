@@ -219,18 +219,34 @@ public static class LcAuthHelper
     /// Is true when the user exist at database but the account is not enabled (never accepted TOU or created a password).
     /// That happens when:
     /// - Has a status of 'serviceProfessionalClient'
+    /// - Has a status of 'subscriber'
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
     private static bool IsUserButNotEnabledAccount(LcRest.UserProfile user)
     {
-        return user.accountStatusID == (int)LcEnum.AccountStatus.serviceProfessionalClient;
+        return (
+            user.accountStatusID == (int)LcEnum.AccountStatus.serviceProfessionalClient ||
+            user.accountStatusID == (int)LcEnum.AccountStatus.subscriber
+        );
     }
+    const string UserIsServiceProfessionalClientMessage = @"
+        We see one of our service professionals has already scheduled services for you in the past.
+        We've just sent an invitation to create your account to {0}.
+        Please follow its instructions. We can't wait to get you on board!
+    ";
+    const string UserIsSubscriberMessage = @"
+        We see you have subscribed previously to our newsletter or referrenced a service professional.
+        We've just sent an invitation to create your account to {0}.
+        Please follow its instructions. We can't wait to get you on board!
+    ";
     /// <summary>
-    /// Convert a user record with 'Not Enabled Account' into a standard enabled account. This doesn't validate the user
-    /// record fits that case, so call IsUserButNotEnabledAccount before this (and see it's docs)
+    /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount
+    /// for more info, and check that value before call this to prevent an error when user has an enabled account.
     /// This supports the cases
     /// - User with status of 'serviceProfessionalClient': the user has an account created as client by a service professional.
+    /// - User with status of 'subscriber': the user submitted it's email through a Lead Generation API to get in touch with newsletters or
+    ///   to reference a service professional.
     /// 
     /// For the conversion, we need support next actions/requests:
     /// - A: We need to communicate that specific situation (error message), generate a confirmation code
@@ -244,18 +260,30 @@ public static class LcAuthHelper
     /// <param name="password"></param>
     /// <param name="returnProfile"></param>
     /// <returns></returns>
-    private static LoginResult SignupANotEnabledAccount(int userID, string email, string password, bool returnProfile)
+    private static LoginResult SignupANotEnabledAccount(int userID, string email, string password, bool returnProfile, int accountStatusID)
     {
+        // Get confirmation code, if any
         var confirmationCode = Request["confirmationCode"];
-        var errMsg = String.Format(@"
-            We see one of our service professionals has already scheduled services for you in the past.
-            We've just sent an invitation to create your account to {0}.
-            Please follow its instructions. We can't wait to get you on board!", email
-        );
+        // Prepare error message
+        var errTpl = "";
+        if (accountStatusID == (int)LcEnum.AccountStatus.serviceProfessionalClient)
+        {
+            errTpl = UserIsServiceProfessionalClientMessage;
+        }
+        else if (accountStatusID == (int)LcEnum.AccountStatus.subscriber)
+        {
+            errTpl = UserIsSubscriberMessage;
+        }
+        else
+        {
+            throw new Exception("Not allowed");
+        }
+        var errMsg = String.Format(errTpl, email);
+
         // Action/Request A: Create confirmation code
         if (String.IsNullOrEmpty(confirmationCode))
         {
-            // To generate a confirmation code (creates the Membership record, that does not exists still since is as just a client)
+            // To generate a confirmation code (creates the Membership record, that does not exists still)
             // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
             // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
             // record will exists already, just double check and try creation only if record don't exists:
@@ -275,7 +303,7 @@ public static class LcAuthHelper
             // If confirmation token is valid, enable account and reset password
             if (LcAuth.GetConfirmationToken(userID) == confirmationCode)
             {
-                // We know is valid, we can update the accountStatus to not be any more a "service professional's client"
+                // We know is valid, we can update the accountStatus to be an standard/enabled account
                 // and that will allow to set the account as confirmed
                 using (var db = new LcDatabase())
                 {
@@ -394,7 +422,7 @@ public static class LcAuthHelper
                 // and is possible for that user to become an regular/enabled account.
                 if (IsUserButNotEnabledAccount(user))
                 {
-                    logged = SignupANotEnabledAccount(userID, email, password, returnProfile);
+                    logged = SignupANotEnabledAccount(userID, email, password, returnProfile, user.accountStatusID);
                 }
                 else
                 {
