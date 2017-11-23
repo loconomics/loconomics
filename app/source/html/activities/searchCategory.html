@@ -31,7 +31,7 @@
                 <div class="SearchResultsBackground" data-bind="css: $root.categoryBackgroundImage">
                     <div class="SearchResultsBackground-text">
                         <h1 data-bind="text: $root.title"></h1>
-                        <p data-bind="visible: serviceProfessionalsCount() > 0">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
+                        <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
                         <p><span data-bind="text: searchDescription"></span></p>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="ServiceProfessionalResult-actions">
                         <p><strong data-bind="visible: serviceProfessionalsCount > 0 && averageHourlyRate > 0">
-                        <span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> from <span class="FromPrice">$<span  data-bind="text: averageHourlyRate"></span>/hour</span>
+                        <span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> from <span class="FromPrice"><span  data-bind="text: averageHourlyRate, format: { type: 'number', format: '$0,0' }"></span>/hour</span>
                         </strong></p>
                         <p><span data-bind="visible: serviceProfessionalsCount < 1 || averageHourlyRate < 1">&nbsp;</span>
                         </p>
