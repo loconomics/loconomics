@@ -214,6 +214,121 @@ public static class LcAuthHelper
         }
     }
 
+    #region Internal Signup processes
+    /// <summary>
+    /// Is true when the user exist at database but the account is not enabled (never accepted TOU or created a password).
+    /// That happens when:
+    /// - Has a status of 'serviceProfessionalClient'
+    /// - Has a status of 'subscriber'
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    private static bool IsUserButNotEnabledAccount(LcRest.UserProfile user)
+    {
+        return (
+            user.accountStatusID == (int)LcEnum.AccountStatus.serviceProfessionalClient ||
+            user.accountStatusID == (int)LcEnum.AccountStatus.subscriber
+        );
+    }
+    const string UserIsServiceProfessionalClientMessage = @"
+        We see one of our service professionals has already scheduled services for you in the past.
+        We've just sent an invitation to create your account to {0}.
+        Please follow its instructions. We can't wait to get you on board!
+    ";
+    const string UserIsSubscriberMessage = @"
+        We see you have subscribed previously to our newsletter or referrenced a service professional.
+        We've just sent an invitation to create your account to {0}.
+        Please follow its instructions. We can't wait to get you on board!
+    ";
+    /// <summary>
+    /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount
+    /// for more info, and check that value before call this to prevent an error when user has an enabled account.
+    /// This supports the cases
+    /// - User with status of 'serviceProfessionalClient': the user has an account created as client by a service professional.
+    /// - User with status of 'subscriber': the user submitted it's email through a Lead Generation API to get in touch with newsletters or
+    ///   to reference a service professional.
+    /// 
+    /// For the conversion, we need support next actions/requests:
+    /// - A: We need to communicate that specific situation (error message), generate a confirmation code
+    ///   for the existent user, send email to let him to confirm that he/she owns the given e-mail.
+    /// - B: On returning here after request/response A, a confirmation code is being provided and we must proceed
+    ///   by checking the confirmation code and, on success, enable account (change status), update the membership password and
+    ///   continue with a valid set of LoginResult. External code should allow user to update any additional account data.
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <param name="returnProfile"></param>
+    /// <returns></returns>
+    private static LoginResult SignupANotEnabledAccount(int userID, string email, string password, bool returnProfile, int accountStatusID)
+    {
+        // Get confirmation code, if any
+        var confirmationCode = Request["confirmationCode"];
+        // Prepare error message
+        var errTpl = "";
+        if (accountStatusID == (int)LcEnum.AccountStatus.serviceProfessionalClient)
+        {
+            errTpl = UserIsServiceProfessionalClientMessage;
+        }
+        else if (accountStatusID == (int)LcEnum.AccountStatus.subscriber)
+        {
+            errTpl = UserIsSubscriberMessage;
+        }
+        else
+        {
+            throw new Exception("Not allowed");
+        }
+        var errMsg = String.Format(errTpl, email);
+
+        // Action/Request A: Create confirmation code
+        if (String.IsNullOrEmpty(confirmationCode))
+        {
+            // To generate a confirmation code (creates the Membership record, that does not exists still)
+            // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
+            // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
+            // record will exists already, just double check and try creation only if record don't exists:
+            if (!LcAuth.HasMembershipRecord(userID))
+            {
+                WebSecurity.CreateAccount(email, LcAuth.GeneratePassword(), true);
+            }
+            StartOnboardingForUser(userID);
+            // send email to let him to confirm it owns the given e-mail
+            LcMessaging.SendWelcomeCustomer(userID, email);
+            // Not valid after all, just communicate was was done and needs to do to active its account:
+            throw new HttpException(409, errMsg);
+        }
+        // Action/Request B: confirm confirmation code
+        else
+        {
+            // If confirmation token is valid, enable account and reset password
+            if (LcAuth.GetConfirmationToken(userID) == confirmationCode)
+            {
+                // We know is valid, we can update the accountStatus to be an standard/enabled account
+                // and that will allow to set the account as confirmed
+                using (var db = new LcDatabase())
+                {
+                    db.Execute("UPDATE users SET accountStatusID = @1 WHERE UserID = @0", userID, LcEnum.AccountStatus.active);
+                }
+                // now we can confirm (we already know the code is valid, it will just double check and update database)
+                LcAuth.ConfirmAccount(confirmationCode);
+                // set the password provided by the user. Trick: we need to generate a reset token in order to set the password.
+                var token = WebSecurity.GeneratePasswordResetToken(email);
+                LcAuth.ResetPassword(token, password);
+                // Left continue with profile data update..
+            }
+            else
+            {
+                // RE-send email to let him to confirm it owns the given e-mail
+                LcMessaging.SendWelcomeCustomer(userID, email);
+                throw new HttpException(409, errMsg);
+            }
+        }
+
+        // We need a logged object, and additionally a double check is performed (so we ensure setting the password process worked).
+        return Login(email, password, false, returnProfile, false);
+    }
+    #endregion
+
     /// <summary>
     /// Signup with fields:
     /// - email [required]
@@ -300,22 +415,20 @@ public static class LcAuthHelper
             // Otherwise, just register the user.
             if (LcAuth.ExistsEmail(email))
             {
-                // If the email exists, we try to log-in using the provided password, to don't bother with "e-mail in use" error 
-                // if the user provides the correct credentials (maybe just don't remember he/she has already an account; make it easy for them
-                // to return).
-                // BUT we have a special situation that needs extra checks:
-                // CLIENT--CONFIRMATION LOGIC
-                // The email can exists because the user has an account created as client by a service professional:
-                // - A: On that cases, we need to communicate that specific situation (error message), generate a confirmation code
-                // for the existent user, send email to let him to confirm it owns the given e-mail.
-                // - B: On returning here after point A, a confirmation code is provided and we must proceed
-                // by checking the confirmation code and, on success, unlock and update the membership password and
-                // continue updating any given data.
+                // We query the user with that email
                 var userID = WebSecurity.GetUserId(email);
                 var user = LcRest.UserProfile.Get(userID);
-                if (user.accountStatusID != (int)LcEnum.AccountStatus.serviceProfessionalClient)
+                // There are special cases when a user is registered, but never has accepted TOU or created a password (Not Enabled Account),
+                // and is possible for that user to become an regular/enabled account.
+                if (IsUserButNotEnabledAccount(user))
                 {
-                    // NOT a client, just standard sign-up that requires verify the email/password or fail
+                    logged = SignupANotEnabledAccount(userID, email, password, returnProfile, user.accountStatusID);
+                }
+                else
+                {
+                    // If the email exists, we try to log-in using the provided password, to don't bother with "e-mail in use" error 
+                    // if the user provides the correct credentials (maybe just don't remember he/she has already an account; make it easy for them
+                    // to return).
                     // Try Login
                     try
                     {
@@ -338,66 +451,6 @@ public static class LcAuthHelper
                         // Not valid log-in, throw a 'email exists' error with Conflict http code
                         throw new HttpException(409, "E-mail address is already in use.");
                     }
-                }
-                else
-                {
-                    // CLIENT--CONFIRMATION LOGIC
-                    // The email can exists because the user has an account created as client by a service professional:
-                    // - A: On that cases, we need to communicate that specific situation (error message), generate a confirmation code
-                    // for the existent user, send email to let him to confirm it owns the given e-mail.
-                    // - B: On returning here after point A, a confirmation code is provided and we must proceed
-                    // by checking the confirmation code and, on success, unlock and update the membership password and
-                    // continue updating any given data.
-                    var confirmationCode = Request["confirmationCode"];
-                    var errMsg = String.Format(@"We see one of our service professionals has already scheduled services for you in the past.
-                        We've just sent an invitation to create your account to {0}.
-                        Please follow its instructions. We can't wait to get you on board!", email
-                    );
-                    if (String.IsNullOrEmpty(confirmationCode))
-                    {
-                        // Point A: create confirmation code  
-                        // generate a confirmation code (creates the Membership record, that does not exists still since is as just a client)
-                        // this needs a random password (we still didn't verified the user, so do NOT trust on the given password).
-                        // NOTE: since this can be attempted several time by the user, and next attempts will fail because the Membership
-                        // record will exists already, just double check and try creation only if record don't exists:
-                        if (!LcAuth.HasMembershipRecord(userID))
-                        {
-                            WebSecurity.CreateAccount(email, LcAuth.GeneratePassword(), true);
-                        }
-                        StartOnboardingForUser(userID);
-                        // send email to let him to confirm it owns the given e-mail
-                        LcMessaging.SendWelcomeCustomer(userID, email);
-                        // Not valid after all, just communicate was was done and needs to do to active its account:
-                        throw new HttpException(409, errMsg);
-                    }
-                    else
-                    {
-                        // Point B: confirm confirmation code
-                        if (LcAuth.GetConfirmationToken(userID) == confirmationCode)
-                        {
-                            // We know is valid, we can update the accountStatus to not be any more a "service professional's client"
-                            // and that will allow to set the account as confirmed
-                            using (var db = new LcDatabase())
-                            {
-                                db.Execute("UPDATE users SET accountStatusID = @1 WHERE UserID = @0", userID, LcEnum.AccountStatus.active);
-                            }
-                            // now we can confirm (we already know the code is valid, it will just double check and update database)
-                            LcAuth.ConfirmAccount(confirmationCode);
-                            // set the password provided by the user. Trick: we need to generate a reset token in order to set the password.
-                            var token = WebSecurity.GeneratePasswordResetToken(email);
-                            LcAuth.ResetPassword(token, password);
-                            // Left continue with profile data update..
-                        }
-                        else
-                        {
-                            // RE-send email to let him to confirm it owns the given e-mail
-                            LcMessaging.SendWelcomeCustomer(userID, email);
-                            throw new HttpException(409, errMsg);
-                        }
-                    }
-
-                    // We need a logged object, and additionally a double check is performed (so we ensure setting the password process worked).
-                    logged = Login(email, password, false, returnProfile, false);
                 }
 
                 // Update account data with the extra information.
