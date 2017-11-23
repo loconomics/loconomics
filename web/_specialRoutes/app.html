@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="App" data-app-version="1.7.1" data-site-url=""
+<html lang="en" class="App" data-app-version="1.7.2" data-site-url=""
 data-facebook-language="en-US" data-facebook-appid="180579422039773" data-culture="en-US"
 data-app-id="com.loconomics.app" data-app-name="Loconomics">
   
@@ -27,10 +27,10 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
     </script>
     <!-- End Google Analytics -->
-    <link href="assets/css/libs.min.201711212206.css" rel="stylesheet">
-    <link href="assets/css/app.min.201711212206.css" rel="stylesheet">
-    <script src="assets/js/common.min.201711212206.js"></script>
-    <script src="assets/js/app.min.201711212206.js"></script>
+    <link href="assets/css/libs.min.201711231608.css" rel="stylesheet">
+    <link href="assets/css/app.min.201711231608.css" rel="stylesheet">
+    <script src="assets/js/common.min.201711231608.js"></script>
+    <script src="assets/js/app.min.201711231608.js"></script>
   </head>
   
   <body> <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
@@ -6765,7 +6765,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                 <div class="SearchResultsBackground-text">
                    <h1 data-bind="text: $root.title"></h1>
 
-                  <p data-bind="visible: serviceProfessionalsCount() > 0">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
+                  <p data-bind="visible: serviceProfessionalsCount">(<span data-bind="text: serviceProfessionalsCount"></span> near you)</p>
                   <p><span data-bind="text: searchDescription"></span>
                   </p>
                 </div>
@@ -6788,7 +6788,7 @@ data-app-id="com.loconomics.app" data-app-name="Loconomics">
                 </div>
                 <div class="ServiceProfessionalResult-actions">
                   <p><strong data-bind="visible: serviceProfessionalsCount > 0 && averageHourlyRate > 0">
-                        <span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> from <span class="FromPrice">$<span  data-bind="text: averageHourlyRate"></span>/hour</span>
+                        <span data-bind="text: serviceProfessionalsCount"></span> professional<span data-bind="visible: serviceProfessionalsCount > 1">s</span> from <span class="FromPrice"><span  data-bind="text: averageHourlyRate, format: { type: 'number', format: '$0,0' }"></span>/hour</span>
                         </strong>
                   </p>
                   <p><span data-bind="visible: serviceProfessionalsCount < 1 || averageHourlyRate < 1">&nbsp;</span>
@@ -10233,7 +10233,7 @@ NEITHER
                 <form id="workPhotosForm" class="SmartNavContent container-fluid">
                    <h1><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> <span data-bind="text: title"></span></h1>
 
-                  <ul class="list-unstyled WorkPhotos" data-bind="sortable: { data: list, afterMove: updateSort, options: { axis: 'y', containment: 'parent', handle: '.WorkPhotos-moveBtn', scroll: true, tolerance: 'pointer' } }">
+                  <ul class="list-unstyled WorkPhotos" data-bind="foreach: list">
                     <li>
                       <div class="WorkPhotos-imgBtn">
                         <img alt="Work photo" class="WorkPhotos-img" data-bind="attr: { src: url, alt: caption, style: photoRotationStyle, hidden: localTempPhotoPreview }"
@@ -10249,14 +10249,6 @@ NEITHER
  <span>Rotate</span>
 
                         </button>
-                        <!-- Needed as a link with #move, setting role=button for accessibility;
-                        if can be changed to real button, the best -->
-                        <!--TEMPORARLY REMOVED move button (defeats all the purpose of using sortable
-                        binding rather than foreach) but we need to research a way to make it accessible
-                        <a href="#move" role="button" class="btn btn-link WorkPhotos-moveBtn">
-                                        <span class="glyphicon glyphicon-move"></span>
-                                        <span>Move</span>
-                                    </a>-->
                         <button type="button" class="btn btn-link WorkPhotos-removeBtn" data-bind="click: $root.removeImg"> <span class="glyphicon glyphicon-remove"></span>
  <span>Delete</span>
 
