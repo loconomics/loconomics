@@ -39,7 +39,7 @@ merged_branches = [branch for branch in merged_branches
 archived_branches = []
 archived_branches_all = []
 for branch in merged_branches:
-    if confirm('Archive branch {}?', branch)
+    if confirm('Archive branch {}?', branch):
         out('git tag archive/{} {}', branch, branch)
         archived_branches.append(branch)
 
