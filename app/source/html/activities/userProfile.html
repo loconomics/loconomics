@@ -2,33 +2,46 @@
 <div data-activity="userProfile" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <h1 class="hidden-xs hidden-sm">Be your shiny self</h1>
+        <h1 data-bind="text: title"></h1>
         <div class="row">
             <div class="col-md-7 col-sm-reset">
                 <h2 class="SectionTitle">
-                    <span>Community profile</span>
+                    <span>Your public profile</span>
                     <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                </h2>  
+                </h2>
                 <ul class="TilesList TilesList--openEnd">
                     <li>
-                        <a class="InfoTile" href="/aboutMe">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-contact-outline" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>About me</p>
+                        <a class="IconContentItem" href="/publicContactInfo?mustReturn=userProfile&returnText=Your profile">
+                            <icon-dec class="Item-icon" params="icon: 'ion-ios-telephone-outline'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Contact information</p>
                             </div>
                         </a>
                     </li>
-                    <li data-bind="visible: isServiceProfessional"><a class="InfoTile" href="/education">
-                        <div class="Tile-icon" aria-hidden="true">
-                            <span class="fa ion ion-university" aria-hidden="true"></span>
-                        </div>
-                        <div class="Tile-content">
-                            <div>Training and education</div>
-                            <em>List any relevant studies</em>
-                        </div>
-                    </a></li>
+                    <li>
+                        <a class="IconContentItem" href="/publicProfilePicture?mustReturn=userProfile&returnText=Your profile">
+                            <icon-dec class="Item-icon" params="icon: 'ion-ios-camera-outline'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Profile photo</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="IconContentItem" href="/publicBio?mustReturn=userProfile&returnText=Your profile">
+                            <icon-dec class="Item-icon" params="icon: 'ion-ios-book-outline'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Profile bio</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="IconContentItem" href="/userBirthDay?mustReturn=userProfile&returnText=Your profile">
+                            <icon-dec class="Item-icon" params="icon: 'fa-birthday-cake'"></icon-dec>
+                            <div class="Item-content">
+                                <p>Birthday</p>
+                            </div>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

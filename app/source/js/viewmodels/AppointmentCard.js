@@ -15,6 +15,14 @@ var ko = require('knockout'),
     EventEmitter = require('events').EventEmitter;
 var Booking = require('../models/Booking');
 var Address = require('../models/Address');
+var calendar = require('../data/calendar');
+var bookings = require('../data/bookings');
+var showNotification = require('../modals/notification').show;
+var showConfirm = require('../modals/confirm').show;
+var showTextEditor = require('../modals/textEditor').show;
+var showError = require('../modals/error').show;
+var paymentAccount = require('../data/paymentAccount');
+var payoutPreferenceRequired = require('../modals/payoutPreferenceRequired');
 
 var events = {
     confirmed: 'confirmed',
@@ -107,7 +115,7 @@ function AppointmentCardViewModel(params) {
                     'Saving changes' :
                     v && v.areDifferent() ?
                         this.isNew() && this.isBooking() ?
-                            'Book' :
+                            'Schedule' :
                             'Save changes'
                         : 'Saved'
         );
@@ -184,7 +192,7 @@ function AppointmentCardViewModel(params) {
 
             var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
-            app.modals.showNotification({
+            showNotification({
                 title: 'Confirmed!',
                 message: msg
             });
@@ -199,13 +207,13 @@ function AppointmentCardViewModel(params) {
 
         if (version && version.areDifferent()) {
             this.isSaving(true);
-            app.model.calendar.setAppointment(version.version, this.allowBookUnavailableTime())
+            calendar.setAppointment(version.version, this.allowBookUnavailableTime())
             .then(afterSave)
             .catch(function(err) {
                 // The version data keeps untouched, user may want to retry
                 // or made changes on its un-saved data.
                 // Show error
-                app.modals.showError({
+                showError({
                     title: 'There was an error saving the data.',
                     error: err
                 });
@@ -232,7 +240,7 @@ function AppointmentCardViewModel(params) {
     this.confirmCancel = function confirmCancel() {
         var v = this.editedVersion();
         if (v && v.areDifferent()) {
-            this.app.modals.confirm({
+            showConfirm({
                 title: 'Cancel',
                 message: 'Are you sure?',
                 yes: 'Yes',
@@ -312,7 +320,7 @@ function AppointmentCardViewModel(params) {
 
         var msg = this.item().client().firstName() + ' will receive an e-mail confirmation.';
 
-        app.modals.showNotification({
+        showNotification({
             title: 'Done!',
             message: msg
         })
@@ -324,13 +332,13 @@ function AppointmentCardViewModel(params) {
     this.cancelBookingByServiceProfessional = function() {
         if (!this.bookingCanBeCancelledByServiceProfessional()) return;
         this.isSaving(true);
-        app.model.bookings.cancelBookingByServiceProfessional(this.bookingID())
+        bookings.cancelBookingByServiceProfessional(this.bookingID())
         .then(function(booking) { afterSaveBooking(booking, events.cancelled); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });
@@ -345,13 +353,13 @@ function AppointmentCardViewModel(params) {
     this.declineBookingByServiceProfessional = function() {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
-        app.model.bookings.declineBookingByServiceProfessional(this.bookingID())
+        bookings.declineBookingByServiceProfessional(this.bookingID())
         .then(function(booking) { afterSaveBooking(booking, events.declined); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });
@@ -366,13 +374,13 @@ function AppointmentCardViewModel(params) {
     this.confirmBookingRequest = function(dateType) {
         if (!this.isBookingRequest()) return;
         this.isSaving(true);
-        app.model.bookings.confirmBookingRequest(this.bookingID(), dateType)
+        bookings.confirmBookingRequest(this.bookingID(), dateType)
         .then(function(booking) { afterSaveBooking(booking, events.confirmed); })
         .catch(function(err) {
             // The version data keeps untouched, user may want to retry
             // or made changes on its un-saved data.
             // Show error
-            app.modals.showError({
+            showError({
                 title: 'There was an error saving the data.',
                 error: err
             });
@@ -385,7 +393,7 @@ function AppointmentCardViewModel(params) {
     };
 
     this.confirmCancelBookingByServiceProfessional = function() {
-        this.app.modals.confirm({
+        showConfirm({
             title: 'Cancel booking',
             message: 'Are you sure?',
             yes: 'Yes',
@@ -404,8 +412,47 @@ function AppointmentCardViewModel(params) {
             return this.selectedRequestDateType() === ko.unwrap(dateType);
         }, this);
     }.bind(this);
+    /**
+     * It validates if professional has set-up a payout preference, only if
+     * done it can accept a booking request
+     * @returns {Promise<boolean>} Whether satisfy validation or not
+     */
+    this.validatePayoutPreference = function() {
+        return paymentAccount.whenLoaded()
+        .then(function() {
+            return paymentAccount.data.isReady();
+        }.bind(this));
+    };
     this.setSelectedRequestDateType = function(dateType) {
-        this.selectedRequestDateType(dateType);
+        if (dateType) {
+            var performSelection = function() {
+                this.selectedRequestDateType(dateType);
+            }.bind(this);
+
+            this.validatePayoutPreference()
+            .then(function(isValid) {
+                if (isValid) {
+                    performSelection();
+                }
+                else {
+                    // Direct user to set-up a payout preference
+                    payoutPreferenceRequired.show({
+                        reason: payoutPreferenceRequired.Reason.acceptBookingRequest
+                    })
+                    .then(function(done) {
+                        if (done) {
+                            performSelection();
+                        }
+                    })
+                    .catch(function(err) {
+                        showError({
+                            title: 'Unable to set-up payout preference',
+                            error: err
+                        });
+                    });
+                }
+            });
+        }
     }.bind(this);
 
     this.performSelectedBookingRequestAnswer = function() {
@@ -522,7 +569,7 @@ function AppointmentCardViewModel(params) {
     this.editTextField = function editTextField(field) {
         if (this.isLocked()) return;
 
-        app.modals.showTextEditor({
+        showTextEditor({
             title: textFieldsHeaders[field],
             text: this.item()[field]()
         })
@@ -531,7 +578,7 @@ function AppointmentCardViewModel(params) {
         }.bind(this))
         .catch(function(err) {
             if (err) {
-                app.modals.showError({ error: err });
+                showError({ error: err });
             }
             // No error, do nothing just was dismissed
         });
@@ -568,7 +615,10 @@ AppointmentCardViewModel._inherits(EventEmitter);
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:23,maxstatements:40 */
+    /*jshint maxcomplexity:23,maxstatements:43 */
+
+    // on init
+    paymentAccount.sync();
 
     // If the request includes an appointment plain object, that's an
     // in-editing appointment so put it in place (to restore a previous edition)

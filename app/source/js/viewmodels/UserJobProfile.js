@@ -7,6 +7,9 @@
 
 var ko = require('knockout'),
     UserJobTitle = require('../models/UserJobTitle');
+var jobTitles = require('../data/jobTitles');
+var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
 
 function UserJobProfileViewModel(app) {
 
@@ -15,7 +18,7 @@ function UserJobProfileViewModel(app) {
     // Load and save job title info
     var jobTitlesIndex = {};
     function syncJobTitle(jobTitleID) {
-        return app.model.jobTitles.getJobTitle(jobTitleID)
+        return jobTitles.getJobTitle(jobTitleID)
         .then(function(jobTitle) {
             jobTitlesIndex[jobTitleID] = jobTitle;
 
@@ -36,18 +39,19 @@ function UserJobProfileViewModel(app) {
 
     function attachMarketplaceStatus(userJobtitle) {
         userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
-            var status = this.statusID();
+            var status = this.statusID(),
+                isComplete = this.isComplete();
             // L18N
-            if (status === UserJobTitle.status.on) {
-                return 'Marketplace profile: <strong class="text-success">ON</strong>';
+            if (isComplete && status === UserJobTitle.status.on) {
+                return 'Marketplace listing: <strong class="text-success">ON</strong>';
             }
-            else if (status === UserJobTitle.status.off) {
-                return 'Marketplace profile: <strong class="text-danger">OFF</strong>';
+            else if (isComplete && status === UserJobTitle.status.off) {
+                return 'Marketplace listing: <strong class="text-danger">OFF</strong>';
             }
             else {
                 // TODO: read number of steps left to activate from required alerts for the jobtitle
                 // '__count__ steps left to activate'
-                return '<span class="text-danger">There are steps left to activate</span>';
+                return '<span class="text-danger">Steps remaining to activate listing</span>';
             }
         }, userJobtitle);
     }
@@ -57,9 +61,20 @@ function UserJobProfileViewModel(app) {
         attachMarketplaceStatus(userJobtitle);
     }
 
+    var showLoadingError = function showLoadingError(err) {
+        showError({
+            title: 'An error happening when loading your job profile.',
+            error: err
+        });
+
+        this.isLoading(false);
+        this.isSyncing(false);
+        this.thereIsError(true);
+    }.bind(this);
+
     this.userJobProfile = ko.observableArray([]);
     // Updated using the live list, for background updates
-    app.model.userJobProfile.list.subscribe(function(list) {
+    userJobProfile.list.subscribe(function(list) {
         // We need the job titles info before end
         Promise.all(list.map(function(userJobTitle) {
             return syncJobTitle(userJobTitle.jobTitleID());
@@ -91,17 +106,6 @@ function UserJobProfileViewModel(app) {
         return false;
     }.bind(this);
 
-    var showLoadingError = function showLoadingError(err) {
-        app.modals.showError({
-            title: 'An error happening when loading your job profile.',
-            error: err
-        });
-
-        this.isLoading(false);
-        this.isSyncing(false);
-        this.thereIsError(true);
-    }.bind(this);
-
     // Loading and sync of data
     this.sync = function sync() {
         var firstTime = this.isFirstTime();
@@ -115,7 +119,7 @@ function UserJobProfileViewModel(app) {
         }
 
         // Keep data updated:
-        app.model.userJobProfile.syncList()
+        userJobProfile.syncList()
         .catch(showLoadingError);
 
     }.bind(this);

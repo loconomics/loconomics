@@ -5,6 +5,13 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var weeklySchedule = require('../data/weeklySchedule');
+var schedulingPreferences = require('../data/schedulingPreferences');
+var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
+
+// Components in use in the template
+require('../kocomponents/switch-checkbox');
 
 var A = Activity.extend(function SchedulingPreferencesActivity() {
 
@@ -17,43 +24,37 @@ var A = Activity.extend(function SchedulingPreferencesActivity() {
         backLink: '/calendar',
         helpLink: this.viewModel.helpLink
     });
-
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
+    this.title('Availability settings');
 
     this.registerHandler({
-        target: this.app.model.weeklySchedule,
+        target: weeklySchedule,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save your weekly schedule.' : 'Unable to load your weekly schedule.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 
     this.registerHandler({
-        target: this.app.model.schedulingPreferences,
+        target: schedulingPreferences,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Unable to save scheduling preferences.' : 'Unable to load scheduling preferences.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
-        // Reset
-        this.navBar.model.updateWith(this.defaultNavBar, true);
-    }
-
     // Touch desktop navigation too
     var info = this.app.getReturnRequestInfo(this.requestData);
     this.viewModel.goBackLink(info && info.link || '/calendar');
@@ -67,8 +68,8 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
 
     // Keep data updated:
-    this.app.model.schedulingPreferences.sync();
-    this.app.model.weeklySchedule.sync();
+    schedulingPreferences.sync();
+    weeklySchedule.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
 };
@@ -81,10 +82,8 @@ function ViewModel(app) {
     this.goBackLink = ko.observable('');
     this.goBackLabel = ko.observable('');
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
-
-    this.schedulingPreferences = new SchedulingPreferencesVM(app);
-    this.weeklySchedule = new WeeklyScheduleVM(app);
+    this.schedulingPreferences = new SchedulingPreferencesVM();
+    this.weeklySchedule = new WeeklyScheduleVM();
 
     this.save = function save() {
         return Promise.all([
@@ -94,14 +93,9 @@ function ViewModel(app) {
         .then(function() {
             // A weekly schedule change may change the status of userJobTitles and bookMeButtonReady, so
             // force a refresh of that data
-            app.model.userJobProfile.clearCache();
-            app.model.userJobProfile.syncList();
-            // Move forward:
-            if (app.model.onboarding.inProgress()) {
-                app.model.onboarding.goNext();
-            } else {
-                app.successSave();
-            }
+            userJobProfile.clearCache();
+            userJobProfile.syncList();
+            app.successSave();
         })
         .catch(function() {
             // catch error, managed on event
@@ -125,20 +119,16 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            app.model.onboarding.inProgress() ?
-                'Save and continue' :
-                this.isLoading() ?
-                    'loading...' :
-                    this.isSaving() ?
-                        'Saving...' :
-                        'Save'
+            this.isLoading() ?
+                'loading...' :
+                this.isSaving() ?
+                    'Saving...' :
+                    'Save'
         );
     }, this);
 }
 
-function SchedulingPreferencesVM(app) {
-
-    var schedulingPreferences = app.model.schedulingPreferences;
+function SchedulingPreferencesVM() {
 
     var prefsVersion = schedulingPreferences.newVersion();
     prefsVersion.isObsolete.subscribe(function(itIs) {
@@ -173,9 +163,7 @@ function SchedulingPreferencesVM(app) {
 
 var timeZoneList = require('../utils/timeZoneList');
 
-function WeeklyScheduleVM(app) {
-
-    var weeklySchedule = app.model.weeklySchedule;
+function WeeklyScheduleVM() {
 
     var scheduleVersion = weeklySchedule.newVersion();
     scheduleVersion.isObsolete.subscribe(function(itIs) {
@@ -216,4 +204,3 @@ function WeeklyScheduleVM(app) {
     this.timeZonesList = ko.observable(timeZoneList.getUserList());
     this.topUsTimeZones = ko.observable(timeZoneList.getTopUsZones());
 }
-

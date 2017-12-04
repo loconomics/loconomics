@@ -4,6 +4,8 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var education = require('../data/education');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function EducationActivity() {
 
@@ -15,28 +17,31 @@ var A = Activity.extend(function EducationActivity() {
     this.navBar = Activity.createSubsectionNavBar('Profile', {
         backLink: '/userProfile' , helpLink: this.viewModel.helpLink
     });
+    this.title('Education');
+    // Share navBar with desktop nav through viewModel
+    this.viewModel.navBar = this.navBar;
 });
 
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
-    
+
     // Request a sync and catch any error
-    this.app.model.education.sync()
+    education.sync()
     .catch(function (err) {
-        this.app.modals.showError({
+        showError({
             title: 'Error loading education information',
             error: err
         });
     }.bind(this));
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.helpLink = '/help/relatedArticles/201960833-adding-education-to-your-profile';
 
-    this.isLoading = app.model.education.state.isLoading;
-    this.isSyncing = app.model.education.state.isSyncing;
+    this.isLoading = education.state.isLoading;
+    this.isSyncing = education.state.isSyncing;
 
-    this.list = app.model.education.list;
+    this.list = education.list;
 }

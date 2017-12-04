@@ -7,11 +7,14 @@ var ko = require('knockout'),
     $ = require('jquery'),
     getDateWithoutTime = require('../utils/getDateWithoutTime');
 var moment = require('moment-timezone');
+var showTimePicker = require('../modals/timePicker').show;
 
 require('../components/DatePicker');
 var datepickerAvailability = require('../utils/datepickerAvailability');
 
 var timeZoneList = require('../utils/timeZoneList');
+var availability = require('../data/availability');
+var showError = require('../modals/error').show;
 
 function DatetimePickerVM(app, element) {
     //jshint maxstatements: 40
@@ -25,7 +28,7 @@ function DatetimePickerVM(app, element) {
     // Let's external code to add a set of objects { id: tzID, label: tzLabel }
     // to display at top, below the 'auto' option.
     this.specialTimeZones = ko.observableArray([]);
-    
+
     this.durationDisplay = ko.pureComputed(function() {
         var fullMinutes = this.requiredDurationMinutes();
         if (fullMinutes <= 0)
@@ -44,12 +47,12 @@ function DatetimePickerVM(app, element) {
     }, this);
 
     /**
-     * Converts the given date to the given timeZone but 
+     * Converts the given date to the given timeZone but
      * discarding time info, so gets a midnight time for the
      * same numerical date (times are not meant to be equivalent).
      * Returns a moment object able to manage timezone.
      * Example: 2016-12-13 00:00 UTC -> 2016-12-13 00:00 PST,
-     * same date part with time as zero (even if different at source date). 
+     * same date part with time as zero (even if different at source date).
      * No equivalent instant, since for that UTC, the PST is
      * actually 2016-12-12 16:00.
      * If no timeZone, returns as local date at the start of the date.
@@ -57,9 +60,9 @@ function DatetimePickerVM(app, element) {
     this.getDateAtTimeZone = function(date, timeZone) {
         var s;
         if (timeZone) {
-            // Get only the date part of the local-date picked 
+            // Get only the date part of the local-date picked
             // (format as 2016-01-01)
-            // and generate a moment with that and the timezone, so we 
+            // and generate a moment with that and the timezone, so we
             // get the start of the date at the correct time zone
             // NOTE: if we just build a moment(date) and pass
             // the timezone with .tz(tz) we are getting the wrong
@@ -74,7 +77,7 @@ function DatetimePickerVM(app, element) {
 
     this.dateAvail = ko.observable();
     this.groupedSlots = ko.computed(function(){
-        
+
         var requiredDurationMinutes = this.requiredDurationMinutes();
         var includeEndTime = this.includeEndTime();
         var tz = this.timeZone() || timeZoneList.getLocalTimeZone();
@@ -128,9 +131,9 @@ function DatetimePickerVM(app, element) {
         return groups;
 
     }, this);
-    
+
     this.selectedDatetime = ko.observable(null);
-    
+
     this.selectDatetime = function(selectedDatetime, event) {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -143,7 +146,7 @@ function DatetimePickerVM(app, element) {
     this.pickedTime = ko.observable();
     this.allowBookUnavailableTime = ko.observable(false);
     this.unavailableTimeBtnEnabled = ko.observable(false);
-    
+
     this.getPickedDatetime = function() {
         var t = this.pickedTime();
         if (!(t instanceof Date)) {
@@ -153,14 +156,14 @@ function DatetimePickerVM(app, element) {
         }
         return t;
     };
-    
+
     this.setPickedAsSelected = function() {
         this.allowBookUnavailableTime(true);
         this.selectedDatetime(this.getPickedDatetime());
     }.bind(this);
-    
+
     this.showTimePicker = function() {
-        app.modals.showTimePicker({
+        showTimePicker({
             title: 'Book an unavailable time',
             selectedTime: null,
             unsetLabel: 'Cancel'
@@ -174,7 +177,7 @@ function DatetimePickerVM(app, element) {
             // Just modal was dismissed, so picker was rejected but not an error
         });
     }.bind(this);
-    
+
     this.reset = function() {
         this.selectedDatetime(null);
         this.pickedTime(null);
@@ -183,18 +186,18 @@ function DatetimePickerVM(app, element) {
         this.specialTimeZones.removeAll();
         this.isTimeZonePickerOpen(false);
     }.bind(this);
-    
+
     this.bindDateData = function (date) {
 
         if (!date || !this.userID()) return;
-        
+
         var tz = this.timeZone();
 
         this.isLoading(true);
 
         var s = this.getDateAtTimeZone(date, tz);
         var e = s.clone().add(1, 'day');
-        return app.model.availability.times(this.userID(), s, e)
+        return availability.times(this.userID(), s, e)
         .then(function(data) {
 
             this.dateAvail(data);
@@ -207,25 +210,25 @@ function DatetimePickerVM(app, element) {
             }));*/
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error loading availability',
                 error: err
             });
-        }.bind(this))
+        })
         .then(function() {
             // Finally
             this.isLoading(false);
         }.bind(this));
     }.bind(this);
 
-    
+
     ///
     /// Init component and handlers
     // Getting component element
     var $datePicker = $(element).find('.calendar-placeholder');
     $datePicker.show().datepicker({ extraClasses: 'DatePicker--tagged' });
     this.tagAvailability = datepickerAvailability.create(app, $datePicker, this.isLoading);
-    
+
     $datePicker.on('dateChanged', function(e) {
         if (e.viewMode === 'days') {
             this.selectedDate(e.date);
@@ -244,7 +247,7 @@ function DatetimePickerVM(app, element) {
     this.timeZone.subscribe(function() {
         this.bindDateData(this.selectedDate());
     }.bind(this));
-    
+
     // On Setting the data, we need to refresh tags,
     // and on change userID. This runs too the first time
     // update.
@@ -255,7 +258,7 @@ function DatetimePickerVM(app, element) {
         }
     }, this)
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 60 } });
-    
+
     // Force first refresh on datepicker to allow
     // event handlers to get notified on first time:
     $datePicker.datepicker('fill');

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var rLength = /.{8,}/;  // at least 8 characters long
+var rLength = /.{8,}/;  // Must be at least 8 characters long
 var rSymbol = /[^\w\s]|_/; // at least one of ~!@#$%^*&;?.+_
 var rNumber = /[0-9]/; // at least 1 number
 var rUpper = /[A-Z]/; // at least 1 uppercase letter

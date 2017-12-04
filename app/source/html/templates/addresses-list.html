@@ -1,0 +1,24 @@
+<!-- Knockout Template addresses -->
+<!-- Used to list service addresses with a link to edit. Will be used for billing addresses in the future (will need switch statement at URL) -->
+<script type="text/html" id="addresses-list-template">
+    <ul class="TilesList" data-bind="foreach: {data: addresses, as: 'address'}">
+        <li data-bind="template: { name: 'address-list-item-template', data: { address: address, viewModel: $parent} }"></li>
+    </ul>
+</script>
+<!-- Address template with open list classes -->
+<script type="text/html" id="address-open-list-template">
+    <ul class="TilesList TilesList--openEnd" data-bind="foreach: {data: addresses, as: 'address'}">
+        <li data-bind="template: { name: 'address-list-item-template', data: { address: address, viewModel: $parent} }"></li>
+    </ul>
+</script>
+<script type="text/html" id="address-list-item-template">
+    <div class="AddressItem" data-bind="with: address, attr: { id: 'location' + address.addressID() }">
+        <div class="Item-content">
+            <p><strong data-bind="text: address.addressName() || 'Service Area'"></strong></p>
+            <p data-bind="text: address.singleLine"></p>
+        </div>
+        <div class="Item-action">
+            <a class="btn btn-icon-link" data-bind="attr: {href: 'addressEditor/service/' + address.jobTitleID() + '/' + address.addressID(), 'aria-label': 'Edit '+ address.addressName() || 'Service Area' }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+        </div>  
+    </div>
+</script>

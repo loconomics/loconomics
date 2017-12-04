@@ -1,15 +1,17 @@
 /** Calendar activity **/
 'use strict';
-
-var $ = require('jquery'),
-    moment = require('moment'),
-    ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
-
 require('../components/DatePicker');
+var $ = require('jquery');
+var moment = require('moment');
+var ko = require('knockout');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
 var datepickerAvailability = require('../utils/datepickerAvailability');
-
+var user = require('../data/userProfile').data;
+var calendar = require('../data/calendar');
+var showError = require('../modals/error').show;
 var Activity = require('../components/Activity');
+var Appointment = require('../models/Appointment');
+var TimeSlotViewModel = require('../viewmodels/TimeSlot');
 
 var A = Activity.extend(function CalendarActivity() {
 
@@ -17,7 +19,9 @@ var A = Activity.extend(function CalendarActivity() {
 
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
-    this.navBar = Activity.createSectionNavBar('Calendar');
+    // null for logo
+    this.navBar = Activity.createSectionNavBar(null);
+    this.title('Your Calendar');
 
     /* Getting elements */
     this.$datepicker = this.$activity.find('#calendarDatePicker');
@@ -45,7 +49,7 @@ var A = Activity.extend(function CalendarActivity() {
 
                     // Update datepicker selected date on date change (from
                     // a different source than the datepicker itself
-                    this.$datepicker.removeClass('is-visible');
+                    this.hideDatepicker();
                     // Change not from the widget?
                     if (this.$datepicker.datepicker('getValue').toISOString() !== isoDate)
                         this.$datepicker.datepicker('setValue', date, true);
@@ -84,17 +88,63 @@ var A = Activity.extend(function CalendarActivity() {
         }.bind(this)
     });
 
-    this.hideDatepicker = function() {
-        // Run datepicker close logic by calling 'hide', it fixes some bugs
-        this.$datepicker.datepicker('hide')
+    /* IMPORTANT:B1 iagosrl: I had to remove all this special hidding (and showing)
+        because has conflicts with accessibility/keyboard use and the attempts
+        to make it works with that (display:none on transitionend) was buggy,
+        with race conditions that make it fails.
+        CHECK that too the show logic is commented and some CSS for the
+        use of [hidden] to make a transition effect
+    // Set-up our special hide logic for when running datepicker('hide')
+    var isHiddingDatePicker = false;
+    var isShowingDatePicker = false;
+    var openerElement = null;
+    var thatDatepicker = this.$datepicker;
+    thatDatepicker.datepicker('setCustomHide', function() {
+        if (isShowingDatePicker || isHiddingDatePicker) return true;
+
+        isHiddingDatePicker = true;
+        thatDatepicker
+        .attr('hidden', 'hidden')
+        .one('transitionend', function() {
+            thatDatepicker.css('display', 'none');
+            isHiddingDatePicker = false;
+        });
+        this.picker.hide();
         // but keep the element itself visible, since we use container transition :-)
-        .children().show();
+        thatDatepicker.children().show();
+        setTimeout(function() {
+            if (openerElement) {
+                openerElement.focus();
+            }
+        }, 300);
+        return true;
+    });*/
+
+    this.hideDatepicker = function() {
+        this.$datepicker.datepicker('hide');
     };
 
     // Creating viewModel handlers to manage calendar
     this.viewModel.openDatePicker = function(d, e) {
-        this.$datepicker.toggleClass('is-visible');
-        this.hideDatepicker();
+        /*IMPORTANT:B1 (read details above)
+        if (isShowingDatePicker || isHiddingDatePicker) return;
+        if (!this.$datepicker.attr('hidden')) {
+            this.hideDatepicker();
+        }
+        else {
+            isShowingDatePicker = true;
+            this.$datepicker.css('display', 'block');
+            setTimeout(function() {
+                this.$datepicker.attr('hidden', null);
+                this.$datepicker.datepicker('show');
+                isShowingDatePicker = false;
+            }.bind(this), 200);
+        }
+        openerElement = e.target;
+        */
+        // Alternative toggle show/hide
+        this.$datepicker.datepicker('toggle', e);
+
         e.preventDefault();
         e.stopPropagation();
     }.bind(this);
@@ -148,13 +198,10 @@ A.prototype.show = function show(options) {
     this.viewModel.previousDate = null;
     this.viewModel.currentDate(date);
     // Force a refresh of tags
-    this.tagAvailability(date, this.app.model.userProfile.data.userID(), true);
+    this.tagAvailability(date, user.userID(), true);
 };
 
-var Appointment = require('../models/Appointment'),
-    TimeSlotViewModel = require('../viewmodels/TimeSlot');
-
-function ViewModel(app) {
+function ViewModel() {
 
     this.currentDate = ko.observable(getDateWithoutTime());
     var fullDayFree = [Appointment.newFreeSlot({ date: this.currentDate() })];
@@ -210,7 +257,7 @@ function ViewModel(app) {
 
         this.isLoading(true);
 
-        app.model.calendar.getDateAvailability(date)
+        calendar.getDateAvailability(date)
         .then(function(dateAvail) {
 
             // IMPORTANT: First, we need to check that we are
@@ -222,7 +269,7 @@ function ViewModel(app) {
             // TODO: still this has the minor bug of losing the isLoading
             // if a previous triggered load still didn't finished; its minor
             // because is very rare that happens, moving this stuff
-            // to a special appModel for mixed bookings and events with
+            // to a special data module for mixed bookings and events with
             // per date cache that includes a view object with isLoading will
             // fix it and reduce this complexity.
             if (date.toISOString() !== this.currentDate().toISOString()) {
@@ -242,7 +289,7 @@ function ViewModel(app) {
             this.isLoading(false);
 
             var msg = 'Error loading calendar events.';
-            app.modals.showError({
+            showError({
                 title: msg,
                 error: err
             });

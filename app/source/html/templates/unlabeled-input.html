@@ -2,5 +2,6 @@
 <script type="text/html" id="unlabeled-input-template">
     <div class="form-group">
       <input type="text" class="form-control" data-bind="textInput: value, disable: disable, attr: attr">
+      <div class="help-block" data-bind="if: showRemaining">Character limit: <span data-bind="text: charRemaining"></span></div>
     </div>
 </script>

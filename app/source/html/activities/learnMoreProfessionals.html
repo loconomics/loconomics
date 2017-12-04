@@ -2,16 +2,16 @@
 <div data-activity="learnMoreProfessionals" class="LearnMorePage">
     <div role="main">
         <div class="coop-search">
-            <h1 class="coop-title">Work independently…together.</h1>
-            <p class="coop-tagline">Find clients, find community</p>
-            <div class="container LearnMorePage-Video">
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item" width="560" height="315" src="https://www.youtube.com/embed/XKqqYvuSRss?rel=0&amp;showinfo=0" allowfullscreen></iframe>
-                </div>
-            </div>
-            <form id="coop-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
-                <!--<app-search-job-titles params="api: search"></app-search-job-titles>-->
-                <div class="col-sm-12" data-bind="template: { name: 'search-job-titles-template', data: search() }"></div>
+            <h1 class="coop-title" data-bind="text: title"></h1>
+            <p class="coop-tagline">Scheduling, marketing, invoicing, and client management tools. Grow and manage your business on your terms.</p>
+            <form id="coop-search" class="row">
+                <!--class="col-sm-12" -->
+                <job-title-autocomplete params="
+                    target: 'addJobTitle',
+                    suggestionButtonText: suggestionButtonText,
+                    onSelect: onSelectJobTitle,
+                    id: 'learnMoreProfessionals-autocomplete',
+                    visuallyHiddenLabel: true"></job-title-autocomplete>
             </form>
             <div class="coop-join-up">
                 <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
@@ -22,103 +22,21 @@
             <div class="container coop-section-listing">
                 <ul class="row list-unstyled">
                     <li class="col-sm-4">
-                        <i aria-hidden="true" class="fa ion ion-iphone"></i>
-                        <h3>Tools</h3>
-                        <p>All the marketing, management, and scheduling stuff to enrich and maintain your business.</p>
+                        <i aria-hidden="true" class="fa ion ion-ios-list-outline"></i>
+                        <h3>Free listing</h3>
+                        <p>Clients find your listing using our search with 0% commissions. Your first listing is free.</p>
                     </li>
                     <li class="col-sm-4">
-                        <i aria-hidden="true" class="fa ion ion-ios-cart-outline"></i>
-                        <h3>Marketplace</h3>
-                        <p>An easy platform where clients can find and book you directly.</p>
+                        <i aria-hidden="true" class="fa fa-handshake-o"></i>
+                        <h3>Referrals</h3>
+                        <p>Our cooperative thrives on recommendations. Meet other Bay Area professionals.</p>
                     </li>
                     <li class="col-sm-4" href="#coop-ownership">
                         <i aria-hidden="true" class="fa ion ion-social-usd"></i>
-                        <h3>Cooperative ownership</h3>
-                        <p>That's right, you own us. You help make decisions. Every year we profit, you'll get a dividend.</p>
+                        <h3>Profit-sharing</h3>
+                        <p>Owner plans start from $19/mo. Get access to exclusive events, resources, and dividends.</p>
                     </li>
                 </ul>
-            </div>
-        </div>
-        <div class="coop-benefits">
-            <h2 class="coop-section-title">Why Join Loconomics?</h2>
-            <div class="coop-section-listing">
-                <ul class="list-unstyled">
-                    <li href="#learnMoreProfessionals-signup">
-                        <h2>0%</h2>
-                        <h3>No commissions, no bidding</h3>
-                        <p>You have total control of your pricing. There is no markup to your clients.</p>
-                    </li>
-                    <li href="#learnMoreProfessionals-signup">
-                        <div class="Icon-bookNow"></div>
-                        <h3>Online scheduler</h3>
-                        <p>Clients can see when you're available and book you.</p>
-                    </li>
-                    <li href="#learnMoreProfessionals-signup">
-                        <i aria-hidden="true" class="fa fa-bullhorn"></i>
-                        <h3>Your own website</h3>
-                        <p>Your profile on our marketplace with a custom URL. We boost you via search engines.</p>
-                    </li>
-                    <li href="#learnMoreProfessionals-signup">
-                        <i aria-hidden="true" class="fa ion ion-card"></i>
-                        <h3>Fast &amp; easy payments</h3>
-                        <p>Straight to your bank account, with a small processing fee of 2.9% and $.30 per transaction.</p>
-                    </li>
-                    <li href="#learnMoreProfessionals-signup">
-                        <i aria-hidden="true" class="fa ion ion-bowtie"></i>
-                        <h3>Personal branding</h3>
-                        <p>You decide how to present yourself. Tailor your service, then back it up with great reviews.</p>
-                    </li>
-                    <li href="#learnMoreProfessionals-signup">
-                        <i aria-hidden="true" class="fa ion ion-ios-people-outline"></i>
-                        <h3>Develop your client base</h3>
-                        <p>Maybe you're an established pro, maybe you're starting out. Devoted clients are waiting.</p>
-                    </li>
-<!--
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-android-contacts"></i>
-                        <h3>Client management</h3>
-                        <p>Keep track of client info, booking history &amp; notes. Clients get automatic app't reminders.</p>
-                    </li>
--->
-<!--
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-speedometer-outline"></i>
-                        <h3>Goal &amp; performance tracking</h3>
-                        <p>Set &amp; achieve weekly, monthly, &amp; annual goals to ensure a healthy work/life balance.</p>
-                    </li>
--->
-<!--
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
-                        <h3>Fair background checks</h3>
-                        <p>Our Background Check Policy is designed to help you get to work &amp; keep your clients safe.</p>
-                    </li>
--->
-<!--
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-umbrella"></i>
-                        <h3>Access to insurance</h3>
-                        <p>Health, dental, vision, and professional liability  plans through Freelancers Union</p>
-                    </li>
--->
-<!--
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-lightbulb-outline"></i>
-                        <h3>New features</h3>
-                        <p>Have an idea to help you do your work better? As an owner, you'll help decide what we build.</p>
-                    </li>
--->
-<!--
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-cloud-upload-outline"></i>
-                        <h3>Developer API</h3>
-                        <p>Are you a developer &amp; want to integrate an app to help other owners? Get in touch.</p>
-                    </li>
--->
-                </ul>
-            </div>
-            <div class="coop-join-up">
-                <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
             </div>
         </div>
         <div id="coop-ownership" class="coop-ownership">
@@ -136,9 +54,9 @@
                         <p>You elect our board members (or maybe you get elected!). You choose how active you want to be in making decisions about Loconomics. No fat cats or invisible investors pulling the strings here.</p>
                     </li>
                     <li class="col-sm-4">
-                        <i aria-hidden="true" class="fa ion ion-social-usd"></i>
-                        <h3>Make profits</h3>
-                        <p>When there's a little leftover money in the pool of monthly owner fees, we'll reinvest it in Loconomics, growing our cooperative and community.</p>
+                        <i aria-hidden="true" class="fa ion ion-arrow-graph-up-right"></i>
+                        <h3>Grow professionally</h3>
+                        <p>Become a better businessperson, keep up on trends, and be successful in what you do.</p>
                     </li>
                 </ul>
             </div>
@@ -146,22 +64,9 @@
                 <a href="#learnMoreProfessionals-signup" class="btn btn-secondary btn-lg btn-block">Join up</a>
             </div>
         </div>
-       <div id="coop-pricing" class="coop-pricing">
-            <h2 class="coop-section-title">Owner pricing:</h2>
-                <ul class="list-unstyled">
-                    <li>
-                        <h3>Monthly</h3>
-                        <h1>$29.95</h1>
-                    </li>
-<!--
-                    <div class="coop-or"><h3>OR</h3></div>
-                    <li>
-                        <h3>Annual</h3>
-                        <h1>$299.95</h1>
-                        <p>12 MONTHS FOR THE PRICE OF 10</p>
-                    </li>
--->
-                </ul>
+        <div id="coop-pricing" class="clearfix coop-pricing">
+            <h2 class="coop-section-title">0% commissions on all plans. No bidding.</h2>
+            <app-payment-plans></app-payment-plans>
         </div>
         <div id="learnMoreProfessionals-signup" class="coop-signup" data-bind="visible: !isServiceProfessional()">
             <h1 class="coop-title">Join up.</h1>
@@ -171,7 +76,7 @@
                 </app-signup>
             </div>
             <div data-bind="visible: !inApp(), template: { name: 'download-app-template' }"></div>
-            <a href="/addJobTitles" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a job profile</a>
+            <a href="/addJobTitle" class="btn btn-default btn-add-profile" data-bind="visible: isClient() && !isServiceProfessional()">Add a listing</a>
         </div>
     </div>
     <div>@render('parts/WebsiteFooter.html')</div>

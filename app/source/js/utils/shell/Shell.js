@@ -8,12 +8,13 @@
     specified in the constructor settings for per-instance setup.
 **/
 var deps = require('./dependencies');
+var ko = require('knockout');
 
 /** Constructor **/
 
 function Shell(settings) {
     //jshint maxcomplexity:16
-    
+
     deps.EventEmitter.call(this);
 
     this.$ = settings.jquery || deps.jquery;
@@ -39,7 +40,7 @@ function Shell(settings) {
     this.history = settings.history || window.history;
 
     this.indexName = settings.indexName || 'index';
-    
+
     this.items = settings.domItemsManager;
 
     // loader can be disabled passing 'null', so we must
@@ -61,17 +62,17 @@ function Shell(settings) {
         closed: 'shell-closed',
         opened: 'shell-opened'
     };
-    
+
     /**
         A function to decide if the
         access is allowed (returns 'null')
         or forbidden (return a state object with information
         that will be passed to the 'forbiddenAccessName' item;
         the 'route' property on the state is automatically filled).
-        
-        The default buit-in just allow everything 
+
+        The default buit-in just allow everything
         by just returning 'null' all the time.
-        
+
         It receives as parameter the state object,
         that almost contains the 'route' property with
         information about the URL.
@@ -79,9 +80,10 @@ function Shell(settings) {
     this.accessControl = settings.accessControl || deps.accessControl;
     // What item to load when access is forbidden
     this.forbiddenAccessName = settings.forbiddenAccessName || this.indexName;
-    
+
     // Access to the current route
     this.currentRoute = null;
+    this.currentRouteObservable = ko.observable();
     // Access to referrer/previous route
     this.referrerRoute = null;
 }
@@ -157,11 +159,11 @@ Shell.prototype.goBack = function goBack(state, steps) {
 **/
 Shell.prototype.getUpdatedState = function getUpdatedState(state) {
     /*jshint maxcomplexity: 8 */
-    
+
     // For current uses, any pendingStateUpdate is used as
     // the state, rather than the provided one
     state = this._pendingStateUpdate || state || this.history.state || {};
-    
+
     // TODO: more advanced uses must be to use the 'state' to
     // recover the UI state, with any message from other UI
     // passing in a way that allow update the state, not
@@ -174,19 +176,19 @@ Shell.prototype.getUpdatedState = function getUpdatedState(state) {
     // discard the update
     */
     this._pendingStateUpdate = null;
-    
-    // Doesn't matters if state includes already 
+
+    // Doesn't matters if state includes already
     // 'route' information, need to be overwritten
     // to match the current one.
     // NOTE: previously, a check prevented this if
     // route property exists, creating infinite loops
     // on redirections from activity.show since 'route' doesn't
     // match the new desired location
-    
+
     // Detect if is a hashbang URL or an standard one.
     // Except if the app is forced to use hashbang.
     var isHashBang = /#!/.test(location.href) || this.forceHashbang;
-    
+
     var link = (
         isHashBang ?
         location.hash :
@@ -198,10 +200,10 @@ Shell.prototype.getUpdatedState = function getUpdatedState(state) {
         var sep = link.indexOf('?') !== -1 ? '&' : '?';
         link += sep + location.search.substr(1);
     }
-    
+
     // Set the route
     state.route = this.parseUrl(link);
-    
+
     return state;
 };
 
@@ -219,6 +221,7 @@ Shell.prototype._refreshReferrer = function() {
 };
 Shell.prototype._refreshCurrent = function() {
     this.currentRoute = this.parseUrl(this._getLocationRoutedUrl());
+    this.currentRouteObservable(this.currentRoute);
 };
 
 /**
@@ -240,7 +243,7 @@ Shell.prototype.pushState = function pushState(state, title, url) {
 };
 
 Shell.prototype.replace = function replace(state) {
-    
+
     state = this.getUpdatedState(state);
 
     // Use the index on root calls
@@ -249,6 +252,7 @@ Shell.prototype.replace = function replace(state) {
     }
     this.referrerRoute = this.currentRoute;
     this.currentRoute = state.route;
+    this.currentRouteObservable(this.currentRoute);
     //console.log('shell replace', state.route);
 
     // Access control
@@ -271,7 +275,9 @@ Shell.prototype.replace = function replace(state) {
 
                 var $oldCont = shell.items.getActive();
                 $oldCont = $oldCont.not($cont);
-                shell.items.switch($oldCont, $cont, shell, state);
+                // On first load (there is no referrer), we don't want the focus
+                // to change to the activity so we ask to prevent it
+                shell.items.switch($oldCont, $cont, shell, state, !shell.referrerRoute);
                 //console.log('shell replace after switch', state.route);
 
                 resolve(); //? resolve(act);
@@ -300,7 +306,7 @@ Shell.prototype.replace = function replace(state) {
             var err = new Error('Page not found (' + state.route.name + ')');
             console.warn('Shell Page not found, state:', state);
             promise = Promise.reject(err);
-            
+
             // To avoid being in an inexistant URL (generating inconsistency between
             // current view and URL, creating bad history entries),
             // a goBack is executed, just after the current pipe ends
@@ -310,13 +316,13 @@ Shell.prototype.replace = function replace(state) {
             }.bind(this), 1);
         }
     }
-    
+
     var thisShell = this;
     promise.catch(function(err) {
         if (!(err instanceof Error))
             err = new Error(err);
 
-        // Log error, 
+        // Log error,
         console.error('Shell, unexpected error.', err);
         // notify as an event
         thisShell.emit('error', err);
@@ -334,9 +340,9 @@ Shell.prototype.run = function run() {
     // Catch popstate event to update shell replacing the active container.
     // Allows polyfills to provide a different but equivalent event name
     this.$(window).on(this.history.popstateEvent || 'popstate', function(event) {
-        
-        var state = event.state || 
-            (event.originalEvent && event.originalEvent.state) || 
+
+        var state = event.state ||
+            (event.originalEvent && event.originalEvent.state) ||
             shell.history.state;
 
         // get state for current. To support polyfills, we use the general getter
@@ -349,14 +355,14 @@ Shell.prototype.run = function run() {
     //
     // Catch all links in the page (not only $root ones) and like-links.
     // IMPORTANT: the timeout and linkWorking is a kind of hack/workaround because of:
-    // - iOS click delay: changing linkEvent to be 'tap click' (jqm tap event) or 
+    // - iOS click delay: changing linkEvent to be 'tap click' (jqm tap event) or
     //   more standard but simplistic 'touchend click', only on iOS if possible, the
     //   iOS click delay can be avoided, letting the touch event to trigger this Shell handler
     //   and preventing the click from happening to avoid double execution
     //   (thanks to linkWorking and setTimeout).
     //   A broken alternative would be to use only one event, like 'tap' or 'touchend', but
     //   they fall down when a touch gesture happens in the limit of a link/element because
-    //   a touchstart happens out of our target link -failing touchend and tap since don't 
+    //   a touchstart happens out of our target link -failing touchend and tap since don't
     //   get triggered in our link- but the browser/webview still executes (and inmediatly)
     //   the 'click' event on the link. It seems an edge case but is easier to make it happens
     //   than it seems. It's the bug that forced to implement this workaournd :-/
@@ -388,7 +394,7 @@ Shell.prototype.run = function run() {
             e.preventDefault();
             return;
         }
-        
+
         //DEBUG console.log('Shell on', linkEvent, e.type, 'href', href, 'element', $t);
 
         // Do nothing if the URL contains the protocol
@@ -424,4 +430,26 @@ Shell.prototype.run = function run() {
     this.items.init();
     // Route to the current url/state
     this.replace();
+};
+
+/**
+ * Generates and returns an observable variable that updates when the active
+ * route changes, but limited to changes on the current route name
+ * (scoped to that, so views can get notified only on changes that affects them)
+ * @returns {KnockoutObservable<shell/route>}
+ */
+Shell.prototype.getCurrentObservableRoute = function() {
+    var route = this.currentRouteObservable;
+    var lastValue = route();
+    var scopedName = lastValue.name;
+    return ko.pureComputed(function() {
+        var updatedRoute = route();
+        if (updatedRoute.name === scopedName) {
+            lastValue = updatedRoute;
+            return updatedRoute;
+        }
+        else {
+            return lastValue;
+        }
+    });
 };

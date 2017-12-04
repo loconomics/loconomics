@@ -1,6 +1,6 @@
 /**
     ServiceProfessionalServiceEditor activity
-    
+
     TODO: ModelVersion is NOT being used, so no getting updates if server updates
     the data after load (data load is requested but get first from cache). Use
     version and get sync'ed data when ready, and additionally notification to
@@ -13,6 +13,13 @@ var ko = require('knockout'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
     Route = require('../utils/Router').Route;
 
+var onboarding = require('../data/onboarding');
+var clients = require('../data/clients');
+var pricingTypes = require('../data/pricingTypes');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
+
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
     Activity.apply(this, arguments);
@@ -22,6 +29,22 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Services', {
         helpLink: this.viewModel.helpLink
     });
+    this.title = ko.pureComputed(function() {
+        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
+            prefix = this.isNew() ? 'New ' : '',
+            postfix = this.client() ? (' only for ' + this.client().firstName()) : '';
+
+        if (this.isLoading()) {
+            return 'Loading...';
+        }
+        else if (this.serviceProfessionalServiceVersion()) {
+            return prefix + pricingName + postfix;
+        }
+        else {
+            return 'Unable to load service';
+        }
+
+    }, this.viewModel);
     /// Go out after save succesfully an item.
     /// Pricing is a plain object
     this.viewModel.onSave = function(pricing) {
@@ -38,7 +61,7 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
             this.app.shell.goBack(this.requestData);
         }
-        else if (this.app.model.onboarding.inProgress()) {
+        else if (onboarding.inProgress()) {
             this.app.shell.goBack();
         }
         else {
@@ -52,12 +75,12 @@ exports.init = A.init;
 A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/serviceProfessionalService/' + this.viewModel.jobTitleID();
-    
+
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10    
+    //jshint maxcomplexity:10
     Activity.prototype.show.call(this, options);
 
     // Reset
@@ -82,9 +105,9 @@ A.prototype.show = function show(options) {
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
-    
+
     this.updateNavBarState();
-    
+
     /**
         The pricing record needs some special set-up after creation/loading and before
         being presented to the user, because special value-rules.
@@ -101,10 +124,10 @@ A.prototype.show = function show(options) {
             c.pricing.refreshNoPriceRate();
         }
     }.bind(this);
-    
+
     var showLoadingError = function(error) {
         this.viewModel.isLoading(false);
-        this.app.modals.showError({
+        showError({
             title: 'Unable to load service',
             error: error
         })
@@ -120,7 +143,7 @@ A.prototype.show = function show(options) {
         var clientID = service.clientID();
 
         if(clientID) {
-            return this.app.model.clients.getItem(clientID)
+            return clients.getItem(clientID)
             .then(function(client) {
                 this.viewModel.client(client);
             }.bind(this));
@@ -133,11 +156,11 @@ A.prototype.show = function show(options) {
 
     if (pricingTypeID) {
         // Load the pricing Type
-        this.app.model.pricingTypes.getItem(pricingTypeID)
+        pricingTypes.getItem(pricingTypeID)
         .then(function(type) {
             this.viewModel.pricingType(type);
             // New pricing
-            var serviceVersion = this.app.model.serviceProfessionalServices.newItemVersion({
+            var serviceVersion = serviceProfessionalServices.newItemVersion({
                 jobTitleID: jobTitleID,
                 pricingTypeID: pricingTypeID,
                 visibleToClientID: clientID
@@ -154,14 +177,14 @@ A.prototype.show = function show(options) {
     }
     else if (serviceProfessionalServiceID) {
         // Get the pricing
-        this.app.model.serviceProfessionalServices.getItemVersion(jobTitleID, serviceProfessionalServiceID)
+        serviceProfessionalServices.getItemVersion(jobTitleID, serviceProfessionalServiceID)
         .then(function (serviceProfessionalServiceVersion) {
             if (!serviceProfessionalServiceVersion) {
                 throw new Error('Unable to load service');
             }
             // Load the pricing type before put the version
             // returns to let the 'catch' to get any error
-            return this.app.model.pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
+            return pricingTypes.getItem(serviceProfessionalServiceVersion.version.pricingTypeID())
             .then(function(type) {
                 this.viewModel.pricingType(type);
                 this.viewModel.serviceProfessionalServiceVersion(serviceProfessionalServiceVersion);
@@ -185,19 +208,19 @@ function ViewModel(app) {
     /*jshint maxstatements: 35*/
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.isLoading = ko.observable(false);
     // managed manually instead of
-    //app.model.serviceProfessionalServices.state.isLoading;
-    this.isSaving = app.model.serviceProfessionalServices.state.isSaving;
-    this.isSyncing = app.model.serviceProfessionalServices.state.isSyncing;
-    this.isDeleting = app.model.serviceProfessionalServices.state.isDeleting;
+    //serviceProfessionalServices.state.isLoading;
+    this.isSaving = serviceProfessionalServices.state.isSaving;
+    this.isSyncing = serviceProfessionalServices.state.isSyncing;
+    this.isDeleting = serviceProfessionalServices.state.isDeleting;
     this.jobTitleID = ko.observable(0);
     this.serviceProfessionalServiceID = ko.observable(0);
     // L10N
     this.moneySymbol = ko.observable('$');
-    
+
     this.pricingType = ko.observable(new PricingType());
 
     this.serviceProfessionalServiceVersion = ko.observable(null);
@@ -211,28 +234,11 @@ function ViewModel(app) {
 
     this.client = ko.observable(null);
 
-    this.header = ko.pureComputed(function() {
-        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
-            prefix = this.isNew() ? 'New ' : '',
-            postfix = this.client() ? (' only for ' + this.client().fullName()) : '';
-
-        if (this.isLoading()) {
-            return 'Loading...';
-        }
-        else if (this.serviceProfessionalServiceVersion()) {
-            return prefix + pricingName + postfix;
-        }
-        else {
-            return 'Unable to load service';
-        }
-
-    }, this);
-    
     // Quicker access in form, under a 'with'
     this.current = ko.pureComputed(function() {
         var t = this.pricingType(),
             p = this.serviceProfessionalService();
-        
+
         if (t && p) {
             return {
                 type: t,
@@ -249,11 +255,11 @@ function ViewModel(app) {
     }, this);
 
     this.wasRemoved = ko.observable(false);
-    
+
     this.isLocked = ko.computed(function() {
-        return this.isDeleting() || app.model.serviceProfessionalServices.state.isLocked();
+        return this.isDeleting() || serviceProfessionalServices.state.isLocked();
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         var p = this.serviceProfessionalService();
         return p && !p.updatedDate();
@@ -262,10 +268,10 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         var v = this.serviceProfessionalServiceVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         'Save changes' :
                         'Saved'
@@ -276,40 +282,40 @@ function ViewModel(app) {
         var v = this.serviceProfessionalServiceVersion();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
-                'Deleting...' : 
+            this.isDeleting() ?
+                'Deleting...' :
                 'Delete'
         );
     }, this);
 
     this.save = function() {
-        
-        app.model.serviceProfessionalServices.setItem(this.serviceProfessionalService().model.toPlainObject())
+
+        serviceProfessionalServices.setItem(this.serviceProfessionalService().model.toPlainObject())
         .then(function(serverData) {
             // Update version with server data.
             this.serviceProfessionalService().model.updateWith(serverData);
             // Push version so it appears as saved
             this.serviceProfessionalServiceVersion().push({ evenIfObsolete: true });
-            
+
             // After save logic provided by the activity, injected in the view:
             this.onSave(serverData);
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to save the service.',
                 error: err
             });
         });
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
         // TODO Better l10n or replace by a new preset field on pricingType.deleteLabel
         var p = this.pricingType();
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete ' + (p && p.singularName()),
             message: 'Are you sure? The operation cannot be undone.',
             yes: 'Delete',
@@ -322,14 +328,14 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.serviceProfessionalServices.delItem(this.jobTitleID(), this.serviceProfessionalServiceID())
+        serviceProfessionalServices.delItem(this.jobTitleID(), this.serviceProfessionalServiceID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Unable to delete the service.',
                 error: err
             });

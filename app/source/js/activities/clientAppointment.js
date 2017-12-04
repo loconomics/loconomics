@@ -6,9 +6,11 @@
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var EditClientBookingCardVM = require('../viewmodels/EditClientBookingCardVM');
+var clientAppointments = require('../data/clientAppointments');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ClientAppointmentActivity() {
-    
+
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
@@ -16,6 +18,7 @@ var A = Activity.extend(function ClientAppointmentActivity() {
     this.navBar = Activity.createSubsectionNavBar('', {
         backLink: '/myAppointments' , helpLink: this.viewModel.helpLink
     });
+    this.title('Your appointments');
 });
 
 exports.init = A.init;
@@ -23,11 +26,11 @@ exports.init = A.init;
 A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
-    
+
     var params = options && options.route && options.route.segments;
     var id = params[0] |0;
     this.viewModel.load(id);
-    
+
     //Get the return nav text
     var returnText = options && options.route && options.route.query.returnText || 'Back';
     this.viewModel.returnText(decodeURIComponent(returnText));
@@ -35,19 +38,19 @@ A.prototype.show = function show(options) {
 
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201983163-making-changes-canceling-appointments';
-    this.list = app.model.clientAppointments.list;
+    this.list = clientAppointments.list;
     this.currentIndex = ko.observable(-1);
     this.currentItem = new EditClientBookingCardVM(app);
     this.isLoading = ko.observable(false);
-    this.returnText = ko.observable('Back'); 
-        
+    this.returnText = ko.observable('Back');
+
     this.isEditButtonVisible = ko.pureComputed(function() {
         return (this.canCancel() || this.canEdit()) && !this.isEditMode() && !this.isCancelMode();
     }, this.currentItem);
     this.isCancelEditButtonVisible = ko.pureComputed(function() {
         return (this.canCancel() || this.canEdit()) && (this.isEditMode() || this.isCancelMode());
     }, this.currentItem);
-    
+
     this.isEmpty = ko.pureComputed(function() {
         return this.currentIndex() === -2;
     }, this);
@@ -73,20 +76,20 @@ function ViewModel(app) {
             this.currentItem.load(id)
             .then(function() {
                 // Load the list in background
-                app.model.clientAppointments.sync()
+                clientAppointments.sync()
                 .then(updateListIndex);
             })
             .catch(function(err) {
-                app.modals.showError({
+                showError({
                     title: 'Error loading the appointment',
                     error: err
                 });
-            }.bind(this));
+            });
         }
         else {
             this.isLoading(true);
             this.currentItem.reset();
-            app.model.clientAppointments.sync()
+            clientAppointments.sync()
             .then(function() {
                 var first = this.list().length ? this.list()[0] : null;
                 if (first) {
@@ -105,7 +108,7 @@ function ViewModel(app) {
             }.bind(this))
             .catch(function(err) {
                 this.isLoading(false);
-                app.modals.showError({
+                showError({
                     title: 'Error loading appointments',
                     error: err
                 });

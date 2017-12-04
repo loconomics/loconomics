@@ -7,6 +7,10 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var InputPaymentMethod = require('../models/InputPaymentMethod');
 var Address = require('../models/Address');
+var paymentPlans = require('../data/paymentPlans');
+var userPaymentPlan = require('../data/userPaymentPlan');
+var showNotification = require('../modals/notification').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function UserFeesActivity() {
 
@@ -18,6 +22,7 @@ var A = Activity.extend(function UserFeesActivity() {
     this.navBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account', helpLink: this.viewModel.helpLink
     });
+    this.title('Loconomics plans');
 });
 
 module.exports = A;
@@ -29,29 +34,29 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Request to sync plans, just in case there are remote changes
-    this.app.model.paymentPlans.sync();
+    paymentPlans.sync();
     // Load active plan, if any
-    this.app.model.userPaymentPlan.sync();
+    userPaymentPlan.sync();
 };
 
 function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201964153-how-owner-user-fees-work';
 
-    this.plans = app.model.paymentPlans.list;
-    this.activeUserPaymentPlan = app.model.userPaymentPlan.data;
+    this.plans = paymentPlans.list;
+    this.activeUserPaymentPlan = userPaymentPlan.data;
 
-    this.selectedPaymentPlanID = ko.observable(null);
+    this.selectedPaymentPlanID = ko.observable('');
     this.paymentMethod = new InputPaymentMethod();
     this.paymentMethod.billingAddress(new Address());
 
     this.reset = function() {
-        this.selectedPaymentPlanID(null);
+        this.selectedPaymentPlanID('');
         this.paymentMethod.model.reset();
     }.bind(this);
 
     this.isLoading = ko.pureComputed(function() {
-        return app.model.paymentPlans.state.isLoading() || app.model.userPaymentPlan.isLoading();
+        return paymentPlans.state.isLoading() || userPaymentPlan.isLoading();
     });
     this.isSaving = ko.observable(false);
     this.isLocked = ko.pureComputed(function() {
@@ -63,7 +68,7 @@ function ViewModel(app) {
     this.activePaymentPlan = ko.pureComputed(function(){
         var id = this.activeUserPaymentPlan.paymentPlan();
         if (id) {
-            return app.model.paymentPlans.getObservableItem(id)();
+            return paymentPlans.getObservableItem(id)();
         }
         else {
             return null;
@@ -86,10 +91,10 @@ function ViewModel(app) {
             paymentMethod: this.paymentMethod.model.toPlainObject(true)
         };
 
-        app.model.userPaymentPlan.createSubscription(plain)
+        userPaymentPlan.createSubscription(plain)
         .then(function() {
             this.isSaving(false);
-            app.modals.showNotification({ title: 'Payment plan saved', message: 'Thank you' })
+            showNotification({ title: 'Payment plan saved', message: 'Thank you' })
             .then(function() {
                 // Move forward:
                 app.successSave();
@@ -97,7 +102,7 @@ function ViewModel(app) {
         }.bind(this))
         .catch(function(err) {
             this.isSaving(false);
-            app.modals.showError({ title: 'Error creating your subscription', error: err });
+            showError({ title: 'Error creating your subscription', error: err });
         }.bind(this));
     }.bind(this);
 
@@ -113,6 +118,6 @@ function ViewModel(app) {
     }.bind(this);
 
     this.changePlan = function() {
-        app.modals.showNotification({ title: 'Not Implemented', message: 'Not Implemented' });
+        showNotification({ title: 'Not Implemented', message: 'Not Implemented' });
     };
 }

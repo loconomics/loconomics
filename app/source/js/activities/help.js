@@ -4,15 +4,18 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var onboarding = require('../data/onboarding');
+var help = require('../data/help');
 
 var A = Activity.extend(function HelpActivity() {
-    
+
     Activity.apply(this, arguments);
-    
-    this.viewModel = new ViewModel(this.app);
-    this.accessLevel = null;    
+
+    this.viewModel = new ViewModel();
+    this.accessLevel = null;
 
     this.navBar = Activity.createSubsectionNavBar('Back');
+    this.title("We're here to help");
 
     // TestingData
     //setSomeTestingData(this.viewModel);
@@ -26,9 +29,9 @@ var A = Activity.extend(function HelpActivity() {
         this.viewModel.isLoading(true);
 
         Promise.all([
-            this.app.model.help.getArticles(),
-            this.app.model.help.getCategories(),
-            this.app.model.help.getSections()            
+            help.getArticles(),
+            help.getCategories(),
+            help.getSections()
         ])
         .then(function(res) {
             this.viewModel.articles(res[0]);
@@ -123,14 +126,14 @@ A.prototype.show = function show(state) {
 
 var ko = require('knockout');
 
-function ViewModel(app) {
-    this.isInOnboarding = app.model.onboarding.inProgress;
+function ViewModel() {
+    this.isInOnboarding = onboarding.inProgress;
     this.articles = ko.observableArray([]);
     this.searchText = ko.observable('');
     this.isLoading = ko.observable(false);
     this.params = ko.observable(''); // sections/2342342342-stuff-i-do
-    this.viewType = ko.observable(''); 
-    
+    this.viewType = ko.observable('');
+
     this.tailId = ko.observable('');
 
     this.categories = ko.observableArray([]);
@@ -144,15 +147,15 @@ function ViewModel(app) {
     this.selectedSectionId = ko.observable(0);
 
     this.fullArticleData = ko.pureComputed(function() {
-        return app.model.help.findByIdAt(this.selectedArticleId(), this.articles());
+        return help.findByIdAt(this.selectedArticleId(), this.articles());
     }, this);
 
     this.selectedSection = ko.pureComputed(function(){
-        return app.model.help.findByIdAt(this.selectedSectionId(), this.sections());
+        return help.findByIdAt(this.selectedSectionId(), this.sections());
     }, this);
 
     this.selectedCategory = ko.pureComputed(function(){
-        return app.model.help.findByIdAt(this.selectedCategoryId(), this.categories());
+        return help.findByIdAt(this.selectedCategoryId(), this.categories());
     }, this);
 
     this.filteredSectionArticles = ko.pureComputed(function() {
@@ -171,7 +174,7 @@ function ViewModel(app) {
             return sectionIsSelected;
         });
         return result.length ? result:null;
-        
+
     }, this);
 
     this.filteredArticles = ko.pureComputed(function() {

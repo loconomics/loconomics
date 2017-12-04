@@ -10,7 +10,7 @@ module.exports = {
         src: [
             'phonegap/www/*.*',
             'phonegap/www/res/**/*.*',
-            'phonegap/www/assets/js/{app,libs,styleguidelibs}.min.js',
+            'phonegap/www/assets/js/{app,common}.min.js',
             'phonegap/www/assets/css/{app,libs}.min.css',
             'phonegap/www/assets/images/**/*.*',
             'phonegap/www/assets/fonts/**/*.*',

@@ -11,35 +11,30 @@
                 </ul>
             </div>
             <div class="LightForm col-md-7 col-sm-reset">
-                <h2 class="SectionTitle">
-                    <span>Calendar Syncing</span>
-                    <app-loading-spinner params="mod: 'onRight'"></app-loading-spinner>
-                </h2>
-                <form data-bind="submit: save" class="container-fluid LightForm">
-                    <p class="isolated text-muted">
-                    Do you use a calendar already? We can both import your availability and export your Loconomics bookings to ensure you never miss an appointment. 
-                    </p>
-                    <div class="isolated">
-                        <div class="form-group">
-                            <label for="calendarSync-icalImportUrl">
-                            Please paste the URL from your iCal-supported calendar to import your free/busy information here:
-                            </label>
-                            <div>
-                                <input type="url" id="calendarSync-icalImportUrl" class="form-control"
-                                data-bind="value: sync.icalImportUrl, disable: isLocked"/>
+                <h1><icon-dec params="icon: 'ion-ios-loop'"></icon-dec> <span data-bind="text: title"></span></h1>
+                <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+                <form id="syncCalendarForm" data-bind="submit: save" class="container-fluid LightForm" aria-describedby="syncCalendarFormInstructions">
+                    <p id="syncCalendarFormInstructions" class="help-block">Do you use a calendar already? We can both import your availability and export your Loconomics bookings to ensure you're never double-booked.</p>
+                    <fieldset>
+                        <legend>Import a calendar to Loconomics:</legend>
+                        <div class="isolated">
+                            <div class="form-group">
+                                <label for="calendarSync-icalImportUrl">Your calendar's URL you want to import:</label>
+                                <input id="calendarSync-icalImportUrl" type="url" class="form-control" data-bind="value: sync.icalImportUrl, disable: isLocked" aria-describedby="calendarSync-icalImportUrl-instructions"/>
+                                <p id="calendarSync-icalImportUrl-instructions" class="help-block">Importing your calendar will block your Loconomics availability when you're busy so clients don't schedule you. <a href="/help/articles/205985385-how-do-i-import-and-sync-my-existing-calendar">Learn how to find your URL</a>.</p>
                             </div>
+                            <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Import your calendar</button>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block" data-bind="text: submitText, disable: isLocked">Save</button>
-                    </div>
-                    <div class="form-group">
-                        <label for="calendarSync-icalExportUrl">
-                        Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments:
-                        </label>
-                        <input type="url" readonly id="calendarSync-icalExportUrl" class="form-control" data-bind="value: sync.icalExportUrl" />
-                    </div>
-                    <div class="isolated">
-                        <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
-                    </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Export your Loconomics bookings:</legend>
+                        <div class="form-group">
+                            <label for="calendarSync-icalExportUrl">Loconomics calendar URL:</label>
+                            <input id="calendarSync-icalExportUrl" type="url" readonly class="form-control" data-bind="value: sync.icalExportUrl" aria-describedby="calendarSync-icalExportUrl-instructions"/>
+                            <p id="calendarSync-icalExportUrl-instructions" class="help-block">Please copy this URL and paste it into your iCal-supported calendar to sync all your Loconomics appointments.</p>
+                            <button type="button" class="btn btn-danger btn-block" data-bind="text: resetText, disable: isLocked, event: { click: reset }">Reset Private URL</button>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
             <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">

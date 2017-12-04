@@ -3,12 +3,12 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout'),
-    moment = require('moment');
+var Model = require('./Model');
+var ko = require('knockout');
+var moment = require('moment-timezone');
 
 module.exports = function EventDates(values) {
-    
+
     Model(this);
 
     this.model.defProperties({
@@ -16,13 +16,13 @@ module.exports = function EventDates(values) {
         endTime: null,
         timeZone: ''
     }, values);
-    
+
     this.duration = ko.computed({
         read: function() {
             var s = this.startTime(),
                 e = this.endTime();
             if (!s || !e) return null;
-            
+
             return moment.duration(e - s);
         },
         write: function(value) {
@@ -38,29 +38,31 @@ module.exports = function EventDates(values) {
         },
         owner: this
     });
-    
+
     // Smart visualization of date and time
     this.displayedDate = ko.pureComputed(function() {
-        
+
         return moment(this.startTime()).locale('en-US-LC').calendar();
-        
+
     }, this);
-    
+
     this.displayedStartTime = ko.pureComputed(function() {
-        
+
         return moment(this.startTime()).locale('en-US-LC').format('LT');
-        
+
     }, this);
-    
+
     this.displayedEndTime = ko.pureComputed(function() {
-        
+
         return moment(this.endTime()).locale('en-US-LC').format('LT');
-        
+
     }, this);
-    
+
+    this.displayedTimeZone = ko.pureComputed(function() {
+        return this.timeZone() && moment().tz(this.timeZone()).format('z');
+    }, this);
+
     this.displayedTimeRange = ko.pureComputed(function() {
-        
-        return this.displayedStartTime() + '-' + this.displayedEndTime();
-        
+        return this.displayedStartTime() + '-' + this.displayedEndTime() + ' ' + this.displayedTimeZone();
     }, this);
 };

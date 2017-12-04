@@ -8,19 +8,10 @@
     
     switch (UrlData[0].ToLower()) {
         case "alerts":
-            data = LcData.GetActiveUserAlerts(userID);
-            break;
-        case "numbers":
-            data = LcData.GetUserAlertsNumbers(userID);
+            data = LcRest.Alert.GetActive(userID);
             break;
         case "positions":
             data = LcData.UserInfo.GetUserPositionsStatuses(userID);
-            break;
-        case "checkactivation":
-            data = LcData.UserInfo.CheckUserPositionActivation(userID, LcData.UserInfo.GetUserPositionsStatuses(userID));
-            break;
-        case "profilepopup":
-            data = LcHelpers.UseProfileActivationPopup(LcData.UserInfo.GetUserPositionsStatuses(userID), userID);
             break;
         case "usercontact":
             data = LcData.UserInfo.GetUserRowWithContactData(userID);
@@ -32,8 +23,6 @@
         <li><a href="alerts">Alerts</a></li>
         <li><a href="numbers">Numbers</a></li>
         <li><a href="positions">GetUserPositionsStatuses</a></li>
-        <li><a href="checkactivation">CheckUserPositionActivation</a></li>
-        <li><a href="profilepopup">UseProfileActivationPopup</a></li>
         <li><a href="usercontact">UserRowWithContactData</a></li>
     </ul>
 </div>

@@ -10,6 +10,11 @@ var ko = require('knockout'),
     RouteMatcher = require('../utils/Router').RouteMatcher,
     Route = require('../utils/Router').Route,
     serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
+var onboarding = require('../data/onboarding');
+var clients = require('../data/clients');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var DEFAULT_BACK_LINK = '/listingEditor';
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -19,12 +24,27 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/scheduling', helpLink: this.viewModel.helpLink
+        backLink: DEFAULT_BACK_LINK,
+        helpLink: this.viewModel.helpLink
     });
     // Save defaults to restore on updateNavBarState when needed:
     this.defaultLeftAction = this.navBar.leftAction().model.toPlainObject(true);
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
+    this.title = ko.pureComputed(function() {
+        if (this.isInOnboarding() && this.jobTitleName()) {
+            return 'Add your first ' + this.jobTitleName() + ' offering';
+        }
+        else if (this.jobTitleName() && !this.isSelectionMode()) {
+            return this.jobTitleName() + ' offerings';
+        }
+        else if (this.jobTitleName() && this.isSelectionMode()) {
+            return "What's included in " + this.clientName() + "'s " + this.jobTitleName() + ' appointment?';
+        }
+        else {
+            return 'Select a job title';
+        }
+    }, this.viewModel);
 
     // On changing jobTitleID:
     this.registerHandler({
@@ -61,18 +81,17 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     this.registerHandler({
         target: this.viewModel.clientID,
         handler: function(clientID) {
-            var viewModel = this.viewModel,
-                app = this.app;
+            var viewModel = this.viewModel;
 
             viewModel.client(null);
 
             if(clientID) {
-                app.model.clients.getItem(clientID)
+                clients.getItem(clientID)
                 .then(function(client) {
                     viewModel.client(client);
                 })
                 .catch(function(error) {
-                    app.modals.showError({ title: 'Unable to load client.', error: error });
+                    showError({ title: 'Unable to load client.', error: error });
                 });
             }
         }.bind(this)
@@ -117,7 +136,7 @@ A.prototype.applyOwnNavbarRules = function() {
 A.prototype.newLeftAction = function() {
     var leftAction = {},
         jid = this.viewModel.jobTitleID(),
-        url = this.mustReturnTo || (jid && '/jobtitles/' + jid || '/scheduling'),
+        url = this.mustReturnTo || (DEFAULT_BACK_LINK  + (jid ? '/' + jid : '')),
         handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
 
     leftAction.link = url;
@@ -131,12 +150,12 @@ A.prototype.leftActionText = function() {
     var clientName = this.viewModel.client() && this.viewModel.clientFullName(),
         jobTitle = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName();
 
-    return this.requestData.navTitle || clientName || jobTitle || 'Scheduler';
+    return this.requestData.navTitle || clientName || jobTitle || 'Back';
 };
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    this.app.model.onboarding.updateNavBar(this.navBar) ||
+    onboarding.updateNavBar(this.navBar) ||
     this.applyOwnNavbarRules();
 };
 
@@ -236,7 +255,7 @@ function ViewModel(app) {
     this.serviceEditorCancelLink = ko.observable(null);
 
     this.helpLink = '/help/relatedArticles/201967166-listing-and-pricing-your-services';
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
     this.isLocked = this.isLoading;
 
@@ -251,17 +270,16 @@ function ViewModel(app) {
     this.loadServicesData = function() {
         var clientID = this.clientID(),
             jobTitleID = this.jobTitleID(),
-            model = app.model.serviceProfessionalServices,
             services = null;
 
         if(this.isSelectionMode()) {
-            services = model.getServicesBookableByProvider(clientID, jobTitleID);
+            services = serviceProfessionalServices.getServicesBookableByProvider(clientID, jobTitleID);
         }
         else if (clientID) {
-            services = model.getClientSpecificServicesForJobTitle(clientID, jobTitleID);
+            services = serviceProfessionalServices.getClientSpecificServicesForJobTitle(clientID, jobTitleID);
         }
         else {
-            services = model.getList(jobTitleID);
+            services = serviceProfessionalServices.getList(jobTitleID);
         }
 
         return this.loadData(null, jobTitleID, services);
@@ -287,7 +305,7 @@ function ViewModel(app) {
     }, this);
 
     this.clientManagerLink = ko.pureComputed(function() {
-        if (this.client() || this.isSelectionMode() || app.model.onboarding.inProgress()) {
+        if (this.client() || this.isSelectionMode() || onboarding.inProgress()) {
             return null;
         }
         else {
@@ -308,7 +326,7 @@ function ViewModel(app) {
     }, this);
 
     this.onboardingNextReady = ko.computed(function() {
-        var isin = app.model.onboarding.inProgress(),
+        var isin = onboarding.inProgress(),
             hasPricing = this.list().length > 0;
 
         return isin && hasPricing;
@@ -340,10 +358,10 @@ function ViewModel(app) {
     **/
     this.endSelection = function(data, event) {
 
-        if (app.model.onboarding.inProgress()) {
+        if (onboarding.inProgress()) {
             // Ensure we keep the same jobTitleID in next steps as here:
-            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
-            app.model.onboarding.goNext();
+            onboarding.selectedJobTitleID(this.jobTitleID());
+            onboarding.goNext();
         }
         else {
             // Run method injected by the activity to return a

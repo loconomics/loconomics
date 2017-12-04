@@ -86,6 +86,9 @@ namespace LcRest
         const string sqlConditionOnlyActivePlans = @"
             AND SubscriptionEndDate is null
         ";
+        const string sqlGetBySubscriptionID = sqlSelectAll + @"
+            WHERE   o.subscriptionID = @0
+        ";
 
         /// <summary>
         /// Get the record by its ID
@@ -97,6 +100,20 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(sqlGetItem, userPaymentPlanID));
+            }
+        }
+
+        /// <summary>
+        /// Get a record by the payment gateway 'subscriptionID', that is meant to be
+        /// unique.
+        /// </summary>
+        /// <param name="subscriptionID"></param>
+        /// <returns></returns>
+        public static UserPaymentPlan GetBySubscriptionID(string subscriptionID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetBySubscriptionID, subscriptionID));
             }
         }
 
@@ -189,6 +206,30 @@ namespace LcRest
                     data.planStatus,
                     data.daysPastDue
                 );
+
+                try
+                {
+                    // Run Membership Checks to enable/disable member (OwnerStatus update)
+                    UserProfile.CheckAndSaveOwnerStatus(data.userID);
+                }
+                catch (Exception ex)
+                {
+                    // An error checking status must NOT prevent us from saving/creating
+                    // the payment-plan, but we must notify staff so we can take manual action
+                    // to fix the error and run the check again for this user
+                    try
+                    {
+                        LcLogger.LogAspnetError(ex);
+                        LcMessaging.NotifyError("UserPaymentPlan.Set->UserProfile.CheckAndSaveOwnerStatus::userID=" + data.userID,
+                            System.Web.HttpContext.Current.Request.RawUrl,
+                            ex.ToString());
+                    }
+                    catch
+                    {
+                        // Prevent cancel paymentplan creation/update because of email or log failing. Really strange
+                        // and webhook-scheduleTask for subscriptions would attempt again this.
+                    }
+                }
             }
         }
         #endregion
@@ -348,6 +389,150 @@ namespace LcRest
            var subscriptionID = GetUserActivePlan(userID).subscriptionID;
            LcPayment.Membership.GetUserSubscription(subscriptionID);
         */
+
+        /// <summary>
+        /// For the last payment plan of the user, gets the subscription status (planStatus)
+        /// parsed for the Braintree enumeration, with fallback to UNRECOGNIZED value if
+        /// no payment plan registered.
+        /// This checks for closed plans too (useful to know if last payment was cancelled or suspended).
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static Braintree.SubscriptionStatus GetLastPaymentPlanStatus(int userID)
+        {
+            var sql = @"
+			SELECT TOP 1 PlanStatus
+			FROM UserPaymentPlan
+			WHERE UserID = @0
+            ORDER BY UserPaymentPlanID DESC
+            ";
+            using (var db = new LcDatabase())
+            {
+                var status = (string)db.QueryValue(sql, userID);
+                if (status == null)
+                {
+                    return Braintree.SubscriptionStatus.UNRECOGNIZED;
+                }
+                else
+                {
+                    return Braintree.SubscriptionStatus.STATUSES.First(x => status == x.ToString());
+                }
+            }
+        }
         #endregion
+
+        #region Updates from Gateway
+        /// <summary>
+        /// Save updated data and status of a subscription from a notification
+        /// of the gateway.
+        /// </summary>
+        /// <param name="subscription"></param>
+        public void UpdatedAtGateway(Braintree.Subscription subscription, Braintree.WebhookKind notification)
+        {
+            if (subscriptionID != subscription.Id)
+            {
+                throw new Exception(String.Format("Subscription IDs don't match, record '{0}', input '{1}'", subscriptionID, subscription.Id));
+            }
+            // Update record with information from the gateway
+            paymentPlanLastChangedDate = subscription.UpdatedAt.Value;
+            nextPaymentDueDate = subscription.NextBillingDate;
+            nextPaymentAmount = subscription.NextBillAmount;
+            daysPastDue = subscription.DaysPastDue ?? 0;
+            // New status
+            planStatus = subscription.Status.ToString();
+            // Detect when a subscription ended
+            if (subscription.Status == Braintree.SubscriptionStatus.CANCELED ||
+                subscription.Status == Braintree.SubscriptionStatus.EXPIRED)
+            {
+                subscriptionEndDate = subscription.BillingPeriodEndDate ?? DateTimeOffset.Now;
+            }
+        }
+
+        /// <summary>
+        /// Save updated data and status of a subscription from a change at the gateway.
+        /// A comparision between saved status and new one will detect the kind of notification
+        /// </summary>
+        /// <param name="subscription"></param>
+        public void UpdatedAtGateway(Braintree.Subscription subscription)
+        {
+            // Detect kind of change/notification
+            // Status livecycle at official docs: https://developers.braintreepayments.com/guides/recurring-billing/overview#subscription-statuses
+            // Cannot detect Braintree.WebhookKind.SUBSCRIPTION_TRIAL_ENDED here but is
+            // not important really, because the status of the subscrition is Active already in trial period;
+            // the important change (to update some data) is when the paymend was done (that happens at same
+            // time as the trial_ended for the first one, and one update for the same data and status is enought).
+            var kind = Braintree.WebhookKind.UNRECOGNIZED;
+            if (planStatus != subscription.Status.ToString())
+            {
+                // Status change, detect which one
+                // - Can change from Pending, Active or PastDue to Canceled
+                if (subscription.Status == Braintree.SubscriptionStatus.CANCELED)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_CANCELED;
+                }
+                // - Can change from Active to Canceled
+                else if (subscription.Status == Braintree.SubscriptionStatus.EXPIRED)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_EXPIRED;
+                }
+                // - Change change from Pending, PastDue
+                else if (subscription.Status == Braintree.SubscriptionStatus.ACTIVE)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_WENT_ACTIVE;
+                }
+                // - Change change from Pending, Active
+                else if (subscription.Status == Braintree.SubscriptionStatus.PAST_DUE)
+                {
+                    kind = Braintree.WebhookKind.SUBSCRIPTION_WENT_PAST_DUE;
+                }
+                // - Impossible to have a change from 'other' status to Pending, is not allowed
+                //   in the Braintree subscription livecycle
+            }
+
+            UpdatedAtGateway(subscription, kind);
+        }
+        #endregion
+
+        #region Query by Plan/Subscription status
+        /// <summary>
+        /// Get active subscriptions, all ones with a non final status (Active, Pending, Past_due)
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(LcDatabase db)
+        {
+            return db.Query(sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)",
+                Braintree.SubscriptionStatus.PENDING.ToString(),
+                Braintree.SubscriptionStatus.PAST_DUE.ToString(),
+                Braintree.SubscriptionStatus.ACTIVE.ToString())
+            .Select(FromDB);
+        }
+        #endregion
+
+        public static bool MeetsOwnsershipRequirement(int userID)
+        {
+            var sql = @"
+            DECLARE @UserID = @0
+            DECLARE @hasPaid bit = 0
+
+			IF EXISTS (
+				SELECT *
+				FROM UserPaymentPlan
+				WHERE UserID = @UserID
+					AND PlanStatus IN ('Active', 'Past Due')
+					-- extra check for 'current plan'
+					AND SubscriptionEndDate is null
+			)
+			BEGIN
+				SET @hasPaid = 1
+			END
+
+            SELECT @hasPaid
+            ";
+            using (var db = new LcDatabase())
+            {
+                return (bool)db.QueryValue(sql, userID);
+            }
+        }
     }
 }

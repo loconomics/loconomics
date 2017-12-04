@@ -1,0 +1,138 @@
+@render('../parts/landingPageHead.html')
+<div id="landingPage" data-activity="friends-of-the-board-anahi" class="LandingPage">
+    <div role="main">
+        <div class="landingpage-background">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-7 col-sm-reset landingpage-copy">
+                        <div class="landingpage-brand"></div>
+                        <div class="landingpage-copyBackground">
+                            <h1 class="landingpage-title">Bienvenido, Profesionales de Bay Area</h1>
+                            <p class="landingpage-tagline">Encuentre clientes, communidad, herramientas y recursos. Gestione y haga crecer su negocio en sus propios términos.</p>
+                            <br>
+                            <div class="landingpage-proposition">
+                                <p><span class="fa ion-ios-checkmark-outline" aria-hidden="true"></span><strong>Regístrese gratis</strong><span class="hidden-xs"> – Nuevos clientes le encontrarán a través de nuestro marketplace. Anuncie sus servicos sin comisiones.</span></p>
+                            </div>
+                            <div class="landingpage-proposition">
+                                <p><span class="fa ion-ios-checkmark-outline" aria-hidden="true"></span><strong>Referencias</strong><span class="hidden-xs"> – Nuestros miembros comparten clientes. Conozca otros profesionales en su communidad.</span></p>
+                            </div>
+                            <div class="landingpage-proposition">
+                                <p><span class="fa ion-ios-checkmark-outline" aria-hidden="true"></span><strong>Compartimos beneficios</strong><span class="hidden-xs"> – Planes para miembros desde $19/m. Acceso a eventos exclusivos, recursos, y ganancias.</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: profile">
+                            <h5 class="SignupLogin-prompt">¿Cuál es su principal área de trabajo?</h5>
+                            <app-select-job-title params="selected: jobTitleID, caption: 'Elija uno para empezar'">
+                                <item id="14">Profesional de Limpieza</item>
+                                <item id="76">Paseador de Perros</item>
+                                <item id="106">Masajista/o</item>
+                                <item id="22">Jardinero</item>
+                                <item id="90">Fotógrafo</item>
+                                <item id="32">Tutor</item>
+                                <item id="82">Personal de Mantenimiento</item>
+                                <item id="0">Elegir en el siguente paso</item>
+                            </app-select-job-title>
+                        </app-signup>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="landingpage-hiw">
+            <h2 class="landingpage-title">Cómo funciona:</h2>
+            <div class="container landingpage-hiw-list">
+                <ul class="row list-unstyled">
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-list-outline"></i>
+                        <h3>Regístrese gratis</h3>
+                        <p>Te toma unos minutos – 0% comisiones. Invite a su red de trabajo. Cuando crecemos, crece su negocio.</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-chatboxes-outline"></i>
+                        <h3>Únase a la conversación</h3>
+                        <p>Organizamos reuniones informales regularmente y disponemos de foros en linea. Construya su red de una manera que se adapte a su personalidad.</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
+                        <h3>Cómo ser socio</h3>
+                        <p>Desde $19/m. Incluye acceso a los talleres, beneficios compartidos y características exclusivas en nuestra app. Elegimos nuestra junta directiva.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 Testimonials">
+                    <div class="carousel slide" data-ride="carousel" id="quote-carousel" data-interval="false">
+                        <!-- Carousel Slides / Quotes -->
+                        <div class="carousel-inner text-center">
+                            <!-- Quote 1 -->
+                            <div class="item active">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>He trabajado por 7 años en diferentes cooperativas y estoy muy orgullosa de formar parte de Loconomics. Nosotros trabajamos en equipo y al mismo tiempo yo soy dueña de mi propio negocio, con la confianza de que compartimos los beneficios en esta plataforma y con nadie más. Compartimos y elegimos los puestos de liderazgo, tomamos decisiones y crecemos personalmente.</p>
+                                            <small>Anahi Rojas, Professional Eco-Cleaning</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- Quote 2 -->
+                            <div class="item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I love being part of something bigger and radical. Loconomics is bringing local service professionals together with a progressive team of technologists to facilitate our success. Even better, I share the profits and help influence decisions.</p>
+                                            <small>Christopher Tellez, SF Reiki Center</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- Quote 3 -->
+                            <div class="item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I like that I run my own business but have the support of Loconomics to keep my schedule flowing and organized.</p>
+                                            <small>YaVette Holts, One Presence Massage</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <!-- Bottom Carousel Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#quote-carousel" data-slide-to="0" class="active"><img class="img-responsive" src="/assets/images/anahi.png" alt="">
+                            </li>
+                            <li data-target="#quote-carousel" data-slide-to="1"><img class="img-responsive " src="/assets/images/christopher.png" alt="">
+                            </li>
+                            <li data-target="#quote-carousel" data-slide-to="2"><img class="img-responsive" src="/assets/images/YaVette.png" alt="">
+                            </li>
+                        </ol>
+                        <!-- Carousel Buttons Next/Prev -->
+                        <a data-slide="prev" href="#quote-carousel" class="left carousel-control"><i class="fa ion-ios-arrow-left"></i></a>
+                        <a data-slide="next" href="#quote-carousel" class="right carousel-control"><i class="fa ion-ios-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Press">
+                <a class="pressLogo pressLogo-NYT" href="https://www.nytimes.com/2016/07/21/business/smallbusiness/a-new-wrinkle-in-the-gig-economy-workers-get-most-of-the-money.html?_r=0" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-SFChronicle" href="http://www.sfgate.com/business/article/Cooperatives-give-new-meaning-to-sharing-economy-5502879.php" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-TheNation" href="https://www.thenation.com/article/5-ways-take-back-tech/" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-Shareable" href="http://www.shareable.net/blog/owning-is-the-new-sharing" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-FastCompany" href="https://www.fastcompany.com/3051845/the-peoples-uber-why-the-sharing-economy-must-share-ownership" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-EastBayExpress" href="http://www.eastbayexpress.com/oakland/the-true-sharing-economy/Content?oid=4563249" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-FT" href="https://www.ft.com/content/beb85bdc-1f8e-11e7-b7d3-163f5a7f229c" target="_blank">
+                </a>
+        </div>
+    </div>
+</div>
+@render('../parts/landingPageFoot.html')

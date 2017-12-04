@@ -39,6 +39,41 @@ namespace LcRest
                 modifiedDate = record.modifiedDate
             };
         }
+
+        /// <summary>
+        /// Create an instance for a plan subscription and 
+        /// a payment transaction.
+        /// If transaction exists on database, it gets the record updating the transaction status.
+        /// </summary>
+        /// <param name="userPlan"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        public static UserFeePayment FromSubscriptionTransaction(UserPaymentPlan userPlan, Braintree.Transaction transaction)
+        {
+            var payment = GetBySubscriptionTransaction(userPlan.userID, userPlan.subscriptionID, transaction.Id);
+            if (payment == null)
+            {
+                // New one
+                payment = new UserFeePayment
+                {
+                    userID = userPlan.userID,
+                    subscriptionID = userPlan.subscriptionID,
+                    paymentAmount = transaction.Amount ?? 0,
+                    paymentDate = transaction.CreatedAt ?? DateTime.Now,
+                    paymentMethod = userPlan.paymentMethod,
+                    //paymentMethod = LcPayment.PaymentMethodInfo.Get(transaction.CreditCard.Token).Description,
+                    paymentPlan = transaction.PlanId,
+                    paymentStatus = transaction.Status.ToString(),
+                    paymentTransactionID = transaction.Id
+                };
+            }
+            else
+            {
+                // Update status
+                payment.paymentStatus = transaction.Status.ToString();
+            }
+            return payment;
+        }
         #endregion
 
         #region Fetch
@@ -63,6 +98,10 @@ namespace LcRest
         const string sqlGetByUser = sqlSelect + @"
             WHERE   O.userID = @0
         ";
+        const string sqlGetBySubscriptionTransaction = sqlGetByUser + @"
+                AND subscriptionID = @1
+                AND paymentTransactionID = @2
+        ";
 
         public static UserFeePayment Get(int userFeePaymentID)
         {
@@ -77,6 +116,15 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return db.Query(sqlGetByUser, userID).Select(FromDB);
+            }
+        }
+
+        public static UserFeePayment GetBySubscriptionTransaction(int userID,
+            string subscriptionID, string paymentTransactionID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetBySubscriptionTransaction, userID, subscriptionID, paymentTransactionID));
             }
         }
         #endregion

@@ -60,11 +60,12 @@ public static class LcAuth
         string lastname,
         string password,
         bool isProvider,
-        string marketingSource = null,
-        int genderID = -1,
-        string aboutMe = null,
-        string phone = null,
-        string signupDevice = null
+        string marketingSource,
+        int genderID,
+        string aboutMe,
+        string phone,
+        string signupDevice,
+        int countryID
     )
     {
         // Check password validity.
@@ -112,7 +113,8 @@ public static class LcAuth
                 // TODO:CONFIRM: SQL executed inside a procedure is inside the transaction? Some errors on testing showed that maybe not, and that's a problem.
                 db.Execute("exec CreateCustomer @0,@1,@2,@3,@4,@5,@6,@7",
                     userid, firstname, lastname,
-                    LcData.GetCurrentLanguageID(), LcData.GetCurrentCountryID(),
+                    LcData.GetCurrentLanguageID(),
+                    countryID > 0 ? countryID : LcData.GetCurrentCountryID(),
                     genderID, aboutMe, phone
                 );
 
@@ -194,7 +196,7 @@ public static class LcAuth
         return WebSecurity.ChangePassword(email, currentPassword, newPassword);
     }
 
-    public static void BecomeProvider(int userID, Database db = null)
+    public static void BecomeProvider(int userID, Database db = null, bool perserveOnboardingStep = false)
     {
         var ownDb = db == null;
         if (ownDb)
@@ -205,13 +207,15 @@ public static class LcAuth
         // Provider profiles must have a BookCode, so generate one
         // (but not replace if one exists)
         var bookCode = LcData.UserInfo.GenerateBookCode(userID);
-        
-        db.Execute(@"UPDATE Users SET 
-            IsProvider = 1,
-            OnboardingStep = 'welcome',
+
+        var sql = @"UPDATE Users SET 
+            IsProvider = 1," + 
+            (perserveOnboardingStep ? "" : " OnboardingStep = 'welcome', ") + @"
             BookCode = @1
             WHERE UserID = @0
-        ", userID, bookCode);
+        ";
+
+        db.Execute(sql, userID, bookCode);
 
         if (ownDb)
         {
@@ -236,8 +240,6 @@ public static class LcAuth
                             
             // Add Facebook verification as confirmed
             db.Execute(@"EXEC SetUserVerification @0,@1,@2,@3", userID, 8, DateTime.Now, 1);
-            // Test social media alert
-            db.Execute("EXEC TestAlertSocialMediaVerification @0", userID);
         }
     }
 

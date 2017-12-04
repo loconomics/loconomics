@@ -1,13 +1,15 @@
-/** NavBar view model.
-    It allows customize the NavBar per activity.
-**/
+/**
+ * NavBar view model.
+ * It allows customize the NavBar per activity.
+ * @module viewmodels/NavBar
+ */
 var Model = require('../models/Model'),
     NavAction = require('./NavAction');
 
 function NavBar(values) {
-    
+
     Model(this);
-    
+
     this.model.defProperties({
         // Title showed in the center
         // When the title is 'null', the app logo is showed in place,

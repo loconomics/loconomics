@@ -2,8 +2,43 @@
     It tracks the onboarding information and methods
     to update views to that state
 **/
-var Model = require('../models/Model'),
-    ko = require('knockout');
+var Model = require('../models/Model');
+var ko = require('knockout');
+
+/**
+ * Definition of steps, in strict order, with settings from available:
+ * - serviceProfessionalOnly:boolean Whether is display to professional users only
+ * - jobTitleSpecific:boolean Whether the step needs a jobTitleID in order to work,
+ * and accepts that as the first URL segment
+ */
+var STEPS = {
+    welcome: {},
+    publicContactInfo: {},
+    addJobTitle: {
+        serviceProfessionalOnly: true
+    },
+    serviceAddresses: {
+        serviceProfessionalOnly: true,
+        jobTitleSpecific: true
+    }
+};
+var PROFESSIONAL_FINISH_STEP = 'listingEditor';
+var CLIENT_FINISH_STEP = 'home';
+
+var PROFESSIONAL_STEPS = Object.keys(STEPS)
+.filter(function(stepName) {
+    return !STEPS[stepName].clientOnly;
+})
+.map(function(stepName) {
+    return stepName;
+});
+var CLIENT_STEPS = Object.keys(STEPS)
+.filter(function(stepName) {
+    return !STEPS[stepName].serviceProfessionalOnly;
+})
+.map(function(stepName) {
+    return stepName;
+});
 
 function OnboardingProgress(values) {
     var stepNumberFinished = -1;
@@ -11,14 +46,27 @@ function OnboardingProgress(values) {
     Model(this);
 
     this.model.defProperties({
+        isServiceProfessional: false,
         stepNumber: stepNumberFinished,
         // Let's set a job title to pass in to jobTitleSpecific steps as URL segment
         selectedJobTitleID: null
     }, values);
 
+    this.stepNames = ko.pureComputed(function() {
+        return this.isServiceProfessional() ? PROFESSIONAL_STEPS : CLIENT_STEPS;
+    }, this);
+    /**
+     * Gives the name of the step (activity) that should be navigated after finishing
+     * the onboarding.
+     * @member {KnockoutComputed<string>}
+     */
+    this.stepAfterFinish = ko.pureComputed(function() {
+        return this.isServiceProfessional() ? PROFESSIONAL_FINISH_STEP : CLIENT_FINISH_STEP;
+    }, this);
+
     this.totalSteps = ko.pureComputed(function() {
         // 'Zero' step is a welcome, not accounted:
-        return this.stepNames.length - 1;
+        return this.stepNames().length - 1;
     }, this);
 
     this.incrementStep = function() {
@@ -27,7 +75,7 @@ function OnboardingProgress(values) {
         if(this.isFinished()) {
             return;
         }
-        else if(currentStep == (this.stepNames.length - 1)){
+        else if(currentStep == (this.stepNames().length - 1)){
             this.finish();
         }
         else {
@@ -36,7 +84,10 @@ function OnboardingProgress(values) {
     };
 
     this.stepAfter = function(stepName) {
-        var nextStep = new OnboardingProgress({ selectedJobTitleID: this.selectedJobTitleID() });
+        var nextStep = new OnboardingProgress({
+            selectedJobTitleID: this.selectedJobTitleID(),
+            isServiceProfessional: this.isServiceProfessional()
+        });
         nextStep.setStepByName(stepName);
         nextStep.incrementStep();
 
@@ -44,10 +95,8 @@ function OnboardingProgress(values) {
     };
 
     this.stepName = ko.pureComputed(function() {
-        return this.stepNames[this.stepNumber()] || null;
+        return this.stepNames()[this.stepNumber()] || null;
     }, this);
-
-    this.stepNames = OnboardingProgress.steps.names;
 
     this.stepUrl = ko.pureComputed(function() {
         var name = this.stepName();
@@ -55,7 +104,7 @@ function OnboardingProgress(values) {
         var url = '/' + name;
 
         // Check if there is need for a jobTitleID in the URL
-        var def = OnboardingProgress.steps.definitions[name];
+        var def = STEPS[name];
         var jobID = this.selectedJobTitleID();
         if (jobID && def && def.jobTitleSpecific) {
             url += '/' + jobID;
@@ -85,50 +134,10 @@ function OnboardingProgress(values) {
 module.exports = OnboardingProgress;
 
 OnboardingProgress.prototype.setStepByName = function setStepByName(name) {
-    var stepIndex = this.stepNames.indexOf(name);
+    var stepIndex = this.stepNames().indexOf(name);
     if (stepIndex > -1) {
         this.stepNumber(stepIndex);
         return true;
     }
     return false;
-};
-
-// Definitions of the steps for 'welcome' onboarding, for any relevant set-up needed
-// on there, like if they need a jobTitleID
-// IMPORTANT: A server side feature at sign-up depends strictly on the order
-// of the first three steps, to skip the addJobTitles when a jobTitle is
-// given in the process, so move directly into schedulingPreferences.
-// If this changes, the server must be udpated properly or some steps
-// may end being skipt wrongly
-OnboardingProgress.steps = {
-    names: [
-        'welcome',
-        'addJobTitles',
-        'schedulingPreferences',
-        'serviceProfessionalService',
-        'serviceAddresses',
-        'bookingPolicies',
-        'licensesCertifications',
-        'aboutMe',
-        'paymentAccount'
-    ],
-    definitions: {
-        welcome: {},
-        addJobTitles: {},
-        schedulingPreferences: {},
-        serviceProfessionalService: {
-            jobTitleSpecific: true
-        },
-        serviceAddresses: {
-            jobTitleSpecific: true
-        },
-        bookingPolicies: {
-            jobTitleSpecific: true
-        },
-        licensesCertifications: {
-            jobTitleSpecific: true
-        },
-        aboutMe: {},
-        paymentAccount: {}
-    }
 };

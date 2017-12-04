@@ -9,7 +9,7 @@
 var RedirectType = {
     permanent: 301,
     temporary: 302
-}
+};
 /**
  * Perform an http redirect in a Connect/Express response
  * object, closing the response
@@ -52,8 +52,9 @@ module.exports = {
     options: {
         //livereload: 35729
         middleware: function(connect, options, middlewares) {
-            // Injects in first place
-            middlewares.unshift(autoHtmlExtensionMiddleware);
+            // Injects in last place (after static and directory; if we put
+            // this before directory, will not detect directory listing).
+            middlewares.push(autoHtmlExtensionMiddleware);
             // All middlewares
             return middlewares;
         }

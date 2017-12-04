@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -39,9 +40,25 @@ namespace LcRest
         public int accountStatusID;
         public DateTime createdDate;
         public DateTime updatedDate;
+        public int countryID;
+        public int languageID;
 
-        public int? ownerStatusID;
-        public DateTime? ownerAnniversaryDate;
+        [JsonIgnore]
+        public Owner owner;
+        public int ownerStatusID
+        {
+            get
+            {
+                return owner.statusID;
+            }
+        }
+        public DateTime? ownerAnniversaryDate
+        {
+            get
+            {
+                return owner.ownerAnniversaryDate;
+            }
+        }
 
         // Automatic field right now, but is better
         // to communicate it than to expect the App or API client
@@ -83,9 +100,15 @@ namespace LcRest
                 accountStatusID = record.accountStatusID,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
+                languageID = record.languageID,
+                countryID = record.countryID,
 
-                ownerStatusID = record.ownerStatusID,
-                ownerAnniversaryDate = record.ownerAnniversaryDate
+                owner = new Owner
+                {
+                    userID = record.userID,
+                    statusID = record.ownerStatusID ?? (int)Owner.DefaultOwnerStatus,
+                    ownerAnniversaryDate = record.ownerAnniversaryDate
+                }
             };
         }
 
@@ -117,6 +140,8 @@ namespace LcRest
             ,accountStatusID
             ,createdDate
             ,updatedDate
+            ,PreferredLanguageID as languageID
+            ,PreferredCountryID as countryID
 
             ,ownerStatusID
             ,ownerAnniversaryDate
@@ -278,5 +303,20 @@ namespace LcRest
         }
         #endregion
 
+        #region Membership / OwnerStatus
+        /// <summary>
+        /// Checks the membership requirements of the user and
+        /// if there is a status change is saved at database.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public static LcEnum.OwnerStatus CheckAndSaveOwnerStatus(int userID)
+        {
+            var owner = Get(userID).owner;
+            owner.status = Owner.GetExpectedOwnerStatus(userID);
+            Owner.Set(owner);
+            return owner.status;
+        }
+        #endregion
     }
 }

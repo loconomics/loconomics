@@ -4,19 +4,19 @@
 
 Activity() {
     // Corretly getting space, scrolling context and fixing SmartNavBar
-    overflow: auto;    
+    overflow: auto;
     position: absolute;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 1;
+    z-index: $app-activity-z-index;
     background: $gray-background;
-    
+
     /* activity must be notified of the navbar to fix
        available space
     */
     &.has-navbar {
-        padding-bottom: $activityNavbarHeight;
+        padding-bottom: $app-navbar-height;
     }
 
     // media-app-navbar and big

@@ -2,7 +2,7 @@
 
 module.exports = function(grunt) {
 
-    var includedPatterns = ['modals/**/*.html', 'activities/**/*.html', 'templates/**/*.html'];
+    var includedPatterns = ['activities/**/*.html', 'templates/**/*.html'];
     var includedDir = 'source/html/';
     var includedFiles = grunt.file.expand({
         cwd: includedDir,
@@ -176,7 +176,6 @@ module.exports = function(grunt) {
         landingPageTemplatesPatterns = ['templates/signup.html',
                                         'templates/signup-field.html',
                                         'templates/validated-password.html',
-                                        'modals/errorModal.html',
                                         'templates/select-job-title.html'],
         landingPageTemplatesFiles = grunt.file.expand({
                 cwd: includedDir,

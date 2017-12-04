@@ -3,18 +3,18 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    moment = require('moment'),
-    ko = require('knockout');
+var Model = require('./Model');
+var moment = require('moment');
+var ko = require('knockout');
 
 function TimeRange(values) {
     Model(this);
-    
+
     this.model.defProperties({
         start: '00:00:00',
         end: '00:00:00'
     }, values);
-    
+
     // Additional interfaces to get/set the range times
     // by using a different data unit or format.
 
@@ -36,6 +36,17 @@ function TimeRange(values) {
         },
         owner: this
     });
+
+    var convertToLocalTime = function(strTime) {
+        var time = moment.duration(strTime);
+        return moment().startOf('day').add(time);
+    };
+    this.localStartTime = ko.pureComputed(function() {
+        return convertToLocalTime(this.start());
+    }, this);
+    this.localEndTime = ko.pureComputed(function() {
+        return convertToLocalTime(this.end());
+    }, this);
 }
 
 module.exports = TimeRange;
@@ -58,7 +69,7 @@ function minutesToTimeString(minutes) {
         h = d.hours(),
         m = d.minutes(),
         s = d.seconds();
-    
+
     return (
         twoDigits(h) + ':' +
         twoDigits(m) + ':' +

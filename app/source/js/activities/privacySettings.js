@@ -5,14 +5,18 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var user = require('../data/userProfile').data;
+var onboarding = require('../data/onboarding');
+var privacySettings = require('../data/privacySettings');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function PrivacySettingsActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.loggedUser;
-    
+
     var serviceProfessionalNavBar = Activity.createSubsectionNavBar('Account', {
         backLink: '/account' , helpLink: this.viewModel.helpLinkProfessionals
     });
@@ -22,25 +26,26 @@ var A = Activity.extend(function PrivacySettingsActivity() {
     });
     this.clientNavBar = serviceProfessionalNavBar.model.toPlainObject(true);
     this.navBar = this.viewModel.user.isServiceProfessional() ? serviceProfessionalNavBar : clientNavBar;
-        
+    this.title('Privacy settings');
+
     this.registerHandler({
-        target: this.app.model.privacySettings,
+        target: privacySettings,
         event: 'error',
         handler: function(err) {
             var msg = err.task === 'save' ? 'Error saving privacy settings.' : 'Error loading privacy settings.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
-        }.bind(this)
+        }
     });
 });
 
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
+
+    if (!onboarding.updateNavBar(this.navBar)) {
         // Reset
         var nav = this.viewModel.user.isServiceProfessional() ? this.serviceProfessionalNavBar : this.clientNavBar;
         this.navBar.model.updateWith(nav, true);
@@ -49,26 +54,22 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 
 A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
-    
+
     // Keep data updated:
-    this.app.model.privacySettings.sync();
+    privacySettings.sync();
     // Discard any previous unsaved edit
     this.viewModel.discard();
-    
+
     this.updateNavBarState();
 };
 
 function ViewModel(app) {
-    this.user = app.model.userProfile.data;
+    this.user = user;
     this.helpLinkProfessionals = '/help/relatedArticles/201967106-protecting-your-privacy';
     this.helpLinkClients = '/help/relatedArticles/201960903-protecting-your-privacy';
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
-    
-    this.user = app.model.userProfile.data;
-
-    var privacySettings = app.model.privacySettings;
 
     var settingsVersion = privacySettings.newVersion();
     settingsVersion.isObsolete.subscribe(function(itIs) {
@@ -84,7 +85,7 @@ function ViewModel(app) {
             settingsVersion.pull({ evenIfNewer: true });
         }
     });
-    
+
     // Actual data for the form:
     this.settings = settingsVersion.version;
 
@@ -92,14 +93,14 @@ function ViewModel(app) {
 
     this.submitText = ko.pureComputed(function() {
         return (
-            this.isLoading() ? 
-                'loading...' : 
-                this.isSaving() ? 
-                    'saving...' : 
+            this.isLoading() ?
+                'loading...' :
+                this.isSaving() ?
+                    'saving...' :
                     'Save'
         );
     }, privacySettings);
-    
+
     this.discard = function discard() {
         settingsVersion.pull({ evenIfNewer: true });
     }.bind(this);

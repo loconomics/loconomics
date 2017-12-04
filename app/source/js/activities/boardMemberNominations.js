@@ -10,9 +10,10 @@ var A = Activity.extend(function BoardMemberNominationsActivity() {
 
     this.accessLevel = null;
     this.viewModel = new ViewModel();
-    this.navBar = Activity.createSubsectionNavBar('Owner information', {
+    this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo' , helpLink: this.viewModel.helpLink
     });
+    this.title('Board nominations');
 });
 
 module.exports = A;

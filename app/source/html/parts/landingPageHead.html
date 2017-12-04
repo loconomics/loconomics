@@ -29,12 +29,12 @@
 
         <link href="../assets/css/libs@(dotVersion).css" rel="stylesheet">
         <link href="../assets/css/welcome@(dotVersion).css" rel="stylesheet">
-        <script src="../assets/js/styleguidelibs@(dotVersion).js"></script>
-        <script src="../assets/js/libs@(dotVersion).js"></script>
+        <script src="../assets/js/common@(dotVersion).js"></script>
         <script src="../assets/js/welcome@(dotVersion).js"></script>
     </head>
     <body>
-        <div class="App-activities">
+        <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
+        <div class="App-activities" id="activities-container">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render('../' + includedFiles[f])
             }

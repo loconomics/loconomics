@@ -3,39 +3,28 @@
   <app-inline-user-menu></app-inline-user-menu>
   <div class="container">
       <div class="row">
-          <h1 class="hidden-xs hidden-sm">What you're good at</h1>
+        <h1 data-bind="text: title"></h1>
+        <div data-bind="css: { 'is-loading': isLoading }">
+            <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
+        </div>
         <div class="col-md-7 col-sm-reset">
-
             <div data-bind="visible: user.isServiceProfessional">
-                <h2 class="SectionTitle">Your listings</h2>
-                <div data-bind="css: { 'is-loading': isLoading }">
-                    <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
-                </div>
+                <h2 class="SectionTitle">Listings by job title</h2>
                 <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
-                <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="CompactLinkTile" href="/addJobTitles">
-                            <div class="Tile-content text-muted">Add a listing</div>
-                            <div class="Tile-icon text-muted"><span class="fa ion ion-plus"></span></div>
-                        </a>
-                    </li>
-                    <li class="LinkTile" data-bind="visible: isPreviewReady">
-                        <div class="Tile-content"><a href="/profile" class="btn btn-default btn-block">Preview listing</a></div>
-                    </li>
-                </ul>
+                <h2 class="SectionTitle">Add a new listing</h2>
+                <a class="IconContentItem" href="/addJobTitle">
+                    <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Search for a job title</p>
+                    </div>
+                </a>
                 <h2 class="SectionTitle">Availability settings</h2>
-                <ul class="TilesList TilesList--openEnd">
-                    <li>
-                        <a class="InfoTile" href="/schedulingPreferences?mustReturn=marketplaceProfile&returnText=Your Listings">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-ios-settings" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <p>Availability settings</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+                <a class="IconContentItem" href="/schedulingPreferences?mustReturn=marketplaceProfile&returnText=Your Listings">
+                    <icon-dec class="Item-icon" params="icon: 'ion-ios-settings'"></icon-dec>
+                    <div class="Item-content">
+                        <p>Adjust your availability</p>
+                    </div>
+                </a>
             </div>
             <app-feedback-entry class="visible-xs visible-sm" params="section: 'marketplaceProfile'"></app-feedback-entry>
         </div>

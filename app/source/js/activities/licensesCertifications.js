@@ -6,6 +6,13 @@
 var ko = require('knockout'),
     $ = require('jquery'),
     Activity = require('../components/Activity');
+var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var userLicensesCertifications = require('../data/userLicensesCertifications');
+var jobTitleLicenses = require('../data/jobTitleLicenses');
+var DEFAULT_BACK_LINK = '/listingEditor';
+var DEFAULT_BACK_TEXT = 'Back';
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function LicensesCertificationsActivity() {
 
@@ -14,13 +21,14 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    
-    this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: this.viewModel.helpLink
+
+    this.navBar = Activity.createSubsectionNavBar(DEFAULT_BACK_TEXT, {
+        backLink: DEFAULT_BACK_LINK, helpLink: this.viewModel.helpLink
     });
-    
+    this.title('Professional credentials');
+
     this.defaultNavBar = this.navBar.model.toPlainObject(true);
-    
+
     // On changing jobTitleID:
     // - load job title name
     this.registerHandler({
@@ -28,38 +36,38 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
         handler: function(jobTitleID) {
 
             if (jobTitleID) {
-                
+
                 ////////////
                 // Job Title
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
-
-                // Fill in job title name
-                this.viewModel.jobTitleName(jobTitle.singularName());
+                    // Fill in job title name
+                    this.viewModel.jobTitleName(jobTitle.singularName());
+                    this.updateNavBarState();
                 }.bind(this))
                 .catch(function(err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load listing details.',
                         error: err
                     });
-                }.bind(this));
-                
+                });
+
                 // Get data for the Job title ID
-                this.app.model.userLicensesCertifications.getList(jobTitleID)
+                userLicensesCertifications.getList(jobTitleID)
                 .then(function(list) {
                     // Save for use in the view
-                    this.viewModel.submittedUserLicensesCertifications(this.app.model.userLicensesCertifications.asModel(list));
+                    this.viewModel.submittedUserLicensesCertifications(userLicensesCertifications.asModel(list));
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load submitted licenses and credentials.',
                         error: err
                     });
-                }.bind(this));
+                });
 
                 // Get required licenses for the Job title ID - an object, not a list
-                this.app.model.jobTitleLicenses.getItem(jobTitleID)
+                jobTitleLicenses.getItem(jobTitleID)
                 .then(function(item) {
                     // Save for use in the view
                     this.viewModel.jobTitleApplicableLicences(item);
@@ -71,12 +79,12 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                     }
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'Unable to load license requirements.',
                         error: err
                     });
-                }.bind(this));
-                
+                });
+
                 // Fix URL
                 // If the URL didn't included the jobTitleID, or is different,
                 // we put it to avoid reload/resume problems
@@ -91,17 +99,37 @@ var A = Activity.extend(function LicensesCertificationsActivity() {
                 this.viewModel.jobTitleName('Job Title');
                 this.viewModel.submittedUserLicensesCertifications([]);
                 this.viewModel.jobTitleApplicableLicences(null);
+                this.updateNavBarState();
             }
         }.bind(this)
     });
 });
 exports.init = A.init;
 
+A.prototype.useJobTitleInNavBar = function() {
+    // First, reset
+    this.navBar.model.updateWith(this.defaultNavBar, true);
+
+    // Apply job title name and link
+    var text = this.viewModel.jobTitleName() || DEFAULT_BACK_TEXT;
+    var id = this.viewModel.jobTitleID();
+    var link = id ? DEFAULT_BACK_LINK + '/' + id : DEFAULT_BACK_LINK;
+    // Use job title name and ID for back link
+    this.navBar.leftAction().model.updateWith({
+        text: text,
+        link: link
+    });
+};
+
 A.prototype.updateNavBarState = function updateNavBarState() {
-    
-    if (!this.app.model.onboarding.updateNavBar(this.navBar)) {
-        // Reset
-        this.navBar.model.updateWith(this.defaultNavBar, true);
+    // Onboarding takes precence, then mustReturn, then default
+    // navbar with jobtitle
+    var done = onboarding.updateNavBar(this.navBar);
+    if (!done) {
+        done = this.app.applyNavbarMustReturn(this.requestData);
+    }
+    if (!done) {
+        this.useJobTitleInNavBar();
     }
 };
 
@@ -110,7 +138,7 @@ A.prototype.show = function show(options) {
     this.viewModel.jobTitleID(0);
 
     Activity.prototype.show.call(this, options);
-    
+
     this.updateNavBarState();
 
     var params = options && options.route && options.route.segments;
@@ -127,23 +155,23 @@ var UserJobProfile = require('../viewmodels/UserJobProfile');
 function ViewModel(app) {
     this.helpLink = '/help/relatedArticles/201967966-adding-credentials';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
-    
+    this.isInOnboarding = onboarding.inProgress;
+
     this.jobTitleID = ko.observable(0);
     this.submittedUserLicensesCertifications = ko.observableArray([]);
     //is an object that happens to have arrays
     this.jobTitleApplicableLicences = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title'); 
-    
-    this.isSyncing = app.model.userLicensesCertifications.state.isSyncing();
-    this.isLoading = app.model.userLicensesCertifications.state.isLoading();
-    
+    this.jobTitleName = ko.observable('Job Title');
+
+    this.isSyncing = userLicensesCertifications.state.isSyncing();
+    this.isLoading = userLicensesCertifications.state.isLoading();
+
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/licensesCertifications');
     this.jobTitles.selectJobTitle = function(jobTitle) {
-        
+
         this.jobTitleID(jobTitle.jobTitleID());
-        
+
         return false;
     }.bind(this);
 
@@ -155,17 +183,17 @@ function ViewModel(app) {
         });
         app.shell.go(url, request);
     }.bind(this);
-    
+
     this.selectItem = function(item) {
         var url = '/licensesCertificationsForm/' + this.jobTitleID() + '/' +
-            item.userLicenseCertificationID() + '?mustReturn=' + 
+            item.userLicenseCertificationID() + '?mustReturn=' +
             encodeURIComponent(app.shell.currentRoute.url) +
             '&returnText=' + encodeURIComponent('Licenses/certifications');
         app.shell.go(url, this.requestData);
     }.bind(this);
-    
+
     this.onboardingNextReady = ko.computed(function() {
-        if (!app.model.onboarding.inProgress()) return false;
+        if (!onboarding.inProgress()) return false;
         var groups = this.jobTitleApplicableLicences();
         if (!groups) return false;
 
@@ -195,7 +223,7 @@ function ViewModel(app) {
                     var userCredential = findUserCredential(credential.licenseCertificationID());
                     return (userCredential && userCredential.statusID() === ???);
                 }*/
-                
+
                 if (credential.required()) {
                     // NOTE: It returns the negated result, that means that when a required credential
                     // is not fullfilled, returning true we stop immediately the loop and know the requirements
@@ -205,7 +233,7 @@ function ViewModel(app) {
             });
             return allAccomplished;
         };
-        
+
         return (
             hasAllRequiredOfGroup(groups.municipality()) &&
             hasAllRequiredOfGroup(groups.county()) &&
@@ -213,12 +241,12 @@ function ViewModel(app) {
             hasAllRequiredOfGroup(groups.country())
         );
     }, this);
-    
+
     this.goNext = function() {
-        if (app.model.onboarding.inProgress()) {
+        if (onboarding.inProgress()) {
             // Ensure we keep the same jobTitleID in next steps as here:
-            app.model.onboarding.selectedJobTitleID(this.jobTitleID());
-            app.model.onboarding.goNext();
+            onboarding.selectedJobTitleID(this.jobTitleID());
+            onboarding.goNext();
         }
     }.bind(this);
 }

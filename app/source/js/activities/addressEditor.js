@@ -1,6 +1,6 @@
 /**
     AddressEditor activity
-    
+
     TODO: ModelVersion is NOT being used, so no getting updates if server updates
     the data after load (data load is requested but get first from cache). Use
     version and get sync'ed data when ready, and additionally notification to
@@ -18,6 +18,11 @@ var ko = require('knockout');
 var Address = require('../models/Address');
 var Activity = require('../components/Activity');
 var PostalCodeVM = require('../viewmodels/PostalCode');
+var onboarding = require('../data/onboarding');
+var jobTitles = require('../data/jobTitles');
+var serviceAddresses = require('../data/serviceAddresses');
+var showConfirm = require('../modals/confirm').show;
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function AddressEditorActivity() {
 
@@ -28,7 +33,8 @@ var A = Activity.extend(function AddressEditorActivity() {
     this.navBar = Activity.createSubsectionNavBar('Locations', {
         backLink: '/scheduling' , helpLink: this.viewModel.helpLink
     });
-    
+    this.title('Edit location');
+
     // On changing jobTitleID:
     // - load job title name
     this.registerHandler({
@@ -36,24 +42,24 @@ var A = Activity.extend(function AddressEditorActivity() {
         handler: function(jobTitleID) {
             if (jobTitleID) {
                 // Get data for the Job title ID
-                this.app.model.jobTitles.getJobTitle(jobTitleID)
+                jobTitles.getJobTitle(jobTitleID)
                 .then(function(jobTitle) {
                     // Fill in job title name
                     this.viewModel.jobTitleName(jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
-                }.bind(this));
+                });
             }
             else {
                 this.viewModel.jobTitleName('Job Title');
             }
         }.bind(this)
     });
-    
+
     // Special treatment of the save operation
     this.viewModel.onSave = function(addressID) {
         if (this.requestData.returnNewAsSelected === true) {
@@ -69,8 +75,14 @@ var A = Activity.extend(function AddressEditorActivity() {
 
             this.app.shell.goBack(this.requestData);
         }
-        else if (this.app.model.onboarding.inProgress()) {
+        else if (onboarding.inProgress()) {
+            // Per #712, we move to next onboarding step directly from editor
+            // but implementation details at onboarding complicate this a bit,
+            // so just go back and then move next
             this.app.shell.goBack();
+            setTimeout(function() {
+                onboarding.goNext();
+            }, 100);
         }
         else {
             this.app.successSave();
@@ -83,18 +95,18 @@ exports.init = A.init;
 A.prototype.updateNavBarState = function updateNavBarState() {
 
     var link = this.requestData.cancelLink || '/serviceAddresses/' + this.viewModel.jobTitleID();
-    
+
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
 
 A.prototype.show = function show(options) {
     //jshint maxcomplexity:12
     Activity.prototype.show.call(this, options);
-    
+
     // Reset
     this.viewModel.wasRemoved(false);
-    
-    // Params    
+
+    // Params
     var params = options && options.route && options.route.segments || [];
 
     var kind = params[0] || '',
@@ -106,7 +118,7 @@ A.prototype.show = function show(options) {
         serviceType = params[2] || '';
     // Special type: clientLocation
     var clientUserID = serviceType === 'clientLocation' ? params[3] : null;
-    
+
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.addressID(addressID);
     this.viewModel.clientUserID(clientUserID);
@@ -115,52 +127,56 @@ A.prototype.show = function show(options) {
 
     if (addressID) {
         // Get the address
-        this.app.model.serviceAddresses.getItemVersion(jobTitleID, addressID)
+        serviceAddresses.getItemVersion(jobTitleID, addressID)
         .then(function (addressVersion) {
             if (addressVersion) {
                 this.viewModel.addressVersion(addressVersion);
 
-                var address = addressVersion.original,
-                    header = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Place of work' : 'Edit location';
+                var address = addressVersion.original;
+                var title = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'Edit this place of work' : 'Edit this service area';
+                var formInstructions = (address.isServiceLocation() && address.kind() == Address.kind.service) ? 'This is an address of a location where clients come to receive your ' : "This is an area where you are willing to go to a client's home or business to perform your ";
 
-                this.viewModel.header(header);
+                this.title(title);
+                this.viewModel.formInstructions(formInstructions);
             }
             else {
                 this.viewModel.addressVersion(null);
-                this.viewModel.header('Unknown or deleted location');
+                this.title('Unknown or deleted location');
+                this.viewModel.formInstructions('');
             }
 
-            this.viewModel.subheader('');
             this.viewModel.postalCodeVM.onFormLoaded();
         }.bind(this))
         .catch(function (err) {
-            this.app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });
-        }.bind(this));
+        });
     }
     else {
         // New address
-        this.viewModel.addressVersion(this.app.model.serviceAddresses.newItemVersion({
+        this.viewModel.addressVersion(serviceAddresses.newItemVersion({
             jobTitleID: jobTitleID
         }));
 
-        this.viewModel.subheader('');
+        this.viewModel.formInstructions('');
         this.viewModel.postalCodeVM.onFormLoaded();
 
         switch (serviceType) {
             case 'serviceArea':
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(false);
-                this.viewModel.header('Add an area where you work');
-                this.viewModel.subheader('Clients will be able to book your offerings at locations within this area.');
+                this.title('Add an area where you work');
+                this.viewModel.titleIcon('ion-pinpoint');
+                this.viewModel.formInstructions("Enter a zip code and a distance from that zip code to create an area where you are willing to go to a client's home or business to perform your ");
                 break;
             case 'serviceLocation':
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a place where you work');
-                this.viewModel.subheader('Clients will be able to book your offerings at this location.');
+                this.title('Add a place where you work');
+                this.viewModel.titleIcon('ion-ios-location-outline');
+                this.viewModel.formInstructions('Enter the address of the location where clients come to receive your ');
                 break;
             case 'clientLocation':
                 // A service professional is adding a location to perform a service that belongs
@@ -168,12 +184,15 @@ A.prototype.show = function show(options) {
                 this.viewModel.address().userID(clientUserID);
                 this.viewModel.address().isServiceArea(false);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a client location');
+                this.title('Add a client location');
+                this.viewModel.titleIcon('ion-ios-location-outline');
+                this.viewModel.formInstructions("Enter your client's address where you'll perform your ");
                 break;
             default:
                 this.viewModel.address().isServiceArea(true);
                 this.viewModel.address().isServiceLocation(true);
-                this.viewModel.header('Add a location');
+                this.title('Add a location for your ');
+                this.viewModel.titleIcon('ion-ios-location-outline');
                 break;
         }
     }
@@ -183,20 +202,20 @@ function ViewModel(app) {
     // jshint maxstatements:80
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
-    this.isInOnboarding = app.model.onboarding.inProgress;
+    this.isInOnboarding = onboarding.inProgress;
 
-    this.header = ko.observable('Edit location');
-    this.subheader = ko.observable('');
+    this.titleIcon = ko.observable('ion-ios-location-outline');
+    this.formInstructions = ko.observable('');
     // List of possible error messages registered
     // by name
     this.errorMessages = {
         postalCode: ko.observable('')
     };
-    
+
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
     this.clientUserID = ko.observable(0);
-    this.jobTitleName = ko.observable('Job Title'); 
+    this.jobTitleName = ko.observable('Job Title');
 
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {
@@ -209,21 +228,20 @@ function ViewModel(app) {
 
     // On change to a valid code, do remote look-up
     this.postalCodeVM = new PostalCodeVM({
-        appModel: app.model,
         address: this.address,
         postalCodeError: this.errorMessages.postalCode
     });
 
-    this.isLoading = app.model.serviceAddresses.state.isLoading;
-    this.isSaving = app.model.serviceAddresses.state.isSaving;
-    this.isDeleting = app.model.serviceAddresses.state.isDeleting;
+    this.isLoading = serviceAddresses.state.isLoading;
+    this.isSaving = serviceAddresses.state.isSaving;
+    this.isDeleting = serviceAddresses.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
-    
+
     this.isLocked = ko.computed(function() {
-        return this.isDeleting() || app.model.serviceAddresses.state.isLocked();
+        return this.isDeleting() || serviceAddresses.state.isLocked();
     }, this);
-    
+
     this.isNew = ko.pureComputed(function() {
         var add = this.address();
         return !add || !add.updatedDate();
@@ -232,10 +250,10 @@ function ViewModel(app) {
     this.submitText = ko.pureComputed(function() {
         var v = this.addressVersion();
         return (
-            this.isLoading() ? 
-                'Loading...' : 
-                this.isSaving() ? 
-                    'Saving changes' : 
+            this.isLoading() ?
+                'Loading...' :
+                this.isSaving() ?
+                    'Saving changes' :
                     v && v.areDifferent() ?
                         'Save changes' :
                         'Saved'
@@ -246,11 +264,11 @@ function ViewModel(app) {
         var v = this.addressVersion();
         return v && v.areDifferent();
     }, this);
-    
+
     this.deleteText = ko.pureComputed(function() {
         return (
-            this.isDeleting() ? 
-                'Deleting...' : 
+            this.isDeleting() ?
+                'Deleting...' :
                 'Delete'
         );
     }, this);
@@ -267,7 +285,7 @@ function ViewModel(app) {
         else {
             // Normal use: save the user (serviceProfessional) address and provide the generated
             // addressID to the onSave method.
-            app.model.serviceAddresses.setItem(this.address().model.toPlainObject())
+            serviceAddresses.setItem(this.address().model.toPlainObject())
             .then(function(serverData) {
                 // Update version with server data.
                 this.address().model.updateWith(serverData);
@@ -278,7 +296,7 @@ function ViewModel(app) {
                 this.onSave(serverData.addressID);
             }.bind(this))
             .catch(function(err) {
-                app.modals.showError({
+                showError({
                     title: 'There was an error while saving.',
                     error: err
                 });
@@ -286,9 +304,9 @@ function ViewModel(app) {
         }
 
     }.bind(this);
-    
+
     this.confirmRemoval = function() {
-        app.modals.confirm({
+        showConfirm({
             title: 'Delete location',
             message: 'Are you sure? This cannot be undone.',
             yes: 'Delete',
@@ -301,20 +319,20 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        app.model.serviceAddresses.delItem(this.jobTitleID(), this.addressID())
+        serviceAddresses.delItem(this.jobTitleID(), this.addressID())
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location
             app.shell.goBack();
         }.bind(this))
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'There was an error while deleting.',
                 error: err
             });
         });
     }.bind(this);
-    
+
     /**
         Typed value binding rather than html binding allow to avoid
         problems because the data in html are string values while

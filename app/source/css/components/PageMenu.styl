@@ -8,17 +8,17 @@
   width: 100%;
   padding: 0px;
   text-align: center;
-  line-height: 19px !important;
+  line-height: 1.2em !important;
   background-color: $brand-primary;
-  
+
   .PageMenu-list {
-    display: none;    
-    
+    display: none;
+
     a {
       color: #FFF;
       text-decoration: none;
     }
-      
+
     ul {
       display: block;
       width: 100% !important;
@@ -50,10 +50,10 @@
         }
       }
     }
-    
+
     @media $mediaMinXs {
       display: inherit;
-    }  
+    }
   }
   &.DashboardNavMenu {
     background-color: $gray-light;
@@ -77,21 +77,24 @@
           &.divider{
             display none;
           }
-        }  
+        }
       }
     }
   }
-  
+
   .btn-group {
     @media $mediaMinXs {
       display: none;
-    }        
+    }
+    .dropdown-menu > li {
+      width: auto;
+    }
   }
-  
+
   .btn-group {
-    padding: 5px; 
+    padding: 5px;
     width: 66.67%;
-  
+
     .btn {
       float: none;
       width: 100%;
@@ -106,35 +109,35 @@
       border: 2px solid white;
       margin: auto;
     }
-    
+
     .dropdown-toggle:focus,
     .dropdown-toggle:hover {
-      border: 2px solid $brand-primary-dark; 
-      background-color: white;   
+      border: 2px solid $brand-primary-dark;
+      background-color: white;
       color: $brand-secondary-dark !important;
     }
 
     .dropdown-menu {
       width: 100%;
 
-      > li {        
+      > li {
         text-align: center;
         border-bottom: 1px solid $gray-background;
-        
+
         > a {
           white-space: normal;
           font-size: inherit;
           padding: 10px 0px;
         }
       }
-      
+
       > li:hover,
         a:hover{
           color: $brand-secondary-dark;
           font-weight: 400;
-          background-color: white;          
-        }        
-      
+          background-color: white;
+        }
+
       > li:last-child {
           border-bottom: none;
       }

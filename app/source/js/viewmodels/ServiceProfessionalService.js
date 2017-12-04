@@ -7,6 +7,10 @@ var ko = require('knockout'),
     $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
+var jobTitles = require('../data/jobTitles');
+var pricingTypes = require('../data/pricingTypes');
+var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var showError = require('../modals/error').show;
 
 function ServiceProfessionalServiceViewModel(app) {
     // jshint maxstatements:100
@@ -44,7 +48,7 @@ function ServiceProfessionalServiceViewModel(app) {
     /**
       * Implementations of this view model should specify a factory function
       * for creating list groups from services depending on the desired behavior
-      * 
+      *
       * @see {@link viewmodels/ServiceListGroupFactories}
       * @function
       * @abstract
@@ -59,25 +63,37 @@ function ServiceProfessionalServiceViewModel(app) {
     }, this);
 
     /**
-        Toggle the selection status of a single pricing, adding
-        or removing it from the 'selectedServices' array.
-    **/
-    this.toggleServiceSelection = function(service) {
-
-        var inIndex = -1,
-            isSelected = this.selectedServices().some(function(selectedServices, index) {
-            if (selectedServices === service) {
+     * Toggle the selection of a given service from the list of services.
+     * It identifies automatically if was included in the list already,
+     * removing or adding to reflect the change.
+     * @param {Object} service The model object representing a service/offering
+     * @private
+     */
+    var toggleAtSelectedServices = function(service) {
+        var inIndex = -1;
+        var wasSelected = this.selectedServices()
+        .some(function(item, index) {
+            if (item === service) {
                 inIndex = index;
                 return true;
             }
         });
 
-        service.isSelected(!isSelected);
-
-        if (isSelected)
+        if (wasSelected)
             this.selectedServices.splice(inIndex, 1);
         else
             this.selectedServices.push(service);
+    }.bind(this);
+
+    /**
+        Toggle the selection status of a single pricing, adding
+        or removing it from the 'selectedServices' array.
+    **/
+    this.toggleServiceSelection = function(service) {
+        // Toggle selection of the service
+        service.isSelected(!service.isSelected());
+        // And update list of selectedServices for this change
+        toggleAtSelectedServices(service);
     }.bind(this);
 
     this.editServiceURL = function(jobTitleID, serviceID) {
@@ -93,7 +109,7 @@ function ServiceProfessionalServiceViewModel(app) {
         app.shell.go(this.editServiceURL(this.jobTitleID(), service.serviceProfessionalServiceID()),
                      this.editServiceRequest());
     }.bind(this);
-    
+
     /**
         Handler for the listview items, managing edition and selection depending on current mode
     **/
@@ -107,6 +123,16 @@ function ServiceProfessionalServiceViewModel(app) {
 
         event.preventDefault();
         event.stopImmediatePropagation();
+    }.bind(this);
+
+    /**
+     * Handler for the 'change' event at a checkbox used in selection mode,
+     * so rather than use tapService/toggleServiceSelection we invert the control,
+     * detecting the value change for checked that auto updates service.isSelected
+     * and we update the list of selectedServices based on that.
+     */
+    this.onCheckboxChange = function(service) {
+        toggleAtSelectedServices(service);
     }.bind(this);
 
     this.newServiceURL = function(jobTitleID, pricingTypeID) {
@@ -127,9 +153,9 @@ function ServiceProfessionalServiceViewModel(app) {
         var request = $.extend({}, this.newServiceRequest(), {
             selectedJobTitleID: this.jobTitleID()
         });
-        
+
         // When in selection mode:
-        // Add current selection as preselection, so can be recovered later and 
+        // Add current selection as preselection, so can be recovered later and
         // the editor can add the new pricing to the list
         if (this.isSelectionMode()) {
             request.selectedServices = this.selectedServices().map(this.selectedServiceRequest);
@@ -166,13 +192,13 @@ function ServiceProfessionalServiceViewModel(app) {
         this.isLoading(true);
         // Get data for the Job title ID and pricing types.
         // They are essential data
-        return app.model.jobTitles.getJobTitle(jobTitleID)
+        return jobTitles.getJobTitle(jobTitleID)
         .then(function(jobTitle) {
             this.jobTitle(jobTitle);
 
             var pricingTypeIDs = jobTitle.pricingTypes().map(function(type) { return type.pricingTypeID(); });
 
-            return app.model.pricingTypes.getListByIDs(pricingTypeIDs);
+            return pricingTypes.getListByIDs(pricingTypeIDs);
         }.bind(this))
         .then(function(pricingTypes) {
             this.pricingTypes(pricingTypes);
@@ -182,7 +208,7 @@ function ServiceProfessionalServiceViewModel(app) {
         }.bind(this))
         .then(function(list) {
 
-            list = app.model.serviceProfessionalServices.asModel(list);
+            list = serviceProfessionalServices.asModel(list);
 
             // Read presets selection from requestData
             var preset = this.preSelectedServices(),
@@ -210,7 +236,7 @@ function ServiceProfessionalServiceViewModel(app) {
         }.bind(this))
         .catch(function (err) {
             this.isLoading(false);
-            app.modals.showError({
+            showError({
                 title: 'There was an error while loading.',
                 error: err
             });

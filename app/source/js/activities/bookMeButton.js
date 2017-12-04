@@ -7,17 +7,21 @@ var Activity = require('../components/Activity');
 var ko = require('knockout');
 var $ = require('jquery');
 var clipboard = require('../utils/clipboard');
+var marketplaceProfile = require('../data/marketplaceProfile');
+var userJobProfile = require('../data/userJobProfile');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function BookMeButtonActivity() {
-    
+
     Activity.apply(this, arguments);
-    
+
     this.viewModel = new ViewModel(this.app);
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Website scheduling', {
         backLink: 'scheduling' , helpLink: this.viewModel.helpLink
     });
+    this.title('Add scheduling to your website');
     // Auto select text on textarea, for better 'copy'
     // NOTE: the 'select' must happen on click, no touch, not focus,
     // only 'click' is reliable and bug-free.
@@ -31,14 +35,14 @@ var A = Activity.extend(function BookMeButtonActivity() {
             this.setSelectionRange(0, 99999);
         }
     });
-    
+
     this.registerHandler({
-        target: this.app.model.marketplaceProfile,
+        target: marketplaceProfile,
         event: 'error',
         handler: function(err) {
             if (err && err.task === 'save') return;
             var msg = 'Error loading data to build the Button.';
-            this.app.modals.showError({
+            showError({
                 title: msg,
                 error: err && err.task && err.error || err
             });
@@ -53,15 +57,15 @@ var A = Activity.extend(function BookMeButtonActivity() {
             if (jobTitleID) {
                 // User Job Title
                 // Get data for the Job Title and User Profile
-                this.app.model.userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
-                //this.app.model.jobTitles.getJobTitle(jobTitleID)
+                userJobProfile.getUserJobTitleAndJobTitle(jobTitleID)
+                //jobTitles.getJobTitle(jobTitleID)
                 .then(function(job) {
                     this.viewModel.userJobTitle(job.userJobTitle);
                     // Fill in job title name
                     this.viewModel.jobTitleName(job.jobTitle.singularName());
                 }.bind(this))
                 .catch(function (err) {
-                    this.app.modals.showError({
+                    showError({
                         title: 'There was an error while loading.',
                         error: err
                     });
@@ -80,59 +84,58 @@ exports.init = A.init;
 A.prototype.show = function show(state) {
     // reset
     this.viewModel.jobTitleID(false);
-    
+
     Activity.prototype.show.call(this, state);
-    
+
     // Keep data updated:
-    this.app.model.marketplaceProfile.sync();
-    
+    marketplaceProfile.sync();
+
     // Set the job title
     var jobID = state.route.segments[0] |0;
     this.viewModel.jobTitleID(jobID);
     this.viewModel.copyText('Copy');
 };
 
-function ViewModel(app) {
+function ViewModel() {
     this.helpLink = '/help/relatedArticles/201959943-add-scheduling-to-your-website';
 
-    var marketplaceProfile = app.model.marketplaceProfile;
-    this.jobTitleName = ko.observable('Job Title'); 
-    
+    this.jobTitleName = ko.observable('Job Title');
+
     // Actual data for the form:
-    
+
     // Read-only bookCode
     this.bookCode = ko.computed(function() {
         return marketplaceProfile.data.bookCode();
     });
-    
+
     this.jobTitleID = ko.observable(0);
-    
+
     this.copyText = ko.observable('Copy');
-    
+
     // Button type, can be: 'icon', 'link'
     this.type = ko.observable('icon');
-    
+
     this.type.subscribe(function() {
         // On any change, restore copy label
         this.copyText('Copy');
     }.bind(this));
 
     this.isLocked = marketplaceProfile.isLocked;
-    
+
     // Generation of the button code
-    
+
     var buttonTemplate =
         '<!-- begin Loconomics book-me-button -->' +
-        '<a style="display:inline-block"><img alt="" style="border:none" width="200" height="50" /></a>' + 
+        '<a style="display:inline-block"><img alt="" style="border:none" width="200" height="50" /></a>' +
         '<!-- end Loconomics book-me-button -->';
-    
+
     var linkTemplate =
         '<!-- begin Loconomics book-me-button -->' +
         '<a><span></span></a>' +
         '<!-- end Loconomics book-me-button -->';
 
     this.buttonHtmlCode = ko.pureComputed(function() {
-        
+
         if (marketplaceProfile.isLoading()) {
             return 'loading...';
         }
@@ -165,7 +168,7 @@ function ViewModel(app) {
         var btn = this.buttonHtmlCode().replace(/\n+/, '');
         return 'mailto:?body=' + encodeURIComponent('Loconomics Book Me Now Button HTML code: ' + btn);
     }, this);
-    
+
     this.userJobTitle = ko.observable(null);
     this.bookMeButtonReady = ko.pureComputed(function() {
         var j = this.userJobTitle();
@@ -188,34 +191,34 @@ function ViewModel(app) {
         },
         owner: this
     });
-    
+
     this.copyCode = function() {
         var text = this.buttonHtmlCode();
         var errMsg = clipboard.copy(text);
         if (errMsg) {
-            app.modals.showError({ error: errMsg });
+            showError({ error: errMsg });
         }
         else {
             this.copyText('Copied!');
         }
     }.bind(this);
-    
+
     this.save = function() {
         var ujt = this.userJobTitle();
         if (ujt) {
             //this.isSaving(true);
-            
+
             var plain = ujt.model.toPlainObject();
             plain.collectPaymentAtBookMeButton = ujt.collectPaymentAtBookMeButton();
 
-            app.model.userJobProfile.setUserJobTitle(plain)
+            userJobProfile.setUserJobTitle(plain)
             .then(function() {
                 //this.isSaving(false);
-                //app.successSave();        
+                //app.successSave();
             }.bind(this))
             .catch(function(err) {
                 //this.isSaving(false);
-                app.modals.showError({ title: 'Error saving your "collect payment" preference', error: err });
+                showError({ title: 'Error saving your "collect payment" preference', error: err });
             }.bind(this));
         }
     }.bind(this);

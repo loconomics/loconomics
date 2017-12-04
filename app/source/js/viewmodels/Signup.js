@@ -4,12 +4,16 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    EventEmitter = require('events').EventEmitter,
-    ValidatedPasswordViewModel = require('./ValidatedPassword'),
-    Field = require('./Field'),
-    fb = require('../utils/facebookUtils'),
-    countriesOptions = require('./CountriesOptions');
+var ko = require('knockout');
+var EventEmitter = require('events').EventEmitter;
+var ValidatedPasswordViewModel = require('./ValidatedPassword');
+var Field = require('./Field');
+var fb = require('../utils/facebookUtils');
+var countriesOptions = require('./CountriesOptions');
+var auth = require('../data/auth');
+var onboarding = require('../data/onboarding');
+var showError = require('../modals/error').show;
+var phoneValidationRegex = require('../utils/phoneValidationRegex');
 
 /**
  * Enum with valid values for profile type.
@@ -53,23 +57,34 @@ var facebookMe = function() {
     }
 };
 
-function SignupVM(app) {
+function SignupVM() {
     //jshint maxstatements:55
 
     EventEmitter.call(this);
 
     fb.load(); // load FB asynchronously, if it hasn't already been loaded
 
-    this.confirmationCode = ko.observable(null);
+    /**
+     * Let's mark if sign-up is embedded into a booking being done by a new
+     * user or not.
+     * The value is sent to server, and when enabled makes required the fields:
+     * firstName, lastName, phone
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.atBooking = ko.observable(false);
+    // First and last names available currently only to catch
+    // the data from Facebook Connect and when atBooking; they don't exist
+    // in the standard front-end now, where are optional data for teh API,
+    // and only front-end exists when atBooking=true
     this.firstName = new Field();
     this.lastName = new Field();
+    // Required only for atBooking=true
     this.phone = new Field();
-    this.postalCode = new Field();
+
+    this.confirmationCode = ko.observable(null);
     this.countriesOptions = countriesOptions();
     this.country = new Field();
     this.country(countriesOptions.unitedStates);
-    this.referralCode = new Field();
-    this.device = new Field();
 
     this.facebookUserID = ko.observable();
     this.facebookAccessToken = ko.observable();
@@ -101,46 +116,15 @@ function SignupVM(app) {
         return lastNameRegex.test(this.lastName());
     }, this);
 
-    this.isPostalCodeValid = ko.pureComputed(function() {
-        var postalCodeRegex = /^\d{5}([\-]?\d{4})?$/;
-        return postalCodeRegex.test(this.postalCode());
-    }, this);
-
-/*
-// Phone validation: valid North America patterns, 10 to 14 digits
-var testData = [
-    '(123) 456-7890',
-    '123-456-7890',
-    '123.456.7890',
-    '1234567890',
-    '(123) 456-78901',
-    '123-456-789012',
-    '123.456.7890123',
-    '12345678901234'
-];
-var rValidChars = /[\d\(\)\-\.\ ]+/;
-var rValidPatterns = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
-var r = rValidPatterns;
-var testResults = testData.map(n => r.test(n));
-if (!testResults.reduce((ok, r) => ok ? r : false))
-    console.error('Some test failed', testResults);
-else
-    console.info('Success');
-*/
-
     this.isPhoneValid = ko.pureComputed(function() {
-        var phoneRegex = /^\([1-9]\d{2}\)\ \d{3}\-\d{4,8}$|^[1-9]\d{2}\-\d{3}\-\d{4,8}$|^[1-9]\d{2}\.\d{3}\.\d{4,8}$|^[1-9]\d{9,13}$/;
+        var isUSA = this.country() === countriesOptions.unitedStates;
+        var phoneRegex = isUSA ? phoneValidationRegex.NORTH_AMERICA_PATTERN : phoneValidationRegex.GENERAL_VALID_CHARS;
         return phoneRegex.test(this.phone());
     }, this);
 
     this.isEmailValid = ko.pureComputed(function() {
         var emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         return emailRegex.test(this.email());
-    }, this);
-
-    this.isReferralCodeValid = ko.pureComputed(function() {
-        var referralCodeRegex = /^.{3,}$/;
-        return referralCodeRegex.test(this.referralCode());
     }, this);
 
     this.signupError = ko.observable('');
@@ -157,14 +141,12 @@ else
     this.emailIsLocked = ko.observable(false);
 
     this.reset = function() {
+        this.atBooking(false);
         this.confirmationCode(null);
         this.firstName('');
         this.lastName('');
         this.phone('');
-        this.postalCode('');
         this.country(countriesOptions.unitedStates);
-        this.referralCode('');
-        this.device('');
         this.facebookUserID('');
         this.facebookAccessToken('');
         this.email('');
@@ -209,14 +191,12 @@ else
         var plainData = {
             confirmationCode: this.confirmationCode(),
             email: this.email(),
+            atBooking: this.atBooking(),
             password: this.validatedPassword.password(),
             firstName: this.firstName(),
             lastName: this.lastName(),
             phone: this.phone(),
-            postalCode: this.postalCode(),
             countryID: this.country().id,
-            referralCode: this.referralCode(),
-            device: this.device(),
             facebookUserID: this.facebookUserID(),
             facebookAccessToken: this.facebookAccessToken(),
             profileType: this.profile(),
@@ -224,7 +204,7 @@ else
             jobTitleName: this.jobTitleName()
         };
 
-        return app.model.signup(plainData)
+        return auth.signup(plainData)
             .then(function(signupData) {
 
                 // The reset includes already a call
@@ -233,9 +213,12 @@ else
                 // locked if a handler attacked choose to not reset the form
 
                 // Start onboarding
-                if (app.model.onboarding) {
-                    app.model.onboarding.selectedJobTitleID(signupData.onboardingJobTitleID);
-                    app.model.onboarding.setStep(signupData.onboardingStep);
+                if (onboarding) {
+                    onboarding.setup({
+                        isServiceProfessional: signupData.profile.isServiceProfessional,
+                        jobTitleID: signupData.onboardingJobTitleID,
+                        step: signupData.onboardingStep
+                    });
                 }
 
                 // Emit event before resetting data (to prevent some
@@ -266,7 +249,7 @@ else
 
                 var msg = err && err.errorMessage;
                 // Using standard visualization of errors, since the field-based visualization can lead to usability problems (user not seeing the message)
-                app.modals.showError({
+                showError({
                     title: 'There was an error signing-up',
                     error: err
                 });
@@ -305,10 +288,6 @@ else
         return this.profile() === profileType.serviceProfessional;
     }, this);
 
-    this.forClient = ko.pureComputed(function() {
-        return !this.forServiceProfessional();
-    }, this);
-
     this.facebook = function() {
         var vm = this;
 
@@ -320,7 +299,7 @@ else
         // email,user_about_me
         facebookLogin()
         .then(function(result) {
-            // Set credentials
+            // Set authorization data
             var auth = result.authResponse;
             // Set FacebookId to link accounts:
             vm.facebookUserID(auth.userID);

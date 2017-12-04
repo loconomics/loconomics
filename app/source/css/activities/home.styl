@@ -11,13 +11,12 @@
 
 [data-activity=home] {
 
-
     // NO NAVBAR, disabled on the JS activity, so this can replace the default:
     top: 0 !important;
 
     // NOTE: all activities are absolute positioned, so is already a positioning context
 
-    [role=main] {
+    .home-main {
         $arrowSize = 30px;
         $sectionTitleFontSize = 32px;
         $sectionTitleLineHeight = ceil($sectionTitleFontSize * 1.1);
@@ -140,15 +139,17 @@
         }
 
         // Why book on Loconomics section
-        .home-booking {
+        .home-community {
             $boxSize = 340px;
             $boxMargin = 1.5%;
 
-            background: $brand-secondary-background;
+            background: $gray-background;
             text-align: center;
             padding-top: 40px;
 
-            down-arrow($arrowSize, 0, none, $brand-secondary, center);
+            .home-section-title {
+                color: $gray;
+            }
 
             ul {
                 color: $gray;
@@ -199,44 +200,31 @@
 
                 // icons
                 i {
-                    color: $brand-secondary;
+                    color: $gray;
                     font-size: 3em;
                     display: block;
                 }
             }
-
-            .home-booking-more {
-                width: $boxSize;
-                margin: auto;
-                padding-bottom: 2em;
-
-                @media $mediaMaxXs {
-                    width: auto;
-                    display: block;
-                    margin: 0 $grid-gap;
-
-                    > .btn {
-                        max-width: $boxSize;
-                        margin: 0 auto;
-                    }
-                }
-
-                .btn {
-                    border-color: White;
-                }
-            }
         }
+        .home-lead-generation {
+            $boxSize = 340px;
+            $boxMargin = 1.5%;
 
+            background: $gray-background;
+        }
         .home-categories {
             $boxSize = 240px;
             $boxMargin = 1.5%;
 
-            background: $gray-background;
+            background: $brand-secondary-background;
             text-align: center;
             padding-top: 40px;
 
+            down-arrow($arrowSize, 0, none, $brand-secondary, center);
+
             h2 {
-                color: $gray;
+                color: white;
+                clear: both;
             }
 
             ul {
@@ -250,13 +238,13 @@
                 li {
                     // background photo setup (will have an image per category)
                     background: White no-repeat top center / contain;
-                    background-size: auto 160px;
+                    background-size: auto 164px;
                     display: inline-block;
                     width: $boxSize;
                     margin: $boxMargin;
-                    padding: 12px;
                     vertical-align: middle;
                     box-shadow: 0 1.5px 0 0 rgba(0,0,0,.1);
+                    padding: 12px;
 
                     /* DISABLED, background does not looks good, and not so needed
                     // For a small size where only one card fits the space (~pixels)

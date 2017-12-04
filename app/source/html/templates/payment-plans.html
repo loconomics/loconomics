@@ -1,0 +1,63 @@
+<!-- Component Template payment-plans -->
+<script type="text/html" id="payment-plans-template">
+    <div class="col-md-3">
+        <div class="PaymentPlan">
+            <div class="PaymentPlan-heading">
+                <h2>Free</h2>
+                <h1 class="price">
+                    <span class="number">$0</span>
+                    <span class="month">/mo</span>
+                </h1>
+            </div>
+            <div class="PaymentPlanBenefits">
+              @render('parts/PaymentPlanFree.html')
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="PaymentPlan PaymentPlan--popular">
+            <div class="PaymentPlan-heading">
+                <h2>Growth</h2>
+                <h1 class="price">
+                    <span class="number">$19</span>
+                    <span class="month">/mo</span>
+                </h1>
+                <div class="PaymentPlan-popularBanner">Most Popular!</div>
+            </div>
+            <div class="PaymentPlanBenefits">
+              @render('parts/PaymentPlanGrowth.html')
+            <button data-bind="visible: isServiceProfessional()" type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="PaymentPlan">
+            <div class="PaymentPlan-heading">
+                <h2>Pro</h2>
+                <h1 class="price">
+                    <span class="number">$39</span>
+                    <span class="month">/mo</span>
+                </h1>
+            </div>
+            <div class="PaymentPlanBenefits">
+              @render('parts/PaymentPlanPro.html')
+            <button data-bind="visible: isServiceProfessional()" type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="PaymentPlan">
+            <div class="PaymentPlan-heading">
+                <h2>Pro Annual</h2>
+                <h1 class="price">
+                    <span class="number">$390</span>
+                    <span class="month">/yr</span>
+                </h1>
+            </div>
+            <div class="PaymentPlanBenefits">
+              @render('parts/PaymentPlanProAnnual.html')
+            <button data-bind="visible: isServiceProfessional()" type="button" class="btn btn-block btn-secondary" href="/userFees">Upgrade now</button>
+            </div>
+        </div>
+    </div>
+</script>

@@ -4,10 +4,13 @@
 // @require 'ActivityTitle.styl';
 
 [data-activity=calendar] {
+    h1 {
+        display: inline-block;
+    }
     .CalendarContainer {
         position: relative; /* for absolute positioning of date picker */
     }
-    
+
     .RelatedLink {
         padding: 1em $container-padding-right 1em $container-padding-left;
 
@@ -36,22 +39,16 @@
             padding: 0;
         }
     }
-    
+
     #calendarDailyView {
         min-height: 100%;
-        
+
         @media $mediaMinMd {
           padding-top: 0;
         }
     }
-    
+
     .CalendarDateHeader {
-        button {
-            &:hover,
-            &:focus {
-                outline: none;
-            }
-        }
         .btn-link {
             text-align: left;
         }
@@ -72,10 +69,19 @@
     #calendarDatePicker {
         /* positioning */
         position: absolute;
-        left: 10px;
-        right: 10px;
+        // No horizontal gap, so we get the whole width at narrower screens
+        // and meet better with accessibility for clickable area under touch
+        // screens for each day button (at minimum display 320x480px, buttons
+        // are 45.7x48px, and guidelines are min. of 44px Apple, 48px Android,
+        // the width cannot be increased more but it meets minimum).
+        left: 0;
+        right: 0;
         z-index: 100;
-        top: $SectionTitle-height;
+        // We do not set the 'top' so we let it be in it's natural place in the
+        // document, everything fine while, in markup, the picker is placed just
+        // after the buttont that triggers opening. That way no need to update
+        // it for any change in layout like headers or nav before and screens
+        // top: ..
         // Set limits to avoid innusable full-width sizes:
         min-width: 250px;
         max-width: 500px;
@@ -86,9 +92,8 @@
         background: white;
         box-shadow: 0 0 6px -1px #000;
         border-radius: 4px;
-        
+
         @media $mediaMinMd {
-          top: 116px;
           margin-left: auto;
         }
 
@@ -112,15 +117,16 @@
         }
 
         /** smooth transition and visible state **/
-        opacity: 0;
-        transform: translateY(-15px);
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
         transition: 500ms all;
-        pointer-events: none;
 
-        &.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
+        &[hidden] {
+            display: block;
+            opacity: 0;
+            transform: translateY(-15px);
+            pointer-events: none;
         }
     }
 }

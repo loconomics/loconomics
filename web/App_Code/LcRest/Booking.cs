@@ -249,34 +249,46 @@ namespace LcRest
                 return null;
             }
 
+            // Pre paymentEnabled Checks
+            booking.instantBooking = booking.userJobTitle.instantBooking;
+
             // Payment is required for client bookings, and based on preference for bookNow bookings.
             // That's excludes service professional bookings too from require payment (is not a client booking).
             // IMPORTANT: After bug found at #1002, paymentEnabled can be changed to false later if the pricing/services attached sum zero,
             // so nothing need to be charged, no payment to be collected.
+            // TOO: From issue #564, Epic #563, payment can be enabled without requiring an active
+            // MarketplacePaymentAccount when the professional preference is 'booking request', 
+            // that means we must forbide booking when is InstantBooking and not payment account is active.
             booking.paymentEnabled = false;
             if (booking.bookingTypeID == (int)LcEnum.BookingType.bookNowBooking)
             {
                 booking.paymentEnabled = GetCollectPaymentAtBookMeButtonPreference(jobTitleID);
-                if (booking.paymentEnabled && !IsMarketplacePaymentAccountActive(serviceProfessionalID))
+                if (booking.paymentEnabled &&
+                    booking.instantBooking &&
+                    !IsMarketplacePaymentAccountActive(serviceProfessionalID))
                 {
-                    // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
+                    // Cannot create booking, payment required, is not ready, and instant booking wanted,
+                    // then return null as meaning 'not found'
                     return null;
                 }
             }
             else if (!isServiceProfessionalBooking)
             {
-                booking.paymentEnabled = IsMarketplacePaymentAccountActive(serviceProfessionalID);
-                if (!booking.paymentEnabled)
+                var accountActive = IsMarketplacePaymentAccountActive(serviceProfessionalID);
+                // We require an active account for instant booking; for requests it doesn't matters because
+                // we will ask professional to enable their account before accept the request.
+                if (!accountActive && booking.instantBooking)
                 {
                     // Cannot create booking, payment required and is not ready, return null as meaning 'not found'
                     return null;
                 }
+                // Payment is required for clients
+                booking.paymentEnabled = true;
             }
 
             // Checks:
             booking.bookingStatusID = (int)LcEnum.BookingStatus.incomplete;
             booking.cancellationPolicyID = booking.userJobTitle.cancellationPolicyID;
-            booking.instantBooking = booking.userJobTitle.instantBooking;
             booking.firstTimeBooking = IsFirstTimeBooking(serviceProfessionalID, clientID);
         
             // Fees:
@@ -514,7 +526,7 @@ namespace LcRest
                 var sql = UserID.HasValue ? sqlGetItemForUser : sqlGetItem;
                 var b = FromDB(db.QuerySingle(sql, BookingID, UserID), internalUse, UserID);
                 if (b != null && fillLinks)
-                    b.FillLinks();
+                    b.FillLinks(internalUse);
                 return b;
             }
         }
@@ -828,10 +840,10 @@ namespace LcRest
         /// <summary>
         /// Load from database all the links data
         /// </summary>
-        public void FillLinks()
+        public void FillLinks(bool internalUse = false)
         {
             FillPricingSummary();
-            FillUserJobTitle();
+            FillUserJobTitle(internalUse);
             FillServiceDates();
             FillServiceAddress();
         }
@@ -860,14 +872,16 @@ namespace LcRest
         /// IMPORTANT: Be aware that different rules apply the information load when the booking is created by the service professional,
         /// so it's important to set the bookingType before call this; to avoid mistakes, the bookingTypeID must be set or an exception is throw.
         /// </summary>
-        internal void FillUserJobTitle()
+        internal void FillUserJobTitle(bool internalUse = false)
         {
             if (!Enum.IsDefined(typeof(LcEnum.BookingType), bookingTypeID))
                 throw new Exception("BookingTypeID must be set before calling FillUserJobTitle");
 
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
             var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
-            userJobTitle = LcRest.PublicUserJobTitle.Get(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking);
+            var includeDeactivated = isServiceProfessionalBooking || isBookMeNowBooking || internalUse;
+            var internalUserJobTitle = LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, includeDeactivated, isBookMeNowBooking);
+            userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(internalUserJobTitle);
         }
 
         /// <summary>
@@ -2138,7 +2152,7 @@ namespace LcRest
                     throw new ConstraintException("The chosen time is not available, it conflicts with a recent appointment!");
 
                 // Event data
-                string eventSummary = String.Format("{0} services for {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(customer));
+                string eventSummary = String.Format("{0} services", booking.userJobTitle.jobTitleSingularName);
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");
@@ -2670,7 +2684,7 @@ namespace LcRest
                 }
 
                 // Event data
-                string eventSummary = String.Format("{0} services by {1}", booking.userJobTitle.jobTitleSingularName, ASP.LcHelpers.GetUserDisplayName(provider));
+                string eventSummary = String.Format("{0} services", booking.userJobTitle.jobTitleSingularName);
 
                 // Transaction begins
                 db.Execute("BEGIN TRANSACTION");

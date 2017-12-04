@@ -1,0 +1,20 @@
+<script type="text/html" id="location-card-edit-template">
+    <li class="col-xs-11 col-sm-5 LocationCard" data-bind="attr: { id: 'location' + addressID() }">
+        <div class="Card-heading">
+            <div class="Card-title">
+                <h5 data-bind="text: addressName"></h5>
+            </div>
+            <div class="Card-action"> 
+                <a class="btn btn-icon-link" data-bind="attr: {href: '#!addressEditor/service/' + jobTitleID() + '/' + addressID() + $root.returnLinkGeneralActivity(),'aria-label': 'Edit '+ addressName() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+            </div>
+        </div>
+        <div class="Card-description">
+            <hr>
+            <p data-bind="visible: !isServiceArea()"><span data-bind="text: singleLine"></span></p>
+            <p data-bind="visible: isServiceArea">Within <span data-bind="text: serviceRadius"></span> miles of <span data-bind="text: cityStateLine"></span></p>
+            <app-address-map data-bind="visible: latitude() && longitude()"
+            params="label: 'Interactive map to ' + singleLine(), lat: latitude, lng: longitude,
+            isServiceLocation: isServiceLocation, radius: serviceRadius"></app-address-map>
+        </div>
+    </li>
+</script>

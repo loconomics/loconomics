@@ -7,7 +7,7 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm" data-bind="visible: !isInOnboarding()">
                 <ul>
                     <li>
-                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                        <a href="/listingEditor/" data-bind="attr: {href: '/listingEditor/' + jobTitleID()}">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i> 
                             <span data-bind="text: jobTitleName"></span>
                         </a>
@@ -15,6 +15,7 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
+                <h1><icon-dec params="icon: 'fa-certificate'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <div class="OnboardingValueProp"> 
                     <div class="Icon-container">

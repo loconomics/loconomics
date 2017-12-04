@@ -11,26 +11,13 @@
 
 var ko = require('knockout'),
     $ = require('jquery'),
-    propTools = require('./utils/jsPropertiesTools'),
-    getObservable = require('./utils/getObservable');
+    getObservable = require('./utils/getObservable'),
+    MessageBar = require('./components/MessageBar');
+
+var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
     //jshint maxstatements:100
-
-    /// navbar-action
-    ko.components.register('app-navbar-action', {
-        template: { element: 'navbar-action-template' },
-        viewModel: function(params) {
-
-            propTools.defineGetter(this, 'action', function() {
-                return (
-                    params.action && params.navBar() ?
-                    params.navBar()[params.action]() :
-                    null
-                );
-            });
-        }
-    });
 
     /// unlabeled-input
     ko.components.register('app-unlabeled-input', {
@@ -40,6 +27,7 @@ exports.registerAll = function(app) {
             this.value = getObservable(params.value);
             this.placeholder = getObservable(params.placeholder);
             this.disable = getObservable(params.disable);
+            this.showRemaining = getObservable(false);
 
             var userAttr = getObservable(params.attr);
             this.attr = ko.pureComputed(function() {
@@ -55,6 +43,24 @@ exports.registerAll = function(app) {
             this.type = ko.computed(function() {
                 return type() || 'text';
             }, this);
+
+            this.charRemaining = ko.pureComputed(function() {
+                if (this.value()) {
+                    return userAttr().maxlength - this.value().length;
+                }
+                else
+                    return userAttr().maxlength;
+            }, this);
+
+            this.showRemaining(typeof userAttr() != 'undefined' && typeof userAttr().maxlength != 'undefined');
+        }
+    });
+
+    /// payment-plans
+    ko.components.register('app-payment-plans', {
+        template: { element: 'payment-plans-template' },
+        viewModel: function() {
+            this.isServiceProfessional = user.isServiceProfessional;
         }
     });
 
@@ -70,6 +76,7 @@ exports.registerAll = function(app) {
     });
 
     /// inline-side-menu
+    var help = require('./data/help');
     ko.components.register('app-inline-side-menu', {
         template: { element: 'inline-side-menu-template' },
         viewModel: function(params) { //{ instance: app.navBarBinding }
@@ -114,14 +121,14 @@ exports.registerAll = function(app) {
                     var id = idFromLink(link);
                     if (id) {
                         // By ID
-                        //return app.model.help.getCategory(id).then(category2Item);
-                        return app.model.help.getSectionsByCategory(id).then(function(d) {
+                        //return help.getCategory(id).then(category2Item);
+                        return help.getSectionsByCategory(id).then(function(d) {
                             return d.map(section2Item);
                         });
                     }
                     else {
                         // All categories
-                        return app.model.help.getCategories().then(function(d) {
+                        return help.getCategories().then(function(d) {
                             return d.map(category2Item);
                         });
                     }
@@ -130,14 +137,14 @@ exports.registerAll = function(app) {
                     var id = idFromLink(link);
                     if (id) {
                         // By ID
-                        //return app.model.help.getSection(id).then(section2Item);
-                        return app.model.help.getArticlesBySection(id).then(function(d) {
+                        //return help.getSection(id).then(section2Item);
+                        return help.getArticlesBySection(id).then(function(d) {
                             return d.map(article2Item);
                         });
                     }
                     else {
                         // All categories
-                        return app.model.help.getSections().then(function(d) {
+                        return help.getSections().then(function(d) {
                             return d.map(section2Item);
                         });
                     }
@@ -146,11 +153,11 @@ exports.registerAll = function(app) {
                     var id = idFromLink(link);
                     if (id) {
                         // By ID
-                        return app.model.help.getArticle(id).then(article2Item);
+                        return help.getArticle(id).then(article2Item);
                     }
                     else {
                         // All categories
-                        return app.model.help.getArticles().then(function(d) {
+                        return help.getArticles().then(function(d) {
                             return d.map(article2Item);
                         });
                     }
@@ -200,12 +207,6 @@ exports.registerAll = function(app) {
                 return '/feedbackForm/' + this.section();
             }, this);
         }
-    });
-
-    /// feedback-entry
-    ko.components.register('app-time-slot-tile', {
-        template: { element: 'time-slot-tile-template' },
-        viewModel: require('./viewmodels/TimeSlot')
     });
 
     /// loading-spinner
@@ -339,10 +340,12 @@ exports.registerAll = function(app) {
     var i18n = require('./utils/i18n');
     ko.components.register('app-address-map', {
         synchronous: true,
-        template: '<div></div>',
+        template: '<p tabindex="0" class="sr-only" data-bind="text: label"></p><div></div>',
         viewModel: {
             createViewModel: function(params, componentInfo) {
+                var mapContainer = componentInfo.element.children[1];
                 var v = {
+                    label: getObservable(params.label),
                     lat: ko.unwrap(params.lat),
                     lng: ko.unwrap(params.lng),
                     zoom: ko.unwrap(params.zoom) || 11,
@@ -382,7 +385,7 @@ exports.registerAll = function(app) {
                         center: myLatlng,
                         mapTypeId: google.maps.MapTypeId.ROADMAP
                     };
-                    v.map = new google.maps.Map(componentInfo.element.children[0], mapOptions);
+                    v.map = new google.maps.Map(mapContainer, mapOptions);
                     v.circle = new google.maps.Circle({
                         center: myLatlng,
                         map: v.map,
@@ -400,6 +403,25 @@ exports.registerAll = function(app) {
                     // of take care of that only when thay are visible (updating refreshTs),
                     // to don't waste cycles
                     //$(window).on('layoutUpdate', refresh);
+
+                    // Accessibility enhancement: an empty iframe gets first focus
+                    // of the map area, notifying nothing; just excluding it from tab
+                    // order gets better, since the first focus goes to Google Maps
+                    // link.
+                    var excludeIframeFromTabs = function() {
+                        return $(mapContainer).find('iframe').attr('tabindex', -1).length > 0;
+                    };
+                    // We don't know exactly when the DOM is ready, since is async
+                    // so we try until is done
+                    var tryExcludeIframeFromTabs = function() {
+                        setTimeout(function() {
+                            // If not done yet, schedule a new attempt
+                            if (!excludeIframeFromTabs()) {
+                                tryExcludeIframeFromTabs();
+                            }
+                        }, 500);
+                    };
+                    tryExcludeIframeFromTabs();
                 });
                 return v;
             }
@@ -416,33 +438,6 @@ exports.registerAll = function(app) {
     ko.components.register('app-onboarding-progress-bar', {
         template: { element: 'onboarding-progress-bar-template' },
         viewModel: { createViewModel: function() { return new OnboardingProgressBarVM(app); } }
-    });
-
-    /// search components
-    var SearchJobTitlesVM = require('./viewmodels/SearchJobTitlesVM');
-    ko.components.register('app-search-job-titles', {
-        template: { element: 'search-job-titles-template' },
-        // TODO Try with synchronous option to enable use of this component ( now used viewmodel and template directly)
-        //synchronous: true,
-        // TODO Implement geolocate code of learnMoreProfessionals as part of the component
-        viewModel: {
-            createViewModel: function(params/*, componentInfo*/) {
-                var view = new SearchJobTitlesVM(app);
-                if (params && params.api)
-                    params.api(view);
-
-                if (params)
-                    Object.keys(params).forEach(function(key) {
-                        if (ko.isObservable(view[key])) {
-                            view[key](ko.unwrap(params[key]));
-                            if (ko.isObservable(params[key]))
-                                view[key].subscribe(params[key]);
-                        }
-                    });
-
-                return view;
-            }
-        }
     });
 
     /**
@@ -583,6 +578,15 @@ exports.registerAll = function(app) {
                 }
 
                 return vm;
+            }
+        }
+    });
+
+    ko.components.register('app-message-bar', {
+        template: MessageBar.template,
+        viewModel: {
+            createViewModel: function(params, componentInfo) {
+                return new MessageBar(params, componentInfo.element, componentInfo.templateNodes);
             }
         }
     });

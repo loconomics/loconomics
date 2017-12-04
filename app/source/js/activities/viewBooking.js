@@ -9,6 +9,9 @@
 'use strict';
 
 var Activity = require('../components/Activity');
+var user = require('../data/userProfile').data;
+var bookings = require('../data/bookings');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ViewBookingActivity() {
 
@@ -23,8 +26,8 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     var bookingID = state && state.route.segments && state.route.segments[0];
-    var currentUserID = this.app.model.userProfile.data.userID();
-    this.app.model.bookings.getBooking(bookingID)
+    var currentUserID = user.userID();
+    bookings.getBooking(bookingID)
     .then(function(booking) {
         if (booking.serviceProfessionalUserID() === currentUserID) {
             this.app.shell.go('/appointment/' + booking.serviceDateID(), null, true);
@@ -34,7 +37,7 @@ A.prototype.show = function show(state) {
         }
     }.bind(this))
     .catch(function(err) {
-        this.app.modals.showError({
+        showError({
             title: 'Booking',
             error: err
         }).then(function() {

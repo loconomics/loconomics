@@ -1,109 +1,49 @@
 <!-- Sign up -->
 <script type="text/html" id="signup-template">
     <div class="SignupLogin">
-        <div class="LeadContent" data-bind="visible: !profile()">
-            <ul class="TilesList TilesList--openEnd">
-                <li>
-                    <a class="LinkTile" href="/signup/service-professional">
-                        <div class="Tile-content">
-                            <p>I'm a local service professional</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a class="LinkTile" href="/signup/client">
-                        <div class="Tile-content">
-                            <p>I'm a potential client</p>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a class="LinkTile" href="/signup/service-professional">
-                        <div class="Tile-content">
-                            <p>I'm both</p>
-                        </div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="LeadContent" data-bind="visible: profile">
+        <div class="LeadContent">
             <h2 data-bind="visible: !forServiceProfessional()">Sign up for free</h2>
             <h2 data-bind="visible: forServiceProfessional">Your first listing is free</h2>
 
             <!-- Entry point for children elements provided when the component is instantiated,
                 expected an optional app-select-job-title -->
             <div data-bind="template: { nodes: $componentTemplateNodes }"></div>
-
             <div data-bind="visible: isThenLabelDisplayed">
                 <p class="isolated text-center SignupLogin-lineBehind">
                     then
                 </p>
             </div>
-
-            <div>
-                <div>
-                    <a href="#facebook" data-bind="click: facebook, disable: !enableFacebookButton()" class="btn btn-lg btn-block btn-facebook">
-                        <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
-                    </a>
-                </div>
-                <p class="isolated text-center">
-                    or
-                </p>
-            </div>
+            <button href="#facebook" data-bind="click: facebook, disable: !enableFacebookButton()" class="btn btn-lg btn-block btn-facebook">
+                <i class="fa ion ion-social-facebook pull-left" aria-hidden="true"></i><span data-bind="text: facebookSubmitText"></span>
+            </button>
+            <p class="isolated text-center">
+                or
+            </p>
             <div data-bind="visible: !isEmailSignupDisplayed()">
-                <div>
-                    <a href="#email" data-bind="click: showEmailSignup" class="btn btn-lg btn-default btn-block btn-email">
-                        <i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i><span>Sign up with Email</span>
-                    </a>
-                </div>
+                <button href="#email" data-bind="click: showEmailSignup" class="btn btn-lg btn-default btn-block btn-email"><i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i>Sign up with Email</button>
             </div>
-            <form role="form" data-bind="visible: isEmailSignupDisplayed, event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-                <div>
-                    <div data-bind="visible: forClient">
-                        <label for="firstName">First Name</label>
-                        <div data-bind="template: { name: 'signup-field', data: { name: 'firstName', field: firstName, label: 'First name', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
-
-                        <label for="lastName">Last Name</label>
-                        <div data-bind="template: { name: 'signup-field', data: { name: 'lastName', field: lastName, label: 'Last name', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
-                    </div>
-
-                    <label for="countryID" data-bind="visible: isCountryVisible">Country</label>
-                    <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': countryID.error }, visible: isCountryVisible">
-                        <select id="countryID" data-bind="value: country, options: countriesOptions, optionsText: 'name', optionsValues: 'id'" class="form-control select-unstyled"></select>
-                        <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
-                        <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
-                    </div>
-
-                    <div data-bind="visible: forClient">
-                        <label for="phone">Mobile Phone</label>
-                        <div data-bind="template: { name: 'signup-field', data: { name: 'phone', field: phone, label: 'Mobile phone', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
-                    </div>
-
-                    <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-                        <label for="signupAccountEmail">E-mail address</label>
-                        <div id="signupAccountEmail" placeholder="E-mail address" data-bind="template: { name: 'signup-field', data: { name: 'email', field: email, label: 'E-mail address', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
-                        </div>
-                    </div>
-
-                    <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
+            <form id="signupForm" role="form" data-bind="visible: isEmailSignupDisplayed, event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
+                <label for="countryID" data-bind="visible: isCountryVisible">Country</label>
+                <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': countryID.error }, visible: isCountryVisible">
+                    <select id="countryID" data-bind="value: country, options: countriesOptions, optionsText: 'name', optionsValues: 'id'" class="form-control select-unstyled"></select>
+                    <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                    <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
+                </div>
+                <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
+                    <label for="signupAccountEmail">E-mail address</label>
+                    <div data-bind="template: { name: 'signup-field', data: { id: 'signupAccountEmail', name: 'email', field: email, placeholder: 'example@@address.com', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-lg btn-secondary btn-block" data-bind="disable: isSigningUp()">
+                <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
+                </div>
+                <p>All fields are required</p>
+                <button id="submitSignupButton" type="submit" class="btn btn-lg btn-secondary btn-block" data-bind="disable: isSigningUp()" aria-describedby="submitSignupButtonTerms">
                     <span data-bind="visible: facebookUserID">&nbsp;&nbsp;</span>
                     <span data-bind="text: submitText"></span>
                 </button>
             </form>
-
-            <div class="SignupLogin-loginReminder text-center">
-                <span>Already have an account?</span>
-                <a href="/login" class="btn btn-default">Login</a>
-            </div>
-
-            <p class="isolated">
-                By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true" class="text-secondary">Terms of Use</a> &amp;
-                <a href="#!terms/privacy-policy?mustReturn=true" class="text-secondary">Privacy Policy</a>
-            </p>
+            <p class="SignupLogin-loginReminder text-center">Already have an account?<a role="button" href="/login" class="btn btn-default">Sign in</a></p>
+            <p id="submitSignupButtonTerms" class="help-block">By clicking on "<span data-bind="text: submitText"></span>", you agree to our <a href="#!terms/terms-of-service?mustReturn=true">Terms of Use</a> &amp; <a href="#!terms/privacy-policy?mustReturn=true">Privacy Policy</a></p>
         </div>
     </div>
 </script>

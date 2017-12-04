@@ -36,6 +36,13 @@ We use 'custom-elements' syntax sometimes in the HTML, for components created wi
 
 We use a preprocessor, [Bliss](https://github.com/cstivers78/bliss) at the minimum; it uses Asp.net Razor-like syntax, adapted for javascript. Generally, we use it only at the files wrapping all the html (examples: app.js.html, web.js.html).
 
+### Ordering HTML attributes
+
+To keep consistency in our code, make it easier for debugging, and to adhere to our [Accessbility Policy](https://github.com/loconomics/loconomics/blob/master/docs/App%20Accessibility%20Policy.md) the following ordering should be followed:
+```
+id="", data-bind="", role="", title="", rel="", src="", alt="", href="", target="", class=""
+```
+
 ## Changes to the database
 
 Any proposed changes to the database should be made by placing a .sql file in the web/_DBUpdate folder of your branch with the file named with these three attributes:
@@ -61,14 +68,14 @@ Please review [Understanding the Github Flow](https://guides.github.com/introduc
 Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch. 
 
 #### New branches
-If you are working on a specific Github issue, please create a new branch named issue123 if one doesn't already exist and merge master into it periodically. When you're finished, ask [@iagosrl](mailto:iagosrl@gmail.com) to review, and he'll merge it into master.
+If you are working on a specific Github issue, please create a new branch named is123-short-descriptor if one doesn't already exist and merge master into it periodically. When you're finished, create a pull request for that branch and ask [@iagosrl](mailto:iagosrl@gmail.com) to review.
 
 #### Pull requests
-We prefer you to create a Github issue for a specific task to tackle with it's own branch named issueXX. However, pull requests are fine if you want to make general updates or suggest a change.
+We prefer you to create a Github issue for a specific task to tackle with it's own branch (see above). However, direct pull requests are fine if you want to make general updates or suggest a change.
 
 ### Bugs
 Before reporting a bug:
-* Please have a look in [Known Bugs](https://github.com/loconomics/loconomics/milestones) and the current release folder to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
+* Please have a look at issues tagged as bugs ([Bug S1](https://github.com/loconomics/loconomics/labels/Bug%3A%20S1), [Bug S2](https://github.com/loconomics/loconomics/labels/Bug%3A%20S2), [Bug S3](https://github.com/loconomics/loconomics/labels/Bug%3A%20S3), [Bug S4](https://github.com/loconomics/loconomics/labels/Bug%3A%20S4)) to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
 
 The first thing we do with a bug report is to confirm that we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
 

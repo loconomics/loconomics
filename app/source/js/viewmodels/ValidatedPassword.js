@@ -47,19 +47,11 @@ function ValidatedPassword() {
     }.bind(this);
 
     /**
-     * Password field focus handler
+     * Gets the appropiated DOM element to scroll to
+     * given the password element field
+     * @param {DOMElement} field
+     * @returns {jQuery}
      */
-    this.fieldFocus = function(viewModel, event) {
-        if (!showRequirements()) {
-            // Only hide the link on focus if it hasn't been clicked on already
-            showRequirementsLink(false);
-        }
-
-        showRequirements(true);
-
-        scrollToField(scrollTarget(event.target));
-    }.bind(this);
-
     var scrollTarget = function(field) {
         return $(field).parents('.ValidatedPassword').first();
     };
@@ -81,6 +73,20 @@ function ValidatedPassword() {
             });
         }
     };
+
+    /**
+     * Password field focus handler
+     */
+    this.fieldFocus = function(viewModel, event) {
+        if (!showRequirements()) {
+            // Only hide the link on focus if it hasn't been clicked on already
+            showRequirementsLink(false);
+        }
+
+        showRequirements(true);
+
+        scrollToField(scrollTarget(event.target));
+    }.bind(this);
 
     /**
      * @public

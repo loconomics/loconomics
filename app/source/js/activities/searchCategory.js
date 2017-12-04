@@ -3,9 +3,11 @@
 **/
 'use strict';
 
-var 
+var
     ko = require('knockout'),
     Activity = require('../components/Activity');
+var search = require('../data/search');
+require('../kocomponents/tab-list');
 
 var A = Activity.extend(function SearchCategoryActivity() {
 
@@ -13,15 +15,47 @@ var A = Activity.extend(function SearchCategoryActivity() {
 
     this.accessLevel = null;
     //pass in the app model so the view model can use it
-    this.viewModel = new ViewModel(this.app.model);
+    this.viewModel = new ViewModel();
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
+
+    this.title = ko.computed(function() {
+        var result = this.categorySearchResult();
+        return result && result.categoryName + ' Professionals';
+    }, this.viewModel);
+
+    this.getUrlForCategory = function(catID) {
+        var vm = this.viewModel;
+        return '/searchCategory/' + catID + '/' + vm.origLat() + '/' +
+            vm.origLong() + '/' + vm.searchDistance();
+    };
+    this.loadCategory = function(catID) {
+        var vm = this.viewModel;
+        return vm.load(catID, vm.origLat(), vm.origLong(), vm.searchDistance());
+    };
+
+    var shell = this.app.shell;
+    var observableRoute = shell.getCurrentObservableRoute();
+    this.viewModel.activeTabName = ko.pureComputed({
+        read: function() {
+            var route = observableRoute();
+            // searchCategoryID
+            return route && route.segments && route.segments[0];
+        },
+        write: function(tabName) {
+            this.loadCategory(tabName).then(function() {
+                setTimeout(function() {
+                    shell.replaceState(null, null, this.getUrlForCategory(tabName));
+                }.bind(this), 1);
+            }.bind(this));
+        },
+        owner: this
+    });
 });
 
 exports.init = A.init;
 
-// get jobTitleID from the URL that's passed in from the search results preview
 A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
     var params = this.requestData.route.segments || [];
@@ -30,22 +64,19 @@ A.prototype.show = function show(options) {
     var origLong = params[2] || '';
     var searchDistance = params[3] || '';
     this.viewModel.load(categoryID, origLat, origLong, searchDistance);
-//    var tabName = categoryID + '/' + origLat + '/' + origLong + '/' + searchDistance;
-//    var tab = this.$activity.find('[href="/searchCategory/' + tabName + '"]');
-//    if (tab.length) tab.tab('show');
 };
 
-function ViewModel(appModel) {
+function ViewModel() {
     this.isLoading = ko.observable(false);
     this.isCategoryLoading = ko.observable(false);
     //create an observable variable to hold the search term
-    this.categoryID = ko.observable(); 
+    this.categoryID = ko.observable();
     //create an observable variable to hold the search term
-    this.origLat = ko.observable(); 
+    this.origLat = ko.observable();
     //create an observable variable to hold the search term
-    this.origLong = ko.observable(); 
+    this.origLong = ko.observable();
     //create an observable variable to hold the search term
-    this.searchDistance = ko.observable(); 
+    this.searchDistance = ko.observable();
     //create an object named ServiceProfessionalSearchResult to hold the search results returned from the API
     this.jobTitleSearchResult = ko.observableArray();
     this.categorySearchResult = ko.observable();
@@ -54,17 +85,13 @@ function ViewModel(appModel) {
         var id = this.categoryID();
         return id ? 'CategoryBackground-' + id : '';
     }, this); //add this so that the context is the current one (special ko syntax)
-    
+
     // PRIVATE load functions, that use parameters we will internally ensure are the same values
     // as the observables we have for them
     var loadCategoryData = function(categoryID, origLat, origLong, searchDistance){
         this.isCategoryLoading(true);
-        //Call the get rest API method for api/v1/en-US/search/categories/by-categoryID
-        return appModel.rest.get('search/categories/' + categoryID, {
-            origLat: origLat, 
-            origLong: origLong,
-            searchDistance: searchDistance
-        })
+
+        return search.getCategory(categoryID, origLat, origLong, searchDistance)
         .then(function(data) {
             this.categorySearchResult(data);
             this.isCategoryLoading(false);
@@ -75,13 +102,8 @@ function ViewModel(appModel) {
     }.bind(this);
     var loadData = function(categoryID, origLat, origLong, searchDistance) {
         this.isLoading(true);
-        //Call the get rest API method for api/v1/en-US/search/job-titles/by-category
-        return appModel.rest.get('search/job-titles/by-category', {
-            categoryID: categoryID, 
-            origLat: origLat, 
-            origLong: origLong,
-            searchDistance: searchDistance
-        })
+
+        return search.jobTitlesByCategory(categoryID, origLat, origLong, searchDistance)
         .then(function(list) {
             this.jobTitleSearchResult(list);
             this.isLoading(false);
@@ -106,5 +128,15 @@ function ViewModel(appModel) {
             loadData(categoryID, origLat, origLong, searchDistance)
         ]);
     };
-}
 
+    this.categories = [
+        { id: 1, name: 'Home Care' },
+        { id: 2, name: 'Self Care' },
+        { id: 3, name: 'Child Care' },
+        { id: 4, name: 'Senior Care' },
+        { id: 5, name: 'Pet Care' },
+        { id: 6, name: 'Celebration' },
+        { id: 7, name: 'Transport' },
+        { id: 8, name: 'Office' }
+    ];
+}

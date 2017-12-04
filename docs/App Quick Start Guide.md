@@ -14,7 +14,7 @@ You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) or new
 ```
 npm install -g grunt-cli
 ```
-Note: Linux and Mac may require root/elevated rights in order to install globally. For Mac, try:
+Note: Linux and Mac may require root/elevated rights in order to install globally, try:
 ```
 sudo npm install -g grunt-cli
 ```
@@ -24,40 +24,37 @@ npm install
 ```
 It will install all the modules listed on the package.json file, needed to build the app source code.
 
-Note: Linux and Mac may require root/elevated rights in order to install globally. For Mac, try:
-```
-sudo npm install
-```
-
 ## Build the app source code
 
 Ensure you're in the project's /app folder and run:
 ```
 grunt build
 ```
-It will recreate the content of the /build and /phonegap folders.
+It will recreate the content of the /build folder.
 
-## Start your local host
+After do that you may want to [build the native apps using Phonegap](Deploying the App.md) or debug the app.
+
+## Debug the app on localhost
 
 **Ensure you're in the project's /app folder **
 
 There are two options for this, with the second one preferred:
 
-First option:
+#### First option:
+Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
 ```
 grunt connect:atbuild
 ```
-Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
 
-Second option (preferred):
+#### Second option (preferred):
 ```
 grunt atwork
 ```
 This will:
-- run the connect server at http://localhost:8811/
+- run the connect server at http://localhost:8811/ (same as `grunt connect:atbuild`)
 - run the watch task that will listen for changes on source files to automatically rebuild the needed files (specific builds are performed, like build-js, build-css, depending on the modified files; when they finish, the browser can be refreshed to try latest changes).
   **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#1123](https://github.com/joshdanielson/Loconomics/issues/1123).
-- by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything; when it finishs, the /build/latest.zip file is ready to be sent to PhoneGap Build, and the phonegap folder is ready to perform local PhoneGap builds.
+- by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything.
 - when the build ends, a notification is sent to the system. [More info on this](https://github.com/dylang/grunt-notify)
 
 ## Open the app
@@ -73,27 +70,26 @@ The **appDebug.html** available at localhost:8811 contains non-minimized and sou
 
 ## Point your local storage to a database
 
-At start-up, the app looks for a siteUrl in the config key at localStorage. Since there isn't one set for your localhost, it needs to be set using the html attribute data-site-url. 
+The App/Webapp needs to know where is the REST Service to access data.
+At start-up, the app looks for a `siteUrl` key at localStorage; if nothing, looks for a `data-site-url` attribute at the html
+element; if nothing, uses the document base URL (the domain from where the document is being served).
 
 ### To set up a different REST Service URL:
-Open the Web console with the page opened (can be the local development server created by 'grunt atwork', or our Webapp dev.loconomics.com) and replace the data-site-url:
+Open the Web console with the page opened (can be the local development server created by 'grunt atwork', or our Webapp dev.loconomics.com) and replace the `local siteUrl`:
 
 #### For our dev database (ignore security warnings):
 ```
-localStorage["LoconomicsApp/config"] = '{"siteUrl":"https://dev.loconomics.com"}';
+localStorage.siteUrl = 'http://dev.loconomics.com';
 ```
 #### For your local database:
-
 ```
-localStorage["LoconomicsApp/config"] = '{"siteUrl":"http://localhost/loconomics"}';
+localStorage.siteUrl = 'http://localhost/loconomics';
 ```
 #### To restore it and have the App/Webapp use the default URL:
 ```
-delete localStorage["LoconomicsApp/config"]
+delete localStorage.siteUrl;
 ```
+
 ## API Access & Testing
-Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iagosrl@gmail.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
+Create a user account on http://dev.loconomics.com and request access from [@iagosrl](mailto:iago@loconomics.com) or [@joshdanielson](mailto:joshua.danielson@loconomics.com)
 http://dev.loconomics.com/tests/testrest
-
-
-

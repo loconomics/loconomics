@@ -5,6 +5,8 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
+// Make jquery reference global, may still be needed by some shimed plugins
+window.$ = window.jQuery = $;
 require('./utils/jquery.multiline');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
@@ -17,9 +19,12 @@ require('./utils/Function.prototype._delayed');
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
+// Polyfills for HTML5 DOM additions, used in components with vanilla javascript
+// (avoiding jQuery, it has equivalent methods)
+require('../../vendor/polyfills/Element.prototype.matches');
+require('../../vendor/polyfills/Element.prototype.closest');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var AppModel = require('./appmodel/AppModel');
 
 // Register the special locale
 require('./locales/en-US-LC');
@@ -29,15 +34,13 @@ var attachFastClick = require('fastclick').attach;
 /**
     App static class
 **/
-var app = {
-    // New app model, that starts with anonymous user
-    model: new AppModel(),
-    modals: require('./app.modals'),
-};
+var app = {};
 
 /** Continue app creation with things that need a reference to the app **/
 
 require('./app-components').registerAll(app);
+
+var showError = require('./modals/error').show;
 
 /** App Init **/
 var appInit = function appInit() {
@@ -50,7 +53,6 @@ var appInit = function appInit() {
     // may require adjustments on other scripts that listen to it.
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
-    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
     layoutUpdateEvent.on();
 
     // Bootstrap
@@ -95,18 +97,14 @@ var appInit = function appInit() {
     };
     $(document).on('click', '[href^=#]', fragmentNavigationHandler);
 
-
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });
     };
-    // Catch uncatch model errors
-    app.model.on('error', alertError);
 
-    app.model.init()
-    .then(function() {
+    var launchPage = function() {
         // Mark the page as ready
         $('html').addClass('is-ready');
 
@@ -115,7 +113,13 @@ var appInit = function appInit() {
         require('./activities/landingPage')
         .init($act, app)
         .show({ route: {} });
-    }, alertError);
+    };
+
+    // Try to restore a user session ('remember login')
+    var session = require('./data/session');
+    session.restore()
+    .then(launchPage)
+    .catch(alertError);
 
     // DEBUG
     window.app = app;

@@ -1,0 +1,65 @@
+<form id="venmoSetupForm" class="LightForm" data-bind="with: data" aria-describedby="venmoSetupFormInstructions">
+    <fieldset>
+        <legend>Set-up a Venmo account for payouts</legend> 
+        <p id="venmoSetupFormInstructions" class="help-block">
+            Client payments will be disbursed directly to your existing Venmo account you list here. 
+            If you do not have a Venmo account, a new one will be created linked to your email address 
+            you used when signing up for Loconomics. You will be responsible for transfering payments 
+            to your bank from Venmo.
+        </p>                        
+        <div class="form-group">
+            <label for="firstName">First name</label>
+            <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="value: firstName, disable: $parent.isLocked">
+        </div>                
+        <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="value: lastName, disable: $parent.isLocked">
+        </div>                
+        <div class="form-group">
+            <label for="phone">Phone number</label>
+            <input id="phone" type="tel" class="form-control" required data-bind="value: phone, disable: $parent.isLocked">
+        </div>                
+        <div class="form-group">
+            <label for="streetAddress">Street address</label>
+            <input id="streetAddress" type="text" class="form-control" required data-bind="value: streetAddress, disable: $parent.isLocked">
+        </div>               
+        <div class="form-group" data-bind="css: { 'has-error': $parent.postalCodeErrorMessage() }">
+            <label for="postalCode">Zip code</label>
+            <input id="postalCode" type="number" min="0" class="form-control" required data-bind="textInput: postalCode, event: { blur: $parent.postalCodeVM.onBlur }, disable: $parent.isLocked,
+                        popover: { content: $parent.postalCodeErrorMessage(), trigger: 'focus', container: 'body', placement: 'bottom' }">
+        </div>
+        <div class="form-group">
+            <p class="form-control-static">
+                <span data-bind="visible: city() || stateProvinceCode()">
+                    <span data-bind="text: city"></span>,
+                    <span data-bind="text: stateProvinceCode"></span>
+                </span>
+                <!-- White space to reserve space -->
+                &nbsp;
+            </p>
+        </div>         
+        <div class="form-group">
+            <label for="birthDate">Birth date</label>
+            <input id="birthDate" type="date" placeholder="mm/dd/yyyy" class="form-control" required data-bind="value: birthDate, disable: $parent.isLocked">
+        </div>  
+        <div class="form-group">
+            <input id="braintreeTermsAgreement" type="checkbox" data-bind="checked: agree, disable: $parent.isLocked">
+            <label for="braintreeTermsAgreement">I agree to the Braintree terms of service.</label>
+            <a class="btn btn-link btn-inline text-secondary" data-toggle="collapse" aria-expanded="false" data-target="#braintreeTerms" data-controls="#braintreeTerms">(Show terms of service)</a>
+            <p id="braintreeTerms" class="collapse container-fluid">
+                Venmo is a service of Braintree, a division of PayPal, Inc. (Braintree). Loconomics Cooperative, Inc. 
+                (Loconomics) uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. 
+                By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement
+                available at
+                <a class="text-secondary" href="https://www.braintreepayments.com/legal/payment-services-agreement" target="_blank">https://www.braintreepayments.com/legal/payment-services-agreement</a>,
+                and the applicable bank agreement available at
+                <a class="text-secondary" href="https://www.braintreepayments.com/legal/bank-agreement" target="_blank">https://www.braintreepayments.com/legal/bank-agreement</a>.
+                If you have questions regarding the agreements, please contact Braintree at (877) 434-2894.
+            </p>
+        </div>  
+    </fieldset>
+    <div class="isolated top-only">
+        <button type="submit" class="btn btn-primary btn-block"
+            data-bind="text: $parent.submitText, disable: $parent.isLocked, click: $parent.save"></button>
+    </div>
+</form>

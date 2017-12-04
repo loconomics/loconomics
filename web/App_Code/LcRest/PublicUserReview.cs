@@ -38,6 +38,17 @@ namespace LcRest
                 return reviewerFirstName + l;
             }
         }
+         // Automatic field right now, but is better
+        // to communicate it than to expect the App or API client
+        // to build it. It allows for future optimizations, like
+        // move to static content URLs.
+        public string reviewerPhotoUrl
+        {
+            get
+            {
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + reviewerUserID + "?v=" + updatedDate.ToString("s");
+            }
+        }
         #endregion
 
         #region Instances

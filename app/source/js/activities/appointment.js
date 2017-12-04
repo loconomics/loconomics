@@ -1,16 +1,16 @@
 /** Calendar activity **/
 'use strict';
 
-var $ = require('jquery'),
-    moment = require('moment'),
-    Appointment = require('../models/Appointment'),
-    ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    AppointmentCardViewModel = require('../viewmodels/AppointmentCard'),
-    Listener = require('../utils/EventEmitterListener');
-
 require('../components/DatePicker');
-
+var $ = require('jquery');
+var moment = require('moment');
+var Appointment = require('../models/Appointment');
+var ko = require('knockout');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
+var AppointmentCardViewModel = require('../viewmodels/AppointmentCard');
+var Listener = require('../utils/EventEmitterListener');
+var calendar = require('../data/calendar');
+var showError = require('../modals/error').show;
 var Activity = require('../components/Activity');
 
 var A = Activity.extend(function AppointmentActivity() {
@@ -41,6 +41,23 @@ var A = Activity.extend(function AppointmentActivity() {
         leftAction: new Activity.NavAction(backActionSettings),
         rightAction: Activity.NavAction.goHelpIndex
     });
+    this.viewModel.cardTitle = ko.pureComputed(function() {
+        return this.appointmentCardView() &&
+            this.appointmentCardView().item() &&
+            this.appointmentCardView().item().summary() ||
+            'Appointment';
+    }, this.viewModel);
+    this.title = ko.pureComputed(function() {
+        return (
+            this.currentID() == this.specialAppointmentIds.newBooking ?
+                'Add a new booking' :
+                this.currentID() == this.specialAppointmentIds.newEvent ?
+                'Add a calendar block' :
+                !this.isNewCard() ?
+                this.cardTitle() :
+                'Add'
+        );
+    }, this.viewModel);
 
     // NavBar must update depending on editMode state (to allow cancel and goBack)
     // and appointment date (on read-only, to go back to calendar on current date)
@@ -542,7 +559,7 @@ function ViewModel(app) {
                 else
                     ids.calendarEventID = id;
 
-                return app.model.calendar.getAppointment(ids)
+                return calendar.getAppointment(ids)
                 .then(function (item) {
                     if (item) {
                         // Force a load for the item date.
@@ -567,7 +584,7 @@ function ViewModel(app) {
         }
         else {
             this.isLoading(true);
-            return app.model.calendar.getDateAvailability(date)
+            return calendar.getDateAvailability(date)
             .then(function (dateAvail) {
                 this.isLoading(false);
                 this.dateAvailability(dateAvail);
@@ -578,7 +595,7 @@ function ViewModel(app) {
                 this.isLoading(false);
 
                 var msg = 'Error loading calendar events.';
-                app.modals.showError({
+                showError({
                     title: msg,
                     error: err
                 });

@@ -20,7 +20,8 @@
 @import 'components/ActionSheet.styl'
 @import 'components/SignupLogin.styl'
 @import 'components/LargeNavBar.styl'
-@import 'components/LearnMorePage.styl'
+@import 'components/Press.styl'
+@import 'components/Testimonials.styl'
 
 @import '../../vendor/bootstrap/styl/mixins/image.styl'
 @import '../../vendor/bootstrap/styl/scaffolding.styl'
@@ -54,23 +55,23 @@
             height: 100px;
             background: no-repeat;
             background-image: url('../images/logo-white-large.png');
-            background-image: 
+            background-image:
               linear-gradient(transparent, transparent),
               url('../images/logo-white.svg');
-            background-size: 200px;
+            background-size: 200px auto;
             margin: 20px $grid-gap;
             @media $mediaMaxSm {
                 background-position: center;
                 margin: 0px; 20px;
                 height: 50px;
-                background-size: 100px;
+                background-size: 100px auto;
             }
         }
-        
+
         .landingpage-copy {
             margin-bottom: 30px;
             padding: 30px; 0px; 30px; 30px;
-            background: rgba(0, 152, 154, 0.75); 
+            background: rgba(0, 152, 154, 0.75);
 
             @media $mediaMaxSm {
                 margin-bottom: 0;
@@ -83,22 +84,26 @@
             }
         }
         .landingpage-copyBackground {
-            background: none;            
+            background: none;
             @media $mediaMaxSm {
                 padding: 20px; 0px; 0px; 0px;
-                background: rgba(0, 152, 154, 0.75);   
+                background: rgba(0, 152, 154, 0.75);
                 margin-top: 10px;
                 h1 {
                     margin-top:0px;
                     font-size:21px;
                 }
-            }                     
+            }
         }
         .landingpage-background {
             padding-top: 30px;
             background: no-repeat center / cover;
             background-image:
-              url('../images/Stocksy_txpa4f3500ae7T100_Small_1204339.jpg');
+              url('../images/golden-gate-bridge-388917_1920.jpg');
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
             @media $mediaMaxSm {
                 padding-top: 0px;
             }
@@ -188,105 +193,54 @@
                 }
             }
         }
-        .press {
-            background-color: #f5f5f5;
-            vertical-align: baseline;
+
+        // How the Cooperative Works section
+        .landingpage-hiw {
             text-align: center;
-            box-sizing: content-box;
-            padding-bottom: 75px;
-            
-        }
-        .pressLogo {
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center center;
-            display: inline-block;
-            height: 55px;
-            margin: 30px;
-            width: 300px;
-            @media $mediaMaxSm {
-                width: 200px;
+            color: white;
+            background: $brand-secondary;
+            padding-top: 40px;
+            $iconsSize = 90px;
+            .landingpage-title {
+              color: white;
+              text-align: center;
             }
-        }
-        .pressLogo-NYT {
-            background-image:
-              url('../images/nyt.png');
-        }
-        .pressLogo-FastCompany {
-            background-image:
-              url('../images/Fast_Company.png');
-        }
-        .pressLogo-EastBayExpress {
-            background-image:
-              url('../images/east-bay-express.png');
-        }
-        .pressLogo-SFChronicle {
-            background-image:
-              url('../images/sf-chron.png');
-        }
-        .pressLogo-FT {
-            background-image:
-              url('../images/ft.png');
-        }
-        .pressLogo-Shareable {
-            background-image:
-              url('../images/shareable.png');
-        }
-        .pressLogo-TheNation {
-            background-image:
-              url('../images/thenation.png');
-        }
-        #quote-carousel {
-            padding: 0 10px 30px 10px;
-            margin-top: 60px;
-        }
-        #quote-carousel .carousel-control {
-            background: none;
-            color: #CACACA;
-            font-size: 2.3em;
-            text-shadow: none;
-            margin-top: 30px;
-        }
-        #quote-carousel .carousel-indicators {
-            position: relative;
-            right: 50%;
-            top: auto;
-            bottom: 0px;
-            margin-top: 20px;
-            margin-right: -19px;
-        }
-        #quote-carousel .carousel-indicators li {
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            opacity: 0.4;
-            overflow: hidden;
-            transition: all .4s ease-in;
-            vertical-align: middle;
-        }
-        #quote-carousel .carousel-indicators .active {
-            width: 128px;
-            height: 128px;
-            opacity: 1;
-            transition: all .2s;
-        }
-        #quote-carousel .carousel-control {
-            @media $mediaMaxMd {
-                width: 10%;
+            ul {
+                margin-top: ($iconsSize / 2) + 18px;
+                margin-bottom: 0;
+                padding-bottom: ($iconsSize / 2);
+
+                @media (max-width: 520px) {
+                    margin-top: 0px;
+                }
+                > li {
+                  margin-top: (0 - $iconsSize / 2);
+                  @media (max-width: 520px) {
+                    margin-top: 30px;
+                  }
+                  @media $mediaMaxXs {
+                      margin-top: 0px;
+                  }
+                }
             }
-        }
-        .item blockquote {
-            border-left: none;
-            margin: 0;
-        }
-        .item blockquote p:before {
-            content: "\f10d";
-            font-family: 'Fontawesome';
-            float: left;
-            margin-right: 10px; 
+            @media (max-width: 520px) {
+                    margin: 0 $grid-gap;
+            }
+            h3 {
+                font-weight: bold;
+                font-size: 22px;
+            }
+            // icons
+            i {
+                background: $brand-secondary;
+                border: 2px solid white;
+                font-size: floor($iconsSize / 1.60);
+                border-radius: 50%;
+                width: $iconsSize;
+                height: $iconsSize;
+                line-height: $iconsSize;
+                color: white;
+            }
         }
     }
 }

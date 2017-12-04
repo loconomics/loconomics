@@ -1,8 +1,10 @@
-<ul data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" class="nav navbar-nav">
+<!-- <ul data-bind="visible: isServiceProfessional() && !isAnonymous() && !isInOnboarding()" class="nav navbar-nav">
     @render('parts/AddNewMenuContents.html')
-</ul>
+</ul> -->
 <ul class="nav navbar-nav" data-bind="visible: items().length">
-    <li><h4 class="App-menus-group-header">FAQS</h4></li>
+    <li>
+        <h2 class="App-menus-group-header">FAQS</h2>
+    </li>
     <!-- ko foreach:items -->
     <li>
         <a data-bind="attr: { href: '#!' + link }, text: label" target="_blank"></a>
@@ -10,7 +12,9 @@
     <!-- /ko -->
 </ul>
 <ul class="nav navbar-nav">
-    <li><h4 class="App-menus-group-header">WE'RE HERE TO HELP</h4></li>
+    <li>
+        <h2 class="App-menus-group-header">WE'RE HERE TO HELP</h2>
+    </li>
     <li data-bind="visible: isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200431835-resources-for-service-professionals">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: !isServiceProfessional() && !isAnonymous()"><a href="/help/categories/200474305-resources-for-clients">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>
     <li data-bind="visible: isAnonymous()"><a href="/help">Help articles <i class="fa fa-fw ion-ios-help-outline" aria-hidden="true"></i></a></li>

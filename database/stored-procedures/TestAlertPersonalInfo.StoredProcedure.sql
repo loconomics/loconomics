@@ -6,7 +6,7 @@ GO
 -- =============================================
 -- Author:		Iago Lorenzo Salgueiro
 -- Create date: 2012-06-01
--- Modified date: 2012-08-17
+-- Modified date: 2017-11-09
 -- Description:	Test if the conditions for the
 -- alert type 'personalinfo' are satisfied, 
 -- updating user points and enabling or 
@@ -40,18 +40,6 @@ BEGIN
 				)
 				-- GenderID now in TestAlertPublicBio, to match new forms
 				--AND GenderID > 0
-		)
-		 AND
-		EXISTS (
-			SELECT	AddressID
-			FROM	[Address]
-			WHERE
-				UserID = @UserID AND AddressTypeID = 1
-				AND dbo.fx_IfNW(AddressLine1, null) is not null
-				AND dbo.fx_IfNW(City, null) is not null
-				AND dbo.fx_IfNW(StateProvinceID, null) is not null
-				AND dbo.fx_IfNW(CountryID, null) is not null
-				AND dbo.fx_IfNW(PostalCodeID, null) is not null
 		)
 	) BEGIN
 		-- PASSED: disable alert

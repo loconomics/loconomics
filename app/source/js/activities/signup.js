@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    SignupVM = require('../viewmodels/Signup');
+var Activity = require('../components/Activity');
+var SignupVM = require('../viewmodels/Signup');
 
 var A = Activity.extend(function SignupActivity() {
 
@@ -14,6 +14,7 @@ var A = Activity.extend(function SignupActivity() {
     // null for Logo
     this.navBar = Activity.createSectionNavBar(null);
     this.navBar.rightAction(null);
+    this.title('Welcome to Loconomics');
 
     /// ViewModel setup that requires an $activity reference
     // Focus first wrong field handler for the signup error event
@@ -35,11 +36,9 @@ A.prototype.show = function show(options) {
 
     Activity.prototype.show.call(this, options);
 
-    var p = options && options.route && options.route.segments && options.route.segments[0] || '';
     var q = options && options.route && options.route.query || {};
 
     this.viewModel.setupWith({
-        profile: p,
         email: q.email,
         confirmationCode: q.confirmationCode
     });
@@ -70,7 +69,6 @@ function ViewModel(app) {
      * @param {object} options
      * @param {string} options.email
      * @param {string} options.confirmationCode
-     * @param {string} options.profile
      */
     this.setupWith = function(options) {
         var signup = this.signup();
@@ -78,7 +76,6 @@ function ViewModel(app) {
             signup.email(options.email || undefined);
             signup.emailIsLocked(!!options.email);
             signup.confirmationCode(options.confirmationCode || undefined);
-            signup.profile(options.profile || undefined);
         }
     };
 

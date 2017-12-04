@@ -6,9 +6,7 @@
         <meta name="description" content="Loconomics.com App">
         <meta name="author" content="Loconomics Coop.">
         <link rel="icon" href="assets/images/favicon.ico" />
-        <meta
-          name="viewport"
-          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+        <meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width" />
 
         <meta name="format-detection" content="telephone=no" />
 
@@ -21,24 +19,23 @@
         @if(debug) {
         <link href="assets/css/libs.css?nocache=1" rel="stylesheet">
         <link href="assets/css/app.css?nocache=1" rel="stylesheet">
-        <script src="assets/js/styleguidelibs.js?nocache=1"></script>
-        <script src="assets/js/libs.js?nocache=1"></script>
+        <script src="assets/js/common.js?nocache=1"></script>
         <script src="assets/js/app.js?nocache=1"></script>
         } else {
         <link href="assets/css/libs.min.css" rel="stylesheet">
         <link href="assets/css/app.min.css" rel="stylesheet">
-        <script src="assets/js/styleguidelibs.min.js"></script>
-        <script src="assets/js/libs.min.js"></script>
+        <script src="assets/js/common.min.js"></script>
         <script src="assets/js/app.min.js"></script>
         }
     </head>
     <body>
+        <a id="skip-navigation" class="sr-only" href="#activities-container">Skip navigation</a>
         <div class="SplashScreen">Loading...</div>
-        @render('parts/AppNav.html')
-        <div class="App-activities">
+        <header role="banner">@render('parts/AppNav.html')</header>
+        <main role="main" class="App-activities" id="activities-container">
             @for(var f=0; f < includedFiles.length; f++) {
                 @render(includedFiles[f])
             }
-        </div>
+        </main>
 </body>
 </html>

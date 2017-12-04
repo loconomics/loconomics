@@ -1,12 +1,14 @@
-/** NavAction view model.
-    It allows set-up per activity for the AppNav action button.
-**/
+/**
+ * NavAction view model.
+ * It allows set-up per activity for the AppNav action button.
+ * @module viewmodels/NavAction
+ */
 var Model = require('../models/Model');
 
 function NavAction(values) {
-    
+
     Model(this);
-    
+
     this.model.defProperties({
         link: '',
         icon: '',
@@ -26,7 +28,7 @@ function NavAction(values) {
         // The standard link gets disabled with this
         handler: null
     }, values);
-    
+
     this.runHandler = function runHandler(obj, event) {
         var handler = this.handler();
         if (handler) {
@@ -118,12 +120,12 @@ NavAction.goHelpIndex = new NavAction({
 
 NavAction.goLogin = new NavAction({
     link: '/login',
-    text: 'Log in'
+    text: 'Sign in'
 });
 
 NavAction.goLogout = new NavAction({
     link: '/logout',
-    text: 'Log out'
+    text: 'Sign out'
 });
 
 NavAction.goSignup = new NavAction({

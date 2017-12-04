@@ -1,17 +1,18 @@
 /** WeeklySchedule component styles **/
 
 @import '../utils/isolated.styl';
+@import './SwitchCheckbox.styl'
 
 .WeeklySchedule {
 
-    // Some values from the Bootstrap-Switch plugin styles
-    $switchBtn-partsWidth = 53px;
-    $switchBtn-height = 32px;
-    // 2 visible handles/parts and 2px of lateral border:
-    $switchBtn-width = ($switchBtn-partsWidth * 2) + 2px;
+    // We set manually the SwitchCheckbox-width because it uses relative
+    // units and doesn't count for some visual extra spacing
+    // It's actually 3em that means 42px from base-font-size plus a visual gap
+    $switchWidth = 44px;
     $gapWithSwitch = 14px;
     $addRemBtn-width = 40px;
-    
+    $timeSelectorsIndent = $switchWidth - $addRemBtn-width;
+
     // Center the container, make it uses just the needed width
     text-align: left;
     > form.container {
@@ -23,34 +24,54 @@
     }
 
     .WeeklySchedule-weekDay {
-        
+
         margin-bottom: 14px;
-    
-        /* The element with the label text on 
-            the right of the switch button
+
+        /* Scheme
+            .WeeklySchedule-weekDay
+              > .WeeklySchedule-weekDay-switch
+                > label
+                > .SwitchCheckbox
+              > .WeeklySchedule-weekDay-timeSelectors
+                > .WeeklySchedule-weekDay-timeRange
+                  > button
+                  > select
+                  > span
+                  > select
+                > button
         */
-        label > div + span {
-            pointer-events: none;
-            // IMPORTANT: A gap carefully aligned in vertical
-            // with the dropdowns .WeeklySchedule-weekDay-timeSelectors
-            padding-left: $gapWithSwitch;
-            // To be vertically aligned with the Switch button,
-            // using the Switch height:
-            line-height: $switchBtn-height;
-        }
-        
-        // IMPORTANT: Force SWITCH width to avoid it automatic size (based on text size,
-        // font-family varies from platform to platform)
-        // Using the wider handle size tested --on browser.
-        .bootstrap-switch-container {
-            > span {
-                width: $switchBtn-partsWidth !important;
+
+        .WeeklySchedule-weekDay-switch {
+            // Small margin between switch and timeSelectors, like the
+            // margin labels have but that need to be reset for internal label
+            margin-bottom: 5px;
+            > label {
+                margin-bottom: 0;
+                line-height: $SwitchCheckbox-height;
+            }
+            /* The label is placed at in markup before the input/switch
+                but we want it visually after it, so we float to left the
+                input.
+            */
+            > .SwitchCheckbox,
+            > input[type=checkbox] {
+                float: left;
+            }
+            clearfix();
+
+            // More styling for the label, ensuring a gap with the input,
+            // correct alignment
+            > label {
+                // IMPORTANT: A gap carefully aligned in vertical
+                // with the dropdowns .WeeklySchedule-weekDay-timeSelectors
+                padding-left: $gapWithSwitch;
+                vertical-align: middle;
             }
         }
 
         .WeeklySchedule-weekDay-timeSelectors {
             // IMPORTANT: the remove/add buttons are aligned in the right with the top switch button
-            padding-left: $switchBtn-width - $addRemBtn-width; //68px;
+            padding-left: $timeSelectorsIndent;
 
             // IMPORTANT: Next left margins and select paddings are carefully choosen so
             // it fits one row in a screen size of 320px (original iPhone).
@@ -58,9 +79,9 @@
                 .btn + select {
                     margin-left: 6px;
                 }
-                
+
                 margin-bottom: 2px;
-                
+
                 select {
                     width: auto;
                     display: inline-block;
@@ -81,21 +102,15 @@
     }
 
     .WeeklySchedule-allTime {
-        
+
         isolated();
-    
-        label {
-            display: block;
-            text-align: center;
-        
-            > span {
-                line-height: $switchBtn-height;
-                pointer-events: none;
-            }
-        
-            .bootstrap-switch {
-                margin-left: 1em;
-            }
+
+        display: block;
+        text-align: center;
+
+        > label {
+            // A gap between label and input
+            margin-right: 1em;
         }
     }
 }

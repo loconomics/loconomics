@@ -2,8 +2,9 @@
 
 /** Global dependencies **/
 var $ = require('jquery');
-require('jquery-mobile');
-require('./utils/jquery.multiline');
+// Make jquery reference global, may still be needed by some shimed plugins
+window.$ = window.jQuery = $;
+require('detect_swipe');
 var ko = require('knockout');
 ko.bindingHandlers.format = require('ko/formatBinding').formatBinding;
 ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBinding;
@@ -15,14 +16,22 @@ require('./utils/Function.prototype._delayed');
 require('./utils/Function.prototype.name-polyfill');
 // Promise polyfill, so its not 'require'd per module:
 require('es6-promise').polyfill();
+// Polyfills for HTML5 DOM additions, used in components with vanilla javascript
+// (avoiding jQuery, it has equivalent methods)
+require('../../vendor/polyfills/Element.prototype.matches');
+require('../../vendor/polyfills/Element.prototype.closest');
+// Polyfill requestAnimationFrame, required for Android 4-4.3.
+require('requestAnimationFrame');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
-var AppModel = require('./appmodel/AppModel');
+var onboarding = require('./data/onboarding');
+var ga = require('./data/googleAnalytics');
 
 // Register the special locale
 require('./locales/en-US-LC');
 
 var attachFastClick = require('fastclick').attach;
+var showError = require('./modals/error').show;
 
 /**
     A set of fixes/workarounds for Bootstrap behavior/plugins
@@ -69,13 +78,8 @@ function preBootstrapWorkarounds() {
 var app = {
     shell: require('./app.shell'),
 
-    // New app model, that starts with anonymous user
-    model: new AppModel(),
-
     /** Load activities controllers (not initialized) **/
     activities: require('./app.activities'),
-
-    modals: require('./app.modals'),
 
     /**
         Just redirect the better place for current user and state.
@@ -106,7 +110,7 @@ var app = {
 
                 goDashboard._going = true;
 
-                if(!this.model.onboarding.goIfEnabled()) {
+                if(!onboarding.goIfEnabled()) {
                     this.shell.go('/dashboard');
                 }
 
@@ -177,25 +181,16 @@ app.successSave = function successSave(settings) {
 var appInit = function appInit() {
     /*jshint maxstatements:70,maxcomplexity:16 */
 
-    attachFastClick(document.body);
+    var userProfile = require('./data/userProfile');
+    var user = userProfile.data;
 
-    // NOTE: Put any jQuery-UI used components here and document their use in the
-    //  activities that require them; do NOT require it there because will break
-    //  the use of touch-punch (few lines below). But is recommended to use
-    //  alternative approaches, like knockout--custom-css (like done in autocompletes)
-    // Knockout binding for jquery-ui sortable.
-    // It loads jquery-ui sortable and draggable as dependencies:
-    require('knockout-sortable');
-    // Just AFTER jquery-ui is loaded (or the selected components), load
-    // the fix for touch support:
-    require('jquery.ui.touch-punch');
+    attachFastClick(document.body);
 
     // Enabling the 'layoutUpdate' jQuery Window event that happens on resize and transitionend,
     // and can be triggered manually by any script to notify changes on layout that
     // may require adjustments on other scripts that listen to it.
     // The event is throttle, guaranting that the minor handlers are executed rather
     // than a lot of them in short time frames (as happen with 'resize' events).
-    layoutUpdateEvent.layoutUpdateEvent += ' orientationchange';
     layoutUpdateEvent.on();
 
     // Keyboard plugin events are not compatible with jQuery events, but needed to
@@ -250,9 +245,7 @@ var appInit = function appInit() {
 
     // Load Knockout binding helpers
     bootknock.plugIn(ko);
-    require('./utils/bootstrapSwitchBinding').plugIn(ko);
     require('./utils/pressEnterBindingHandler').plugIn(ko);
-    require('./utils/fileUploaderBindingHandler').plugIn(ko);
 
     // Plugins setup
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -337,11 +330,57 @@ var appInit = function appInit() {
     });
     // Catch errors on item/page loading, showing..
     app.shell.on('error', function(err) {
-        app.modals.showError({ error: err });
+        showError({ error: err });
     });
 
     // Scroll to element when clicking a usual fragment link (not a page link)
     var scrollToElement = require('./utils/scrollToElement');
+    /// API adition to 'shell'
+    /**
+     * @method app.shell.scrollTo Makes the viewport and positioning elements
+     * to scroll to the top of the element identified by the given ID.
+     * @param {string} idOrHash The element ID; a fragment URL can be passed in
+     * to, is just the ID starting with hash character.
+     * @param {boolean} giveFocus Flag to optionally request to focus the
+     * element, making it the active element in the page.
+     */
+    app.shell.scrollTo = function(idOrHash, giveFocus) {
+        // Clean-up id
+        var id = idOrHash.replace(/^#/, '');
+        var hash = '#' + id;
+        // Locate target
+        var target = $(hash);
+        if (target.length) {
+            // Smooth scrolling with animation
+            var opts = { animation: { duration: 300 } };
+            // Special case: if we are at the home page, the special, fixed header
+            // must be an offset to avoid the content to fall behind it
+            // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
+            // the header is still not-fixed -scroll still at the top).
+            var act = target.closest('[data-activity]');
+            var isHome = act.data('activity') === 'home';
+            if (isHome) {
+                opts.topOffset = act.children('header').outerHeight();
+            }
+            scrollToElement(target, opts);
+
+            if (giveFocus) {
+                // Move focus too
+                var noTabindex = !target.attr('tabindex');
+                if (noTabindex) {
+                    // Set-up to allow programatic focus
+                    target.attr('tabindex', -1);
+                }
+                setTimeout(function(){
+                    target.focus();
+                    // reset tabindex
+                    if (noTabindex) {
+                        target.removeAttr('tabindex');
+                    }
+                }, 100);
+            }
+        }
+    };
     app.shell.on('fragmentNavigation', function(href) {
         // Check link, avoiding empty links
         // (href comes with the initial hash ever, so empty is just '#')
@@ -354,22 +393,7 @@ var appInit = function appInit() {
             );
         }
         else {
-            // Locate target
-            var target = $(href);
-            if (target.length) {
-                // Smooth scrolling with animation
-                var opts = { animation: { duration: 300 } };
-                // Special case: if we are at the home page, the special, fixed header
-                // must be an offset to avoid the content to fall behind it
-                // (a generic attempt was done using 'header.is-fixed:visible' but had bug when
-                // the header is still not-fixed -scroll still at the top).
-                var act = target.closest('[data-activity]');
-                var isHome = act.data('activity') === 'home';
-                if (isHome) {
-                    opts.topOffset = act.children('header').outerHeight();
-                }
-                scrollToElement(target, opts);
-            }
+            app.shell.scrollTo(href, true);
         }
     });
 
@@ -403,13 +427,6 @@ var appInit = function appInit() {
         }
     });
 
-    // Catch uncatch model errors
-    app.model.on('error', function(err) {
-        app.modals.showError({
-            error: err
-        });
-    });
-
     // Additional form elements attribute and behavior: data-autoselect=true
     // sets to automatically select the text content of an input text control
     // when gets the focus
@@ -419,7 +436,7 @@ var appInit = function appInit() {
 
     // App init:
     var alertError = function(err) {
-        app.modals.showError({
+        showError({
             title: 'There was an error loading',
             error: err
         });
@@ -428,71 +445,36 @@ var appInit = function appInit() {
     require('./utils/toggleActionSheet').on();
 
     // Supporting sub-domain/channels, set the site-url same like baseUrl
-    // that was computed at the shell already, so the appModel can read it for correct endpoint calls.
+    // that was computed at the shell already, so the data drivers can read it for correct endpoint calls.
     if (app.shell.baseUrl) {
         $('html').attr('data-site-url', app.shell.baseUrl.replace(/^\//, ''));
     }
 
     // Set-up Google Analytics
-    if (window.ga) {
-        var gaTrackerId = 'UA-72265353-4';
-        var appId = $('html').data('app-id');
-        var appName = $('html').data('app-name');
-        var appVersion = $('html').data('app-version');
-        // We want to track exactly the different platforms where
-        // we run: web, android, ios (from cordova device property)
-        // and we use the version field for that
-        appVersion = (window.device && window.device.platform || 'web') + '-' + appVersion;
+    ga.setup(app.shell);
 
-        if (window.cordova) {
-            window.ga.startTrackerWithId(gaTrackerId);
-            window.ga.setAppVersion(appVersion);
-            // app Id and Names seems to be automatic at native
-            window.ga.trackView('index');
-        }
-        else {
-            window.ga('create', gaTrackerId, 'auto');
-            window.ga('set', 'appVersion', appVersion);
-            window.ga('set', 'appName', appName);
-            window.ga('set', 'appId', appId);
-            window.ga('send', 'screenview', { screenName: 'index' });
-        }
-        app.shell.on(app.shell.events.itemReady, function($act, state) {
-            var view = state.route.name;
-            //var url = state && state.route && state.route.url || window.location.pathname + window.location.search + window.location.hash;
-            //url = url.replace(/^#!/, '');
-            if (window.cordova) {
-                window.ga.trackView(view);
-            }
-            else {
-                window.ga('send', 'screenview', { screenName: view });
-            }
-        });
-    }
-
+    var marketplaceProfile = require('./data/marketplaceProfile');
     /**
-     * Set-up, after app.model initialization,
+     * Set-up
      * some observables with user data with the global navbar
      * that needs to display the name, photo and type of user
      */
     var connectUserNavbar = function() {
         // Connect username in navbar, and type flags
         ko.computed(function() {
-            var u = app.model.userProfile.data,
-                n = u.firstName();
-            app.navBarBinding.userName(n || 'Me');
-            app.navBarBinding.isServiceProfessional(u.isServiceProfessional());
-            app.navBarBinding.isClient(u.isClient());
+            app.navBarBinding.userName(user.firstName() || 'Me');
+            app.navBarBinding.isServiceProfessional(user.isServiceProfessional());
+            app.navBarBinding.isClient(user.isClient());
         });
         // Connect photoUrl in navbar: there are two sources, keep with more recent
         ko.computed(function() {
-            var p = app.model.userProfile.data.photoUrl();
+            var p = user.photoUrl();
             if (p) {
                 app.navBarBinding.photoUrl(p);
             }
         });
         ko.computed(function() {
-            var p = app.model.marketplaceProfile.data.photoUrl();
+            var p = marketplaceProfile.data.photoUrl();
             if (p) {
                 app.navBarBinding.photoUrl(p);
             }
@@ -500,54 +482,49 @@ var appInit = function appInit() {
     };
 
     /**
-     * Initializes the onboarding appModel, getting locally stored user
-     * data if is a logged user, and resume the onboarding process
-     * when required
+     * Initializes the onboarding data module, getting locally stored user
+     * data if is a logged user
+     * IMPORTANT: preloadUserProfile must be called before this,
+     * that will update the global 'user' with the onboardingStep we need here.
      */
     var setupOnboarding = function() {
-        // Get a copy from local storage, if any, of the user profile.
-        // This is needed to detect and resume an onboarding, like happens
-        // if a user closes and go back to the app/site, or when coming
-        // from a signup redirect like in a landing page (#381)
-        // NOTE: the usual methods (load, getData) are not used since may
-        // trigger a remote load, and even wait for it, with very bad side effects:
-        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
-        // - worse performance, waiting for a remote request in order to start
-        // (the app must be able to start up without remote connection), while
-        // - remote data is not needed at all; if user is logged, the required
-        // data is ever locally stored
-        return app.model.userProfile.loadFromLocal()
-        .then(function(userProfile) {
-            // Set-up onboarding and current step, if any
-            app.model.onboarding.init(app);
-            app.model.onboarding.setStep(userProfile && userProfile.onboardingStep || null);
-
-            // Workaround #374: because the onboarding selectedJobTitleID is not stored
-            // on server or at local profile, we need an speciallized method. This ensures
-            // that the value is set in place when the async task ends, no further action is required.
-            // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
-            // is recommended
-            return app.model.onboarding.recoverLocalJobTitleID();
-        })
-        .then(function() {
+        // Workaround #374: because the onboarding selectedJobTitleID is not stored
+        // on server or at local profile, we need an speciallized method. This ensures
+        // that the value is set in place when the async task ends, no further action is required.
+        // NOTE: is not the ideal, a refactor for storing onboarding step and jobtitle together
+        // is recommended (see #396)
+        return onboarding.getLocalJobTitleID()
+        .then(function(jobTitleID) {
             // Now we are ready with values in place
             // Resume onboarding
-            /*
-                IMPORTANT: Exception: if the page is loading coming from itself,
-                like from a target=_blank link, does not redirect to
-                avoid to break the proposal of the link (like a help or FAQ link
-                on onboarding)
-
-                We check that there is a referrer (so comes from a link) and it shares the origin
-                (be aware that referrer includes origin+pathname, we just look for same origin).
-            */
-            var r = window.document.referrer,
-                fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
-
-            if (!fromItSelf) {
-                app.model.onboarding.goIfEnabled();
-            }
+            // Set-up onboarding and current step, if any
+            onboarding.init(app);
+            onboarding.setup({
+                isServiceProfessional: user.isServiceProfessional(),
+                jobTitleID: jobTitleID,
+                step: user.onboardingStep() || null
+            });
         });
+    };
+    /**
+     * When onboarding is in progress, redirects to the saved step
+     */
+    var resumeOnboarding = function() {
+        /*
+            IMPORTANT: Exception: if the page is loading coming from itself,
+            like from a target=_blank link, does not redirect to
+            avoid to break the proposal of the link (like a help or FAQ link
+            on onboarding)
+
+            We check that there is a referrer (so comes from a link) and it shares the origin
+            (be aware that referrer includes origin+pathname, we just look for same origin).
+        */
+        var r = window.document.referrer;
+        var fromItSelf = r && r.indexOf(window.document.location.origin) === 0;
+
+        if (!fromItSelf) {
+            onboarding.goIfEnabled();
+        }
     };
 
     /**
@@ -562,10 +539,46 @@ var appInit = function appInit() {
         }
     };
 
-    app.model.init()
+    /**
+     * Loads the user profile from local storage if any,
+     * filling in the shared copy of the data (userProfile.data),
+     * and request a remote sync (in case is logged user).
+     *
+     * IMPORTANT Needs to be executed after session.restore and before
+     * tasks like 'shell.run' (or accessControl checks will fail)
+     * and 'onboarding' (or will not be able to resume from locally stored
+     * onboarding step)
+     */
+    var preloadUserProfile = function() {
+        // REQUIRED FOR ONBOARDING DETAILS:
+        // This is needed to detect and resume an onboarding, like happens
+        // if a user closes and go back to the app/site, or when coming
+        // from a signup redirect like in a landing page (#381)
+        // NOTE: the usual methods (load, getData) are not used since may
+        // trigger a remote load, and even wait for it, with very bad side effects:
+        // - 'unauthorized' remote error, if there are no credentials (anonymous user)
+        // - worse performance, waiting for a remote request in order to start
+        // (the app must be able to start up without remote connection), while
+        // - remote data is not needed at all; if user is logged, the required
+        // data is ever locally stored
+        return userProfile.loadFromLocal()
+        .then(function() {
+            // we have a global reference to 'user' in place that
+            // got updated with loadFromLocal
+            if (!user.isAnonymous()) {
+                userProfile.sync();
+            }
+        });
+    };
+
+    // Try to restore a user session ('remember login')
+    var session = require('./data/session');
+    session.restore()
+    .then(preloadUserProfile)
+    .then(setupOnboarding)
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
-    .then(setupOnboarding)
+    .then(resumeOnboarding)
     .then(setAppAsReady)
     .catch(alertError);
 

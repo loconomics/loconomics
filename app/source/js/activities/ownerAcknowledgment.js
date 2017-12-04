@@ -5,6 +5,8 @@
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
+var ownerAcknowledgment = require('../data/ownerAcknowledgment');
+var showError = require('../modals/error').show;
 
 var A = Activity.extend(function OwnerAcknowledgmentActivity() {
 
@@ -13,9 +15,10 @@ var A = Activity.extend(function OwnerAcknowledgmentActivity() {
     this.accessLevel = this.app.UserType.isServiceProfessional;
     this.viewModel = new ViewModel(this.app);
 
-    this.navBar = Activity.createSubsectionNavBar('Owner information', {
+    this.navBar = Activity.createSubsectionNavBar('Cooperative', {
         backLink: '/ownerInfo', helpLink: '/help/relatedArticles/201964153-how-owner-user-fees-work'
     });
+    this.title('Cooperative Owner Disclosure');
 });
 
 module.exports = A;
@@ -27,15 +30,15 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Load data, if any
-    this.app.model.ownerAcknowledgment.sync();
+    ownerAcknowledgment.sync();
 };
 
 function ViewModel(app) {
 
-    this.isLoading = app.model.ownerAcknowledgment.isLoading;
-    this.isSaving = app.model.ownerAcknowledgment.isSaving;
+    this.isLoading = ownerAcknowledgment.isLoading;
+    this.isSaving = ownerAcknowledgment.isSaving;
 
-    this.acknowledgment = app.model.ownerAcknowledgment.data;
+    this.acknowledgment = ownerAcknowledgment.data;
 
     this.ownerFullName = ko.observable('');
 
@@ -44,12 +47,12 @@ function ViewModel(app) {
     };
 
     this.acknowledge = function() {
-        app.model.ownerAcknowledgment.acknowledge({ ownerFullName: this.ownerFullName() })
+        ownerAcknowledgment.acknowledge({ ownerFullName: this.ownerFullName() })
         .then(function() {
             app.successSave();
         })
         .catch(function(err) {
-            app.modals.showError({
+            showError({
                 title: 'Error saving',
                 error: err
             });

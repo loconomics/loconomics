@@ -1,0 +1,68 @@
+/**
+    PaymentPlan components for display of owner plans
+**/
+
+.PaymentPlan {
+    background-color: white;
+    position: relative;
+    box-sizing: border-box;
+    padding: 20px 0
+    border: 4px solid $gray-lighter;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    color: $gray;
+
+    .PaymentPlan-heading {
+        text-align: center;
+        padding: 10px 0px;
+        margin-top: 5px;
+        height: 180px;
+        h2 {
+            font-size: 26px;
+            line-height: 1.2em;
+            text-transform: none;
+            letter-spacing: .5px;
+            font-weight: 400;
+            font-style: normal;
+        }
+        h1 {
+            font-size: 26px;
+            line-height: 1.2em;
+            font-weight: 400;
+            font-style: normal;
+        }
+        .price {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            .number {
+                font-size: 48px;
+                font-weight: 600;
+            }
+            .month {
+                font-size: 24px;
+                font-weight: 300;
+            }
+        }
+    }
+
+    &.PaymentPlan--popular {
+        border-color: $brand-warning;
+    }
+
+    .PaymentPlan-popularBanner {
+        background-color: $brand-warning;
+        color: white;
+        line-height: 1.6em;
+        width: 100%;
+        font-size: 17px;
+        font-weight: 400;
+        padding: 3px;
+    }
+}
+.PaymentPlanBenefits {
+    list-style: none;
+    padding: 15px;
+    margin-top: 0;
+}
+

@@ -1,9 +1,12 @@
 <script type="text/html" id="onboarding-menu-template">
-<div class="DashboardNavMenu PageMenu hidden-xs hidden-sm">
-    <div class="PageMenu-list">
-        <ul>
-            <li><a href="">Create your first listing</a></li>
-        </ul>
+    <!-- It's aria-hidden since this just a decorative inline-menu replacing
+      the inline-user-menu at desktop sizes.
+      It's not usable at all by screen readers (verbose and repeatitive) -->
+    <div class="DashboardNavMenu PageMenu hidden-xs hidden-sm" aria-hidden="true">
+        <div class="PageMenu-list">
+            <ul>
+                <li><a href="#">Create your first listing</a></li>
+            </ul>
+        </div>
     </div>
-</div>
 </script>

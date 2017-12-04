@@ -1,0 +1,145 @@
+/**
+    Item base class and mixim.
+
+    'Item-' works as namespace for generic children elements used in
+    based tile classes; names in use: Item-title, Item-content, Item-icon,
+    Item-subtitle.
+
+    Modifiers using 'Item-' as prefix, rather than subtiles names:
+    Item--tag-** (one per each $brand-colors)
+**/
+
+$Item-hgap = $grid-gap;
+
+Item($height-em = 3.5em) {
+    // The tile can be a link, a button
+    // or any other element, so ensure
+    // some details and resets
+    display: table;
+    vertical-align: middle;
+    text-decoration: none !important;
+    color: inherit;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    background: none;
+    text-align: left;
+    position: relative;
+    padding: 1em;
+    background-color: white;
+    &:hover {
+        outline-offset: -2px;
+    }
+    label {
+        font-weight: normal;
+    }
+    .Item-content {
+        white-space: normal;
+        word-wrap: break-word;
+        margin: 0;
+        height: $height-em;
+        overflow: hidden;
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        h3,
+        p {
+            margin: 0px;
+        }
+        h3 {
+            font-size: 22px;
+        }
+        p {
+            font-size: 16px;
+        }
+        // Setting margin for small screens since the items margin is auto there
+                //@media $mediaMaxXs {
+        @media (max-width: 520px) {
+            margin: 0 $grid-gap;
+        }
+    }
+    a,
+    button,
+    .Item-action {
+        width: 5%;
+        height: $height-em;
+        min-width: 48px;
+        min-height: 48px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 1.5em;
+        }
+    }
+    .Item-icon {
+        width: 5%;
+        height: $height-em;
+        min-width: 48px;
+        min-height: 48px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        // there are some problems with some icons (ionicons mainly) where
+        // even with enough space, gets cut on the edges; add a minimum gap
+        // to give them overflow space
+        padding: 0 1px;
+        i {
+            font-size: 2em;
+        }
+    }
+    .Item-price {
+        width: 20%;
+        height: $height-em;
+        text-align: right;
+        display: table-cell;
+        vertical-align: middle;
+        overflow: hidden;
+        p {
+            margin: 0em;
+        }
+    }
+    .Item-timeRange {
+        width: 20%;
+        text-align: right;
+        display: table-cell;
+        vertical-align: middle;
+        padding-right: .75em;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+
+/** Add colored tags support, marking the content */
+Item-addTagContentSupport($vgap, $left = -6px) {
+
+    addTagFor($colorName, $color) {
+        &.Item--tag-{$colorName} {
+            .Item-content:before {
+                content: '';
+                position: absolute;
+                top: $vgap;
+                bottom: $vgap;
+                // NO left, because this way it keeps
+                // relative to the content (that may vary on Tiles)
+                // and using margin as a relative measure
+                margin-left: $left;
+                border-left: .3em solid $color;
+            }
+        }
+    }
+
+    for $color in $brand-colors {
+        addTagFor($color, $brand-colors[$color]);
+    }
+
+    for $color in $gray-colors {
+        addTagFor('gray-' + $color, $gray-colors[$color]);
+    }
+}

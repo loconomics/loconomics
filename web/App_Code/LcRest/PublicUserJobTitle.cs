@@ -1,99 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace LcRest
 {
     /// <summary>
-    /// PublicUserJobTitle
+    /// Interface IPublicUserJobTitle
+    /// 
+    /// Includes all properties visible when the API returns a public user job title
     /// </summary>
     public class PublicUserJobTitle
     {
-        #region Fields
-        public int userID;
-        public int jobTitleID;
-        public string intro;
-        public int cancellationPolicyID = CancellationPolicy.DefaultCancellationPolicyID;
-        public bool instantBooking;
-        public string jobTitleSingularName;
-        public string jobTitlePluralName;
-        #endregion
+        public int userID { get; set; }
+        public int jobTitleID { get; set; }
+        public string intro { get; set; }
+        public bool isActive { get; set; }
+        public int cancellationPolicyID { get; set; }
+        public bool instantBooking { get; set; }
+        public string jobTitleSingularName { get; set; }
+        public string jobTitlePluralName { get; set; }
 
-        #region Instances
-        public PublicUserJobTitle() { }
-
-        public static PublicUserJobTitle FromDB(dynamic record)
+        public static PublicUserJobTitle FromUserJobTitle(UserJobTitle userJobTitle)
         {
-            if (record == null) return null;
+            if (userJobTitle == null )
+            {
+                return null;
+            }
 
             return new PublicUserJobTitle
             {
-                userID = record.userID,
-                jobTitleID = record.jobTitleID,
-                intro = record.intro,
-                cancellationPolicyID = record.cancellationPolicyID ?? CancellationPolicy.DefaultCancellationPolicyID,
-                instantBooking = record.instantBooking,
-                jobTitleSingularName = record.jobTitleSingularName,
-                jobTitlePluralName = record.jobTitlePluralName
+                userID = userJobTitle.userID,
+                jobTitleID = userJobTitle.jobTitleID,
+                intro = userJobTitle.intro,
+                isActive = userJobTitle.isActive,
+                cancellationPolicyID = userJobTitle.cancellationPolicyID,
+                instantBooking = userJobTitle.instantBooking,
+                jobTitleSingularName = userJobTitle.jobTitleSingularName,
+                jobTitlePluralName = userJobTitle.jobTitlePluralName
             };
         }
-        #endregion
-
-        #region Fetch
-        #region SQL
-        const string sqlSelectFromCommonWhere = @"
-            SELECT
-                u.userID As userID,
-                u.PositionID As jobTitleID,
-                u.PositionIntro As intro,
-                u.CancellationPolicyID As cancellationPolicyID,
-                u.InstantBooking As instantBooking,
-                positions.PositionSingular As jobTitleSingularName,
-                positions.PositionPlural As jobTitlePluralName
-            FROM
-                userprofilepositions as u
-                    INNER JOIN
-                positions on u.positionID = positions.positionID AND positions.languageID = @1 and positions.countryID = @2
-            WHERE
-                u.UserID = @0
-                    AND u.LanguageID = @1
-                    AND u.CountryID = @2
-                    AND u.Active = 1
-                    -- Double check for approved positions
-                    AND positions.Active = 1
-                    AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
-        ";
-        const string sqlAndJobTitleID = " AND @3 = u.PositionID ";
-        // filter by active only profiles.
-        const string sqlAndActiveProfiles = " AND u.StatusID = 1 ";
-        // filter by active or inactive profiles, but still discarding user deleted profiles (StatusID=0).
-        const string sqlAndActiveOrInactiveProfiles = " AND u.StatusID > 0 ";
-        const string sqlAndBookMeButtonReady = " AND bookMeButtonReady = 1";
-        const string sqlGetActiveItem = sqlSelectFromCommonWhere + sqlAndActiveProfiles + sqlAndJobTitleID;
-        const string sqlGetActiveOrInactiveItem = sqlSelectFromCommonWhere + sqlAndActiveOrInactiveProfiles + sqlAndJobTitleID;
-        const string sqlGetList = sqlSelectFromCommonWhere + sqlAndActiveProfiles;
-        #endregion
-
-        public static PublicUserJobTitle Get(int serviceProfessionalUserID, int languageID, int countryID, int jobTitleID, bool includeDeactivatedProfile = false, bool bookMeButtonRequired = false)
-        {
-            using (var db = new LcDatabase())
-            {
-                var sql = includeDeactivatedProfile ? sqlGetActiveOrInactiveItem : sqlGetActiveItem;
-                if (bookMeButtonRequired)
-                    sql += sqlAndBookMeButtonReady;
-                return FromDB(db.QuerySingle(sql, serviceProfessionalUserID, languageID, countryID, jobTitleID));
-            }
-        }
-
-        public static IEnumerable<PublicUserJobTitle> GetList(int serviceProfessionalUserID, int languageID, int countryID)
-        {
-            using (var db = new LcDatabase())
-            {
-                return db.Query(sqlGetList, serviceProfessionalUserID, languageID, countryID)
-                .Select<dynamic, PublicUserJobTitle>(FromDB);
-            }
-        }
-        #endregion
     }
 }
