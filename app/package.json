@@ -23,7 +23,7 @@
     "browserify": "^14.5.0",
     "browserify-shim": "~3.8.14",
     "chai": "^4.1.2",
-    "deepmerge": "^1.5.2",
+    "deepmerge": "^2.0.1",
     "detect_swipe": "^2.1.4",
     "es6-promise": "~4.1.1",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",

@@ -1,3 +1,13 @@
+/**
+ * Browserify tasks: create javascript bundles.
+ * We are using several transforms, plugins and advanced features.
+ *
+ * Using 'factor-bundle' to split the final file in several files (bundles),
+ * moving common modules (and rarely updated) to a 'common' file and keeping
+ * separated entry points smaller.
+ *
+ * Using 'exorcise' to extract the 'source map' of each bundle to another file
+ */
 'use strict';
 var merge = require('deepmerge');
 var notify = require('grunt-notify/lib/notify-lib');
@@ -7,8 +17,13 @@ var notifySettings = require('./notify.js');
 // (used in the past, removed when commiting this comment)
 // because is the only way to make it works with watch[ify] option.
 var exorcist = require('exorcist');
+var browserifyBundles = require('./shared/browserifyBundles');
 
 module.exports = function(grunt) {
+    /**
+     * External parameters
+     */
+    var fullPaths = !!grunt.option('fullPaths');
     /**
      Browserify config
      **/
@@ -57,126 +72,31 @@ module.exports = function(grunt) {
     };
 
     /**
-     * A list of factors promises that fulfills when files were written.
-     * Each factor is a bundle splitted from the original one
-     * (out of 'common.js')
-     */
-    var factorsPromises = [];
-    /**
-     * Create a Promise that fulfills when the factorized file was wrote
-     * to disk.
-     * @param {string} path Full file path
-     * @param {Stream} factor Factor pipeline, a 'labeled-stream-splicer'
-     * class that implements a Stream with 'end' event.
-     * @returns {Promise}
-     */
-    var factorToPromise = function(path, factor) {
-        factorsPromises.push(new Promise(function(resolve, error) {
-            grunt.verbose.writeln('New Promise for factor', path);
-            // Listen to 'end' event (not to 'finish') that guarantees
-            // that was processed, written to disk and file closed.
-            factor.on('end', resolve);
-            factor.on('error', error);
-
-            // Exorcist integration
-            var mapFile = '';
-            var normalizedPath = path.replace(/\\/g, '/');
-            if (normalizedPath.indexOf(APP_SOURCE.substr(2)) > 0) {
-                mapFile = APP_DEST_MAP;
-            }
-            else if (normalizedPath.indexOf(LANDING_PAGE_SOURCE.substr(2)) > 0) {
-                mapFile = LANDING_PAGE_DEST_MAP;
-            }
-            else {
-                grunt.fail.warn('At browserify: unknow factorized path: ' + path);
-            }
-            factor.get('wrap').push(exorcist(mapFile));
-        }));
-    };
-    /**
-     * Callback for grunt-browserify pre-processing.
-     * Will register promises for all the factorization process
-     * @param {Browserify} b
-     */
-    var preBundle = function(b) {
-        // Reset current 'factors' being processed.
-        factorsPromises = [];
-        // Listen each factor added
-        b.removeListener('factor.pipeline', factorToPromise);
-        b.on('factor.pipeline', factorToPromise);
-        // Listen errors when initially creating the main/full bundle
-        // (syntax errors, not found modules; all before content is splitted).
-        b.on('bundle', function(output) {
-            output.on('error', function(err) {
-                grunt.verbose.error().error(err);
-                grunt.fail.warn('Browserify bundle error: ' + err.toString());
-            });
-
-            // Exorcist integration
-            b.pipeline.get('wrap').push(exorcist(COMMON_DEST_MAP));
-        });
-        b.on('error', function(err) {
-            // Something went wrong.
-            grunt.verbose.error().error(err);
-            grunt.fail.warn('Something went wrong: ' + err.toString());
-        });
-    };
-    /**
-     * Callback for grunt-browserify post-processing.
-     * Will ensure that all factorization processes have completed
-     * before let the process to continue.
-     * IMPORTANT: This is very important becaus by default, the Grunt task will
-     * continue and close the running process without wait for completion,
-     * resulting in corrupted/incompleted files being written.
-     * @param {Error} err An error
-     * @param {(String|Buffer)} src Source of the generated bundle
-     * @param {Function} next Call when done to let the process to continue
-     */
-    var postBundle = function(err, src, next) {
-        Promise.all(factorsPromises).then(function() {
-            grunt.log.ok('Browserify factor-bundle completed with', factorsPromises.length, 'bundles');
-            sendRebuildNotification();
-            next(err, src);
-        })
-        .catch(function(factorsErr) {
-            grunt.verbose.error().error(factorsErr);
-            grunt.fail.warn('Browserify factor-bundle failed:' + factorsErr.toString());
-            next(factorsErr, src);
-        });
-    };
-
-
-    /**
         Generates the [app, landingPage] bundles,
         extracting the common parts out.
     **/
-    bconfig.appCommon = {
-        files: {
-            [COMMON_DEST]: [
-                APP_SOURCE,
-                LANDING_PAGE_SOURCE
-            ]
-        },
+    var appCommonBaseSettings = browserifyBundles.create(
+        grunt, {
+            dest: COMMON_DEST,
+            map: COMMON_DEST_MAP
+        }, [{
+            source: APP_SOURCE,
+            dest: APP_DEST,
+            map: APP_DEST_MAP
+        }, {
+            source: LANDING_PAGE_SOURCE,
+            dest: LANDING_PAGE_DEST,
+            map: LANDING_PAGE_DEST_MAP
+        }],
+        sendRebuildNotification
+    );
+    bconfig.appCommon = merge(appCommonBaseSettings, {
         options: {
             browserifyOptions: {
-                debug: true
-            },
-            plugin: [
-                [
-                    // Output take strictkly the same order than listed
-                    // source files, so they match the expected name-content
-                    'factor-bundle', {
-                        output: [
-                            APP_DEST,
-                            LANDING_PAGE_DEST
-                        ]
-                    }
-                ]
-            ],
-            preBundleCB: preBundle,
-            postBundleCB: postBundle
+                fullPaths: fullPaths
+            }
         }
-    };
+    });
 
     bconfig.watchAppCommon = merge(bconfig.appCommon, {
         options: {
@@ -208,7 +128,8 @@ module.exports = function(grunt) {
         'dest': TESTS_DEST,
         'options': {
             'browserifyOptions': {
-                'debug': true
+                'debug': true,
+                fullPaths: fullPaths
             },
             preBundleCB: function(b) {
                 b.on('bundle', function() {
