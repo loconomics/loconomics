@@ -7,6 +7,10 @@
  * separated entry points smaller.
  *
  * Using 'exorcise' to extract the 'source map' of each bundle to another file
+ *
+ * Using 'common-shakeify' to remove 'dead code' because of unused modules
+ * features (also called 'tree shaking'; not to confuse with the kind of removal
+ * of 'dead code' done by uglify and warned by jshint --that we should prevent)
  */
 'use strict';
 var merge = require('deepmerge');
@@ -18,6 +22,7 @@ var notifySettings = require('./notify.js');
 // because is the only way to make it works with watch[ify] option.
 var exorcist = require('exorcist');
 var browserifyBundles = require('./shared/browserifyBundles');
+require('common-shakeify');
 
 module.exports = function(grunt) {
     /**
@@ -131,6 +136,9 @@ module.exports = function(grunt) {
                 'debug': true,
                 fullPaths: fullPaths
             },
+            plugin: [
+                'common-shakeify'
+            ],
             preBundleCB: function(b) {
                 b.on('bundle', function() {
                     // Exorcist integration

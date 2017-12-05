@@ -17,6 +17,7 @@
 // because is the only way to make it works with watch[ify] option.
 var exorcist = require('exorcist');
 require('factor-bundle');
+require('common-shakeify');
 
 /**
  * @typedef {Object} BundleSettings
@@ -170,6 +171,7 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
             // Array of plugins, we have just one that is defined as an array
             // of name plus settings
             plugin: [
+                'common-shakeify',
                 [
                     // Output take strictkly the same order than listed
                     // source files, so they match the expected name-content
