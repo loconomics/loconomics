@@ -11,6 +11,8 @@ var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
 var clientAddresses = require('../data/clientAddresses');
 var showError = require('../modals/error').show;
+var UserJobProfile = require('../viewmodels/UserJobProfile');
+var ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -33,13 +35,13 @@ var A = Activity.extend(function ServiceAddressesActivity() {
             return 'Where do you work as a ' + this.jobTitleName() + '?';
         }
         else if (this.isInOnboarding()) {
-            return 'Locations for your listing';
+            return 'Location for your listing';
         }
         else if(this.serviceAddresses.isSelectionMode()) {
             return 'Choose a place for this booking';
         }
         else {
-            return 'Locations';
+            return 'Location';
         }
     }, this.viewModel);
 
@@ -166,7 +168,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
         var jid = this.viewModel.jobTitleID(),
             jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
-            url = this.mustReturnTo || (jid && '/marketplaceJobtitles/' + jid || '/scheduling');
+            url = this.mustReturnTo || (jid && '/listingEditor/' + jid || '/schedulingPreferences');
 
         this.navBar.leftAction().link(url);
         this.navBar.leftAction().text(this.requestData.navTitle || jname);
@@ -229,9 +231,6 @@ A.prototype.show = function show(options) {
     }
 };
 
-var UserJobProfile = require('../viewmodels/UserJobProfile'),
-    ServiceAddresses = require('../viewmodels/ServiceAddresses');
-
 function ViewModel(app) {
     // jshint maxstatements:70
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
@@ -239,18 +238,6 @@ function ViewModel(app) {
     this.isInOnboarding = onboarding.inProgress;
 
     this.serviceAddresses = new ServiceAddresses();
-
-    this.addMoreHeaderText = ko.pureComputed(function() {
-        if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
-            return 'Add at least one for your listing';
-        }
-        else if (this.isInOnboarding()) {
-            return 'Want to add any more?';
-        }
-        else {
-            return '';
-        }
-    }, this);
 
     this.addLocationLabel = ko.pureComputed(function() {
         return this.isInOnboarding() ? 'Place clients come to see you' :

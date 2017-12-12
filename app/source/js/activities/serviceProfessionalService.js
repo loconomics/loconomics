@@ -13,7 +13,7 @@ var ko = require('knockout'),
 var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
-var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_LINK = '/listingEditor';
 var showError = require('../modals/error').show;
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {

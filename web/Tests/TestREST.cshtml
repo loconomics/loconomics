@@ -120,16 +120,16 @@
             "post": {
                  "email": "some user email",
                  "password": "",
+                 "atBooking": true,
                  "firstName": "John",
                  "lastName": "Smith",
                  "phone": "1234",
-                 "postalCode": "90001",
-                 "referralCode": "",
-                 "device": "ios",
                  "profileType": "service-professional",
                  "facebookUserID": "",
                  "facebookAccessToken": "",
                  "returnProfile": false,
+                 "jobTitleID": null,
+                 "jobTitleName": null,
                  "api comment": "Same returned data as in Login, and returnProfile behaves the same too. The returned 'redirectUrl' on success must be mandatory when there is a value since sometimes will be different from the given 'redirect', as for providers in the Onboarding, they must continue that at the step given in 'redirectUrl'. This is the fact for current Website, what rules we will manage on mobile?."
             }
         },
@@ -477,6 +477,10 @@
             "put": {
                 "onboardingStep": "welcome"
             }
+        },
+        "User Profile: Become a service professional": {
+            "url": "/api/v1/en-US/me/profile/become-service-professional",
+            "post": {}
         },
 
         "Scheduling Preferences": {
@@ -958,6 +962,12 @@
             }
         },
 
+        "Search Job Titles Autocomplete": {
+            "url": "/api/v1/en-US/search/job-titles/autocomplete",
+            "get": {
+                "searchTerm": "cleaner"
+            }
+        },
 
         "Search Job Titles by Search Term": {
             "url": "/api/v1/en-US/search/job-titles",
@@ -1061,6 +1071,38 @@
         "User Fee Payments": {
             "url": "/api/v1/en-US/me/fee-payments",
             "get": {}
+        },
+
+        "Lead Generation: subscribe to newsletter": {
+            "url": "/api/v1/en-US/lead-generation/newsletter/subscribe",
+            "post": {
+                "email": "user@test.one",
+                "isServiceProfessional": true
+            }
+        },
+        "Lead Generation: subscribe to provide referrals": {
+            "url": "/api/v1/en-US/lead-generation/referral/subscribe",
+            "post": {
+                "email": "user@test.one",
+                "isServiceProfessional": true
+            },
+            "put": {
+                "userID": 123,
+                "email": "user@test.one",
+                "firstName": "User",
+                "lastName": "Test"
+            }
+        },
+        "Lead Generation: refer a professional": {
+            "url": "/api/v1/en-US/lead-generation/referral/refer",
+            "post": {
+                "email": "service@professional.test",
+                "firstName": "Service",
+                "lastname": "Professional",
+                "phone": "123456789",
+                "referredByUserID": 123,
+                "referredByEmail": "user@test.one"
+            }
         }
     };
 

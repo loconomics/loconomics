@@ -45,3 +45,17 @@ api.saveOnboardingStep = function (stepReference) {
         local.setItem(api.localStorageName, api.data.model.toPlainObject());
     });
 };
+
+/**
+ * Request to become the current user profile to a service professional.
+ * If the request is successful, the local profile data is updated properly
+ */
+api.becomeServiceProfessional = function() {
+    return remote.post('me/profile/become-service-professional')
+    .then(function() {
+        api.data.isServiceProfessional(true);
+        // If success, save persistent local copy of the data to ensure the
+        // profile change is saved
+        local.setItem(api.localStorageName, api.data.model.toPlainObject());
+    });
+};

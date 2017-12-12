@@ -1,11 +1,10 @@
 // A simple container for text plus a switch
 .switchLine {
-    padding: 14px $grid-gap;
-    line-height: 28px;
+    padding: .8rem $grid-gap;
+    line-height: 1.75rem;
 
     display: table;
     width: 100%;
-    background-color: white;
 
     .switchLine-label {
         display: table-cell;
@@ -15,5 +14,11 @@
     .switchLine-switch {
         display: table-cell;
         white-space: nowrap;
+        > label {
+            vertical-align: middle;
+        }
+        > switch-checkbox {
+            vertical-align: bottom;
+        }
     }
 }

@@ -22,7 +22,7 @@ $big-message-bar-height = $big-navbar-height
   body the element and is absolutely positioned just below the nav.
 */
 .MessageBar
-    background-color: $brand-primary-background
+    background-color: white;
     border-bottom-width: 1px
     border-bottom-style: solid
     border-color: $gray-light
@@ -33,17 +33,27 @@ $big-message-bar-height = $big-navbar-height
     top: $app-navbar-height
     width: 100%
     z-index: $app-message-bar-z-index
-
+    font-size: 1.2rem;
     @media $media-big-navbar
         border-width: 0
         height: $big-message-bar-height
         top: $big-navbar-height
+        border-bottom-width: 1px
+        border-bottom-style: solid
+        font-size: 1.5rem;
+        i 
+            margin-right: 2.5rem;
+        button 
+            margin-left: 2.5rem;
+    i 
+        font-size: 2em;
+        vertical-align: middle;
 
     &.MessageBar--success
-        background-color: $brand-success-background
+        background-color: white;
 
     &.MessageBar--warning
-        background-color: $brand-warning-background
+        background-color: white;
 
     p
         text-align: center

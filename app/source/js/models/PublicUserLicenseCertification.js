@@ -11,6 +11,7 @@ function PublicUserLicenseCertification(values) {
     this.model.defProperties({  
         userID: 0,
         jobTitleID: 0,
+        userLicenseCertificationID: 0,
         licenseCertificationID: 0,
         licenseCertificationNumber: '',
         licenseCertificationUrl: '',

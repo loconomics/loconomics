@@ -10,9 +10,25 @@ var TAG_NAME = 'job-title-autocomplete';
 var TEMPLATE = require('../../html/kocomponents/job-title-autocomplete.html');
 
 var ko = require('knockout');
-var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
 var getObservable = require('../utils/getObservable');
 exports.ActionForValue = require('./input-autocomplete').ActionForValue;
+var JobTitleSearchResult = require('../models/JobTitleSearchResult');
+var search = require('../data/search');
+
+/**
+ * Minimun text length required to perform a search
+ * @type {number}
+ */
+var MIN_LENGTH = 3;
+
+/**
+ * @enum {string} Available targets for the autocomplete, that slightly changes
+ * the UI of suggestions to better accomodate well defined use cases.
+ */
+var Target = {
+    search: 'search',
+    addJobTitle: 'addJobTitle'
+};
 
 /**
  * The component view model
@@ -31,22 +47,51 @@ exports.ActionForValue = require('./input-autocomplete').ActionForValue;
  * Text for an optional button displayed on each suggestion; it doesn't trigger
  * anything different than select the suggestion, but gives a hint to user
  * for the action after select it.
+ * @param {(string|KnockoutObservable<string>)} [params.label=Job title]
+ * The label text for the input-autocomplete.
+ * @param {(boolean|KnockoutObservable<boolean>)} [params.visuallyHiddenLabel=false]
+ * Whether the label should be visually hidden (hidden but available to screen readers) or not.
+ * @param {(Target|KnockoutObservable<Target>)} [params.target=Target.search] Which use
+ * is targetting the autocomplete instance: searching for job titles or displaying
+ * suggestions to a proffesional that is adding a job title to its listing.
  */
 function ViewModel(params) {
-    // Observables for parameters and results, and auto-search all comes from:
-    // Inherits
-    MarketplaceSearchVM.call(this);
+    this.isLoading = ko.observable(false);
+    //create an observable variable to hold the search term
+    this.value = ko.observable();
 
-    /// Overwritting
-    // We replace the internal 'length' that counts how many results there are,
-    // by one that returns almost 1 if there is valid query; this allow us
+    /**
+     * @member {KnockoutComputed<string>} queryTerm Gets a valid query term to
+     * perform a search, otherwise null.
+     * It's valid if there is a value and meets the minimum length.
+     */
+    this.queryTerm = ko.pureComputed(function() {
+        var s = this.value();
+        return s && s.length >= MIN_LENGTH ? s : null;
+    }, this);
+
+    /**
+     * @member {Object}
+     * Object.jobTitles {KnockoutObservableArray<JobTitleSearchResult>}
+     */
+    this.suggestions = {
+        jobTitles: ko.observableArray([])
+    };
+    // We create a custom 'length' property for suggestions, so it
+    // returns almost 1 if there is valid query when in 'addJobTitle' target;
+    // this allow us
     // to ever show a suggestion to add user typed query even if there are not
     // result, as far as it meets the minimum query lenght (implicit by the
     // the result of the inherit 'queryTerm').
-    var internalResultsLength = this.searchResults.length;
-    this.searchResults.length = ko.pureComputed(function() {
-        var hasQuery = !!this.queryTerm();
-        return Math.max(hasQuery ? 1 : 0, internalResultsLength());
+    this.suggestions.length = ko.pureComputed(function() {
+        var count = this.suggestions.jobTitles().length;
+        if (!this.isAddJobTitle()) {
+            return count;
+        }
+        else {
+            var hasQuery = !!this.queryTerm();
+            return Math.max(hasQuery ? 1 : 0, this.suggestions.jobTitles().length);
+        }
     }, this);
 
     /// Out parameters: allows to expose some internal values externally, but
@@ -73,7 +118,7 @@ function ViewModel(params) {
     /// Members based on params
     // Configurable per use case, or automatic if empty
     /**
-     * @member {(KnockoutObservable<string>|string)}
+     * @member {KnockoutObservable<string>}
      * Let's indicate what text will contain each button that appears near
      * a suggestion, as a hint for the user of the action that will trigger
      * when selecting it. The button will be hidden if no text (default).
@@ -83,9 +128,71 @@ function ViewModel(params) {
      */
     this.suggestionButtonText = getObservable(params.suggestionButtonText);
     /**
-     * @member {(KnockoutObservable<string>|string)} id An unique ID for the input.
+     * @member {KnockoutObservable<string>} id An unique ID for the input.
      */
     this.id = getObservable(params.id);
+    /**
+     * @member {KnockoutObservable<string>} label
+     */
+    this.label = getObservable(params.label || 'Job title');
+    /**
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.visuallyHiddenLabel = getObservable(params.visuallyHiddenLabel);
+    /**
+     * @member {Target}
+     */
+    this.target = getObservable(params.target);
+    /**
+     * Whether we are in target 'addJobTitle' mode.
+     * Anything else is managed as default target 'search'
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.isAddJobTitle = ko.pureComputed(function() {
+        return this.target() === Target.addJobTitle;
+    }, this);
+
+    /// Performing search
+    /**
+     * Performs an API search by term
+     * @private
+     * @param {string} searchTerm
+     */
+    var loadSuggestions = function() {
+        var s = this.value();
+        if(!s) {
+            this.suggestions.jobTitles.removeAll();
+            return;
+        }
+
+        this.isLoading(true);
+
+        return search.jobTitleAutocomplete(s)
+        .then(function(results) {
+            if(results) {
+                this.suggestions.jobTitles(results.map(function(item) {
+                    return new JobTitleSearchResult(item);
+                }));
+            }
+            else {
+                this.suggestions.jobTitles.removeAll();
+            }
+            this.isLoading(false);
+        }.bind(this))
+        .catch(function(err) {
+            this.isLoading(false);
+            if (err && err.statusText === 'abort') return null;
+        }.bind(this));
+    }.bind(this);
+
+    // Auto-search on user typing but throttling it to prevent too much requests
+    // that undermine performance.
+    // It performs the search one has passed a timeout from latest keystroke
+    ko.computed(function() {
+        loadSuggestions();
+    })
+    //.extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 120 } });
+    .extend({ rateLimit: { timeout: 120 } });
  }
 
 ko.components.register(TAG_NAME, {
@@ -93,3 +200,5 @@ ko.components.register(TAG_NAME, {
     viewModel: ViewModel,
     synchronous: true
 });
+
+exports.Target = Target;
