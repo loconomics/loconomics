@@ -13,7 +13,8 @@
   "scripts": {
     "test": "grunt test",
     "watch": "grunt watch",
-    "build": "grunt"
+    "build": "grunt",
+    "lint": "eslint ./source/js --fix"
   },
   "repository": "loconomics/loconomics",
   "private": true,
@@ -29,6 +30,7 @@
     "common-shakeify": "^0.4.5",
     "deepmerge": "^2.0.1",
     "detect_swipe": "^2.1.4",
+    "eslint": "^4.13.1",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "grunt": "^1.0.1",
@@ -45,6 +47,7 @@
     "grunt-contrib-uglify": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "1.x",
     "grunt-copy-to": "0.0.12",
+    "grunt-eslint": "^20.1.0",
     "grunt-mkdir": "1.x",
     "grunt-mocha": "^1.0.4",
     "grunt-newer": "^1.3.0",
