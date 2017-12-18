@@ -193,6 +193,7 @@ module.exports = {
         "no-useless-computed-key": "error",
         "no-useless-concat": "off",
         "no-useless-constructor": "error",
+        "no-useless-escape": "off",
         "no-useless-rename": "error",
         "no-useless-return": "off",
         "no-var": "off",
