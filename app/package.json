@@ -29,7 +29,6 @@
     "common-shakeify": "^0.4.5",
     "deepmerge": "^2.0.1",
     "detect_swipe": "^2.1.4",
-    "es6-promise": "~4.1.1",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "grunt": "^1.0.1",
