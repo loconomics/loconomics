@@ -58,9 +58,8 @@ function sortBookingByDateComparator(a, b) {
 }
 
 var remoteRequest = null;
-function getFromRemote(options) {
+function getFromRemote() {
     if (remoteRequest) return remoteRequest;
-    options = options || {};
     var start = new Date();
     // Up to 3 months in advance for clients. They have not too many apts usually.
     var end = moment().add(3, 'month').toDate();
