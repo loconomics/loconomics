@@ -10,7 +10,7 @@ var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
-var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_LINK = '/listingEditor';
 var DEFAULT_BACK_TEXT = 'Back';
 var showError = require('../modals/error').show;
 

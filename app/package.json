@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.6.6",
+  "version": "1.7.2",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -15,28 +15,25 @@
     "watch": "grunt watch",
     "build": "grunt"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:joshdanielson/Loconomics.git"
-  },
+  "repository": "loconomics/loconomics",
   "private": true,
   "devDependencies": {
     "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
     "bliss": "~1.0.1",
-    "blueimp-file-upload": "^9.18.0",
-    "browserify": "^14.4.0",
+    "blueimp-file-upload": "^9.19.1",
+    "browserify": "^14.5.0",
     "browserify-shim": "~3.8.14",
-    "chai": "^4.1.0",
-    "deepmerge": "^1.5.0",
+    "chai": "^4.1.2",
+    "deepmerge": "^1.5.2",
     "detect_swipe": "^2.1.4",
     "es6-promise": "~4.1.1",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "grunt": "^1.0.1",
     "grunt-bliss": "git+https://git@github.com/IagoSRL/grunt-bliss.git",
-    "grunt-browserify": "^5.0.0",
     "grunt-cli": "^1.2.0",
+    "grunt-browserify": "^5.2.0",
     "grunt-contrib-clean": "1.x",
     "grunt-contrib-concat": "1.x",
     "grunt-contrib-connect": "1.x",
@@ -44,7 +41,7 @@
     "grunt-contrib-htmlmin": "2.x",
     "grunt-contrib-jshint": "1.x",
     "grunt-contrib-stylus": "1.x",
-    "grunt-contrib-uglify": "3.x",
+    "grunt-contrib-uglify": "^3.1.0",
     "grunt-contrib-watch": "1.x",
     "grunt-copy-to": "0.0.12",
     "grunt-mkdir": "1.x",
@@ -56,25 +53,22 @@
     "grunt-zip": "~0.17.1",
     "is_js": "~0.9.0",
     "jquery": "^3.2.1",
-    "jquery-ui": "~1.10.5",
     "jshint": "^2.9.4",
     "knockout": "~3.4.2",
-    "knockout-sortable": "~0.14.0",
-    "knockout.mapping": "~2.4.3",
     "less": "1.4.2",
     "less2stylus": "^0.1.0",
     "load-grunt-config": "~0.19.2",
     "localforage": "1.5.x",
     "lodash": "~4.17.4",
-    "mocha": "^3.2.0",
-    "moment": "~2.18.1",
-    "moment-timezone": "~0.5.9",
+    "mocha": "^3.5.3",
+    "moment": "^2.19.2",
+    "moment-timezone": "^0.5.14",
     "nib": "~1.1.2",
     "numeral": "~2.0.6",
     "route-parser": "0.0.5",
     "stringify": "^5.1.0",
     "stylus": "~0.54.5",
-    "time-grunt": "1.x"
+    "time-grunt": "^1.4.0"
   },
   "browserify": {
     "transform": [
@@ -89,7 +83,6 @@
     "bootstrap-carousel": "./vendor/bootstrap-source/js/carousel.js",
     "fastclick": "./vendor/fastclick-forked/fastclick.js",
     "jquery.ajaxQueue": "./vendor/caoglish/jquery.ajaxQueue.js",
-    "jquery.ui.touch-punch": "./vendor/touch-punch/jquery.ui.touch-punch.min",
     "jquery.fileupload-image": "blueimp-file-upload/js/jquery.fileupload-image",
     "ko/formatBinding": "./vendor/iagosrl/ko/formatBinding",
     "ko/domElementBinding": "./vendor/iagosrl/ko/domElementBinding",
@@ -113,11 +106,6 @@
       "exports": "FastClick"
     },
     "jquery.ajaxQueue": {
-      "depends": [
-        "jquery"
-      ]
-    },
-    "jquery.ui.touch-punch": {
       "depends": [
         "jquery"
       ]

@@ -37,9 +37,11 @@ namespace LcRest
         {
             get
             {
-                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/profile/photo/" + userID;
+                return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID + "?v=" + updatedDate.ToString("s");
             }
         }
+
+        private DateTime updatedDate;
         #endregion
 
         #region Links
@@ -75,7 +77,8 @@ namespace LcRest
                 otherJobTitles = record.otherJobTitles,
                 allJobTitles = record.allJobTitles,
                 distance = record.distance,
-                clientVisibility = visibility
+                clientVisibility = visibility,
+                updatedDate = record.updatedDate
             };
             r.FillLinks();
             return r;
@@ -106,6 +109,7 @@ namespace LcRest
 
                      SELECT 
                         u.userID,
+                        u.updatedDate,
                         p.positionID as JobTitleID,
                         u.firstName,
                         u.lastName,                
@@ -156,7 +160,8 @@ namespace LcRest
                         u.publicBio,
                         u.businessName,
                         upp.InstantBooking,
-                        p.PositionSingular
+                        p.PositionSingular,
+                        u.updatedDate
                     ", JobTitleID, origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, visibility));
             }
@@ -184,6 +189,7 @@ namespace LcRest
 
                  SELECT 
                         u.userID,
+                        u.updatedDate,
                         jobTitleID = -2,
                         u.firstName,
                         u.lastName,                
@@ -232,7 +238,8 @@ namespace LcRest
                         u.firstName,
                         u.lastName,
                         u.publicBio,
-                        u.businessName
+                        u.businessName,
+                        u.updatedDate
                     ", "%" + SearchTerm + "%", origLat, origLong, SearchDistance, locale.languageID, locale.countryID)
                     .Select(x => (ServiceProfessionalSearchResult)FromDB(x, visibility));
             }

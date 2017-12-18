@@ -9,6 +9,7 @@ var NavAction = require('../viewmodels/NavAction');
 var ko = require('knockout');
 var userProfile = require('./userProfile');
 var local = require('./drivers/localforage');
+var onboardingSuccessModal = require('../modals/onboardingSuccess');
 
 var NAVBAR_TITLE = 'Create your first listing';
 
@@ -26,10 +27,32 @@ api.currentActivity = ko.observable('');
 // TODO: Rething to refactor this; will require decoupling app.shell
 api.init = function init(app) {
     api.app = app;
-    api.currentActivity(app.shell.currentRoute.name);
+    api.currentActivity(app.shell.currentRoute && app.shell.currentRoute.name);
     app.shell.on(app.shell.events.itemReady, function() {
         api.currentActivity(app.shell.currentRoute.name);
     });
+};
+
+/**
+ * Set-up the onboarding with preset data after a signup or restoring a session.
+ * @param {Object} options
+ * @param {string} options.step The step where the user left the process or starts with.
+ * @param {number} [options.jobTitleID] The jobTitleID selected at a previous
+ * signup form or saved after the addJobTitle step.
+ * @param {boolean} [options.isServiceProfessional] It set-ups the equivalent flag
+ * and when value is 'true', it skips the 'welcome' step (that has the
+ * selector buttons for the type of profile) in case that's the current one.
+ */
+api.setup = function(options) {
+    var step = options.step;
+    if (options.isServiceProfessional === true && options.step === 'welcome') {
+        step = api.stepAfter(step).stepName();
+    }
+    api.isServiceProfessional(options.isServiceProfessional);
+    if (options.jobTitleID |0 > 0) {
+        api.selectedJobTitleID(options.jobTitleID);
+    }
+    api.setStep(step);
 };
 
 // Extended with new methods
@@ -44,10 +67,6 @@ api.setStep = function(stepName) {
     // No progress:
     this.model.reset();
     return false;
-};
-
-api.skipToAddJobTitles = function() {
-    this.setStep(OnboardingProgress.steps.names[1]);
 };
 
 // Update the given navbar with the current onboarding information (only if in progress)
@@ -68,12 +87,17 @@ api.goCurrentStep = function() {
 
 api.goNext = function goNext() {
     var url;
+    var showOnboardingSuccess = false;
 
     if(this.isAtCurrentStep()) {
         this.incrementStep();
         userProfile.saveOnboardingStep(this.stepName());
 
-        url = this.isFinished() ? '/onboardingSuccess' : this.stepUrl();
+        url = this.isFinished() ? this.stepAfterFinish() : this.stepUrl();
+        // When onboarding finishes, we will prepare to display a 'success' message
+        if (this.isFinished()) {
+            showOnboardingSuccess = true;
+        }
     }
     else {
         url = this.stepAfter(api.currentActivity()).stepUrl();
@@ -81,6 +105,13 @@ api.goNext = function goNext() {
 
     // replaceState flag is true, preventing browser back button to move between onboarding steps
     this.app.shell.go(url, null, true);
+
+    // Display modal with notification when required
+    if (showOnboardingSuccess) {
+        onboardingSuccessModal.show({
+            isServiceProfessional: this.isServiceProfessional()
+        });
+    }
 };
 
 api.isAtCurrentStep = ko.pureComputed(function() {
@@ -92,13 +123,14 @@ api.isAtCurrentStep = ko.pureComputed(function() {
     and redirects to the current step, or do nothing.
 **/
 api.goIfEnabled = function() {
-    if (this.inProgress() && !api.isAtCurrentStep()) {
+    var inProgress = this.inProgress();
+    if (inProgress && !api.isAtCurrentStep()) {
         // Go to the step URL if we are NOT already there, by checking name to
         // not overwrite additional details, like a jobTitleID at the URL
         api.app.shell.go(api.stepUrl());
     }
 
-    return this.inProgress();
+    return inProgress;
 };
 
 /// Workaround for #374:
@@ -119,23 +151,12 @@ var persistLocalJobTitleID = function(jobTitleID) {
     return local.setItem(LOCAL_JOBTITLEID_KEY, jobTitleID);
 };
 /**
- * Get local copy of the ID for resuming onboarding.
- * @private
- * @returns {Promise<number>}
+ * Get the jobTitleID stored locally after a sign-up or in course onboarding,
+ * needed to restore the onboarding process correctly.
+ * @returns {Promise<number>} The jobTitleID
  */
-var getLocalJobTitleID = function() {
+api.getLocalJobTitleID = function() {
     return local.getItem(LOCAL_JOBTITLEID_KEY);
 };
 // At any point that selected job title ID is changed, we persist it
 api.selectedJobTitleID.subscribe(persistLocalJobTitleID);
-/**
- * Request to recover the selectedJobTitleID value from local store.
- * When this ends, the value is in place, ready to resume onboarding.
- * @returns {Promise<int>} A copy of the jobTitleID
- */
-api.recoverLocalJobTitleID = function() {
-    return getLocalJobTitleID().then(function(id) {
-        api.selectedJobTitleID(id);
-        return id;
-    });
-};

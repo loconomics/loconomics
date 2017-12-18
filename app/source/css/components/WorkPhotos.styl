@@ -11,8 +11,6 @@ $workPhotos-maxContainerWidth = $workPhotos-maxImageWidth + ($workPhotos-borderW
     display: block;
     width: auto
     overflow: hidden;
-    // For 'sortable' reordering
-    position: relative;
     margin: auto;
 
     > li {
@@ -64,14 +62,6 @@ $workPhotos-maxContainerWidth = $workPhotos-maxImageWidth + ($workPhotos-borderW
 
         .WorkPhotos-toolbar {
             text-align: center;
-        }
-
-        &.is-selected {
-            .WorkPhotos-editionLayer {
-                //display: block;
-                opacity: 1;
-                pointer-events: auto;
-            }
         }
     }
 }

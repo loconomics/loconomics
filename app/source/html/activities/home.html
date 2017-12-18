@@ -1,7 +1,7 @@
 <!-- Home activity (aka search) -->
 <div data-activity="home">
     <div class="home-main">
-        <div class="home-search">
+        <section class="home-search">
             <h1 class="home-title" data-bind="text: title"></h1>
             <p class="home-tagline">Independent service professionals at your service.</p>
             <form id="home-search" data-bind="submit: search" action="/" method="get" class="row" autocomplete="off">
@@ -9,11 +9,12 @@
                     <location-autocomplete params="value: 'San Francisco, CA', onSelect: onPlaceSelect"></location-autocomplete>
                 </div>
                 <div class="col-sm-7">
-                    <home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>
+                    <!--<home-search-box params="value: searchTerm, results: searchResults, isBusy: isLoading, onSelect: onSelect"></home-search-box>-->
+                    <job-title-autocomplete params="target: 'search', suggestionButtonText: 'Go', onSelect: onSelect, id: 'home-jobTitleAutocomplete', visuallyHiddenLabel: true"></job-title-autocomplete>
                 </div>
             </form>
-        </div>
-        <div id="home-hiw" class="home-hiw">
+        </section>
+        <section id="home-hiw" class="home-hiw">
             <h2 class="home-section-title">How Loconomics works:</h2>
             <div class="container home-section-listing">
                 <ul class="row list-unstyled">
@@ -34,48 +35,8 @@
                     </li>
                 </ul>
             </div>
-        </div>
-        <div class="home-booking">
-            <h2 class="home-section-title">Why Loconomics?</h2>
-            <div class="home-section-listing">
-                <ul class="list-unstyled">
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-color-filter-outline"></i>
-                        <h3>Worker-owned</h3>
-                        <p>Loconomics is owned by the professionals providing you great service. No middle-men.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-search"></i>
-                        <h3>All your needs</h3>
-                        <p>Schedule anything from house cleaning to reiki using the same simple  process.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa fa-calendar-o"></i>
-                        <h3>Easy scheduling</h3>
-                        <p>Schedule and reschedule 24/7, receive reminders and even sync your calendar.</p>
-                    </li>
-                    <!-- <li>
-                        <i aria-hidden="true" class="fa ion ion-card"></i>
-                        <h3>Clear pricing</h3>
-                        <p>No awkward cash exchanges, pay professional directly with credit card.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-checkmark"></i>
-                        <h3>Background check policy</h3>
-                        <p>Choose your comfort level when booking providers using our <a href="#!terms/background-check-policy" target="_blank">Background Check Policy</a>.</p>
-                    </li>
-                    <li>
-                        <i aria-hidden="true" class="fa ion ion-ios-heart"></i>
-                        <h3>Favorites</h3>
-                        <p>Easily store and share your favorite professionals with your favorite people.</p>
-                    </li> -->
-                </ul>
-            </div>
-            <div class="home-booking-more">
-                <a href="/about" class="btn btn-secondary btn-lg btn-block">Learn more</a>
-            </div>
-        </div>
-       <div id="home-categories" class="home-categories">
+        </section>
+        <section id="home-categories" class="home-categories">
             <h2 class="home-section-title">Browse by category</h2>
             <div class="home-section-listing">
                 <ul class="list-unstyled">
@@ -129,7 +90,39 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </section>
+        <section class="home-community">
+            <h2 class="home-section-title">Help your community thrive</h2>
+            <div class="home-section-listing">
+                <ul class="list-unstyled">
+                    <li>
+                        <icon-dec params="icon: 'ion-ios-color-filter-outline'"></icon-dec>
+                        <h3>No middle-men</h3>
+                        <p>Your local professionals own Loconomics. 100% of your dollars stay local. No commissions.</p>
+                    </li>
+                    <li>
+                        <icon-dec params="icon: 'ion-android-home'"></icon-dec>
+                        <h3>Support small business</h3>
+                        <p>Professionals are their own boss and masters in their field. Help support their ambition.</p>
+                    </li>
+                    <li>
+                        <icon-dec params="icon: 'ion-earth'"></icon-dec>
+                        <h3>Environmentally friendly</h3>
+                        <p>Enrich the lives of you and your community by purchasing services. Stop buying stuff.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="home-lead-generation clearfix">
+            <ul class="list-unstyled">
+                <li data-bind="visible: isAnonymous()" class="col-xs-12 col-md-4 col-md-offset-2">
+                    <lead-generation-newsletter></lead-generation-newsletter>
+                </li>
+                <li data-bind="css: {'col-md-offset-4':!isAnonymous()}" class="col-xs-12 col-md-4">
+                    <lead-generation-refer></lead-generation-refer>
+                </li>
+            </ul>
+        </section>
     </div>
     <div>@render('parts/WebsiteFooter.html')</div>
 </div>

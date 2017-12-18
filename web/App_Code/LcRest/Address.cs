@@ -546,7 +546,7 @@ namespace LcRest
 
             // Automatically set the City, StateProvinceID and PostalCodeID given
             // the PostalCode and Country information from the object.
-            if (!AutosetByCountryPostalCode(address))
+            if (!String.IsNullOrEmpty(address.postalCode) && !AutosetByCountryPostalCode(address))
             {
                 // TODO l10n
                 throw new ValidationException("Invalid postal code", "postalCode", "address");
@@ -554,7 +554,8 @@ namespace LcRest
 
             // GPS
             if ((!address.latitude.HasValue || address.latitude.Value == 0) &&
-                (!address.longitude.HasValue || address.longitude.Value == 0))
+                (!address.longitude.HasValue || address.longitude.Value == 0) &&
+                !String.IsNullOrEmpty(address.postalCode))
             {
                 var addressInline = ASP.LcHelpers.JoinNotEmptyStrings(", ",
                     address.addressLine1,
@@ -621,7 +622,7 @@ namespace LcRest
                     // Cannot be null on database, but can be empty on some addresses (service radius)
                     address.addressLine1 ?? "",
                     address.addressLine2,
-                    address.city,
+                    address.city ?? "",
                     address.stateProvinceID,
                     address.postalCodeID,
                     address.countryID,

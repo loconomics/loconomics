@@ -526,7 +526,7 @@ namespace LcRest
                 var sql = UserID.HasValue ? sqlGetItemForUser : sqlGetItem;
                 var b = FromDB(db.QuerySingle(sql, BookingID, UserID), internalUse, UserID);
                 if (b != null && fillLinks)
-                    b.FillLinks();
+                    b.FillLinks(internalUse);
                 return b;
             }
         }
@@ -840,10 +840,10 @@ namespace LcRest
         /// <summary>
         /// Load from database all the links data
         /// </summary>
-        public void FillLinks()
+        public void FillLinks(bool internalUse = false)
         {
             FillPricingSummary();
-            FillUserJobTitle();
+            FillUserJobTitle(internalUse);
             FillServiceDates();
             FillServiceAddress();
         }
@@ -872,14 +872,16 @@ namespace LcRest
         /// IMPORTANT: Be aware that different rules apply the information load when the booking is created by the service professional,
         /// so it's important to set the bookingType before call this; to avoid mistakes, the bookingTypeID must be set or an exception is throw.
         /// </summary>
-        internal void FillUserJobTitle()
+        internal void FillUserJobTitle(bool internalUse = false)
         {
             if (!Enum.IsDefined(typeof(LcEnum.BookingType), bookingTypeID))
                 throw new Exception("BookingTypeID must be set before calling FillUserJobTitle");
 
             var isServiceProfessionalBooking = bookingTypeID == (int)LcEnum.BookingType.serviceProfessionalBooking;
             var isBookMeNowBooking = bookingTypeID == (int)LcEnum.BookingType.bookNowBooking;
-            userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, isServiceProfessionalBooking || isBookMeNowBooking, isBookMeNowBooking));
+            var includeDeactivated = isServiceProfessionalBooking || isBookMeNowBooking || internalUse;
+            var internalUserJobTitle = LcRest.UserJobTitle.GetItem(serviceProfessionalUserID, languageID, countryID, jobTitleID, includeDeactivated, isBookMeNowBooking);
+            userJobTitle = LcRest.PublicUserJobTitle.FromUserJobTitle(internalUserJobTitle);
         }
 
         /// <summary>

@@ -53,7 +53,7 @@
 										{
 											<span>ending in @(info.booking.paymentLastFourCardNumberDigits)</span>
 										}
-										has been charged for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")).</strong></td>
+										has been charged for @((info.booking.pricingSummary.totalPrice ?? 0).ToString("c")).</strong></td>
                             </tr>
                             <tr>
                                 <td align="center">
@@ -106,7 +106,7 @@
 										{
 											<span>ending in @(info.booking.paymentLastFourCardNumberDigits)</span>
 										}
-										has been charged for @(info.booking.pricingSummary.totalPrice.Value.ToString("c")). See you again soon.</td>
+										has been charged for @((info.booking.pricingSummary.totalPrice ?? 0).ToString("c")). See you again soon.</td>
                             </tr>
                             <tr>
                                 <td align="center">

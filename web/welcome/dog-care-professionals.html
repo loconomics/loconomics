@@ -2,8 +2,8 @@
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); </script> <script> /*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var e=this.createElement("script");n&&(this.domain=n),e.id="js-iframe-async",e.src="https://assets.zendesk.com/embeddable_framework/main.js",this.t=+new Date,this.zendeskHost="loconomics.zendesk.com",this.zEQueue=a,this.body.appendChild(e)},o.write('<body onload="document._l();">'),o.close()}();
-              /*]]>*/ </script> <link href=../assets/css/libs.min.201710032339.css rel=stylesheet> <link href=../assets/css/welcome.min.201710032339.css rel=stylesheet> <script src=../assets/js/common.min.201710032339.js></script> <script src=../assets/js/welcome.min.201710032339.js></script> </head> <body> <a id=skip-navigation class=sr-only href=#activities-container>Skip navigation</a> <div class=App-activities id=activities-container> <script type=text/html id=signup-template> <div class="SignupLogin">
-            <div class="LeadContent" data-bind="visible: profile">
+              /*]]>*/ </script> <link href=../assets/css/libs.min.201711231607.css rel=stylesheet> <link href=../assets/css/welcome.min.201711231607.css rel=stylesheet> <script src=../assets/js/common.min.201711231607.js></script> <script src=../assets/js/welcome.min.201711231607.js></script> </head> <body> <a id=skip-navigation class=sr-only href=#activities-container>Skip navigation</a> <div class=App-activities id=activities-container> <script type=text/html id=signup-template> <div class="SignupLogin">
+            <div class="LeadContent">
                 <h2 data-bind="visible: !forServiceProfessional()">Sign up for free</h2>
                 <h2 data-bind="visible: forServiceProfessional">Your first listing is free</h2>
     
@@ -25,30 +25,20 @@
                     <button href="#email" data-bind="click: showEmailSignup" class="btn btn-lg btn-default btn-block btn-email"><i class="fa ion ion-ios-email-outline pull-left" aria-hidden="true"></i>Sign up with Email</button>
                 </div>
                 <form id="signupForm" role="form" data-bind="visible: isEmailSignupDisplayed, event: { submit: clickSignup }, css: { 'has-error': signupError }" novalidate>
-                    <div data-bind="visible: forClient">
-                        <label for="firstName">First Name*</label>
-                        <div data-bind="template: { name: 'signup-field', data: { id: 'firstName', name: 'firstName', field: firstName,  placeholder: '', type: 'text'} }, css: {'is-valid': isFirstNameValid}"></div>
-                        <label for="lastName">Last Name*</label>
-                        <div data-bind="template: { name: 'signup-field', data: { id: 'lastName', name: 'lastName', field: lastName,  placeholder: '', type: 'text'} }, css: {'is-valid': isLastNameValid}"></div>
-                    </div>
-                    <label for="countryID" data-bind="visible: isCountryVisible">Country*</label>
+                    <label for="countryID" data-bind="visible: isCountryVisible">Country</label>
                     <div class="form-group has-feedback is-valid" data-bind="css: { 'has-error': countryID.error }, visible: isCountryVisible">
                         <select id="countryID" data-bind="value: country, options: countriesOptions, optionsText: 'name', optionsValues: 'id'" class="form-control select-unstyled"></select>
                         <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
                         <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
                     </div>
-                    <div data-bind="visible: forClient">
-                        <label for="phone">Mobile Phone*</label>
-                        <div data-bind="template: { name: 'signup-field', data: { id: 'phone', name: 'phone', field: phone, placeholder: '', type: 'tel' } }, css: {'is-valid': isPhoneValid }"></div>
-                    </div>
                     <div class="form-group has-feedback" data-bind="css: { 'has-error': email.error }">
-                        <label for="signupAccountEmail">E-mail address*</label>
+                        <label for="signupAccountEmail">E-mail address</label>
                         <div data-bind="template: { name: 'signup-field', data: { id: 'signupAccountEmail', name: 'email', field: email, placeholder: 'example@address.com', type: 'email'} }, css: {'is-valid': isEmailValid}, disable: emailIsLocked">
                         </div>
                     </div>
                     <div class="form-group has-feedback" data-bind="template: { name: 'validated-password', data: validatedPassword }, css: { 'has-error': validatedPassword.password.error }, visible: !facebookUserID()">
                     </div>
-                    <p>* - required fields</p>
+                    <p>All fields are required</p>
                     <button id="submitSignupButton" type="submit" class="btn btn-lg btn-secondary btn-block" data-bind="disable: isSigningUp()" aria-describedby="submitSignupButtonTerms">
                         <span data-bind="visible: facebookUserID">&nbsp;&nbsp;</span>
                         <span data-bind="text: submitText"></span>
@@ -65,7 +55,7 @@
             <i class="fa form-control-feedback form-control-feedback--valid text-muted pull-right icon-right icon ion-android-done" aria-hidden="true"></i>
             <i class="fa form-control-feedback form-control-feedback--default text-muted pull-right icon-right icon" aria-hidden="true" data-bind="css: $data.icon"></i>
         </div> </script> <script type=text/html id=validated-password> <div class="ValidatedPassword">
-            <label for="validatedPasswordField">Password*</label>
+            <label for="validatedPasswordField">Password</label>
             <a id="ValidatedPassword-requirements-link" class="form-help-cue text-secondary" type="button" aria-controls="validatedPasswordDescription" data-bind="click: requirementsLinkClick, visible: showRequirementsLink">
                 Requirements<i class="icon fa fa-question-circle"></i>
             </a>

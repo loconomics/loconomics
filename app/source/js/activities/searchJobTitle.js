@@ -3,11 +3,13 @@
 **/
 'use strict';
 
-var
-    ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult'),
-    ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 var search = require('../data/search');
+var user = require('../data/userProfile').data;
+require('../kocomponents/lead-generation/newsletter');
+require('../kocomponents/lead-generation/refer');
 
 var A = Activity.extend(function SearchJobTitleActivity() {
 
@@ -17,11 +19,10 @@ var A = Activity.extend(function SearchJobTitleActivity() {
     //pass in the app model so the view model can use it
     this.viewModel = new ViewModel();
     this.navBar = Activity.createSubsectionNavBar('Back');
-    this.title = ko.computed(function() { 
+    this.title = ko.computed(function() {
         var result = this.jobTitleSearchResult();
-        return result && result.pluralName; 
+        return result && result.pluralName;
     }, this.viewModel);
-
 });
 
 exports.init = A.init;
@@ -39,6 +40,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel() {
+    this.isAnonymous = user.isAnonymous;
     this.isLoading = ko.observable(false);
     this.isJobTitleLoading = ko.observable(false);
     //create an observable variable to hold the search term
@@ -81,4 +83,9 @@ function ViewModel() {
             this.isLoading(false);
         }.bind(this));
     };
+    this.searchFailureMessage = ko.computed(function() {
+        var result = this.jobTitleSearchResult();
+        var name = result && ko.unwrap(result.pluralName);
+        return result && "We don't yet have " + name + ' in your area. Help us grow by introducing us to professionals or signing up for our newsletter.';
+    },this);
 }

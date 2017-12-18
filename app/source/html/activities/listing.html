@@ -1,0 +1,183 @@
+<!-- Activity listing -->
+<div data-activity="listing" class="Listing" data-bind="css: { 'is-loading': isLoading }">
+    <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
+        <p>
+            <span data-bind="ifnot:isActive"><icon-dec class="text-danger" params="icon: 'ion-alert-circled'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>inactive.</strong></span>
+            <span data-bind="if:isActive"><icon-dec class="text-success" params="icon: 'ion-ios-checkmark'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>active.</strong></span>
+            <button data-bind="click: editListing" class="btn btn-default"> Edit</button>
+        </p>
+    </app-message-bar>
+    <app-loading-spinner params="mod: 'xl floating'"></app-loading-spinner>
+    <div data-bind="with: user">
+        <nav id="listing-navigation" class="PageMenu" title="Listing shortcuts">
+            <div class="PageMenu-list">
+                <ul>
+                    <li data-bind="visible: $root.hasServicesOverview"><a href="#listing-services-overview">Overview</a></li>
+                    <li><a href="#listing-offerings">Offerings</a></li>
+                    <li><a href="#listing-reviews">Reviews</a></li>
+                    <li data-bind="visible: $root.workPhotos().length"><a href="#listing-photos">Photos</a></li>
+                    <li><a href="#listing-hours">Hours</a></li>
+                    <li><a href="#listing-location">Location</a></li>
+                    <li data-bind="visible: $root.hasCredentials"><a href="#listing-credentials-verifications">Credentials</a></li>
+                    <li><a href="#listing-booking-policies">Policies</a></li>
+                    <li data-bind="visible: profile().publicBio"><a href="#listing-about-service-professional">About</a></li>
+                </ul>
+            </div>
+        </nav>
+        <section id="listing-service-professional-info" class="col-xs-12 col-sm-12 Listing-heading" title="Information about service professional">
+            <div class="Listing-professionalInfo col-xs-12 col-sm-6 col-sm-offset-3">
+                <div class="Listing-professionalPic">
+                    <div class="Avatar Avatar--primary Avatar--lg">
+                        <img data-bind="attr: {src: profile().photoUrl(), alt: 'Photo of ' + profile().firstNameLastInitial() }">
+                    </div>
+                    <br>
+                </div>
+                <div class="Listing-bookingInfo">
+                    <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h1>
+                    <p data-bind="visible: profile().businessName(), text: profile().businessName()"></p>
+                    <a data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl(), attr: { href: profile().serviceProfessionalWebsiteUrl() }" target="_blank"></a>
+                    <div data-bind="with: selectedJobTitle">
+                        <app-stars-rating data-bind="visible: rating() && rating().ratingAverage" params="rating: rating() && rating().ratingAverage, total: rating() && rating().totalRatings, size: 'sm'"></app-stars-rating>
+                        <div data-bind="visible: serviceAttributes().hasExperienceLevel(), with: serviceAttributes().experienceLevel">
+                            <p>Experience: <span data-bind="text: name"></span></p>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" data-bind="attr: { href: $root.getBookLink, 'aria-label': 'Book ' + profile().firstNameLastInitial() + '&#8217;s' + ' services' }">Schedule</button>
+                    <p>Response time <span data-bind="text: stats() && stats().responseTimeText"></span></p>
+                </div>
+            </div>
+        </section>
+        <div class="container">
+            <section id="listing-services-overview" class="row" data-bind="visible: $root.hasServicesOverview, with: selectedJobTitle" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading" >
+                    <h2><icon-dec params="icon: 'ion-clipboard'"></icon-dec> Overview of services</h2>
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <p class="Listing-userText" data-bind="text: intro, visible: hasIntro"></p>
+                    <ul class="Listing-overviewAttributes" data-bind="foreach: serviceAttributes().serviceAttributes">
+                        <li class="col-xs-12 col-md-4">
+                            <h5 class="text-uppercase"  data-bind="text: name"></h5>
+                            <ul data-bind="foreach: serviceAttributes">
+                                <li>
+                                    <p><icon-dec params="icon: 'ion-android-done'"></icon-dec> <span data-bind="text: name"></span></p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section id="listing-offerings" class="row" data-bind="with: selectedJobTitle" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="visible: $root.hasVIPOfferingsForClient">
+                    <h2 ><icon-dec params="icon: 'ion-ios-eye-outline'"></icon-dec> VIP offerings for you</h2>
+                </div>
+                <ul data-bind="template: { name: 'offering-card-template', foreach: clientSpecificServices() }"></ul>
+                <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="visible: publicServices()">
+                    <h2><icon-dec params="icon: 'ion-ios-pricetags-outline'"></icon-dec> Offerings</h2>
+                </div>
+                <ul data-bind="template: { name: 'offering-card-template', foreach: publicServices() }"></ul>
+            </section>
+            <section id="listing-reviews" class="row" data-bind="with: selectedJobTitle" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-chatboxes-outline'"></icon-dec> Reviews <span data-bind="visible: $root.hasReviews"> (<span data-bind="visible: $root.hasReviews, text: rating() && rating().totalRatings"></span>) <app-stars-rating params="rating: rating() && rating().ratingAverage, size: 'sm'"></app-stars-rating></span></h2>
+                </div>
+                <div class="col-xs-12 col-sm-12">
+                    <p data-bind="visible: !$root.reviews.list().length"><span data-bind="text: $parent.profile().firstNameLastInitial()"></span> is too new to review. Help them out by booking them.</p>
+                </div>
+                <div class="col-xs-12 col-sm-12" data-bind="visible: $root.hasReviews">
+                    <h3>Summary</h3>
+                    <div class="row">
+                        <p class="col-xs-5 col-md-2" aria-describedby="rating1stars">Quality of Work</p>
+                        <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating1, size: 'xs'"></app-stars-rating>
+                    </div>
+                    <div class="row">
+                        <p class="col-xs-5 col-md-2" aria-describedby="rating2stars">Environment</p>
+                        <app-stars-rating id="rating2stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating2, size: 'xs'"></app-stars-rating>
+                    </div>
+                    <div class="row">
+                        <p class="col-xs-5 col-md-2" aria-describedby="rating3stars">Professionalism</p>
+                        <app-stars-rating id="rating3stars" class="col-xs-5 col-md-2" params="rating: rating() && rating().rating3, size: 'xs'"></app-stars-rating>
+                    </div>
+                </div>
+                <div class="row" data-bind="visible: $root.reviews.list().length">
+                    <ul data-bind="template: { name: 'review-card-template', foreach: $root.reviews.list() }"></ul>
+                    <div class="col-xs-12 col-sm-12 text-center" data-bind="visible: !$root.reviews.endReached()">
+                        <button class="btn btn-primary" data-bind="click: $root.reviews.loadOlder">View more reviews</button>
+                    </div>
+                </div>
+            </section>
+            <section id="listing-photos" class="row" data-bind="visible: $root.workPhotos().length, with: selectedJobTitle" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-camera-outline'"></icon-dec> Photos</h2>
+                </div>
+                <div class="row" data-bind="foreach: $root.workPhotos">
+                    <figure class="col-xs-12 col-sm-6">
+                        <img class="display-block" data-bind="attr: { src: url}">
+                        <figcaption class="text-center" data-bind="text: caption"></figcaption>
+                    </figure>
+                </div>
+                <div class="col-xs-12 col-sm-12 text-center" data-bind="visible: $root.viewMoreWorkPhotosLabel()">
+                    <button class="btn btn-primary" data-bind="text: $root.viewMoreWorkPhotosLabel, click: $root.viewAllPhotos"></button>
+                </div>
+            </section>
+            <section id="listing-hours" class="row" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-clock-outline'"></icon-dec> Hours</h2>
+                </div>
+                <div class="col-xs-12 col-sm-12" data-bind="template: { name: 'service-professional-hours-template', data: weeklySchedule() }"></div>
+            </section>
+            <section id="listing-location" class="row" data-bind="visible: $root.serviceAddresses().length" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
+                    <h2><icon-dec params="icon: 'ion-ios-location-outline'"></icon-dec> Location</h2>
+                </div>
+                <ul data-bind="template: { name: 'location-card-template', foreach: $root.serviceAddresses() }"></ul>
+            </section>
+            <section id="listing-credentials-verifications" class="row" data-bind="visible: $root.hasCredentials" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
+                    <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
+                </div>
+                <div class="col-xs-12 col-sm-12" data-bind="visible: selectedJobTitle() && selectedJobTitle().licensesCertifications().length">
+                    <h3>Professional credentials</h3>
+                    <p>These are verified according to our <a href="#!terms/background-check-policy" target="_blank">Background Check and License Verification policy</a>.</p>
+                    <ul data-bind="template: { name: 'license-card-template', foreach: selectedJobTitle() && selectedJobTitle().licensesCertifications }"></ul>
+                </div>
+                <div class="col-xs-12 col-sm-12" data-bind="visible: education().length">
+                    <h3>Education credentials</h3>
+                    <p>Loconomics does not verify education credentials.</p>
+                    <ul data-bind="template: { name: 'education-card-template', foreach: education }"></ul>
+                </div>
+            </section>
+            <section id="listing-booking-policies" class="row" data-bind="with: selectedJobTitle" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec> Booking policies</h2>
+                </div>
+                <div class="container-fluid">
+                    <div class="col-xs-12 col-md-6">
+                        <h3><span data-bind="text: $parent.profile().firstName"></span>'s scheduling policy</h3>
+                        <div data-bind="visible: !instantBooking()">
+                            <strong>Acceptance required</strong>
+                            <p>You can request up to three times for your appointment. <span data-bind="text: $parent.profile().firstName"></span> will then approve one of them within 18 hours or let you know their unavailable.</p>
+                        </div>
+                        <div data-bind="visible: instantBooking()">
+                            <strong>Instant scheduling</strong>
+                            <p>When scheduling offerings with <span data-bind="text: $parent.profile().firstName"></span>, your appointment is confirmed instantly.</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <h3><span data-bind="text: $parent.profile().firstName"></span>'s cancellation policy</h3>
+                        <p data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: cancellationPolicy() } }"></p>
+                    </div>
+                </div>
+            </section>
+            <section id="listing-about-service-professional" class="row" data-bind="visible: profile().publicBio" title="">
+                <div class="col-xs-12 col-sm-12 SectionHeading">
+                    <h2><icon-dec params="icon: 'ion-ios-book-outline'"></icon-dec> About <span data-bind="text: profile().firstName"></span></h2>
+                </div>
+                <div class="container-fluid">
+                    <div class="col-xs-12">
+                        <p class="Listing-userText" data-bind="text: profile().publicBio"></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

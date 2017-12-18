@@ -77,19 +77,19 @@
 								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore == 0)  
 								    {
                                     <span>
-                                        @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.displayCancellationLimitDate())</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
+                                        @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.displayCancellationLimitDate())</strong> to avoid any cancellation fees. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@((info.booking.pricingSummary.totalPrice ?? 0).ToString("c"))</strong>, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
                                     </span>
 								    }
 								    else if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore > 0)  
 								    {
 									    <span>
-										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should you not have cancelled your appointment by <strong>@(info.displayCancellationLimitDate())</strong>. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>.
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should you not have cancelled your appointment by <strong>@(info.displayCancellationLimitDate())</strong>. Since that time has passed, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@((info.booking.pricingSummary.totalPrice ?? 0).ToString("c"))</strong>.
 									    </span>
 								    }
 								    else if (info.cancellationLimitDate > DateTime.Now && policy.cancellationFeeBefore > 0)  
 								    {
 									    <span>
-										   @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since you've cancelled, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@(info.booking.pricingSummary.totalPrice.Value.ToString("c"))</strong>.
+										   @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since you've cancelled, your card ending in @(info.booking.paymentLastFourCardNumberDigits) will be charged <strong>@((info.booking.pricingSummary.totalPrice ?? 0).ToString("c"))</strong>.
 									    </span>
 								    }
 								    else
@@ -108,19 +108,19 @@
 								    @if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore == 0)  
 								    {
 									    <span>
-										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.displayCancellationLimitDate())</strong> to avoid any cancellation fees. Since that time has passed, <strong>@(info.booking.pricingSummary.cancellationFeeCharged.Value.ToString("c"))</strong> is due at your next appointment, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states you would have had to cancel your appointment by <strong>@(info.displayCancellationLimitDate())</strong> to avoid any cancellation fees. Since that time has passed, <strong>@((info.booking.pricingSummary.cancellationFeeCharged ?? 0).ToString("c"))</strong> is due at your next appointment, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
 									    </span>
 								    }
 								    else if (info.cancellationLimitDate <= DateTime.Now && policy.cancellationFeeBefore > 0)  
 								    {
 									    <span>
-										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should you not have cancelled your appointment by <strong>@(info.displayCancellationLimitDate())</strong>. Since that time has passed, <strong>@(info.booking.pricingSummary.cancellationFeeCharged.Value.ToString("c"))</strong> is due at your next appointment, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong> should you not have cancelled your appointment by <strong>@(info.displayCancellationLimitDate())</strong>. Since that time has passed, <strong>@((info.booking.pricingSummary.cancellationFeeCharged ?? 0).ToString("c"))</strong> is due at your next appointment, which is @(info.serviceProfessional.firstName)&rsquo;s cancellation fee of <strong>@((policy.cancellationFeeAfter).ToString("0.##%")) of the cost of booked services</strong>.
 									    </span>
 								    }
 								    else if (info.cancellationLimitDate > DateTime.Now && policy.cancellationFeeBefore > 0)  
 								    {
 									    <span>
-										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since you've cancelled, <strong>@(info.booking.pricingSummary.cancellationFeeCharged.Value.ToString("c"))</strong> is due at your next appointment.
+										    @(info.serviceProfessional.firstName)&rsquo;s cancellation policy states a cancellation fee of <strong>@((policy.cancellationFeeBefore).ToString("0.##%")) of the cost of booked services</strong>. Since you've cancelled, <strong>@((info.booking.pricingSummary.cancellationFeeCharged ?? 0).ToString("c"))</strong> is due at your next appointment.
 									    </span>
 								    }
 								    else
