@@ -20,8 +20,6 @@ require('es6-promise').polyfill();
 // (avoiding jQuery, it has equivalent methods)
 require('../../vendor/polyfills/Element.prototype.matches');
 require('../../vendor/polyfills/Element.prototype.closest');
-// Polyfill requestAnimationFrame, required for Android 4-4.3.
-require('requestAnimationFrame');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');

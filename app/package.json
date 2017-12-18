@@ -97,8 +97,7 @@
     "ko/formatBinding": "./vendor/iagosrl/ko/formatBinding",
     "ko/domElementBinding": "./vendor/iagosrl/ko/domElementBinding",
     "layoutUpdateEvent": "./vendor/iagosrl/layoutUpdateEvent",
-    "iagosrl/throttle": "./vendor/iagosrl/throttle",
-    "requestAnimationFrame": "./vendor/darius/requestAnimationFrame.js"
+    "iagosrl/throttle": "./vendor/iagosrl/throttle"
   },
   "browserify-shim": {
     "bootstrap": {
