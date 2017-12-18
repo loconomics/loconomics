@@ -207,7 +207,7 @@ A.prototype.show = function show(options) {
         // Avoid links to this same page at 'new booking' or 'new event' state
         // to prevent infinite loops
         //referrer && referrer.replace(/\/?appointment\//i, 'calendar/');
-        var reg = /\/?appointment\/([^\/]*)\/((\-3)|(\-4))/i;
+        var reg = /\/?appointment\/([^/]*)\/((-3)|(-4))/i;
         if (referrer && reg.test(referrer)) {
             referrer = referrer.replace(reg, '/appointment/$1/');
         }
@@ -223,7 +223,7 @@ A.prototype.show = function show(options) {
         id,
         type;
 
-    var isNumber = /^\-?\d+$/;
+    var isNumber = /^-?\d+$/;
     if (isNumber.test(s1)) {
         // first parameter is an ID
         id = s1 |0;
@@ -385,7 +385,7 @@ function ViewModel(app) {
         // Get ID from URL, to avoid do anything if the same.
         var apt = this.currentAppointment(),
             aptId = apt.id(),
-            found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
+            found = /appointment\/([^/]+)\/(-?\d+)/i.exec(window.location),
             urlId = found && found[2] |0,
             urlDate = found && found[1],
             curDateStr = getDateWithoutTime(apt.startTime()).toISOString();

@@ -1,6 +1,6 @@
 /**
     Helper class CachedData.
-    
+
     It manages loading data that is cached in memory, executing
     secuentally any 'loadSource' provided to load the
     data; the first source that returns data uses that
@@ -11,10 +11,10 @@ var CacheControl = require('./CacheControl');
 
 function CachedData(settings) {
     var control = new CacheControl(settings);
-    
+
     this.data = null;
     this.loadSources = settings.loadSources || [];
-    
+
     this.getData = function() {
        if (control.mustRevalidate()) {
           this.load();
@@ -23,13 +23,13 @@ function CachedData(settings) {
             return this.data;
         }
     };
-    
+
     this.setData = function(newData, updateTimestamp) {
         this.data = newData;
         // Mark as updated now, or the given one:
         control.latest = updateTimestamp || new Date();
     };
-    
+
     this.load = function(params) {
         this.loadSources.reduce(function(cur, next) {
             // Execute current loadSource in the list that
@@ -56,7 +56,7 @@ function CachedData(settings) {
                 // A success not returning data must be considered:
                 // TODO: not-found? deleted? throw error?
                 // Just log to notify and set null for now:
-                if (console) console.log('CachedData: revalidated data returns NULL as success; replaced data:', this.data);
+                console.warn('CachedData: revalidated data returns NULL as success; replaced data:', this.data);
                 this.setData(null);
             }
         }.bind(this));

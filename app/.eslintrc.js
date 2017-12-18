@@ -100,6 +100,7 @@ module.exports = {
         "no-catch-shadow": "error",
         "no-confusing-arrow": "error",
         "no-continue": "off",
+        "no-console": ["warn", { allow: ["warn", "error"] }],
         "no-div-regex": "error",
         "no-duplicate-imports": "error",
         "no-else-return": "off",

@@ -36,7 +36,7 @@ A.prototype.show = function show(options) {
     this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
 
     if (!elementName) {
-        console.log('Feedback Support: Accessing without specify an element, using General (0)');
+        console.warn('Feedback Support: Accessing without specify an element, using General (0)');
     }
     else if (!VocElementEnum.hasOwnProperty(elementName)) {
         console.error('Feedback Support: given a bad VOC Element name:', elementName);

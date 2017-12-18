@@ -6,12 +6,12 @@
 var $ = require('jquery');
 
 module.exports = {
-    
+
     baseUrl: '/',
-    
+
     load: function load(route) {
         return new Promise(function(resolve, reject) {
-            console.log('Shell loading on demand', route.name, route);
+            //console.info('Shell loading on demand', route.name, route);
             $.ajax({
                 url: module.exports.baseUrl + route.name + '.html',
                 cache: false

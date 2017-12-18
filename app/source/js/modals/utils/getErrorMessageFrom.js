@@ -93,7 +93,7 @@ var getErrorMessageFrom = function(err, defaultText) {
                     msg += '\n\nTechnical details: ' + jserr;
             }
             catch (ex) {
-                console.log('Impossible to stringify JSON error', err, ex);
+                console.warn('Impossible to stringify JSON error', err, ex);
             }
         }
 
