@@ -34,8 +34,8 @@ var redirectResponse = function(res, toUrl, type) {
  * @param {function} next
  */
 var autoHtmlExtensionMiddleware = function(req, res, next) {
-    var hasExtension = s => /.+\..+$/.test(s);
-    var endsInSlash = s => /\/$/.test(s);
+    var hasExtension = (s) => /.+\..+$/.test(s);
+    var endsInSlash = (s) => /\/$/.test(s);
     if (!hasExtension(req.url) && !endsInSlash(req.url)) {
         var toUrl = req.url + '.html';
         // Redirect

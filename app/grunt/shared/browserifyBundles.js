@@ -160,7 +160,7 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
      */
     return {
         files: {
-            [commonBundle.dest]: bundles.map(bundle => bundle.source)
+            [commonBundle.dest]: bundles.map((bundle) => bundle.source)
         },
         options: {
             browserifyOptions: {
@@ -176,7 +176,7 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
                     // Output take strictkly the same order than listed
                     // source files, so they match the expected name-content
                     'factor-bundle', {
-                        output: bundles.map(bundle => bundle.dest)
+                        output: bundles.map((bundle) => bundle.dest)
                     }
                 ]
             ]
