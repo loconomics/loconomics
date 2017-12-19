@@ -231,7 +231,7 @@ module.exports = function(grunt) {
     };
     var getPublicPagesFilesListFor = function (destDir, names) {
         return names.reduce(function (list, page) {
-            list[destDir + page] + getPublicPagesSourcePath(page);
+            list[destDir + page] = getPublicPagesSourcePath(page);
             return list;
         }, {});
     };
