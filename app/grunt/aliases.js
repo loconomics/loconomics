@@ -32,7 +32,6 @@ module.exports = {
     ],
     'build-html': [
         'replace:html_bad_chars',
-        'bliss:app',
         'bliss:appDebug'
     ],
 
@@ -78,7 +77,11 @@ module.exports = {
 
     'build-dev': [
         'browserify:appCommon',
+        'prepare-bootstrap-variables',
+        'concat:css-libs',
         'stylus:app',
+        'copyto:images',
+        'build-fonts',
         'bliss:appDebug'
     ],
     'build': [

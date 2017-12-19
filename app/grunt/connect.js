@@ -47,11 +47,31 @@ var autoHtmlExtensionMiddleware = function(req, res, next) {
     }
     next();
 };
+/**
+ * Permanent redirect of old files appDebug.html and app.html to the
+ * root (index.html). That old names caused confusion and prevented correct
+ * testing of some features.
+ * @param {Connect.Request} req
+ * @param {Connect.Response} res
+ * @param {function} next
+ */
+const redirectAppDebugHtmlMiddleware = function(req, res, next) {
+    const isAppDebug = (s) => /^\/app(Debug)?\.html/.test(s);
+    if (isAppDebug(req.url)) {
+        redirectResponse(res, '/', RedirectType.permanent);
+        return;
+    }
+    else {
+        next();
+    }
+};
 
 module.exports = {
     options: {
         //livereload: 35729
         middleware: function(connect, options, middlewares) {
+            // Injects in first place, so redirect too not deleted appDebug files
+            middlewares.unshift(redirectAppDebugHtmlMiddleware);
             // Injects in last place (after static and directory; if we put
             // this before directory, will not detect directory listing).
             middlewares.push(autoHtmlExtensionMiddleware);
