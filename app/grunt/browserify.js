@@ -10,7 +10,7 @@
  *
  * Using 'common-shakeify' to remove 'dead code' because of unused modules
  * features (also called 'tree shaking'; not to confuse with the kind of removal
- * of 'dead code' done by uglify and warned by jshint --that we should prevent)
+ * of 'dead code' done by uglify and warned by linting --that we should prevent)
  */
 'use strict';
 var merge = require('deepmerge');

@@ -11,7 +11,7 @@ module.exports = {
         'mocha'
     ],
     'build-js': [
-        'jshint',
+        'eslint',
         'browserify:appCommon',
         'uglify:appCommon'
     ],
