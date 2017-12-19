@@ -13,7 +13,7 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 
 ## Preferred Dev Tools
 ### Text Editor
-[Brackets](http://brackets.io/)
+[Visual Studio Code](https://code.visualstudio.com/)
 
 ### Browser
 [Chrome](https://www.google.com/chrome/browser/desktop/index.html)
@@ -27,11 +27,11 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 [Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris
 
 ## Main libraries
-[jQuery-2](https://jquery.com)
+[jQuery-3](https://jquery.com)
 
 [Bootstrap-3](http://getbootstrap.com)
 
-[Knockoutjs-3.3](http://knockoutjs.com): JavaScript implementation of the Model-View-ViewModel pattern with templates
+[Knockoutjs-3.4](http://knockoutjs.com): JavaScript implementation of the Model-View-ViewModel pattern with templates
 
 [Polyfills](https://www.npmjs.com/package/js-polyfills) for ES5 and ES6-Promise
 
