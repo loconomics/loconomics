@@ -17,7 +17,7 @@ var availability = require('../data/availability');
 var showError = require('../modals/error').show;
 
 function DatetimePickerVM(app, element) {
-    //jshint maxstatements: 40
+    /* eslint max-statements:"off" */
 
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.userID = ko.observable();

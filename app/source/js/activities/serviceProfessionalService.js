@@ -155,8 +155,7 @@ A.prototype.leftActionText = function() {
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    onboarding.updateNavBar(this.navBar) ||
-    this.applyOwnNavbarRules();
+    return onboarding.updateNavBar(this.navBar) || this.applyOwnNavbarRules();
 };
 
 A.prototype.referrerURL = function() {

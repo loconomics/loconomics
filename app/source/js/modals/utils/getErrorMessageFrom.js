@@ -41,7 +41,7 @@ var stringifyErrorsList = function(errors) {
 };
 
 var getErrorMessageFrom = function(err, defaultText) {
-    /*jshint maxcomplexity:16, maxdepth:5*/
+    /* eslint complexity:"off", max-depth:"off" */
 
     defaultText = defaultText || 'Unknow error';
 

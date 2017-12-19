@@ -199,7 +199,7 @@ function RemoteModel(options) {
     }.bind(this);
 
     this.load = function load(options /*{ forceRemoteUpdate:false }*/) {
-        //jshint maxcomplexity:9
+        /* eslint complexity:"off" */
         options = options || {};
         if (options.forceRemoteUpdate || this.cache.mustRevalidate()) {
 

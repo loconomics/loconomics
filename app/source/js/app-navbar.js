@@ -24,7 +24,7 @@ exports.extend = function (app) {
     // Adjust the navbar setup depending on current user,
     // since different things are need for logged-in/out.
     function adjustUserBar() {
-        //jshint maxcomplexity:8
+        /* eslint complexity:"off" */
 
         if (user.isAnonymous()) {
             var prev = app.navBar().leftAction();

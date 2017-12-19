@@ -105,7 +105,7 @@ function Appointment(values) {
     }, this);
 
     this.stateHeader = ko.pureComputed(function() {
-        //jshint maxcomplexity:10
+        /* eslint complexity:"off" */
 
         var text = '';
         if (this.id() > 0 && this.sourceEvent()) {

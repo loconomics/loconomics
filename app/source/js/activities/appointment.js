@@ -292,7 +292,7 @@ var CalendarEvent = require('../models/CalendarEvent'),
     Booking = require('../models/Booking');
 
 function ViewModel(app) {
-    //jshint maxstatements:30
+    /* eslint max-statements:"off" */
     this.app = app;
     this.currentDate = ko.observable(new Date());
     this.currentID = ko.observable(0);
@@ -483,7 +483,7 @@ function ViewModel(app) {
         }
     };
     this.setItemFromCurrentList = function (id) {
-        /*jshint maxdepth:6,maxcomplexity:8*/
+        /* eslint maxdepth:"off", complexity:"off" */
         var list = this.appointments(),
             index,
             item;

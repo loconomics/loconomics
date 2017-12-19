@@ -146,7 +146,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
 exports.init = A.init;
 
 A.prototype.applyOwnNavbarRules = function() {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
 
     var itIs = this.viewModel.serviceAddresses.isSelectionMode();
 
@@ -185,8 +185,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    onboarding.updateNavBar(this.navBar) ||
-    this.applyOwnNavbarRules();
+    return onboarding.updateNavBar(this.navBar) || this.applyOwnNavbarRules();
 };
 
 A.prototype.show = function show(options) {

@@ -172,7 +172,7 @@ app.successSave = function successSave(settings) {
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:70,maxcomplexity:16 */
+    /* eslint max-statements:"off", complexity:"off" */
 
     var userProfile = require('./data/userProfile');
     var user = userProfile.data;

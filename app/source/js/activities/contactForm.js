@@ -25,7 +25,7 @@ var A = Activity.extend(function ContactFormActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
     Activity.prototype.show.call(this, options);
 
     var params = this.requestData.route.segments || [];

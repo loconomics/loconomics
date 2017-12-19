@@ -13,7 +13,7 @@ var ko = require('knockout');
 /** Constructor **/
 
 function Shell(settings) {
-    //jshint maxcomplexity:16
+    /* eslint complexity:"off" */
 
     deps.EventEmitter.call(this);
 

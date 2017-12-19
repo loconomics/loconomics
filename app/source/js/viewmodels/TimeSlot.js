@@ -13,7 +13,7 @@ var moment = require('moment');
 var user = require('../data/userProfile').data;
 
 function TimeSlotViewModel(params) {
-    /*jshint maxcomplexity:9*/
+    /* eslint complexity:"off" */
 
     this.startTime = getObservable(params.startTime || null);
     this.endTime = getObservable(params.endTime || null);
@@ -52,18 +52,18 @@ function TimeSlotViewModel(params) {
 module.exports = TimeSlotViewModel;
 
 /**
-    Static constructor to convert an Appointment model into 
+    Static constructor to convert an Appointment model into
     a TimeSlot instance following UI criteria for preset values/setup.
 **/
 TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
     /*jshint maxcomplexity:12 */
-    
+
     // Commented the option to detect and not link unavail slots:
     //var unavail = Appointment.specialIds.unavailable === apt.id();
     //var link = null;
     //if (!unavail)
     var link = '#!appointment/' + apt.startTime().toISOString() + '/' + apt.id();
-    
+
     if (apt.id() === Appointment.specialIds.preparationTime) {
         // Special link case: it goes to scheduling preferences to allow quick edit
         // the preparation time slots
@@ -109,8 +109,8 @@ TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
         link: link,
         apt: apt,
         price: (
-            apt.sourceBooking() && 
-            apt.sourceBooking().pricingSummary() ? 
+            apt.sourceBooking() &&
+            apt.sourceBooking().pricingSummary() ?
             numeral(apt.sourceBooking().pricingSummary().totalPrice() || 0).format('$0.00') :
             null
         ),

@@ -59,7 +59,7 @@ var A = Activity.extend(function ClientsActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    //jshint maxcomplexity:8
+    /* eslint complexity:"off" */
 
     var itIs = this.viewModel.isSelectionMode();
 

@@ -323,7 +323,7 @@ function LiveNotificationManager(notificationText) {
  * object or extraData param.
  */
 function ViewModel(params, refs, children) {
-    //jshint maxstatements:50
+    /* eslint max-statements:"off" */
     /// Members from input params
     /**
      * @member {KnockoutObservable<string>} id

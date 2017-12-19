@@ -229,7 +229,7 @@ exports.createScheduleSlots = function createScheduleSlots(range, freeScheduleSl
 };
 
 exports.createScheduleSlotsForRanges = function createScheduleSlotsForRanges(start, end, from, to) {
-    /*jshint maxcomplexity:10*/
+    /* eslint complexity:"off" */
     var list = [];
 
     // It happens before the week day schedule starts

@@ -29,7 +29,7 @@ cache.range = {
 function loadLocalCopy() {
     return local.getItem('clientAppointments')
     .then(function(data) {
-        //jshint maxcomplexity:8
+        /* eslint complexity:"off" */
         if (data) {
             if (data.latest)
                 cache.latest = new Date(data.latest);

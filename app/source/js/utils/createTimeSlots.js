@@ -21,7 +21,7 @@ var moment = require('moment');
         Pass in true for this parameter to include the end time too.
 **/
 exports.forRange = function forRange(from, to, size, duration, roundUp, includeEndTime) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off", max-params:"off" */
     from = new Date(from);
     to = new Date(to);
     if (!duration) {

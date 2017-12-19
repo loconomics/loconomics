@@ -100,7 +100,7 @@ var DPGlobal = {
         return {separator: separator, parts: parts};
     },
     parseDate: function(date, format) {
-        /*jshint maxcomplexity:11*/
+        /* eslint complexity:"off" */
         var parts = date.split(format.separator),
             val;
         date = new Date();
@@ -212,7 +212,7 @@ DPGlobal.modesSet = {
 
 // Picker object
 var DatePicker = function(element, options) {
-    /*jshint maxstatements:50,maxcomplexity:30*/
+    /* eslint max-statements:"off", complexity:"off" */
     this.element = $(element);
     this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
 

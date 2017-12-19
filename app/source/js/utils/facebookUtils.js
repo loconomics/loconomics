@@ -51,7 +51,7 @@ exports.load = function() {
                 for (var i = 0; i < apiStatus.stack.length; i++) {
                     try {
                         apiStatus.stack[i](window.FB);
-                    } catch (e) { console && console.error && console.error(e); }
+                    } catch (e) { console.error(e); }
                 }
             }
         });

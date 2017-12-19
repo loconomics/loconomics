@@ -18,7 +18,7 @@ var showNotification = require('../modals/notification').show;
 var showError = require('../modals/error').show;
 
 module.exports = function ProfilePictureBioVM(app) {
-    //jshint maxstatements:36
+    /* eslint max-statements:"off" */
     // Base class:
     ListingVM.call(this, app);
 

@@ -43,7 +43,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
     Activity.prototype.show.call(this, options);
 
     this.updateNavBarState();
