@@ -158,7 +158,6 @@ Shell.prototype.goBack = function goBack(state, steps) {
     returning an state object suitable to use.
 **/
 Shell.prototype.getUpdatedState = function getUpdatedState(state) {
-    /*jshint maxcomplexity: 8 */
 
     // For current uses, any pendingStateUpdate is used as
     // the state, rather than the provided one
@@ -378,7 +377,6 @@ Shell.prototype.run = function run() {
         linkWorkingDelay = 80; // 340; // ms
     //DEBUG var linkEvent = this.linkEvent;
     this.$(document).on(this.linkEvent, '[href], [data-href]', function(e) {
-        //jshint maxcomplexity:8
         //DEBUG console.log('Shell on event', e.type, linkWorking);
         // If working, avoid everything:
         if (linkWorking) return false;

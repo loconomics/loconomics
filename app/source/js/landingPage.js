@@ -39,7 +39,6 @@ var showError = require('./modals/error').show;
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:70,maxcomplexity:16 */
 
     attachFastClick(document.body);
 

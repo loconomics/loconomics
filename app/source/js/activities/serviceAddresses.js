@@ -231,7 +231,6 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    // jshint maxstatements:70
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = onboarding.inProgress;

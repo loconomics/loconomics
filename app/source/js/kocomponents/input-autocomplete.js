@@ -363,7 +363,6 @@ function ViewModel(params, refs, children) {
      * @member {Function<string, object, void>} onSelect
      */
     this.onSelect = function(textValue, contextData) {
-        //jshint maxcomplexity:10
         var actions = DEFAULT_ACTIONS_AFTER_SELECT;
         if (typeof(params.onSelect) === 'function') {
             actions = extend({}, actions, params.onSelect(textValue, contextData));

@@ -56,7 +56,6 @@ module.exports = TimeSlotViewModel;
     a TimeSlot instance following UI criteria for preset values/setup.
 **/
 TimeSlotViewModel.fromAppointment = function fromAppointment(apt) {
-    /*jshint maxcomplexity:12 */
 
     // Commented the option to detect and not link unavail slots:
     //var unavail = Appointment.specialIds.unavailable === apt.id();

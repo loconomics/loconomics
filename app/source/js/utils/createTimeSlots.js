@@ -2,7 +2,6 @@
     It creates slots between the given times and size for each one.
     Past times are avoided, because are not available
 **/
-//jshint maxparams:7
 'use strict';
 
 var moment = require('moment');
@@ -120,7 +119,6 @@ exports.getTotalFreeMinutes = function getTotalFreeMinutes(list) {
         time regularly on this date, so different from all day scheduled)
 **/
 exports.getAvailabilityTag = function(list) {
-    //jshint maxcomplexity:11
     if (!list || list.length === 0)
         return 'none'; // not availability
 

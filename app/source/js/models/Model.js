@@ -111,7 +111,6 @@ module.exports = Model;
     definition
 **/
 function prepareValueByDef(val, def) {
-    //jshint maxcomplexity:10
     if (def.isArray &&
         !Array.isArray(val)) {
         if (val)

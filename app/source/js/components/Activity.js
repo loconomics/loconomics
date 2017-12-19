@@ -223,7 +223,6 @@ Activity.prototype.hide = function hide() {
     }
 **/
 Activity.prototype.registerHandler = function registerHandler(settings) {
-    /*jshint maxcomplexity:8 */
 
     if (!settings)
         throw new Error('Register require a settings object');

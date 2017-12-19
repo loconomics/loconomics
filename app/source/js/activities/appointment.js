@@ -197,7 +197,6 @@ A.prototype.show = function show(options) {
         this.resetScroll = true;
     }
 
-    /* jshint maxcomplexity:10 */
     Activity.prototype.show.call(this, options);
 
     // Prepare cancelLink, before any attempt of internal URL rewriting
@@ -533,7 +532,6 @@ function ViewModel(app) {
     };
 
     var _setCurrent = function setCurrent(date, id, type) {
-        //jshint maxcomplexity:8
         // IMPORTANT: the date to use must be ever
         // a new object rather than the referenced one to
         // avoid some edge cases where the same object is mutated

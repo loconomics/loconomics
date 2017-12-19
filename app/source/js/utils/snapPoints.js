@@ -35,7 +35,6 @@ module.exports = function snapPoints($scrollerElement, points, precision) {
     var checkScroll = function() {
         var top = $scrollerElement.scrollTop();
         Object.keys(points).forEach(function(point) {
-            //jshint maxcomplexity:8
             point = point |0;
             var type;
             if (point === top) {

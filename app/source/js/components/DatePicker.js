@@ -647,7 +647,6 @@ DatePicker.prototype = {
     },
 
     fill: function() {
-        /*jshint maxstatements:70, maxcomplexity:28*/
         var d = new Date(this.viewDate),
             year = d.getFullYear(),
             month = d.getMonth(),
@@ -806,7 +805,6 @@ DatePicker.prototype = {
     },
 
     click: function(e) {
-        /*jshint maxcomplexity:16, maxstatements:30*/
         e.stopPropagation();
         e.preventDefault();
         var target = $(e.target).closest('button.month, button.year, td, th');
