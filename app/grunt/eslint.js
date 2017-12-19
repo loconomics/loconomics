@@ -12,5 +12,10 @@ module.exports = {
             'Gruntfile.js',
             'grunt/**/*.js'
         ]
+    },
+    test: {
+        src: [
+            'source/test/**/*.js'
+        ]
     }
 };

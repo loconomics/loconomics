@@ -1,8 +1,7 @@
 'use strict';
 
-var ko = require('knockout'),
-    AlertLink = require('../../js/viewmodels/AlertLink'),
-    ProfileAlert = require('../../js/models/ProfileAlert');
+var AlertLink = require('../../js/viewmodels/AlertLink');
+var ProfileAlert = require('../../js/models/ProfileAlert');
 
 describe('models/AlertLink', function() {
     describe('href', function() {
@@ -27,7 +26,7 @@ describe('models/AlertLink', function() {
         });
 
         it('should be a string if the name is real', function() {
-            var l = AlertLink.fromProfileAlert(new ProfileAlert({ alertName: 'location' }), {　jobTitleID: 42 });
+            var l = AlertLink.fromProfileAlert(new ProfileAlert({ alertName: 'location' }), { jobTitleID: 42 });
 
             expect(l.label()).to.not.be.empty;
         });
