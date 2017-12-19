@@ -1,7 +1,4 @@
 module.exports = {
-    options: {
-        maxWarnings: 30
-    },
     app: {
         src: [
             'source/js/**/*.js'
