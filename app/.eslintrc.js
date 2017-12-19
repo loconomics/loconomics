@@ -33,7 +33,10 @@ module.exports = {
             "error",
             "last"
         ],
-        "complexity": "off",
+        "complexity": [
+            "error",
+            6
+        ],
         "computed-property-spacing": [
             "error",
             "never"
@@ -78,12 +81,21 @@ module.exports = {
             "error",
             "always"
         ],
-        "max-depth": "error",
+        "max-depth":  [
+            "error",
+            4
+        ],
         "max-len": "off",
         "max-lines": "off",
         "max-nested-callbacks": "error",
-        "max-params": "off",
-        "max-statements": "off",
+        "max-params": [
+            "error",
+            5
+        ],
+        "max-statements": [
+            "error",
+            25
+        ],
         "max-statements-per-line": "off",
         "multiline-comment-style": "off",
         "multiline-ternary": "off",
@@ -188,6 +200,7 @@ module.exports = {
         "no-underscore-dangle": "off",
         "no-unmodified-loop-condition": "off",
         "no-unneeded-ternary": "off",
+        "no-unused-expressions": "error",
         "no-use-before-define": "off",
         "no-useless-call": "off",
         "no-useless-computed-key": "error",
