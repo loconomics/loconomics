@@ -4,6 +4,7 @@
 'use strict';
 
 /** Global dependencies **/
+require('babel-polyfill');
 var $ = require('jquery');
 // Make jquery reference global, may still be needed by some shimed plugins
 window.$ = window.jQuery = $;
