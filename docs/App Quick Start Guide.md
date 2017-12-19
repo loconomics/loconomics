@@ -59,13 +59,12 @@ This will:
 
 ## Open the app
 
-Open your browser (Chrome preferred) and open:
+Open your browser and open:
 ```
-http://localhost:8811/appDebug.html
+http://localhost:8811
 ```
-If you see a directory, select appDebug.html to open the app.
 
-The **appDebug.html** available at localhost:8811 contains non-minimized and source mapped files, better for debugging. It's the preferred one for development, while we have an app.html that contains minimized files without source maps that is what we use in production, just in case there are doubts about minimizing options that could break something (not normally) we have this to test and verify.
+The **index.html** available at localhost:8811 contains non-minimized and source mapped files, better for debugging. It's the preferred one for development, while tasks named 'webapp' creates another html file under the `/web` directory that contains minimized files without source maps that is what we use in production; just in case there are doubts about minimizing options that could break something (not normally, may happens on trying new options to optimize or upgrading/changing minifiers) we can use this to test and verify.
 *Note:* All JS, CSS and HTML is being bundled on single files right now, with the project getting bigger it starts to be a huge load for browsers and debuggers, we have in mind the need to split project files and load them on demand (good for debugging and for webapp load times).
 
 ## Point your local storage to a database
