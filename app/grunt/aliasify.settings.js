@@ -18,7 +18,7 @@ const config = dev ? {} : {
     aliases: {
         'knockout': 'K'
     },
-    verbose: true
+    verbose: false
 };
 
 module.exports = config;
