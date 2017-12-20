@@ -18,11 +18,11 @@ We use a preprocessor, [Stylus](http://stylus-lang.com/); it's similar so SASS. 
 
 ## JS
 
-We use ES5 (Ecmascript 5 edition) syntax in strict mode, with the addition of the ES6/ES2015 Promise pattern (we have an spec-compliant polyfill in place to support old engines).
+We use ES6-ES2017 (Ecmascript 2017 edition) syntax in strict mode, using [Babel](https://babeljs.io/) to transpile it as ES5 depending on supported engines (using the `env` preset and `babel-polyfill`). **WIP** Previously we were restricted to use ES5, we are switching incrementally to updated syntax where helps to make more clear and robust code. Help wanted to modernize codebase this way [#744](https://github.com/loconomics/loconomics/issues/744).
 
-We use [jshint](http://jshint.com/) to validate and enforce some good practices, helping reduce the number of bugs. Every commit must pass the jshint rules.
+We use [eslint](https://eslint.org/) to validate and enforce some good practices, helping reduce the number of bugs. Every commit must pass the eslint rules. *Note:* There is a command to help fix some problems automatically, run `npm run lint`.
 
-We split source files in modules, following the [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) syntax.
+We split source files in modules, we followed the [CommonJS](http://wiki.commonjs.org/wiki/Modules/1.1) syntax but we prefer ES6 syntax now.
 We use a preprocessor, [Browserify](http://browserify.org/), to bundle the modules in a few files.
 
 **Hint**: the *[debugger;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)* javascript statement can be used for easier debugging, but remember to remove it before commiting your changes.
@@ -65,7 +65,7 @@ We use Github to track all development issues, project management, product roadm
 Please review [Understanding the Github Flow](https://guides.github.com/introduction/flow/) as we follow its process.
 
 #### Master, testing, staging, live
-Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch. 
+Only [@iagosrl](mailto:iagosrl@gmail.com) has permissions to commit to the master branch.
 
 #### New branches
 If you are working on a specific Github issue, please create a new branch named is123-short-descriptor if one doesn't already exist and merge master into it periodically. When you're finished, create a pull request for that branch and ask [@iagosrl](mailto:iagosrl@gmail.com) to review.
@@ -75,7 +75,7 @@ We prefer you to create a Github issue for a specific task to tackle with it's o
 
 ### Bugs
 Before reporting a bug:
-* Please have a look at issues tagged as bugs ([Bug S1](https://github.com/loconomics/loconomics/labels/Bug%3A%20S1), [Bug S2](https://github.com/loconomics/loconomics/labels/Bug%3A%20S2), [Bug S3](https://github.com/loconomics/loconomics/labels/Bug%3A%20S3), [Bug S4](https://github.com/loconomics/loconomics/labels/Bug%3A%20S4)) to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue. 
+* Please have a look at issues tagged as bugs ([Bug S1](https://github.com/loconomics/loconomics/labels/Bug%3A%20S1), [Bug S2](https://github.com/loconomics/loconomics/labels/Bug%3A%20S2), [Bug S3](https://github.com/loconomics/loconomics/labels/Bug%3A%20S3), [Bug S4](https://github.com/loconomics/loconomics/labels/Bug%3A%20S4)) to see if the bug has already been reported. If so please add any extra, clarifying information you can to the existing issue.
 
 The first thing we do with a bug report is to confirm that we can reproduce the bug. Please try to give us enough information so that we can produce the buggy experience ourselves:
 

@@ -26,20 +26,20 @@ Loconomics is a hybrid application built with HTML, CSS and JavaScript with a si
 ### Database Query & Administration
 [Razor SQL](https://razorsql.com/) is an SQL query tool, database browser, SQL editor, and database administration tool for Windows, Mac OS X, macOS, Linux, and Solaris
 
-## Main libraries
-[jQuery-3](https://jquery.com)
+## Main libraries, tools
+[Knockoutjs-3.4](http://knockoutjs.com): JavaScript implementation of the Model-View-View Model pattern with templates.
 
-[Bootstrap-3](http://getbootstrap.com)
+[Bootstrap-3](http://getbootstrap.com): CSS framework.
 
-[Knockoutjs-3.4](http://knockoutjs.com): JavaScript implementation of the Model-View-ViewModel pattern with templates
+[jQuery-3](https://jquery.com): required by some plugins, used at minimum in the code.
 
-[Polyfills](https://www.npmjs.com/package/js-polyfills) for ES5 and ES6-Promise
+[Babel](https://babeljs.io/) to transpile ES6-ES2017 syntax to ES5. The `env` preset is used and `babel-polyfill`.
 
-[Momentjs](http://momentjs.com/)
+[Momentjs](http://momentjs.com/) for date/time operations, formatting, and [momentjs-timezone](http://momentjs.com/timezone/).
 
-[Nodejs](https://nodejs.org/en/) to assist in front-end development
+[Nodejs](https://nodejs.org/en/) to assist in front-end development. Minimum versión 8.9 LTS and NPM 5.5.
 
-[Grunt](http://gruntjs.com/) as a task runner
+[Grunt](http://gruntjs.com/) as a task runner.
 
 ## Testing
 
