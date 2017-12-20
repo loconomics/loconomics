@@ -26,6 +26,7 @@
     "bliss": "~1.0.1",
     "blueimp-file-upload": "^9.19.1",
     "browserify": "^14.5.0",
+    "browserify-casesensitiverequire": "^1.0.1",
     "browserify-shim": "~3.8.14",
     "chai": "^4.1.2",
     "common-shakeify": "^0.4.5",
@@ -79,7 +80,8 @@
       "browserify-shim",
       "stringify",
       "babelify",
-      "aliasify"
+      "aliasify",
+      "browserify-casesensitiverequire"
     ]
   },
   "aliasify": "./grunt/aliasify.settings.js",
