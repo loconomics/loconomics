@@ -101,7 +101,7 @@ A.prototype.hide = function() {
 
 
 function ViewModel(app) {
-    //jshint maxstatements:40
+    /* eslint max-statements:"off" */
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);
     this.userID = ko.observable(null);

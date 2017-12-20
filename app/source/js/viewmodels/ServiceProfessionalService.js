@@ -13,7 +13,7 @@ var serviceProfessionalServices = require('../data/serviceProfessionalServices')
 var showError = require('../modals/error').show;
 
 function ServiceProfessionalServiceViewModel(app) {
-    // jshint maxstatements:100
+    /* eslint max-statements:"off" */
     EventEmitter.call(this);
 
     this.list = ko.observableArray([]);

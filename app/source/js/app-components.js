@@ -17,7 +17,7 @@ var ko = require('knockout'),
 var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
-    //jshint maxstatements:100
+    /* eslint max-statements:"off" */
 
     /// unlabeled-input
     ko.components.register('app-unlabeled-input', {

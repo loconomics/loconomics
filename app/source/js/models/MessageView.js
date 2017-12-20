@@ -79,7 +79,6 @@ function MessageView(values, app) {
     };
 
     this.client = ko.pureComputed(function() {
-        //jshint maxcomplexity:8
         var t = this.sourceThread();
         if (!t || !app) return null;
         return getUserData(t.clientUserID());
@@ -87,7 +86,6 @@ function MessageView(values, app) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     this.serviceProfessional = ko.pureComputed(function() {
-        //jshint maxcomplexity:8
         var t = this.sourceThread();
         if (!t || !app) return null;
         return getUserData(t.serviceProfessionalUserID());
@@ -95,7 +93,6 @@ function MessageView(values, app) {
     .extend({ rateLimit: { method: 'notifyWhenChangesStop', timeout: 20 } });
 
     this.sender = ko.pureComputed(function() {
-        //jshint maxcomplexity:8
         var m = this.sourceMessage();
         if (!m || !app) return null;
         return getUserData(m.sentByUserID());

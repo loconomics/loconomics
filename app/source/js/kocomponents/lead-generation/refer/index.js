@@ -26,7 +26,7 @@ var LAST_STEP = 3;
  * @class
  */
 function ViewModel() {
-    //jshint maxstatements: 40
+    /* eslint max-statements:"off" */
     /**
      * Holds a list of objects with a 'dispose' methods that need to be called
      * when disposing the component (see `dispose` method).

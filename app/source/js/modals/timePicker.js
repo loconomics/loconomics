@@ -28,7 +28,7 @@ function twoDigits(n) {
     Is rejected when the modal is dismissed/closed without 'unset' or 'select'.
 **/
 exports.show = function showTimePicker(options) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
     var modal = createElement(TEMPLATE);
     fixFocus(modal);
     var vm = modal.data('viewmodel');

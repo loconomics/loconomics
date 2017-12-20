@@ -1,11 +1,11 @@
 /**
     SmartNavView component.
     Requires its CSS counterpart.
-    
+
     Adapted as common-js modules and class names.
-    
+
     Forked from the project:
-    
+
     Project-Tyson
     Website: https://github.com/c2prods/Project-Tyson
     Author: c2prods
@@ -31,10 +31,10 @@ var $ = function (query) { return document.querySelector(query); };
 var $$ = function (query) { return document.querySelectorAll(query); };
 
 var slideOpts = {
-    sl:     ['slin',   'slout' ],    
-    sr:     ['srin',   'srout' ],    
-    popin:  ['popin',  'noanim'],    
-    popout: ['noanim', 'popout'],    
+    sl:     ['slin',   'slout' ],
+    sr:     ['srin',   'srout' ],
+    popin:  ['popin',  'noanim'],
+    popout: ['noanim', 'popout'],
 };
 
 var clearNode = function (node) {
@@ -88,7 +88,7 @@ var ScrollTop = function () {
         offset = el.scrollTop,
         interval = setInterval(function() {
             el.scrollTop = offset;
-            offset -= 24; 
+            offset -= 24;
             if (offset <= -24) {
                 clearInterval(interval);
             }
@@ -98,8 +98,8 @@ var ScrollTop = function () {
 exports.ScrollTop = ScrollTop;
 
 var TextboxResize = function (el) {
-    /* jshint maxstatements: 28, maxcomplexity:11 */
-    
+    /* eslint max-statements:"off", complexity:"off" */
+
     el.removeEventListener('click', ScrollTop, false);
     el.addEventListener('click', ScrollTop, false);
     var leftbtn = el.parentNode.querySelectorAll('button.left')[0];
@@ -145,12 +145,12 @@ var TextboxResize = function (el) {
 exports.TextboxResize = TextboxResize;
 
 exports.enableAll = function enableAll() {
-    
+
     var i = 0;
-    
+
     var textboxes = $$('.SmartNavBar h1');
     for (i = 0; i<textboxes.length; i++) TextboxResize(textboxes[i]);
-    
+
     var navbtns = $$('.SmartNavBar button');
     for (i = 0; i<navbtns.length; i++) navbtns[i].addEventListener('click', Slide, false);
 

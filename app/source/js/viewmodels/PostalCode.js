@@ -26,7 +26,6 @@ var postalCodes = require('../data/postalCodes');
     }
 **/
 var PostalCode = function(options) {
-    //jshint maxcomplexity:12
     if (!options) throw 'Options required at postal code auto-lookup';
     if (!options.address) throw 'Address required (must have address-like observable fields with standard names)';
     if (!ko.isObservable(options.postalCodeError)) throw 'Postal Code Error observable required';
@@ -55,7 +54,6 @@ var PostalCode = function(options) {
                 }
             })
             .catch(function(err) {
-                //jshint maxcomplexity:10
                 postalCodes.updateAddressModel(postalCodes.emptyAddress, address);
 
                 // Expected errors, a single message, set

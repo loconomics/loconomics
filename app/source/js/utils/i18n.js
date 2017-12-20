@@ -40,7 +40,7 @@ i18n.convertMilesKm = function convertMilesKm(q, unit) {
         return MILES_TO_KM * q;
     else if (unit == 'km')
         return q / MILES_TO_KM;
-    if (console && console.log) console.log('convertMilesKm: Unrecognized unit ' + unit);
+    console.warn('convertMilesKm: Unrecognized unit ' + unit);
     return 0;
 };
 

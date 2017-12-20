@@ -155,8 +155,7 @@ A.prototype.leftActionText = function() {
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    onboarding.updateNavBar(this.navBar) ||
-    this.applyOwnNavbarRules();
+    return onboarding.updateNavBar(this.navBar) || this.applyOwnNavbarRules();
 };
 
 A.prototype.referrerURL = function() {
@@ -196,7 +195,6 @@ A.prototype.parseRoute = function(url) {
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:8
     Activity.prototype.show.call(this, options);
 
     // Remember route to go back, from a request of 'mustReturn' or last requested
@@ -244,7 +242,6 @@ A.prototype.show = function show(options) {
 var UserJobProfile = require('../viewmodels/UserJobProfile');
 
 function ViewModel(app) {
-    // jshint maxstatements:100
     // ViewModel has all of the properties of a ServiceProfessionalServiceViewModel
     ServiceProfessionalServiceViewModel.call(this, app);
 

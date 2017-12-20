@@ -11,7 +11,7 @@ module.exports = {
         'mocha'
     ],
     'build-js': [
-        'jshint',
+        'eslint',
         'browserify:appCommon',
         'uglify:appCommon'
     ],
@@ -32,7 +32,6 @@ module.exports = {
     ],
     'build-html': [
         'replace:html_bad_chars',
-        'bliss:app',
         'bliss:appDebug'
     ],
 
@@ -76,14 +75,6 @@ module.exports = {
 
     //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
-    'build-dev': [
-        'browserify:appCommon',
-        'stylus:app',
-        'bliss:appDebug'
-    ],
-    'build': [
-        'parallel:build-app'
-    ],
     'build-webapp-html': [
         'replace:html_bad_chars',
         'bliss:webapp',

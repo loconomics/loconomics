@@ -10,8 +10,8 @@ function lowerFirstLetter(n) {
 }
 
 function lowerCamelizeObject(obj) {
-    //jshint maxcomplexity:8
-    
+    /* eslint complexity:"off" */
+
     if (!obj || typeof(obj) !== 'object') return obj;
 
     var ret = Array.isArray(obj) ? [] : {};
@@ -28,7 +28,7 @@ function lowerCamelizeObject(obj) {
 }
 
 function Rest(optionsOrUrl) {
-    
+
     var url = typeof(optionsOrUrl) === 'string' ?
         optionsOrUrl :
         optionsOrUrl && optionsOrUrl.url;
@@ -61,7 +61,7 @@ Rest.prototype.putFile = function putFile(apiUrl, data) {
 };
 
 Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType) {
-    
+
     var thisRest = this;
     var url = this.baseUrl + apiUrl;
 
@@ -105,7 +105,7 @@ Rest.prototype.request = function request(apiUrl, httpMethod, data, contentType)
         // by default, continue propagating the error
         throw err;
     });
-    
+
     promiseXhr.xhr = xhr;
     return promiseXhr;
 };

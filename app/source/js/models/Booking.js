@@ -30,7 +30,7 @@ var statusLabels = {
 var Enum = require('../utils/Enum');
 
 function Booking(values) {
-//jshint maxstatements:34    
+    /* eslint max-statements:"off" */
     Model(this);
 
     this.model.defProperties({
@@ -44,12 +44,12 @@ function Booking(values) {
         bookingTypeID: 0,
         cancellationPolicyID: 0,
         parentBookingID: null,
-        
+
         serviceAddressID: null,
         serviceDateID: null,
         alternativeDate1ID: null,
         alternativeDate2ID: null,
-        
+
         pricingSummaryID: 0,
         pricingSummaryRevision: 0,
         paymentLastFourCardNumberDigits: null,
@@ -70,18 +70,18 @@ function Booking(values) {
         paymentAuthorized: false,
         awaitingResponseFromUserID: null,
         pricingAdjustmentRequested: false,
-        
+
         updatedDate: null,
-        
+
         specialRequests: null,
         preNotesToClient: null,
         postNotesToClient: null,
         preNotesToSelf: null,
         postNotesToSelf: null,
-        
+
         reviewedByServiceProfessional: false,
         reviewedByClient: false,
-        
+
         pricingSummary: new PricingSummary(),
         serviceAddress: {
             Model: Address
@@ -99,14 +99,14 @@ function Booking(values) {
             Model: PublicUserJobTitle
         }
     }, values);
-    
+
     this.canBeCancelledByServiceProfessional = ko.pureComputed(function() {
         return (
             this.bookingStatusID() === Booking.status.confirmed &&
             this.bookingTypeID() === Booking.type.serviceProfessionalBooking
         );
     }, this);
-    
+
     this.canBeCancelledByClient = ko.pureComputed(function() {
         return (
             (this.bookingStatusID() === Booking.status.confirmed ||
@@ -114,7 +114,7 @@ function Booking(values) {
             this.bookingTypeID() !== Booking.type.serviceProfessionalBooking
         );
     }, this);
-    
+
     this.canBeDeclinedByClient = ko.pureComputed(function() {
         return (
             (this.bookingStatusID() === Booking.status.confirmed ||
@@ -122,50 +122,50 @@ function Booking(values) {
             this.bookingTypeID() === Booking.type.serviceProfessionalBooking
         );
     }, this);
-    
+
     this.canBeDeclinedByServiceProfessional = ko.pureComputed(function() {
         return (
             this.bookingStatusID() === Booking.status.request &&
             this.bookingTypeID() !== Booking.type.serviceProfessionalBooking
         );
     }, this);
-    
+
     this.isRequest = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.request;
     }, this);
-    
+
     this.isConfirmed = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.confirmed;
     }, this);
-    
+
     this.isCompleted = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.completed;
     }, this);
-    
+
     this.isIncomplete = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.incomplete;
     }, this);
-    
+
     this.isPerformed = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.servicePerformed;
-    }, this);    
-    
+    }, this);
+
     this.isDispute = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.dispute;
     }, this);
-    
+
     this.isCancelled = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.cancelled;
     }, this);
-    
+
     this.isDenied = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.denied;
     }, this);
-    
+
     this.isExpired = ko.pureComputed(function() {
         return this.bookingStatusID() === Booking.status.requestExpired;
     }, this);
-    
+
     /**
         It communicates when the booking is at a final state in its life-cycle, so it keeps closed
     **/
@@ -173,29 +173,29 @@ function Booking(values) {
     this.isClosed = ko.pureComputed(function() {
         return finalStatuses.indexOf(this.bookingStatusID()) > -1;
     }, this);
-    
+
     this.isServiceProfessionalBooking = ko.pureComputed(function() {
         return this.bookingTypeID() === Booking.type.serviceProfessionalBooking;
     }, this);
-    
+
     // Smart visualization of date and time
     this.displayedDate = ko.pureComputed(function() {
         return moment(this.serviceDate().startTime()).locale('en-US-LC').calendar();
     }, this);
-    
+
     this.displayedStartTime = ko.pureComputed(function() {
         return moment(this.serviceDate().startTime()).locale('en-US-LC').format('LT');
     }, this);
-    
+
     this.displayedEndTime = ko.pureComputed(function() {
         return moment(this.serviceDate().endTime()).locale('en-US-LC').format('LT');
     }, this);
-    
+
     // TODO Can/must be removed this shortcut?
     this.servicesSummary = ko.pureComputed(function() {
         return this.pricingSummary().servicesSummary();
     }, this);
-    
+
     this.displayPaymentAuthorizedLabel = ko.pureComputed(function() {
         return this.paymentAuthorized() && !this.isCompleted();
     }, this);
@@ -205,7 +205,7 @@ function Booking(values) {
     this.displayPaymentPaidLabel = ko.pureComputed(function() {
         return this.paymentEnabled() && this.isCompleted();
     }, this);
-    
+
     /// Visible status label
     /// L18N: Move the labels object to a locale ressources file
     this.bookingStatusLabel = ko.pureComputed(function() {

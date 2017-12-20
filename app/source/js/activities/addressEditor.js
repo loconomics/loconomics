@@ -100,7 +100,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:12
+    /* eslint complexity:"off" */
     Activity.prototype.show.call(this, options);
 
     // Reset
@@ -199,7 +199,6 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    // jshint maxstatements:80
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = onboarding.inProgress;

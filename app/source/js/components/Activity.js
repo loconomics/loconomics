@@ -93,7 +93,7 @@ Activity.applyTitle = function (title) {
     Must be executed every time the activity is put in the current view.
 **/
 Activity.prototype.show = function show(options) {
-    //jshint maxcomplexity:9
+    /* eslint complexity:"off" */
     // TODO: must keep viewState up to date using options/state.
     //console.log('Activity show', this.constructor.name);
     if (!this.__bindingDone) {
@@ -223,7 +223,6 @@ Activity.prototype.hide = function hide() {
     }
 **/
 Activity.prototype.registerHandler = function registerHandler(settings) {
-    /*jshint maxcomplexity:8 */
 
     if (!settings)
         throw new Error('Register require a settings object');
@@ -381,4 +380,8 @@ Activity.extend = function extendsActivity(ClassFn) {
     ClassFn.init = createSingleton.bind(null, ClassFn);
 
     return ClassFn;
+};
+
+Activity.init = function($activity, app, name) {
+    return createSingleton(this, $activity, app, name);
 };

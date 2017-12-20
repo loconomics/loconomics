@@ -32,7 +32,7 @@ module.exports = function ReviewsVM() {
         this.isLoading(true);
         var task = users.getReviews(this.userID(), this.jobTitleID(), options)
         .then(function(newData) {
-            //jshint maxcomplexity:8
+            /* eslint complexity:"off" */
             if (newData && newData.length) {
                 if (newData.length < (options.limit || 20)) {
                     this.endReached(true);

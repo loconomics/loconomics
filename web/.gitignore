@@ -5,3 +5,6 @@ packages/
 _logs/*
 node_modules
 node_modules/*
+_specialRoutes/app.html
+assets/*
+welcome/*

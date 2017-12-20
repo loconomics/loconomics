@@ -31,7 +31,7 @@ TARGETS.APP = {
             'grunt/**/*.js',
         ],
         tasks: [
-            'newer:jshint:grunt',
+            'newer:eslint:grunt',
             'build',
             'notify:setupChangeBuild'
         ],
@@ -41,9 +41,9 @@ TARGETS.APP = {
     },
 
     js: {
-        files: ['<%= jshint.app.src %>'],
+        files: ['<%= eslint.app.src %>'],
         tasks: [
-            'newer:jshint:app'
+            'newer:eslint:app'
         ]
     },
 
@@ -91,7 +91,7 @@ TARGETS.LANDING_PAGES = {
             'grunt/**/*.js',
         ],
         tasks: [
-            'newer:jshint:grunt',
+            'newer:eslint:grunt',
             'build-landingPages',
             'notify:setupChangeBuild'
         ],
@@ -102,10 +102,10 @@ TARGETS.LANDING_PAGES = {
 
     js: {
         // All js source and bundle generation is shared with app/appCommon
-        files: ['<%= jshint.app.src %>'],
+        files: ['<%= eslint.app.src %>'],
         tasks: [
             // Just lint updated files
-            'newer:jshint:app'
+            'newer:eslint:app'
             // No browserify, the watchify-enabled task must be used
             // No notification on completion, we just let errors to get notified
         ]

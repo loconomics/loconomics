@@ -7,14 +7,14 @@
   * If the activity and its template are not disposed, then it should hide the message
   * bar when it is hidden.
   *
-  * When a message bar component is initialized and rendered, the view model will 
+  * When a message bar component is initialized and rendered, the view model will
   * move the message bar DOM element to be directly under the <body> element. This is
   * due to constraints in the layout styles for the navigation bar and activities.
-  * 
-  * Customize the content of the message bar by including markup in the 
-  * <app-message-bar> tag. Named items in the params attribute on the 
-  * component tag will be passed through to the template markup included in the 
-  * component. For example: 
+  *
+  * Customize the content of the message bar by including markup in the
+  * <app-message-bar> tag. Named items in the params attribute on the
+  * component tag will be passed through to the template markup included in the
+  * component. For example:
   *
   * <app-message-bar param="arbitraryParam: someObservable">
   *     <p data-bind="text: arbitraryParam"></p>
@@ -31,9 +31,9 @@ var $ = require('jquery'),
 /**
  * Initialized by knockout components.
  *
- * Params included in the component tag are passed through to any template inside the 
+ * Params included in the component tag are passed through to any template inside the
  * component markup. There are well-known params to include as observables:
- * 
+ *
  * @param {Object} params
  * @param {Knockout Observer Boolean} params.visible the message bar will be visible when this observable is true, hidden otherwise. If this is not included, the message bar will always be visible
  * @param {Knockout Observer MessageBar.tones} params.tone for the message bar when visible
@@ -61,7 +61,7 @@ var MessageBar = function(params, element, templateNodes) {
     this.setTone(this.params.tone());
 
     // The template nodes are added to the message bar. The message bar is removed from
-    // the component element, so we must explicitly bind the message bar to this 
+    // the component element, so we must explicitly bind the message bar to this
     // view model
     ko.applyBindings(this, this._$messageBar.get(0));
 };
@@ -69,7 +69,7 @@ var MessageBar = function(params, element, templateNodes) {
 MessageBar.template = '<div class="MessageBarSpacer"></div>';
 
 /**
- * Enumeration of tones for the message bar (represents classes 
+ * Enumeration of tones for the message bar (represents classes
  * for different themes)
  *
  * @enum
@@ -121,7 +121,7 @@ MessageBar.prototype.setTone = function(tone) {
  * @param {Boolean} isVisible set to true to show message bar, false to hide it
  */
 MessageBar.prototype.setVisible = function(isVisible) {
-    isVisible ? this.show() : this.hide();
+    return isVisible ? this.show() : this.hide();
 };
 
 /**

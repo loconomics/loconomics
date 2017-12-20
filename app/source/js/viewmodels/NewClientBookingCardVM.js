@@ -41,7 +41,6 @@ function clearLastBooking() {
 }
 
 function NewClientBookingCardVM(app) {
-    //jshint maxstatements:40
     // Base Class:
     BaseClientBookingCardVM.call(this, app);
 
@@ -93,7 +92,7 @@ function NewClientBookingCardVM(app) {
     ///
     /// Save and Restore State
     this.saveState = function saveState() {
-        //jshint maxcomplexity:9
+        /* eslint complexity:"off" */
         // IMPORTANT: Not all booking and view observables data is saved, since
         // lot of that are managed by the initial booking setup, state
         // info, and other data needs a verification, like the list of selected
@@ -145,7 +144,6 @@ function NewClientBookingCardVM(app) {
     this.restoreState = function restoreState() {
         this.isRestoring(true);
         return loadLastBooking().then(function(s) {
-            //jshint maxdepth:6, maxcomplexity:11
             if (!s) {
                 this.isRestoring(false);
                 return;

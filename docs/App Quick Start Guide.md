@@ -7,8 +7,10 @@
 
 ## Install Node.js
 
-You'll need to [download Node.js v4.6.0](https://nodejs.org/en/download/) or newer (macOS, Windows, Linux) and install on your local machine.
-*Note: if a problem is detected when using a newer version of Node, please post errors in [a new issue](https://github.com/joshdanielson/Loconomics/issues/new), we want to support newest versions.*
+You'll need to [download Node.js v8.9.3](https://nodejs.org/en/download/) or newer (macOS, Windows, Linux) and install on your local machine.
+*Note: if a problem is detected when using a newer version of Node, please post errors in [a new issue](https://github.com/loconomics/loconomics/issues/new), we want to support newest versions.*
+
+It comes with [NPM](http://npmjs.com/), we used it as the project package manager (minimum version 5.5, commiting the `package-lock.json` file).
 
 ## Install Grunt globally (from the command line)
 ```
@@ -38,35 +40,39 @@ After do that you may want to [build the native apps using Phonegap](Deploying t
 
 **Ensure you're in the project's /app folder **
 
-There are two options for this, with the second one preferred:
+#### Build for development
+Before load and start debugging the app, you need to build it --almost the first time or when switching between branches.
 
-#### First option:
+You should use and alternate version of the 'build' command:
+```
+grunt build --dev
+```
+
+With the `--dev` modifier, we ensure the files includes source maps and debugging symbols. And optimization/minification steps
+are not executed with this, being a bit faster (they are not used when debugging anyway).
+
+#### Start local server
 Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
-```
-grunt connect:atbuild
-```
-
-#### Second option (preferred):
 ```
 grunt atwork
 ```
+
 This will:
-- run the connect server at http://localhost:8811/ (same as `grunt connect:atbuild`)
+- run the connect server at http://localhost:8811/ (calls internally to `grunt connect:atbuild`)
 - run the watch task that will listen for changes on source files to automatically rebuild the needed files (specific builds are performed, like build-js, build-css, depending on the modified files; when they finish, the browser can be refreshed to try latest changes).
-  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#1123](https://github.com/joshdanielson/Loconomics/issues/1123).
+  **Important:** the 'watch' task is unable to detect new created files of some types, requiring us to manually restart the 'atwork' task to let detect further changes. Any help fixing this is welcome, at [#28](https://github.com/loconomics/loconomics/issues/28).
 - by modifying the package.json file, e.g. to update the version number, the watch task will run the grunt build task, rebuilding everything.
 - when the build ends, a notification is sent to the system. [More info on this](https://github.com/dylang/grunt-notify)
 
 ## Open the app
 
-Open your browser (Chrome preferred) and open:
+Open your browser and open:
 ```
-http://localhost:8811/appDebug.html
+http://localhost:8811
 ```
-If you see a directory, select appDebug.html to open the app.
 
-The **appDebug.html** available at localhost:8811 contains non-minimized and source mapped files, better for debugging. It's the preferred one for development, while we have an app.html that contains minimized files without source maps that is what we use in production, just in case there are doubts about minimizing options that could break something (not normally) we have this to test and verify.
-*Note:* All JS, CSS and HTML is being bundled on single files right now, with the project getting bigger it starts to be a huge load for browsers and debuggers, we have in mind the need to split project files and load them on demand (good for debugging and for webapp load times).
+The **index.html** available at localhost:8811 loads non-minimized and source mapped files, better for debugging. It's the preferred one for development, while tasks named 'webapp' creates another html file under the `/web` directory that contains minimized files without source maps, that is what we use in production; just in case there are doubts about minimizing options that could break something (not normally, may happens on trying new options to optimize or upgrading/changing minifiers) we can use this to test and verify.
+*Note:* All JS, CSS and HTML is being bundled on single files right now, with the project getting bigger it starts to be a huge load for browsers and debuggers, we have in mind the need to split project files and load them on demand (good for debugging and for webapp load times). Help wanted at [#460]((https://github.com/loconomics/loconomics/issues/460) [#203]((https://github.com/loconomics/loconomics/issues/203)
 
 ## Point your local storage to a database
 

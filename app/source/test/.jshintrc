@@ -1,9 +1,0 @@
-{
-    "extends": "../../.jshintrc",
-    // Adding Mocha, Chai, globals
-    "predef": [
-        "describe",
-        "it",
-        "expect"
-    ]
-}

@@ -13,7 +13,7 @@ var escapeSelector = require('../escapeSelector');
 var getFlags = require('../userAgentFlags');
 
 function DomItemsManager(settings) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
 
     this.idAttributeName = settings.idAttributeName || 'id';
     this.allowDuplicates = !!settings.allowDuplicates || false;

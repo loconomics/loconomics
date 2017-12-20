@@ -15,7 +15,7 @@ function required(val, msg) {
 }
 
 function GroupListRemoteModel(settings) {
-    /*jshint maxstatements:28*/
+    /* eslint max-statements:"off" */
 
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
