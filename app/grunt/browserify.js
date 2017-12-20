@@ -46,43 +46,6 @@ module.exports = function(grunt) {
      **/
     var bconfig = {};
 
-    // Constants defining the source and destination paths for the
-    // files involved in the appCommon set-up
-    /**
-     * Destination for the common modules file.
-     * It's the main target for the Browserify task.
-     */
-    var COMMON_DEST = './build/assets/js/common.js';
-    /**
-     * Destintation for the common modules source-map file.
-     */
-    var COMMON_DEST_MAP = COMMON_DEST + '.map';
-    /**
-     * Source of the App bundle
-     */
-    var APP_SOURCE = './source/js/app.js';
-    /**
-     * Destination of the App bundle
-     */
-    var APP_DEST = './build/assets/js/app.js';
-    /**
-     * Destintation for the App bundle source-map file.
-     */
-    var APP_DEST_MAP = APP_DEST + '.map';
-    /**
-     * Source of the Landing Page bundle
-     */
-    var LANDING_PAGE_SOURCE = './source/js/landingPage.js';
-    /**
-     * Destination of the Landing Page bundle.
-     * Renamed as 'welcome' for the result file.
-     */
-    var LANDING_PAGE_DEST = './build/assets/js/welcome.js';
-    /**
-     * Destintation for the Landing Page bundle source-map file.
-     */
-    var LANDING_PAGE_DEST_MAP = LANDING_PAGE_DEST + '.map';
-
     // Utility to send a desktop notification
     var sendRebuildNotification = function() {
         notify(notifySettings.browserify.options);
@@ -94,16 +57,16 @@ module.exports = function(grunt) {
     **/
     var appCommonBaseSettings = browserifyBundles.create(
         grunt, {
-            dest: COMMON_DEST,
-            map: dev && COMMON_DEST_MAP
+            dest: './build/assets/js/common.js',
+            map: dev && './build/assets/js/common.js.map'
         }, [{
-            source: APP_SOURCE,
-            dest: APP_DEST,
-            map: dev && APP_DEST_MAP
+            source: './source/js/app.js',
+            dest: './build/assets/js/app.js',
+            map: dev && './build/assets/js/app.js.map'
         }, {
-            source: LANDING_PAGE_SOURCE,
-            dest: LANDING_PAGE_DEST,
-            map: dev && LANDING_PAGE_DEST_MAP
+            source: './source/js/landingPage.js',
+            dest: './build/assets/js/welcome.js',
+            map: dev && './build/assets/js/welcome.js.map'
         }],
         sendRebuildNotification
     );
