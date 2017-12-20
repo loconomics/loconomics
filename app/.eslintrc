@@ -8,6 +8,10 @@
     "parserOptions": {
         "sourceType": "module"
     },
+    "settings": {
+        "polyfills": ["promises"]
+    },
+    "plugins": ["compat"],
     "rules": {
         "accessor-pairs": "error",
         "array-bracket-newline": "off",
@@ -33,6 +37,7 @@
             "error",
             "last"
         ],
+        "compat/compat": "warn",
         "complexity": [
             "error",
             6

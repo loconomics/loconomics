@@ -79,3 +79,8 @@ We run a SQL Server 2008 R2 database hosted on Microsoft Azure. Request access f
 | Opera Mini | None
 | Android | 4.4+
 | Chrome for Android | Current
+
+## Check supported versions
+As part of Babel and the `env` preset, a tool named `browserslist` is used to set-up which engines we support so Babel can optimize the best for them. The settings are in the `package.json` file.
+
+That tool is installed as a dependency, but by installing it globally with `npm i -g browserslist`, can be run in the /app folder, without parameters, to get a list of current browsers, engines and versions supported.
