@@ -14,7 +14,8 @@
     "test": "grunt test",
     "watch": "grunt watch",
     "build": "grunt",
-    "lint": "eslint ./source/js --fix"
+    "lint": "eslint ./source/js --fix",
+    "browserslist": "browserslist"
   },
   "repository": "loconomics/loconomics",
   "private": true,
