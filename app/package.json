@@ -58,6 +58,7 @@
     "grunt-parallel": "^0.5.1",
     "grunt-text-replace": "^0.4.0",
     "grunt-zip": "~0.17.1",
+    "insert-css": "^2.0.0",
     "is_js": "~0.9.0",
     "jquery": "^3.2.1",
     "knockout": "~3.4.2",
@@ -73,12 +74,22 @@
     "numeral": "~2.0.6",
     "route-parser": "0.0.5",
     "stringify": "^5.1.0",
+    "stylify": "^1.4.0",
     "stylus": "~0.54.5",
     "time-grunt": "^1.4.0"
   },
   "browserify": {
     "transform": [
       "browserify-shim",
+      ["stylify", {
+        "use": [],
+        "set": {
+          "urlfunc": "embedurl",
+          "linenos": true,
+          "include css": true,
+          "compress": false
+        }
+      }],
       "stringify",
       "babelify",
       "aliasify",
