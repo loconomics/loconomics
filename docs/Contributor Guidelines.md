@@ -45,14 +45,14 @@ id="", data-bind="", role="", title="", rel="", src="", alt="", href="", target=
 
 ## Changes to the database
 
-Any proposed changes to the database should be made by placing a .sql file in the web/_DBUpdate folder of your branch with the file named with these three attributes:
-- issue123 (the branch name) +
-- A1 (order of the changes made to the database. Start a new letter if unrelated.) +
-- short title (something describing the changes)
+Any proposed changes to the database should be made by placing a `.sql` file in the web/_DBUpdate folder of your branch with the file named with these three attributes:
+- Issue number as `issue123-` +
+- Order of the changes made to the database, as `01- ` +
+- short title (something describing the changes), as `new table userReviews`.
 
 ### Example
 ```
-issue1076 - A1 - new customertransactiontype table.sql
+issue123-01- new table userReviews.sql
 ```
 
 Changes to stored procedures or user defined functions should be reflected in the file corresponding to the object under ``/database/``. The update script should be added to the ``_DBUpdate`` folder just like any other database change. If the object already exists in the database, the update script should use the ``ALTER`` statement.
