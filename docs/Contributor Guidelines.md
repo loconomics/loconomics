@@ -18,7 +18,7 @@ We use a preprocessor, [Stylus](http://stylus-lang.com/); it's similar so SASS. 
 
 ## JS
 
-We use ES6-ES2017 (Ecmascript 2017 edition) syntax in strict mode, using [Babel](https://babeljs.io/) to transpile it as ES5 depending on supported engines (using the `env` preset and `babel-polyfill`). **WIP** Previously we were restricted to use ES5, we are switching incrementally to updated syntax where helps to make more clear and robust code. Help wanted to modernize codebase this way [#744](https://github.com/loconomics/loconomics/issues/744).
+We use ES2017 (Ecmascript 2017 edition) syntax in strict mode, using [Babel](https://babeljs.io/) to transpile it as ES5 depending on supported engines (using the `env` preset and `babel-polyfill`). **WIP** Previously we were restricted to use ES5, we are switching incrementally to updated syntax where helps to make more clear and robust code. Help wanted to modernize codebase this way [#744](https://github.com/loconomics/loconomics/issues/744).
 
 We use [eslint](https://eslint.org/) to validate and enforce some good practices, helping reduce the number of bugs. Every commit must pass the eslint rules. *Note:* There is a command to help fix some problems automatically, run `npm run lint`.
 
@@ -26,6 +26,11 @@ We split source files in modules, we followed the [CommonJS](http://wiki.commonj
 We use a preprocessor, [Browserify](http://browserify.org/), to bundle the modules in a few files.
 
 **Hint**: the *[debugger;](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger)* javascript statement can be used for easier debugging, but remember to remove it before commiting your changes.
+
+### Link to ressources about ES6--ES2017:
+- [Modern JS Cheatseet](https://github.com/mbeaudru/modern-js-cheatsheet)
+- [Babel ES2015 docs](https://babeljs.io/learn-es2015/)
+- [Axel Rauschmayer books --free to read online](http://exploringjs.com/)
 
 ## HTML
 
