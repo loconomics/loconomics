@@ -25,10 +25,22 @@ var browserifyBundles = require('./shared/browserifyBundles');
 require('common-shakeify');
 
 module.exports = function(grunt) {
+    /// External parameters
     /**
-     * External parameters
+     * Whether enable the fullPaths option in Browserify.
+     * False by default, useful to be enabled when the result needs to be
+     * analyzed with tools like 'discify'.
+     * @private {Boolean}
      */
     var fullPaths = !!grunt.option('fullPaths');
+    /**
+     * Whether current environment is 'development', in order to enable
+     * features like source-maps (Browserify debug mode).
+     * IMPORTANT: This parameter is shared with other tasks and settings, should
+     * keep the same on every use for consistent results (see '--dev').
+     * @private {Boolean}
+     */
+    var dev = !!grunt.option('dev');
     /**
      Browserify config
      **/
@@ -83,15 +95,15 @@ module.exports = function(grunt) {
     var appCommonBaseSettings = browserifyBundles.create(
         grunt, {
             dest: COMMON_DEST,
-            map: COMMON_DEST_MAP
+            map: dev && COMMON_DEST_MAP
         }, [{
             source: APP_SOURCE,
             dest: APP_DEST,
-            map: APP_DEST_MAP
+            map: dev && APP_DEST_MAP
         }, {
             source: LANDING_PAGE_SOURCE,
             dest: LANDING_PAGE_DEST,
-            map: LANDING_PAGE_DEST_MAP
+            map: dev && LANDING_PAGE_DEST_MAP
         }],
         sendRebuildNotification
     );
