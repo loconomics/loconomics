@@ -75,18 +75,6 @@ module.exports = {
 
     //TODO: task that uses the PhoneGapBuild REST API to upload for build, using environment credentials
 
-    'build-dev': [
-        'browserify:appCommon',
-        'prepare-bootstrap-variables',
-        'concat:css-libs',
-        'stylus:app',
-        'copyto:images',
-        'build-fonts',
-        'bliss:appDebug'
-    ],
-    'build': [
-        'parallel:build-app'
-    ],
     'build-webapp-html': [
         'replace:html_bad_chars',
         'bliss:webapp',
