@@ -123,6 +123,17 @@ module.exports = function(grunt) {
         }
     };
 
+    var stylify = require('stylify');
+    var stylifyOptions = {
+        use: [ require('nib')() ],
+        "set": {
+          "urlfunc": "embedurl",
+          "linenos": true,
+          "include css": true,
+          "compress": false
+        }
+    };
+
     bconfig.trialcss = {
         'src': [
             './source/trialcss/trialcss.js'
@@ -135,7 +146,10 @@ module.exports = function(grunt) {
             },
             plugin: [
                 'common-shakeify'
-            ]
+            ],
+            configure: function(b) {
+                b.transform(stylify, stylifyOptions);
+            }
         }
     };
 

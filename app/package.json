@@ -81,15 +81,6 @@
   "browserify": {
     "transform": [
       "browserify-shim",
-      ["stylify", {
-        "use": [],
-        "set": {
-          "urlfunc": "embedurl",
-          "linenos": true,
-          "include css": true,
-          "compress": false
-        }
-      }],
       "stringify",
       "babelify",
       "aliasify",
