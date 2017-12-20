@@ -19,6 +19,7 @@
   "repository": "loconomics/loconomics",
   "private": true,
   "devDependencies": {
+    "aliasify": "^2.1.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
@@ -76,9 +77,11 @@
     "transform": [
       "browserify-shim",
       "stringify",
-      "babelify"
+      "babelify",
+      "aliasify"
     ]
   },
+  "aliasify": "./grunt/aliasify.settings.js",
   "browserslist": [
     "> 1%",
     "last 2 versions",
