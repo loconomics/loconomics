@@ -123,5 +123,21 @@ module.exports = function(grunt) {
         }
     };
 
+    bconfig.trialcss = {
+        'src': [
+            './source/trialcss/trialcss.js'
+        ],
+        'dest': './build/trialcss/trialcss.js',
+        'options': {
+            'browserifyOptions': {
+                'debug': true,
+                fullPaths: fullPaths
+            },
+            plugin: [
+                'common-shakeify'
+            ]
+        }
+    };
+
     return bconfig;
 };

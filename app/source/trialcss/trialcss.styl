@@ -1,0 +1,21 @@
+/*
+    Trial
+*/
+@import 'a.css';
+.TrialCss {
+    background: #999 url('images/logo-large.png') center
+    min-width: 300px
+    min-height: 100px
+    display: block
+
+    > h2 {
+        color: green;
+        transition color 2s
+    }
+
+    &.done {
+        > h2 {
+            color red
+        }
+    }
+}
