@@ -16,7 +16,7 @@ var dev = !!~process.argv.indexOf('--dev');
 
 const config = dev ? {} : {
     aliases: {
-        'knockout': '../node_modules/knockout/build/output/knockout-latest.js'
+        'knockout': 'K'
     },
     verbose: true
 };
