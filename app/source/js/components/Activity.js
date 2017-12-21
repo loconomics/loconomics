@@ -25,11 +25,6 @@ function Activity($activity, app) {
     // By default, reset scroll to top on activity.show
     this.resetScroll = true;
 
-    // TODO: Future use of a viewState, plain object representation
-    // of part of the viewModel to be used as the state passed to the
-    // history and between activities calls.
-    this.viewState = {};
-
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
     this.requestData = null;
@@ -56,7 +51,7 @@ function Activity($activity, app) {
      */
     this.title = ko.observable('');
 
-    // Knockout binding of viewState delayed to first show
+    // Knockout binding of viewModel delayed to first show
     // to avoid problems with subclasses replacing the viewModel property
 }
 
@@ -94,7 +89,6 @@ Activity.applyTitle = function (title) {
 **/
 Activity.prototype.show = function show(options) {
     /* eslint complexity:"off" */
-    // TODO: must keep viewState up to date using options/state.
     //console.log('Activity show', this.constructor.name);
     if (!this.__bindingDone) {
         // Default viewModel: the Activity instance (for more simple scenarios)
