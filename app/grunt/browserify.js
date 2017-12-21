@@ -13,7 +13,7 @@
  * of 'dead code' done by uglify and warned by linting --that we should prevent)
  */
 'use strict';
-var merge = require('deepmerge');
+var merge = require('./shared/mergeGruntBrowserifySettings');
 var notify = require('grunt-notify/lib/notify-lib');
 var notifySettings = require('./notify.js');
 // Using exorcist to extract source-maps from files.
