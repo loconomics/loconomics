@@ -123,12 +123,22 @@ module.exports = function(grunt) {
         }
     };
 
+    var poststylus = require('poststylus');
+    var autoprefixer = require('autoprefixer');
     var stylify = require('stylify');
+    var cleancss = require('postcss-clean');
+
     var stylifyOptions = {
-        use: [ require('nib')() ],
+        use: [
+            require('nib')(),
+            poststylus([
+                autoprefixer,
+                cleancss(require('./cssmin.settings.js'))
+            ])
+        ],
         "set": {
           "urlfunc": "embedurl",
-          "linenos": true,
+          "linenos": false,
           "include css": true,
           "compress": false
         }

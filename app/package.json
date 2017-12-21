@@ -21,6 +21,7 @@
   "private": true,
   "devDependencies": {
     "aliasify": "^2.1.0",
+    "autoprefixer": "^7.2.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
@@ -72,6 +73,8 @@
     "moment-timezone": "^0.5.14",
     "nib": "~1.1.2",
     "numeral": "~2.0.6",
+    "postcss-clean": "git+https://git@github.com/IagoSRL/postcss-clean.git#sync-api-no-remote",
+    "poststylus": "^1.0.0",
     "route-parser": "0.0.5",
     "stringify": "^5.1.0",
     "stylify": "^1.4.0",
