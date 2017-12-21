@@ -71,6 +71,7 @@ module.exports = function(grunt) {
         }],
         sendRebuildNotification
     );
+    appCommonBaseSettings = merge(appCommonBaseSettings, browserifyStylus.create(grunt));
     bconfig.appCommon = merge(appCommonBaseSettings, {
         options: {
             browserifyOptions: {
