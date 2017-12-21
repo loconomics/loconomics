@@ -9,6 +9,7 @@ var NavBar = require('../viewmodels/NavBar');
 
 require('../utils/Function.prototype._inherits');
 var showConfirm = require('../modals/confirm').show;
+var insertCss = require('insert-css');
 
 /**
     Activity class definition
@@ -17,6 +18,12 @@ function Activity($activity, app) {
 
     this.$activity = $activity;
     this.app = app;
+
+    /**
+     * CSS to style this activity.
+     * @private {string}
+     */
+    this.style = null;
 
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
@@ -50,6 +57,7 @@ function Activity($activity, app) {
      * @member {KnockoutObservable<string>|string}
      */
     this.title = ko.observable('');
+
 
     // Knockout binding of viewModel delayed to first show
     // to avoid problems with subclasses replacing the viewModel property
@@ -111,6 +119,15 @@ Activity.prototype.show = function show(options) {
         ko.applyBindings(this.viewModel, this.$activity.get(0));
 
         this.__bindingDone = true;
+
+        // Additionally to binding, inject styles is needed too only first time
+        /**
+         * Enable the own activity style CSS, if there is someone.
+         * @private
+         */
+        this.__styleElement = this.style && insertCss(this.style, {
+            container: this.$activity.get(0)
+        });
     }
 
     options = options || {};
@@ -201,6 +218,15 @@ Activity.prototype.hide = function hide() {
     }
 
     this.isShown(false);
+};
+
+/**
+ * Dispose any ressources that cannot be done automatically.
+ */
+Activity.prototype.dispose = function() {
+    if (this.__styleElement) {
+        this.__styleElement.parentNode.removeChild(this.__styleElement);
+    }
 };
 
 /**
