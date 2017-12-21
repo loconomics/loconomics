@@ -123,17 +123,44 @@ module.exports = function(grunt) {
         }
     };
 
+    var postcss = require('postcss');
     var poststylus = require('poststylus');
     var autoprefixer = require('autoprefixer');
     var stylify = require('stylify');
-    //var cleancss = require('postcss-clean');
+    var CleanCSS = require('clean-css');
+    var cleanCssSettings = require('./cssmin.settings.js');
+    var postCleanCss = postcss.plugin('clean-css', function() {
+        const cleancss = new CleanCSS(cleanCssSettings);
+        return function (css, res) {
+            var result = cleancss.minify(css.toString());
+            if (result.warnings) {
+                for(const msg of result.warnings) {
+                    // Logs without stop task
+                    grunt.log.error('CleanCSS:', msg);
+                    //res.warn(msg);
+                }
+            }
+            if (result.errors) {
+                for(const msg of result.errors) {
+                    // Logs stopping task, except --force is used
+                    grunt.fail.warn('CleanCSS:', msg);
+                    //res.error(msg); ?
+                }
+            }
+            // NOTE: Something to do with result.sourceMap? and .stats?
+            // (Stylus has not source maps, that is the really important, so
+            // a map for minified is not relevant)
+            // Return optimized styles:
+            res.root = postcss.parse(result.styles);
+        };
+    });
 
     var stylifyOptions = {
         use: [
             require('nib')(),
             poststylus([
                 autoprefixer,
-                //cleancss(require('./cssmin.settings.js'))
+                postCleanCss()
             ])
         ],
         "set": {
