@@ -23,6 +23,7 @@ var notifySettings = require('./notify.js');
 var exorcist = require('exorcist');
 var browserifyBundles = require('./shared/browserifyBundles');
 require('common-shakeify');
+var browserifyStylus = require('./shared/browserifyStylus');
 
 module.exports = function(grunt) {
     /// External parameters
@@ -123,85 +124,8 @@ module.exports = function(grunt) {
         }
     };
 
-    var postcss = require('postcss');
-    var poststylus = require('poststylus');
-    var autoprefixer = require('autoprefixer');
-    var stylify = require('stylify');
-    var CleanCSS = require('clean-css');
-    var cleanCssSettings = require('./cssmin.settings.js');
-    var postCleanCss = postcss.plugin('clean-css', function() {
-        const cleancss = new CleanCSS(cleanCssSettings);
-        return function (css, res) {
-            var result = cleancss.minify(css.toString());
-            if (result.warnings) {
-                for(const msg of result.warnings) {
-                    // Logs without stop task
-                    grunt.log.error('CleanCSS:', msg);
-                    //res.warn(msg);
-                }
-            }
-            if (result.errors) {
-                for(const msg of result.errors) {
-                    // Logs stopping task, except --force is used
-                    grunt.fail.warn('CleanCSS:', msg);
-                    //res.error(msg); ?
-                }
-            }
-            // NOTE: Something to do with result.sourceMap? and .stats?
-            // (Stylus has not source maps, that is the really important, so
-            // a map for minified is not relevant)
-            // Return optimized styles:
-            res.root = postcss.parse(result.styles);
-        };
-    });
-    const sharedStylusSettings = require('./stylus.settings');
-    /**
-     * Logs a PostCSS warning/error into Grunt.
-     * @param {(PostCss.Warning,string,Object)} message
-     */
-    var postLogWarning = function(message) {
-        grunt.fail.warn(message.toString());
-    };
-    const stylus = require('stylus');
-    var fixUrlPathPlugin = function(style) {
-        // TODO: use path module to do something smarter, but this seems fine and
-        // enought for now since all routes start the same way (../)
-        // (like if the file were under the css folder, like global files).
-        // It detects the path and comiles, captures the relative path
-        const detectPath = /^['"]\.\.\/images\/(.+)['"]$/i;
-        // It provides new path and placeholder for the relative path,
-        // but WITHOUT comiles.
-        const replacementPath = '/assets/images/$1';
-        var buildUrlLiteral = (path) => new stylus.nodes.Literal(`url('${path}')`);
-        var fixUrlPath = function(url) {
-            var path = url.toString();
-            //console.log('path', path, detectPath.test(path), path.replace(detectPath, replacementPath));
-            if (detectPath.test(path)) {
-                // Update so it works from the sites root
-                return buildUrlLiteral(path.replace(detectPath, replacementPath));
-            }
-            else {
-                // Left unchanged, notice as warning since can be an error
-                console.warn('Unchanged CSS URL (unknow path; review because the image could not load)');
-                return buildUrlLiteral(path);
-            }
-        };
-        style.define('url', fixUrlPath);
-    };
-
-    var stylifyOptions = {
-        use: [
-            fixUrlPathPlugin,
-            require('nib')(),
-            poststylus([
-                autoprefixer(),
-                postCleanCss()
-            ], postLogWarning)
-        ],
-        "set": sharedStylusSettings
-    };
-
-    bconfig.trialcss = {
+    var trialcssBaseSettings = browserifyStylus.create(grunt);
+    bconfig.trialcss = merge(trialcssBaseSettings, {
         'src': [
             './source/trialcss/trialcss.js'
         ],
@@ -213,12 +137,9 @@ module.exports = function(grunt) {
             },
             plugin: [
                 'common-shakeify'
-            ],
-            configure: function(b) {
-                b.transform(stylify, stylifyOptions);
-            }
+            ]
         }
-    };
+    });
 
     return bconfig;
 };
