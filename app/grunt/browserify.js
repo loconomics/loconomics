@@ -155,14 +155,21 @@ module.exports = function(grunt) {
         };
     });
     const sharedStylusSettings = require('./stylus.settings');
+    /**
+     * Logs a PostCSS warning/error into Grunt.
+     * @param {(PostCss.Warning,string,Object)} message
+     */
+    var postLogWarning = function(message) {
+        grunt.fail.warn(message.toString());
+    };
 
     var stylifyOptions = {
         use: [
             require('nib')(),
             poststylus([
-                autoprefixer,
+                autoprefixer(),
                 postCleanCss()
-            ])
+            ], postLogWarning)
         ],
         "set": sharedStylusSettings
     };
