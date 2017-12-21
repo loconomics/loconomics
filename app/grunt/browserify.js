@@ -154,6 +154,7 @@ module.exports = function(grunt) {
             res.root = postcss.parse(result.styles);
         };
     });
+    const sharedStylusSettings = require('./stylus.settings');
 
     var stylifyOptions = {
         use: [
@@ -163,12 +164,7 @@ module.exports = function(grunt) {
                 postCleanCss()
             ])
         ],
-        "set": {
-          "urlfunc": "embedurl",
-          "linenos": false,
-          "include css": true,
-          "compress": false
-        }
+        "set": sharedStylusSettings
     };
 
     bconfig.trialcss = {
