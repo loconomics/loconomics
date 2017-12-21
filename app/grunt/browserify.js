@@ -126,14 +126,14 @@ module.exports = function(grunt) {
     var poststylus = require('poststylus');
     var autoprefixer = require('autoprefixer');
     var stylify = require('stylify');
-    var cleancss = require('postcss-clean');
+    //var cleancss = require('postcss-clean');
 
     var stylifyOptions = {
         use: [
             require('nib')(),
             poststylus([
                 autoprefixer,
-                cleancss(require('./cssmin.settings.js'))
+                //cleancss(require('./cssmin.settings.js'))
             ])
         ],
         "set": {
