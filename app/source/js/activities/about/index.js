@@ -3,10 +3,12 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
+var Activity = require('../../components/Activity');
 var ko = require('knockout');
 var DEFAULT_TAB = 'us';
-require('../kocomponents/tab-list');
+require('../../kocomponents/tab-list');
+const STYLE = require('./style.styl');
+var insertCss = require('insert-css');
 
 export default class AboutActivity extends Activity {
     constructor($activity, app) {
@@ -45,9 +47,15 @@ export default class AboutActivity extends Activity {
 
     show(state) {
         super.show(state);
+        this._styleElement = insertCss(STYLE);
 
         if (!this.activeTabName()) {
             this.activeTabName(DEFAULT_TAB);
         }
+    }
+
+    hide() {
+        super.hide();
+        this._styleElement.parentNode.removeChild(this._styleElement);
     }
 }
