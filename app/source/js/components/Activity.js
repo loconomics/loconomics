@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction'),
-    NavBar = require('../viewmodels/NavBar');
+var ko = require('knockout');
+var NavAction = require('../viewmodels/NavAction');
+var NavBar = require('../viewmodels/NavBar');
 
 require('../utils/Function.prototype._inherits');
 var showConfirm = require('../modals/confirm').show;
@@ -302,8 +302,8 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
         link: cancelLink,
         text: 'Cancel',
         handler: function(event) {
-            var link = this.link(),
-                eoptions = event && event.options || {};
+            var link = this.link();
+            var eoptions = event && event.options || {};
 
             var goLink = function() {
                 if (link)
