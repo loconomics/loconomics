@@ -7,11 +7,12 @@
 
 import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
+import STYLE from '../LeadGeneration.styl';
 import TEMPLATE from './template.html';
 import ko from 'knockout';
 import leadGenerationApi from '../../../data/leadGeneration';
-import showError from '../../../modals/error';
-import user from '../../../data/userProfile';
+import { show as showError } from '../../../modals/error';
+import { data as user } from '../../../data/userProfile';
 
 const TAG_NAME = 'lead-generation-refer';
 
@@ -29,6 +30,11 @@ class ViewModel extends Komponent {
     constructor() {
         /* eslint max-statements:"off" */
         super();
+        /**
+         * CSS to style this component.
+         * @member {string}
+         */
+        this.style = STYLE;
         /**
          * Holds a list of objects with a 'dispose' methods that need to be called
          * when disposing the component (see `dispose` method).
