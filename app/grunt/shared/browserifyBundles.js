@@ -102,23 +102,27 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
         }));
     };
     /**
-     * Callback for grunt-browserify pre-processing.
+     * Handle and notify errors found generating the output
+     * @param {Error} err
+     */
+    var handleOutputError = function (err) {
+        grunt.verbose.error().error(err);
+        grunt.fail.warn('Browserify bundle error: ' + err.toString());
+    };
+    /**
+     * Callback for grunt-browserify pre-setup.
      * Will register promises for all the factorization process
      * @param {Browserify} b
      */
-    var preBundle = function (b) {
-        // Reset current 'factors' being processed.
-        factorsPromises = [];
+    var configure = function (b) {
         // Listen each factor added
         b.removeListener('factor.pipeline', factorToPromise);
         b.on('factor.pipeline', factorToPromise);
         // Listen errors when initially creating the main/full bundle
         // (syntax errors, not found modules; all before content is splitted).
         b.on('bundle', function (output) {
-            output.on('error', function (err) {
-                grunt.verbose.error().error(err);
-                grunt.fail.warn('Browserify bundle error: ' + err.toString());
-            });
+            output.removeListener('error', handleOutputError);
+            output.on('error', handleOutputError);
             // Exorcist integration
             b.pipeline.get('wrap').push(exorcist(commonBundle.map));
         });
@@ -127,6 +131,14 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
             grunt.verbose.error().error(err);
             grunt.fail.warn('Something went wrong: ' + err.toString());
         });
+    };
+    /**
+     * Callback for grunt-browserify pre-processing.
+     * Reset current 'factors' being processed.
+     * @param {Browserify} b
+     */
+    var preBundle = function () {
+        factorsPromises = [];
     };
     /**
      * Callback for grunt-browserify post-processing.
@@ -166,6 +178,7 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
             browserifyOptions: {
                 debug: usesMapFiles
             },
+            configure: configure,
             preBundleCB: preBundle,
             postBundleCB: postBundle,
             // Array of plugins, we have just one that is defined as an array

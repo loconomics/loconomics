@@ -13,7 +13,7 @@
  * of 'dead code' done by uglify and warned by linting --that we should prevent)
  */
 'use strict';
-var merge = require('deepmerge');
+var merge = require('./shared/mergeGruntBrowserifySettings');
 var notify = require('grunt-notify/lib/notify-lib');
 var notifySettings = require('./notify.js');
 // Using exorcist to extract source-maps from files.
@@ -23,6 +23,7 @@ var notifySettings = require('./notify.js');
 var exorcist = require('exorcist');
 var browserifyBundles = require('./shared/browserifyBundles');
 require('common-shakeify');
+var browserifyStylus = require('./shared/browserifyStylus');
 
 module.exports = function(grunt) {
     /// External parameters
@@ -70,6 +71,7 @@ module.exports = function(grunt) {
         }],
         sendRebuildNotification
     );
+    appCommonBaseSettings = merge(appCommonBaseSettings, browserifyStylus.create(grunt));
     bconfig.appCommon = merge(appCommonBaseSettings, {
         options: {
             browserifyOptions: {

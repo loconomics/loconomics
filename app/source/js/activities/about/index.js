@@ -3,15 +3,17 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var ko = require('knockout');
+import '../../kocomponents/tab-list';
+import Activity from '../../components/Activity';
+import STYLE from './style.styl';
+import ko from 'knockout';
 var DEFAULT_TAB = 'us';
-require('../kocomponents/tab-list');
 
 export default class AboutActivity extends Activity {
     constructor($activity, app) {
         super($activity, app);
 
+        this.style = STYLE;
         // Any user can access this
         this.accessLevel = null;
 

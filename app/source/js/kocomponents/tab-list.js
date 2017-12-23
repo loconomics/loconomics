@@ -117,8 +117,8 @@ var create = function(params, componentInfo) {
             .attr('aria-selected', null)
             .attr('tabindex', '-1');
             prevTab.parent('li')
-            .removeClass(ACTIVE_TAB_CLASS)
-            .each(function(i, tab) {
+            .removeClass(ACTIVE_TAB_CLASS);
+            prevTab.each(function(i, tab) {
                 var prevUrl = tab.getAttribute('href');
                 if (prevUrl) {
                     $('#' + escapeSelector(prevUrl.substr(1)))
