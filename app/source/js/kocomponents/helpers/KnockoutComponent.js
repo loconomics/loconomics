@@ -97,7 +97,13 @@ export default class KnockoutComponent {
      * external observables or computed observables.
      * It's triggered automatically by Knockout after the component was
      * removed, so expect `refs` to not be valid anymore.
-     */
+     *//* TEMPORARLY REMOVED SINCE CAUSES CONFLICTS: INSERT-CSS USES A UNIQUE
+     STYLE ELEMENT FOR ALL, REMOVING THAT MEANS REMOVING ALL OTHERS
+     TODO: Look for/build alternative to insert-css, allowing diposing styles
+     without conflicts; one approach could be add it ever to the component
+     template but that means that shared styles are duplicated at runtime
+     (inserted twice, how much performance problem can be? debugging is a bit
+     annoying because of duplicated applied rules, though)
     dispose() {
         // If there is a component style, must be removed.
         // Need manual removal only if was attached to body (there was not
@@ -106,5 +112,5 @@ export default class KnockoutComponent {
         if (this.__styleElement && !this.refs.root) {
             this.__styleElement.parentNode.removeChild(this.__styleElement);
         }
-    }
+    }*/
 }
