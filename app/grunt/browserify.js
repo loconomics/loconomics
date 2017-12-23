@@ -125,22 +125,5 @@ module.exports = function(grunt) {
         }
     };
 
-    var trialcssBaseSettings = browserifyStylus.create(grunt);
-    bconfig.trialcss = merge(trialcssBaseSettings, {
-        'src': [
-            './source/trialcss/trialcss.js'
-        ],
-        'dest': './build/trialcss/trialcss.js',
-        'options': {
-            'browserifyOptions': {
-                'debug': true,
-                fullPaths: fullPaths
-            },
-            plugin: [
-                'common-shakeify'
-            ]
-        }
-    });
-
     return bconfig;
 };
