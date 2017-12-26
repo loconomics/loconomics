@@ -7,7 +7,7 @@
  *      sync.
  */
 'use strict';
-var envOptions = require('./shared/envOptions');
+var envOptions = require('../shared/envOptions');
 const TASK_NAME = 'build';
 /**
  * Tasks list to build for Production environment
