@@ -8,6 +8,12 @@ module.exports = function (grunt) {
     if(!process.env['NODE_NO_HTTP2']) {
         process.env['NODE_NO_HTTP2'] = 1;
     }
+    // WORKAROUND 'atwork' task is only used for a 'dev' env, but before we
+    // didn't need a '--dev' flag, making it implicit when running that task
+    var inAtwork = grunt.cli.tasks.indexOf('atwork') > -1;
+    if (inAtwork) {
+        process.env['NODE_ENV'] = 'development';
+    }
 
     require('time-grunt')(grunt);
 
