@@ -31,7 +31,7 @@ var events = {
 };
 
 function AppointmentCardViewModel(params) {
-    /*jshint maxstatements: 60*/
+    /* eslint max-statements:"off" */
 
     EventEmitter.call(this);
 
@@ -615,7 +615,7 @@ AppointmentCardViewModel._inherits(EventEmitter);
     external activities.
 **/
 AppointmentCardViewModel.prototype.passIn = function passIn(requestData) {
-    /*jshint maxcomplexity:23,maxstatements:43 */
+    /* eslint complexity:"off", max-statements:"off" */
 
     // on init
     paymentAccount.sync();

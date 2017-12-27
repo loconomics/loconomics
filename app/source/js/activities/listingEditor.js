@@ -120,7 +120,7 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    //jshint maxstatements:40
+    /* eslint max-statements:"off" */
     this.helpLink = '/help/relatedArticles/202034083-managing-your-marketplace-profile';
     this.isLoading = ko.observable(false);
     this.user = ko.observable(null);

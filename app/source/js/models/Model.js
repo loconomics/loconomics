@@ -28,7 +28,7 @@ var ko = require('knockout');
 var $ = require('jquery');
 var clone = function(obj) { return $.extend(true, {}, obj); };
 var cloneValue = function(val, deepCopy) {
-    /*jshint maxcomplexity: 10*/
+    /* eslint complexity:"off" */
     if (typeof(val) === 'object') {
         // A Date object is a special case: even being
         // an object, treat as a basic type, being copied as
@@ -111,7 +111,6 @@ module.exports = Model;
     definition
 **/
 function prepareValueByDef(val, def) {
-    //jshint maxcomplexity:10
     if (def.isArray &&
         !Array.isArray(val)) {
         if (val)

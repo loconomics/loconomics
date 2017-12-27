@@ -1,9 +1,9 @@
 /**
     SmartNavBar component.
     Requires its CSS counterpart.
-    
+
     Created based on the project:
-    
+
     Project-Tyson
     Website: https://github.com/c2prods/Project-Tyson
     Author: c2prods
@@ -43,8 +43,8 @@ var clearNode = function (node) {
     Pass in the title element, buttons must be found as siblings of it.
 **/
 var textboxResize = function textboxResize(el) {
-    /* jshint maxstatements: 28, maxcomplexity:11 */
-    
+    /* eslint max-statements:"off", complexity:"off" */
+
     var leftbtn = el.parentNode.querySelectorAll('.SmartNavBar-edge.left')[0];
     var rightbtn = el.parentNode.querySelectorAll('.SmartNavBar-edge.right')[0];
     if (typeof leftbtn === 'undefined') {
@@ -59,7 +59,7 @@ var textboxResize = function textboxResize(el) {
             className: ''
         };
     }
-    
+
     var margin = Math.max(leftbtn.offsetWidth, rightbtn.offsetWidth);
     el.style.marginLeft = margin + 'px';
     el.style.marginRight = margin + 'px';
@@ -97,14 +97,14 @@ exports.textboxResize = textboxResize;
 **/
 var SmartNavBar = function SmartNavBar(el) {
     this.el = el;
-    
+
     this.refresh = function refresh() {
         var h = $(el).children('h1').get(0);
         if (h)
             textboxResize(h);
     };
 
-    this.refresh(); 
+    this.refresh();
 };
 
 exports.SmartNavBar = SmartNavBar;

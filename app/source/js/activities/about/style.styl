@@ -1,0 +1,105 @@
+/**
+    About activity styles.
+**/
+@import '../../../css/utils/styleguideVars.styl';
+
+[data-activity=about]
+
+    // Ensure contents don't create horizontal scroll
+    .container
+        background $gray-background
+        overflow: hidden;
+        // Multiline for large words, like links. Seems only needed for Webkit;
+        // with and without it, Firefox do it similar and slightly better by default
+        word-wrap: break-word;
+        padding: 40px;
+
+        .nav
+        &.navbar-nav
+            margin-top: 50px;
+            a
+              text-align: right;
+
+        .team-cards
+          width 100%
+          text-align center
+          padding-left 0
+          position relative
+          display flex
+          flex-wrap wrap
+          justify-content center
+
+          .team-member
+            list-style none
+            box-shadow 0 1.5px 0 0 rgba(0,0,0,0.1)
+            background-color white;
+            width 90%
+            height auto
+            margin 10px
+            height auto
+
+            @media $mediaMinSm {
+              width 280px;
+            }
+
+            p
+              opacity 0.5
+              padding 0 25px
+              text-align: justify;
+
+            .title
+              font-style italic
+              display inline-block
+              padding-bottom 25px
+              border-bottom 3px solid rgba(100,100,100,0.5)
+              margin-bottom: 25px
+
+            .member-image
+              width 200px
+              border-radius: 50%;
+              height 200px
+              margin-top 30px
+              background no-repeat center / cover;
+              display inline-block
+              padding 0px
+
+      .special-thanks-partners
+        position: relative;
+
+      a.special-thanks-logos
+        // Fixes clickable and focusable area (accessibility)
+        display: block;
+
+        > img {
+          margin-top: 15px;
+          margin-bottom: 15px;
+          margin-right: auto;
+          margin-left: auto;
+          height: 160px;
+        }
+
+        @media $mediaMinSm {
+          display: inline-block;
+          top: 0px;
+          right: 0px;
+          > img {
+            margin-right: 0px;
+            margin-left: 5px;
+          }
+        }
+
+        &.special-thanks-logos-right
+          > img {
+            border: solid 20px white;
+            height: 350px;
+          }
+
+          @media $mediaMinSm {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            > img {
+              margin-right: 5px;
+              margin-left: 15px;
+            }
+          }

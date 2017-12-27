@@ -29,7 +29,7 @@ var stepsLabels = {
 };
 
 function BaseClientBookingCardVM(app) {
-    //jshint maxstatements:100
+    /* eslint max-statements:"off" */
 
     this.app = app;
 

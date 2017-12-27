@@ -1,4 +1,4 @@
-/* jshint maxcomplexity:14 */
+/* eslint complexity:"off" */
 /**
     Format extender for Knockout observables.
 **/
@@ -23,13 +23,13 @@ exports.formatBinding = {
 
         var options = ko.unwrap(valueAccessor()),
             value = ko.unwrap(allBindings.get('text'));
-            
+
         applyFormat(value, element, options, ko.dataFor(element));
 
     }
 };
 
-function applyFormat(value, element, options, dataContext) {
+function applyFormat(value, element, options/*, dataContext*/) {
 
     var type = ko.unwrap(options.type);
 
@@ -45,36 +45,36 @@ function applyFormat(value, element, options, dataContext) {
     }
 }
 
-/** Definition of several types */ 
+/** Definition of several types */
 exports.types.link = {
     html: true,
     format: function LinkFormatter(value, def, dataContext) {
-    
+
         var link = def ? def.link ? def.link : def : null;
         link = typeof(link) === 'string' ? link : null;
         var r = value;
-        
+
         if (link) {
             r = $('<a/>');
-            
+
             var title = def ? def.title ? def.title : null : null,
                 target = def ? def.target ? def.target : null : null;
-            
+
             r.attr('href', link.replace(/__value__/g, value));
             if (title)
                 r.attr('title', title.replace(/__value__/g, value));
             if (target)
                 r.attr('target', target);
-                
+
             // TODO: dataContext placeholders
-            
+
             if (def.contentFormat) {
                 applyFormat(value, r, def.contentFormat, dataContext);
             }
             else {
                 r.text(value);
             }
-            
+
             r = r.outerHtml();
         }
 
@@ -86,18 +86,18 @@ var moment = require('moment');
 exports.types.datetime = {
     format: function DateTimeFormatter(value, def, dataContext) {
         var moment = require('moment');
-        
+
         if (!value)
             return def.default || def.invalid || '';
-        
+
         var dt = moment(value);
         if (def.locale)
             dt = dt.locale(def.locale);
-        
+
         return dt.isValid() ? dt.format(def.format) : def.invalid || '';
     }
 };
-    
+
 exports.types.concat = {
     format: function ConcatFormatter(value, def, dataContext) {
 
@@ -115,14 +115,14 @@ exports.types.concat = {
     }
 };
 
-var numeral = require('numeral');    
+var numeral = require('numeral');
 exports.types.number = {
     format: function NumberFormatter(value, def, dataContext) {
         var numeral = require('numeral');
         return numeral(value).format(def.format);
     }
 };
-    
+
 exports.types.bool = {
     format: function BoolFormatter(value, def, dataContext) {
         var vs = def.values;

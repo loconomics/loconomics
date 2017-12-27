@@ -197,7 +197,6 @@ A.prototype.show = function show(options) {
         this.resetScroll = true;
     }
 
-    /* jshint maxcomplexity:10 */
     Activity.prototype.show.call(this, options);
 
     // Prepare cancelLink, before any attempt of internal URL rewriting
@@ -207,7 +206,7 @@ A.prototype.show = function show(options) {
         // Avoid links to this same page at 'new booking' or 'new event' state
         // to prevent infinite loops
         //referrer && referrer.replace(/\/?appointment\//i, 'calendar/');
-        var reg = /\/?appointment\/([^\/]*)\/((\-3)|(\-4))/i;
+        var reg = /\/?appointment\/([^/]*)\/((-3)|(-4))/i;
         if (referrer && reg.test(referrer)) {
             referrer = referrer.replace(reg, '/appointment/$1/');
         }
@@ -223,7 +222,7 @@ A.prototype.show = function show(options) {
         id,
         type;
 
-    var isNumber = /^\-?\d+$/;
+    var isNumber = /^-?\d+$/;
     if (isNumber.test(s1)) {
         // first parameter is an ID
         id = s1 |0;
@@ -292,7 +291,7 @@ var CalendarEvent = require('../models/CalendarEvent'),
     Booking = require('../models/Booking');
 
 function ViewModel(app) {
-    //jshint maxstatements:30
+    /* eslint max-statements:"off" */
     this.app = app;
     this.currentDate = ko.observable(new Date());
     this.currentID = ko.observable(0);
@@ -385,7 +384,7 @@ function ViewModel(app) {
         // Get ID from URL, to avoid do anything if the same.
         var apt = this.currentAppointment(),
             aptId = apt.id(),
-            found = /appointment\/([^\/]+)\/(\-?\d+)/i.exec(window.location),
+            found = /appointment\/([^/]+)\/(-?\d+)/i.exec(window.location),
             urlId = found && found[2] |0,
             urlDate = found && found[1],
             curDateStr = getDateWithoutTime(apt.startTime()).toISOString();
@@ -483,7 +482,7 @@ function ViewModel(app) {
         }
     };
     this.setItemFromCurrentList = function (id) {
-        /*jshint maxdepth:6,maxcomplexity:8*/
+        /* eslint maxdepth:"off", complexity:"off" */
         var list = this.appointments(),
             index,
             item;
@@ -533,7 +532,6 @@ function ViewModel(app) {
     };
 
     var _setCurrent = function setCurrent(date, id, type) {
-        //jshint maxcomplexity:8
         // IMPORTANT: the date to use must be ever
         // a new object rather than the referenced one to
         // avoid some edge cases where the same object is mutated

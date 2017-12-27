@@ -7,7 +7,6 @@ var availability = require('../data/availability');
 var showNotification = require('../modals/notification').show;
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
-var showError = require('../modals/error').show;
 
 function EditClientBookingCardVM(app) {
 

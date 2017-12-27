@@ -58,7 +58,7 @@ var facebookMe = function() {
 };
 
 function SignupVM() {
-    //jshint maxstatements:55
+    /* eslint max-statements:"off" */
 
     EventEmitter.call(this);
 

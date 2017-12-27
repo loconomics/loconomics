@@ -90,7 +90,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(state) {
-    /*jshint maxcomplexity: 8*/
+    /* eslint complexity:"off" */
     Activity.prototype.show.call(this, state);
 
     // reset
@@ -201,7 +201,7 @@ function clientDataFromSearchText(txt, client) {
 }
 
 function ViewModel(app) {
-    /*jshint maxstatements:80 */
+    /* eslint max-statements:"off" */
     this.helpLink = '/help/relatedArticles/201152639-managing-clients';
 
     this.clientID = ko.observable(0);

@@ -41,7 +41,7 @@ var stringifyErrorsList = function(errors) {
 };
 
 var getErrorMessageFrom = function(err, defaultText) {
-    /*jshint maxcomplexity:16, maxdepth:5*/
+    /* eslint complexity:"off", max-depth:"off" */
 
     defaultText = defaultText || 'Unknow error';
 
@@ -93,7 +93,7 @@ var getErrorMessageFrom = function(err, defaultText) {
                     msg += '\n\nTechnical details: ' + jserr;
             }
             catch (ex) {
-                console.log('Impossible to stringify JSON error', err, ex);
+                console.warn('Impossible to stringify JSON error', err, ex);
             }
         }
 

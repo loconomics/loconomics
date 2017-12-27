@@ -1,6 +1,7 @@
 'use strict';
 
 /** Global dependencies **/
+require('babel-polyfill');
 var $ = require('jquery');
 // Make jquery reference global, may still be needed by some shimed plugins
 window.$ = window.jQuery = $;
@@ -11,17 +12,10 @@ ko.bindingHandlers.domElement = require('ko/domElementBinding').domElementBindin
 var bootknock = require('./utils/bootknockBindingHelpers');
 require('./utils/Function.prototype._inherits');
 require('./utils/Function.prototype._delayed');
-// Polyfill for useful non-standard feature Function.name for IE9+
-// (feature used to simplify creation of Activities and Models)
-require('./utils/Function.prototype.name-polyfill');
-// Promise polyfill, so its not 'require'd per module:
-require('es6-promise').polyfill();
 // Polyfills for HTML5 DOM additions, used in components with vanilla javascript
 // (avoiding jQuery, it has equivalent methods)
 require('../../vendor/polyfills/Element.prototype.matches');
 require('../../vendor/polyfills/Element.prototype.closest');
-// Polyfill requestAnimationFrame, required for Android 4-4.3.
-require('requestAnimationFrame');
 
 var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');
@@ -179,7 +173,7 @@ app.successSave = function successSave(settings) {
 
 /** App Init **/
 var appInit = function appInit() {
-    /*jshint maxstatements:70,maxcomplexity:16 */
+    /* eslint max-statements:"off", complexity:"off" */
 
     var userProfile = require('./data/userProfile');
     var user = userProfile.data;

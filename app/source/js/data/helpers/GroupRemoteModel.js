@@ -77,7 +77,6 @@ function GroupRemoteModel(settings) {
     var api = this;
 
     api.getItem = function getItem(itemID, forceRemoteLoad) {
-        //jshint maxcomplexity:9
         var cacheEntry = getCacheItem(itemID);
 
         // Concurrent requests: First, check if there is a running/pending request already for this

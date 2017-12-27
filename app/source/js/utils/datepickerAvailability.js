@@ -60,7 +60,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             // We have a list or ranges per date (iso string key)
             // Iterate every day element, and use its date avail from the result
             daysElements.each(function() {
-                // jshint maxcomplexity:10
+                /* eslint complexity:"off" */
                 var $dateTd = $(this);
                 var id = $dateTd.data('date-time');
                 var timeRangeList = byDate[moment(id).format('YYYY-MM-DD')];

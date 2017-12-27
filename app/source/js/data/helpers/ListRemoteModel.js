@@ -23,7 +23,7 @@ function required(val, msg) {
 }
 
 function ListRemoteModel(settings) {
-    /*jshint maxstatements:50*/
+    /* eslint max-statements:"off" */
 
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
