@@ -27,14 +27,15 @@ var LAST_STEP = 3;
  * Component view model
  */
 class ViewModel extends Komponent {
+
+    static get style() { return STYLE; }
+
+    static get template() { return TEMPLATE; }
+
     constructor() {
         /* eslint max-statements:"off" */
         super();
-        /**
-         * CSS to style this component.
-         * @member {string}
-         */
-        this.style = STYLE;
+
         /**
          * Holds a list of objects with a 'dispose' methods that need to be called
          * when disposing the component (see `dispose` method).

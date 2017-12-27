@@ -53,11 +53,6 @@ export default class KnockoutComponent {
          * @member {Object}
          */
         this.children = children;
-        /**
-         * CSS to style this component.
-         * @member {string}
-         */
-        this.style = null;
 
         // Run init async
         setTimeout(() => this.init(), 1);
@@ -84,7 +79,7 @@ export default class KnockoutComponent {
          * the `style` into the page (the element template or the head)
          * @private {HTMLElement}
          */
-        this.__styleElement = this.style && insertCss(this.style, {
+        this.__styleElement = this.constructor.style && insertCss(this.constructor.style, {
             // Insert at the end of the element root, if not defined will
             // fallback to `html>head` element
             container: this.refs.root
