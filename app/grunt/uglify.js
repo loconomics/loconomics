@@ -26,7 +26,6 @@ var conservativeOptions = {
         keep_fnames   : true,  // Avoid that mangle remove function names. This allows enable mangling without causing the bug #709
         if_return     : true,  // optimize if-s followed by return/continue
         join_vars     : true,  // join var declarations
-        cascade       : true,  // try to cascade `right` into `left` in sequences
         side_effects  : true,  // drop side-effect-free statements
         warnings      : true,  // warn about potentially dangerous optimizations/code
         global_defs   : {}     // global definitions

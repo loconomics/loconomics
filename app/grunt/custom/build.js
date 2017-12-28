@@ -7,12 +7,8 @@
  *      sync.
  */
 'use strict';
+var envOptions = require('../shared/envOptions');
 const TASK_NAME = 'build';
-/**
- * Parameter/option that sets environment as 'development'
- * @const {string}
- */
-const DEV_ENV = 'dev';
 /**
  * Tasks list to build for Production environment
  * @const {Array<string>}
@@ -37,7 +33,7 @@ const DEV_TASKS = [
  */
 module.exports = function(grunt) {
     grunt.registerTask(TASK_NAME, 'Build App', function() {
-        const isDevEnv = !!grunt.option(DEV_ENV);
+        const isDevEnv = envOptions.inDev();
         let tasks;
         if (isDevEnv) {
             tasks = DEV_TASKS;

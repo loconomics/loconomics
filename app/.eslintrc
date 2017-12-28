@@ -40,7 +40,7 @@
         "compat/compat": "warn",
         "complexity": [
             "error",
-            6
+            10
         ],
         "computed-property-spacing": [
             "error",

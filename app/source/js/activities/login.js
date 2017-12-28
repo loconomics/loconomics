@@ -52,6 +52,7 @@ var A = Activity.extend(function LoginActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
+    /* eslint complexity:0 */
     Activity.prototype.show.call(this, state);
 
     this.viewModel.reset();
