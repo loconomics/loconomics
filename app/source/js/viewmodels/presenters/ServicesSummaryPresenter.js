@@ -3,8 +3,8 @@
 */
 'use strict';
 
-var groupBy = require('../../utils/groupBy'),
-    mapBy = require ('../../utils/mapBy');
+var groupBy = require('../../utils/groupBy');
+var mapBy = require ('../../utils/mapBy');
 
 /*
     ServicesSummaryPresenter
@@ -38,12 +38,12 @@ ServicesSummaryPresenter.prototype.summaryText = function() {
 };
 
 ServicesSummaryPresenter.prototype.serviceTypeSummaries = function() {
-    var servicesByPricingTypeID = groupBy(this._services, function(s) { return s.pricingTypeID(); }),
-        pricingTypeName = function(type, count) { return count == 1 ? type.singularName() : type.pluralName(); };
+    var servicesByPricingTypeID = groupBy(this._services, function(s) { return s.pricingTypeID(); });
+    var pricingTypeName = function(type, count) { return count == 1 ? type.singularName() : type.pluralName(); };
 
     return Object.keys(servicesByPricingTypeID).map(function(pricingTypeID) {
-        var services = servicesByPricingTypeID[pricingTypeID],
-            pricingType = this._pricingTypesByID[pricingTypeID];
+        var services = servicesByPricingTypeID[pricingTypeID];
+        var pricingType = this._pricingTypesByID[pricingTypeID];
 
         return services.length + ' ' + pricingTypeName(pricingType, services.length).toLowerCase();
     }.bind(this));
@@ -61,8 +61,8 @@ ServicesSummaryPresenter.prototype.serviceTypeSummaries = function() {
     pricingTypes: all pricing types needed to fetch pricing type names for each service in services
 */
 ServicesSummaryPresenter.summaries = function(jobTitles, services, pricingTypes) {
-    var jobTitlesByID = mapBy(jobTitles, function(t) { return t.jobTitleID(); }),
-        servicesByJobTitleID = groupBy(services, function(s) { return s.jobTitleID(); }, Object.keys(jobTitlesByID));
+    var jobTitlesByID = mapBy(jobTitles, function(t) { return t.jobTitleID(); });
+    var servicesByJobTitleID = groupBy(services, function(s) { return s.jobTitleID(); }, Object.keys(jobTitlesByID));
 
     return Object.keys(servicesByJobTitleID).map(function(jobTitleID) {
         return new ServicesSummaryPresenter(jobTitlesByID[jobTitleID], servicesByJobTitleID[jobTitleID], pricingTypes);

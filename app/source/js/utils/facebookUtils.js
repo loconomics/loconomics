@@ -7,9 +7,9 @@
 /*global window*/
 'use strict';
 
-var loader = require('./loader'),
-    $ = require('jquery'),
-    ko = require('knockout');
+var loader = require('./loader');
+var $ = require('jquery');
+var ko = require('knockout');
 
 // Facebook API settings gathered from the current page
 // on first use:

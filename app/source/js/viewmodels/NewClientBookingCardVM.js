@@ -249,8 +249,8 @@ function NewClientBookingCardVM(app) {
         return n ? 'Card ending in ' + n : '';
     }, this);
     ko.computed(function() {
-        var pm = this.paymentMethod(),
-            number = pm && pm.cardNumber();
+        var pm = this.paymentMethod();
+        var number = pm && pm.cardNumber();
         if (number) {
             var last = number.slice(-4);
             this.booking().paymentLastFourCardNumberDigits(last);

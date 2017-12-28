@@ -21,8 +21,8 @@
  */
 'use strict';
 
-var ko = require('knockout'),
-    EventEmitter = require('events').EventEmitter;
+var ko = require('knockout');
+var EventEmitter = require('events').EventEmitter;
 
 function ModelVersion(original) {
 
@@ -93,8 +93,8 @@ ModelVersion.prototype.pull = function pull(options) {
     options = options || {};
 
     // By default, nothing to do, or avoid overwrite changes.
-    var result = false,
-        rollback = null;
+    var result = false;
+    var rollback = null;
 
     if (options.evenIfNewer || !this.isNewer()) {
         // Update version with the original data,
@@ -124,8 +124,8 @@ ModelVersion.prototype.push = function push(options) {
     options = options || {};
 
     // By default, nothing to do, or avoid overwrite changes.
-    var result = false,
-        rollback = null;
+    var result = false;
+    var rollback = null;
 
     if (options.evenIfObsolete || !this.isObsolete()) {
         // Update original, creating first a rollback function.
@@ -165,8 +165,8 @@ ModelVersion.prototype.sync = function sync() {
 function createRollbackFunction(modelInstance) {
     // Previous function creation, get NOW the information to
     // be backed for later.
-    var backedData = modelInstance.model.toPlainObject(true),
-        backedTimestamp = modelInstance.model.dataTimestamp();
+    var backedData = modelInstance.model.toPlainObject(true);
+    var backedTimestamp = modelInstance.model.dataTimestamp();
 
     // Create the function that *may* get executed later, after
     // changes were done in the modelInstance.

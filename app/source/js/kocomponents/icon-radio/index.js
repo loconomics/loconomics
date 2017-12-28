@@ -1,6 +1,6 @@
-var getObservable = require('../../utils/getObservable');
-
 'use strict';
+
+var getObservable = require('../../utils/getObservable');
 
 var TAG_NAME = 'icon-radio';
 var template = require('./template.html');

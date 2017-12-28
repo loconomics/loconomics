@@ -69,8 +69,8 @@ function PublicUserJobTitle(values) {
     this.model.defID(['userID', 'jobTitleID']);
     
     var findMinValue = function(services) {
-        var s = services,
-            maxValue = { price: Number.MAX_VALUE };
+        var s = services;
+        var maxValue = { price: Number.MAX_VALUE };
 
         if (s.length === 0) return null;
 

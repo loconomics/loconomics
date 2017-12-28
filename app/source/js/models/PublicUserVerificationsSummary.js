@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    PublicUserVerificationsGroup = require('./PublicUserVerificationsGroup');
+var Model = require('./Model');
+var PublicUserVerificationsGroup = require('./PublicUserVerificationsGroup');
 
 function PublicUserVerificationsSummary(values) {
     

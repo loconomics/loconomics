@@ -6,12 +6,12 @@ var unwrap = function unwrap(value) {
 
 exports.defineCrudApiForRest = function defineCrudApiForRest(settings) {
     
-    var extendedObject = settings.extendedObject,
-        Model = settings.Model,
-        modelName = settings.modelName,
-        modelListName = settings.modelListName,
-        modelUrl = settings.modelUrl,
-        idPropertyName = settings.idPropertyName;
+    var extendedObject = settings.extendedObject;
+    var Model = settings.Model;
+    var modelName = settings.modelName;
+    var modelListName = settings.modelListName;
+    var modelUrl = settings.modelUrl;
+    var idPropertyName = settings.idPropertyName;
 
     extendedObject['get' + modelListName] = function getList(filters) {
         

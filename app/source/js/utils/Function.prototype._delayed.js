@@ -13,8 +13,8 @@
 Function.prototype._delayed = function delayed(milliseconds) {
     var fn = this;
     return function() {
-        var context = this,
-            args = arguments;
+        var context = this;
+        var args = arguments;
         setTimeout(function () {
             fn.apply(context, args);
         }, milliseconds);
