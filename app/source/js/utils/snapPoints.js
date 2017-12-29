@@ -20,8 +20,8 @@
     TODO Allow horizontal points
 **/
 
-var $ = require('jquery'),
-    throttle = require('iagosrl/throttle');
+var $ = require('jquery');
+var throttle = require('iagosrl/throttle');
 
 module.exports = function snapPoints($scrollerElement, points, precision) {
     /* eslint complexity:"off" */

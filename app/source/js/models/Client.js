@@ -1,8 +1,8 @@
 /** client model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model');
+var ko = require('knockout');
+var Model = require('./Model');
 
 function Client(values) {
     

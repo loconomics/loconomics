@@ -1,10 +1,10 @@
 /** UpcomingBookingsSummary model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    BookingSummary = require('./BookingSummary'),
-    Booking = require('./Booking');
+var ko = require('knockout');
+var Model = require('./Model');
+var BookingSummary = require('./BookingSummary');
+var Booking = require('./Booking');
 
 function UpcomingBookingsSummary(values) {
 

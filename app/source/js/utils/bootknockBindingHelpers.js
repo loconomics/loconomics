@@ -90,8 +90,8 @@ function createHelpers(ko) {
     Plug helpers in the provided Knockout instance
 **/
 function plugIn(ko, prefix) {
-    var name,
-        helpers = createHelpers(ko);
+    var name;
+    var helpers = createHelpers(ko);
 
     for(var h in helpers) {
         if (helpers.hasOwnProperty && !helpers.hasOwnProperty(h))

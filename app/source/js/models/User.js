@@ -80,9 +80,9 @@ function User(values) {
 
     this.userType = ko.pureComputed({
         read: function() {
-            var c = this.isClient(),
-                p = this.isServiceProfessional(),
-                a = this.isAdmin();
+            var c = this.isClient();
+            var p = this.isServiceProfessional();
+            var a = this.isAdmin();
 
             var userType = 0;
 

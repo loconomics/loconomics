@@ -5,8 +5,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    UserJobTitle = require('../models/UserJobTitle');
+var ko = require('knockout');
+var UserJobTitle = require('../models/UserJobTitle');
 var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var showError = require('../modals/error').show;
@@ -39,8 +39,8 @@ function UserJobProfileViewModel(app) {
 
     function attachMarketplaceStatus(userJobtitle) {
         userJobtitle.marketplaceStatusHtml = ko.pureComputed(function() {
-            var status = this.statusID(),
-                isComplete = this.isComplete();
+            var status = this.statusID();
+            var isComplete = this.isComplete();
             // L18N
             if (isComplete && status === UserJobTitle.status.on) {
                 return 'Marketplace listing: <strong class="text-success">ON</strong>';

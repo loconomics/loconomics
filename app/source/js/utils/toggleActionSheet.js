@@ -17,9 +17,9 @@ exports.on = function() {
     }
 
     $(document).on('click', '[data-toggle=ActionSheet]', function() {
-        var $e = $(this),
-            t = $e.data('target'),
-            $t = $('#' + t);
+        var $e = $(this);
+        var t = $e.data('target');
+        var $t = $('#' + t);
 
         // toggleAttr:
         if ($t.attr('hidden')) {

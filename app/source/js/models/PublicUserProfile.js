@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout');
+var Model = require('./Model');
+var ko = require('knockout');
 
 function PublicUserProfile(values) {
     

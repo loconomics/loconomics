@@ -8,8 +8,9 @@ module.exports = function getUrlQuery(url) {
 
     url = url || window.location.href;
 
-    var vars = [], hash,
-        queryIndex = url.indexOf('?');
+    var vars = [];
+    var hash = null;
+    var queryIndex = url.indexOf('?');
     if (queryIndex > -1) {
         var hashes = url.slice(queryIndex + 1).split('&');
         for(var i = 0; i < hashes.length; i++)
