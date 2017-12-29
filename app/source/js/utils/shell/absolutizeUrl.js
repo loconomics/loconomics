@@ -5,8 +5,8 @@
 **/
 'use strict';
 
-var sanitizeUrl = require('./sanitizeUrl'),
-    escapeRegExp = require('../escapeRegExp');
+var sanitizeUrl = require('./sanitizeUrl');
+var escapeRegExp = require('../escapeRegExp');
 
 function absolutizeUrl(baseUrl, url) {
 

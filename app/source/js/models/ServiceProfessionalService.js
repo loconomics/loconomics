@@ -4,9 +4,9 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout'),
-    numeral = require('numeral');
+var Model = require('./Model');
+var ko = require('knockout');
+var numeral = require('numeral');
 
 function ServiceProfessionalService(values) {
     
@@ -120,8 +120,8 @@ function ServiceProfessionalService(values) {
     }, this);
     
     this.sessionsAndDuration = ko.pureComputed(function() {
-        var sessions = this.numberOfSessions(),
-            dur = this.durationText();
+        var sessions = this.numberOfSessions();
+        var dur = this.durationText();
         if (sessions > 1)
             // TODO: l10n
             return sessions + ' sessions, ' + dur;
@@ -132,10 +132,10 @@ function ServiceProfessionalService(values) {
     this.offeringPrice = numeral(this.price()).format('$0,0.00');
 
     this.displayedPrice = ko.pureComputed(function() {
-        var price = this.price(),
-            rate = this.priceRate(),
-            unit = this.priceRateUnit(),
-            result;
+        var price = this.price();
+        var rate = this.priceRate();
+        var unit = this.priceRateUnit();
+        var result;
         // Formatting
         if (price)
             result = numeral(price).format('$0,0.00');

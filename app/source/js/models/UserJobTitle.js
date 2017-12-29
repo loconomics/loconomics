@@ -4,9 +4,9 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    ProfileAlert = require('./ProfileAlert');
+var ko = require('knockout');
+var Model = require('./Model');
+var ProfileAlert = require('./ProfileAlert');
 
 function UserJobTitle(values) {
     
@@ -35,8 +35,8 @@ function UserJobTitle(values) {
     }, this);
 
     this.isComplete = ko.pureComputed(function() {
-        var statusComplete = this.statusID() === UserJobTitle.status.on || this.statusID() === UserJobTitle.status.off,
-            hasRequiredAlerts = this.requiredAlerts().length > 0;
+        var statusComplete = this.statusID() === UserJobTitle.status.on || this.statusID() === UserJobTitle.status.off;
+        var hasRequiredAlerts = this.requiredAlerts().length > 0;
 
         return statusComplete && !hasRequiredAlerts;
     }, this);

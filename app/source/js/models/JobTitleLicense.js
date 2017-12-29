@@ -2,11 +2,11 @@
  **/
 'use strict';
 
-var Model = require('./Model'),
-    JobTitleMunicipalLicense = require('./JobTitleMunicipalLicense'),
-    JobTitleCountyLicense = require('./JobTitleCountyLicense'),
-    JobTitleStateProvinceLicense = require('./JobTitleStateProvinceLicense'),
-    JobTitleCountryLicense = require('./JobTitleCountryLicense');
+var Model = require('./Model');
+var JobTitleMunicipalLicense = require('./JobTitleMunicipalLicense');
+var JobTitleCountyLicense = require('./JobTitleCountyLicense');
+var JobTitleStateProvinceLicense = require('./JobTitleStateProvinceLicense');
+var JobTitleCountryLicense = require('./JobTitleCountryLicense');
 
 function JobTitleLicenses(values) {
 //Calling Model and passing in the arrays using the defProperties method. The properties will be a ko observable using defProperties. 

@@ -13,10 +13,10 @@ var Appointment = require('../models/Appointment');
 var moment = require('moment-timezone');
 
 exports.sortAppointments = function(a, b) {
-    var as = a.startTime(),
-        ae = a.endTime(),
-        bs = b.startTime(),
-        be = b.endTime();
+    var as = a.startTime();
+    var ae = a.endTime();
+    var bs = b.startTime();
+    var be = b.endTime();
 
     if (as === null)
         return -1;
@@ -60,8 +60,8 @@ exports.fillPreparationTimeSlots = function fillPreparationTimeSlots(date, slots
         if (slot.id() > 0 &&
             slot.sourceBooking()) {
 
-            var end = slot.startTime(),
-                start = moment(end).subtract(preparationHours, 'hours').toDate();
+            var end = slot.startTime();
+            var start = moment(end).subtract(preparationHours, 'hours').toDate();
 
             // avoiding the preparation slot if it ends before or just on
             // the previous slot end (or before the date) to avoid unneeded slots
@@ -113,17 +113,17 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
     // add preparation time for each booking
     exports.fillPreparationTimeSlots(date, slots, schedulingPreferences.betweenTime());
 
-    var filledSlots = [],
-        zeroTime = '00:00:00',
-        last = zeroTime,
-        lastDateTime = null,
-        timeFormat = 'HH:mm:ss';
+    var filledSlots = [];
+    var zeroTime = '00:00:00';
+    var last = zeroTime;
+    var lastDateTime = null;
+    var timeFormat = 'HH:mm:ss';
 
     if (slots.length === 0) {
         // No slots, empty date so create the required
         // unavailable/free/unavailable slots for the 'date'
-        var fullStart = moment(date).startOf('day'),
-            fullEnd = fullStart.clone().add(1, 'days');
+        var fullStart = moment(date).startOf('day');
+        var fullEnd = fullStart.clone().add(1, 'days');
 
         filledSlots = exports.createScheduleSlots({
             start: fullStart.toDate(),
@@ -133,10 +133,10 @@ exports.fillDayAvailability = function fillDayAvailability(date, appointmentsLis
     else {
         // Look for time gaps in the list
         slots.forEach(function(slot) {
-            var start = slot.startTime(),
-                s = moment(start),
-                end = slot.endTime(),
-                e = moment(end);
+            var start = slot.startTime();
+            var s = moment(start);
+            var end = slot.endTime();
+            var e = moment(end);
 
             if (s.format(timeFormat) > last) {
 

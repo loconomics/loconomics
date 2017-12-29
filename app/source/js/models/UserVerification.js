@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout'),
-    Verification = require('./Verification');
+var Model = require('./Model');
+var ko = require('knockout');
+var Verification = require('./Verification');
 
 function UserVerification(values) {
     Model(this);

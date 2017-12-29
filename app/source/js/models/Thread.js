@@ -4,8 +4,8 @@
  **/
 'use strict';
 
-var Model = require('./Model'),
-    Message = require('./Message');
+var Model = require('./Model');
+var Message = require('./Message');
 
 function Thread(values) {
     

@@ -44,8 +44,8 @@ PricingSummary.editable = function(obj) {
     pricingSummary.gratuityPercentage = ko.observable(0);
     pricingSummary.gratuityAmount = ko.observable(0);
     pricingSummary.gratuity = ko.pureComputed(function() {
-        var percentage = this.gratuityPercentage() |0,
-            amount = this.gratuityAmount() |0;
+        var percentage = this.gratuityPercentage() |0;
+        var amount = this.gratuityAmount() |0;
         var r = (
             percentage > 0 ?
                 (this.subtotalPrice() * (percentage / 100)) :
@@ -66,11 +66,11 @@ PricingSummary.editable = function(obj) {
 
     //this.clientServiceFeePrice = ko.pureComputed(function() {
     ko.computed(function() {
-        var t = +this.subtotalPrice(),
-            f = +this.firstTimeServiceFeeFixed(),
-            p = +this.firstTimeServiceFeePercentage(),
-            min = +this.firstTimeServiceFeeMinimum(),
-            max = +this.firstTimeServiceFeeMaximum();
+        var t = +this.subtotalPrice();
+        var f = +this.firstTimeServiceFeeFixed();
+        var p = +this.firstTimeServiceFeePercentage();
+        var min = +this.firstTimeServiceFeeMinimum();
+        var max = +this.firstTimeServiceFeeMaximum();
 
         // Per decission at #1005, if subtotal (professional services) is 0 (only free services chosen by client),
         // we do NOT charge a first time fee even if the kind of booking had required that; but just for tracking information, we keep

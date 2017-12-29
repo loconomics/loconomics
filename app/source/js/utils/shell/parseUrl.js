@@ -5,8 +5,8 @@
 **/
 'use strict';
 
-var getUrlQuery = require('../getUrlQuery'),
-    escapeRegExp = require('../escapeRegExp');
+var getUrlQuery = require('../getUrlQuery');
+var escapeRegExp = require('../escapeRegExp');
 
 function parseUrl(baseUrl, link) {
 

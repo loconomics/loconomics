@@ -108,8 +108,8 @@ function TimePickerModel() {
         var step = (this.stepInMinutes() / 60) |0;
         // IMPORTANT: avoid infinite loops:
         if (step <= 0) step = 1;
-        var values = [],
-            i;
+        var values = [];
+        var i;
         if (region === 'US') {
             values.push({
                 value: 0,
