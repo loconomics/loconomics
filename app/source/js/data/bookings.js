@@ -127,8 +127,8 @@ exports.setServiceProfessionalBooking = function setServiceProfessionalBooking(b
             booking
     ;
 
-    var id = booking.bookingID || '',
-        method = id ? 'put' : 'post';
+    var id = booking.bookingID || '';
+    var method = id ? 'put' : 'post';
 
     booking.allowBookUnavailableTime = allowBookUnavailableTime || false;
 

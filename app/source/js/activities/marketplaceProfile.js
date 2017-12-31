@@ -3,10 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    UserJobProfileViewModel = require('../viewmodels/UserJobProfile'),
-    ko = require('knockout'),
-    moment = require('moment');
+var Activity = require('../components/Activity');
+var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
+var ko = require('knockout');
+var moment = require('moment');
 var user = require('../data/userProfile').data;
 var marketplaceProfile = require('../data/marketplaceProfile');
 
