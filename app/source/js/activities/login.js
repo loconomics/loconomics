@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
+var ValidatedPasswordViewModel = require('../viewmodels/ValidatedPassword');
 var user = require('../data/userProfile').data;
 var auth = require('../data/auth');
 var onboarding = require('../data/onboarding');

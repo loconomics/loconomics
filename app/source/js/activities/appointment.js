@@ -151,11 +151,11 @@ var A = Activity.extend(function AppointmentActivity() {
 exports.init = A.init;
 
 A.prototype.registerAppointmentListeners = function() {
-    var listeners = [],
-        events = AppointmentCardViewModel.events,
-        cardView = this.viewModel.appointmentCardView(),
-        viewModel = this.viewModel,
-        app = this.app;
+    var listeners = [];
+    var events = AppointmentCardViewModel.events;
+    var cardView = this.viewModel.appointmentCardView();
+    var viewModel = this.viewModel;
+    var app = this.app;
 
     this.disposeAppointmentListeners();
 
@@ -214,13 +214,13 @@ A.prototype.show = function show(options) {
         this.requestData.cancelLink = referrer;
     }
 
-    var s1 = options && options.route && options.route.segments[0],
-        s2 = options && options.route && options.route.segments[1],
-        s3 = options && options.route && options.route.segments[2],
-        date,
-        datetime,
-        id,
-        type;
+    var s1 = options && options.route && options.route.segments[0];
+    var s2 = options && options.route && options.route.segments[1];
+    var s3 = options && options.route && options.route.segments[2];
+    var date;
+    var datetime;
+    var id;
+    var type;
 
     var isNumber = /^-?\d+$/;
     if (isNumber.test(s1)) {
@@ -272,8 +272,8 @@ A.prototype.hide = function hide() {
 };
 
 function findAppointmentInList(list, id) {
-    var found = null,
-        index = -1;
+    var found = null;
+    var index = -1;
     list.some(function(apt, i) {
         if (apt.id() === id) {
             found = apt;
@@ -287,8 +287,8 @@ function findAppointmentInList(list, id) {
     };
 }
 
-var CalendarEvent = require('../models/CalendarEvent'),
-    Booking = require('../models/Booking');
+var CalendarEvent = require('../models/CalendarEvent');
+var Booking = require('../models/Booking');
 
 function ViewModel(app) {
     /* eslint max-statements:"off" */
@@ -382,12 +382,12 @@ function ViewModel(app) {
         // Update URL to match the appointment ID and
         // track it state
         // Get ID from URL, to avoid do anything if the same.
-        var apt = this.currentAppointment(),
-            aptId = apt.id(),
-            found = /appointment\/([^/]+)\/(-?\d+)/i.exec(window.location),
-            urlId = found && found[2] |0,
-            urlDate = found && found[1],
-            curDateStr = getDateWithoutTime(apt.startTime()).toISOString();
+        var apt = this.currentAppointment();
+        var aptId = apt.id();
+        var found = /appointment\/([^/]+)\/(-?\d+)/i.exec(window.location);
+        var urlId = found && found[2] |0;
+        var urlDate = found && found[1];
+        var curDateStr = getDateWithoutTime(apt.startTime()).toISOString();
 
         if (!found ||
             urlId !== aptId.toString() ||
@@ -483,9 +483,9 @@ function ViewModel(app) {
     };
     this.setItemFromCurrentList = function (id) {
         /* eslint maxdepth:"off", complexity:"off" */
-        var list = this.appointments(),
-            index,
-            item;
+        var list = this.appointments();
+        var index;
+        var item;
 
         // First, respect special IDs, except the 'no appts':
         if (id < -1) {

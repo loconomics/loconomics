@@ -45,10 +45,10 @@ module.exports = function DateCache(settings) {
     this.get = function(start, end) {
 
         var date = new Date(start);
-        var resultsPerDate = {},
-            holes = [],
-            minRequest = null,
-            maxRequest = null;
+        var resultsPerDate = {};
+        var holes = [];
+        var minRequest = null;
+        var maxRequest = null;
 
         while (date <= end) {
             var dateKey = moment(date).format('YYYY-MM-DD');
