@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    $ = require('jquery'),
-    ko = require('knockout');
+var Activity = require('../components/Activity');
+var $ = require('jquery');
+var ko = require('knockout');
 var calendarSyncing = require('../data/calendarSyncing');
 var showError = require('../modals/error').show;
 

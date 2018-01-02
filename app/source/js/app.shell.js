@@ -17,9 +17,9 @@ if (!window.cordova) {
 var History = require('./utils/shell/hashbangHistory');
 
 // Shell dependencies
-var shell = require('./utils/shell/index'),
-    Shell = shell.Shell,
-    DomItemsManager = shell.DomItemsManager;
+var shell = require('./utils/shell/index');
+var Shell = shell.Shell;
+var DomItemsManager = shell.DomItemsManager;
 
 //var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
 

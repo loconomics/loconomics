@@ -25,8 +25,8 @@
   *
   * @class
   */
-var $ = require('jquery'),
-    ko = require('knockout');
+var $ = require('jquery');
+var ko = require('knockout');
 
 /**
  * Initialized by knockout components.

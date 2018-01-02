@@ -6,10 +6,10 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    NavBar = require('./viewmodels/NavBar'),
-    NavAction = require('./viewmodels/NavAction');
+var ko = require('knockout');
+var $ = require('jquery');
+var NavBar = require('./viewmodels/NavBar');
+var NavAction = require('./viewmodels/NavAction');
 var user = require('./data/userProfile').data;
 
 // Components in use by the AppNav template
@@ -266,9 +266,9 @@ exports.extend = function (app) {
         Fallback to shell goBack
     **/
     app.performsNavBarBack = function performsNavBarBack(options) {
-        var nav = this.navBar(),
-            left = nav && nav.leftAction(),
-            $btn = $('.AppNav .SmartNavBar-edge.left > a.SmartNavBar-btn');
+        var nav = this.navBar();
+        var left = nav && nav.leftAction();
+        var $btn = $('.AppNav .SmartNavBar-edge.left > a.SmartNavBar-btn');
 
         // There is an action, trigger like a click so all the handlers
         // attached on spare places do their work:
@@ -288,10 +288,10 @@ exports.extend = function (app) {
     **/
     var lastNotificationTimer = null;
     app.showNavBarNotification = function showNavBarNotification(settings) {
-        var msg = settings && settings.message || 'Hello World!',
-            duration = settings && settings.duration || 2000,
-            transitionDuration = settings && settings.transitionDuration || 400,
-            $el = $('.AppNav .SmartNavBar-notification');
+        var msg = settings && settings.message || 'Hello World!';
+        var duration = settings && settings.duration || 2000;
+        var transitionDuration = settings && settings.transitionDuration || 400;
+        var $el = $('.AppNav .SmartNavBar-notification');
 
         $el.text(msg);
         $el.fadeIn(transitionDuration)

@@ -3,9 +3,8 @@
 **/
 'use strict';
 
-var
-    ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 var search = require('../data/search');
 require('../kocomponents/tab-list');
 

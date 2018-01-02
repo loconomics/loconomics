@@ -7,11 +7,11 @@
     override changes if server data is different that any local change.
 **/
 'use strict';
-var ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    PricingType = require('../models/PricingType'),
-    RouteMatcher = require('../utils/Router').RouteMatcher,
-    Route = require('../utils/Router').Route;
+var ko = require('knockout');
+var Activity = require('../components/Activity');
+var PricingType = require('../models/PricingType');
+var RouteMatcher = require('../utils/Router').RouteMatcher;
+var Route = require('../utils/Router').Route;
 
 var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
@@ -30,9 +30,9 @@ var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
         helpLink: this.viewModel.helpLink
     });
     this.title = ko.pureComputed(function() {
-        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service',
-            prefix = this.isNew() ? 'New ' : '',
-            postfix = this.client() ? (' only for ' + this.client().firstName()) : '';
+        var pricingName = (this.pricingType() && this.pricingType().singularName()) || 'Service';
+        var prefix = this.isNew() ? 'New ' : '';
+        var postfix = this.client() ? (' only for ' + this.client().firstName()) : '';
 
         if (this.isLoading()) {
             return 'Loading...';
@@ -88,8 +88,8 @@ A.prototype.show = function show(options) {
     this.viewModel.pricingType(null);
 
     // Params
-    var paramsDefaults = { jobTitleID: 0, serviceID: 0, pricingTypeID: 0, clientID: 0 },
-        matcher = new RouteMatcher([
+    var paramsDefaults = { jobTitleID: 0, serviceID: 0, pricingTypeID: 0, clientID: 0 };
+    var matcher = new RouteMatcher([
             new Route('/:jobTitleID/pricingType/:pricingTypeID/client/:clientID/new'),
             new Route('/:jobTitleID/pricingType/:pricingTypeID/new'),
             new Route('/:jobTitleID/:serviceID')
@@ -97,10 +97,10 @@ A.prototype.show = function show(options) {
 
     var params = matcher.match(options.route.path) || {};
 
-    var jobTitleID = params.jobTitleID | 0,
-        pricingTypeID = params.pricingTypeID | 0,
-        serviceProfessionalServiceID = params.serviceID | 0,
-        clientID = params.clientID | 0;
+    var jobTitleID = params.jobTitleID | 0;
+    var pricingTypeID = params.pricingTypeID | 0;
+    var serviceProfessionalServiceID = params.serviceID | 0;
+    var clientID = params.clientID | 0;
 
     this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.serviceProfessionalServiceID(serviceProfessionalServiceID);
@@ -234,8 +234,8 @@ function ViewModel(app) {
 
     // Quicker access in form, under a 'with'
     this.current = ko.pureComputed(function() {
-        var t = this.pricingType(),
-            p = this.serviceProfessionalService();
+        var t = this.pricingType();
+        var p = this.serviceProfessionalService();
 
         if (t && p) {
             return {

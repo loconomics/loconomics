@@ -140,15 +140,15 @@ function ViewModel() {
             return 'loading...';
         }
         else {
-            var type = this.type(),
-                tpl = buttonTemplate;
+            var type = this.type();
+            var tpl = buttonTemplate;
 
             if (type === 'link')
                 tpl = linkTemplate;
 
-            var siteUrl = $('html').attr('data-site-url') || window.location.origin,
-                linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/',
-                imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
+            var siteUrl = $('html').attr('data-site-url') || window.location.origin;
+            var linkUrl = siteUrl + '/book/' + this.bookCode() + '/' + this.jobTitleID() + '/';
+            var imgUrl = siteUrl + '/img/extern/book-me-now-button.svg';
 
             var code = generateButtonCode({
                 tpl: tpl,

@@ -118,7 +118,8 @@ function ViewModel(app) {
 
     // Control list movements
     var goToIndex = function(i) {
-        var min = 0, max = this.list().length - 1;
+        var min = 0;
+        var max = this.list().length - 1;
         if (this.currentIndex() >= min) {
             var ni = Math.max(min, Math.min(max, i));
             this.currentIndex(ni);

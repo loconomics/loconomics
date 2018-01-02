@@ -341,9 +341,9 @@ function ViewModel(app) {
         }
     }, this);
     this.requiredAlertLinks = ko.pureComputed(function() {
-        var userJobTitle = this.userJobTitle(),
-            jobTitleID = userJobTitle && userJobTitle.jobTitleID(),
-            requiredAlerts = (userJobTitle && userJobTitle.requiredAlerts()) || [];
+        var userJobTitle = this.userJobTitle();
+        var jobTitleID = userJobTitle && userJobTitle.jobTitleID();
+        var requiredAlerts = (userJobTitle && userJobTitle.requiredAlerts()) || [];
 
         return requiredAlerts.map(function(profileAlert) {
             return AlertLink.fromProfileAlert(profileAlert, { jobTitleID: jobTitleID });

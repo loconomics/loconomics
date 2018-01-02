@@ -37,8 +37,8 @@ var showError = require('./modals/error').show;
 function preBootstrapWorkarounds() {
     // Internal Bootstrap source utility
     function getTargetFromTrigger($trigger) {
-        var href,
-            target = $trigger.attr('data-target') ||
+        var href;
+        var target = $trigger.attr('data-target') ||
             (href = $trigger.attr('href')) &&
             href.replace(/.*(?=#[^\s]+$)/, ''); // strip for ie7
 
@@ -52,9 +52,9 @@ function preBootstrapWorkarounds() {
     // NOTE: handler must execute before the Bootstrap handler for the same
     // event in order to work.
     $(document).on('click.bs.collapse.data-api.workaround', '[data-toggle="collapse"]', function() {
-        var $t = $(this),
-            $target = getTargetFromTrigger($t),
-            data = $target && $target.data('bs.collapse');
+        var $t = $(this);
+        var $target = getTargetFromTrigger($t);
+        var data = $target && $target.data('bs.collapse');
 
         // If any
         if (data) {
@@ -259,9 +259,9 @@ var appInit = function appInit() {
     $(document).on('click', '[data-shell]', function(e) {
         // Using attr rather than the 'data' API to get updated
         // DOM values
-        var cmdline = $(this).attr('data-shell') || '',
-            args = cmdline.split(' '),
-            cmd = args[0];
+        var cmdline = $(this).attr('data-shell') || '';
+        var args = cmdline.split(' ');
+        var cmd = args[0];
 
         if (cmd && typeof(app.shell[cmd]) === 'function') {
             app.shell[cmd].apply(app.shell, args.slice(1));

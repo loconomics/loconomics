@@ -44,10 +44,10 @@ var clearNode = function (node) {
 };
 
 var SwitchTabs = function () {
-    var vIn = $('#'+this.dataset.vin),
-        vOut = $('.SmartNavView.active'),
-        vInCmd = this,
-        vOutCmd = $('.SmartNavTabs button.active');
+    var vIn = $('#'+this.dataset.vin);
+    var vOut = $('.SmartNavView.active');
+    var vInCmd = this;
+    var vOutCmd = $('.SmartNavTabs button.active');
     vOut.classList.remove('active');
     vIn.classList.add('active');
     vOut.classList.add('hidden');
@@ -59,10 +59,10 @@ var SwitchTabs = function () {
 exports.SwitchTabs = SwitchTabs;
 
 var Slide = function (callback) {
-    var vIn = $('#'+this.dataset.vin),
-        vOut = $('.SmartNavView.active'),
-        slideType = this.dataset.sd,
-        onAnimationEnd = function () {
+    var vIn = $('#'+this.dataset.vin);
+    var vOut = $('.SmartNavView.active');
+    var slideType = this.dataset.sd;
+    var onAnimationEnd = function () {
             vOut.classList.add('hidden');
             vIn.classList.add('active');
             vIn.classList.remove(slideOpts[slideType][0]);
@@ -84,9 +84,9 @@ var Slide = function (callback) {
 exports.Slide = Slide;
 
 var ScrollTop = function () {
-    var el = this.parentNode.parentNode.childNodes[5].childNodes[1],
-        offset = el.scrollTop,
-        interval = setInterval(function() {
+    var el = this.parentNode.parentNode.childNodes[5].childNodes[1];
+    var offset = el.scrollTop;
+    var interval = setInterval(function() {
             el.scrollTop = offset;
             offset -= 24;
             if (offset <= -24) {

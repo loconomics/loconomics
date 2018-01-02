@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    VocElementEnum = require('../models/VocElementEnum');
+var Activity = require('../components/Activity');
+var VocElementEnum = require('../models/VocElementEnum');
 var onboarding = require('../data/onboarding');
 var feedback = require('../data/feedback');
 var showError = require('../modals/error').show;
@@ -29,8 +29,8 @@ A.prototype.show = function show(options) {
     Activity.prototype.show.call(this, options);
 
     var params = this.requestData.route.segments || [];
-    var elementName = params[0] || '',
-        elementID = VocElementEnum[elementName] |0;
+    var elementName = params[0] || '';
+    var elementID = VocElementEnum[elementName] |0;
 
     this.viewModel.emailSubject(this.requestData.route.query.subject || '');
     this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');

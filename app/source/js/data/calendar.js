@@ -142,9 +142,9 @@ var getRemoteAppointmentsByDate = function (date) {
         calendarEvents.getEventsByDates(date)
     ]).then(function(group) {
 
-        var events = group[1],
-            bookings = group[0],
-            apts = [];
+        var events = group[1];
+        var bookings = group[0];
+        var apts = [];
 
         if (events && events().length) {
             apts = Appointment.listFromCalendarEventsBookings(events(), bookings());

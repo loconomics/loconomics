@@ -451,8 +451,8 @@ ListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, b
     };
     this.pushListToRemote = function pushListToRemote(data) {
 
-        var itemID = data[this.settings.itemIdField],
-            method = itemID ? 'put' : 'post';
+        var itemID = data[this.settings.itemIdField];
+        var method = itemID ? 'put' : 'post';
 
         var url = baseUrl + (
             itemID ? '/' + itemID : ''

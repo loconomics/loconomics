@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;
 var userVerifications = require('../data/userVerifications');
 var showNotification = require('../modals/notification').show;

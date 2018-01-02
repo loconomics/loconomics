@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    ko = require('knockout'),
-    photoTools = require('../utils/photoTools');
+var Activity = require('../components/Activity');
+var ko = require('knockout');
+var photoTools = require('../utils/photoTools');
 require('jquery.fileupload-image');
 var onboarding = require('../data/onboarding');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
@@ -107,8 +107,8 @@ A.prototype.show = function show(state) {
 
     this.updateNavBarState();
 
-    var ModelVersion = require('../utils/ModelVersion'),
-        UserLicenseCertification = require('../models/UserLicenseCertification');
+    var ModelVersion = require('../utils/ModelVersion');
+    var UserLicenseCertification = require('../models/UserLicenseCertification');
 
     if (!this.viewModel.isNew()) {
         userLicensesCertifications
