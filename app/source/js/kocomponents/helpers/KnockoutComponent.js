@@ -10,83 +10,52 @@ import ko from 'knockout';
 
 export default class KnockoutComponent {
     /**
-     * Set-up the view model to be used at the component template using incoming
-     * parameters, and perform any extra operation on template and incoming
-     * elements.
-     * All the parameters are optional and subclasses don't need to support
-     * them if they don't use them at all. But to follow a common pattern,
-     * is expected they use the same params and same order (can add an additional
-     * settings/whatever as last parameter), and pass in `undefined` when
-     * calling `super` for any unused one so they keep the default value
-     * (they are not allowed to be null).
-     * @param {Object} [params={}] Instance parameters, given through data-params
-     * attribute.
-     * @param {Object} [elements={}] Set of references to elements, clasified
-     * @param {Object} [elements.refs={}] References to component instance elements
-     * (HTMLElements, Array<HTMLElements>); they were created from the component
-     * html template.
-     * Should be provided internally by the creator of the component, as a named
-     * set of special elements. Should be only used when something special must
-     * be done with the element that cannot happens using Knockout binding and has
-     * advantages over using a custom Knockout binding helper. A typical
-     * element provided is `refs.root`, the component instance element.
-     * @param {Object} [elements.children={}] References to incoming children elements
-     * (HTMLElements, Array<HTMLElements>).
-     * Should be filtered internally by the creator of the component, provided as
-     * a named set of allowed children. Should be used to restrict which elements
-     * can be provided, do anything special with them and inject them in the
-     * template at specific placeholders; remember that this is not needed
-     * if you just want to inject all given children in the template, use
-     * the special `$componentTemplateNodes` value available at templates
-     * ([check out Knockout documentation](knockoutjs.com/documentation/component-custom-elements.html))
+     * Set-up the members to be used as the component view model, process
+     * incoming parameters.
+     * @param {Object} params Instance parameters, given through data-params
+     * attribute and processed by Knockout
      */
-    constructor(params = {}, elements = {}) {
-        const { refs = {}, children = {} } = elements;
-        /**
-         * Store the parameters unprocessed
-         * @member {Object}
-         */
-        this.rawParams = params;
-        /**
-         * Holds references to template elements
-         * @member {Object}
-         */
-        this.refs = refs;
-        /**
-         * Holds references to incoming children elements
-         * @member {Object}
-         */
-        this.children = children;
-
-        // Run init async
-        setTimeout(() => this.init(), 1);
+    constructor() {
+        /* eslint no-useless-constructor:off */
     }
 
     /**
-     * Perform initialization tasks after the constructor.
-     * Use constructor to create properties, and init to run tasks.
-     * Should not be used to create members except for internal properties.
-     * It's triggered internally after constructor with minimum delay (async),
-     * allowing subclasses to replace some base properties before use them
-     * at some tasks.
-     * Do not call directly, can be extended.
+     * Template and class (view-model) were instantiated, but still not bound
+     * together.
+     * Knockout attached the component template to the DOM and detached children
+     * nodes given in the usage of the component ('templateNodes'), being both
+     * available in the object passed in as parameter for advanced manipulation.
+     * Be aware that, since binding didn't happened, any component used in the
+     * template has not been instantiated still, same as any content generated
+     * by binding handlers.
+     * This method is useful to filter/adapt/reference that DOM elements and
+     * assign them to observables properties so is available for binding.
+     * This callback is executed just after the constructor.
+     * Should not be used to create new members (keep that at the constructor),
+     * but can update them.
+     * @param {Knockout.ComponentInfo} componentInfo
+     * @see http://knockoutjs.com/documentation/component-registration.html#a-createviewmodel-factory-function
      */
-    init() {
-        if (this.__initialized) {
-            throw new Error('Component was already initialized.');
+    beforeBinding(componentInfo) {
+        if (this.__beforeBinding) {
+            throw new Error('Manual attempt to call beforeBinding.');
         }
         else {
-            this.__initialized = true;
+            this.__beforeBinding = true;
         }
+
+        // We set the class name directly in the component, if any
+        if (this.cssClass) {
+            componentInfo.element.classList.add(this.cssClass);
+        }
+
         /**
          * Enable the component specific CSS (if there is someone), injecting
          * the `style` into the page (the element template or the head)
          * @private {HTMLElement}
          */
         this.__styleElement = this.constructor.style && insertCss(this.constructor.style, {
-            // Insert at the end of the element root, if not defined will
-            // fallback to `html>head` element
-            container: this.refs.root
+            container: componentInfo.element
         });
     }
 
@@ -139,23 +108,17 @@ export default class KnockoutComponent {
      * @param {Array<HTMLNodes>} componentInfo.templateNodes is an array
      * containing any DOM nodes that have been supplied to the component; they
      * are the children given to the instance of the component, like:
-     * <knockout-component> template <span>nodes</span> </knockout-component>
+     * <knockout-component> template <span>nodes</span> </knockout-co
+     * mponent>
      * @returns {KnockoutComponent} An instance of the component class, ready
      * to be bound to the template (Knockout will bind it).
      */
     static from(params, componentInfo) {
-        // We set the class name directly in the component, if any
-        if (this.cssClass) {
-            componentInfo.element.classList.add(this.cssClass);
-        }
-        return new this(params, {
-            refs: {
-                root: componentInfo.element
-            },
-            children: {
-                all: componentInfo.templateNodes
-            }
-        });
+        // Create a new instance
+        var vm = new this(params);
+        // Run the beforeBinding with DOM elements
+        vm.beforeBinding(componentInfo);
+        return vm;
     }
 }
 
@@ -225,3 +188,31 @@ var komponentLoader = {
 };
 // Adding the loader to the beggining, so takes precedence over standard set-up
 ko.components.loaders.unshift(komponentLoader);
+
+/**
+ * @typedef {Object} Knockout.ComponentInfo
+ * @member {HTMLElement} element is the element the component is being
+ * injected into. When beforeBinding is called, the template has
+ * already been injected into this element, but isn't yet bound.
+ *
+ * Recommendation: should be only used when something special must
+ * be done with the element that cannot happens using Knockout binding and has
+ * advantages over using a custom Knockout binding helper. Too, can be used
+ * to query for elements that ever exists in the instance (not affected by
+ * bindings that remove childrens, as 'if', 'with', or inside loops) and are
+ * needed for special management (a binding helper 'ref' can be used and allows
+ * dynamic elements and react on changes).
+ *
+ * @member {Array<HTMLNode>} templateNodes is an array containing any DOM
+ * nodes that have been supplied to the component.
+ *
+ * Recommendations:
+ * Should be filtered at beforeBinding, assigning nodes/elements of allowed,
+ * expected children to component properties for usage in the template (for
+ * example, to re-inject them -using them as externally given templates,
+ * see usage of the 'template' binding with the option 'nodes').
+ * Remember that this is not needed
+ * if you just want to inject all given children in the template, for that use
+ * the special `$componentTemplateNodes` value available at templates
+ * ([check out Knockout documentation](knockoutjs.com/documentation/component-custom-elements.html))
+ */
