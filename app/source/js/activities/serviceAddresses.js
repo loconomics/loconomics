@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var $ = require('jquery');
+var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
@@ -166,9 +166,9 @@ A.prototype.applyOwnNavbarRules = function() {
         // Reset to defaults, or given title:
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
 
-        var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
-            url = this.mustReturnTo || (jid && '/listingEditor/' + jid || '/schedulingPreferences');
+        var jid = this.viewModel.jobTitleID();
+        var jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler';
+        var url = this.mustReturnTo || (jid && '/listingEditor/' + jid || '/schedulingPreferences');
 
         this.navBar.leftAction().link(url);
         this.navBar.leftAction().text(this.requestData.navTitle || jname);
@@ -346,8 +346,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.onboardingNextReady = ko.computed(function() {
-        var isin = onboarding.inProgress(),
-            hasItems = this.serviceAddresses.sourceAddresses().length > 0;
+        var isin = onboarding.inProgress();
+        var hasItems = this.serviceAddresses.sourceAddresses().length > 0;
 
         return isin && hasItems;
     }, this);

@@ -3,11 +3,11 @@
   */
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout'),
-    PasswordValidator = require('../utils/PasswordValidator'),
-    Field = require('./Field'),
-    scrollToElement = require('../utils/scrollToElement');
+var $ = require('jquery');
+var ko = require('knockout');
+var PasswordValidator = require('../utils/PasswordValidator');
+var Field = require('./Field');
+var scrollToElement = require('../utils/scrollToElement');
 
 /*
  * View model representing a password field with validation and messages.
@@ -16,11 +16,11 @@ var $ = require('jquery'),
  * @class
  */
 function ValidatedPassword() {
-    var MINIMUM_HEIGHT_FOR_SCROLL = 700,
-        SCROLL_ANIMATION_DURATION = 300,
-        hasScrolledToField = false,
-        showRequirements = ko.observable(false),
-        showRequirementsLink = ko.observable(true);
+    var MINIMUM_HEIGHT_FOR_SCROLL = 700;
+    var SCROLL_ANIMATION_DURATION = 300;
+    var hasScrolledToField = false;
+    var showRequirements = ko.observable(false);
+    var showRequirementsLink = ko.observable(true);
 
     /**
       * password is the value of the password field
@@ -138,13 +138,13 @@ function ValidatedPassword() {
     }, this);
 
     this.characterKindsLabel = ko.pureComputed(function() {
-        var count = validator().getCorrectCharacterKindsCount(),
-            labels = [
-                    'Includes at least 3 character types:',
-                    'Includes at least 2 more character types:',
-                    'Includes at least 1 more character type:',
-                    'Includes at least 3 character types'
-                ];
+        var count = validator().getCorrectCharacterKindsCount();
+        var labels = [
+            'Includes at least 3 character types:',
+            'Includes at least 2 more character types:',
+            'Includes at least 1 more character type:',
+            'Includes at least 3 character types'
+        ];
         return labels[Math.min(count, labels.length - 1)];
     }, this);
 }

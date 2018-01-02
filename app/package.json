@@ -49,7 +49,7 @@
     "grunt-contrib-cssmin": "2.x",
     "grunt-contrib-htmlmin": "2.x",
     "grunt-contrib-stylus": "1.x",
-    "grunt-contrib-uglify": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
+    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#ccb95a70cad6a4e9e902d3bd5d0e38a4de09a1e1",
     "grunt-contrib-watch": "1.x",
     "grunt-copy-to": "0.0.12",
     "grunt-eslint": "^20.1.0",

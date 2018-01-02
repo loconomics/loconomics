@@ -1,11 +1,11 @@
 /** PerformanceSummary model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    ListViewItem = require('./ListViewItem'),
-    moment = require('moment'),
-    numeral = require('numeral');
+var ko = require('knockout');
+var Model = require('./Model');
+var ListViewItem = require('./ListViewItem');
+var moment = require('moment');
+var numeral = require('numeral');
 
 function PerformanceSummary(values) {
 

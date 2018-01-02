@@ -3,10 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    UserJobProfileViewModel = require('../viewmodels/UserJobProfile'),
-    ko = require('knockout'),
-    moment = require('moment');
+var Activity = require('../components/Activity');
+var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
+var ko = require('knockout');
+var moment = require('moment');
 var user = require('../data/userProfile').data;
 var marketplaceProfile = require('../data/marketplaceProfile');
 
@@ -52,9 +52,9 @@ function ViewModel(app) {
 
     jobVm.verificationsSecondaryText = ko.computed(function() {
         // TODO read count limit
-        var verificationsLimit = 10,
-            count = this.verificationsCount(),
-            remaining = verificationsLimit - count;
+        var verificationsLimit = 10;
+        var count = this.verificationsCount();
+        var remaining = verificationsLimit - count;
         // Format
         // L18N
         return remaining > 0 ? 'You can add up to ' + remaining + ' more' : 'You cannot add more';

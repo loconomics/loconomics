@@ -246,8 +246,8 @@ var countries = [
         [237, 'Yemen'],
         [238, 'Zambia'],
         [239, 'Zimbabwe']
-    ],
-    unitedStates = countries[0];
+    ];
+var unitedStates = countries[0];
 
 var option = function(country) {
     return { 'id': country[0], 'name': country[1] };

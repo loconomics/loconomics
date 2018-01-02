@@ -109,13 +109,13 @@ A.prototype.show = function show(options) {
     // Params
     var params = options && options.route && options.route.segments || [];
 
-    var kind = params[0] || '',
-        isService = kind === Address.kind.service,
-        jobTitleID = isService ? params[1] |0 : 0,
-        addressID = isService ? params[2] |0 : params[1] |0,
-        // Only used on service address creation, instead an ID we get
-        // a string for 'serviceArea' or 'serviceLocation')
-        serviceType = params[2] || '';
+    var kind = params[0] || '';
+    var isService = kind === Address.kind.service;
+    var jobTitleID = isService ? params[1] |0 : 0;
+    var addressID = isService ? params[2] |0 : params[1] |0;
+    // Only used on service address creation, instead an ID we get
+    // a string for 'serviceArea' or 'serviceLocation')
+    var serviceType = params[2] || '';
     // Special type: clientLocation
     var clientUserID = serviceType === 'clientLocation' ? params[3] : null;
 

@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery');
+var ko = require('knockout');
+var $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
 var jobTitles = require('../data/jobTitles');
@@ -211,8 +211,8 @@ function ServiceProfessionalServiceViewModel(app) {
             list = serviceProfessionalServices.asModel(list);
 
             // Read presets selection from requestData
-            var preset = this.preSelectedServices(),
-                selection = this.selectedServices;
+            var preset = this.preSelectedServices();
+            var selection = this.selectedServices;
 
             // Add the isSelected property to each item
             list.forEach(function(item) {

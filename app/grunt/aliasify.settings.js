@@ -6,13 +6,14 @@
  */
 'use strict';
 
+var envOptions = require('./shared/envOptions');
+
 /**
- * Detects if the 'dev' parameter was given at console, meaning that
- * settings must be prepared for development environment (files with debug
+ * Settings must be prepared for development environment (files with debug
  * code/symbols versus files without debug/optimized)
  * @type {Boolean}
  */
-var dev = !!~process.argv.indexOf('--dev');
+var dev = envOptions.inDev();
 
 const config = dev ? {} : {
     aliases: {

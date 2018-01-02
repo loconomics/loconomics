@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    VocElementEnum = require('../models/VocElementEnum');
+var Activity = require('../components/Activity');
+var VocElementEnum = require('../models/VocElementEnum');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
@@ -49,8 +49,8 @@ A.prototype.show = function show(options) {
     this.updateNavBarState();
 
     var params = this.requestData.route.segments || [];
-    var elementName = params[0] || '',
-        elementID = VocElementEnum[elementName] |0;
+    var elementName = params[0] || '';
+    var elementID = VocElementEnum[elementName] |0;
 
     this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
 

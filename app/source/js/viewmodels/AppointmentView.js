@@ -28,8 +28,8 @@ module.exports = function AppointmentView(appointment) {
 
     ko.computed(function() {
         var add = this.address();
-        var aid = add && add.addressID(),
-            jid = this.jobTitleID();
+        var aid = add && add.addressID();
+        var jid = this.jobTitleID();
         if (aid && jid) {
             serviceAddresses.getItem(jid, aid).then(function(serverAddress) {
                 if (serverAddress.addressID === aid)
@@ -53,8 +53,8 @@ module.exports = function AppointmentView(appointment) {
         var b = this.sourceBooking();
         if (!b) return [];
 
-        var jid = this.jobTitleID(),
-            details = this.pricing();
+        var jid = this.jobTitleID();
+        var details = this.pricing();
 
         return details.map(function(det) {
             return pricingSummaryDetailView(det, jid);
@@ -124,8 +124,8 @@ module.exports = function AppointmentView(appointment) {
 };
 
 function pricingSummaryDetailView(pricingSummaryDetail, jobTitleID) {
-    var observable = ko.observable(serviceProfessionalServices.asModel()), // default empty object
-        serviceID = pricingSummaryDetail.serviceProfessionalServiceID();
+    var observable = ko.observable(serviceProfessionalServices.asModel()); // default empty object
+    var serviceID = pricingSummaryDetail.serviceProfessionalServiceID();
 
     pricingSummaryDetail.serviceProfessionalService = observable;
 

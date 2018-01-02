@@ -40,7 +40,7 @@
         "compat/compat": "warn",
         "complexity": [
             "error",
-            6
+            10
         ],
         "computed-property-spacing": [
             "error",
@@ -76,10 +76,6 @@
         "key-spacing": "off",
         "keyword-spacing": "off",
         "line-comment-position": "off",
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
         "lines-around-comment": "off",
         "lines-around-directive": "off",
         "lines-between-class-members": [
@@ -227,7 +223,7 @@
         "object-curly-spacing": "off",
         "object-property-newline": "off",
         "object-shorthand": "off",
-        "one-var": ["warn", "never"],
+        "one-var": ["error", "never"],
         "one-var-declaration-per-line": "off",
         "operator-assignment": "off",
         "operator-linebreak": "off",

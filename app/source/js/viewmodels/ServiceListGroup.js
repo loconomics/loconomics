@@ -2,10 +2,10 @@
 
 'use strict';
 
-var groupBy = require('../utils/groupBy'),
-    mapBy = require('../utils/mapBy'),
-    ServiceList = require('./ServiceList'),
-    $ = require('jquery');
+var groupBy = require('../utils/groupBy');
+var mapBy = require('../utils/mapBy');
+var ServiceList = require('./ServiceList');
+var $ = require('jquery');
 
 /**
  * Creates a new ServiceListGroup view model. Service list group creates lists
@@ -62,8 +62,8 @@ ServiceListGroup.prototype.serviceLists = function() {
          }, this.defaultGroups());
 
     return Object.keys(groups).map(function(pricingTypeID) {
-        var pricingType = this.pricingTypesByID()[pricingTypeID],
-            listTitle = this.listTitle({pricingType: pricingType});
+        var pricingType = this.pricingTypesByID()[pricingTypeID];
+        var listTitle = this.listTitle({pricingType: pricingType});
 
         return new ServiceList({
                 services: groups[pricingTypeID],

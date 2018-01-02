@@ -2,9 +2,9 @@
  **/
 'use strict';
 
-var Model = require('./Model'),
-    ServiceAttributeCategory = require('./ServiceAttributeCategory'),
-    ExperienceLevel = require('./ExperienceLevel');
+var Model = require('./Model');
+var ServiceAttributeCategory = require('./ServiceAttributeCategory');
+var ExperienceLevel = require('./ExperienceLevel');
 
 function JobTitleServiceAttributes(values) {
 

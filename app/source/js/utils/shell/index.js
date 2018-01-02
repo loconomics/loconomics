@@ -7,13 +7,13 @@
 **/
 'use strict';
 
-var deps = require('./dependencies'),
-    DomItemsManager = require('./DomItemsManager'),
-    parseUrl = require('./parseUrl'),
-    absolutizeUrl = require('./absolutizeUrl'),
-    $ = require('jquery'),
-    loader = require('./loader'),
-    EventEmitter = require('events').EventEmitter;
+var deps = require('./dependencies');
+var DomItemsManager = require('./DomItemsManager');
+var parseUrl = require('./parseUrl');
+var absolutizeUrl = require('./absolutizeUrl');
+var $ = require('jquery');
+var loader = require('./loader');
+var EventEmitter = require('events').EventEmitter;
 
 $.extend(deps, {
     parseUrl: parseUrl,

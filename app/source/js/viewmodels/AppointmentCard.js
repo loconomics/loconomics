@@ -4,15 +4,15 @@
     or placeholder information
 **/
 
-var ko = require('knockout'),
-    moment = require('moment'),
-    getObservable = require('../utils/getObservable'),
-    Appointment = require('../models/Appointment'),
-    AppointmentView = require('../viewmodels/AppointmentView'),
-    ModelVersion = require('../utils/ModelVersion'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime'),
-    PricingSummaryDetail = require('../models/PricingSummaryDetail'),
-    EventEmitter = require('events').EventEmitter;
+var ko = require('knockout');
+var moment = require('moment');
+var getObservable = require('../utils/getObservable');
+var Appointment = require('../models/Appointment');
+var AppointmentView = require('../viewmodels/AppointmentView');
+var ModelVersion = require('../utils/ModelVersion');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
+var PricingSummaryDetail = require('../models/PricingSummaryDetail');
+var EventEmitter = require('events').EventEmitter;
 var Booking = require('../models/Booking');
 var Address = require('../models/Address');
 var calendar = require('../data/calendar');
@@ -476,8 +476,8 @@ function AppointmentCardViewModel(params) {
         if (this.progress &&
             !this.progress.ended) {
             data.progress = this.progress;
-            var step = data.progress.step || 1,
-                total = data.progress.total || 1;
+            var step = data.progress.step || 1;
+            var total = data.progress.total || 1;
             // TODO I18N
             data.title = step + ' of ' + total;
             data.navTitle = null;
@@ -592,9 +592,9 @@ function AppointmentCardViewModel(params) {
     // Calculate the endTime given an appointment duration, retrieved
     // from the selected service
     ko.computed(function calculateEndTime() {
-        var duration = this.item().serviceDurationMinutes(),
-            start = moment(this.item().startTime()),
-            end;
+        var duration = this.item().serviceDurationMinutes();
+        var start = moment(this.item().startTime());
+        var end;
 
         if (this.isBooking() &&
             start.isValid()) {
