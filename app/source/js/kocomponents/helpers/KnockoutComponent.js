@@ -160,7 +160,7 @@ export default class KnockoutComponent {
 }
 
 /**
- * Text hook needed to enable the 'afterRender' method on components, by
+ * Text hook needed to enable the 'afterRender' callback method on components, by
  * injecting it into the end of the template (it's a trick)
  * @const {string}
  */
@@ -208,17 +208,20 @@ var komponentLoader = {
         if (componentConfig.prototype instanceof KnockoutComponent) {
             // Get template from the class
             const template = getTemplateFrom(componentConfig);
-            // Get view model constructor (will use explicit or inherit creator
-            // function)
-            const viewModel = {
-                createViewModel: componentConfig.from
-            };
-            callback({ viewModel, template });
+            // Reuse default template loader that converts a string into Nodes
+            ko.components.defaultLoader.loadTemplate(name, template, (templateNodes) => {
+                callback({
+                    template: templateNodes,
+                    // Get view model constructor (will use explicit or inherit creator
+                    // function)
+                    createViewModel: componentConfig.from.bind(componentConfig)
+                });
+            });
         }
         else {
             callback(null);
         }
     }
 };
-// Adding the loader to the beggining, so it reuses the default loader
+// Adding the loader to the beggining, so takes precedence over standard set-up
 ko.components.loaders.unshift(komponentLoader);

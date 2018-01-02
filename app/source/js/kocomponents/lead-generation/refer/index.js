@@ -26,7 +26,7 @@ var LAST_STEP = 3;
 /**
  * Component view model
  */
-class ViewModel extends Komponent {
+export default class LeadGenerationRefer extends Komponent {
 
     static get style() { return STYLE; }
 
@@ -309,7 +309,4 @@ class ViewModel extends Komponent {
     }
 }
 
-ko.components.register(TAG_NAME, {
-    template: TEMPLATE,
-    viewModel: ViewModel
-});
+ko.components.register(TAG_NAME, LeadGenerationRefer);
