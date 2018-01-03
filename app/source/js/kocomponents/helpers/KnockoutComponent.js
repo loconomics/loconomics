@@ -16,7 +16,13 @@ export default class KnockoutComponent {
      * attribute and processed by Knockout
      */
     constructor() {
-        /* eslint no-useless-constructor:off */
+        /**
+         * Holds a list of objects with a 'dispose' method or functions that
+         * need to be called when disposing the component, freeing up ressources
+         * that don't do it automatically (see `dispose` method).
+         * @member {Array<IDisposable>}
+         */
+        this.disposables = [];
     }
 
     /**
@@ -57,30 +63,57 @@ export default class KnockoutComponent {
         this.__styleElement = this.constructor.style && insertCss(this.constructor.style, {
             container: componentInfo.element
         });
+        /*
+        TEMPORARLY REMOVED SINCE CAUSES CONFLICTS: INSERT-CSS USES A UNIQUE
+        STYLE ELEMENT FOR ALL, REMOVING THAT MEANS REMOVING ALL OTHERS
+        TODO: Look for/build alternative to insert-css, allowing diposing styles
+        without conflicts; one approach could be add it ever to the component
+        template but that means that shared styles are duplicated at runtime
+        (inserted twice, how much performance problem can be? debugging is a bit
+        annoying because of duplicated applied rules, though)
+        // If there is a component style, must be removed.
+        this.disposables.push(function() {
+            if (this.__styleElement) {
+                this.__styleElement.parentNode.removeChild(this.__styleElement);
+            }
+        }.bind(this));
+        */
     }
 
     /**
      * Free ressources that are not automatically managed.
      * Usually needed to remove external events listeners, subscriptions to
      * external observables or computed observables.
-     * It's triggered automatically by Knockout after the component was
-     * removed, so expect `refs` to not be valid anymore.
-     *//* TEMPORARLY REMOVED SINCE CAUSES CONFLICTS: INSERT-CSS USES A UNIQUE
-     STYLE ELEMENT FOR ALL, REMOVING THAT MEANS REMOVING ALL OTHERS
-     TODO: Look for/build alternative to insert-css, allowing diposing styles
-     without conflicts; one approach could be add it ever to the component
-     template but that means that shared styles are duplicated at runtime
-     (inserted twice, how much performance problem can be? debugging is a bit
-     annoying because of duplicated applied rules, though)
+     * It's triggered automatically by Knockout when the component instance is
+     * not needed anymore and just before remove it from the DOM.
+     * @see http://knockoutjs.com/documentation/component-binding.html#component-lifecycle
+     *
+     * Note:
+     * Base implementation let you just register a 'disposable' object or function
+     * at previous steps in the livecycle, and they will be disposed already by
+     * this method, so should be very rare you need to replace or extend this
+     * implementation.
+     *
+     * @param {(Function|IDisposable)}
+     */
     dispose() {
-        // If there is a component style, must be removed.
-        // Need manual removal only if was attached to body (there was not
-        // a reference to the element --in that case, the whole element
-        // was already removed at this point)
-        if (this.__styleElement && !this.refs.root) {
-            this.__styleElement.parentNode.removeChild(this.__styleElement);
-        }
-    }*/
+        this.disposables.forEach(function(value) {
+            try {
+                if (value && value.dispose) {
+                    value.dispose();
+                }
+                else if (typeof(value) === 'function') {
+                    value();
+                }
+                else {
+                    throw new Error('Invalid disposable', value);
+                }
+            }
+            catch(ex) {
+                console.error('Error at component dispose(), running an individual disposable', ex);
+            }
+        });
+    }
 
     /**
      * Creates an instance from the input parameters and DOM references of
@@ -215,4 +248,18 @@ ko.components.loaders.unshift(komponentLoader);
  * if you just want to inject all given children in the template, for that use
  * the special `$componentTemplateNodes` value available at templates
  * ([check out Knockout documentation](knockoutjs.com/documentation/component-custom-elements.html))
+ */
+
+/**
+ * Interface for objects that includes a disposal task.
+ *
+ * @interface IDisposable
+ */
+/**
+ * Get the color as an array of red, green, and blue values, represented as
+ * decimal numbers between 0 and 1.
+ *
+ * @function
+ * @name IDisposable#dispose
+ * Explicitely free ressources, stop tasks, and similar.
  */

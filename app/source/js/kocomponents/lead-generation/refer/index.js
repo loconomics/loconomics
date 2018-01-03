@@ -36,13 +36,6 @@ export default class LeadGenerationRefer extends Komponent {
         /* eslint max-statements:"off" */
         super();
 
-        /**
-         * Holds a list of objects with a 'dispose' methods that need to be called
-         * when disposing the component (see `dispose` method).
-         * @member {Array}
-         */
-        this.disposables = [];
-
         /// Form data
         /**
          * Holds the ID generated for the current anonymous user after register
@@ -291,21 +284,6 @@ export default class LeadGenerationRefer extends Komponent {
                 this.currentStep(2);
             }
         }.bind(this);
-    }
-
-    /**
-     * Performs clean-up of observables subscriptions and other used objects that
-     * need disposal when the component instance is deleted
-     * @member
-     */
-    dispose() {
-        super.dispose();
-        this.disposables.forEach(function(value) {
-            try {
-                value.dispose();
-            }
-            catch(ex) { }
-        });
     }
 }
 
