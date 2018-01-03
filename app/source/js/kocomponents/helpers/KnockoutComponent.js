@@ -133,16 +133,8 @@ export default class KnockoutComponent {
      *
      * @param {Object} params is an object whose key/value pairs are the parameters
      * passed from the component binding or custom element ('data-params="_is_this_"')
-     * @param {Object} componentInfo Access to DOM elements instantiated from
+     * @param {Knockout.ComponentInfo} componentInfo Access to DOM elements instantiated from
      * the component template or nodes provided
-     * @param {HTMLElement} componentInfo.element is the element the component
-     * is being injected into. When this method is called, the template has
-     * already been injected into this element, but isn't yet bound.
-     * @param {Array<HTMLNodes>} componentInfo.templateNodes is an array
-     * containing any DOM nodes that have been supplied to the component; they
-     * are the children given to the instance of the component, like:
-     * <knockout-component> template <span>nodes</span> </knockout-co
-     * mponent>
      * @returns {KnockoutComponent} An instance of the component class, ready
      * to be bound to the template (Knockout will bind it).
      */
@@ -238,6 +230,9 @@ ko.components.loaders.unshift(komponentLoader);
  *
  * @member {Array<HTMLNode>} templateNodes is an array containing any DOM
  * nodes that have been supplied to the component.
+ * They are the children given to the instance of the component, like:
+ * <knockout-component> template <span>nodes</span> </knockout-co
+ * mponent>
  *
  * Recommendations:
  * Should be filtered at beforeBinding, assigning nodes/elements of allowed,
