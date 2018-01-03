@@ -1,7 +1,27 @@
 /**
  * Base class to help implementing a Knockout Component.
- * It's basically the base ViewModel class attached to a component implementing
- * generic features needed on most cases and enforcing some good practices.
+ * The class instance becomes the ViewModel attached to a component, and the
+ * class includes static (shared and read-only) information about the
+ * component, as the template.
+ * This class implements some generic features needed on most cases,
+ * enforces some good practices and sets a common lifecycle for components.
+ *
+ * ## Component lifecycle
+ * On top of what Knockout offers by default (see http://knockoutjs.com/documentation/component-binding.html#component-lifecycle),
+ * this class offers some details implementations that should work for all cases
+ * while offering clear replaceable methods to hook at the different moments
+ * in the life of the component.
+ * - Knockout detects a component using this base class and runs its specific loader
+ * - KnockoutComponent loader offers the template from the `static get template()`.
+ * Must be implemented by derived classes.
+ * - KnockoutComponent loader offers the `static from(params, componentInfo)`
+ * method as the creator of the view-model (AKA: { createViewModel: ..from }). Most
+ * cases, if not all, will never replace this.
+ * - The component class is instantiated (constructor executed); that instance
+ * works as the view-model.
+ * - beforeBinding is triggered, providing componentInfo.
+ * - afterRender is triggered.
+ * - dispose is triggered, the element is being removed completely after this.
  */
 'use strict';
 
@@ -20,10 +40,29 @@ export default class KnockoutComponent {
          * Holds a list of objects with a 'dispose' method or functions that
          * need to be called when disposing the component, freeing up ressources
          * that don't do it automatically (see `dispose` method).
-         * @member {Array<IDisposable>}
+         * @member {Array<(Function,IDisposable)>}
          */
         this.disposables = [];
     }
+
+    /**
+     * Must be implemented by derived classes
+     * @member {string}
+     */
+    static get template() { throw new Error('No component template defined'); }
+
+    /**
+     * CSS text defining the style created for the component
+     * @member {string}
+     */
+    static get style() { return undefined; }
+
+    /**
+     * CSS class name defined at `style` that will be added to the component
+     * instance.
+     * @member {string}
+     */
+    static get cssClass() { return undefined; }
 
     /**
      * Template and class (view-model) were instantiated, but still not bound
@@ -93,8 +132,6 @@ export default class KnockoutComponent {
      * at previous steps in the livecycle, and they will be disposed already by
      * this method, so should be very rare you need to replace or extend this
      * implementation.
-     *
-     * @param {(Function|IDisposable)}
      */
     dispose() {
         this.disposables.forEach(function(value) {
@@ -113,6 +150,15 @@ export default class KnockoutComponent {
                 console.error('Error at component dispose(), running an individual disposable', ex);
             }
         });
+    }
+
+    /**
+     * All binding was set-up, triggered initial values,
+     * all DOM is ready including sub-components. It enables post-processing
+     * when custom binding handlers are not enough or just is simpler this way
+     */
+    afterRender() {
+        /* eslint class-methods-use-this:off */
     }
 
     /**
