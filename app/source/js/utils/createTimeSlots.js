@@ -26,11 +26,11 @@ exports.forRange = function forRange(from, to, size, duration, roundUp, includeE
     if (!duration) {
         throw new Error('forRange: Duration is required');
    }
-    var i = moment(from),
-        d,
-        slots = [],
-        now = new Date(),
-        enought;
+    var i = moment(from);
+    var d;
+    var slots = [];
+    var now = new Date();
+    var enought;
 
     // Round up if required
     if (roundUp) {
@@ -98,8 +98,8 @@ exports.forList = function forList(list, size, duration, roundUp, includeEndTime
 exports.getTotalFreeMinutes = function getTotalFreeMinutes(list) {
     return list.reduce(function (count, item) {
         if (item.availability === 'free') {
-            var s = moment(item.startTime),
-                e = moment(item.endTime);
+            var s = moment(item.startTime);
+            var e = moment(item.endTime);
             return count + e.diff(s, 'minutes');
         }
         else return count;
@@ -124,9 +124,9 @@ exports.getAvailabilityTag = function(list) {
 
     var minutes = exports.getTotalFreeMinutes(list);
 
-    var perc = (minutes / (8*60)) * 100,
-        date = moment(list[0].startTime).startOf('day').toDate(),
-        today = moment().startOf('day').toDate();
+    var perc = (minutes / (8*60)) * 100;
+    var date = moment(list[0].startTime).startOf('day').toDate();
+    var today = moment().startOf('day').toDate();
 
     if (date < today)
         return 'past';
@@ -191,8 +191,8 @@ exports.filterListBy = function filterListBy(list, start, end) {
 **/
 exports.splitListInLocalDates = function filterListBy(list) {
     var isodateFormat = 'YYYY-MM-DD';
-    var lastIsodate,
-        group;
+    var lastIsodate;
+    var group;
     var result = {};
 
     list.forEach(function(timeRange) {
@@ -204,10 +204,10 @@ exports.splitListInLocalDates = function filterListBy(list) {
             lastIsodate = isostart;
         }
 
-        var end = moment(timeRange.endTime),
-            endJustDate = end.startOf('day'),
-            isoend = end.format(isodateFormat),
-            nextDayStart = start.clone().startOf('day').add(1, 'day');
+        var end = moment(timeRange.endTime);
+        var endJustDate = end.startOf('day');
+        var isoend = end.format(isodateFormat);
+        var nextDayStart = start.clone().startOf('day').add(1, 'day');
 
         // Checks if different dates, but discard when ending is just
         // the beggining of next date because that's correct for a range
@@ -231,8 +231,8 @@ exports.splitListInLocalDates = function filterListBy(list) {
             // full day ranges and never the next date, that is managed after the
             // loop the same way if there was something or not in between.
             while (idate < endJustDate) {
-                var idateIso = idate.format(isodateFormat),
-                    idatetimeIso = idate.format();
+                var idateIso = idate.format(isodateFormat);
+                var idatetimeIso = idate.format();
                 // Mutate iteration date to next day
                 idate.add(1, 'day');
                 // New date group with single item list of full-day range:

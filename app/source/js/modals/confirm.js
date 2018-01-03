@@ -29,10 +29,10 @@ exports.show = function (options) {
     options = options || {};
 
     // Fallback error message
-    var title = header.data('default-text'),
-        msg = body.data('default-text'),
-        yes = yesBtn.data('default-text'),
-        no = noBtn.data('default-text');
+    var title = header.data('default-text');
+    var msg = body.data('default-text');
+    var yes = yesBtn.data('default-text');
+    var no = noBtn.data('default-text');
 
     body.multiline(options.message || msg);
     header.text(options.title || title);

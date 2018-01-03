@@ -9,7 +9,8 @@ var map = {'À':'A','Á':'A','Â':'A','Ã':'A','Ä':'A','Å':'A','Æ':'AE','Ç':
 
 module.exports = function removeAccent(str) {
 
-    var res = '', c;
+    var res = '';
+    var c = null;
     for (var i = 0, l = str.length; i < l; i++) {
         c = str.charAt(i);
         res += map[c] || c;

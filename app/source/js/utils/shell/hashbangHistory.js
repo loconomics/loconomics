@@ -28,9 +28,9 @@
 **/
 //global location
 'use strict';
-var $ = require('jquery'),
-    sanitizeUrl = require('./sanitizeUrl'),
-    getUrlQuery = require('../getUrlQuery');
+var $ = require('jquery');
+var sanitizeUrl = require('./sanitizeUrl');
+var getUrlQuery = require('../getUrlQuery');
 
 // Init: Load saved copy from sessionStorage
 var session = sessionStorage.getItem('hashbangHistory.store');
@@ -182,8 +182,8 @@ var hashbangHistory = {
         url = cannonicalUrl(url);
 
         // it has saved state?
-        var suid = getSuid(url),
-            hasOldState = suid !== null;
+        var suid = getSuid(url);
+        var hasOldState = suid !== null;
 
         // save new state for url
         state = checkState(state) || null;
@@ -254,8 +254,8 @@ $w.on('hashchange', function(e) {
     // for the updated URL, if any
     // (can have value when traversing
     // history).
-    var suid = getSuid(url),
-        state = null;
+    var suid = getSuid(url);
+    var state = null;
 
     if (suid !== null)
         state = session.states[suid];

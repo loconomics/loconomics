@@ -2,9 +2,9 @@
 **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout'),
-    PricingSummaryDetail = require('./PricingSummaryDetail');
+var Model = require('./Model');
+var ko = require('knockout');
+var PricingSummaryDetail = require('./PricingSummaryDetail');
 
 module.exports = function PricingSummary(values) {
     

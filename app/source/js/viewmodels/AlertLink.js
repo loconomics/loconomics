@@ -70,8 +70,8 @@ var alertPresets = {
               label: 'Verify your professional license or certification',
               route: new RouteParser('/licensesCertifications/:jobTitleID')
         }
-    },
-    undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };
+    };
+var undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };
 
 /*
  * Creates an AlertLink. Do not initialize directly.

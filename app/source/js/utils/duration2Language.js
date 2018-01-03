@@ -19,13 +19,13 @@ var moment = require('moment');
 module.exports = function duration2Language(duration) {
     /* eslint complexity:"off" */
     duration = moment.duration(duration);
-    var y = duration.years(),
-        d = duration.days(),
-        h = duration.hours(),
-        m = duration.minutes(),
-        s = duration.seconds(),
-        l = duration.milliseconds(),
-        parts = [];
+    var y = duration.years();
+    var d = duration.days();
+    var h = duration.hours();
+    var m = duration.minutes();
+    var s = duration.seconds();
+    var l = duration.milliseconds();
+    var parts = [];
 
     if (y === 1) parts.push('a year');
     else if (y) parts.push(y + ' years');

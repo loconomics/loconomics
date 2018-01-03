@@ -5,9 +5,9 @@
 **/
 'use strict';
 
-var Address = require('./Address'),
-    Model = require('./Model'),
-    ko = require('knockout');
+var Address = require('./Address');
+var Model = require('./Model');
+var ko = require('knockout');
 
 function InputPaymentMethod(values) {
 
@@ -26,8 +26,8 @@ function InputPaymentMethod(values) {
     
     this.expirationMonthYear = ko.computed({
         read: function() {
-            var m = this.expirationMonth(),
-                y = this.expirationYear();
+            var m = this.expirationMonth();
+            var y = this.expirationYear();
             
             if (!m && !y) return '';
 

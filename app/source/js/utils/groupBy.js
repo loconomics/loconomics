@@ -3,8 +3,8 @@
 */
 'use strict';
 
-var lodashGroupBy = require('lodash/groupBy'),
-    $ = require('jquery');
+var lodashGroupBy = require('lodash/groupBy');
+var $ = require('jquery');
 
 /*
     groupBy

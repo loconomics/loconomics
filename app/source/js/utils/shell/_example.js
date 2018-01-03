@@ -4,9 +4,9 @@
 **/
 'use strict';
 
-var shell = require('./index'),
-    Shell = shell.Shell,
-    DomItemsManager = shell.DomItemsManager;
+var shell = require('./index');
+var Shell = shell.Shell;
+var DomItemsManager = shell.DomItemsManager;
 
 // On ready
 Shell.deps.$(function() {

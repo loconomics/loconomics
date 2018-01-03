@@ -181,8 +181,8 @@ A.prototype.show = function show(options) {
     this.hideDatepicker();
 
     // Date from the parameter, fallback to today
-    var sdate = options.route && options.route.segments && options.route.segments[0],
-        date;
+    var sdate = options.route && options.route.segments && options.route.segments[0];
+    var date;
     if (sdate) {
         // Parsing date from ISO format
         var mdate = moment(sdate);

@@ -11,10 +11,10 @@
 
 'use strict';
 
-var ServiceCollection = require('../models/ServiceCollection'),
-    ServiceListGroup = require('./ServiceListGroup'),
-    ServiceList = require('./ServiceList'),
-    $ = require('jquery');
+var ServiceCollection = require('../models/ServiceCollection');
+var ServiceListGroup = require('./ServiceListGroup');
+var ServiceList = require('./ServiceList');
+var $ = require('jquery');
 
 /**
  * @exports viewmodels/ServiceListGroupFactories
@@ -37,8 +37,8 @@ ClientBookedServicesListGroup._inherits(ServiceListGroup);
  * @override
  */
 ClientBookedServicesListGroup.prototype.listTitle = function(options) {
-    var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services',
-        postFix = this.isClientSpecific ? ' Just For You' : '';
+    var pricingTypeLabel = (options.pricingType && options.pricingType.pluralName()) || 'Services';
+    var postFix = this.isClientSpecific ? ' Just For You' : '';
 
     return pricingTypeLabel + postFix;
 };
@@ -58,8 +58,8 @@ ClientBookedServicesListGroup.prototype.newButtons = function() {
  * @returns {Array} service list groups
  */
 Factories.clientBookedServices = function(services, pricingTypes) {
-    var serviceCollection = new ServiceCollection(services),
-        options = { pricingTypes: pricingTypes };
+    var serviceCollection = new ServiceCollection(services);
+    var options = { pricingTypes: pricingTypes };
 
     var clientListGroup = new ClientBookedServicesListGroup($.extend(options, {
             services: serviceCollection.clientSpecificServices(),
@@ -181,9 +181,9 @@ ProviderManagedServicesListGroup._inherits(ServiceListGroup);
  * @override
  */
 ProviderManagedServicesListGroup.prototype.listTitle = function(options) {
-    var clientPostfix = this.clientName.length > 0 ? (' for ' + this.clientName) : '',
-        pricingType = options.pricingType,
-        pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
+    var clientPostfix = this.clientName.length > 0 ? (' for ' + this.clientName) : '';
+    var pricingType = options.pricingType;
+    var pricingTypeLabel = (pricingType && pricingType.pluralName() || 'Services');
 
     return pricingTypeLabel + clientPostfix;
 };

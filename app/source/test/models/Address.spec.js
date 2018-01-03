@@ -17,8 +17,8 @@ describe('models/Address', function() {
         });
 
         it('should include one item if all others are empty', function() {
-            var tokyo = 'Tokyo',
-                a = new Address({city: tokyo});
+            var tokyo = 'Tokyo';
+            var a = new Address({city: tokyo});
 
             expect(a.singleLine()).to.equal(tokyo);
         });
@@ -38,8 +38,8 @@ describe('models/Address', function() {
         });
 
         it('should include one item if all others are empty', function() {
-            var addressLine1 = '800 80th St',
-                a = new Address({ addressLine1: addressLine1 });
+            var addressLine1 = '800 80th St';
+            var a = new Address({ addressLine1: addressLine1 });
 
             expect(a.addressLine()).to.equal(addressLine1);
         });
@@ -59,8 +59,8 @@ describe('models/Address', function() {
         });
 
         it('should only include a city only if state is missing', function() {
-            var tokyo = 'Tokyo',
-                a = new Address({city: tokyo});
+            var tokyo = 'Tokyo';
+            var a = new Address({city: tokyo});
 
             expect(a.cityState()).to.equal(tokyo);
         });
@@ -80,8 +80,8 @@ describe('models/Address', function() {
         });
 
         it('should only include one if the others are missing', function() {
-            var tokyo = 'Tokyo',
-                a = new Address({city: tokyo});
+            var tokyo = 'Tokyo';
+            var a = new Address({city: tokyo});
 
             expect(a.cityStateLine()).to.equal(tokyo);
         });

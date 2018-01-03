@@ -3,10 +3,10 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    textSearch = require('../utils/textSearch');
+var $ = require('jquery');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
+var textSearch = require('../utils/textSearch');
 var clients = require('../data/clients');
 var showError = require('../modals/error').show;
 
@@ -182,8 +182,8 @@ function ViewModel(app) {
 
         // Sorting list, in a cross browser way (in Firefox, just A > B works, but not on webkit/blink)
         var clients = this.filteredClients().sort(function(clientA, clientB) {
-            var a = clientA.firstName().toLowerCase(),
-                b = clientB.firstName().toLowerCase();
+            var a = clientA.firstName().toLowerCase();
+            var b = clientB.firstName().toLowerCase();
             if (a === b)
                 return 0;
             else if (a > b)
@@ -192,9 +192,9 @@ function ViewModel(app) {
                 return -1;
         });
 
-        var groups = [],
-            latestGroup = null,
-            latestLetter = null;
+        var groups = [];
+        var latestGroup = null;
+        var latestLetter = null;
 
         clients.forEach(function(client) {
             var letter = (client.firstName()[0] || '').toUpperCase();
@@ -221,9 +221,9 @@ function ViewModel(app) {
     this.publicSearchRunning = ko.observable(null);
     // When filering has no results:
     ko.computed(function() {
-        var filtered = this.filteredClients(),
-            searchText = this.searchText(),
-            request = null;
+        var filtered = this.filteredClients();
+        var searchText = this.searchText();
+        var request = null;
 
         // If there is search text and no results from local filtering
         if (filtered.length === 0 && searchText) {

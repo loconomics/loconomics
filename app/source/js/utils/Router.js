@@ -47,8 +47,8 @@
       m.match('/jobs/3') // { job: 3, isNew: false }
       m.match('/will-not-match'); // false
 */
-var RouteParser = require('route-parser'),
-    $ = require('jquery');
+var RouteParser = require('route-parser');
+var $ = require('jquery');
 
 var Route = function(expression, defaults) {
     this.routeParser = new RouteParser(expression);
