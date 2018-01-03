@@ -1,9 +1,9 @@
 /** JobTitle model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    JobTitlePricingType = require('./JobTitlePricingType');
+var ko = require('knockout');
+var Model = require('./Model');
+var JobTitlePricingType = require('./JobTitlePricingType');
 
 function JobTitle(values) {
     

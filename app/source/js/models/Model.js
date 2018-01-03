@@ -168,13 +168,13 @@ function prepareValueByDef(val, def) {
 
 function createDef(givenVal, initialVal) {
 
-    var def,
-        isModel = givenVal && givenVal.model instanceof Model,
-        isArray = Array.isArray(givenVal),
-        //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
-        // Change attempt: isArray = givenVal && givenVal.isArray || Array.isArray(givenVal),
-        isDate = (givenVal instanceof Date),
-        isObject = typeof(givenVal) === 'object' && !isDate;
+    var def;
+    var isModel = givenVal && givenVal.model instanceof Model;
+    var isArray = Array.isArray(givenVal);
+    //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
+    // Change attempt: isArray = givenVal && givenVal.isArray || Array.isArray(givenVal),
+    var isDate = (givenVal instanceof Date);
+    var isObject = typeof(givenVal) === 'object' && !isDate;
 
     if (givenVal !== null && !isModel && isObject && !isArray) {
         def = givenVal;
@@ -213,10 +213,10 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
 
     initialValues = initialValues || {};
 
-    var modelObject = this.modelObject,
-        propertiesList = this.propertiesList,
-        defs = this.propertiesDefs,
-        dataTimestamp = this.dataTimestamp;
+    var modelObject = this.modelObject;
+    var propertiesList = this.propertiesList;
+    var defs = this.propertiesDefs;
+    var dataTimestamp = this.dataTimestamp;
 
     Object.keys(properties).forEach(function(key) {
 
@@ -260,9 +260,9 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
 
     initialValues = initialValues || {};
 
-    var modelObject = this.modelObject,
-        defs = this.fieldsDefs,
-        fieldsList = this.fieldsList;
+    var modelObject = this.modelObject;
+    var defs = this.fieldsDefs;
+    var fieldsList = this.fieldsList;
 
     Object.keys(fields).each(function(key) {
 
@@ -337,8 +337,8 @@ Model.prototype.regTimestamp = function regTimestampProperty(propertyName) {
 **/
 Model.prototype.toPlainObject = function toPlainObject(deepCopy) {
 
-    var plain = {},
-        modelObj = this.modelObject;
+    var plain = {};
+    var modelObj = this.modelObject;
 
     function setValue(property, val) {
         var clonedValue = cloneValue(val, deepCopy);
@@ -381,11 +381,11 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
         data = data.model.toPlainObject(deepCopy);
     }
 
-    var target = this.modelObject,
-        defs = this.propertiesDefs;
+    var target = this.modelObject;
+    var defs = this.propertiesDefs;
     this.propertiesList.forEach(function(property) {
-        var val = data[property],
-            def = defs[property];
+        var val = data[property];
+        var def = defs[property];
         if (typeof(val) !== 'undefined') {
             target[property](prepareValueByDef(val, def));
         }
@@ -393,8 +393,8 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
 
     defs = this.fieldsDefs;
     this.fieldsList.forEach(function(field) {
-        var val = data[field],
-            def = defs[field];
+        var val = data[field];
+        var def = defs[field];
         if (typeof(val) !== 'undefined') {
             target[field] = prepareValueByDef(val, def);
         }

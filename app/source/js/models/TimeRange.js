@@ -65,10 +65,10 @@ function twoDigits(n) {
     in a string like: 00:00:00 (hours:minutes:seconds)
 **/
 function minutesToTimeString(minutes) {
-    var d = moment.duration(minutes, 'minutes'),
-        h = d.hours(),
-        m = d.minutes(),
-        s = d.seconds();
+    var d = moment.duration(minutes, 'minutes');
+    var h = d.hours();
+    var m = d.minutes();
+    var s = d.seconds();
 
     return (
         twoDigits(h) + ':' +

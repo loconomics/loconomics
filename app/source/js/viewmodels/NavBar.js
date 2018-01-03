@@ -3,8 +3,8 @@
  * It allows customize the NavBar per activity.
  * @module viewmodels/NavBar
  */
-var Model = require('../models/Model'),
-    NavAction = require('./NavAction');
+var Model = require('../models/Model');
+var NavAction = require('./NavAction');
 
 function NavBar(values) {
 

@@ -8,9 +8,9 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    moment = require('moment'),
-    createTimeSlots = require('./createTimeSlots');
+var $ = require('jquery');
+var moment = require('moment');
+var createTimeSlots = require('./createTimeSlots');
 var availability = require('../data/availability');
 var showError = require('../modals/error').show;
 
@@ -42,8 +42,8 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
         // We need to know the range of dates being displayed on the
         // monthly calendar, from the first week day of first month week
         // to 6 full weeks.
-        var start = moment(date).clone().startOf('month').startOf('week'),
-            end = start.clone().add(6, 'weeks');
+        var start = moment(date).clone().startOf('month').startOf('week');
+        var end = start.clone().add(6, 'weeks');
 
         // Switch loading flag
         if (isLoading)

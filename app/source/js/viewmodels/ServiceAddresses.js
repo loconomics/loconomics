@@ -72,8 +72,8 @@ function ServiceAddressesViewModel() {
     this.observerSelected = function(item) {
         return ko.pureComputed(function() {
             //return this.selectedAddress() === item;
-            var sid = this.selectedAddress() && ko.unwrap(this.selectedAddress().addressID),
-                iid = item && ko.unwrap(item.addressID);
+            var sid = this.selectedAddress() && ko.unwrap(this.selectedAddress().addressID);
+            var iid = item && ko.unwrap(item.addressID);
             return sid === iid;
         }, this);
     }.bind(this);

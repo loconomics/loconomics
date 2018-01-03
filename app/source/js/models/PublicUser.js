@@ -50,8 +50,8 @@ function PublicUser(values) {
 
     // Utilities for ServiceProfessionalInfo; used to at /listing
     this.selectedJobTitle = ko.pureComputed(function() {
-        var jid = this.selectedJobTitleID(),
-            jp = this.jobProfile();
+        var jid = this.selectedJobTitleID();
+        var jp = this.jobProfile();
         if (!jid || !jp) return null;
         var found = null;
         jp.some(function(jobTitle) {

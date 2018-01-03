@@ -368,13 +368,13 @@ Shell.prototype.run = function run() {
     // - And additionally: it prevents two 'clicks' from happening excessive fast because
     //   some kind of a second unwanted touch happening very fast, making
     //   a click by mistake on a different link on the loaded new page.
-    var linkWorking = null,
+    var linkWorking = null;
         // OLD: iOS 300ms delay, a bit increased to avoid problems.
         // NOTE: as of inclusion of fastclick in the main project, reduced
         // this delay to avoid being noticeable on some edge cases, but still
         // preserving because other not verified use cases (like on a touch on a link that dynamically
         // changes being perceived as two quick consecutive clicks, executing two actions in one and that being unwanted)
-        linkWorkingDelay = 80; // 340; // ms
+    var linkWorkingDelay = 80; // 340; // ms
     //DEBUG var linkEvent = this.linkEvent;
     this.$(document).on(this.linkEvent, '[href], [data-href]', function(e) {
         //DEBUG console.log('Shell on event', e.type, linkWorking);

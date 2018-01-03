@@ -2,8 +2,8 @@
  **/
 'use strict';
 
-var Model = require('./Model'),
-    ServiceAttribute = require('./ServiceAttribute');
+var Model = require('./Model');
+var ServiceAttribute = require('./ServiceAttribute');
 
 function ServiceAttributeCategory(values) {
     

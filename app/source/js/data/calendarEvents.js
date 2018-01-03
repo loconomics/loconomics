@@ -93,8 +93,8 @@ exports.setEvent = function setEvent(event) {
             event
     ;
 
-    var id = event.calendarEventID || '',
-        method = id ? 'put' : 'post';
+    var id = event.calendarEventID || '';
+    var method = id ? 'put' : 'post';
 
     return remote[method]('me/events' + (id ? '/' : '') + id, event)
     .then(function(serverEvent) {

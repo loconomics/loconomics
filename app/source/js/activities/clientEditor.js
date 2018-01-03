@@ -82,9 +82,9 @@ var A = Activity.extend(function ClientEditionActivity() {
 exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
-    var referrerRoute = this.app.shell.referrerRoute,
-        referrer = this.viewModel.clientID() === 0 ? referrerRoute && referrerRoute.url : null,
-        link = this.requestData.cancelLink || referrer || '/clients';
+    var referrerRoute = this.app.shell.referrerRoute;
+    var referrer = this.viewModel.clientID() === 0 ? referrerRoute && referrerRoute.url : null;
+    var link = this.requestData.cancelLink || referrer || '/clients';
 
     this.convertToCancelAction(this.navBar.leftAction(), link);
 };
@@ -259,18 +259,17 @@ function ViewModel(app) {
                      userJobProfile.getJobTitles(),
                      pricingTypes.getList()])
         .then(function(models) {
-            var services = serviceProfessionalServices.asModel(models[0]),
-                jobTitles = models[1],
-                pricingTypes = models[2](),
-
-                summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
+            var services = serviceProfessionalServices.asModel(models[0]);
+            var jobTitles = models[1];
+            var pricingTypes = models[2]();
+            var summaries = ServicesSummaryPresenter.summaries(jobTitles, services, pricingTypes).sort(ServicesSummaryPresenter.sortByJobTitle);
 
             view.serviceSummaries(summaries);
         })
         .catch(function(error) {
-            var messagePrefix = 'Unable to load special pricings',
-                messageName = view.client() ? ' for ' + view.client().firstName() : '',
-                message = messagePrefix + messageName + '.';
+            var messagePrefix = 'Unable to load special pricings';
+            var messageName = view.client() ? ' for ' + view.client().firstName() : '';
+            var message = messagePrefix + messageName + '.';
 
             showError({
                 title: message,
@@ -364,8 +363,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.tapServiceSummary = function(serviceSummary, event) {
-        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!clientEditor/:clientID'),
-            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
+        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID?mustReturn=#!clientEditor/:clientID');
+        var url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
 
         app.shell.go(url);
 
@@ -374,8 +373,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.tapServiceSummaryNew = function(serviceSummary, event) {
-        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID/new'),
-            url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
+        var route = new RouteParser('#!serviceProfessionalService/:jobTitleID/client/:clientID/new');
+        var url = route.reverse({ jobTitleID : serviceSummary.jobTitleID(), clientID : this.clientID() });
 
         app.shell.go(url, null);
 
@@ -488,13 +487,11 @@ function ViewModel(app) {
         // NOTE: discarded the fullName because several results can be retrieved,
         // better use the search for that and double check entries
 
-        var email = c.email(),
-            //fullName = c.fullName(),
-            phone = c.phone();
-        if (!email && !phone /*!fullName && */) return;
+        var email = c.email();
+        var phone = c.phone();
+        if (!email && !phone) return;
 
         clients.publicSearch({
-            //fullName: fullName,
             email: email,
             phone: phone
         })

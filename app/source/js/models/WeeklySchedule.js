@@ -3,11 +3,11 @@
  **/
 'use strict';
 
-var ko = require('knockout'),
-    moment = require('moment-timezone'),
-    Model = require('./Model'),
-    WeekDaySchedule = require('./WeekDaySchedule'),
-    TimeRange = require('./TimeRange');
+var ko = require('knockout');
+var moment = require('moment-timezone');
+var Model = require('./Model');
+var WeekDaySchedule = require('./WeekDaySchedule');
+var TimeRange = require('./TimeRange');
 
 var timeZoneList = require('../utils/timeZoneList');
 

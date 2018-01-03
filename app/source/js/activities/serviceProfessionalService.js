@@ -3,13 +3,13 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity'),
-    ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService'),
-    $ = require('jquery'),
-    RouteMatcher = require('../utils/Router').RouteMatcher,
-    Route = require('../utils/Router').Route,
-    serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
+var ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService');
+var $ = require('jquery');
+var RouteMatcher = require('../utils/Router').RouteMatcher;
+var Route = require('../utils/Router').Route;
+var serviceListGroupFactories = require('../viewmodels/ServiceListGroupFactories');
 var onboarding = require('../data/onboarding');
 var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
@@ -65,9 +65,9 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
             if (jobTitleID) {
 
-                var params = this.parseRoute(this.requestData.route.path),
-                    urlJobTitleID = params.jobTitleID | 0,
-                    clientID = params.clientID | 0;
+                var params = this.parseRoute(this.requestData.route.path);
+                var urlJobTitleID = params.jobTitleID | 0;
+                var clientID = params.clientID | 0;
 
                 if (urlJobTitleID !== jobTitleID) {
                     var url = this.buildRoute(jobTitleID, clientID, params.isNew);
@@ -134,10 +134,10 @@ A.prototype.applyOwnNavbarRules = function() {
 };
 
 A.prototype.newLeftAction = function() {
-    var leftAction = {},
-        jid = this.viewModel.jobTitleID(),
-        url = this.mustReturnTo || (DEFAULT_BACK_LINK  + (jid ? '/' + jid : '')),
-        handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
+    var leftAction = {};
+    var jid = this.viewModel.jobTitleID();
+    var url = this.mustReturnTo || (DEFAULT_BACK_LINK  + (jid ? '/' + jid : ''));
+    var handler = this.viewModel.isSelectionMode() ? this.returnRequest : null;
 
     leftAction.link = url;
     leftAction.text = this.leftActionText();
@@ -147,8 +147,8 @@ A.prototype.newLeftAction = function() {
 };
 
 A.prototype.leftActionText = function() {
-    var clientName = this.viewModel.client() && this.viewModel.clientFullName(),
-        jobTitle = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName();
+    var clientName = this.viewModel.client() && this.viewModel.clientFullName();
+    var jobTitle = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName();
 
     return this.requestData.navTitle || clientName || jobTitle || 'Back';
 };
@@ -173,17 +173,17 @@ A.prototype.serviceEditorCancelLink = function(isAdditionMode) {
 };
 
 A.prototype.buildRoute = function(jobTitleID, clientID, isAdditionMode) {
-    var base = '/serviceProfessionalService',
-        jobTitle = '/' + jobTitleID,
-        client = clientID > 0 ? ('/client/' + clientID) : '',
-        newParam = isAdditionMode ? '/new' : '';
+    var base = '/serviceProfessionalService';
+    var jobTitle = '/' + jobTitleID;
+    var client = clientID > 0 ? ('/client/' + clientID) : '';
+    var newParam = isAdditionMode ? '/new' : '';
 
     return base + jobTitle + client + newParam;
 };
 
 A.prototype.parseRoute = function(url) {
-    var paramsDefaults = { jobTitleID: 0, isNew: false, clientID: null },
-        matcher = new RouteMatcher([
+    var paramsDefaults = { jobTitleID: 0, isNew: false, clientID: null };
+    var matcher = new RouteMatcher([
             new Route('/:jobTitleID/new', { isNew: true }),
             new Route('/:jobTitleID/client/:clientID/new', { isNew: true }),
             new Route('/:jobTitleID/client/:clientID'),
@@ -265,9 +265,9 @@ function ViewModel(app) {
     }.bind(this);
 
     this.loadServicesData = function() {
-        var clientID = this.clientID(),
-            jobTitleID = this.jobTitleID(),
-            services = null;
+        var clientID = this.clientID();
+        var jobTitleID = this.jobTitleID();
+        var services = null;
 
         if(this.isSelectionMode()) {
             services = serviceProfessionalServices.getServicesBookableByProvider(clientID, jobTitleID);
@@ -287,10 +287,10 @@ function ViewModel(app) {
     }, this);
 
     this.serviceListGroupsFactory = function(services, pricingTypes) {
-        var factories = serviceListGroupFactories,
-            listGroupsFactory = this.isSelectionMode() ? factories.providerBookedServices :
-                                                         factories.providerManagedServices,
-            isClientSpecific = !!this.clientID();
+        var factories = serviceListGroupFactories;
+        var listGroupsFactory = this.isSelectionMode() ? factories.providerBookedServices :
+                                                         factories.providerManagedServices;
+        var isClientSpecific = !!this.clientID();
 
         services = this.isAdditionMode() ? [] : services;
 
@@ -323,8 +323,8 @@ function ViewModel(app) {
     }, this);
 
     this.onboardingNextReady = ko.computed(function() {
-        var isin = onboarding.inProgress(),
-            hasPricing = this.list().length > 0;
+        var isin = onboarding.inProgress();
+        var hasPricing = this.list().length > 0;
 
         return isin && hasPricing;
     }, this);

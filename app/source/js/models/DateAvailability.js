@@ -8,13 +8,13 @@
 'use strict';
 
 var Model = require('../models/Model');
-var Appointment = require('../models/Appointment'),
-    WeeklySchedule = require('../models/WeeklySchedule'),
-    SchedulingPreferences = require('../models/SchedulingPreferences'),
-    moment = require('moment'),
-    ko = require('knockout'),
-    availabilityCalculation = require('../utils/availabilityCalculation'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
+var Appointment = require('../models/Appointment');
+var WeeklySchedule = require('../models/WeeklySchedule');
+var SchedulingPreferences = require('../models/SchedulingPreferences');
+var moment = require('moment');
+var ko = require('knockout');
+var availabilityCalculation = require('../utils/availabilityCalculation');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 function DateAvailability(values) {
 
@@ -73,8 +73,8 @@ function DateAvailability(values) {
     this.availableMinutes = ko.pureComputed(function() {
         return this.list().reduce(function(minutes, apt) {
             if (apt.id() === Appointment.specialIds.free) {
-                var et = moment(apt.endTime()),
-                    st = moment(apt.startTime());
+                var et = moment(apt.endTime());
+                var st = moment(apt.startTime());
                 minutes += et.diff(st, 'minutes');
             }
             return minutes;
@@ -99,9 +99,9 @@ function DateAvailability(values) {
             Can be: 'none', 'low', 'medium', 'full', 'past'
     **/
     this.availableTag = ko.pureComputed(function() {
-        var perc = this.availablePercent(),
-            date = this.date(),
-            today = getDateWithoutTime();
+        var perc = this.availablePercent();
+        var date = this.date();
+        var today = getDateWithoutTime();
 
         if (date < today)
             return 'past';
@@ -133,8 +133,8 @@ function DateAvailability(values) {
         if (!duration)
             duration = slotSizeMinutes;
 
-        var date = this.date(),
-            today = getDateWithoutTime();
+        var date = this.date();
+        var today = getDateWithoutTime();
 
         // Quick return if with empty list when
         // - past date (no time)
@@ -155,8 +155,8 @@ function DateAvailability(values) {
     **/
     this.getFreeAvailableSlots = function getFreeAvailableSlots() {
 
-        var date = this.date(),
-            today = getDateWithoutTime();
+        var date = this.date();
+        var today = getDateWithoutTime();
 
         // Quick return with empty list when
         // - past date (no time)

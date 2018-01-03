@@ -6,9 +6,9 @@
  **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    moment = require('moment');
+var ko = require('knockout');
+var Model = require('./Model');
+var moment = require('moment');
 var PublicUserProfile = require('./PublicUserProfile');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
@@ -50,8 +50,8 @@ function MessageView(values, app) {
     this.quickDateTime = ko.pureComputed(function() {
         var date = this.createdDate();
 
-        var m = moment(date).locale('en-US-LC'),
-            t = moment().startOf('day');
+        var m = moment(date).locale('en-US-LC');
+        var t = moment().startOf('day');
 
         if (m.isAfter(t)) {
             return m.format('LT');
@@ -113,7 +113,8 @@ MessageView.fromThread = function(app, thread) {
     var msg = thread.messages();
     msg = msg && msg[0] || null;
 
-    var tag, classNames;
+    var tag;
+    var  classNames;
     if (msg) {
         // TODO: more different tag/classes depending on booking state as per design
         // NOTE: That requires to load the booking or request by auxID and wait for it

@@ -19,8 +19,8 @@ module.exports = function EventDates(values) {
 
     this.duration = ko.computed({
         read: function() {
-            var s = this.startTime(),
-                e = this.endTime();
+            var s = this.startTime();
+            var e = this.endTime();
             if (!s || !e) return null;
 
             return moment.duration(e - s);

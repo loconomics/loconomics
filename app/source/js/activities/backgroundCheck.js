@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var Activity = require('../components/Activity');
 
 var A = Activity.extend(function BackgroundCheckActivity() {
 
@@ -50,17 +50,17 @@ Verification.status = {
 function testdata() {
 
     var verA = new BackgroundCheck({
-            name: 'Database Search'
-        }),
-        verB = new BackgroundCheck({
-            name: 'Basic Criminal'
-        }),
-        verC = new BackgroundCheck({
-            name: 'Risk Adverse'
-        }),
-        verD = new BackgroundCheck({
-            name: 'Healthcare Check'
-        });
+        name: 'Database Search'
+    });
+    var verB = new BackgroundCheck({
+        name: 'Basic Criminal'
+    });
+    var verC = new BackgroundCheck({
+        name: 'Risk Adverse'
+    });
+    var verD = new BackgroundCheck({
+        name: 'Healthcare Check'
+    });
 
     return [
         new UserBackgroundCheck({

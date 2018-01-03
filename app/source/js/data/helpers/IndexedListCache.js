@@ -14,9 +14,9 @@
 **/
 'use strict';
 
-var CacheControl = require('./CacheControl'),
-    jsPropertiesTools = require('../../utils/jsPropertiesTools'),
-    ko = require('knockout');
+var CacheControl = require('./CacheControl');
+var jsPropertiesTools = require('../../utils/jsPropertiesTools');
+var ko = require('knockout');
 
 function createItemIndexEntry(list, itemIndex) {
     return {
