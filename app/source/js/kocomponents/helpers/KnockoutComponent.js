@@ -198,6 +198,21 @@ export default class KnockoutComponent {
     }
 
     /**
+     * It creates a Knockout Computed with the given function that will be
+     * automatically disposed at the end of life of the component.
+     * The context of the function will be the component instance.
+     * @param {function} task Function that will read some observables and perform
+     * a task with their values, repeating at every data change
+     * @returns {KnockoutComputed} The computed generated, that can be extended
+     * as usual.
+     */
+    observeChanges(task) {
+        var computed = ko.computed(task, this);
+        this.disposables.push(computed);
+        return computed;
+    }
+
+    /**
      * Creates an instance from the input parameters and DOM references of
      * the instantiated template and given children nodes.
      * It implements the execution of some common lifecycle steps.
