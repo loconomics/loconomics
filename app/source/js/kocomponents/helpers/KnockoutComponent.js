@@ -55,6 +55,25 @@ import ko from 'knockout';
 
 export default class KnockoutComponent {
     /**
+     * Must be implemented by derived classes
+     * @member {string}
+     */
+    static get template() { throw new Error('No component template defined'); }
+
+    /**
+     * CSS text defining the style created for the component
+     * @member {string}
+     */
+    static get style() { return undefined; }
+
+    /**
+     * CSS class name defined at `style` that will be added to the component
+     * instance.
+     * @member {string}
+     */
+    static get cssClass() { return undefined; }
+
+    /**
      * Set-up the members to be used as the component view model, process
      * incoming parameters and set-up tasks based on data changes.
      *
@@ -86,25 +105,6 @@ export default class KnockoutComponent {
          */
         this.disposables = [];
     }
-
-    /**
-     * Must be implemented by derived classes
-     * @member {string}
-     */
-    static get template() { throw new Error('No component template defined'); }
-
-    /**
-     * CSS text defining the style created for the component
-     * @member {string}
-     */
-    static get style() { return undefined; }
-
-    /**
-     * CSS class name defined at `style` that will be added to the component
-     * instance.
-     * @member {string}
-     */
-    static get cssClass() { return undefined; }
 
     /**
      * Template and class (view-model) were instantiated, but still not bound
@@ -156,6 +156,15 @@ export default class KnockoutComponent {
     }
 
     /**
+     * All binding was set-up, triggered initial values,
+     * all DOM is ready including sub-components. It enables post-processing
+     * when custom binding handlers are not enough or just is simpler this way
+     */
+    afterRender() {
+        /* eslint class-methods-use-this:off */
+    }
+
+    /**
      * Free ressources that are not automatically managed.
      * Usually needed to remove external events listeners, subscriptions to
      * external observables or computed observables.
@@ -189,24 +198,9 @@ export default class KnockoutComponent {
     }
 
     /**
-     * All binding was set-up, triggered initial values,
-     * all DOM is ready including sub-components. It enables post-processing
-     * when custom binding handlers are not enough or just is simpler this way
-     */
-    afterRender() {
-        /* eslint class-methods-use-this:off */
-    }
-
-    /**
      * Creates an instance from the input parameters and DOM references of
      * the instantiated template and given children nodes.
-     * It helps provide a common interface to the components constructor (that
-     * behaves as view-model, in Knockout naming).
-     * It too works as a base for more advanced implementations for the
-     * creator of viewmodel, like analyzing DOM nodes to give them to the
-     * constructor filtered/adapted with meaningful names as part of refs and
-     * children objects.
-     * It too assign the CSS class to the instantiated element.
+     * It implements the execution of some common lifecycle steps.
      *
      * NOTE: In Knockout internals, this is used as the `createViewModel`
      * function given at component registration, so any subclass customizing
