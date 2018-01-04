@@ -1,16 +1,23 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-04 15:44+11:00\n"
-"PO-Revision-Date: 2018-01-04 15:44+11:00\n"
+"POT-Creation-Date: 2018-01-04 19:57+11:00\n"
+"PO-Revision-Date: 2018-01-04 20:01+1100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: i18n.POTGenerator\n"
+"X-Generator: Poedit 2.0.5\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_AU\n"
 
 #: Default.cshtml:3
 msgid "Home Page"
-msgstr "mozzie roo bar"
+msgstr "A mozzie roo bar"
+
+#: assets\js\app.js:2
+msgid "javascript content here"
+msgstr "longneck ridgy-didge fossicker trackie dacks buckleys chance budgie smugglers feral mates rates"
 
 #: Default.cshtml:16
 msgid "Modify this template to jump-start your ASP.NET Web Pages application."
@@ -19,4 +26,3 @@ msgstr "Gutful of chuck a sickie flat out like a rollie true blue."
 #: Default.cshtml:19
 msgid "To learn more about ASP.NET Web Pages, visit"
 msgstr "As cross as a cane toad rapt vee dub"
-

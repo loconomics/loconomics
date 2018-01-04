@@ -42,7 +42,7 @@
         // database preferences.
         System.Threading.Thread.CurrentThread.CurrentCulture =
         System.Threading.Thread.CurrentThread.CurrentUICulture = 
-        System.Globalization.CultureInfo.CreateSpecificCulture("en-AU");
+        System.Globalization.CultureInfo.CreateSpecificCulture(i18n.LocalizedApplication.Current.DefaultLanguage);
     }
        
 </script>

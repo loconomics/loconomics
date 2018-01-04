@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "[[[Home Page]]]";
+    Page.Culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
     var db = Database.Open("StarterSite");
     var languageID = LcData.GetCurrentLanguageID();
     var countryID = LcData.GetCurrentCountryID();
@@ -12,7 +13,7 @@
 <section class="featured">
     <div class="content-wrapper">
         <hgroup class="title">
-            <h1>@Page.Title.</h1>
+            <h1>@Page.Title - @Page.Culture.</h1>
             <h2>[[[Modify this template to jump-start your ASP.NET Web Pages application.]]]</h2>
         </hgroup>
         <p>
