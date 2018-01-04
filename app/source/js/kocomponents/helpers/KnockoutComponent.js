@@ -138,27 +138,21 @@ export default class KnockoutComponent {
 
         /**
          * Enable the component specific CSS (if there is someone), injecting
-         * the `style` into the page (the element template or the head)
+         * the `style` into the page (at the element template instance)
          * @private {HTMLElement}
          */
         this.__styleElement = this.constructor.style && insertCss(this.constructor.style, {
             container: componentInfo.element
         });
-        /*
-        TEMPORARLY REMOVED SINCE CAUSES CONFLICTS: INSERT-CSS USES A UNIQUE
-        STYLE ELEMENT FOR ALL, REMOVING THAT MEANS REMOVING ALL OTHERS
-        TODO: Look for/build alternative to insert-css, allowing diposing styles
-        without conflicts; one approach could be add it ever to the component
-        template but that means that shared styles are duplicated at runtime
-        (inserted twice, how much performance problem can be? debugging is a bit
-        annoying because of duplicated applied rules, though)
+        // TODO: Insert in a global space with detection of duplications, since
+        // now insert-css does an append-only and the styleElement created at
+        // global place is shared for all (cannot be removed).
         // If there is a component style, must be removed.
-        this.disposables.push(function() {
-            if (this.__styleElement) {
+        if (this.__styleElement) {
+            this.disposables.push(() => {
                 this.__styleElement.parentNode.removeChild(this.__styleElement);
-            }
-        }.bind(this));
-        */
+            });
+        }
     }
 
     /**
