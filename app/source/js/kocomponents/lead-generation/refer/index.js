@@ -1,17 +1,17 @@
 /**
  * Captures a user's email address and adds them to our newsletter list and
  * allows to refer service professionals.
- * @module kocomponents/lead-generation-refer
+ * @module kocomponents/lead-generation/refer
  */
 'use strict';
 
 import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
-import STYLE from '../LeadGeneration.styl';
-import TEMPLATE from './template.html';
 import ko from 'knockout';
 import leadGenerationApi from '../../../data/leadGeneration';
 import { show as showError } from '../../../modals/error';
+import style from '../LeadGeneration.styl';
+import template from './template.html';
 import { data as user } from '../../../data/userProfile';
 
 const TAG_NAME = 'lead-generation-refer';
@@ -21,16 +21,16 @@ const TAG_NAME = 'lead-generation-refer';
  * new professionals.
  * @const {number}
  */
-var LAST_STEP = 3;
+const LAST_STEP = 3;
 
 /**
- * Component view model
+ * Component
  */
 export default class LeadGenerationRefer extends Komponent {
 
-    static get style() { return STYLE; }
+    static get style() { return style; }
 
-    static get template() { return TEMPLATE; }
+    static get template() { return template; }
 
     constructor() {
         /* eslint max-statements:"off" */
@@ -148,7 +148,7 @@ export default class LeadGenerationRefer extends Komponent {
          * time refers another professional)
          * @private
          */
-        this.disposables.push(ko.computed(function() {
+        this.observeChanges(function() {
             // Detect changes to this fields:
             this.email();
             this.firstName();
@@ -156,20 +156,20 @@ export default class LeadGenerationRefer extends Komponent {
             this.phone();
             // Reset flag
             this.isDone(false);
-        }, this));
+        });
         /**
          * Automatically fills in the name of the logged user when reaching the
          * step 2; nothing for anonymous users
          * @private.
          */
-        this.disposables.push(ko.computed(function() {
+        this.observeChanges(function() {
             // Detect when goes to step two being a logged use
             if (!user.isAnonymous() && this.currentStep() === 2) {
                 // Fill in name, if any
                 this.firstName(user.firstName());
                 this.lastName(user.lastName());
             }
-        }, this));
+        });
 
         /// Save methods and common utilities
         /**
