@@ -5,7 +5,15 @@
     void Application_Start(object sender, EventArgs e) 
     {
         // Code that runs on application startup
-
+        i18n.LocalizedApplication.Current.TweakMessageTranslation = delegate(System.Web.HttpContextBase context, i18n.Helpers.Nugget nugget, i18n.LanguageTag langtag, string message)
+        {
+            switch (context.Response.ContentType)
+            {
+                case "application/javascript":
+                    return message.Replace("\'", "\\'");
+            }
+            return message;
+        };
     }
     
     void Application_End(object sender, EventArgs e) 
