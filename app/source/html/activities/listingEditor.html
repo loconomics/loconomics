@@ -162,7 +162,10 @@
                         <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
                         <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
                     </div>
+
+                    <badge-view params="assertion: 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0'"></badge-view>
                     <ul data-bind="template: { name: 'license-card-edit-template', foreach: $root.submittedUserLicensesCertifications }"></ul>
+
                 </div>
                 <div class="col-xs-12 col-sm-12">
                     <div class="col-xs-12 SectionHeading">
