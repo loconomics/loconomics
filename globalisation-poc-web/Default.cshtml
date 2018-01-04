@@ -1,8 +1,10 @@
 ﻿@{
     Layout = "~/_SiteLayout.cshtml";
-    Page.Title = "Home Page";
+    Page.Title = "[[[Home Page]]]";
     var db = Database.Open("StarterSite");
-    var selectedData = db.Query("SELECT * FROM [UserProfile]");
+    var languageID = LcData.GetCurrentLanguageID();
+    var countryID = LcData.GetCurrentCountryID();
+    var selectedData = db.Query("SELECT * FROM [Positions] as p where p.LanguageID = @0 AND p.CountryID = @1", languageID, countryID);
     var grid = new WebGrid(source: selectedData);
 }
 
@@ -12,7 +14,6 @@
         <hgroup class="title">
             <h1>@Page.Title.</h1>
             <h2>[[[Modify this template to jump-start your ASP.NET Web Pages application.]]]</h2>
-            @ServerInfo.GetHtml();
         </hgroup>
         <p>
             [[[To learn more about ASP.NET Web Pages, visit]]]
@@ -22,6 +23,31 @@
             <a href="http://forums.iis.net/1166.aspx" title="ASP.NET Web Pages Forum">our forums</a>.
         </p>
     </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Position ID</th>
+                <th>Language ID</th>
+                <th>Country ID</th>
+                <th>Position Singular</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var row in selectedData)
+    {
+                <tr>
+                    <td>@row.PositionID</td>
+                    <td>@row.LanguageID</td>
+                    <td>@row.CountryID</td>
+                    <td>@row.PositionSingular</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @ServerInfo.GetHtml();
 </section>
 }
 
