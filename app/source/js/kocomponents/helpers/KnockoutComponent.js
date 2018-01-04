@@ -7,19 +7,44 @@
  * enforces some good practices and sets a common lifecycle for components.
  *
  * ## Component lifecycle
- * On top of what Knockout offers by default (see http://knockoutjs.com/documentation/component-binding.html#component-lifecycle),
- * this class offers some details implementations that should work for all cases
- * while offering clear replaceable methods to hook at the different moments
- * in the life of the component.
+ * This class both simplifies and organizes implementation of components,
+ * being the most usual to just implement the constructor.
+ * There are some common steps that require/may need to be implemented usually,
+ * defined as 'simplified lifecycle' and others to understand the internals
+ * and more advanced replacable parts described at 'advanced lifecycle'.
+ * Both lists show up in strict order of execution, check the own
+ * methods/elements documentation for details.
+ *
+ * ### Simplifed lifecycle
+ * - `constructor`: defining the instance view-model
+ * - `beforeBinding`: template instantiated but not yet bound
+ * - `afterRender`: all processed, ready for the user
+ * - `dispose`: clean-up before removal
+ *
+ * ### Advanced lifecycle
+ * To be able to understand all the implementation or perform some advanced,
+ * yet rare, sub-classes set-ups, it's important to know
+ * the [Knockout components lifecycle](http://knockoutjs.com/documentation/component-binding.html#component-lifecycle)
+ * and how [component loaders works](http://knockoutjs.com/documentation/component-loaders.html),
+ * for which this class offers implementation details and customization.
+ * This class should work for all cases while offering clear replaceable methods
+ * to hook at the internals of the life of the component, but if something too
+ * different is needed may be far easier to use Knockout components API directly
+ * rather than this class and reuse some utilities.
+ *
+ * Process:
+ * - A component is defined and registed with `ko.components.register(..)` passing
+ * in a tag name and the component class.
  * - Knockout detects a component using this base class and runs its specific loader
  * - KnockoutComponent loader offers the template from the `static get template()`.
  * Must be implemented by derived classes.
  * - KnockoutComponent loader offers the `static from(params, componentInfo)`
- * method as the creator of the view-model (AKA: { createViewModel: ..from }). Most
- * cases, if not all, will never replace this.
+ * method as the creator of the view-model (AKA: { createViewModel: ..from }).
+ * Most cases, if not all, will never need to replace this. The standard `from`
+ * is responsible to execute internally the next two steps.
  * - The component class is instantiated (constructor executed); that instance
  * works as the view-model.
- * - beforeBinding is triggered, providing componentInfo.
+ * - beforeBinding is triggered, providing componentInfo data.
  * - afterRender is triggered.
  * - dispose is triggered, the element is being removed completely after this.
  */
@@ -31,8 +56,25 @@ import ko from 'knockout';
 export default class KnockoutComponent {
     /**
      * Set-up the members to be used as the component view model, process
-     * incoming parameters.
-     * @param {Object} params Instance parameters, given through data-params
+     * incoming parameters and set-up tasks based on data changes.
+     *
+     * - Members: observable properties, computed members. Functions needed to
+     * trigger actions from binding can be defined here as arrow functions
+     * or as class methods (in this last case, be aware of edge cases that can
+     * change the `this` context).
+     *
+     * - Parameters: external data and observables, used to set initial values
+     * for the observable properties, used directly as properties in order
+     * to keep bi-directional communication of data changes (parent<->child,
+     * view<->component), or to provide callbacks to notice events or results.
+     *
+     * - Tasks: side effect computeds (functions running whether an observable(s)
+     * changes --use `observeChanges`), request or listen to external
+     * data/services. When having large/lots of tasks, define and call a `tasks`
+     * method for them or even individual task specific ones, to keep functions
+     * small in statements and complexity.
+     *
+     * @param {Object} params Instance parameters, given through the params
      * attribute and processed by Knockout
      */
     constructor() {
