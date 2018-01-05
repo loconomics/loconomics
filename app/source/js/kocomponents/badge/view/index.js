@@ -1,7 +1,7 @@
 /**
  * Displays badges users have earned. Loconomics badges are currently issued through badgr.io
  * How it works:
- * The 'assertion' parameter is a URL that includes user-specific information
+ * The 'src' parameter is a URL that includes user-specific information
  * about a user's single badge including:
  * - 'image' of the badge
  * - 'evidence' (optional)
@@ -10,6 +10,8 @@
  * The 'badge' contains the following information:
  * - 'name' of the badge
  * - 'narrative' of the badge which is a description
+ *
+ * You can also pass this information directly into the 'assertion' parameter if you already have it locally.
  * 
  * To populate this information and display in the component:
  * - we fetch the 'assertion' json object 
@@ -30,7 +32,7 @@ var ko = require('knockout');
 // const style = require('./style.styl');
 
 function ViewModel(params) {
-    const {assertion} = params;
+    const {assertion, src} = params;
     // Notes for Josh: equivalent to 'var src = params.src;'
     this.image = getObservable('');
     this.narrative = getObservable('');
@@ -39,26 +41,35 @@ function ViewModel(params) {
     this.badgeDescription = getObservable('');
 //    this.style = style;
 
-    fetch(assertion)
-    .then((r) => {
-      if(r.ok)
-        return r.json();
-    }).then((json) => {
-      this.image(json.image);
-      this.narrative(json.narrative);
-      if (json.evidence.length > 0) {
-        this.evidence(json.evidence[0].id);
-        }
-      const badge = json.badge.slice(0,-6) + '.json?v=2_0';
-      fetch(badge)
+    let populateObservables = (payload) => {
+      this.image(payload.image);
+      this.narrative(payload.narrative);
+      if (payload.evidence.length > 0) {
+        this.evidence(payload.evidence[0].id);
+      }
+    }
+
+    if(src) {
+      fetch(src)
       .then((r) => {
         if(r.ok)
           return r.json();
       }).then((json) => {
-        this.badgeName(json.name);
-        this.badgeDescription(json.description);
+        populateObservables(json);
+        const badge = json.badge.slice(0,-6) + '.json?v=2_0';
+        fetch(badge)
+        .then((r) => {
+          if(r.ok)
+            return r.json();
+        }).then((json) => {
+          this.badgeName(json.name);
+          this.badgeDescription(json.description);
+        });
       });
-    });
+    } else {
+      populateObservables(assertion);
+      // TODO: Set `badgeName` and `badgeDescription` once collections are supported.
+    }
 }
 
 ko.components.register(TAG_NAME, {
