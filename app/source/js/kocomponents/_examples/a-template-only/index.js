@@ -4,7 +4,7 @@
  * It's useful for very simple things (no params or a few) or to start
  * mocking-up a feature.
  *
- * @module kocomponents/_examples/template-only
+ * @module kocomponents/_examples/a-template-only
  *
  * FIXME: Update this component description
  * FIXME: Document parameters allowed using jsdoc syntax in this initial comment,

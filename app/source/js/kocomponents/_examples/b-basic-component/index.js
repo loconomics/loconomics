@@ -2,6 +2,8 @@
  * Example of a basic Knockout Component that uses the helper KnockoutComponent
  * and ES6 class syntax to define it.
  *
+ * @module kocomponents/_examples/b-basic-komponent
+ *
  * FIXME: Update this component description
  * FIXME: Document parameters allowed using jsdoc syntax in the constructor,
  * or if there is no one, at this initial commit
