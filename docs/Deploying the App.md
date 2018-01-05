@@ -11,13 +11,13 @@ This is our preferred way, both to generate the production version of the app ('
 To build for the build service,
 
 ```bash
-grunt build
+yarn grunt build
 
-grunt prepare-phonegapbuild-dev # for a dev/test build
+yarn grunt prepare-phonegapbuild-dev # for a dev/test build
 
 # or
 
-grunt prepare-phonegapbuild-live # for a production build
+yarn grunt prepare-phonegapbuild-live # for a production build
 ```
 
 The ``prepare-*`` tasks generate zip files under /build directory, one for each task, that can be uploaded to the Phonegap Build service.
@@ -36,13 +36,13 @@ The project has a folder ready to store results of a local build, but most files
 To prepare for a phonegap build,
 
 ```bash
-grunt build
+yarn grunt build
 
-grunt prepare-phonegapcli-dev # for testing
+yarn grunt prepare-phonegapcli-dev # for testing
 
 # or
 
-grunt prepare-phonegapcli-live # for production
+yarn grunt prepare-phonegapcli-live # for production
 ```
 
 This ``prepare-*`` tasks performs additional build on top of ``grunt build``, like
@@ -92,13 +92,13 @@ PhoneGap Build service to build the native apps.
 ## Web
 In terminal enter command:
 ```
-grunt build-webapp
+yarn grunt build-webapp
 ```
 that will build the html, and build/copy assets (js, css, images, fonts).
 
 If assets are already generated, you can build only the html:
 ```
-grunt build-webapp-html
+yarn grunt build-webapp-html
 ```
 
 The output files for that tasks goes to the /web directory; in a local environment with the [back-end setup done](Backend Development Environment Setup Guide.md), you can just try it at your localhost dev server.
