@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-01-05 21:00+11:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: i18n.POTGenerator\n"
+
+#: ..\app\source\html\parts\UserMenuContents.html:23
+msgid "Dashboard"
+msgstr ""
+
+#: Default.cshtml:10
+msgid "hello from %1, today is %0"
+msgstr ""
+
+#: Default.cshtml:3
+msgid "Home Page"
+msgstr ""
+
+#: assets\js\app.js:2
+msgid "javascript content here"
+msgstr ""
+
+#: Default.cshtml:19
+msgid "Modify this template to jump-start your ASP.NET Web Pages application."
+msgstr ""
+
+#: Default.cshtml:22
+msgid "To learn more about ASP.NET Web Pages, visit"
+msgstr ""
+
