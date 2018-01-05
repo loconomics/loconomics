@@ -1,19 +1,21 @@
 ﻿@{
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "[[[Home Page]]]";
-    Page.Culture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+    Page.Culture = System.Globalization.CultureInfo.CurrentUICulture;
     var db = Database.Open("StarterSite");
     var languageID = LcData.GetCurrentLanguageID();
     var countryID = LcData.GetCurrentCountryID();
     var selectedData = db.Query("SELECT * FROM [Positions] as p where p.LanguageID = @0 AND p.CountryID = @1", languageID, countryID);
     var grid = new WebGrid(source: selectedData);
+    var hello = string.Format("[[[hello from %1, today is %0|||{0}|||{1}]]]", DateTime.Now.ToString("ddd", System.Globalization.CultureInfo.CurrentUICulture), "@samwa");
+    Page.Hello = hello;
 }
 
 @section featured {
 <section class="featured">
     <div class="content-wrapper">
         <hgroup class="title">
-            <h1>@Page.Title - @Page.Culture.</h1>
+            <h1>@Page.Title - @Page.Culture.Name</h1>
             <h2>[[[Modify this template to jump-start your ASP.NET Web Pages application.]]]</h2>
         </hgroup>
         <p>
@@ -47,6 +49,14 @@
             }
         </tbody>
     </table>
+    <dl>
+        <dt>Sunday</dt>
+        <dd>@Page.Culture.DateTimeFormat.GetDayName(DayOfWeek.Sunday)</dd>
+    </dl>
+    <dl>
+        <dt>Localisation with formatting</dt>
+        <dd>@Page.Hello</dd>
+    </dl>
 
     @ServerInfo.GetHtml();
 </section>

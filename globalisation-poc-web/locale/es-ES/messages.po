@@ -1,22 +1,36 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-04 15:44+11:00\n"
-"PO-Revision-Date: 2018-01-04 15:44+11:00\n"
+"POT-Creation-Date: 2018-01-05 21:00+11:00\n"
+"PO-Revision-Date: 2018-01-05 21:00+1100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: i18n.POTGenerator\n"
+"X-Generator: Poedit 2.0.5\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_ES\n"
+
+#: ..\app\source\html\parts\UserMenuContents.html:23
+msgid "Dashboard"
+msgstr "Salpicadero"
+
+#: Default.cshtml:10
+msgid "hello from %1, today is %0"
+msgstr "hola desde %1, hoy es %0"
 
 #: Default.cshtml:3
 msgid "Home Page"
-msgstr ""
+msgstr "Lorem ipsum dolor sit amet"
 
-#: Default.cshtml:16
-msgid "Modify this template to jump-start your ASP.NET Web Pages application."
+#: assets\js\app.js:2
+msgid "javascript content here"
 msgstr ""
 
 #: Default.cshtml:19
-msgid "To learn more about ASP.NET Web Pages, visit"
-msgstr ""
+msgid "Modify this template to jump-start your ASP.NET Web Pages application."
+msgstr "Integer diam ex, egestas et felis sit amet, ultrices lacinia tortor. Quisque eget ornare metus."
 
+#: Default.cshtml:22
+msgid "To learn more about ASP.NET Web Pages, visit"
+msgstr "Suspendisse in porttitor tellus. In interdum enim arcu"
