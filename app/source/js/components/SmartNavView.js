@@ -1,11 +1,11 @@
 /**
     SmartNavView component.
     Requires its CSS counterpart.
-    
+
     Adapted as common-js modules and class names.
-    
+
     Forked from the project:
-    
+
     Project-Tyson
     Website: https://github.com/c2prods/Project-Tyson
     Author: c2prods
@@ -31,10 +31,10 @@ var $ = function (query) { return document.querySelector(query); };
 var $$ = function (query) { return document.querySelectorAll(query); };
 
 var slideOpts = {
-    sl:     ['slin',   'slout' ],    
-    sr:     ['srin',   'srout' ],    
-    popin:  ['popin',  'noanim'],    
-    popout: ['noanim', 'popout'],    
+    sl:     ['slin',   'slout' ],
+    sr:     ['srin',   'srout' ],
+    popin:  ['popin',  'noanim'],
+    popout: ['noanim', 'popout'],
 };
 
 var clearNode = function (node) {
@@ -44,10 +44,10 @@ var clearNode = function (node) {
 };
 
 var SwitchTabs = function () {
-    var vIn = $('#'+this.dataset.vin),
-        vOut = $('.SmartNavView.active'),
-        vInCmd = this,
-        vOutCmd = $('.SmartNavTabs button.active');
+    var vIn = $('#'+this.dataset.vin);
+    var vOut = $('.SmartNavView.active');
+    var vInCmd = this;
+    var vOutCmd = $('.SmartNavTabs button.active');
     vOut.classList.remove('active');
     vIn.classList.add('active');
     vOut.classList.add('hidden');
@@ -59,10 +59,10 @@ var SwitchTabs = function () {
 exports.SwitchTabs = SwitchTabs;
 
 var Slide = function (callback) {
-    var vIn = $('#'+this.dataset.vin),
-        vOut = $('.SmartNavView.active'),
-        slideType = this.dataset.sd,
-        onAnimationEnd = function () {
+    var vIn = $('#'+this.dataset.vin);
+    var vOut = $('.SmartNavView.active');
+    var slideType = this.dataset.sd;
+    var onAnimationEnd = function () {
             vOut.classList.add('hidden');
             vIn.classList.add('active');
             vIn.classList.remove(slideOpts[slideType][0]);
@@ -84,11 +84,11 @@ var Slide = function (callback) {
 exports.Slide = Slide;
 
 var ScrollTop = function () {
-    var el = this.parentNode.parentNode.childNodes[5].childNodes[1],
-        offset = el.scrollTop,
-        interval = setInterval(function() {
+    var el = this.parentNode.parentNode.childNodes[5].childNodes[1];
+    var offset = el.scrollTop;
+    var interval = setInterval(function() {
             el.scrollTop = offset;
-            offset -= 24; 
+            offset -= 24;
             if (offset <= -24) {
                 clearInterval(interval);
             }
@@ -98,8 +98,8 @@ var ScrollTop = function () {
 exports.ScrollTop = ScrollTop;
 
 var TextboxResize = function (el) {
-    /* jshint maxstatements: 28, maxcomplexity:11 */
-    
+    /* eslint max-statements:"off", complexity:"off" */
+
     el.removeEventListener('click', ScrollTop, false);
     el.addEventListener('click', ScrollTop, false);
     var leftbtn = el.parentNode.querySelectorAll('button.left')[0];
@@ -145,12 +145,12 @@ var TextboxResize = function (el) {
 exports.TextboxResize = TextboxResize;
 
 exports.enableAll = function enableAll() {
-    
+
     var i = 0;
-    
+
     var textboxes = $$('.SmartNavBar h1');
     for (i = 0; i<textboxes.length; i++) TextboxResize(textboxes[i]);
-    
+
     var navbtns = $$('.SmartNavBar button');
     for (i = 0; i<navbtns.length; i++) navbtns[i].addEventListener('click', Slide, false);
 

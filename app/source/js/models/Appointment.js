@@ -3,7 +3,7 @@
 
 var ko = require('knockout');
 var Model = require('./Model');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var PricingSummaryDetail = require('./PricingSummaryDetail');
 var CalendarEvent = require('./CalendarEvent');
 var Booking = require('./Booking');
@@ -83,11 +83,11 @@ function Appointment(values) {
     this.displayedEndTime = ko.pureComputed(function() {
         return moment(this.endTime()).locale('en-US-LC').format('LT');
     }, this);
-    
+
     this.displayedTimeZone = ko.pureComputed(function() {
         return this.timeZone() && moment().tz(this.timeZone()).format('z');
     }, this);
-    
+
     this.displayedTimeRange = ko.pureComputed(function() {
         return this.displayedStartTime() + '-' + this.displayedEndTime() + ' ' + this.displayedTimeZone();
     }, this);
@@ -105,7 +105,7 @@ function Appointment(values) {
     }, this);
 
     this.stateHeader = ko.pureComputed(function() {
-        //jshint maxcomplexity:10
+        /* eslint complexity:"off" */
 
         var text = '';
         if (this.id() > 0 && this.sourceEvent()) {
@@ -259,8 +259,8 @@ var Time = require('../utils/Time');
 **/
 Appointment.newFreeSlot = function newFreeSlot(options) {
 
-    var start = options.start || new Time(options.date, 0, 0, 0),
-        end = options.end || new Time(options.date, 0, 0, 0);
+    var start = options.start || new Time(options.date, 0, 0, 0);
+    var end = options.end || new Time(options.date, 0, 0, 0);
 
     return new Appointment({
         id: Appointment.specialIds.free,
@@ -275,8 +275,8 @@ Appointment.newFreeSlot = function newFreeSlot(options) {
 
 Appointment.newUnavailableSlot = function newUnavailableSlot(options) {
 
-    var start = options.start || new Time(options.date, 0, 0, 0),
-        end = options.end || new Time(options.date, 0, 0, 0);
+    var start = options.start || new Time(options.date, 0, 0, 0);
+    var end = options.end || new Time(options.date, 0, 0, 0);
 
     return new Appointment({
         id: Appointment.specialIds.unavailable,
@@ -291,8 +291,8 @@ Appointment.newUnavailableSlot = function newUnavailableSlot(options) {
 
 Appointment.newPreparationTimeSlot = function newPreparationTimeSlot(options) {
 
-    var start = options.start || new Time(options.date, 0, 0, 0),
-        end = options.end || new Time(options.date, 0, 0, 0);
+    var start = options.start || new Time(options.date, 0, 0, 0);
+    var end = options.end || new Time(options.date, 0, 0, 0);
 
     return new Appointment({
         id: Appointment.specialIds.preparationTime,

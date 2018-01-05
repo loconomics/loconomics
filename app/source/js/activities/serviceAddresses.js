@@ -3,14 +3,16 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var $ = require('jquery');
+var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var serviceAddresses = require('../data/serviceAddresses');
 var clientAddresses = require('../data/clientAddresses');
 var showError = require('../modals/error').show;
+var UserJobProfile = require('../viewmodels/UserJobProfile');
+var ServiceAddresses = require('../viewmodels/ServiceAddresses');
 
 var A = Activity.extend(function ServiceAddressesActivity() {
 
@@ -33,13 +35,13 @@ var A = Activity.extend(function ServiceAddressesActivity() {
             return 'Where do you work as a ' + this.jobTitleName() + '?';
         }
         else if (this.isInOnboarding()) {
-            return 'Locations for your listing';
+            return 'Location for your listing';
         }
         else if(this.serviceAddresses.isSelectionMode()) {
             return 'Choose a place for this booking';
         }
         else {
-            return 'Locations';
+            return 'Location';
         }
     }, this.viewModel);
 
@@ -144,7 +146,7 @@ var A = Activity.extend(function ServiceAddressesActivity() {
 exports.init = A.init;
 
 A.prototype.applyOwnNavbarRules = function() {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
 
     var itIs = this.viewModel.serviceAddresses.isSelectionMode();
 
@@ -164,9 +166,9 @@ A.prototype.applyOwnNavbarRules = function() {
         // Reset to defaults, or given title:
         this.navBar.leftAction().model.updateWith(this.defaultLeftAction, true);
 
-        var jid = this.viewModel.jobTitleID(),
-            jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler',
-            url = this.mustReturnTo || (jid && '/marketplaceJobtitles/' + jid || '/scheduling');
+        var jid = this.viewModel.jobTitleID();
+        var jname = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName() || 'Scheduler';
+        var url = this.mustReturnTo || (jid && '/listingEditor/' + jid || '/schedulingPreferences');
 
         this.navBar.leftAction().link(url);
         this.navBar.leftAction().text(this.requestData.navTitle || jname);
@@ -183,8 +185,7 @@ A.prototype.applyOwnNavbarRules = function() {
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     // Perform updates that apply this request:
-    onboarding.updateNavBar(this.navBar) ||
-    this.applyOwnNavbarRules();
+    return onboarding.updateNavBar(this.navBar) || this.applyOwnNavbarRules();
 };
 
 A.prototype.show = function show(options) {
@@ -229,28 +230,12 @@ A.prototype.show = function show(options) {
     }
 };
 
-var UserJobProfile = require('../viewmodels/UserJobProfile'),
-    ServiceAddresses = require('../viewmodels/ServiceAddresses');
-
 function ViewModel(app) {
-    // jshint maxstatements:70
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = onboarding.inProgress;
 
     this.serviceAddresses = new ServiceAddresses();
-
-    this.addMoreHeaderText = ko.pureComputed(function() {
-        if(this.isInOnboarding() && this.serviceAddresses.sourceAddresses().length === 0) {
-            return 'Add at least one for your listing';
-        }
-        else if (this.isInOnboarding()) {
-            return 'Want to add any more?';
-        }
-        else {
-            return '';
-        }
-    }, this);
 
     this.addLocationLabel = ko.pureComputed(function() {
         return this.isInOnboarding() ? 'Place clients come to see you' :
@@ -361,8 +346,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.onboardingNextReady = ko.computed(function() {
-        var isin = onboarding.inProgress(),
-            hasItems = this.serviceAddresses.sourceAddresses().length > 0;
+        var isin = onboarding.inProgress();
+        var hasItems = this.serviceAddresses.sourceAddresses().length > 0;
 
         return isin && hasItems;
     }, this);

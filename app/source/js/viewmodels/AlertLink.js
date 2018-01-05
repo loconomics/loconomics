@@ -23,20 +23,20 @@ var alertPresets = {
             route: new RouteParser('/servicesOverview/:jobTitleID')
         },
         availability: {
-            label: 'When can you be booked?',
-            route: new RouteParser('/schedulingPreferences?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            label: 'What hours do you work?',
+            route: new RouteParser('/schedulingPreferences?mustReturn=listingEditor/:jobTitleID')
         },
         personalinfo: {
-            label: 'How do we reach you?',
-            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            label: 'How do clients reach you?',
+            route: new RouteParser('/publicContactInfo?mustReturn=listingEditor/:jobTitleID')
         },
         photo: {
             label: 'Add your profile photo',
-            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/publicProfilePicture?mustReturn=listingEditor/:jobTitleID')
         },
         payment: {
             label: 'How do you want to be paid?',
-            route: new RouteParser('/paymentPreference?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/payoutPreference?mustReturn=listingEditor/:jobTitleID')
         },
         pricingdetails: {
             label: 'Create a bookable offering',
@@ -44,10 +44,10 @@ var alertPresets = {
         },
         publicbio: {
             label: 'Add a personal bio',
-            route: new RouteParser('/aboutMe?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/publicBio?mustReturn=listingEditor/:jobTitleID')
         },
         professionallicense: {
-            label: 'Verify your professional license or certification',
+            label: 'Submit required credentials',
             route: new RouteParser('/licensesCertifications/:jobTitleID')
         },
         location: {
@@ -56,11 +56,11 @@ var alertPresets = {
         },
         'add-education': {
             label: 'Add training or education',
-            route: new RouteParser('/education?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+            route: new RouteParser('/education?mustReturn=listingEditor/:jobTitleID')
         },
         verifyemail: {
               label: 'Verify your account (check your e-mail)',
-              route: new RouteParser('/verifications?mustReturn=marketplaceJobtitles/:jobTitleID&returnText=Back to listing')
+              route: new RouteParser('/verifications?mustReturn=listingEditor/:jobTitleID')
         },
         showcasework: {
             label: 'Add photos of your work',
@@ -70,8 +70,8 @@ var alertPresets = {
               label: 'Verify your professional license or certification',
               route: new RouteParser('/licensesCertifications/:jobTitleID')
         }
-    },
-    undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };
+    };
+var undefinedPreset = { label: '', route: { reverse: function() { return ''; } } };
 
 /*
  * Creates an AlertLink. Do not initialize directly.

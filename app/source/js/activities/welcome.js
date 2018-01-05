@@ -46,6 +46,16 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     this.updateNavBarState();
+
+    // Country specific code:
+    // If the user is non for the current country set-up (fixed as USA for now #728)
+    // we are displaying a notice of non-availability while skipping onboarding
+    // steps; to prevent they get trapped in onboarding forever #722, we should
+    // immediately finish it.
+    if (!user.isUSUser()) {
+        onboarding.finish();
+        userProfile.saveOnboardingStep(onboarding.stepName());
+    }
 };
 
 function ViewModel() {
@@ -58,17 +68,13 @@ function ViewModel() {
     this.helpLink = ko.pureComputed(function() {
         return this.user.isServiceProfessional() ? this.helpLinkProfessionals : this.helpLinkClients ;
     }, this);
-    this.startOnboarding = function startOnboarding() {
+    this.startProffesionalOnboarding = function startOnboarding() {
+        userProfile.becomeServiceProfessional();
+        onboarding.isServiceProfessional(true);
         onboarding.goNext();
     };
-    this.clientOnboarding = function clientOnboarding() {
-        // IMPORTANT: right now, there is not an onboarding for client, and the onboarding data module
-        // takes care of steps only for professionals, so clients has a single onboarding step, this
-        // 'welcome' activity. Because of that, once the client choose to 'start' here we just
-        // remove the onboarding step to prevent show them this welcome again every time it enters again.
-        onboarding.stepNumber(-1);
-        userProfile.saveOnboardingStep(null);
-        // We left the link behind to go wherever is linking (to add here an app.shell.go('/')
-        // can conflict)
+    this.startClientOnboarding = function startOnboarding() {
+        onboarding.isServiceProfessional(false);
+        onboarding.goNext();
     };
 }

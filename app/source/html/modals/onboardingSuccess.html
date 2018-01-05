@@ -1,0 +1,35 @@
+<div id="onboardingSuccessModal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="onboardingSuccessModal-label" aria-describedby="onboardingSuccessModal-content" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h2 class="modal-title" id="onboardingSuccessModal-label">
+                    <span data-bind="text: title"></span>
+                </h2>
+            </div>
+            <div class="modal-body" id="onboardingSuccessModal-content" role="document">
+                <div data-bind="if: isServiceProfessional">
+                    <ul class="IconList">
+                        <li>
+                            <i class="fa ion-ios-color-wand-outline"></i>
+                            <p>Next we will show you your listing so you can edit and enhance it</p>
+                        </li>
+                        <li>
+                            <i class="fa ion-earth"></i>
+                            <p>When you're ready, you can make your listing public to potential clients and other professionals</p>
+                        </li>
+                    </ul>
+                </div>
+                <div data-bind="ifnot: isServiceProfessional">
+                    <ul class="IconList">
+                        <li>
+                            <i class="fa ion-search"></i>
+                            <p>Find and schedule local services</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

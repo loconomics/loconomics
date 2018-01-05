@@ -29,7 +29,7 @@ cache.range = {
 function loadLocalCopy() {
     return local.getItem('clientAppointments')
     .then(function(data) {
-        //jshint maxcomplexity:8
+        /* eslint complexity:"off" */
         if (data) {
             if (data.latest)
                 cache.latest = new Date(data.latest);
@@ -58,9 +58,8 @@ function sortBookingByDateComparator(a, b) {
 }
 
 var remoteRequest = null;
-function getFromRemote(options) {
+function getFromRemote() {
     if (remoteRequest) return remoteRequest;
-    options = options || {};
     var start = new Date();
     // Up to 3 months in advance for clients. They have not too many apts usually.
     var end = moment().add(3, 'month').toDate();

@@ -13,8 +13,8 @@ var userProfile = require('./userProfile');
 
 /**
  * @callback LocalLoginCb
- * @param {Credentials} credentials Response data from login/signup
- * @returns {Promise<Credentials>}
+ * @param {UserAuthKey} credentials Response data from login/signup
+ * @returns {Promise<UserAuthKey>}
  */
 
 /**
@@ -56,7 +56,7 @@ var performLocalLogin = function (username) {
  * the provided credentials.
  * @param {string} username
  * @param {string} password
- * @returns {Promise<LoggedData>}
+ * @returns {Promise<UserAuthKey>}
  */
 exports.login = function (username, password) {
 
@@ -75,7 +75,7 @@ exports.login = function (username, password) {
  * Performs a login attempt with the API by using
  * a Facebook accessToken.
  * @param {string} accessToken Token given by the Facebook API
- * @returns {Promise<LoggedData>}
+ * @returns {Promise<UserAuthKey>}
  */
 exports.facebookLogin = function (accessToken) {
 
@@ -117,12 +117,16 @@ exports.logout = function logout() {
  * Facebook credentials
  * @param {string} [data.firstName]
  * @param {string} [data.lastName]
+ * @param {number} [data.countryID]
  * @param {string} [data.phone]
- * @param {string} [data.device]
- * @param {string} [facebookUserID]
- * @param {string} [facebookAccessToken]
- * @param {string} [profileType=client] Closed enumeration allowing
+ * @param {string} [data.facebookUserID]
+ * @param {string} [data.facebookAccessToken]
+ * @param {string} [data.profileType=client] Closed enumeration allowing
  * 'service-professional' and 'client'
+ * @param {string} [data.confirmationCode]
+ * @param {number} [data.jobTitleID]
+ * @param {string} [data.jobTitleName]
+ * @returns {Promise<UserAuthKey>}
  */
 exports.signup = function (data) {
 

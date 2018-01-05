@@ -3,12 +3,13 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    NavAction = require('../viewmodels/NavAction'),
-    NavBar = require('../viewmodels/NavBar');
+var ko = require('knockout');
+var NavAction = require('../viewmodels/NavAction');
+var NavBar = require('../viewmodels/NavBar');
 
 require('../utils/Function.prototype._inherits');
 var showConfirm = require('../modals/confirm').show;
+var insertCss = require('insert-css');
 
 /**
     Activity class definition
@@ -18,17 +19,18 @@ function Activity($activity, app) {
     this.$activity = $activity;
     this.app = app;
 
+    /**
+     * CSS to style this activity.
+     * @private {string}
+     */
+    this.style = null;
+
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
     this.accessLevel = null;
 
     // By default, reset scroll to top on activity.show
     this.resetScroll = true;
-
-    // TODO: Future use of a viewState, plain object representation
-    // of part of the viewModel to be used as the state passed to the
-    // history and between activities calls.
-    this.viewState = {};
 
     // Object to hold the options passed on 'show' as a result
     // of a request from another activity
@@ -56,7 +58,8 @@ function Activity($activity, app) {
      */
     this.title = ko.observable('');
 
-    // Knockout binding of viewState delayed to first show
+
+    // Knockout binding of viewModel delayed to first show
     // to avoid problems with subclasses replacing the viewModel property
 }
 
@@ -93,8 +96,7 @@ Activity.applyTitle = function (title) {
     Must be executed every time the activity is put in the current view.
 **/
 Activity.prototype.show = function show(options) {
-    //jshint maxcomplexity:9
-    // TODO: must keep viewState up to date using options/state.
+    /* eslint complexity:"off" */
     //console.log('Activity show', this.constructor.name);
     if (!this.__bindingDone) {
         // Default viewModel: the Activity instance (for more simple scenarios)
@@ -117,6 +119,15 @@ Activity.prototype.show = function show(options) {
         ko.applyBindings(this.viewModel, this.$activity.get(0));
 
         this.__bindingDone = true;
+
+        // Additionally to binding, inject styles is needed too only first time
+        /**
+         * Enable the own activity style CSS, if there is someone.
+         * @private
+         */
+        this.__styleElement = this.style && insertCss(this.style, {
+            container: this.$activity.get(0)
+        });
     }
 
     options = options || {};
@@ -210,6 +221,15 @@ Activity.prototype.hide = function hide() {
 };
 
 /**
+ * Dispose any ressources that cannot be done automatically.
+ */
+Activity.prototype.dispose = function() {
+    if (this.__styleElement) {
+        this.__styleElement.parentNode.removeChild(this.__styleElement);
+    }
+};
+
+/**
     Register a handler that acts on an event or subscription notification,
     that will be enabled on Activity.show and disabled on Activity.hide.
 
@@ -223,7 +243,6 @@ Activity.prototype.hide = function hide() {
     }
 **/
 Activity.prototype.registerHandler = function registerHandler(settings) {
-    /*jshint maxcomplexity:8 */
 
     if (!settings)
         throw new Error('Register require a settings object');
@@ -255,8 +274,9 @@ Activity.NavAction = NavAction;
 Activity.createSectionNavBar = function createSectionNavBar(title) {
     return new NavBar({
         title: title,
-        leftAction: NavAction.menuIn,
-        rightAction: NavAction.menuNewItem
+        leftAction: NavAction.menuIn
+        // NOTE: Removed as of #726 until a new menu for it is implemented as of #191 child issues.
+        //rightAction: NavAction.menuNewItem
     });
 };
 
@@ -302,8 +322,8 @@ Activity.prototype.createCancelAction = function createCancelAction(cancelLink, 
         link: cancelLink,
         text: 'Cancel',
         handler: function(event) {
-            var link = this.link(),
-                eoptions = event && event.options || {};
+            var link = this.link();
+            var eoptions = event && event.options || {};
 
             var goLink = function() {
                 if (link)
@@ -380,4 +400,8 @@ Activity.extend = function extendsActivity(ClassFn) {
     ClassFn.init = createSingleton.bind(null, ClassFn);
 
     return ClassFn;
+};
+
+Activity.init = function($activity, app, name) {
+    return createSingleton(this, $activity, app, name);
 };

@@ -6,8 +6,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    IndexedGroupListCache = require('./IndexedGroupListCache');
+var ko = require('knockout');
+var IndexedGroupListCache = require('./IndexedGroupListCache');
 
 function required(val, msg) {
     if (val === null || typeof(val) === 'undefined') throw new Error(msg || 'Required parameter');
@@ -15,7 +15,7 @@ function required(val, msg) {
 }
 
 function GroupListRemoteModel(settings) {
-    /*jshint maxstatements:28*/
+    /* eslint max-statements:"off" */
 
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
@@ -293,9 +293,9 @@ GroupListRemoteModel.prototype.addRestSupport = function addRestSupport(restClie
         return restClient.get(baseUrl + groupID);
     };
     this.pushItemToRemote = function pushToRemote(data) {
-        var groupID = data[this.settings.groupIdField],
-            itemID = data[this.settings.itemIdField],
-            method = itemID ? 'put' : 'post';
+        var groupID = data[this.settings.groupIdField];
+        var itemID = data[this.settings.itemIdField];
+        var method = itemID ? 'put' : 'post';
 
         var url = baseUrl + groupID + (
             itemID ? '/' + itemID : ''

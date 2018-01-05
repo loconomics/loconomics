@@ -13,7 +13,7 @@ var escapeSelector = require('../escapeSelector');
 var getFlags = require('../userAgentFlags');
 
 function DomItemsManager(settings) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
 
     this.idAttributeName = settings.idAttributeName || 'id';
     this.allowDuplicates = !!settings.allowDuplicates || false;
@@ -73,9 +73,9 @@ DomItemsManager.prototype.inject = function inject(name, html) {
 
     // Creating a wrapper around the html
     // (can be provided the innerHtml or outerHtml, doesn't matters with next approach)
-    var $html = $('<div/>', { html: html }),
-        // We look for the container element (when the outerHtml is provided)
-        $c = this.find(name, $html);
+    var $html = $('<div/>', { html: html });
+    // We look for the container element (when the outerHtml is provided)
+    var $c = this.find(name, $html);
 
     if ($c.length === 0) {
         // Its innerHtml, so the wrapper becomes the container itself

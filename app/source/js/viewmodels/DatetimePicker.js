@@ -3,9 +3,9 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
+var ko = require('knockout');
+var $ = require('jquery');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
 var moment = require('moment-timezone');
 var showTimePicker = require('../modals/timePicker').show;
 
@@ -17,7 +17,7 @@ var availability = require('../data/availability');
 var showError = require('../modals/error').show;
 
 function DatetimePickerVM(app, element) {
-    //jshint maxstatements: 40
+    /* eslint max-statements:"off" */
 
     this.selectedDate = ko.observable(getDateWithoutTime());
     this.userID = ko.observable();
@@ -34,9 +34,9 @@ function DatetimePickerVM(app, element) {
         if (fullMinutes <= 0)
             return '';
 
-        var hours = Math.floor(fullMinutes / 60),
-            minutes = fullMinutes % 60,
-            text = '';
+        var hours = Math.floor(fullMinutes / 60);
+        var minutes = fullMinutes % 60;
+        var text = '';
 
         if (hours > 0)
             text += moment.duration({ hours: hours }).humanize() + ' ';

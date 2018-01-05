@@ -3,10 +3,10 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    ko = require('knockout'),
-    MessageView = require('../models/MessageView'),
-    textSearch = require('../utils/textSearch');
+var Activity = require('../components/Activity');
+var ko = require('knockout');
+var MessageView = require('../models/MessageView');
+var textSearch = require('../utils/textSearch');
 
 var messaging = require('../data/messaging');
 var showError = require('../modals/error').show;
@@ -54,8 +54,8 @@ function ViewModel(app) {
     // bodyText of the last message (additionally to the thread subject)
     // even if this implementation try to iterate all messages.
     this.threads = ko.pureComputed(function() {
-        var t = this.sourceThreads(),
-            s = this.searchText();
+        var t = this.sourceThreads();
+        var s = this.searchText();
 
         if (!t)
             return [];

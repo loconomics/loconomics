@@ -19,7 +19,6 @@ var TEMPLATE = require('../../html/modals/textEditor.html');
 var createElement = require('./utils/createElement');
 
 exports.show = function showTextEditor(options) {
-    //jshint maxcomplexity:10
     var modal = createElement(TEMPLATE);
     var vm = modal.data('viewmodel');
     fixFocus(modal);

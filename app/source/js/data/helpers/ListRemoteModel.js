@@ -23,7 +23,7 @@ function required(val, msg) {
 }
 
 function ListRemoteModel(settings) {
-    /*jshint maxstatements:50*/
+    /* eslint max-statements:"off" */
 
     settings = settings || {};
     settings.listTtl = required(settings.listTtl, 'listTtl is required');
@@ -451,8 +451,8 @@ ListRemoteModel.prototype.addRestSupport = function addRestSupport(restClient, b
     };
     this.pushListToRemote = function pushListToRemote(data) {
 
-        var itemID = data[this.settings.itemIdField],
-            method = itemID ? 'put' : 'post';
+        var itemID = data[this.settings.itemIdField];
+        var method = itemID ? 'put' : 'post';
 
         var url = baseUrl + (
             itemID ? '/' + itemID : ''

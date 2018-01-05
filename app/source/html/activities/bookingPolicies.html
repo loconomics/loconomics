@@ -1,13 +1,12 @@
 <!-- cancellationPolicy activity -->
 <div data-activity="bookingPolicies" data-bind="css: { 'is-loading': isLoading, 'is-saving': isSaving }" class="Boxes-sm animated">
-    <app-inline-user-menu data-bind="visible: !isInOnboarding()"></app-inline-user-menu>
-    <app-onboarding-menu data-bind="visible: isInOnboarding"></app-onboarding-menu>
+    <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <div class="row">
-            <div data-bind="visible: !isInOnboarding()" class="SubSectionNavBar hidden-xs hidden-sm">
+            <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
-                        <a href="/marketplaceJobtitles/" data-bind="attr: {href: '/marketplaceJobtitles/' + jobTitleID()}">
+                        <a href="/listingEditor/" data-bind="attr: { href: '/listingEditor/' + jobTitleID() }">
                             <i class="fa fa-fw ion-ios-arrow-thin-left"></i>
                             <span data-bind="text: jobTitleName"></span>
                         </a>
@@ -15,7 +14,6 @@
                 </ul>
             </div>
             <div class="col-md-7 col-sm-reset">
-                <app-onboarding-progress-bar></app-onboarding-progress-bar>
                 <h1><icon-dec params="icon: 'ion-ios-close'"></icon-dec> <span data-bind="text: title"></span></h1>
                 <div data-bind="css: { 'is-loading': isLoading }">
                     <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -52,7 +50,7 @@
                                         <label data-bind="
                                             attr: { for: 'cancellationPolicy' + policy.cancellationPolicyID() },
                                             text: policy.name"></label>
-                                        <p class="help-block"><span data-bind="text: policy.description, attr: { id: 'cancellationPolicyInformation' + policy.cancellationPolicyID() }"></span><em><span> For example, if a booking was made by a client for one week from now and cancelled by <strong data-bind="text: policy.refundLimitDate, format: { type: 'datetime', format: 'LT dddd, LL' }"></strong>, they would <strong><span data-bind="text: policy.cancellationFeeBeforeDisplay"></span></strong>. If they cancelled after, they would be charged a <strong><span data-bind="text: policy.cancellationFeeAfterDisplay"></span> cancellation fee.</strong></span></em></p>
+                                        <p class="help-block" data-bind="template: { name: 'cancellationPolicy-info-template', data: { policy: $data } }"></p>
                                     </div>
                                 </div>
                             </div>

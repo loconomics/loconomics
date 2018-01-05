@@ -1,7 +1,7 @@
 'use strict';
 
-var UserJobTitle = require('../../js/models/UserJobTitle'),
-    ProfileAlert = require('../../js/models/ProfileAlert');
+var UserJobTitle = require('../../js/models/UserJobTitle');
+var ProfileAlert = require('../../js/models/ProfileAlert');
 
 describe('models/UserJobTitle', function() {
     describe('userID', function() {
@@ -70,8 +70,8 @@ describe('models/UserJobTitle', function() {
 
     describe('createdDate', function() {
         it('should be a model field', function() {
-            var d = Date.now(),
-                j = new UserJobTitle({ createdDate: d });
+            var d = Date.now();
+            var j = new UserJobTitle({ createdDate: d });
 
             expect(j.createdDate()).to.equal(d);
         });
@@ -79,8 +79,8 @@ describe('models/UserJobTitle', function() {
 
     describe('updatedDate', function() {
         it('should be a model field', function() {
-            var d = Date.now(),
-                j = new UserJobTitle({ updatedDate: d });
+            var d = Date.now();
+            var j = new UserJobTitle({ updatedDate: d });
 
             expect(j.updatedDate()).to.equal(d);
         });
@@ -102,10 +102,10 @@ describe('models/UserJobTitle', function() {
         });
 
         it('should only include required alerts', function() {
-            var requiredAlert = new ProfileAlert({ isRequired: true }),
-                requiredAlert2 = new ProfileAlert({ isRequired: true }),
-                optionalAlert = new ProfileAlert({ isRequired: false }),
-                j = new UserJobTitle({ alerts: [optionalAlert, requiredAlert, requiredAlert2] });
+            var requiredAlert = new ProfileAlert({ isRequired: true });
+            var requiredAlert2 = new ProfileAlert({ isRequired: true });
+            var optionalAlert = new ProfileAlert({ isRequired: false });
+            var j = new UserJobTitle({ alerts: [optionalAlert, requiredAlert, requiredAlert2] });
 
             expect(j.requiredAlerts().length).to.equal(2);
         });
@@ -113,8 +113,8 @@ describe('models/UserJobTitle', function() {
 
     describe('isComplete', function() {
         it('should be true if there are no required alerts and status is not incomplete', function() {
-            var optionalAlert = new ProfileAlert({ isRequired: false }),
-                j = new UserJobTitle({ alerts: [optionalAlert], statusID: UserJobTitle.status.off });
+            var optionalAlert = new ProfileAlert({ isRequired: false });
+            var j = new UserJobTitle({ alerts: [optionalAlert], statusID: UserJobTitle.status.off });
 
             expect(j.isComplete()).to.be.equal(true);
         });
@@ -126,8 +126,8 @@ describe('models/UserJobTitle', function() {
         });
 
         it('should be false if there are required alerts', function() {
-            var requiredAlert = new ProfileAlert({ isRequired: true }),
-                j = new UserJobTitle({ alerts: [requiredAlert], statusID: UserJobTitle.status.on });
+            var requiredAlert = new ProfileAlert({ isRequired: true });
+            var j = new UserJobTitle({ alerts: [requiredAlert], statusID: UserJobTitle.status.on });
 
             expect(j.isComplete()).to.be.equal(false);
         });

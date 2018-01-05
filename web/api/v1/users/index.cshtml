@@ -93,7 +93,9 @@
                 verifications = LcRest.PublicUserVerification.GetList(userID, 0),
                 jobProfile = extendedJobProfile,
                 stats = LcRest.PublicUserStats.Get(userID),
-                education = LcRest.Education.GetList(userID)
+                education = LcRest.Education.GetList(userID),
+                weeklySchedule = LcCalendar.GetAvailability.WeeklySchedule(userID),
+                schedulingPreferences = LcCalendar.GetSchedulingPreferences(userID)
             };
         }
 

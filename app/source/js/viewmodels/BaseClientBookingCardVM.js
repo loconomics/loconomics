@@ -29,7 +29,7 @@ var stepsLabels = {
 };
 
 function BaseClientBookingCardVM(app) {
-    //jshint maxstatements:100
+    /* eslint max-statements:"off" */
 
     this.app = app;
 
@@ -312,10 +312,10 @@ function BaseClientBookingCardVM(app) {
     }, this);
     ko.computed(function triggerSelectedDatetime() {
         if (!this.booking()) return;
-        var v = this.serviceStartDatePickerView(),
-            dt = v && v.selectedDatetime(),
-            current = this.booking().serviceDate(),
-            field = this.timeFieldToBeSelected.peek();
+        var v = this.serviceStartDatePickerView();
+        var dt = v && v.selectedDatetime();
+        var current = this.booking().serviceDate();
+        var field = this.timeFieldToBeSelected.peek();
 
         if (dt && field &&
             dt.toString() !== (current && current.startTime().toString())) {

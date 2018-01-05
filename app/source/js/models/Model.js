@@ -4,19 +4,19 @@
     Is not exactly an 'OOP base' class, but provides
     utilities to models and a model definition object
     when executed in their constructors as:
-    
+
     '''
     function MyModel() {
         Model(this);
         // Now, there is a this.model property with
-        // an instance of the Model class, with 
+        // an instance of the Model class, with
         // utilities and model settings.
     }
     '''
-    
+
     That auto creation of 'model' property can be avoided
     when using the object instantiation syntax ('new' keyword):
-    
+
     '''
     var model = new Model(obj);
     // There is no a 'obj.model' property, can be
@@ -25,11 +25,10 @@
 **/
 'use strict';
 var ko = require('knockout');
-ko.mapping = require('knockout.mapping');
 var $ = require('jquery');
 var clone = function(obj) { return $.extend(true, {}, obj); };
 var cloneValue = function(val, deepCopy) {
-    /*jshint maxcomplexity: 10*/
+    /* eslint complexity:"off" */
     if (typeof(val) === 'object') {
         // A Date object is a special case: even being
         // an object, treat as a basic type, being copied as
@@ -72,7 +71,7 @@ var cloneValue = function(val, deepCopy) {
 };
 
 function Model(modelObject) {
-    
+
     if (!(this instanceof Model)) {
         // Executed as a function, it must create
         // a Model instance
@@ -80,11 +79,11 @@ function Model(modelObject) {
         // and register automatically as part
         // of the modelObject in 'model' property
         modelObject.model = model;
-        
+
         // Returns the instance
         return model;
     }
- 
+
     // It includes a reference to the object
     this.modelObject = modelObject;
     // It maintains a list of properties and fields
@@ -92,11 +91,7 @@ function Model(modelObject) {
     this.fieldsList = [];
     this.propertiesDefs = {};
     this.fieldsDefs = {};
-    // It allow setting the 'ko.mapping.fromJS' mapping options
-    // to control conversions from plain JS objects when 
-    // 'updateWith'.
-    this.mappingOptions = {};
-    
+
     // Timestamp with the date of last change
     // in the data (automatically updated when changes
     // happens on properties; fields or any other member
@@ -116,8 +111,7 @@ module.exports = Model;
     definition
 **/
 function prepareValueByDef(val, def) {
-    //jshint maxcomplexity:10
-    if (def.isArray && 
+    if (def.isArray &&
         !Array.isArray(val)) {
         if (val)
             val = [val];
@@ -173,14 +167,14 @@ function prepareValueByDef(val, def) {
 }
 
 function createDef(givenVal, initialVal) {
-    
-    var def,
-        isModel = givenVal && givenVal.model instanceof Model,
-        isArray = Array.isArray(givenVal),
-        //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
-        // Change attempt: isArray = givenVal && givenVal.isArray || Array.isArray(givenVal),
-        isDate = (givenVal instanceof Date),
-        isObject = typeof(givenVal) === 'object' && !isDate;
+
+    var def;
+    var isModel = givenVal && givenVal.model instanceof Model;
+    var isArray = Array.isArray(givenVal);
+    //TODO ToInvestigate how option 'isArray' must work here without introducing incompatible change
+    // Change attempt: isArray = givenVal && givenVal.isArray || Array.isArray(givenVal),
+    var isDate = (givenVal instanceof Date);
+    var isObject = typeof(givenVal) === 'object' && !isDate;
 
     if (givenVal !== null && !isModel && isObject && !isArray) {
         def = givenVal;
@@ -195,10 +189,10 @@ function createDef(givenVal, initialVal) {
         else if (isDate)
             def.isDate = isDate;
     }
-    
+
     initialVal = typeof(initialVal) === 'undefined' ? def.defaultValue : initialVal;
     def.initialValue = prepareValueByDef(initialVal, def);
-    
+
     return def;
 }
 
@@ -208,9 +202,9 @@ function createDef(givenVal, initialVal) {
     and some optional initialValues (normally that is provided externally
     as a parameter to the model constructor, while default values are
     set in the constructor).
-    That properties become members of the modelObject, simplifying 
+    That properties become members of the modelObject, simplifying
     model definitions.
-    
+
     It uses Knockout.observable and observableArray, so properties
     are funtions that reads the value when no arguments or sets when
     one argument is passed of.
@@ -219,13 +213,13 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
 
     initialValues = initialValues || {};
 
-    var modelObject = this.modelObject,
-        propertiesList = this.propertiesList,
-        defs = this.propertiesDefs,
-        dataTimestamp = this.dataTimestamp;
+    var modelObject = this.modelObject;
+    var propertiesList = this.propertiesList;
+    var defs = this.propertiesDefs;
+    var dataTimestamp = this.dataTimestamp;
 
     Object.keys(properties).forEach(function(key) {
-        
+
         // Create and register definition
         var def = createDef(properties[key], initialValues[key]);
         defs[key] = def;
@@ -240,17 +234,17 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
         // Remember default
         modelObject[key]._defaultValue = def.defaultValue;
         // remember initial
-        modelObject[key]._initialValue = def.initialValue;    
-        
+        modelObject[key]._initialValue = def.initialValue;
+
         // Add subscriber to update the timestamp on changes
         modelObject[key].subscribe(function() {
             dataTimestamp(new Date());
         });
-        
+
         // Add to the internal registry
         propertiesList.push(key);
     });
-    
+
     // Update timestamp after the bulk creation.
     dataTimestamp(new Date());
 };
@@ -259,26 +253,26 @@ Model.prototype.defProperties = function defProperties(properties, initialValues
     Define fields as plain members of the modelObject using
     the fields object definition that includes default values,
     and some optional initialValues.
-    
+
     Its like defProperties, but for plain js values rather than observables.
 **/
 Model.prototype.defFields = function defFields(fields, initialValues) {
 
     initialValues = initialValues || {};
 
-    var modelObject = this.modelObject,
-        defs = this.fieldsDefs,
-        fieldsList = this.fieldsList;
+    var modelObject = this.modelObject;
+    var defs = this.fieldsDefs;
+    var fieldsList = this.fieldsList;
 
     Object.keys(fields).each(function(key) {
-        
+
         // Create and register definition
         var def = createDef(fields[key], initialValues[key]);
         defs[key] = def;
-        
+
         // Create field with initial value
         modelObject[key] = def.initialValue;
-        
+
         // Add to the internal registry
         fieldsList.push(key);
     });
@@ -291,10 +285,10 @@ Model.prototype.defFields = function defFields(fields, initialValues) {
     fields.
 **/
 Model.prototype.defID = function defID(fieldsNames) {
-    
+
     // Store the list
     this.idFieldsNames = fieldsNames;
-    
+
     // Define ID observable
     if (fieldsNames.length === 1) {
         // Returns single value
@@ -313,7 +307,7 @@ Model.prototype.defID = function defID(fieldsNames) {
 };
 
 /**
-    Allows to register a property (previously defined) as 
+    Allows to register a property (previously defined) as
     the model timestamp, so gets updated on any data change
     (keep in sync with the internal dataTimestamp).
 **/
@@ -321,8 +315,8 @@ Model.prototype.regTimestamp = function regTimestampProperty(propertyName) {
 
     var prop = this.modelObject[propertyName];
     if (typeof(prop) !== 'function') {
-        throw new Error('There is no observable property with name [' + 
-                        propertyName + 
+        throw new Error('There is no observable property with name [' +
+                        propertyName +
                         '] to register as timestamp.'
        );
     }
@@ -336,15 +330,15 @@ Model.prototype.regTimestamp = function regTimestampProperty(propertyName) {
 /**
     Returns a plain object with the properties and fields
     of the model object, just values.
-    
+
     @param deepCopy:bool If left undefined, do not copy objects in
     values and not references. If false, do a shallow copy, setting
     up references in the result. If true, to a deep copy of all objects.
 **/
 Model.prototype.toPlainObject = function toPlainObject(deepCopy) {
 
-    var plain = {},
-        modelObj = this.modelObject;
+    var plain = {};
+    var modelObj = this.modelObject;
 
     function setValue(property, val) {
         var clonedValue = cloneValue(val, deepCopy);
@@ -371,7 +365,7 @@ Model.prototype.toPlainObject = function toPlainObject(deepCopy) {
 };
 
 Model.prototype.updateWith = function updateWith(data, deepCopy) {
-    
+
     // We need a plain object for 'fromJS'.
     // If is a model, extract their properties and fields from
     // the observables (fromJS), so we not get computed
@@ -382,16 +376,16 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
         // We need to set the same timestamp, so
         // remember for after the fromJS
         timestamp = data.model.dataTimestamp();
-        
+
         // Replace data with a plain copy of itself
         data = data.model.toPlainObject(deepCopy);
     }
 
-    var target = this.modelObject,
-        defs = this.propertiesDefs;
+    var target = this.modelObject;
+    var defs = this.propertiesDefs;
     this.propertiesList.forEach(function(property) {
-        var val = data[property],
-            def = defs[property];
+        var val = data[property];
+        var def = defs[property];
         if (typeof(val) !== 'undefined') {
             target[property](prepareValueByDef(val, def));
         }
@@ -399,8 +393,8 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
 
     defs = this.fieldsDefs;
     this.fieldsList.forEach(function(field) {
-        var val = data[field],
-            def = defs[field];
+        var val = data[field];
+        var def = defs[field];
         if (typeof(val) !== 'undefined') {
             target[field] = prepareValueByDef(val, def);
         }
@@ -409,21 +403,6 @@ Model.prototype.updateWith = function updateWith(data, deepCopy) {
     // Same timestamp if any
     if (timestamp)
         this.modelObject.model.dataTimestamp(timestamp);
-};
-
-/**
-    Given a plain object in a accepted import structure
-    (never a Model instance), it maps
-    the data to the object following a set of mapping options
-    of ko.mapping.
-    If the data is a representation of the model by 'toPlainObject'
-    then use 'updateWith' better.
-    
-    TODO: Review, not used still, no sure if really useful to depend
-    on ko.mapping and this.
-**/
-Model.prototype.mapData = function mapData(data, optionalMapping) {
-    ko.mapping.fromJS(data, optionalMapping || this.mappingOptions, this.modelObject);
 };
 
 Model.prototype.clone = function clone(data, deepCopy) {
@@ -470,7 +449,7 @@ Model.prototype.touch = function touch() {
     with the default ones of the constructor, plus optional new preset data.
 **/
 Model.prototype.reset = function reset(presets) {
-    
+
     var newInstance = new this.modelObject.constructor(presets);
 
     this.updateWith(newInstance, true);

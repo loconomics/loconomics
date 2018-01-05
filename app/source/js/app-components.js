@@ -9,15 +9,15 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    getObservable = require('./utils/getObservable'),
-    MessageBar = require('./components/MessageBar');
+var ko = require('knockout');
+var $ = require('jquery');
+var getObservable = require('./utils/getObservable');
+var MessageBar = require('./components/MessageBar');
 
 var user = require('./data/userProfile').data;
 
 exports.registerAll = function(app) {
-    //jshint maxstatements:100
+    /* eslint max-statements:"off" */
 
     /// unlabeled-input
     ko.components.register('app-unlabeled-input', {
@@ -216,8 +216,8 @@ exports.registerAll = function(app) {
             var base = 'loadingSpinner';
             this.mod = getObservable(params.mod || '');
             this.cssClass = ko.pureComputed(function() {
-                var c = base,
-                    mods = (this.mod() || '').split(' ');
+                var c = base;
+                var mods = (this.mod() || '').split(' ');
                 if (mods.length)
                     c += ' ' + base + '--' + mods.join(' ' + base + '--');
                 return c;
@@ -274,8 +274,8 @@ exports.registerAll = function(app) {
             }
 
             this.stars = ko.pureComputed(function() {
-                var r = this.rating(),
-                    list = [];
+                var r = this.rating();
+                var list = [];
                 for (var i = 1; i <= 5; i++) {
                     list.push(computeStarValue(r, i));
                 }

@@ -2,7 +2,6 @@
     It creates slots between the given times and size for each one.
     Past times are avoided, because are not available
 **/
-//jshint maxparams:7
 'use strict';
 
 var moment = require('moment');
@@ -21,17 +20,17 @@ var moment = require('moment');
         Pass in true for this parameter to include the end time too.
 **/
 exports.forRange = function forRange(from, to, size, duration, roundUp, includeEndTime) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off", max-params:"off" */
     from = new Date(from);
     to = new Date(to);
     if (!duration) {
         throw new Error('forRange: Duration is required');
    }
-    var i = moment(from),
-        d,
-        slots = [],
-        now = new Date(),
-        enought;
+    var i = moment(from);
+    var d;
+    var slots = [];
+    var now = new Date();
+    var enought;
 
     // Round up if required
     if (roundUp) {
@@ -99,8 +98,8 @@ exports.forList = function forList(list, size, duration, roundUp, includeEndTime
 exports.getTotalFreeMinutes = function getTotalFreeMinutes(list) {
     return list.reduce(function (count, item) {
         if (item.availability === 'free') {
-            var s = moment(item.startTime),
-                e = moment(item.endTime);
+            var s = moment(item.startTime);
+            var e = moment(item.endTime);
             return count + e.diff(s, 'minutes');
         }
         else return count;
@@ -120,15 +119,14 @@ exports.getTotalFreeMinutes = function getTotalFreeMinutes(list) {
         time regularly on this date, so different from all day scheduled)
 **/
 exports.getAvailabilityTag = function(list) {
-    //jshint maxcomplexity:11
     if (!list || list.length === 0)
         return 'none'; // not availability
 
     var minutes = exports.getTotalFreeMinutes(list);
 
-    var perc = (minutes / (8*60)) * 100,
-        date = moment(list[0].startTime).startOf('day').toDate(),
-        today = moment().startOf('day').toDate();
+    var perc = (minutes / (8*60)) * 100;
+    var date = moment(list[0].startTime).startOf('day').toDate();
+    var today = moment().startOf('day').toDate();
 
     if (date < today)
         return 'past';
@@ -193,8 +191,8 @@ exports.filterListBy = function filterListBy(list, start, end) {
 **/
 exports.splitListInLocalDates = function filterListBy(list) {
     var isodateFormat = 'YYYY-MM-DD';
-    var lastIsodate,
-        group;
+    var lastIsodate;
+    var group;
     var result = {};
 
     list.forEach(function(timeRange) {
@@ -206,10 +204,10 @@ exports.splitListInLocalDates = function filterListBy(list) {
             lastIsodate = isostart;
         }
 
-        var end = moment(timeRange.endTime),
-            endJustDate = end.startOf('day'),
-            isoend = end.format(isodateFormat),
-            nextDayStart = start.clone().startOf('day').add(1, 'day');
+        var end = moment(timeRange.endTime);
+        var endJustDate = end.startOf('day');
+        var isoend = end.format(isodateFormat);
+        var nextDayStart = start.clone().startOf('day').add(1, 'day');
 
         // Checks if different dates, but discard when ending is just
         // the beggining of next date because that's correct for a range
@@ -233,8 +231,8 @@ exports.splitListInLocalDates = function filterListBy(list) {
             // full day ranges and never the next date, that is managed after the
             // loop the same way if there was something or not in between.
             while (idate < endJustDate) {
-                var idateIso = idate.format(isodateFormat),
-                    idatetimeIso = idate.format();
+                var idateIso = idate.format(isodateFormat);
+                var idatetimeIso = idate.format();
                 // Mutate iteration date to next day
                 idate.add(1, 'day');
                 // New date group with single item list of full-day range:

@@ -17,7 +17,7 @@ var conservativeOptions = {
         loops         : true,  // optimize loops
         // Iago: Additionally to drop unused vars/funcs, it drops the functions names too
         // causing the bug #709 (we use Function.name).
-        // I had set-up jshint to notify about actual unused bars/funcs so
+        // I had set-up linting to notify about actual unused bars/funcs so
         // compression stage is not reach if that happens.
         unused        : false, // drop unused variables/functions
         hoist_funs    : true,  // hoist function declarations. This fix some strict mode violations, caused by other optimizations.
@@ -26,7 +26,6 @@ var conservativeOptions = {
         keep_fnames   : true,  // Avoid that mangle remove function names. This allows enable mangling without causing the bug #709
         if_return     : true,  // optimize if-s followed by return/continue
         join_vars     : true,  // join var declarations
-        cascade       : true,  // try to cascade `right` into `left` in sequences
         side_effects  : true,  // drop side-effect-free statements
         warnings      : true,  // warn about potentially dangerous optimizations/code
         global_defs   : {}     // global definitions

@@ -17,6 +17,8 @@ namespace LcRest
         public int userID;
 
         public string publicBio;
+
+        public string businessName;
         /// <summary>
         /// Slug or URL fragment choosen by the service professional
         /// as a custom URL belonging the loconomics.com domain.
@@ -68,6 +70,7 @@ namespace LcRest
                 return LcUrl.AppUrl + LcRest.Locale.Current.ToString() + "/Profile/Photo/" + userID + "?v=" + updatedDate.ToString("s");
             }
         }
+        public bool hasUploadedPhoto;
 
         public DateTime createdDate;
         public DateTime updatedDate;
@@ -80,9 +83,11 @@ namespace LcRest
             {
                 userID = record.userID,
                 publicBio = record.publicBio,
+                businessName = record.businessName,
                 serviceProfessionalProfileUrlSlug = record.serviceProfessionalProfileUrlSlug,
                 serviceProfessionalWebsiteUrl = record.serviceProfessionalWebsiteUrl,
                 bookCode = record.bookCode,
+                hasUploadedPhoto = record.hasUploadedPhoto,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
@@ -104,9 +109,11 @@ namespace LcRest
             Users.userID
 
             ,publicBio
+            ,businessName
             ,providerProfileUrl as serviceProfessionalProfileUrlSlug
             ,providerWebsiteUrl as serviceProfessionalWebsiteUrl
             ,bookCode   
+            ,CASE WHEN Users.Photo IS NULL THEN Cast(0 as bit) ELSE Cast(1 as bit) END As hasUploadedPhoto
                         
             ,createdDate
             ,updatedDate
@@ -121,17 +128,20 @@ namespace LcRest
         private const string sqlUpdateProfile = @"
         DECLARE 
         @UserID int
-        ,@PublicBio varchar(500)
+        ,@PublicBio varchar(4000)
+        ,@BusinessName nvarchar(145)
         ,@ProviderProfileURLSlug varchar(2078)
         ,@ProviderWebsiteURL varchar(2078)
 
         SET @UserID = @0
         SET @PublicBio = @1
-        SET @ProviderProfileURLSlug = @2
-        SET @ProviderWebsiteURL = @3
+        SET @BusinessName = @2
+        SET @ProviderProfileURLSlug = @3
+        SET @ProviderWebsiteURL = @4
 
         UPDATE	Users
         SET     PublicBio = @PublicBio
+		        ,BusinessName = @BusinessName
 		        ,ProviderProfileURL = @ProviderProfileURLSlug
 		        ,ProviderWebsiteURL = @ProviderWebsiteURL
 
@@ -173,6 +183,7 @@ namespace LcRest
                 db.Execute(sqlUpdateProfile,
                     profile.userID,
                     profile.publicBio,
+                    profile.businessName,
                     profile.serviceProfessionalProfileUrlSlug,
                     profile.serviceProfessionalWebsiteUrl
                 );

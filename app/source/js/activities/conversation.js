@@ -48,8 +48,8 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
 
     // Params
-    var params = state && state.route && state.route.segments || [],
-        threadID = params[0] |0;
+    var params = state && state.route && state.route.segments || [];
+    var threadID = params[0] |0;
 
     this.viewModel.threadID(threadID);
 

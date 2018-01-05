@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity'),
-    VocElementEnum = require('../models/VocElementEnum');
+var Activity = require('../components/Activity');
+var VocElementEnum = require('../models/VocElementEnum');
 var onboarding = require('../data/onboarding');
 var feedback = require('../data/feedback');
 var showError = require('../modals/error').show;
@@ -25,18 +25,18 @@ var A = Activity.extend(function ContactFormActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:10
+    /* eslint complexity:"off" */
     Activity.prototype.show.call(this, options);
 
     var params = this.requestData.route.segments || [];
-    var elementName = params[0] || '',
-        elementID = VocElementEnum[elementName] |0;
+    var elementName = params[0] || '';
+    var elementID = VocElementEnum[elementName] |0;
 
     this.viewModel.emailSubject(this.requestData.route.query.subject || '');
     this.viewModel.message(this.requestData.route.query.body || this.requestData.route.query.message || '');
 
     if (!elementName) {
-        console.log('Feedback Support: Accessing without specify an element, using General (0)');
+        console.warn('Feedback Support: Accessing without specify an element, using General (0)');
     }
     else if (!VocElementEnum.hasOwnProperty(elementName)) {
         console.error('Feedback Support: given a bad VOC Element name:', elementName);

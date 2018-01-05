@@ -17,14 +17,14 @@ if (!window.cordova) {
 var History = require('./utils/shell/hashbangHistory');
 
 // Shell dependencies
-var shell = require('./utils/shell/index'),
-    Shell = shell.Shell,
-    DomItemsManager = shell.DomItemsManager;
+var shell = require('./utils/shell/index');
+var Shell = shell.Shell;
+var DomItemsManager = shell.DomItemsManager;
 
 //var iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
 
 // Creating the shell:
-var shell = new Shell({
+module.exports = new Shell({
 
     // Selector, DOM element or jQuery object pointing
     // the root or container for the shell items
@@ -32,7 +32,7 @@ var shell = new Shell({
 
     // If is not in the site root, the base URL is required:
     baseUrl: baseUrl,
-    
+
     forceHashbang: hashBang,
     // Must be a all-users accesible URL
     indexName: 'home',
@@ -54,5 +54,3 @@ var shell = new Shell({
         root: '.App-activities'
     })
 });
-
-module.exports = shell;

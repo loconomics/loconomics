@@ -9,12 +9,12 @@ var ko = require('knockout');
 
 function TimeRange(values) {
     Model(this);
-    
+
     this.model.defProperties({
         start: '00:00:00',
         end: '00:00:00'
     }, values);
-    
+
     // Additional interfaces to get/set the range times
     // by using a different data unit or format.
 
@@ -36,6 +36,17 @@ function TimeRange(values) {
         },
         owner: this
     });
+
+    var convertToLocalTime = function(strTime) {
+        var time = moment.duration(strTime);
+        return moment().startOf('day').add(time);
+    };
+    this.localStartTime = ko.pureComputed(function() {
+        return convertToLocalTime(this.start());
+    }, this);
+    this.localEndTime = ko.pureComputed(function() {
+        return convertToLocalTime(this.end());
+    }, this);
 }
 
 module.exports = TimeRange;
@@ -54,11 +65,11 @@ function twoDigits(n) {
     in a string like: 00:00:00 (hours:minutes:seconds)
 **/
 function minutesToTimeString(minutes) {
-    var d = moment.duration(minutes, 'minutes'),
-        h = d.hours(),
-        m = d.minutes(),
-        s = d.seconds();
-    
+    var d = moment.duration(minutes, 'minutes');
+    var h = d.hours();
+    var m = d.minutes();
+    var s = d.seconds();
+
     return (
         twoDigits(h) + ':' +
         twoDigits(m) + ':' +

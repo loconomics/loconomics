@@ -1,13 +1,13 @@
 /** Address model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model');
+var ko = require('knockout');
+var Model = require('./Model');
 
 function Address(values) {
 
     Model(this);
-    
+
     this.model.defProperties({
         addressID: 0,
         addressName: '',
@@ -45,7 +45,7 @@ function Address(values) {
     }, this);
 
     this.singleLineDetailed = ko.pureComputed(function() {
-        //jshint maxcomplexity:12
+        /* eslint complexity:"off" */
         var r = this.addressLine1() || '';
         if (r) r += ' ';
         r += this.addressLine2() || '';
@@ -73,7 +73,7 @@ function Address(values) {
                 this.stateProvinceCode()
             ], ', ');
     }, this);
-    
+
     this.cityStateLine = ko.computed(function() {
         return joinList([
                 this.city(),
@@ -81,7 +81,7 @@ function Address(values) {
                 this.postalCode()
             ], ', ');
     }, this);
-    
+
     // TODO: needed? l10n? must be provided by server side?
     var countries = {
         'US': 'United States',

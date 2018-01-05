@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var Model = require('../models/Model'),
-    ko = require('knockout');
+var Model = require('../models/Model');
+var ko = require('knockout');
 
 function BookingProgress(values) {
     Model(this);

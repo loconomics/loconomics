@@ -1,11 +1,7 @@
 'use strict';
 
 module.exports = {
-    options: {
-        // Remove all but first 'banner' comment
-        specialComments: 1,
-        report: 'min'
-    },
+    options: require('./cssmin.settings.js'),
     app: {
         files: {
             './build/assets/css/app.min.css': ['./build/assets/css/app.css']

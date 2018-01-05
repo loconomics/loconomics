@@ -9,7 +9,7 @@ var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
-var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_LINK = '/listingEditor';
 var DEFAULT_BACK_TEXT = 'Back';
 require('../kocomponents/servicesOverview/attributes-combobox');
 var showError = require('../modals/error').show;
@@ -267,8 +267,8 @@ function AttributesCategoryVM(cat, userAtts) {
 
     // Available, not selected, list of attributes
     this.availableAttributes = ko.computed(function() {
-        var props = this.proposedServiceAttributes(),
-            atts = selectedAttsIds();
+        var props = this.proposedServiceAttributes();
+        var atts = selectedAttsIds();
         return cat.serviceAttributes().filter(function(att) {
             var toInclude = atts.indexOf(att.serviceAttributeID()) === -1;
             if (toInclude === false) return false;
@@ -285,9 +285,9 @@ function AttributesCategoryVM(cat, userAtts) {
     };
 
     this.pushAttributeName = function(attName) {
-        var newOne = attName || '',
-            isEmpty = /^\s*$/.test(newOne),
-            wasFound = this.selectedAttributes().some(foundAttItem.bind(null, { name: newOne }));
+        var newOne = attName || '';
+        var isEmpty = /^\s*$/.test(newOne);
+        var wasFound = this.selectedAttributes().some(foundAttItem.bind(null, { name: newOne }));
         if (!isEmpty && !wasFound) {
             userAtts.proposedServiceAttributes.push(catID, newOne);
         }

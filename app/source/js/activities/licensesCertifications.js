@@ -3,14 +3,14 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    $ = require('jquery'),
-    Activity = require('../components/Activity');
+var ko = require('knockout');
+var $ = require('jquery');
+var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
 var jobTitles = require('../data/jobTitles');
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var jobTitleLicenses = require('../data/jobTitleLicenses');
-var DEFAULT_BACK_LINK = '/marketplaceJobtitles';
+var DEFAULT_BACK_LINK = '/listingEditor';
 var DEFAULT_BACK_TEXT = 'Back';
 var showError = require('../modals/error').show;
 
@@ -176,8 +176,8 @@ function ViewModel(app) {
     }.bind(this);
 
     this.addNew = function(item) {
-        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID(),
-            cancelUrl = app.shell.currentRoute.url;
+        var url = '#!licensesCertificationsForm/' + this.jobTitleID() + '/0?licenseCertificationID=' + item.licenseCertificationID();
+        var cancelUrl = app.shell.currentRoute.url;
         var request = $.extend({}, this.requestData, {
             cancelLink: cancelUrl
         });

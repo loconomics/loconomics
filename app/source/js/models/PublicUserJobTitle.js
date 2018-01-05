@@ -13,15 +13,16 @@
 
 var ko = require('knockout');
 var numeral = require('numeral');
-var Model = require('./Model'),
-    PublicUserRating = require('./PublicUserRating'),
-    PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary'),
-    Address = require('./Address'),
-    WorkPhoto = require('./WorkPhoto'),
-    PublicUserJobTitleServiceAttributes = require('./PublicUserJobTitleServiceAttributes'),
-    ServiceProfessionalService = require('./ServiceProfessionalService'),
-    UserVerification = require('./UserVerification'),
-    UserLicenseCertification = require('./UserLicenseCertification');
+var Model = require('./Model');
+var PublicUserRating = require('./PublicUserRating');
+var PublicUserVerificationsSummary = require('./PublicUserVerificationsSummary');
+var Address = require('./Address');
+var WorkPhoto = require('./WorkPhoto');
+var PublicUserJobTitleServiceAttributes = require('./PublicUserJobTitleServiceAttributes');
+var ServiceProfessionalService = require('./ServiceProfessionalService');
+var UserVerification = require('./UserVerification');
+var UserLicenseCertification = require('./UserLicenseCertification');
+var UserCancellationPolicy = require('./CancellationPolicy');
 
 function PublicUserJobTitle(values) {
     
@@ -61,14 +62,15 @@ function PublicUserJobTitle(values) {
         licensesCertifications: {
             Model: UserLicenseCertification,
             isArray: true
-        }
+        },
+        cancellationPolicy: { Model: UserCancellationPolicy }
     }, values);
 
     this.model.defID(['userID', 'jobTitleID']);
     
     var findMinValue = function(services) {
-        var s = services,
-            maxValue = { price: Number.MAX_VALUE };
+        var s = services;
+        var maxValue = { price: Number.MAX_VALUE };
 
         if (s.length === 0) return null;
 

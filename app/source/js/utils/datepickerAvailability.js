@@ -8,9 +8,9 @@
 **/
 'use strict';
 
-var $ = require('jquery'),
-    moment = require('moment'),
-    createTimeSlots = require('./createTimeSlots');
+var $ = require('jquery');
+var moment = require('moment');
+var createTimeSlots = require('./createTimeSlots');
 var availability = require('../data/availability');
 var showError = require('../modals/error').show;
 
@@ -42,8 +42,8 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
         // We need to know the range of dates being displayed on the
         // monthly calendar, from the first week day of first month week
         // to 6 full weeks.
-        var start = moment(date).clone().startOf('month').startOf('week'),
-            end = start.clone().add(6, 'weeks');
+        var start = moment(date).clone().startOf('month').startOf('week');
+        var end = start.clone().add(6, 'weeks');
 
         // Switch loading flag
         if (isLoading)
@@ -60,7 +60,7 @@ exports.create = function createDatepickerAvailability(app, $datepicker, isLoadi
             // We have a list or ranges per date (iso string key)
             // Iterate every day element, and use its date avail from the result
             daysElements.each(function() {
-                // jshint maxcomplexity:10
+                /* eslint complexity:"off" */
                 var $dateTd = $(this);
                 var id = $dateTd.data('date-time');
                 var timeRangeList = byDate[moment(id).format('YYYY-MM-DD')];

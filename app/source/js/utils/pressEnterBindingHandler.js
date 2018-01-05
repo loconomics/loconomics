@@ -1,6 +1,7 @@
 /**
-    Bootknock: Set of Knockout Binding Helpers for Bootstrap js components (jquery plugins)
-    
+    Binding Handler to assign a method to the event of user pressing the
+    'Enter' key.
+
     Dependencies: jquery
     Injected dependencies: knockout
 **/

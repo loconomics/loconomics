@@ -1,0 +1,18 @@
+
+<script type="text/html" id="offering-card-edit-template">
+    <li class="col-xs-11 col-sm-5 OfferingCard" data-bind="attr: { id: 'offering' + id() }">
+        <div class="Card-heading">
+            <div class="Card-title">
+                <h5 data-bind="text: name"></h5>
+                <p data-bind="text: displayedDurationAndPrice"></p>
+            </div>
+            <div class="Card-action"> 
+                <a class="btn btn-icon-link" data-bind="attr: {href: '#!serviceProfessionalServiceEditor/' + jobTitleID() + '/' + id() + $root.returnLinkGeneralActivity(),'aria-label': 'Edit '+ name() }"><icon-dec params="icon: 'ion-edit'"></icon-dec></a>
+            </div>
+        </div>
+        <div data-bind="visible: description" class="Card-description">
+            <hr>
+            <p data-bind="text: description"></p>
+        </div>
+    </li>
+</script>

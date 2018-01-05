@@ -3,8 +3,8 @@
 **/
 'use strict';
 
-var ko = require('knockout'),
-    getDateWithoutTime = require('../utils/getDateWithoutTime');
+var ko = require('knockout');
+var getDateWithoutTime = require('../utils/getDateWithoutTime');
 
 var Activity = require('../components/Activity');
 var user = require('../data/userProfile').data;

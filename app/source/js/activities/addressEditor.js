@@ -76,7 +76,13 @@ var A = Activity.extend(function AddressEditorActivity() {
             this.app.shell.goBack(this.requestData);
         }
         else if (onboarding.inProgress()) {
+            // Per #712, we move to next onboarding step directly from editor
+            // but implementation details at onboarding complicate this a bit,
+            // so just go back and then move next
             this.app.shell.goBack();
+            setTimeout(function() {
+                onboarding.goNext();
+            }, 100);
         }
         else {
             this.app.successSave();
@@ -94,7 +100,7 @@ A.prototype.updateNavBarState = function updateNavBarState() {
 };
 
 A.prototype.show = function show(options) {
-    //jshint maxcomplexity:12
+    /* eslint complexity:"off" */
     Activity.prototype.show.call(this, options);
 
     // Reset
@@ -103,13 +109,13 @@ A.prototype.show = function show(options) {
     // Params
     var params = options && options.route && options.route.segments || [];
 
-    var kind = params[0] || '',
-        isService = kind === Address.kind.service,
-        jobTitleID = isService ? params[1] |0 : 0,
-        addressID = isService ? params[2] |0 : params[1] |0,
-        // Only used on service address creation, instead an ID we get
-        // a string for 'serviceArea' or 'serviceLocation')
-        serviceType = params[2] || '';
+    var kind = params[0] || '';
+    var isService = kind === Address.kind.service;
+    var jobTitleID = isService ? params[1] |0 : 0;
+    var addressID = isService ? params[2] |0 : params[1] |0;
+    // Only used on service address creation, instead an ID we get
+    // a string for 'serviceArea' or 'serviceLocation')
+    var serviceType = params[2] || '';
     // Special type: clientLocation
     var clientUserID = serviceType === 'clientLocation' ? params[3] : null;
 
@@ -193,7 +199,6 @@ A.prototype.show = function show(options) {
 };
 
 function ViewModel(app) {
-    // jshint maxstatements:80
     this.helpLink = '/help/relatedArticles/201965996-setting-your-service-locations-areas';
 
     this.isInOnboarding = onboarding.inProgress;

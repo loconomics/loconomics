@@ -2,8 +2,8 @@
  **/
 'use strict';
 
-var Model = require('./Model'),
-    ko = require('knockout');
+var Model = require('./Model');
+var ko = require('knockout');
 
 // Needed utility to extend with methods the observable
 // properties that holds a plain object as dictionary
@@ -43,7 +43,7 @@ function extendValuesByCategory(obs) {
             prevValue = v;
             Object.keys(catsObs).forEach(function(a) {
                 // notify changes
-                a.valueHasMutated && a.valueHasMutated();
+                if(a.valueHasMutated) a.valueHasMutated();
             });
         }
     });
@@ -71,8 +71,8 @@ function extendValuesByCategory(obs) {
     };
 
     obs.remove = function(catID, attID) {
-        var v = obs(),
-            cat = v && v[catID];
+        var v = obs();
+        var cat = v && v[catID];
         if (cat) {
             var i = cat.indexOf(attID);
             if (i > -1) {

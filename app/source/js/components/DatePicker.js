@@ -92,24 +92,26 @@ var DPGlobal = {
         return [31, (DPGlobal.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
     },
     parseFormat: function(format){
-        var separator = format.match(/[.\/\-\s].*?/),
-            parts = format.split(/\W+/);
+        var separator = format.match(/[.\/\-\s].*?/);
+        var parts = format.split(/\W+/);
         if (!separator || !parts || parts.length === 0){
             throw new Error("Invalid date format.");
         }
         return {separator: separator, parts: parts};
     },
     parseDate: function(date, format) {
-        /*jshint maxcomplexity:11*/
-        var parts = date.split(format.separator),
-            val;
+        /* eslint complexity:"off" */
+        var parts = date.split(format.separator);
+        var val;
         date = new Date();
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
         if (parts.length === format.parts.length) {
-            var year = date.getFullYear(), day = date.getDate(), month = date.getMonth();
+            var year = date.getFullYear();
+            var day = date.getDate();
+            var month = date.getMonth();
             for (var i=0, cnt = format.parts.length; i < cnt; i++) {
                 val = parseInt(parts[i], 10)||1;
                 switch(format.parts[i]) {
@@ -212,7 +214,7 @@ DPGlobal.modesSet = {
 
 // Picker object
 var DatePicker = function(element, options) {
-    /*jshint maxstatements:50,maxcomplexity:30*/
+    /* eslint max-statements:"off", complexity:"off" */
     this.element = $(element);
     this.format = DPGlobal.parseFormat(options.format||this.element.data('date-format')||'mm/dd/yyyy');
 
@@ -647,11 +649,10 @@ DatePicker.prototype = {
     },
 
     fill: function() {
-        /*jshint maxstatements:70, maxcomplexity:28*/
-        var d = new Date(this.viewDate),
-            year = d.getFullYear(),
-            month = d.getMonth(),
-            currentDate = this.date.valueOf();
+        var d = new Date(this.viewDate);
+        var year = d.getFullYear();
+        var month = d.getMonth();
+        var currentDate = this.date.valueOf();
 
         // Calculate first date to show, usually on previous month:
         // We force a date in previous month; Date will fix negative month number
@@ -694,10 +695,10 @@ DatePicker.prototype = {
             .removeClass(classes.active);
 
             // Add date mark to current
-            var diff = lastDayPrevMonth - prevMonth.getDate(),
-                index = diff + this.date.getDate(),
-                irow = (index / 7) |0,
-                icol = index % 7;
+            var diff = lastDayPrevMonth - prevMonth.getDate();
+            var index = diff + this.date.getDate();
+            var irow = (index / 7) |0;
+            var icol = index % 7;
             tbody.find('tr:eq(' + irow + ') td:eq(' + icol + ')').addClass(classes.active);
 
             this._prevDate = new Date(this.viewDate);
@@ -714,9 +715,9 @@ DatePicker.prototype = {
             var nextMonth = new Date(prevMonth);
             nextMonth.setDate(nextMonth.getDate() + 42);
             nextMonth = nextMonth.valueOf();
-            var clsName,
-                prevY,
-                prevM;
+            var clsName;
+            var prevY;
+            var prevM;
 
             // Update days values
             var weekTr = this.picker.find('.' + classes.days + ' tbody tr:first-child()');
@@ -806,12 +807,12 @@ DatePicker.prototype = {
     },
 
     click: function(e) {
-        /*jshint maxcomplexity:16, maxstatements:30*/
         e.stopPropagation();
         e.preventDefault();
         var target = $(e.target).closest('button.month, button.year, td, th');
         if (target.length === 1) {
-            var month, year;
+            var month;
+            var year;
 
             var completeMonthYear = function completeMonthYear() {
                 if (this.viewMode !== 0) {
@@ -892,9 +893,9 @@ $.fn.datepicker = function ( option ) {
     var vals = Array.prototype.slice.call(arguments, 1);
     var returned;
     this.each(function () {
-        var $this = $(this),
-            data = $this.data('datepicker'),
-            options = typeof option === 'object' && option;
+        var $this = $(this);
+        var data = $this.data('datepicker');
+        var options = typeof option === 'object' && option;
         if (!data) {
             $this.data('datepicker', (data = new DatePicker(this, $.extend({}, $.fn.datepicker.defaults,options))));
         }

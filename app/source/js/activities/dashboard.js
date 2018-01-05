@@ -5,10 +5,10 @@
 
 var ko = require('knockout');
 
-var Activity = require('../components/Activity'),
-    AppointmentView = require('../viewmodels/AppointmentView'),
-    Appointment = require('../models/Appointment'),
-    UserJobTitle = require('../models/UserJobTitle');
+var Activity = require('../components/Activity');
+var AppointmentView = require('../viewmodels/AppointmentView');
+var Appointment = require('../models/Appointment');
+var UserJobTitle = require('../models/UserJobTitle');
 var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
 var bookings = require('../data/bookings');
@@ -169,11 +169,11 @@ A.prototype.syncGetMore = function syncGetMore() {
 };
 
 
-var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary'),
-    MailFolder = require('../models/MailFolder'),
-    PerformanceSummary = require('../models/PerformanceSummary'),
-    GetMore = require('../models/GetMore'),
-    UpcomingAppointmentsSummary = require('../models/UpcomingAppointmentsSummary');
+var UpcomingBookingsSummary = require('../models/UpcomingBookingsSummary');
+var MailFolder = require('../models/MailFolder');
+var PerformanceSummary = require('../models/PerformanceSummary');
+var GetMore = require('../models/GetMore');
+var UpcomingAppointmentsSummary = require('../models/UpcomingAppointmentsSummary');
 
 function ViewModel() {
 

@@ -9,6 +9,7 @@
 var GroupRemoteModel = require('./helpers/GroupRemoteModel');
 var PublicUserProfile = require('../models/PublicUserProfile');
 var remote = require('./drivers/restClient');
+var cancellationPolicies = require('./cancellationPolicies');
 
 /**
     Get the user index/summary information. That includes
@@ -20,7 +21,19 @@ var remote = require('./drivers/restClient');
     widgets.
 **/
 exports.getUser = function(userID, options) {
-    return remote.get('users/' + (userID |0), options);
+    return remote.get('users/' + (userID |0), options)
+    .then(function(user) {
+        var policiesPerJobTitle = user.jobProfile.map(function(userJobTitle) {
+            return cancellationPolicies.getItem(userJobTitle.cancellationPolicyID);
+        });
+        return Promise.all(policiesPerJobTitle)
+        .then(function(policies) {
+            user.jobProfile.forEach(function (userJobTitle, index) {
+                userJobTitle.cancellationPolicy = policies[index];
+            });
+            return user;
+        });
+    });
 };
 
 // IMPORTANT: We need cache for user profiles, since are used to fetch information

@@ -1,9 +1,9 @@
 /** BookingSummary model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    moment = require('moment');
+var ko = require('knockout');
+var Model = require('./Model');
+var moment = require('moment');
 
 function BookingSummary(values) {
     

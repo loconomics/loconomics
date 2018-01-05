@@ -1,9 +1,9 @@
 /** GetMore model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model'),
-    ListViewItem = require('./ListViewItem');
+var ko = require('knockout');
+var Model = require('./Model');
+var ListViewItem = require('./ListViewItem');
 
 function GetMore(values) {
 

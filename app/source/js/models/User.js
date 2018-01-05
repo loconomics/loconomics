@@ -1,8 +1,10 @@
 /** User model **/
 'use strict';
 
-var ko = require('knockout'),
-    Model = require('./Model');
+var ko = require('knockout');
+var Model = require('./Model');
+
+var US_COUNTRY_ID = 1;
 
 // Enum UserType
 var UserType = {
@@ -21,35 +23,37 @@ var UserType = {
 };
 
 function User(values) {
-    
+
     Model(this);
-    
+
     this.model.defProperties({
         userID: 0,
         email: '',
-        
+
         firstName: '',
         lastName: '',
         secondLastName: '',
         businessName: '',
-        
+
         alternativeEmail: '',
         phone: '',
         canReceiveSms: '',
         birthMonthDay: null,
         birthMonth: null,
-        
+
         isServiceProfessional: false,
         isClient: false,
         isAdmin: false,
         isCollaborator: false,
-        
+
         photoUrl: null,
 
         onboardingStep: null,
         accountStatusID: 0,
         createdDate: null,
-        updatedDate: null
+        updatedDate: null,
+        languageID: null,
+        countryID: null
     }, values);
 
     this.fullName = ko.pureComputed(function() {
@@ -58,14 +62,14 @@ function User(values) {
             nameParts.push(this.lastName());
         if (this.secondLastName())
             nameParts.push(this.secondLastName);
-        
+
         return nameParts.join(' ');
     }, this);
-    
+
     this.birthDay = ko.pureComputed(function() {
         if (this.birthMonthDay() &&
             this.birthMonth()) {
-            
+
             // TODO i10n
             return this.birthMonth() + '/' + this.birthMonthDay();
         }
@@ -73,15 +77,15 @@ function User(values) {
             return null;
         }
     }, this);
-    
+
     this.userType = ko.pureComputed({
         read: function() {
-            var c = this.isClient(),
-                p = this.isServiceProfessional(),
-                a = this.isAdmin();
-            
+            var c = this.isClient();
+            var p = this.isServiceProfessional();
+            var a = this.isAdmin();
+
             var userType = 0;
-            
+
             if (this.isAnonymous())
                 userType = userType | UserType.anonymous;
             if (c)
@@ -90,7 +94,7 @@ function User(values) {
                 userType = userType | UserType.serviceProfessional;
             if (a)
                 userType = userType | UserType.admin;
-            
+
             return userType;
         },
         /* NOTE: Not required for now:
@@ -98,17 +102,21 @@ function User(values) {
         },*/
         owner: this
     });
-    
+
     this.isAnonymous = ko.pureComputed(function(){
         return this.userID() < 1;
     }, this);
-    
+
     /**
         It matches a UserType from the enumeration?
     **/
     this.isUserType = function isUserType(type) {
         return (this.userType() & type);
     }.bind(this);
+
+    this.isUSUser = ko.pureComputed(function() {
+        return this.countryID() == US_COUNTRY_ID;
+    }, this);
 }
 
 module.exports = User;

@@ -7,9 +7,9 @@
 /*global window*/
 'use strict';
 
-var loader = require('./loader'),
-    $ = require('jquery'),
-    ko = require('knockout');
+var loader = require('./loader');
+var $ = require('jquery');
+var ko = require('knockout');
 
 // Facebook API settings gathered from the current page
 // on first use:
@@ -51,7 +51,7 @@ exports.load = function() {
                 for (var i = 0; i < apiStatus.stack.length; i++) {
                     try {
                         apiStatus.stack[i](window.FB);
-                    } catch (e) { console && console.error && console.error(e); }
+                    } catch (e) { console.error(e); }
                 }
             }
         });
