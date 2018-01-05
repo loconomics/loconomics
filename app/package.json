@@ -25,7 +25,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
-    "bliss": "~1.0.1",
+    "bliss": "git://github.com/cstivers78/bliss.git#54c7da14babc80b39734b771c539ac7ee07b1255",
     "blueimp-file-upload": "^9.19.1",
     "browserify": "^14.5.0",
     "browserify-casesensitiverequire": "^1.0.1",

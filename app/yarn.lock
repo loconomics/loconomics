@@ -810,6 +810,14 @@ binary-extensions@^1.0.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.10.0.tgz#9aeb9a6c5e88638aad171e167f5900abe24835d0"
 
+"bliss@git://github.com/cstivers78/bliss.git#54c7da14babc80b39734b771c539ac7ee07b1255":
+  version "1.0.2"
+  resolved "git://github.com/cstivers78/bliss.git#54c7da14babc80b39734b771c539ac7ee07b1255"
+  dependencies:
+    html-minifier ">=0.4.5"
+    uglify-js ">=1.2.3"
+    underscore "1.5.2"
+
 bliss@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/bliss/-/bliss-1.0.1.tgz#cc71ce3d47b6e76785d423b80da2b30ea335e514"
@@ -5446,7 +5454,7 @@ underscore.string@~3.2.3:
   version "3.2.3"
   resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-3.2.3.tgz#806992633665d5e5fcb4db1fb3a862eb68e9e6da"
 
-underscore@~1.5.1:
+underscore@1.5.2, underscore@~1.5.1:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.5.2.tgz#1335c5e4f5e6d33bbb4b006ba8c86a00f556de08"
 
