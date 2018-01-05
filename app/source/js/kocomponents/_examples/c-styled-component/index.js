@@ -1,6 +1,8 @@
 /**
  * Example of a basic KnockoutComponent with styles, based on basicKomponent.
  *
+ * @module kocomponents/_examples/c-styled-component
+ *
  * FIXME: Update this component description
  * FIXME: Document parameters allowed using jsdoc syntax in the constructor,
  * or if there is no one, at this initial commit
