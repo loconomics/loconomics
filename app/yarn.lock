@@ -2623,7 +2623,7 @@ grunt-contrib-stylus@1.x:
     nib "^1.1.0"
     stylus "^0.54.0"
 
-"grunt-contrib-uglify@git://github.com/gruntjs/grunt-contrib-uglify.git#harmony":
+"grunt-contrib-uglify-es@git://github.com/gruntjs/grunt-contrib-uglify.git#ccb95a70cad6a4e9e902d3bd5d0e38a4de09a1e1":
   version "3.3.0"
   resolved "git://github.com/gruntjs/grunt-contrib-uglify.git#ccb95a70cad6a4e9e902d3bd5d0e38a4de09a1e1"
   dependencies:
