@@ -32,8 +32,9 @@ var ko = require('knockout');
 // const style = require('./style.styl');
 
 function ViewModel(params) {
-    const {assertion, src} = params;
+    const {src} = params;
     // Notes for Josh: equivalent to 'var src = params.src;'
+    this.assertion = getObservable(params.assertion);
     this.image = getObservable('');
     this.narrative = getObservable('');
     this.evidence = getObservable('');
@@ -41,34 +42,31 @@ function ViewModel(params) {
     this.badgeDescription = getObservable('');
 //    this.style = style;
 
-    let populateObservables = (payload) => {
+    const populateObservables = (payload) => {
       this.image(payload.image);
       this.narrative(payload.narrative);
       if (payload.evidence.length > 0) {
         this.evidence(payload.evidence[0].id);
       }
-    }
+      const badge = payload.badge.slice(0,-6) + '.json?v=2_0';
+      fetch(badge)
+      .then((r) => {
+        if(r.ok)
+          return r.json();
+      }).then((json) => {
+        this.badgeName(json.name);
+        this.badgeDescription(json.description);
+      });
+    };
 
     if(src) {
       fetch(src)
       .then((r) => {
         if(r.ok)
           return r.json();
-      }).then((json) => {
-        populateObservables(json);
-        const badge = json.badge.slice(0,-6) + '.json?v=2_0';
-        fetch(badge)
-        .then((r) => {
-          if(r.ok)
-            return r.json();
-        }).then((json) => {
-          this.badgeName(json.name);
-          this.badgeDescription(json.description);
-        });
-      });
+      }).then((json) => populateObservables(json));
     } else {
-      populateObservables(assertion);
-      // TODO: Set `badgeName` and `badgeDescription` once collections are supported.
+      populateObservables(this.assertion());
     }
 }
 
