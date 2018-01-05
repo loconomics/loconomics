@@ -1,6 +1,11 @@
 language: node_js
 node_js:
 - node
-cache: yarn
+
+before_script:
+  - npm install -g grunt-cli
+  - cd app
+  - npm install
+
 script:
-  - yarn grunt build
+  - npm test
