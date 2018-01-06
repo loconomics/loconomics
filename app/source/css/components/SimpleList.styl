@@ -1,6 +1,9 @@
 /**
     SimpleList component
 **/
+
+@import '../utils/styleguideVars.styl';
+
 /* Component vars */
 $heightLimit = 33px;
 /* Used the same gap
@@ -21,7 +24,7 @@ $contentVGap = 6px;
         position: relative;
         max-width: 100%;
         border-bottom: 1px solid $gray-background;
-        
+
         > * {
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -35,14 +38,14 @@ $contentVGap = 6px;
             box-sizing: border-box;
             padding: $contentVGap $contentHGap;
         }
-        
+
         /* Any row in the listview is expected to be a button/link, so color is reset */
         .btn,
         .btn-link {
             color: $gray-dark;
         }
     }
-    
+
     .SimpleList-divider {
         text-align: left;
         padding: ($contentVGap / 2) $contentHGap;
