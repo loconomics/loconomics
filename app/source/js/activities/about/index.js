@@ -7,9 +7,13 @@ import '../../kocomponents/tab-list';
 import Activity from '../../components/Activity';
 import STYLE from './style.styl';
 import ko from 'knockout';
+import template from './template.html';
 var DEFAULT_TAB = 'us';
 
 export default class AboutActivity extends Activity {
+
+    static get template() { return template; }
+
     constructor($activity, app) {
         super($activity, app);
 

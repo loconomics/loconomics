@@ -41,9 +41,6 @@ module.exports = new Shell({
 
     linkEvent: 'click',
 
-    // No need for loader, everything comes bundled
-    loader: null,
-
     // History Polyfill:
     history: History,
 

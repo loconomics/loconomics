@@ -4,6 +4,9 @@
 'use strict';
 
 var $ = require('jquery');
+var appActivities = require('../../app.activities');
+
+const folder = 'assets/js/activities/';
 
 module.exports = {
 
@@ -11,14 +14,20 @@ module.exports = {
 
     load: function load(route) {
         return new Promise(function(resolve, reject) {
-            //console.info('Shell loading on demand', route.name, route);
-            $.ajax({
-                url: module.exports.baseUrl + route.name + '.html',
-                cache: false
-                // We are loading the program and no loader screen in place,
-                // so any in between interaction will be problematic.
-                //async: false
-            }).then(resolve, reject);
+            console.debug('Shell loading on demand', route.name, route);
+            $.getScript(
+                module.exports.baseUrl + folder + route.name + '.js'
+            ).done(function(/*script*/) {
+                // TODO: Get module from the script: was executed and module exists
+                // but which is the name/path? Can be get in a different way?
+                debugger;
+                var Activity = require('./activities/' + route.name).default;
+                // Register as loaded activity class
+                appActivities[route.name] = Activity;
+                // Resolve with the html, that will be injected by the Shell/DomItemsManager
+                resolve(Activity.template);
+            })
+            .fail(reject);
         });
     }
 };
