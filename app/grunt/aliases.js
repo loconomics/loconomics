@@ -12,6 +12,7 @@ module.exports = {
     ],
     'build-js': [
         'eslint',
+        'mkdir:build-assets-js',
         'browserify:appCommon',
         'uglify:appCommon'
     ],
