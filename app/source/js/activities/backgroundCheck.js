@@ -14,7 +14,7 @@ var A = Activity.extend(function BackgroundCheckActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
-        backLink: '/marketplaceProfile'
+        backLink: '/yourListings'
     });
     this.title(' Your background checks');
 
