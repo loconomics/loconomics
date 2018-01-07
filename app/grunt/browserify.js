@@ -69,6 +69,10 @@ module.exports = function(grunt) {
             source: './source/js/landingPage.js',
             dest: './build/assets/js/welcome.js',
             map: dev && './build/assets/js/welcome.js.map'
+        }, {
+            source: './source/js/activities/about/index.js',
+            dest: './build/assets/js/activities/about.js',
+            map: dev && './build/assets/js/activities/about.js.map'
         }],
         sendRebuildNotification
     );

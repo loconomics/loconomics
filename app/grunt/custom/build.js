@@ -19,6 +19,7 @@ const PRODUCTION_TASKS = ['parallel:build-app'];
  * @const {Array<string>}
  */
 const DEV_TASKS = [
+    'mkdir:build-assets-js',
     'browserify:appCommon',
     'prepare-bootstrap-variables',
     'concat:css-libs',

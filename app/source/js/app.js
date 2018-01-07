@@ -21,6 +21,9 @@ var layoutUpdateEvent = require('layoutUpdateEvent');
 var onboarding = require('./data/onboarding');
 var ga = require('./data/googleAnalytics');
 
+var activities = require('./activities');
+activities.preload(require('./app.activities'));
+
 // Register the special locale
 require('./locales/en-US-LC');
 
@@ -71,9 +74,6 @@ function preBootstrapWorkarounds() {
 **/
 var app = {
     shell: require('./app.shell'),
-
-    /** Load activities controllers (not initialized) **/
-    activities: require('./app.activities'),
 
     /**
         Just redirect the better place for current user and state.
@@ -127,7 +127,7 @@ require('./app-navbar').extend(app);
 require('./app-components').registerAll(app);
 
 app.getActivity = function getActivity(name) {
-    var activity = this.activities[name];
+    var activity = activities.get(name);
     if (activity) {
         var $act = this.shell.items.find(name);
         if ($act && $act.length)

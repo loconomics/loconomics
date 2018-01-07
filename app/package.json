@@ -137,5 +137,8 @@
         "jquery"
       ]
     }
+  },
+  "dependencies": {
+    "load-script2": "^1.0.0"
   }
 }
