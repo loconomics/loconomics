@@ -1,5 +1,7 @@
 <h1><a href="https://loconomics.com"> <img src="app/source/images/logo-large.png" alt="Loconomics"/></a> </h1>
 
+[![Build Status](https://travis-ci.org/loconomics/loconomics.svg?branch=master)](https://travis-ci.org/loconomics/loconomics)
+
 Loconomics is an app for booking local services that's cooperatively owned by the local service professionals providing services. If you'd like to find out more, check out [Loconomics.com](https://loconomics.com).
 
 ### Contributing
