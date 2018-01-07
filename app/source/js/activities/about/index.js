@@ -4,11 +4,14 @@
 'use strict';
 
 import '../../kocomponents/tab-list';
+import * as activities from '../index';
 import Activity from '../../components/Activity';
-import STYLE from './style.styl';
 import ko from 'knockout';
+import style from './style.styl';
 import template from './template.html';
-var DEFAULT_TAB = 'us';
+
+const ROUTE_NAME = 'about';
+const DEFAULT_TAB = 'us';
 
 export default class AboutActivity extends Activity {
 
@@ -17,7 +20,7 @@ export default class AboutActivity extends Activity {
     constructor($activity, app) {
         super($activity, app);
 
-        this.style = STYLE;
+        this.style = style;
         // Any user can access this
         this.accessLevel = null;
 
@@ -57,3 +60,5 @@ export default class AboutActivity extends Activity {
         }
     }
 }
+
+activities.register(ROUTE_NAME, AboutActivity);
