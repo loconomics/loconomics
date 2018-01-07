@@ -3,9 +3,16 @@
 module.exports = {
     'default': [
         'build',
-        'test'
+        'test-after-build'
     ],
+    // If wants to run 'test' after a build, this task prevents doing duplicated work
+    'test-after-build': [
+        'browserify:tests',
+        'mocha'
+    ],
+    // Run JavaScript testing
     'test': [
+        'mkdir:build-assets-js',
         'browserify:appCommon',
         'browserify:tests',
         'mocha'
