@@ -17,10 +17,11 @@ export default class AboutActivity extends Activity {
 
     static get template() { return template; }
 
+    static get style() { return style; }
+
     constructor($activity, app) {
         super($activity, app);
 
-        this.style = style;
         // Any user can access this
         this.accessLevel = null;
 
