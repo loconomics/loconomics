@@ -31,7 +31,7 @@ A.prototype.show = function show(state) {
 
     if (this.viewModel.user.isServiceProfessional()) {
         this.viewModel.sync();
-        yourListings.sync();
+        marketplaceProfile.sync();
     }
 };
 
@@ -72,8 +72,8 @@ function ViewModel(app) {
         var example = 'www.loconomics.com/YOURNAME';
         // IMPORTANT: the ProfileUrl ever returns a value, with automatic SEO URL when no custom slug
         // so we check if there is slug or not to show the actual URL or the example
-        var slug = yourListings.data.serviceProfessionalProfileUrlSlug();
-        var url = yourListings.data.serviceProfessionalProfileUrl();
+        var slug = marketplaceProfile.data.serviceProfessionalProfileUrlSlug();
+        var url = marketplaceProfile.data.serviceProfessionalProfileUrl();
         return slug ? url : example;
     }, jobVm);
 
