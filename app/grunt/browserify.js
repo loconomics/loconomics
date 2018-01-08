@@ -53,6 +53,60 @@ module.exports = function(grunt) {
         notify(notifySettings.browserify.options);
     };
 
+    /// Set-up bundles to generate
+    /**
+     * List of bundles for appCommon task.
+     * It contains every entry point to the app (scripts that manage app load,
+     * set-up of Shell and other global settings),
+     * plus on-demand bundles, implementing specific features loaded by the
+     * entry points through the Shell loader (activities) or others
+     * @private {Array<BundleSettings>}
+     */
+    const appCommonBundles = [
+        // App entry point (the main one)
+        {
+            source: './source/js/app.js',
+            dest: './build/assets/js/app.js',
+            map: dev && './build/assets/js/app.js.map'
+        },
+        // Landing Page entry point (AKA 'welcome' pages)
+        {
+            source: './source/js/landingPage.js',
+            dest: './build/assets/js/welcome.js',
+            map: dev && './build/assets/js/welcome.js.map'
+        }
+    ];
+    // We query all activities defined and add them as on-demand bundles
+    // (all defined properly as folder and index file; old style activities
+    // cannot be generated this way, that keeps working as before included
+    // inside the App entry point)
+    const activitiesBasePath = './source/js/activities/';
+    const appCommonActivities = grunt.file.expand({
+        cwd: activitiesBasePath,
+        filter: grunt.file.isFile
+    }, ['*/index.js']);
+    const buildActivitiesBasePath = './build/assets/js/activities/';
+    // We convert the array of activities files into BundleSettings,
+    // and are appended to the bundles collection
+    appCommonBundles.push(...appCommonActivities.map((activityPath) => {
+        // activityPath is a string like 'about/index.js' thanks to the set-up
+        // of the 'grunt.file.expand' task before, so to get the activity name
+        // is just split the first part up to before the path separator (even in
+        // Windows returns '/' as separator).
+        // We rebuild the original path relative to app directory as source
+        // and create the destination using the activity name
+        const name = activityPath.substr(0, activityPath.indexOf('/'));
+        // Create returned object (in comments, example of values to be created)
+        return {
+            // source: './source/js/activities/about/index.js',
+            source: activitiesBasePath + activityPath,
+            // dest: './build/assets/js/activities/about.js',
+            dest: buildActivitiesBasePath + name + '.js',
+            // map: dev && './build/assets/js/activities/about.js.map'
+            map: dev && buildActivitiesBasePath + activityPath + '.map'
+        };
+    }));
+
     /**
         Generates the [app, landingPage] bundles,
         extracting the common parts out.
@@ -61,15 +115,7 @@ module.exports = function(grunt) {
         grunt, {
             dest: './build/assets/js/common.js',
             map: dev && './build/assets/js/common.js.map'
-        }, [{
-            source: './source/js/app.js',
-            dest: './build/assets/js/app.js',
-            map: dev && './build/assets/js/app.js.map'
-        }, {
-            source: './source/js/landingPage.js',
-            dest: './build/assets/js/welcome.js',
-            map: dev && './build/assets/js/welcome.js.map'
-        }],
+        }, appCommonBundles,
         sendRebuildNotification
     );
     appCommonBaseSettings = merge(appCommonBaseSettings, browserifyStylus.create(grunt));
