@@ -8,7 +8,7 @@ var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 var ko = require('knockout');
 var moment = require('moment');
 var user = require('../data/userProfile').data;
-var yourListings = require('../data/marketplaceProfile');
+var marketplaceProfile = require('../data/marketplaceProfile');
 
 var A = Activity.extend(function YourListingsActivity() {
 
