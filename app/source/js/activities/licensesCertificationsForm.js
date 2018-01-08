@@ -23,7 +23,7 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/marketplaceProfile', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
+        backLink: '/yourListings', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
     this.title('Your credentials');
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
