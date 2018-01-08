@@ -5,19 +5,7 @@
 **/
 'use strict';
 
-var Activity = require('./components/Activity');
-var EmptyActivity = Activity.extend(function EmptyActivity() {
-
-    Activity.apply(this, arguments);
-
-    this.accessLevel = null;
-    this.viewModel = {};
-    this.navBar = Activity.createSectionNavBar();
-});
-
 module.exports = {
-    '_test': EmptyActivity,
-    '_styleGuide': require('./activities/_styleGuide'),
     'downloadApp': require('./activities/downloadApp'),
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
