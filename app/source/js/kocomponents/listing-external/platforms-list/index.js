@@ -24,6 +24,10 @@ import template from './template.html';
 
 const className = 'ComponentExample';
 const TAG_NAME = 'component-example';
+const dummyData = {};
+dummyData[-1] =
+[{"PlatformName":"TaskRabbit","type":"Assertion","id":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w?v=2_0","image":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w/image","badge":"https://api.badgr.io/public/badges/79aIEiiLRnu-Lie4I50syg?v=2_0","verification":{"type":"HostedBadge"},"evidence":[{"type":"Evidence","id":"https://loconomics.com/img/userphotos/u1232/$licenseCertification-542dc4ccf3504502b8f5cc899c8fb4c4.JPG","narrative":"Joshua submitted a photo of their license."},{"type":"Evidence","id":"http://www.camtc.org/record-search?certificateNumber=52970&work=&lastName=&firstName=","narrative":"Loconomics Staff has validated Joshua's license on the CAMTC board's website."}],"narrative":"Joshua is up-to-date on his massage therapist license and it expires on 10/13/2018.","issuedOn":"2018-01-04T18:05:51.710973+00:00","recipient":{"salt":"044096d2a7a949e79e19cbd75aa6f68c","type":"email","hashed":true,"identity":"sha256$47ad6c10e01c94cce527b573ee5125dc987770bc1ab963e385a51cc62c17fed5"}}, {"PlatformName":"TaskRabbit","type":"Assertion","id":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w?v=2_0","image":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w/image","badge":"https://api.badgr.io/public/badges/79aIEiiLRnu-Lie4I50syg?v=2_0","verification":{"type":"HostedBadge"},"evidence":[{"type":"Evidence","id":"https://loconomics.com/img/userphotos/u1232/$licenseCertification-542dc4ccf3504502b8f5cc899c8fb4c4.JPG","narrative":"Joshua submitted a photo of their license."},{"type":"Evidence","id":"http://www.camtc.org/record-search?certificateNumber=52970&work=&lastName=&firstName=","narrative":"Loconomics Staff has validated Joshua's license on the CAMTC board's website."}],"narrative":"Joshua is up-to-date on his massage therapist license and it expires on 10/13/2018.","issuedOn":"2018-01-04T18:05:51.710973+00:00","recipient":{"salt":"044096d2a7a949e79e19cbd75aa6f68c","type":"email","hashed":true,"identity":"sha256$47ad6c10e01c94cce527b573ee5125dc987770bc1ab963e385a51cc62c17fed5"}}, {"PlatformName":"TaskRabbit","type":"Assertion","id":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w?v=2_0","image":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w/image","badge":"https://api.badgr.io/public/badges/79aIEiiLRnu-Lie4I50syg?v=2_0","verification":{"type":"HostedBadge"},"evidence":[{"type":"Evidence","id":"https://loconomics.com/img/userphotos/u1232/$licenseCertification-542dc4ccf3504502b8f5cc899c8fb4c4.JPG","narrative":"Joshua submitted a photo of their license."},{"type":"Evidence","id":"http://www.camtc.org/record-search?certificateNumber=52970&work=&lastName=&firstName=","narrative":"Loconomics Staff has validated Joshua's license on the CAMTC board's website."}],"narrative":"Joshua is up-to-date on his massage therapist license and it expires on 10/13/2018.","issuedOn":"2018-01-04T18:05:51.710973+00:00","recipient":{"salt":"044096d2a7a949e79e19cbd75aa6f68c","type":"email","hashed":true,"identity":"sha256$47ad6c10e01c94cce527b573ee5125dc987770bc1ab963e385a51cc62c17fed5"}}];
+dummyData[106] = [{"PlatformName":"TaskRabbit","type":"Assertion","id":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w?v=2_0","image":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w/image","badge":"https://api.badgr.io/public/badges/79aIEiiLRnu-Lie4I50syg?v=2_0","verification":{"type":"HostedBadge"},"evidence":[{"type":"Evidence","id":"https://loconomics.com/img/userphotos/u1232/$licenseCertification-542dc4ccf3504502b8f5cc899c8fb4c4.JPG","narrative":"Joshua submitted a photo of their license."},{"type":"Evidence","id":"http://www.camtc.org/record-search?certificateNumber=52970&work=&lastName=&firstName=","narrative":"Loconomics Staff has validated Joshua's license on the CAMTC board's website."}],"narrative":"Joshua is up-to-date on his massage therapist license and it expires on 10/13/2018.","issuedOn":"2018-01-04T18:05:51.710973+00:00","recipient":{"salt":"044096d2a7a949e79e19cbd75aa6f68c","type":"email","hashed":true,"identity":"sha256$47ad6c10e01c94cce527b573ee5125dc987770bc1ab963e385a51cc62c17fed5"}}, {"PlatformName":"TaskRabbit","type":"Assertion","id":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w?v=2_0","image":"https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w/image","badge":"https://api.badgr.io/public/badges/79aIEiiLRnu-Lie4I50syg?v=2_0","verification":{"type":"HostedBadge"},"evidence":[{"type":"Evidence","id":"https://loconomics.com/img/userphotos/u1232/$licenseCertification-542dc4ccf3504502b8f5cc899c8fb4c4.JPG","narrative":"Joshua submitted a photo of their license."},{"type":"Evidence","id":"http://www.camtc.org/record-search?certificateNumber=52970&work=&lastName=&firstName=","narrative":"Loconomics Staff has validated Joshua's license on the CAMTC board's website."}],"narrative":"Joshua is up-to-date on his massage therapist license and it expires on 10/13/2018.","issuedOn":"2018-01-04T18:05:51.710973+00:00","recipient":{"salt":"044096d2a7a949e79e19cbd75aa6f68c","type":"email","hashed":true,"identity":"sha256$47ad6c10e01c94cce527b573ee5125dc987770bc1ab963e385a51cc62c17fed5"}}];
 
 /**
  * Component
@@ -62,12 +66,12 @@ export default class ComponentExample extends Komponent {
          * A name for the greating.
          * @member {KnockoutObservable<string>}
          */
-        this.name = getObservable(params.name || 'World');
+        this.jobTitleID = getObservable(params.jobTitleID || -1);
         /**
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
          */
-        this.counter = ko.observable(0);
+        this.suggestedPlatform = ko.observableArray();
         /**
          * Optional callback for external notifications on clicking 'count'
          */
@@ -76,6 +80,10 @@ export default class ComponentExample extends Komponent {
         // FIXME: A callback is usual to notify some event, but on this case
         // we could allow the 'counter' being provided externally as an
         // observable (like the 'name') and reset the number at constructor.
+        this.observeChanges(() => {
+            const data = dummyData[this.jobTitleID()];
+            this.suggestedPlatform(data);
+        });
     }
 
     /**

@@ -13,7 +13,7 @@ that an initial letter is being used to sort them, starting from the most simple
 and adding details based on concepts learnt in previous examples.
 
 ## Naming
-Each new activity has it's own folder, the name of the folder must match the
+Each new activity has its own folder, the name of the folder must match the
 name of the activity and the route (the initial URL path), using hyphens and
 lowercase. Be aware that in the JavaScript, the class name follows PascalCase,
 but should be still the same name just converted to that convention, plus
