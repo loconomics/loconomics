@@ -13,7 +13,7 @@
  * register line).
  */
 import Komponent from '../../helpers/KnockoutComponent';
-import getObservable from '../utils/getObservable';
+import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 // REMOVEME: Import the style (should include the extension)
 import style from './style.styl';
