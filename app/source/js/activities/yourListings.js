@@ -1,5 +1,5 @@
 /**
-    MarketplaceProfile activity
+    yourListings activity
 **/
 'use strict';
 
@@ -10,7 +10,7 @@ var moment = require('moment');
 var user = require('../data/userProfile').data;
 var marketplaceProfile = require('../data/marketplaceProfile');
 
-var A = Activity.extend(function MarketplaceProfileActivity() {
+var A = Activity.extend(function YourListingsActivity() {
 
     Activity.apply(this, arguments);
 

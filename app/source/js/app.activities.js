@@ -1,24 +1,11 @@
 /**
-    List of activities loaded in the App,
+    List of activities to preload in the App (at main entry point 'app'),
     as an object with the activity name as the key
     and the controller as value.
 **/
 'use strict';
 
-var Activity = require('./components/Activity');
-var EmptyActivity = Activity.extend(function EmptyActivity() {
-
-    Activity.apply(this, arguments);
-
-    this.accessLevel = null;
-    this.viewModel = {};
-    this.navBar = Activity.createSectionNavBar();
-});
-
 module.exports = {
-    '_test': EmptyActivity,
-    '_styleGuide': require('./activities/_styleGuide'),
-    '_modals': require('./activities/_modals'),
     'downloadApp': require('./activities/downloadApp'),
     'calendar': require('./activities/calendar'),
     'datetimePicker': require('./activities/datetimePicker'),
@@ -47,7 +34,7 @@ module.exports = {
     'privacySettings': require('./activities/privacySettings'),
     'addJobTitle': require('./activities/addJobTitle'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
-    'marketplaceProfile': require('./activities/marketplaceProfile'),
+    'yourListings': require('./activities/yourListings'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
@@ -61,7 +48,6 @@ module.exports = {
     'learnMoreProfessionals': require('./activities/learnMoreProfessionals'),
     'booking': require('./activities/booking'),
     'terms': require('./activities/terms'),
-    'about': require('./activities/about').default,
     'payments': require('./activities/payments'),
     'userFees': require('./activities/userFees'),
     'performance': require('./activities/performance'),
