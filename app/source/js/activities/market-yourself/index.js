@@ -19,6 +19,7 @@
 // following convention but done for simplicity of examples as commented
 // on their kocomponents/_examples/README.md file.
 import '../../kocomponents/listing-external/platforms-list';
+import '../../kocomponents/listing-external/platforms-suggested';
 import * as activities from '../index';
 // REMOVEME: After migration of old activities into folders, the base class will
 // move from this path into '../helpers/Activity', we will upgrade existent
