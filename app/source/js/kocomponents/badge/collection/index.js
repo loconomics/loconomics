@@ -32,7 +32,10 @@ function ViewModel(params) {
       if(r.ok) {
         return r.json();
       }
-    }).then((json) => this.badges(json.badges));
+    }).then((json) => {
+      const badges = json.badges.map((b) => `${b.id}?v=2_0`);
+      this.badges(badges);
+    });
 }
 
 ko.components.register(TAG_NAME, {
