@@ -35,6 +35,7 @@ function ViewModel(params) {
     const {src} = params;
     // Notes for Josh: equivalent to 'var src = params.src;'
     this.assertion = getObservable(params.assertion);
+    this.id = getObservable();
     this.image = getObservable('');
     this.narrative = getObservable('');
     this.evidence = getObservable('');
@@ -47,9 +48,10 @@ function ViewModel(params) {
     });
 
     const populateObservables = (payload) => {
+      this.id(payload.id);
       this.image(payload.image);
       this.narrative(payload.narrative);
-      if (payload.evidence.length > 0) {
+      if (payload.evidence && payload.evidence.length > 0) {
         this.evidence(payload.evidence[0].id);
       }
       fetch(payload.badge, {headers})
