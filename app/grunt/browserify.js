@@ -103,7 +103,7 @@ module.exports = function(grunt) {
             // dest: './build/assets/js/activities/about.js',
             dest: buildActivitiesBasePath + name + '.js',
             // map: dev && './build/assets/js/activities/about.js.map'
-            map: dev && buildActivitiesBasePath + activityPath + '.map'
+            map: dev && (buildActivitiesBasePath + name + '.js.map')
         };
     }));
 
