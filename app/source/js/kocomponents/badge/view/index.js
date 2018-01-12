@@ -42,14 +42,17 @@ function ViewModel(params) {
     this.badgeDescription = getObservable('');
 //    this.style = style;
 
+    const headers = new Headers({
+      'Accept': 'application/json'
+    });
+
     const populateObservables = (payload) => {
       this.image(payload.image);
       this.narrative(payload.narrative);
       if (payload.evidence.length > 0) {
         this.evidence(payload.evidence[0].id);
       }
-      const badge = payload.badge.slice(0,-6) + '.json?v=2_0';
-      fetch(badge)
+      fetch(payload.badge, {headers})
       .then((r) => {
         if(r.ok)
           return r.json();
@@ -60,7 +63,7 @@ function ViewModel(params) {
     };
 
     if(src) {
-      fetch(src)
+      fetch(src, {headers})
       .then((r) => {
         if(r.ok)
           return r.json();

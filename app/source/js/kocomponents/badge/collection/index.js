@@ -23,7 +23,11 @@ function ViewModel(params) {
     // Notes for Josh: equivalent to 'var src = params.src;'
     this.badges = getObservable([]);
 
-    fetch(src)
+    const headers = new Headers({
+      'Accept': 'application/json'
+    });
+
+    fetch(src, {headers})
     .then((r) => {
       if(r.ok) {
         return r.json();
