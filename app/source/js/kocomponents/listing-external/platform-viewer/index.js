@@ -13,7 +13,7 @@
  * register line).
  */
 import Komponent from '../../helpers/KnockoutComponent';
-import getObservable from '../utils/getObservable';
+import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 // REMOVEME: Import the style (should include the extension)
 import style from './style.styl';
@@ -22,13 +22,42 @@ import template from './template.html';
 // to import them from here, like
 // import '../another/component';
 
-const className = 'ComponentExample';
-const TAG_NAME = 'component-example';
+const className = 'PlatformViewer';
+const TAG_NAME = 'listing-external-platform-viewer';
+const dummyData = {};
+dummyData[1] =
+[
+    {
+      'SuggestedPlatformID': '1',
+      'PlatformName': '99designs',
+      'ShortDescription': 'Marketplace for freelance designers.',
+      'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
+      'FeesDescription': '-$0 sign-up fee↵-20% commission if design chosen',
+      'PositiveAspects': '-Global demand',
+      'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
+      'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
+      'UserHasListing': '0'
+    }
+  ];
+dummyData[2] =
+[
+    {
+      'SuggestedPlatformID': '2',
+      'PlatformName': 'TaskRabbit',
+      'ShortDescription': 'Marketplace for freelance designers.',
+      'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
+      'FeesDescription': '-$0 sign-up fee↵-20% commission if design chosen',
+      'PositiveAspects': '-Global demand',
+      'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
+      'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
+      'UserHasListing': '0'
+    }
+  ];
 
 /**
  * Component
  */
-export default class ComponentExample extends Komponent {
+export default class PlatformViewer extends Komponent {
 
     // REMOVEME: assign style in the static property, and see className..
     static get style() { return style; }
@@ -62,12 +91,12 @@ export default class ComponentExample extends Komponent {
          * A name for the greating.
          * @member {KnockoutObservable<string>}
          */
-        this.name = getObservable(params.name || 'World');
+        this.platformID = getObservable(params.platformID || -1);
         /**
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
          */
-        this.counter = ko.observable(0);
+        this.suggestedPlatform = ko.observableArray();
         /**
          * Optional callback for external notifications on clicking 'count'
          */
@@ -76,6 +105,10 @@ export default class ComponentExample extends Komponent {
         // FIXME: A callback is usual to notify some event, but on this case
         // we could allow the 'counter' being provided externally as an
         // observable (like the 'name') and reset the number at constructor.
+        this.observeChanges(() => {
+            const data = dummyData[this.platformID()];
+            this.suggestedPlatform(data);
+        });
     }
 
     /**
@@ -91,4 +124,4 @@ export default class ComponentExample extends Komponent {
 
 // FIXME: Just reminder that EVER should register the component with this line
 // at the end, but don't need a comment (remove me!)
-ko.components.register(TAG_NAME, ComponentExample);
+ko.components.register(TAG_NAME, PlatformViewer);
