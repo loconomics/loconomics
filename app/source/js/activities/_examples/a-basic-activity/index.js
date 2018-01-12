@@ -18,13 +18,13 @@
 // itself with the name `component-example` rather than the folder name, not
 // following convention but done for simplicity of examples as commented
 // on their kocomponents/_examples/README.md file.
-import '../../../kocomponents/_examples/a-template-only';
+import '../../kocomponents/_examples/a-template-only';
 import * as activities from '../index';
 // REMOVEME: After migration of old activities into folders, the base class will
 // move from this path into '../helpers/Activity', we will upgrade existent
 // activities too.
-import Activity from '../../../components/Activity';
-import UserType from '../../../enums/UserType';
+import Activity from '../../components/Activity';
+import UserType from '../../enums/UserType';
 import template from './template.html';
 
 const ROUTE_NAME = 'example-activity';
