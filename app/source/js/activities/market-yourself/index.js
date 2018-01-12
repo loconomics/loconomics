@@ -27,9 +27,9 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import template from './template.html';
 
-const ROUTE_NAME = 'suggested-platforms';
+const ROUTE_NAME = 'market-yourself';
 
-export default class SuggestedPlatformsActivity extends Activity {
+export default class MarketYourselfActivity extends Activity {
 
     static get template() { return template; }
 
@@ -71,7 +71,7 @@ export default class SuggestedPlatformsActivity extends Activity {
         // changed depending on other activity observables --usually this is
         // recommended over an observable since it keeps all possible values
         // in one place)
-        this.title = 'Example Activity';
+        this.title = 'Market yourself outside of Loconomics';
     }
 
     /**
@@ -94,4 +94,4 @@ export default class SuggestedPlatformsActivity extends Activity {
     }
 }
 
-activities.register(ROUTE_NAME, SuggestedPlatformsActivity);
+activities.register(ROUTE_NAME, MarketYourselfActivity);

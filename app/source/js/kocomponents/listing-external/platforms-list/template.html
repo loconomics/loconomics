@@ -1,17 +1,17 @@
-<p>
-    Hello <span data-bind="text: name" class="ComponentExample-name"></span>!
-</p>
-
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: suggestedPlatform">
     <li>
         <div class="ListingSummaryItem">
             <div class="Item-content">
                 <p><strong data-bind="text: PlatformName"></strong><p>
-                <p data-bind="text: narrative"></p>
+                <p data-bind="text: ShortDescription"></p>
             </div>
-            <button type="button" class="btn btn-icon-link" data-bind="">
-                <span data-bind="attr: { 'aria-label': 'Go to your '+ displayedSingularName() + ' listing' }"></span>
+            <button type="button" class="btn btn-icon-link" data-bind="visible: UserHasListing === 0">
+                <span data-bind="attr: { 'aria-label': 'Go to create a '+ PlatformName + ' listing' }"></span>
                 <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            </button>
+            <button type="button" class="btn btn-icon-link" data-bind="visible: UserHasListing === 1">
+                <span data-bind="attr: { 'aria-label': 'Go to create a '+ PlatformName + ' listing' }"></span>
+                <icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec>
             </button>
         </div>
     </li>
