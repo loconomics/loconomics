@@ -32,8 +32,11 @@ var ko = require('knockout');
 // const style = require('./style.styl');
 
 function ViewModel(params) {
-    const {src} = params;
+    let {src} = params;
     // Notes for Josh: equivalent to 'var src = params.src;'
+    if(src) {
+      src = src.replace(/\?v=.+$/, '?v=2_0');
+    }
     this.assertion = getObservable(params.assertion);
     this.id = getObservable();
     this.image = getObservable('');
