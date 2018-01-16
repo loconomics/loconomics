@@ -18,7 +18,7 @@
 // itself with the name `component-example` rather than the folder name, not
 // following convention but done for simplicity of examples as commented
 // on their kocomponents/_examples/README.md file.
-import '../../kocomponents/listing-external/platform-viewer';
+import '../../kocomponents/external-platform/info';
 import * as activities from '../index';
 // REMOVEME: After migration of old activities into folders, the base class will
 // move from this path into '../helpers/Activity', we will upgrade existent
@@ -27,9 +27,9 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import template from './template.html';
 
-const ROUTE_NAME = 'view-platform';
+const ROUTE_NAME = 'external-platform-view';
 
-export default class ViewPlatformActivity extends Activity {
+export default class ExternalPlatformViewActivity extends Activity {
 
     static get template() { return template; }
 
@@ -71,7 +71,7 @@ export default class ViewPlatformActivity extends Activity {
         // changed depending on other activity observables --usually this is
         // recommended over an observable since it keeps all possible values
         // in one place)
-        this.title = 'View 99designs info';
+        this.title = 'Your 99designs listing';
     }
 
     /**
@@ -94,4 +94,4 @@ export default class ViewPlatformActivity extends Activity {
     }
 }
 
-activities.register(ROUTE_NAME, ViewPlatformActivity);
+activities.register(ROUTE_NAME, ExternalPlatformViewActivity);

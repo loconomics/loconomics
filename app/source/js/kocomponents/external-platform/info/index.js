@@ -22,43 +22,44 @@ import template from './template.html';
 // to import them from here, like
 // import '../another/component';
 
-const className = 'PlatformsSuggested';
-const TAG_NAME = 'listing-external-platforms-suggested';
+const className = 'ExternalPlatformInfo';
+const TAG_NAME = 'external-platform-info';
 const dummyData = {};
-dummyData[-1] =
+dummyData[1] =
 [
     {
-      'SuggestedPlatformID': 1,
+      'PlatformID': 1,
       'PlatformName': '99designs',
       'ShortDescription': 'Marketplace for freelance designers.',
-      'UserHasListing': false
-    },
-    {
-      'SuggestedPlatformID': 2,
-      'PlatformName': 'TaskRabbit',
-      'ShortDescription': 'Marketplace for freelance designers.',
-      'UserHasListing': true
+      'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
+      'FeesDescription': '-$0 sign-up fee↵-20% commission if design chosen',
+      'PositiveAspects': '-Global demand',
+      'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
+      'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
+      'SignUpURL': 'https://99designs.com/designers',
+      'SignInURL': 'https://99designs.com/login'
     }
   ];
-dummyData[540] =
+dummyData[2] =
 [
     {
-      'SuggestedPlatformID': 1,
-      'PlatformName': '99designs',
-      'ShortDescription': 'Marketplace for freelance designers.',
-      'UserHasListing': true
-    },
-    {
-      'SuggestedPlatformID': 2,
+      'PlatformID': 2,
       'PlatformName': 'TaskRabbit',
-      'ShortDescription': 'Marketplace for freelance gigs.',
-      'UserHasListing': false
+      'ShortDescription': 'Marketplace for freelance designers.',
+      'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
+      'FeesDescription': '-$0 sign-up fee↵-20% commission if design chosen',
+      'PositiveAspects': '-Global demand',
+      'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
+      'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
+      'SignUpURL': 'https://www.taskrabbit.com/become-a-tasker',
+      'SignInURL': 'https://www.taskrabbit.com/login'
     }
   ];
+
 /**
  * Component
  */
-export default class PlatformsSuggested extends Komponent {
+export default class ExternalPlatformInfo extends Komponent {
 
     // REMOVEME: assign style in the static property, and see className..
     static get style() { return style; }
@@ -92,12 +93,13 @@ export default class PlatformsSuggested extends Komponent {
          * A name for the greating.
          * @member {KnockoutObservable<string>}
          */
-        this.userID = getObservable(params.userID || -1);
+        this.platformID = getObservable(params.platformID || -1);
+
         /**
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
          */
-        this.suggestedPlatform = ko.observableArray();
+        this.externalPlatform = ko.observableArray();
         /**
          * Optional callback for external notifications on clicking 'count'
          */
@@ -107,8 +109,8 @@ export default class PlatformsSuggested extends Komponent {
         // we could allow the 'counter' being provided externally as an
         // observable (like the 'name') and reset the number at constructor.
         this.observeChanges(() => {
-            const data = dummyData[this.userID()];
-            this.suggestedPlatform(data);
+            const data = dummyData[this.platformID()];
+            this.externalPlatform(data);
         });
     }
 
@@ -125,4 +127,4 @@ export default class PlatformsSuggested extends Komponent {
 
 // FIXME: Just reminder that EVER should register the component with this line
 // at the end, but don't need a comment (remove me!)
-ko.components.register(TAG_NAME, PlatformsSuggested);
+ko.components.register(TAG_NAME, ExternalPlatformInfo);

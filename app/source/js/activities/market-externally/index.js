@@ -18,7 +18,7 @@
 // itself with the name `component-example` rather than the folder name, not
 // following convention but done for simplicity of examples as commented
 // on their kocomponents/_examples/README.md file.
-import '../../kocomponents/listing-external/platforms-suggested';
+import '../../kocomponents/external-platform/suggestions-list';
 import * as activities from '../index';
 // REMOVEME: After migration of old activities into folders, the base class will
 // move from this path into '../helpers/Activity', we will upgrade existent
@@ -27,9 +27,9 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import template from './template.html';
 
-const ROUTE_NAME = 'market-yourself';
+const ROUTE_NAME = 'market-externally';
 
-export default class MarketYourselfActivity extends Activity {
+export default class MarketExternallyActivity extends Activity {
 
     static get template() { return template; }
 
@@ -94,4 +94,4 @@ export default class MarketYourselfActivity extends Activity {
     }
 }
 
-activities.register(ROUTE_NAME, MarketYourselfActivity);
+activities.register(ROUTE_NAME, MarketExternallyActivity);

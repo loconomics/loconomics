@@ -1,4 +1,4 @@
-<div data-bind="foreach: suggestedPlatform">
+<div data-bind="foreach: externalPlatform">
     <h2>About</h2>
     <p data-bind="text: LongDescription"></p>
     <h2>Commissions and fees</h2>
@@ -9,6 +9,6 @@
     <p data-bind="text: NegativeAspects"></p>
     <h2>How to stand out</h2>
     <p data-bind="text: Advice"></p>
-    <button class="btn btn-primary" data-bind="visible: !UserHasListing, attr: { href: SignUpURL }">Sign up</button>
-    <button class="btn btn-default" data-bind="visible: UserHasListing, attr: { href: SignInURL }">Sign in</button>
+    <!-- <button class="btn btn-primary" data-bind="visible: !$root.userHasListing, attr: { href: SignUpURL }">Sign up</button>
+    <button class="btn btn-default" data-bind="visible: $root.userHasListing, attr: { href: SignInURL }">Sign in</button> -->
 </div>
