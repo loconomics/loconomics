@@ -19,12 +19,6 @@ function Activity($activity, app) {
     this.$activity = $activity;
     this.app = app;
 
-    /**
-     * CSS to style this activity.
-     * @private {string}
-     */
-    this.style = null;
-
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
     this.accessLevel = null;
@@ -125,7 +119,7 @@ Activity.prototype.show = function show(options) {
          * Enable the own activity style CSS, if there is someone.
          * @private
          */
-        this.__styleElement = this.style && insertCss(this.style, {
+        this.__styleElement = this.constructor.style && insertCss(this.constructor.style, {
             container: this.$activity.get(0)
         });
     }
@@ -405,3 +399,23 @@ Activity.extend = function extendsActivity(ClassFn) {
 Activity.init = function($activity, app, name) {
     return createSingleton(this, $activity, app, name);
 };
+
+/**
+ * Must be implemented by derived classes
+ * @static @member {string}
+ */
+Object.defineProperty(Activity, 'template', {
+    get: function() { throw new Error('No activity template defined'); },
+    enumerable: true,
+    configurable: true
+});
+
+/**
+ * CSS text defining the style created for the activity.
+ * @static @member {string}
+ */
+Object.defineProperty(Activity, 'style', {
+    get: function() { return undefined; },
+    enumerable: true,
+    configurable: true
+});

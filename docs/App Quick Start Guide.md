@@ -10,19 +10,13 @@
 You'll need to [download Node.js v8.9.3](https://nodejs.org/en/download/) or newer (macOS, Windows, Linux) and install on your local machine.
 *Note: if a problem is detected when using a newer version of Node, please post errors in [a new issue](https://github.com/loconomics/loconomics/issues/new), we want to support newest versions.*
 
-It comes with [NPM](http://npmjs.com/), we used it as the project package manager (minimum version 5.5, commiting the `package-lock.json` file).
+## Install Yarn
 
-## Install Grunt globally (from the command line)
-```
-npm install -g grunt-cli
-```
-Note: Linux and Mac may require root/elevated rights in order to install globally, try:
-```
-sudo npm install -g grunt-cli
-```
+We use [Yarn](https://yarnpkg.com) as our package manager. You'll need to [install it](https://yarnpkg.com/en/docs/install) before continuing.
+
 ## Install modules (from the command line in the /app folder of the project directory)
 ```
-npm install
+yarn --ignore-engines
 ```
 It will install all the modules listed on the package.json file, needed to build the app source code.
 
@@ -30,7 +24,7 @@ It will install all the modules listed on the package.json file, needed to build
 
 Ensure you're in the project's /app folder and run:
 ```
-grunt build
+yarn grunt build
 ```
 It will recreate the content of the /build folder.
 
@@ -45,7 +39,7 @@ Before load and start debugging the app, you need to build it --almost the first
 
 You should use and alternate version of the 'build' command:
 ```
-grunt build --dev
+yarn grunt build --dev
 ```
 
 With the `--dev` modifier, we ensure the files includes source maps and debugging symbols. And optimization/minification steps
@@ -54,7 +48,7 @@ are not executed with this, being a bit faster (they are not used when debugging
 #### Start local server
 Allows you to test the webapp in the browser, a lightweight built-in http server is being used (connect), to start it, run next command and keep the task alive.
 ```
-grunt atwork
+yarn grunt atwork
 ```
 
 This will:
