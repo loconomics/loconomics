@@ -18,7 +18,6 @@
 // itself with the name `component-example` rather than the folder name, not
 // following convention but done for simplicity of examples as commented
 // on their kocomponents/_examples/README.md file.
-import '../../kocomponents/listing-external/platforms-list';
 import '../../kocomponents/listing-external/platforms-suggested';
 import * as activities from '../index';
 // REMOVEME: After migration of old activities into folders, the base class will

@@ -2,7 +2,7 @@
     yourListings activity
 **/
 'use strict';
-
+import '../kocomponents/utilities/icon-dec.js';
 var Activity = require('../components/Activity');
 var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 var ko = require('knockout');

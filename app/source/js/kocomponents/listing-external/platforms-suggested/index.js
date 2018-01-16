@@ -12,6 +12,7 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+import '../platforms-list';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';

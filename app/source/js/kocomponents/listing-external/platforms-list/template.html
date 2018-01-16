@@ -5,14 +5,12 @@
                 <p><strong data-bind="text: PlatformName"></strong><p>
                 <p data-bind="text: ShortDescription"></p>
             </div>
-            <button type="button" class="btn btn-icon-link" data-bind="visible: UserHasListing === 0">
-                <span data-bind="attr: { 'aria-label': 'Go to create a '+ PlatformName + ' listing' }"></span>
+            <a class="btn btn-icon-link" data-bind="visible: !UserHasListing, attr: { 'aria-label': 'View information about listing yourself on '+ PlatformName, href: '/view-platform?mustReturn=market-yourself&returnText=Market Yourself' }">
                 <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
-            </button>
-            <button type="button" class="btn btn-icon-link" data-bind="visible: UserHasListing === 1">
-                <span data-bind="attr: { 'aria-label': 'Go to create a '+ PlatformName + ' listing' }"></span>
-                <icon-dec params="icon: 'ion-ios-checkmark-outline'"></icon-dec>
-            </button>
+            </a>
+            <a class="btn btn-icon-link" data-bind="visible: UserHasListing, attr: { 'aria-label': 'View your '+ PlatformName + ' listing details', href: '/view-platform?mustReturn=market-yourself&returnText=Market Yourself' }">
+                <icon-dec params="icon: 'ion-ios-checkmark-outline'" class="text-success"></icon-dec>
+            </a>
         </div>
     </li>
 </ul>

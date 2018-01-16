@@ -12,6 +12,7 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -20,7 +21,6 @@ import style from './style.styl';
 import template from './template.html';
 // FIXME: If the component uses in the template other components, you need
 // to import them from here, like
-// import '../another/component';
 
 const className = 'PlatformsList';
 const TAG_NAME = 'listing-external-platforms-list';
@@ -28,7 +28,7 @@ const dummyData = {};
 dummyData[193] =
 [
     {
-      'SuggestedPlatformID': '1',
+      'SuggestedPlatformID': 1,
       'PlatformName': '99designs',
       'ShortDescription': 'Marketplace for freelance designers.',
       'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
@@ -36,10 +36,10 @@ dummyData[193] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'UserHasListing': '0'
+      'UserHasListing': false
     },
     {
-      'SuggestedPlatformID': '2',
+      'SuggestedPlatformID': 2,
       'PlatformName': 'TaskRabbit',
       'ShortDescription': 'Marketplace for freelance designers.',
       'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
@@ -47,13 +47,13 @@ dummyData[193] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'UserHasListing': '1'
+      'UserHasListing': true
     }
   ];
 dummyData[106] =
 [
     {
-      'SuggestedPlatformID': '1',
+      'SuggestedPlatformID': 1,
       'PlatformName': '99designs',
       'ShortDescription': 'Marketplace for freelance designers.',
       'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
@@ -61,10 +61,10 @@ dummyData[106] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'UserHasListing': '1'
+      'UserHasListing': true
     },
     {
-      'SuggestedPlatformID': '2',
+      'SuggestedPlatformID': 2,
       'PlatformName': 'TaskRabbit',
       'ShortDescription': 'Marketplace for freelance designers.',
       'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
@@ -72,7 +72,7 @@ dummyData[106] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'UserHasListing': '0'
+      'UserHasListing': false
     }
   ];
 
