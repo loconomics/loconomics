@@ -12,7 +12,6 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
-import '../platforms-list';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -28,16 +27,34 @@ const TAG_NAME = 'listing-external-platforms-suggested';
 const dummyData = {};
 dummyData[-1] =
 [
-  {
-    'jobTitleID': '106',
-    'Name': 'Bodyworker'
-  },
-  {
-    'jobTitleID': '193',
-    'Name': 'Psychotherapist'
-  }
-];
-
+    {
+      'SuggestedPlatformID': 1,
+      'PlatformName': '99designs',
+      'ShortDescription': 'Marketplace for freelance designers.',
+      'UserHasListing': false
+    },
+    {
+      'SuggestedPlatformID': 2,
+      'PlatformName': 'TaskRabbit',
+      'ShortDescription': 'Marketplace for freelance designers.',
+      'UserHasListing': true
+    }
+  ];
+dummyData[540] =
+[
+    {
+      'SuggestedPlatformID': 1,
+      'PlatformName': '99designs',
+      'ShortDescription': 'Marketplace for freelance designers.',
+      'UserHasListing': true
+    },
+    {
+      'SuggestedPlatformID': 2,
+      'PlatformName': 'TaskRabbit',
+      'ShortDescription': 'Marketplace for freelance gigs.',
+      'UserHasListing': false
+    }
+  ];
 /**
  * Component
  */
@@ -80,7 +97,7 @@ export default class PlatformsSuggested extends Komponent {
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
          */
-        this.userJobTitle = ko.observableArray();
+        this.suggestedPlatform = ko.observableArray();
         /**
          * Optional callback for external notifications on clicking 'count'
          */
@@ -91,7 +108,7 @@ export default class PlatformsSuggested extends Komponent {
         // observable (like the 'name') and reset the number at constructor.
         this.observeChanges(() => {
             const data = dummyData[this.userID()];
-            this.userJobTitle(data);
+            this.suggestedPlatform(data);
         });
     }
 
