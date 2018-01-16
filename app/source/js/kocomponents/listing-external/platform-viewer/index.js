@@ -28,7 +28,7 @@ const dummyData = {};
 dummyData[1] =
 [
     {
-      'SuggestedPlatformID': '1',
+      'SuggestedPlatformID': 1,
       'PlatformName': '99designs',
       'ShortDescription': 'Marketplace for freelance designers.',
       'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
@@ -36,13 +36,15 @@ dummyData[1] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'UserHasListing': '0'
+      'SignUpURL': 'https://99designs.com/designers',
+      'SignInURL': 'https://99designs.com/login',
+      'UserHasListing': true
     }
   ];
 dummyData[2] =
 [
     {
-      'SuggestedPlatformID': '2',
+      'SuggestedPlatformID': 2,
       'PlatformName': 'TaskRabbit',
       'ShortDescription': 'Marketplace for freelance designers.',
       'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
@@ -50,7 +52,9 @@ dummyData[2] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'UserHasListing': '0'
+      'SignUpURL': 'https://www.taskrabbit.com/become-a-tasker',
+      'SignInURL': 'https://www.taskrabbit.com/login',
+      'UserHasListing': false
     }
   ];
 

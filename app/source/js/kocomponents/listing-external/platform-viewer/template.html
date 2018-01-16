@@ -1,12 +1,14 @@
-<h2>About</h2>
-<p data-bind="text: "></p>
-<h2>Commissions and fees</h2>
-<p data-bind="text: "></p>
-<h2>Positive aspects</h2>
-<p data-bind="text: "></p>
-<h2>What to watch out for</h2>
-<p data-bind="text: "></p>
-<h2>How to stand out</h2>
-<p data-bind="text: "></p>
-<button></button>
-<button></button>
+<div data-bind="foreach: suggestedPlatform">
+    <h2>About</h2>
+    <p data-bind="text: LongDescription"></p>
+    <h2>Commissions and fees</h2>
+    <p data-bind="text: FeesDescription"></p>
+    <h2>Positive aspects</h2>
+    <p data-bind="text: PositiveAspects"></p>
+    <h2>What to watch out for</h2>
+    <p data-bind="text: NegativeAspects"></p>
+    <h2>How to stand out</h2>
+    <p data-bind="text: Advice"></p>
+    <button class="btn btn-primary" data-bind="visible: !UserHasListing, attr: { href: SignUpURL }">Sign up</button>
+    <button class="btn btn-default" data-bind="visible: UserHasListing, attr: { href: SignInURL }">Sign in</button>
+</div>
