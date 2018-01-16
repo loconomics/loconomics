@@ -13,7 +13,7 @@
  * register line).
  */
 import Komponent from '../../helpers/KnockoutComponent';
-import getObservable from '../utils/getObservable';
+import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 // REMOVEME: Import the style (should include the extension)
 import style from './style.styl';
@@ -22,13 +22,28 @@ import template from './template.html';
 // to import them from here, like
 // import '../another/component';
 
-const className = 'ComponentExample';
-const TAG_NAME = 'component-example';
+const className = 'ExternalListingEditor';
+const TAG_NAME = 'external-listing-editor';
+const dummyData = {};
+dummyData[214] =
+[
+    {
+      'externalListingID': 214,
+      'PlatformID': 2,
+      'PlatformName': '99designs',
+      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
+      'URL': 'https://99designs.com/designers',
+      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
+      'CreatedDate': '-Global demand',
+      'ModifiedDate': '-Zero pay if design not chosen↵-High commissions if chosen',
+      'Active': 1
+    }
+  ];
 
 /**
  * Component
  */
-export default class ComponentExample extends Komponent {
+export default class ExternalListingEditor extends Komponent {
 
     // REMOVEME: assign style in the static property, and see className..
     static get style() { return style; }
@@ -62,12 +77,11 @@ export default class ComponentExample extends Komponent {
          * A name for the greating.
          * @member {KnockoutObservable<string>}
          */
-        this.name = getObservable(params.name || 'World');
-        /**
-         * Internal counter for how many times pressed the button
-         * @member {KnockoutObservable<number>}
-         */
-        this.counter = ko.observable(0);
+        this.externalListingID = getObservable(params.externalListingID || 0);
+        
+
+        this.externalListing = ko.observableArray();
+
         /**
          * Optional callback for external notifications on clicking 'count'
          */
@@ -76,6 +90,10 @@ export default class ComponentExample extends Komponent {
         // FIXME: A callback is usual to notify some event, but on this case
         // we could allow the 'counter' being provided externally as an
         // observable (like the 'name') and reset the number at constructor.
+        this.observeChanges(() => {
+            const data = dummyData[this.externalListingID()];
+            this.externalListing(data);
+        });
     }
 
     /**
@@ -91,4 +109,4 @@ export default class ComponentExample extends Komponent {
 
 // FIXME: Just reminder that EVER should register the component with this line
 // at the end, but don't need a comment (remove me!)
-ko.components.register(TAG_NAME, ComponentExample);
+ko.components.register(TAG_NAME, ExternalListingEditor);

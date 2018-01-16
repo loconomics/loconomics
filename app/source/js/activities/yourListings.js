@@ -2,6 +2,7 @@
     yourListings activity
 **/
 'use strict';
+import '../kocomponents/external-listing/list';
 import '../kocomponents/utilities/icon-dec.js';
 var Activity = require('../components/Activity');
 var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');

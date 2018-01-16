@@ -1,0 +1,15 @@
+<div data-bind="foreach: suggestedPlatform">
+    <h2>Created</h2>
+    <p data-bind="text: CreatedDate"></p>
+    <h2>URL</h2>
+    <p data-bind="text: FeesDescription"></p>
+    <h2>Last Modified</h2>
+    <p data-bind="text: ModifiedDate"></p>
+    <h2>Notes</h2>
+    <p data-bind="text: Notes"></p>
+    <h2>Job Titles</h2>
+    <p data-bind="text: PlatformName"></p>
+</div>
+<h2>About <span data-bind="text: PlatformName"></span></h2>
+<external-platform-info params="platformID: PlatformID"></external-platform-info>
+
