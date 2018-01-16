@@ -44,9 +44,14 @@ Vagrant.configure("2") do |config|
     sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
     add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
     apt-get update
-    apt-get install -y nodejs dotnet-sdk-2.1.3 mssql-server
-    MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='Loconomics!' /opt/mssql/bin/mssql-conf -n setup
+    apt-get install -y nodejs dotnet-sdk-2.1.3 mssql-server mssql-tools unixodbc-dev
+    export SQL_SERVER_PASSWORD='Loconomics!'
+    MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD=$SQL_SERVER_PASSWORD /opt/mssql/bin/mssql-conf -n setup
     npm install -g yarn
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /home/ubuntu/.bash_profile
+    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /home/ubuntu/.bashrc
+    source /home/ubuntu/.bashrc
+    # sqlcmd -S localhost -U SA -P $SQL_SERVER_PASSWORD ...
   SHELL
 
 end
