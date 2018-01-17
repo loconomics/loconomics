@@ -31,7 +31,7 @@ dummyData[214] =
       'externalListingID': 214,
       'PlatformID': 2,
       'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
+      'JobTitles': 'Graphic Designer, Graphic Artist, Front-end Developer',
       'URL': 'https://99designs.com/designers',
       'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
       'CreatedDate': '-Global demand',
