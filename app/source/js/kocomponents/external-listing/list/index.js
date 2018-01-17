@@ -16,13 +16,11 @@ import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
-// REMOVEME: Import the style (should include the extension)
-import style from './style.styl';
+
 import template from './template.html';
 // FIXME: If the component uses in the template other components, you need
 // to import them from here, like
 
-const className = 'ExternalListingList';
 const TAG_NAME = 'external-listing-list';
 const dummyData = {};
 dummyData[-1] =
@@ -124,23 +122,6 @@ dummyData[540] =
  * Component
  */
 export default class ExternalListingList extends Komponent {
-
-    // REMOVEME: assign style in the static property, and see className..
-    static get style() { return style; }
-
-    // REMOVEME: assign the CSS class name that is defined in the '.styl' file
-    // using our naming convention for CSS, just in case that class needs to
-    // be attached to the element tag, not just to the content; you
-    // can set a class name directly on the template, but that applies only to
-    // content, not to the element like
-    // <component-example><p class="ClassName"></p></component-example>
-    // while you may need it in the element, like
-    // <component-example class="ClassName"><p></p></component-example>
-    // This is what this property does.
-    // Sometimes is not needed, though, depends on how is styled but remember
-    // that custom-elements without explicit styles behave by default
-    // as 'display:inline' because of browsers engines defaults.
-    static get className() { return className; }
 
     static get template() { return template; }
 
