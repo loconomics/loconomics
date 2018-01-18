@@ -22,6 +22,22 @@ import template from './template.html';
 // import '../another/component';
 
 const TAG_NAME = 'earnings-summary';
+const dummyData = {};
+dummyData[0] =
+[
+  {
+    'total': 23250.00,
+    'period': '2017 Year-to-date',
+    'jobTitle': 'All job titles',
+    'platform': 'all platforms',
+    'paidOut': 23000.00,
+    'expected': 250.00,
+    'averageHourlyRate': 23.83,
+    'hoursWorked': 975.50,
+    'bookings': 57
+  }
+];
+
 
 /**
  * Component
@@ -40,10 +56,29 @@ export default class EarningsSummary extends Komponent {
         super();
 
         /**
-         * A name for the greating.
+         * A job title for the summary query. Defualt value is all job titles.
+         * @member {KnockoutObservable<integer>}
+         */
+        this.jobTitleID = getObservable(params.jobTitleID || -1);
+
+        /**
+         * A time range for the summary query. Default value is year-to-date.
+         * @member {KnockoutObservable<array>}
+         */
+        this.timeRange = getObservable(params.timeRange || 'World');
+
+        /**
+         * A platformID for the summary query. Defualt value is all platforms.
          * @member {KnockoutObservable<string>}
          */
-        this.name = getObservable(params.name || 'World');
+        this.platformID = getObservable(params.platformID || -1);
+
+        /**
+         * Earnings summary returned given query parameters.
+         * @member {KnockoutObservable<string>}
+         */
+        this.earningsSummary = ko.observableArray();
+
         /**
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
@@ -57,6 +92,10 @@ export default class EarningsSummary extends Komponent {
         // FIXME: A callback is usual to notify some event, but on this case
         // we could allow the 'counter' being provided externally as an
         // observable (like the 'name') and reset the number at constructor.
+        this.observeChanges(() => {
+            const data = dummyData[0];
+            this.earningsSummary(data);
+        });
     }
 
     /**

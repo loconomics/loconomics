@@ -2,8 +2,11 @@
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
         <h1 data-bind="text: title"></h1>
-        <div class="Box-sm">
+        <div class="Box-sm col-md-7 col-sm-reset">
             <earnings-summary></earnings-summary>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'marketplaceProfile'"></app-inline-side-menu>
         </div>
     </div>
 </div>
