@@ -12,6 +12,8 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+
+import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';

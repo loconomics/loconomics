@@ -12,6 +12,7 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+
 import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
@@ -25,98 +26,58 @@ const TAG_NAME = 'external-listing-list';
 const dummyData = {};
 dummyData[-1] =
 [
-    {
-      'externalListingID': 214,
-      'PlatformID': 2,
-      'PlatformName': '101designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 1
-    },
-    {
-      'externalListingID': 215,
-      'PlatformID': 3,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 1
-    },
-    {
-      'externalListingID': 217,
-      'PlatformID': 4,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 1
-    },
-    {
-      'externalListingID': 218,
-      'PlatformID': 5,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 0
-    }
+  {
+    'externalListingID': 214,
+    'PlatformID': 2,
+    'PlatformName': 'Upwork',
+    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
+  },
+  {
+    'externalListingID': 215,
+    'PlatformID': 3,
+    'PlatformName': '99designs',
+    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
+  },
+  {
+    'externalListingID': 217,
+    'PlatformID': 4,
+    'PlatformName': 'TaskRabbit',
+    'JobTitles': ["Handyman"]
+  },
+  {
+    'externalListingID': 218,
+    'PlatformID': 5,
+    'PlatformName': 'Wag',
+    'JobTitles': ["Dog Walker"]
+  }
 ];
 dummyData[540] =
 [
-    {
-      'externalListingID': 214,
-      'PlatformID': 2,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 1
-    },
-    {
-      'externalListingID': 215,
-      'PlatformID': 3,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 1
-    },
-    {
-      'externalListingID': 217,
-      'PlatformID': 4,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 1
-    },
-    {
-      'externalListingID': 218,
-      'PlatformID': 5,
-      'PlatformName': '99designs',
-      'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-      'URL': 'https://99designs.com/designers',
-      'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-      'CreatedDate': '-Global demand',
-      'ModifiedDate': '-Global demand',
-      'Active': 0
-    }
-  ];
+  {
+    'externalListingID': 214,
+    'PlatformID': 2,
+    'PlatformName': 'Upwork',
+    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
+  },
+  {
+    'externalListingID': 215,
+    'PlatformID': 3,
+    'PlatformName': '99designs',
+    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
+  },
+  {
+    'externalListingID': 217,
+    'PlatformID': 4,
+    'PlatformName': 'TaskRabbit',
+    'JobTitles': ["Handyman"]
+  },
+  {
+    'externalListingID': 218,
+    'PlatformID': 5,
+    'PlatformName': 'Wag',
+    'JobTitles': ["Dog Walker"]
+  }
+];
 
 /**
  * Component
