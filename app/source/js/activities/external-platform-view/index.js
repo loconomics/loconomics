@@ -25,6 +25,7 @@ import * as activities from '../index';
 // activities too.
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
+import ko from 'knockout';
 import template from './template.html';
 
 const ROUTE_NAME = 'external-platform-view';
@@ -72,6 +73,7 @@ export default class ExternalPlatformViewActivity extends Activity {
         // recommended over an observable since it keeps all possible values
         // in one place)
         this.title = 'Your 99designs listing';
+        this.platformID = ko.Observable();
     }
 
     /**
@@ -91,6 +93,8 @@ export default class ExternalPlatformViewActivity extends Activity {
     show(state) {
         super.show(state);
         // Check other examples for some code using 'state'
+        var params = state.route && state.route.segments;
+        this.platformID(params[0] |0);
     }
 }
 

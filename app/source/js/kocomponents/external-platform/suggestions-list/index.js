@@ -12,6 +12,8 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+
+import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -23,32 +25,19 @@ import template from './template.html';
 
 const TAG_NAME = 'external-platforms-suggestions-list';
 const dummyData = {};
-dummyData[-1] =
-[
-    {
-      'PlatformID': 1,
-      'PlatformName': '99designs',
-      'ShortDescription': 'Marketplace for freelance designers.'
-    },
-    {
-      'PlatformID': 2,
-      'PlatformName': 'TaskRabbit',
-      'ShortDescription': 'Marketplace for freelance designers.'
-    }
-  ];
 dummyData[540] =
 [
-    {
-      'PlatformID': 1,
-      'PlatformName': '99designs',
-      'ShortDescription': 'Marketplace for freelance designers.'
-    },
-    {
-      'PlatformID': 2,
-      'PlatformName': 'TaskRabbit',
-      'ShortDescription': 'Marketplace for freelance gigs.'
-    }
-  ];
+  {
+    'PlatformID': 1,
+    'PlatformName': '99designs',
+    'ShortDescription': 'Marketplace for freelance designers.'
+  },
+  {
+    'PlatformID': 2,
+    'PlatformName': 'TaskRabbit',
+    'ShortDescription': 'Marketplace for freelance gigs.'
+  }
+];
 /**
  * Component
  */

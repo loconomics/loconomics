@@ -12,6 +12,8 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+
+import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -34,8 +36,7 @@ dummyData[1] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'SignUpURL': 'https://99designs.com/designers',
-      'SignInURL': 'https://99designs.com/login'
+      'SignUpURL': 'https://99designs.com/designers'
     }
   ];
 dummyData[2] =
@@ -49,8 +50,7 @@ dummyData[2] =
       'PositiveAspects': '-Global demand',
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'SignUpURL': 'https://www.taskrabbit.com/become-a-tasker',
-      'SignInURL': 'https://www.taskrabbit.com/login'
+      'SignUpURL': 'https://www.taskrabbit.com/become-a-tasker'
     }
   ];
 
