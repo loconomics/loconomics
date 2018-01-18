@@ -1,31 +1,31 @@
 /**
  * Captures a user's email address and adds them to our newsletter list.
- * @module kocomponents/lead-generation-newsletter
+ * @module kocomponents/lead-generation/newsletter
  */
 'use strict';
 
 import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
-import STYLE from '../LeadGeneration.styl';
-import TEMPLATE from './template.html';
 import ko from 'knockout';
 import leadGenerationApi from '../../../data/leadGeneration';
 import { show as showError } from '../../../modals/error';
+import style from '../LeadGeneration.styl';
+import template from './template.html';
 
 const TAG_NAME = 'lead-generation-newsletter';
 
 /**
- *
- * @class
+ * Component
  */
-class ViewModel extends Komponent {
+export default class LeadGenerationNewsletter extends Komponent {
+
+    static get style() { return style; }
+
+    static get template() { return template; }
+
     constructor() {
         super();
-        /**
-         * CSS to style this component.
-         * @member {string}
-         */
-        this.style = STYLE;
+
         /// Form data
         /**
          * @member {KnockoutObservable<string>}
@@ -101,7 +101,4 @@ class ViewModel extends Komponent {
     }
 }
 
-ko.components.register(TAG_NAME, {
-    template: TEMPLATE,
-    viewModel: ViewModel
-});
+ko.components.register(TAG_NAME, LeadGenerationNewsletter);
