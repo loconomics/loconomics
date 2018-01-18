@@ -18,7 +18,7 @@
 // itself with the name `component-example` rather than the folder name, not
 // following convention but done for simplicity of examples as commented
 // on their kocomponents/_examples/README.md file.
-// import '../../kocomponents/_examples/a-template-only';
+import '../../kocomponents/earnings/summary';
 import * as activities from '../index';
 // REMOVEME: After migration of old activities into folders, the base class will
 // move from this path into '../helpers/Activity', we will upgrade existent
