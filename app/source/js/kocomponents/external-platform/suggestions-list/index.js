@@ -23,7 +23,7 @@ import template from './template.html';
 // to import them from here, like
 // import '../another/component';
 
-const TAG_NAME = 'external-platforms-suggestions-list';
+const TAG_NAME = 'external-platform-suggestions-list';
 const dummyData = {};
 dummyData[540] =
 [

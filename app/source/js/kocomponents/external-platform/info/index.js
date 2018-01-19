@@ -25,23 +25,18 @@ import template from './template.html';
 
 const TAG_NAME = 'external-platform-info';
 const dummyData = {};
-dummyData[1] =
-[
-    {
-      'PlatformID': 1,
-      'PlatformName': '99designs',
-      'ShortDescription': 'Marketplace for freelance designers.',
-      'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
-      'FeesDescription': '-$0 sign-up fee↵-20% commission if design chosen',
-      'PositiveAspects': '-Global demand',
-      'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
-      'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
-      'SignUpURL': 'https://99designs.com/designers'
-    }
-  ];
-dummyData[2] =
-[
-    {
+dummyData[1] ={
+    'PlatformID': 1,
+    'PlatformName': '99designs',
+    'ShortDescription': 'Marketplace for freelance designers.',
+    'LongDescription': 'Hi there. We’re 99designs, the world’s largest online graphic design marketplace. We connect more than one million talented freelance designers with creative people, genius entrepreneurs, savvy businesses… anyone who needs great work.',
+    'FeesDescription': '-$0 sign-up fee↵-20% commission if design chosen',
+    'PositiveAspects': '-Global demand',
+    'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
+    'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
+    'SignUpURL': 'https://99designs.com/designers'
+};
+dummyData[2] ={
       'PlatformID': 2,
       'PlatformName': 'TaskRabbit',
       'ShortDescription': 'Marketplace for freelance designers.',
@@ -51,8 +46,7 @@ dummyData[2] =
       'NegativeAspects': '-Zero pay if design not chosen↵-High commissions if chosen',
       'Advice': '-Enter many contests to build a reputation↵-Repurpose designs to multiple clients if they fit the criteria',
       'SignUpURL': 'https://www.taskrabbit.com/become-a-tasker'
-    }
-  ];
+};
 
 /**
  * Component
@@ -80,7 +74,7 @@ export default class ExternalPlatformInfo extends Komponent {
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
          */
-        this.externalPlatform = ko.observableArray();
+        this.externalPlatform = ko.observable();
         /**
          * Optional callback for external notifications on clicking 'count'
          */

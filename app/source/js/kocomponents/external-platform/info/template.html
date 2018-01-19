@@ -1,4 +1,4 @@
-<div data-bind="foreach: externalPlatform">
+<div data-bind="with: externalPlatform">
     <h2>About</h2>
     <p data-bind="text: LongDescription"></p>
     <h2>Commissions and fees</h2>
@@ -9,4 +9,6 @@
     <p data-bind="text: NegativeAspects"></p>
     <h2>How to stand out</h2>
     <p data-bind="text: Advice"></p>
+    <button>Visit <span data-bind="text: PlatformName"></span></button>
+    <button>Add <span data-bind="text: PlatformName"></span> listing</button>
 </div>
