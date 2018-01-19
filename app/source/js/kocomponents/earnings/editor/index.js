@@ -1,3 +1,4 @@
+
 /**
  * Example of a basic Knockout Component that uses the helper KnockoutComponent
  * and ES6 class syntax to define it.
@@ -13,6 +14,8 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
+
+import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
 // import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -23,9 +26,7 @@ import template from './template.html';
 
 const TAG_NAME = 'earnings-editor';
 const dummyData = {};
-dummyData[0] =
-[
-  {
+dummyData[0] ={
     'total': null,
     'date': null,
     'duration': null,
@@ -37,13 +38,10 @@ dummyData[0] =
     'clientLastName': null,
     'clientEmail': null,
     'clientPhoneNumber': null
-  }
-];
-dummyData[123] =
-[
-  {
+};
+dummyData[123] ={
     'total': 320.00,
-    'date': 1/15/2018, 
+    'date': '1/15/2018', 
     'duration': 180,
     'platformID': 2,
     'jobTitleID': 106,
@@ -53,8 +51,7 @@ dummyData[123] =
     'clientLastName': 'Harrington',
     'clientEmail': 'kyra@loconomics.com',
     'clientPhoneNumber': '4159026022'
-  }
-];
+};
 
 
 /**
@@ -85,7 +82,7 @@ export default class EarningsEditor extends Komponent {
          * Step One
          * @member {KnockoutObservable<number>}
          */
-        this.total = ko.observable(0);
+        this.total = ko.observable(null);
         /**
          * @member {KnockoutObservable<date>}
          */                 
@@ -139,24 +136,16 @@ export default class EarningsEditor extends Komponent {
          * Whether current step is 1
          * @member {KnockoutComputed<boolean>}
          */
-        this.isAtStepOne = ko.pureComputed(function() {
-            return this.currentStep() === 1;
-        }, this);
+        this.isAtStep = function(number) {
+            return ko.pureComputed( () => this.currentStep() === number);
+        }; 
         /**
-         * Whether current step is 2
+         * Whether current step is 1
          * @member {KnockoutComputed<boolean>}
          */
-        this.isAtStepTwo = ko.pureComputed(function() {
-            return this.currentStep() === 2;
-        }, this);
-        /**
-         * Whether current step is 3
-         * @member {KnockoutComputed<boolean>}
-         */
-        this.isAtStepThree = ko.pureComputed(function() {
-            return this.currentStep() === 3;
-        }, this);
-
+        this.goNextStep = function() {
+            this.currentStep(this.currentStep() + 1);
+        }; 
         /// Statuses
         /**
          * Whether a subscription request was already and successfully sent
@@ -213,3 +202,4 @@ export default class EarningsEditor extends Komponent {
 // FIXME: Just reminder that EVER should register the component with this line
 // at the end, but don't need a comment (remove me!)
 ko.components.register(TAG_NAME, EarningsEditor);
+
