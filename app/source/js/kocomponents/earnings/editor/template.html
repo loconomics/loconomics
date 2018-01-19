@@ -1,0 +1,22 @@
+<form id="earningsEntryForm" aria-describedby="earningsEntryFormInstructions">
+    <fieldset id="earningsEntryForm-StepOne" class="earnings-step"
+        data-bind="visible: isAtStepOne(), if: isAtStepOne">
+        <div class="col-xs-12">
+            <legend>How much were you paid?</legend>
+            <label for="total">Total</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="total"
+                    type="number"
+                    placeholder="$0.00"
+                    data-bind="
+                        value: total, format: { type: 'number', format: '$0,0.00' }
+                    " />
+                <i class="form-control-feedback text-success ion-android-done"
+                    data-bind=""
+                    aria-hidden="true"></i>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked, click: goStepTwo">Save and continue</button>
+        </div>
+    </fieldset>
+</form>
