@@ -13,12 +13,7 @@ var A = Activity.extend(function LandingPageActivity() {
     Activity.apply(this, arguments);
 
     this.title = 'Welcome';
-    this.viewModel = new ViewModel();
-});
 
-exports.init = A.init;
-
-function ViewModel() {
     /**
      * Navigate to onboarding or dashboard.
      * It's a simplified and adapted version of app.goDashboard that
@@ -44,4 +39,6 @@ function ViewModel() {
     };
 
     this.profile = SignupVM.profileType.serviceProfessional;
-}
+});
+
+exports.init = A.init;
