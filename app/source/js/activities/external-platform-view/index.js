@@ -73,7 +73,7 @@ export default class ExternalPlatformViewActivity extends Activity {
         // recommended over an observable since it keeps all possible values
         // in one place)
         this.title = 'Your 99designs listing';
-        this.platformID = ko.Observable();
+        this.platformID = ko.observable();
     }
 
     /**

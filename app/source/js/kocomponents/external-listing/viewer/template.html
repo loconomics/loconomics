@@ -1,16 +1,16 @@
-<div data-bind="foreach: suggestedPlatform">
+<div data-bind="with: externalListing">
     <h2>Created</h2>
     <p data-bind="text: CreatedDate"></p>
     <h2>URL</h2>
-    <p data-bind="text: FeesDescription"></p>
+    <p data-bind="text: URL"></p>
     <h2>Last Modified</h2>
     <p data-bind="text: ModifiedDate"></p>
     <h2>Notes</h2>
     <p data-bind="text: Notes"></p>
     <h2>Job Titles</h2>
-    <p data-bind="text: PlatformName"></p>
+    <p data-bind="text: JobTitles"></p>
     <button class="btn btn-default" data-bind=" attr: { href: SignInURL }">Sign in</button>
+    <h2>About <span data-bind="text: PlatformName"></span></h2>
+    <!-- <external-platform-info params="platformID: PlatformID, viewAddListing: false"></external-platform-info> -->
 </div>
-<h2>About <span data-bind="text: PlatformName"></span></h2>
-<external-platform-info params="platformID: PlatformID"></external-platform-info>
 

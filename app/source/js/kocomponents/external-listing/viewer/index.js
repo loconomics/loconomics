@@ -12,7 +12,6 @@
  * noted; same if some comment looks repeatitive or not helpfull (like the
  * register line).
  */
-
 import '../../utilities/icon-dec.js';
 import '../../external-platform/info';
 import Komponent from '../../helpers/KnockoutComponent';
@@ -26,66 +25,54 @@ import template from './template.html';
 
 const TAG_NAME = 'external-listing-viewer';
 const dummyData = {};
-dummyData[214] =
-[
-    {
-        'ExternalListingID': 214,
-        'PlatformID': 2,
-        'PlatformName': 'Upwork',
-        'SignInURL': 'https://99designs.com/designers',
-        'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-        'URL': 'https://99designs.com/designers',
-        'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-        'CreatedDate': 1/10/2018,
-        'ModifiedDate': 1/10/2018,
-        'Active': 1
-    }
-];
-dummyData[215] =
-[
-    {
-        'ExternalListingID': 215,
-        'PlatformID': 3,
-        'PlatformName': '99designs',
-        'SignInURL': 'https://99designs.com/designers',
-        'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
-        'URL': 'https://99designs.com/designers',
-        'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-        'CreatedDate': 1/10/2018,
-        'ModifiedDate': 1/10/2018,
-        'Active': 1
-    }
-];
-dummyData[217] =
-[
-    {
-        'ExternalListingID': 214,
-        'PlatformID': 4,
-        'PlatformName': 'TaskRabbit',
-        'SignInURL': 'https://99designs.com/designers',
-        'JobTitles': ["Handyman"],
-        'URL': 'https://99designs.com/designers',
-        'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-        'CreatedDate': 1/10/2018,
-        'ModifiedDate': 1/10/2018,
-        'Active': 1
-    }
-];
-dummyData[218] =
-[
-    {
-        'ExternalListingID': 218,
-        'PlatformID': 5,
-        'PlatformName': 'Wag',
-        'SignInURL': 'https://99designs.com/designers',
-        'JobTitles': ["Dog Walker"],
-        'URL': 'https://99designs.com/designers',
-        'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-        'CreatedDate': 1/10/2018,
-        'ModifiedDate': 1/10/2018,
-        'Active': 1
-    }
-];
+dummyData[214] ={
+    'ExternalListingID': 214,
+    'PlatformID': 2,
+    'PlatformName': 'Upwork',
+    'SignInURL': 'https://99designs.com/designers',
+    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
+    'URL': 'https://99designs.com/designers',
+    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
+    'CreatedDate': '1/10/2018',
+    'ModifiedDate': '1/10/2018',
+    'Active': 1
+};
+dummyData[215] ={
+    'ExternalListingID': 215,
+    'PlatformID': 3,
+    'PlatformName': '99designs',
+    'SignInURL': 'https://99designs.com/designers',
+    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
+    'URL': 'https://99designs.com/designers',
+    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
+    'CreatedDate': '1/10/2018',
+    'ModifiedDate': '1/10/2018',
+    'Active': 1
+};
+dummyData[217] ={
+    'ExternalListingID': 214,
+    'PlatformID': 4,
+    'PlatformName': 'TaskRabbit',
+    'SignInURL': 'https://99designs.com/designers',
+    'JobTitles': ["Handyman"],
+    'URL': 'https://99designs.com/designers',
+    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
+    'CreatedDate': '1/10/2018',
+    'ModifiedDate': '1/10/2018',
+    'Active': 1
+};
+dummyData[218] ={
+    'ExternalListingID': 218,
+    'PlatformID': 5,
+    'PlatformName': 'Wag',
+    'SignInURL': 'https://99designs.com/designers',
+    'JobTitles': ["Dog Walker"],
+    'URL': 'https://99designs.com/designers',
+    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
+    'CreatedDate': '1/10/2018',
+    'ModifiedDate': '1/10/2018',
+    'Active': 1
+};
 
 
 /**
@@ -113,7 +100,7 @@ export default class ExternalListingViewer extends Komponent {
          * Internal counter for how many times pressed the button
          * @member {KnockoutObservable<number>}
          */
-        this.externalListing = ko.observableArray();
+        this.externalListing = ko.observable();
         /**
          * Optional callback for external notifications on clicking 'count'
          */
