@@ -12,6 +12,7 @@ var onboarding = require('../data/onboarding');
 var A = Activity.extend(function LandingPageActivity() {
     Activity.apply(this, arguments);
 
+    this.title = 'Welcome';
     this.viewModel = new ViewModel();
 });
 
