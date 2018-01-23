@@ -34,10 +34,10 @@
     {
         public override dynamic Get()
         {
-            if (!Request["givemeerror"].IsEmpty()) {
-                throw new HttpException(500, Request["givemeerror"]);
+            if (!Request["givemeerror"].IsEmpty()) {                
+                throw new HttpException(Request["givemeerror"].AsInt(), Request["givemeerror"] + "[[[Give me an error]]]");
             }
-        
+
             if (!UrlData[0].IsEmpty()) {
                 throw new HttpException(404, "Not found: (" + UrlData[0] + ")");
             }
@@ -45,7 +45,7 @@
             if (Request["name"] == "userpos") {
                 var pos = LcData.UserInfo.GetUserPos();
                 if (pos == null || pos.Count == 0)
-                    return new { rows = new object[]{}, message = "You have not positions. Logged?" };
+                    return new { rows = new object[]{}, message = "[[[You have not positions. Logged?]]]" };
                 else
                     return new { rows = LcData.UserInfo.GetUserPos() };
             }
@@ -65,7 +65,7 @@
                 throw new HttpException(500, Request["givemeerror"]);
             }
             if (!UrlData[0].IsEmpty()) {
-                throw new HttpException(500, "Cannot POST to an item");
+                throw new HttpException(500, "[[[Cannot POST to an item]]]");
             }
 
             return editItem();
@@ -79,11 +79,11 @@
             var v = validateItemID();
             if (v != null)
                 return v;
-                
+
             var updated = editItem();
 
             updated["ItemID"] = UrlData[0];
-        
+
             // OK
             StatusCode = 200;
             return updated;
@@ -99,26 +99,26 @@
                 return v;
 
             // I deleted a bit of nothing!
-            StatusCode = 204;
+            StatusCode = 404;
             return null;
         }
-        
+
         dynamic editItem() {
-        
+
             Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
             Validation.RequireField("name", LcRessources.RequiredField("Name"));
             Validation.Add("num", Validator.Decimal("Num must be a number"));
-        
+
             if (Validation.IsValid()) {
-            
+
                 // Creating a bit of something, an ID and the same input data
                 // TODO: itemData needs to be filtered!
                 var itemData = Request.Form.AllKeys.ToDictionary(key => key, key => Request.Form[key]);
                 itemData["ItemID"] = new Random().Next(0, 100).ToString();
-           
+
                 // HTTP 201: 'Ok, Created'
                 StatusCode = 201;
-            
+
                 return itemData;
             }
             else {
@@ -126,7 +126,7 @@
                 throw new HttpException(400, "Validation rules");
             }
         }
-    
+
         dynamic validateItemID() {
 
             if (UrlData[0].IsEmpty()) {
