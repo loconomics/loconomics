@@ -1,19 +1,28 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-05 21:00+11:00\n"
-"PO-Revision-Date: 2018-01-05 21:00+1100\n"
+"POT-Creation-Date: 2018-01-23 21:13+11:00\n"
+"PO-Revision-Date: 2018-01-23 21:13+11:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.5\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: es_ES\n"
+"X-Generator: i18n.POTGenerator\n"
 
 #: ..\app\source\html\parts\UserMenuContents.html:23
 msgid "Dashboard"
 msgstr "Salpicadero"
+
+#: ..\web\App_Code\LcAuthHelper.cs:452
+msgid "E-mail address is already in use."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:383
+msgid "Facebook account already connected. Sign in."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:500
+msgid "Facebook account does not exists."
+msgstr ""
 
 #: Default.cshtml:10
 msgid "hello from %1, today is %0"
@@ -23,6 +32,26 @@ msgstr "hola desde %1, hoy es %0"
 msgid "Home Page"
 msgstr "Lorem ipsum dolor sit amet"
 
+#: ..\web\App_Code\LcAuthHelper.cs:579
+msgid "Incorrect user"
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:96
+msgid "Incorrect username or password."
+msgstr ""
+
+#: ..\web\api\v1\auth\reset-password.cshtml:47
+msgid "Instructions to reset your password have been sent to {0}. Please check your spam folder if you don't see it."
+msgstr ""
+
+#: ..\web\api\v1\auth\change-password.cshtml:45
+msgid "Invalid email address or password"
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:590
+msgid "Invalid Facebook credentials"
+msgstr ""
+
 #: assets\js\app.js:2
 msgid "javascript content here"
 msgstr ""
@@ -31,6 +60,97 @@ msgstr ""
 msgid "Modify this template to jump-start your ASP.NET Web Pages application."
 msgstr "Integer diam ex, egestas et felis sit amet, ultrices lacinia tortor. Quisque eget ornare metus."
 
+#: ..\web\App_Code\LcAuthHelper.cs:279
+msgid "Not allowed"
+msgstr ""
+
+#: ..\web\api\v1\auth\change-password.cshtml:48
+#: ..\web\api\v1\auth\login.cshtml:58
+#: ..\web\api\v1\auth\signup.cshtml:74
+msgid "Not Found"
+msgstr ""
+
+#: ..\web\_specialRoutes\app.html:3810
+#: ..\web\_specialRoutes\Login.cshtml:15
+msgid "Password"
+msgstr ""
+
+#: ..\web\api\v1\auth\reset-password.cshtml:52
+msgid "Please enter a new password."
+msgstr ""
+
+#: ..\web\api\v1\auth\reset-password.cshtml:51
+msgid "Please provide a valid reset token."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:353
+msgid "The email is not valid."
+msgstr ""
+
 #: Default.cshtml:22
 msgid "To learn more about ASP.NET Web Pages, visit"
 msgstr "Suspendisse in porttitor tellus. In interdum enim arcu"
+
+#: ..\web\api\v1\auth\facebook-user.cshtml:47
+msgid "User doesn't exists"
+msgstr ""
+
+#: ..\web\_specialRoutes\Login.cshtml:14
+msgid "Username"
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:234
+msgid ""
+"We see one of our service professionals has already scheduled services for you in the past.\n"
+"        We've just sent an invitation to create your account to {0}.\n"
+"        Please follow its instructions. We can't wait to get you on board!"
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:239
+msgid ""
+"We see you have subscribed previously to our newsletter or referrenced a service professional.\n"
+"        We've just sent an invitation to create your account to {0}.\n"
+"        Please follow its instructions. We can't wait to get you on board!"
+msgstr ""
+
+#: ..\web\api\v1\Test.cshtml:48
+msgid "You have not positions. Logged?"
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:66
+#: ..\web\App_Code\LcAuthHelper.cs:370
+msgid "You must specify a password."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:65
+msgid "You must specify a user name."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:350
+msgid "You must specify an email."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:391
+msgid "You must specify your first name."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:392
+msgid "You must specify your last name."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:390
+msgid "You must specify your mobile phone number."
+msgstr ""
+
+#: ..\web\App_Code\LcAuthHelper.cs:191
+msgid "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent."
+msgstr ""
+
+#: ..\web\_specialRoutes\Login.cshtml:14
+msgid "Your e-mail"
+msgstr ""
+
+#: ..\web\api\v1\auth\change-password.cshtml:38
+msgid "Your password has been updated. Please log in again with your new password"
+msgstr ""
+
