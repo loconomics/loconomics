@@ -160,7 +160,7 @@ function SignupVM() {
      */
     this.fieldOfStudyID = new Field();
     /**
-     * The type of CCC member, from a close list: Student, Proffesor, Administrator
+     * The type of CCC member, from a close list: student, proffesor, administrator
      * Value for CCCUsers.UserType.
      * Required for isCccMember==true
      * @member {KnockoutObservable<string>}
