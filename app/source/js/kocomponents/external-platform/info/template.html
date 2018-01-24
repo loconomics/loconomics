@@ -10,5 +10,5 @@
     <h2>How to stand out</h2>
     <p data-bind="text: Advice"></p>
     <a class="btn btn-default" target="_blank" data-bind="attr: { href: SignUpURL }">Visit <span data-bind="text: PlatformName"></span></a>
-    <a class="btn btn-primary" data-bind="attr: {href: '/external-listing-add/' + PlatformID + '?mustReturn=external-platform-info/' + PlatformID + '&returnText=' + PlatformName + ' info' }">Add <span data-bind="text: PlatformName"></span> listing</a>
+    <a class="btn btn-primary" data-bind="visible: $root.showAddListing, attr: {href: '/external-listing-add/' + PlatformID + '?mustReturn=external-platform-info/' + PlatformID + '&returnText=' + PlatformName + ' info' }">Add <span data-bind="text: PlatformName"></span> listing</a>
 </div>

@@ -54,6 +54,9 @@ export default class ExternalPlatformInfo extends Komponent {
      * @param {(number|KnockoutObservable<number>)} 
      * [params.platformID] The ID of the platform whose 
      * information is being displayed.
+     * @param {(boolean|KnockoutObservable<boolean>)} 
+     * [params.showAddListing] Indicates whether or not the 
+     * "Add Listing" button should be shown.
      **/
     constructor(params) {
         super();
@@ -63,6 +66,12 @@ export default class ExternalPlatformInfo extends Komponent {
          * @member {KnockoutObservable<number>}
          */
         this.platformID = getObservable(params.platformID || -1);
+
+        /** ASKIAGO why this isn't working.
+         * Determines whether or not to display the add link.
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.showAddListing = ko.observable(getObservable(params.showAddListing || true));
 
         /**
          * Information about the external platform.
