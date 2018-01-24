@@ -1,9 +1,18 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a href="/yourListings">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Your listings
+                    </a>
+                </li>
+            </ul>
+        </div>
         <h1 data-bind="text: title"></h1>
         <div class="Box-sm">
-            <external-platform-suggestions-list params="userID: 540"></external-platform-suggestions-list>
+            <external-platform-suggestions-list params="userID: userID"></external-platform-suggestions-list>
         </div>
     </div>
 </div>
