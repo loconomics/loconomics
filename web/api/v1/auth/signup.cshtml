@@ -171,8 +171,17 @@
         {
             using (var db = new LcDatabase())
             {
-                InsertCccUser(db, login.userID);
-                InsertUserEducation(db, login.userID);
+                db.Execute("BEGIN TRANSACTION");
+                try
+                {
+                    InsertCccUser(db, login.userID);
+                    InsertUserEducation(db, login.userID);
+                    db.Execute("COMMIT TRANSACTION");
+                }
+                catch
+                {
+                    db.Execute("ROLLBACK TRANSACTION");
+                }
             }
         }
         private void InsertCccUser(LcDatabase db, int userID)
@@ -202,11 +211,16 @@
         {
             var institutionID = Request["institutionID"].AsInt();
             var fieldOfStudyID = Request["fieldOfStudyID"].AsInt();
+            var fieldOfStudy = db.QueryValue(@"
+                SELECT FieldOfStudyName
+                FROM FieldOfStudy
+                WHERE FieldOfStudyID = @0
+            ", fieldOfStudyID);
             db.Execute(@"
                 INSERT usereducation (
                     UserID,
                     InstitutionID,
-                    FieldOfStudyID,
+                    FieldOfStudy,
                     DegreeCertificate,
                     CreatedDate,
                     ModifiedDate,
@@ -222,7 +236,7 @@
                     'sys',
                     1
                 )
-            ", userID, institutionID, fieldOfStudyID);
+            ", userID, institutionID, fieldOfStudy);
         }
     }
 }
