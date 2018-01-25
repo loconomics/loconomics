@@ -10,11 +10,8 @@
                     type="number"
                     placeholder="$0.00"
                     data-bind="
-                        value: total
+                        value: earningsEntry().Total
                     " />
-                <i class="form-control-feedback text-success ion-android-done"
-                    data-bind=""
-                    aria-hidden="true"></i>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked, click: goNextStep">Save and continue</button>
         </div>
@@ -23,18 +20,14 @@
         data-bind="visible: isAtStep(2), autofocus: isAtStep(2)">
         <div class="col-xs-12">
             <legend>When were you paid?</legend>
-            <label for="total">Total</label>
+            <label for="paidDate">Date</label>
             <div class="form-group">
                 <input class="form-control"
-                    id="total"
-                    type="number"
-                    placeholder="$0.00"
+                    id="paidDate"
+                    type="date"
                     data-bind="
-                        value: total
+                        value: earningsEntry().PaidDate
                     " />
-                <i class="form-control-feedback text-success ion-android-done"
-                    data-bind=""
-                    aria-hidden="true"></i>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked, click: goNextStep">Save and continue</button>
         </div>
@@ -42,19 +35,43 @@
     <fieldset id="earningsEntryForm-StepThree" class="earnings-step"
         data-bind="visible: isAtStep(3), autofocus: isAtStep(3)">
         <div class="col-xs-12">
-            <legend>Who paid you?</legend>
-            <label for="total">Total</label>
+            <legend>Where did you find the work?</legend>
+            <label for="platformID">Platform name</label>
             <div class="form-group">
                 <input class="form-control"
-                    id="total"
-                    type="number"
-                    placeholder="$0.00"
+                    id="firstName"
+                    type="text"
+                    placeholder=""
                     data-bind="
-                        value: total
+                        value: earningsEntry().ClientFirstName
                     " />
-                <i class="form-control-feedback text-success ion-android-done"
-                    data-bind=""
-                    aria-hidden="true"></i>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked, click: goNextStep">Save and continue</button>
+        </div>
+    </fieldset>
+    <fieldset id="earningsEntryForm-StepThree" class="earnings-step"
+        data-bind="visible: isAtStep(4), autofocus: isAtStep(4)">
+        <div class="col-xs-12">
+            <legend>Who did you work for?</legend>
+            <label for="firstName">Client's first name</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="firstName"
+                    type="text"
+                    placeholder=""
+                    data-bind="
+                        value: earningsEntry().ClientFirstName
+                    " />
+            </div>
+            <label for="lastName">Client's last name</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="lastName"
+                    type="text"
+                    placeholder=""
+                    data-bind="
+                        value: earningsEntry().ClientLastName
+                    " />
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked, click: goNextStep">Save and continue</button>
         </div>
