@@ -1,8 +1,6 @@
 
 /**
- * Example of a basic Knockout Component that uses the helper KnockoutComponent
- * and ES6 class syntax to define it.
- *
+ * Used for adding, editing, and copying earnings entries.
  * @module kocomponents/earnings/editor
  *
  */
@@ -52,9 +50,8 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} [params.name=World] A name for the greating.
-     * @param {function<number,void>} [params.onCount] Callback executed each time the 'count'
-     * button is executed with the current counter.
+     * @param {(number|KnockoutObservable<number>)} 
+     * [params.earningsEntryID]
      */
     constructor(params) {
         super();
@@ -65,7 +62,7 @@ export default class EarningsEditor extends Komponent {
          * after registeritself at Step One
          * @member {KnockoutObservable<number>}
          */
-        this.earningsEntryID = getObservable(params.jobTitleID || null);
+        this.earningsEntryID = getObservable(params.earningsEntryID || null);
 
         /**
          * Holds the email user to register the current anonymous 
@@ -125,9 +122,9 @@ export default class EarningsEditor extends Komponent {
 
         /**
          * Earnings summary returned given query parameters.
-         * @member {KnockoutObservable<array>}
+         * @member {KnockoutObservable<object>}
          */
-        this.earningsEntry = ko.observableArray();
+        this.earningsEntry = ko.observable();
 
         /// Steps management
         /**
