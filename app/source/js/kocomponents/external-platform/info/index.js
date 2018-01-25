@@ -90,10 +90,25 @@ export default class ExternalPlatformInfo extends Komponent {
          * When the platformID changes, the information is 
          * updated for the specific platform.
          */
+        // ASKIAGO this piece is throwing a console error and not returning data in the external-listing-view activity (but does in external-platform-view)
+        // index.js:98 Uncaught TypeError: Cannot read property 'PlatformName' of undefined
+        // at ExternalPlatformInfo.<anonymous> (index.js:98)
+        // at Function.evaluateImmediate_CallReadThenEndDependencyDetection (knockout-latest.debug.js:2183)
+        // at Function.evaluateImmediate_CallReadWithDependencyDetection (knockout-latest.debug.js:2150)
+        // at Function.evaluateImmediate (knockout-latest.debug.js:2111)
+        // at Object.ko.computed.ko.dependentObservable (knockout-latest.debug.js:1964)
+        // at ExternalPlatformInfo.observeChanges (KnockoutComponent.js:210)
+        // at new ExternalPlatformInfo (index.js:93)
+        // at Function.from (KnockoutComponent.js:234)
+        // at createViewModel (knockout-latest.debug.js:4035)
+        // at ko.subscription.callback (knockout-latest.debug.js:4006)
         this.observeChanges(() => {
-            const data = dummyData[this.platformID()];
-            this.externalPlatform(data);
-            this.platformName(data.PlatformName);
+            const id = this.platformID();
+            if (id) {
+                const data = dummyData[id];
+                this.externalPlatform(data);
+                this.platformName(data.PlatformName);
+            }
         });
     }
 }
