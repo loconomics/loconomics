@@ -1,3 +1,55 @@
-<p>
-    Hello <span data-bind="text: name" class="ComponentExample-name"></span>!
-</p>
+<form id="externalyListingEntryForm" aria-describedby="externalyListingEntryFormInstructions">
+    <fieldset>
+        <div class="col-xs-12">
+            <legend>Listing details</legend>
+            <label for="listingTitle">Title</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="listingTitle"
+                    type="text"
+                    placeholder=""
+                    data-bind="
+                        value: externalListing().ListingTitle
+                    " />
+            </div>
+            <label for="url">URL</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="url"
+                    type="url"
+                    placeholder="https://"
+                    data-bind="
+                        value: ListingURL
+                    " />
+            </div>
+            <label for="jobTitles">Job Titles</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="jobTitles"
+                    type="text"
+                    placeholder=""
+                    data-bind="
+                        value: JobTitles
+                    " />
+            </div>
+            <!-- <div class="isolated inset">
+                <job-title-autocomplete params="suggestionButtonText: 'Add',
+                    target: 'addJobTitle',
+                    onSelect: onSelectJobTitle,
+                    label: 'Search and select a job title',
+                    id: 'jobTitleToAdd'"></job-title-autocomplete>
+            </div> -->
+            <label for="notes">Notes</label>
+            <div class="form-group">
+                <textarea class="form-control"
+                    id="notes"
+                    rows="5"
+                    placeholder=""
+                    data-bind="
+                        value: Notes
+                    "></textarea>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked">Save</button>
+        </div>
+    </fieldset>
+</form>
