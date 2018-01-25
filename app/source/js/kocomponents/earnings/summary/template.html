@@ -1,4 +1,4 @@
-<div data-bind="foreach: earningsSummary">
+<div data-bind="with: earningsSummary">
     <h2><span data-bind="text: total, format: { type: 'number', format: '$0,0' }"></span> earned</h2>
     <p>Booked earnings for <span data-bind="text: period"></span></p>
     <div data-bind="visible: paidOut > 0">
