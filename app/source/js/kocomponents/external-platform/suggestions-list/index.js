@@ -39,8 +39,9 @@ export default class ExternalPlatformSuggestionsList extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(number|KnockoutObservable<number>)} [params.userID] The user's ID that enables us to query suggested platforms specifically for them.
+     * @param {(number|KnockoutObservable<number>)} [params.userID] 
      */
+
     constructor(params) {
         super();
 
@@ -48,7 +49,7 @@ export default class ExternalPlatformSuggestionsList extends Komponent {
          * The userID the suggestions list is created for.
          * @member {KnockoutObservable<string>}
          */
-        this.userID = getObservable(params.userID || -1);
+        this.userID = getObservable(params.userID);
 
         /**
          * An array of the platforms suggested.

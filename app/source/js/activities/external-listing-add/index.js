@@ -24,19 +24,24 @@ export default class ExternalListingAddActivity extends Activity {
 
         this.navBar = Activity.createSectionNavBar(null);
         this.navBar.rightAction(null);
-        // ASKIAGO this.externalListing.PlatformName 
-        this.title = 'Add ' + '99 Designs' + ' listing';
+        
+        // Creates a placeholder for an "out" parameter to be populated by the component.
+        this.platformName = ko.observable('');
+        
+        // Creates a placeholder for the platform ID to be populated using the show(state) method below.
         this.platformID = ko.observable();
+
+        // Title uses a pureComputed to ensure the platformName is updated.
+        this.title = ko.pureComputed( () => 'Add ' + this.platformName() + ' listing');
     }
 
-    /*
-     * Document platformID
-     * @param {Object} state
+    /**
+      * @param {Object} state
      */
     show(state) {
         super.show(state);
-        // Check other examples for some code using 'state'
         var params = state.route && state.route.segments;
+        // platformID is the first segment in the activity URL 
         this.platformID(params[0] || 0);
     }
 }

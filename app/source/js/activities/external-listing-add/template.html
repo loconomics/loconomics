@@ -1,6 +1,15 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: '#!external-platform-view/' + platformID() + '?mustReturn=market-externally'+ '&returnText=Market externally' }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Market externally
+                    </a>
+                </li>
+            </ul>
+        </div>
         <h1 data-bind="text: title"></h1>
         <div class="Box-sm">
             <external-listing-editor params="platformID: platformID"></external-listing-editor>

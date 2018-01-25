@@ -1,6 +1,15 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: '#!external-listing-view/' + externalListingID() + '?mustReturn=yourListings'+ '&returnText=Your listings' }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Your listings
+                    </a>
+                </li>
+            </ul>
+        </div>
         <h1 data-bind="text: title"></h1>
         <div class="Box-sm">
             <external-listing-editor params="externalListingID: externalListingID"></external-listing-editor>

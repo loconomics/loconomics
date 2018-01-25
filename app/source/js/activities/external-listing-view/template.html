@@ -1,9 +1,18 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a href="/yourListings">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Your listings
+                    </a>
+                </li>
+            </ul>
+        </div>
         <div class="col-xs-12 col-sm-12 SectionHeading">
             <h1 data-bind="text: title"></h1>
-            <a data-bind="attr: {href: '#!external-listing-edit/' + externalListingID() + '?mustReturn=external-listing-view/' + externalListingID() + '&returnText=' + title(),'aria-label': 'Edit your ' + platformName() + ' listing' }" class="btn btn-default pull-right">Edit</a>
+            <a data-bind="attr: { href: '#!external-listing-edit/' + externalListingID() + '?mustReturn=external-listing-view/' + externalListingID() + '&returnText=' + title(),'aria-label': 'Edit your ' + platformName() + ' listing' }" class="btn btn-default pull-right">Edit</a>
         </div>
         <div class="Box-sm">
             <external-listing-viewer params="externalListingID: externalListingID, platformName: platformName"></external-listing-viewer>

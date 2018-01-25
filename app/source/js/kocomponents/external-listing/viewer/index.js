@@ -59,18 +59,18 @@ export default class ExternalListingViewer extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} [params.name=World] A name for the greating.
-     * @param {function<number,void>} [params.onCount] Callback executed each time the 'count'
-     * button is executed with the current counter.
+     * @param {(number|KnockoutObservable<number>)} 
+     * [params.externalListingID]
      */
     constructor(params) {
         super();
 
         /**
-         * A name for the greating.
-         * @member {KnockoutObservable<string>}
+         * The ID of the external listing the professional
+         * is viewing.
+         * @member {KnockoutObservable<number>}
          */
-        this.externalListingID = getObservable(params.externalListingID || -1);
+        this.externalListingID = getObservable(params.externalListingID);
 
         /**
          * An "out" parameter that fills the platform name 
@@ -78,8 +78,20 @@ export default class ExternalListingViewer extends Komponent {
          * @member {KnockoutObservable<string>}
          */
         this.platformName = params.platformName;
+
+        /**
+         * An "out" parameter that fills the platformID 
+         * to enable information about the platform to
+         * be displayed.
+         * @member {KnockoutObservable<number>}
+         */        
         this.platformID = ko.observable(null);
 
+        /**
+         * An object containing all the information about 
+         * the professionals external listing.
+         * @member {KnockoutObservable<object>}
+         */   
         this.externalListing = ko.observable();
 
         this.observeChanges(() => {
@@ -92,7 +104,6 @@ export default class ExternalListingViewer extends Komponent {
             }
         });
     }
-
 }
 
 ko.components.register(TAG_NAME, ExternalListingViewer);

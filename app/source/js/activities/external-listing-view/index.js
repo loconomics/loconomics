@@ -5,6 +5,7 @@
  * @module activities/external-listing-view
  *
  */
+
 import '../../kocomponents/external-listing/viewer';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
@@ -25,12 +26,15 @@ export default class ExternalListingViewActivity extends Activity {
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSectionNavBar(null);
         this.navBar.rightAction(null);
+
         // Creates a placeholder for an "out" parameter to be populated by the component.
         this.platformName = ko.observable('');
-        // Title uses a pureComputed to ensure the platformName is updated.
-        this.title = ko.pureComputed( () => 'My ' + this.platformName() + ' listing');
+        
         // Creates a placeholder for the external listing ID to be populated using the show(state) method below.
         this.externalListingID = ko.observable();
+        
+        // Title uses a pureComputed to ensure the platformName is updated.
+        this.title = ko.pureComputed( () => 'My ' + this.platformName() + ' listing');
     }
 
     /**

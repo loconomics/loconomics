@@ -4,6 +4,7 @@
  * 
  * @module kocomponents/external-listing/editor
  */
+
 // import '../../job-title-autocomplete.js'; ASKIAGO how to add multiple job titles-may need new component as current job-title-autocomplete only allows one job title to be added.
 // import '../../../../html/kocomponents/job-title-autocomplete.html';
 import '../../utilities/icon-dec.js';
@@ -15,10 +16,6 @@ import template from './template.html';
 const TAG_NAME = 'external-listing-editor';
 const dummyData = {};
 const dummyPlatformData = {};
-/**
- * Basic information about the external platform to use in 
- * placeholders and instructions.
- */
 dummyPlatformData[2] =
 [
     {
@@ -28,9 +25,6 @@ dummyPlatformData[2] =
         'SignInURL': '99designs'
     }
 ];
-/**
- * Information stored about the external listing.
- */
 dummyData[214] =
 [
     {
@@ -57,16 +51,16 @@ export default class ExternalListingEditor extends Komponent {
     /**
      * @param {object} params
      * @param {(number|KnockoutObservable<number>)} 
-     * [params.platformID] The platformID for creating an external listing.
+     * [params.platformID]
      * @param {(number|KnockoutObservable<number>)} 
-     * [params.externalListingID] The ID for an external 
-     * listing.
+     * [params.externalListingID].
      */
+
     constructor(params) {
         super(); 
         /// Form data
         /**
-         * Holds the ID for the current external listing.
+         * Holds the ID for the external listing being edited.
          * @member {KnockoutObservable<number>}
          */
         this.externalListingID = getObservable(params.externalListingID);
@@ -79,29 +73,33 @@ export default class ExternalListingEditor extends Komponent {
         this.externalPlatformID = getObservable(params.platformID);
 
         /**
-         * The title for the external listing (required). A default title value
-         * will be given that the user can edit.
+         * The title for the external listing (required). A 
+         * default title value will be given that the user can 
+         * edit.
          * @member {KnockoutObservable<string>} 
          * ASKIAGO how to replace 'TaskRabbit' with a variable.
          */                 
         // this.listingTitle = ko.pureComputed('My ' + 'TaskRabbit' + ' listing');
         
         /**
-         * Holds the job title or titles a user is promoting on the listing.
+         * Holds the job title or titles a user is promoting on 
+         * the listing.
          * ASKIAGO Includes both names and IDs?
          * @member {KnockoutObservable<array>}
          */
         this.jobTitles = ko.observableArray([]);
 
         /**
-         * --Optional--Holds the URL for the user's listing (optional). The placeholder
-         * or help block should include the 'ListingURLPrefix' to aid the user.
+         * --Optional--Holds the URL for the user's listing 
+         * (optional). The placeholder or help block should 
+         * include the 'ListingURLPrefix' to aid the user.
          * @member {KnockoutObservable<string>}
          */                 
-        this.url = ko.observable('');
+        this.listingURL = ko.observable('');
 
         /**
-         * --Optional--Holds notes the user can enter about the listing.
+         * --Optional--Holds notes the user can enter about 
+         * the listing.
          * @member {KnockoutObservable<string>}
          */
         this.notes = ko.observable('');
@@ -113,11 +111,12 @@ export default class ExternalListingEditor extends Komponent {
         this.externalListing = ko.observableArray();
 
         /**
-         * Holds the basic information about the external platform of the listing.
+         * Holds the basic information about the external platform
+         * of the listing being added.
          * @member {KnockoutObservable<array>}
          */
         this.externalPlatformBasicInfo = ko.observableArray();
-        //
+
         this.observeChanges(() => {
             const id = this.externalListingID();
             if (id) {
@@ -126,7 +125,7 @@ export default class ExternalListingEditor extends Komponent {
                 this.externalPlatformID(data.PlatformID);
             }
         });
-        //
+
         this.observeChanges(() => {
             const id = this.externalPlatformID();
             if (id) {
@@ -135,16 +134,6 @@ export default class ExternalListingEditor extends Komponent {
                 this.externalListing().PlatformID = id;
             }
         });
-    }
-
-    /**
-     * Increases the counter and notify through callback
-     */
-    count() {
-        this.counter(this.counter() + 1);
-        if (this.onCount) {
-            this.onCount(this.counter());
-        }
     }
 }
 

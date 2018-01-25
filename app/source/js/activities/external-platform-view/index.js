@@ -25,17 +25,16 @@ export default class ExternalPlatformViewActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        // FIXME: REQUIRED: Define the kind of activity navbar used and values
-        // For now, next set-up is the usual for first-level activities (like
-        // home, dashboard, cms, ...). Use Activity.createSubsectionNavBar
-        // and accepted values for activities that are behind another in the
-        // navigation hierarchy (check Activity class documentation)
+
         this.navBar = Activity.createSectionNavBar(null);
         this.navBar.rightAction(null);
+
         // Creates a placeholder for an "out" parameter to be populated by the component.
         this.platformName = ko.observable('');
+
         // Title uses a pureComputed to ensure the platformName is updated.
         this.title = ko.pureComputed( () =>  this.platformName() + ' information');
+        
         // Creates a placeholder for the platform ID to be populated using the show(state) method below.
         this.platformID = ko.observable();
     }
