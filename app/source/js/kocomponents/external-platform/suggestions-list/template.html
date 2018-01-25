@@ -1,5 +1,5 @@
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: suggestedPlatform">
-    <li>
+    <li data-bind="attr: { id: 'externalPlatform' + PlatformID }">
         <div class="ListingSummaryItem">
             <div class="Item-content">
                 <p><strong data-bind="text: PlatformName"></strong><p>
