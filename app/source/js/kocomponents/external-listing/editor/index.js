@@ -21,7 +21,6 @@ dummyPlatformData[1] =
     {
         'PlatformID': 1,
         'PlatformName': '99designs',
-        'ListingURLPrefix': 'https://99designs.com/designers/',
         'SignInURL': 'https://99designs.com/designers/'
     }
 ];
@@ -30,7 +29,6 @@ dummyPlatformData[2] =
     {
         'PlatformID': 2,
         'PlatformName': 'TaskRabbit',
-        'ListingURLPrefix': 'https://TaskRabbit.com/rabbits/',
         'SignInURL':  'https://TaskRabbit.com/'
     }
 ];
@@ -41,7 +39,6 @@ dummyData[214] =
       'PlatformID': 1,
       'ListingTitle': 'Amazing Designer',
       'JobTitles': 'Graphic Designer, Graphic Artist, Front-end Developer',
-      'ListingURL': 'https://99designs.com/designers',
       'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
       'CreatedDate': '-Global demand',
       'ModifiedDate': '-Zero pay if design not chosen↵-High commissions if chosen',
@@ -55,7 +52,6 @@ dummyData[215] =
       'PlatformID': 2,
       'ListingTitle': 'Amazing Rabbit',
       'JobTitles': 'Graphic Designer, Graphic Artist, Front-end Developer',
-      'ListingURL': 'https://99designs.com/designers',
       'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
       'CreatedDate': '-Global demand',
       'ModifiedDate': '-Zero pay if design not chosen↵-High commissions if chosen',
@@ -141,7 +137,6 @@ export default class ExternalListingEditor extends Komponent {
                     PlatformID: this.externalPlatformID(),
                     ListingTitle: 'My ' + this.platformName() + ' listing',
                     JobTitles: '',
-                    ListingURL: '',
                     Notes: '',
                     CreatedDate: '',
                     ModifiedDate: false,
