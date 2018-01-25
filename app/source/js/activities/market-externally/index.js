@@ -27,7 +27,9 @@ export default class MarketExternallyActivity extends Activity {
 
         this.navBar = Activity.createSubsectionNavBar(null);
 
-        // Passes in the current user's ID as an observable.
+        /**
+         * Passes in the current user's ID as an observable.
+         */
         this.userID = userProfile.data.userID;
   
         this.title = 'Market yourself outside of Loconomics';

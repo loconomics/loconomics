@@ -82,7 +82,8 @@ export default class ExternalListingEditor extends Komponent {
         super(); 
         /// Form data
         /**
-         * Holds the ID for the external listing being edited.
+         * Holds the ID for the external listing being 
+         * edited.
          * @member {KnockoutObservable<number>}
          */
         this.externalListingID = getObservable(params.externalListingID);
@@ -108,8 +109,8 @@ export default class ExternalListingEditor extends Komponent {
         this.externalListing = ko.observable(null);
 
         /**
-         * Holds the basic information about the external platform
-         * of the listing being added.
+         * Holds the basic information about the external 
+         * platform of the listing being added.
          * @member {KnockoutObservable<object>}
          */
         this.externalPlatformBasicInfo = ko.observable();
