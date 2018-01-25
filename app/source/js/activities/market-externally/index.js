@@ -25,8 +25,7 @@ export default class MarketExternallyActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSectionNavBar(null);
-        this.navBar.rightAction(null);
+        this.navBar = Activity.createSubsectionNavBar(null);
 
         // Passes in the current user's ID as an observable.
         this.userID = userProfile.data.userID;

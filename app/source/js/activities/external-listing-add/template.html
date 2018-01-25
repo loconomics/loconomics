@@ -4,15 +4,15 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a data-bind="attr: { href: '#!external-platform-view/' + platformID() + '?mustReturn=market-externally'+ '&returnText=Market externally' }">
-                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Market externally
+                    <a data-bind="attr: { href: '/external-platform-view/' + platformID() + '?mustReturn=market-externally'+ '&returnText=Market externally' }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> <span data-bind="text: platformName() + ' Info'">
                     </a>
                 </li>
             </ul>
         </div>
         <h1 data-bind="text: title"></h1>
         <div class="Box-sm">
-            <external-listing-editor params="platformID: platformID"></external-listing-editor>
+            <external-listing-editor params="platformID: platformID, platformName: platformName"></external-listing-editor>
         </div>
     </div>
 </div>

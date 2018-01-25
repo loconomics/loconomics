@@ -24,8 +24,7 @@ export default class ExternalListingViewActivity extends Activity {
         super($activity, app);
 
         this.accessLevel = UserType.serviceProfessional;
-        this.navBar = Activity.createSectionNavBar(null);
-        this.navBar.rightAction(null);
+        this.navBar = Activity.createSubsectionNavBar(null);
 
         // Creates a placeholder for an "out" parameter to be populated by the component.
         this.platformName = ko.observable('');

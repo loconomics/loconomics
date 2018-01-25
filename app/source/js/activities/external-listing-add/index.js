@@ -22,16 +22,23 @@ export default class ExternalListingAddActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
 
-        this.navBar = Activity.createSectionNavBar(null);
-        this.navBar.rightAction(null);
+        this.navBar = Activity.createSubsectionNavBar(null);
         
-        // Creates a placeholder for an "out" parameter to be populated by the component.
+        /**
+         * Creates a placeholder for an "out" parameter to be 
+         * populated by the component.
+        */
         this.platformName = ko.observable('');
         
-        // Creates a placeholder for the platform ID to be populated using the show(state) method below.
+        /**  
+         * Creates a placeholder for the platform ID to be populated 
+         * using the show(state) method below.
+        */
         this.platformID = ko.observable();
 
-        // Title uses a pureComputed to ensure the platformName is updated.
+        /**  
+        Title uses a pureComputed to ensure the platformName is updated.
+        */
         this.title = ko.pureComputed( () => 'Add ' + this.platformName() + ' listing');
     }
 
@@ -42,7 +49,7 @@ export default class ExternalListingAddActivity extends Activity {
         super.show(state);
         var params = state.route && state.route.segments;
         // platformID is the first segment in the activity URL 
-        this.platformID(params[0] || 0);
+        this.platformID(params[0] || -1);
     }
 }
 
