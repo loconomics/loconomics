@@ -27,7 +27,7 @@ const TAG_NAME = 'external-listing-viewer';
 const dummyData = {};
 dummyData[214] ={
     'ExternalListingID': 214,
-    'PlatformID': 2,
+    'PlatformID': 1,
     'PlatformName': 'Upwork',
     'SignInURL': 'https://99designs.com/designers',
     'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
@@ -39,7 +39,7 @@ dummyData[214] ={
 };
 dummyData[215] ={
     'ExternalListingID': 215,
-    'PlatformID': 3,
+    'PlatformID': 2,
     'PlatformName': '99designs',
     'SignInURL': 'https://99designs.com/designers',
     'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"],
@@ -49,31 +49,6 @@ dummyData[215] ={
     'ModifiedDate': '1/10/2018',
     'Active': 1
 };
-dummyData[217] ={
-    'ExternalListingID': 214,
-    'PlatformID': 4,
-    'PlatformName': 'TaskRabbit',
-    'SignInURL': 'https://99designs.com/designers',
-    'JobTitles': ["Handyman"],
-    'URL': 'https://99designs.com/designers',
-    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-    'CreatedDate': '1/10/2018',
-    'ModifiedDate': '1/10/2018',
-    'Active': 1
-};
-dummyData[218] ={
-    'ExternalListingID': 218,
-    'PlatformID': 5,
-    'PlatformName': 'Wag',
-    'SignInURL': 'https://99designs.com/designers',
-    'JobTitles': ["Dog Walker"],
-    'URL': 'https://99designs.com/designers',
-    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-    'CreatedDate': '1/10/2018',
-    'ModifiedDate': '1/10/2018',
-    'Active': 1
-};
-
 
 /**
  * Component
@@ -96,36 +71,28 @@ export default class ExternalListingViewer extends Komponent {
          * @member {KnockoutObservable<string>}
          */
         this.externalListingID = getObservable(params.externalListingID || -1);
-        /**
-         * Internal counter for how many times pressed the button
-         * @member {KnockoutObservable<number>}
-         */
-        this.externalListing = ko.observable();
-        /**
-         * Optional callback for external notifications on clicking 'count'
-         */
-        this.onCount = params.onCount || undefined;
 
-        // FIXME: A callback is usual to notify some event, but on this case
-        // we could allow the 'counter' being provided externally as an
-        // observable (like the 'name') and reset the number at constructor.
+        /**
+         * An "out" parameter that fills the platform name 
+         * for use in the title of the activity.
+         * @member {KnockoutObservable<string>}
+         */
+        this.platformName = params.platformName;
+        this.platformID = ko.observable(null);
+
+        this.externalListing = ko.observable();
+
         this.observeChanges(() => {
-            const data = dummyData[this.externalListingID()];
-            this.externalListing(data);
+            const id = this.externalListingID();
+            if (id) {
+                const data = dummyData[id];
+                this.externalListing(data);
+                this.platformName(data.PlatformName);
+                this.platformID(data.PlatformID);
+            }
         });
     }
 
-    /**
-     * Increases the counter and notify through callback
-     */
-    count() {
-        this.counter(this.counter() + 1);
-        if (this.onCount) {
-            this.onCount(this.counter());
-        }
-    }
 }
 
-// FIXME: Just reminder that EVER should register the component with this line
-// at the end, but don't need a comment (remove me!)
 ko.components.register(TAG_NAME, ExternalListingViewer);

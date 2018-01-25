@@ -1,28 +1,11 @@
 /**
- * Example of the most basic activity, implementing base properties and a
- * minimal template that uses an example component.
+ * Allows a professional to edit their external listing's 
+ * information.
+ * @module activities/external-listing-edit
  *
- * @module activities/_examples/a-basic-activity
- *
- * FIXME: Update this activity description
- * FIXME: After copy this example, some paths to imported modules needs to be
- * updated by removing one parent path ('../')
- *
- * REMOVEME: Check other examples for more documentation and the Activity
- * class source code (is partially documented and annotated --we are in the process to
- * enhance that documentation and remove obsolete parts)
  */
-
-// REMOVEME: We MUST explicitly load each component used directly at the
-// template. Be aware that the example component we are loading register
-// itself with the name `component-example` rather than the folder name, not
-// following convention but done for simplicity of examples as commented
-// on their kocomponents/_examples/README.md file.
 import '../../kocomponents/external-listing/editor';
 import * as activities from '../index';
-// REMOVEME: After migration of old activities into folders, the base class will
-// move from this path into '../helpers/Activity', we will upgrade existent
-// activities too.
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
@@ -56,7 +39,7 @@ export default class ExternalListingEditActivity extends Activity {
         // FIXME: REQUIRED: Define which users can access this activity filtering by
         // user type. Assign any valid UserType value.
         // You can set the value 'null' to allow any
-        this.accessLevel = UserType.loggedUser;
+        this.accessLevel = UserType.serviceProfessional;
         // FIXME: REQUIRED: Define the kind of activity navbar used and values
         // For now, next set-up is the usual for first-level activities (like
         // home, dashboard, cms, ...). Use Activity.createSubsectionNavBar
@@ -72,7 +55,7 @@ export default class ExternalListingEditActivity extends Activity {
         // changed depending on other activity observables --usually this is
         // recommended over an observable since it keeps all possible values
         // in one place)
-        this.title = 'Your 99designs listing';
+        this.title = 'Edit your ' + '' + ' listing';
         this.externalListingID = ko.observable();
     }
 

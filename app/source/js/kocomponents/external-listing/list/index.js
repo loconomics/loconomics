@@ -24,33 +24,6 @@ import template from './template.html';
 
 const TAG_NAME = 'external-listing-list';
 const dummyData = {};
-dummyData[-1] =
-[
-  {
-    'externalListingID': 214,
-    'PlatformID': 2,
-    'PlatformName': 'Upwork',
-    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
-  },
-  {
-    'externalListingID': 215,
-    'PlatformID': 3,
-    'PlatformName': '99designs',
-    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
-  },
-  {
-    'externalListingID': 217,
-    'PlatformID': 4,
-    'PlatformName': 'TaskRabbit',
-    'JobTitles': ["Handyman"]
-  },
-  {
-    'externalListingID': 218,
-    'PlatformID': 5,
-    'PlatformName': 'Wag',
-    'JobTitles': ["Dog Walker"]
-  }
-];
 dummyData[540] =
 [
   {
@@ -64,18 +37,6 @@ dummyData[540] =
     'PlatformID': 3,
     'PlatformName': '99designs',
     'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
-  },
-  {
-    'externalListingID': 217,
-    'PlatformID': 4,
-    'PlatformName': 'TaskRabbit',
-    'JobTitles': ["Handyman"]
-  },
-  {
-    'externalListingID': 218,
-    'PlatformID': 5,
-    'PlatformName': 'Wag',
-    'JobTitles': ["Dog Walker"]
   }
 ];
 

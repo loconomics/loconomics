@@ -11,6 +11,6 @@
     <p data-bind="text: JobTitles"></p>
     <button class="btn btn-default" data-bind=" attr: { href: SignInURL }">Sign in</button>
     <h2>About <span data-bind="text: PlatformName"></span></h2>
-    <!-- <external-platform-info params="platformID: PlatformID, viewAddListing: false"></external-platform-info> -->
-</div>
+    <external-platform-info params="platformID: $root.platformID, platformName: $root.platformName, showAddListing: false"></external-platform-info>
+ </div>
 
