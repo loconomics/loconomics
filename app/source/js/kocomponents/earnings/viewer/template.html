@@ -1,0 +1,18 @@
+<div data-bind="with: earningsEntry">
+    <h2>Date Paid</h2>
+    <p data-bind="text: PaidDate"></p>
+    <h2>Total</h2>
+    <p data-bind="text: Total"></p>
+    <h2>Time worked</h2>
+    <p data-bind="text: Duration"></p>
+    <h2>Platform</h2>
+    <p data-bind="text: PlatformID"></p>
+    <h2>Job title</h2>
+    <p data-bind="text: JobTitleID"></p>
+    <h2>Notes</h2>
+    <p data-bind="text: Notes"></p>
+    <h2>Client</h2>
+    <p data-bind="text: ClientFirstName + ' ' + ClientLastName"></p>
+    <button class="btn btn-default" data-bind=" attr: { href: SignInURL }">Sign in</button>
+</div>
+   

@@ -1,0 +1,13 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <earnings-viewer params="earningsEntryID: 123"></earnings-viewer>
+            <a class="btn btn-link btn-default" href="/earnings-copy">Copy entry</a>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>
