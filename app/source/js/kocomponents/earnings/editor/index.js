@@ -5,6 +5,7 @@
  *
  */
 
+import '../../utilities/icon-dec';
 import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
@@ -60,6 +61,7 @@ export default class EarningsEditor extends Komponent {
      * [params.platformID]
      */
     constructor(params) {
+        /* eslint max-statements:"off" */
         super();
         
         /**
@@ -172,12 +174,51 @@ export default class EarningsEditor extends Komponent {
             this.currentStep(this.currentStep() + 1);
         }; 
 
-        /// Statuses
+        this.goToStep = (step) => {
+            this.currentStep(step);
+        };
+
+        this.goToSummary = function() {
+            this.currentStep(0);
+            this.editorMode('Edit');
+            this.stepButtonLabel = 'Save';
+        }; 
+
         /**
-         * Whether a subscription request was already and successfully sent
-         * @member {KnockoutObservable<boolean>}
+         * Takes the user to the next step in the form.
+         * @member {KnockoutComputed<string>}
          */
-        this.isDone = ko.observable(false);
+        this.stepButtonLabel = ko.observable('Save and Continue');
+
+        /**
+         * Takes the user to the next step in the form.
+         * @member {KnockoutComputed<string>}
+         */
+        // this.stepButtonLabel = ko.pureComputed( () => {
+        //     if (this.editorMode() == 'Add') {
+        //         return 'Save and Continue';
+        //     }
+        //     else {
+        //         return 'Save';
+        //     }
+        // }); 
+        
+        /**
+         * Takes the user to the next step in the form.
+         * @member {KnockoutComputed<number>}
+         */
+        this.saveStep = function() {
+            if (this.editorMode() == 'Add') {
+                this.goNextStep();
+                this.stepButtonLabel = 'Save and Continue';
+            }
+            else {
+                this.currentStep(0);
+                this.stepButtonLabel = 'Save';
+            }
+        }; 
+
+        /// Statuses
 
         /**
          * Error message from last 'save' operation
