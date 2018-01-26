@@ -15,10 +15,21 @@ var A = Activity.extend(function AccountActivity() {
     Activity.apply(this, arguments);
 
     this.accessLevel = this.app.UserType.loggedUser;
-    this.viewModel = new ViewModel();
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
     this.title('Your Account');
+
+    this.isServiceProfessional = user.isServiceProfessional;
+    this.activeUserPaymentPlan = userPaymentPlan.data;
+    this.activePaymentPlan = ko.pureComputed(() => {
+        var id = this.activeUserPaymentPlan.paymentPlan();
+        if (id) {
+            return paymentPlans.getObservableItem(id)();
+        }
+        else {
+            return null;
+        }
+    });
 });
 
 exports.init = A.init;
@@ -32,17 +43,3 @@ A.prototype.show = function show(state) {
     // Load active plan, if any
     userPaymentPlan.sync();
 };
-
-function ViewModel() {
-    this.isServiceProfessional = user.isServiceProfessional;
-    this.activeUserPaymentPlan = userPaymentPlan.data;
-    this.activePaymentPlan = ko.pureComputed(() => {
-        var id = this.activeUserPaymentPlan.paymentPlan();
-        if (id) {
-            return paymentPlans.getObservableItem(id)();
-        }
-        else {
-            return null;
-        }
-    });
-}
