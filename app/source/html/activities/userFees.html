@@ -24,21 +24,28 @@
                             <p>
                                 <strong data-bind="text: name"></strong> - <span data-bind="text: summary"></span>
                             </p>
+                            <div data-bind="visible: partnership">
+                                <strong>Expires:</strong>
+                                <span data-bind="text: $parent.activeUserPaymentPlan.nextPaymentDueDate, format: { type: 'datetime', format: 'LL' }"></span>
+                                (Up to 6 months for students)
+                            </div>
                             <!--NOT IMPLEMENTED RIGHT NOW<a class="btn btn-default btn-block" data-bind="click: $parent.changePlan">Change plan</a>-->
                         </div>
                     </div>
-                    <h2>Your payment information:</h2>
-                    <ul class="TilesList TilesList--openEnd" data-bind="visible: !isNew(), with: activeUserPaymentPlan">
-                        <li class="InfoTile" href="/userFees">
-                            <div class="Tile-icon" aria-hidden="true">
-                                <span class="fa ion ion-card" aria-hidden="true"></span>
-                            </div>
-                            <div class="Tile-content">
-                                <div data-bind="text: paymentMethod"></div>
-                                <em>Expires <span data-bind="text: paymentExpiryDate, format: { type: 'datetime', format: 'MM/YYYY' }"></span></em>
-                            </div>
-                        </li>
-                    </ul>
+                    <div data-bind="if: activePaymentPlan() && !activePaymentPlan().partnership()">
+                        <h2>Your payment information:</h2>
+                        <ul class="TilesList TilesList--openEnd" data-bind="visible: !isNew(), with: activeUserPaymentPlan">
+                            <li class="InfoTile" href="/userFees">
+                                <div class="Tile-icon" aria-hidden="true">
+                                    <span class="fa ion ion-card" aria-hidden="true"></span>
+                                </div>
+                                <div class="Tile-content">
+                                    <div data-bind="text: paymentMethod"></div>
+                                    <em>Expires <span data-bind="text: paymentExpiryDate, format: { type: 'datetime', format: 'MM/YYYY' }"></span></em>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <form id="planSelectionForm" data-bind="visible: isNew" aria-describedby="planSelectionFormInstructions">
                     <p id="planSelectionFormInstructions" class="help-block">We have plans to fit any budget. Since we're a cooperative, any paid plans entitle you to becoming an official owner.</p>
