@@ -3,9 +3,12 @@
 **/
 'use strict';
 
-var Activity = require('../components/Activity');
-var user = require('../data/userProfile').data;
-var userPaymentPlan = require('../data/userPaymentPlan');
+import '../kocomponents/utilities/icon-dec';
+import Activity from '../components/Activity';
+import ko from 'knockout';
+import paymentPlans from '../data/paymentPlans';
+import { data as user } from '../data/userProfile';
+import userPaymentPlan from '../data/userPaymentPlan';
 
 var A = Activity.extend(function AccountActivity() {
 
@@ -24,6 +27,8 @@ A.prototype.show = function show(state) {
 
     Activity.prototype.show.call(this, state);
 
+    // Request to sync plans, just in case there are remote changes
+    paymentPlans.sync();
     // Load active plan, if any
     userPaymentPlan.sync();
 };
@@ -31,4 +36,13 @@ A.prototype.show = function show(state) {
 function ViewModel() {
     this.isServiceProfessional = user.isServiceProfessional;
     this.activeUserPaymentPlan = userPaymentPlan.data;
+    this.activePaymentPlan = ko.pureComputed(() => {
+        var id = this.activeUserPaymentPlan.paymentPlan();
+        if (id) {
+            return paymentPlans.getObservableItem(id)();
+        }
+        else {
+            return null;
+        }
+    });
 }
