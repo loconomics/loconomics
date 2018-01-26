@@ -13,7 +13,8 @@ import template from './template.html';
 
 const TAG_NAME = 'earnings-editor';
 const dummyData = {};
-dummyData[0] ={
+dummyData[0] =
+{
     'Total': null,
     'PaidDate': null,
     'Duration': null,
@@ -26,7 +27,8 @@ dummyData[0] ={
     'ClientEmail': null,
     'ClientPhoneNumber': null
 };
-dummyData[123] ={
+dummyData[123] =
+{
     'Total': 320.00,
     'PaidDate': '1/15/2018', 
     'Duration': 180,

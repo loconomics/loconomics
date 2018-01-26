@@ -5,6 +5,7 @@
  * @module kocomponents/_examples/b-basic-komponent
  *
  */
+
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -14,15 +15,15 @@ const TAG_NAME = 'earnings-summary';
 const dummyData = {};
 dummyData[0] =
 {
-    'total': 23250.00,
-    'period': '2017 Year-to-date',
-    'jobTitle': 'All job titles',
-    'platform': 'all platforms',
-    'paidOut': 23000.00,
-    'expected': 250.00,
-    'averageHourlyRate': 23.83,
-    'hoursWorked': 975.50,
-    'bookings': 57
+    'Total': 23250.00,
+    'Period': '2017 Year-to-date',
+    'JobTitle': 'All job titles',
+    'Platform': 'all platforms',
+    'PaidOut': 23000.00,
+    'Expected': 250.00,
+    'AverageHourlyRate': 23.83,
+    'HoursWorked': 975.50,
+    'Bookings': 57
 };
 
 

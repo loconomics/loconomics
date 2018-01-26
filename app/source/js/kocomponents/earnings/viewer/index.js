@@ -14,10 +14,10 @@ import template from './template.html';
 
 const TAG_NAME = 'earnings-viewer';
 const dummyData = {};
-dummyData[123] ={
+dummyData[123] =
+{
     'EarningsEntryID': 123,
     'Total': 320.00,
-    'PaidDate': '1/15/2018', 
     'Duration': 180,
     'PlatformID': 2,
     'JobTitleID': 106,
