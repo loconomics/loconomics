@@ -176,6 +176,7 @@
                 {
                     InsertCccUser(db, login.userID);
                     InsertUserEducation(db, login.userID);
+                    InsertCccPaymentPlan(db, login.userID);
                     db.Execute("COMMIT TRANSACTION");
                 }
                 catch
@@ -237,6 +238,10 @@
                     1
                 )
             ", userID, institutionID, fieldOfStudy);
+        }
+        private void InsertCccPaymentPlan(LcDatabase db, int userID)
+        {
+            LcRest.UserPaymentPlan.CreatePartnershipSubscription(userID, LcEnum.SubscriptionPlan.CccPlan, db);
         }
     }
 }
