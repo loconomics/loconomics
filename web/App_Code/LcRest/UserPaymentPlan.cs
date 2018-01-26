@@ -573,11 +573,18 @@ namespace LcRest
         /// <summary>
         /// Get active subscriptions, all ones with a non final status (Active, Pending, Past_due)
         /// </summary>
+        /// <param name="onlyPaymentEnabled">Includes only subscriptions that have a payment enabled; useful
+        /// to get only subscriptions that should exist at Braintree, excluding ones like partnership subscriptions.</param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(LcDatabase db)
+        public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(bool onlyPaymentEnabled, LcDatabase db)
         {
-            return db.Query(sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)",
+            var sql = (sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)");
+            if (onlyPaymentEnabled)
+            {
+                sql += " AND paymentMethod <> ''";
+            }
+            return db.Query(sql,
                 Braintree.SubscriptionStatus.PENDING.ToString(),
                 Braintree.SubscriptionStatus.PAST_DUE.ToString(),
                 Braintree.SubscriptionStatus.ACTIVE.ToString())
