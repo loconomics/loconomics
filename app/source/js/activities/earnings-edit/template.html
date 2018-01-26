@@ -3,8 +3,7 @@
     <div class="container">
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <button class="btn btn-link btn-default" href="/schedulingPreferences">Copy recent entry</button>
-            <earnings-editor></earnings-editor>
+            <earnings-editor params="editorMode: Edit"></earnings-editor>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>

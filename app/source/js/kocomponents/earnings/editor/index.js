@@ -50,20 +50,41 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * @param {object} params
+     * @param {(string|KnockoutObservable<string>)} 
+     * [params.editorMode]
      * @param {(number|KnockoutObservable<number>)} 
      * [params.earningsEntryID]
+     * @param {(number|KnockoutObservable<number>)} 
+     * [params.platformID]
      */
     constructor(params) {
         super();
-    
-        /// Form data
+        
         /**
-         * Holds the ID generated for the current anonymous user 
-         * after registeritself at Step One
+         * Captures from the activity which "mode" the editor
+         * component is to be used. 
+         * Add: no values 
+         * Edit:
+         * Copy:
+         * @member {KnockoutObservable<string>}
+         */
+        this.editorMode = getObservable(params.editorMode || null);
+    
+        /**
+         * Holds the ID for an earnings entry if being edited or 
+         * copied.
          * @member {KnockoutObservable<number>}
          */
         this.earningsEntryID = getObservable(params.earningsEntryID || null);
 
+        /**
+         * Holds the ID for a platform if being added from the
+         * external-listing-view activity.
+         * @member {KnockoutObservable<number>}
+         */
+        this.platformID = getObservable(params.platformID || null);
+
+        /// Form data
         /**
          * Holds the email user to register the current anonymous 
          * user after atStep One
