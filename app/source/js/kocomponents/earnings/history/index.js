@@ -5,6 +5,8 @@
  * @module kocomponents/earnings/history
  *
  */
+
+import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -15,15 +17,44 @@ const dummyData = {};
 dummyData[0] =
 [
   {
-    'total': 23250.00,
-    'period': '2017 Year-to-date',
-    'jobTitle': 'All job titles',
-    'platform': 'all platforms',
-    'paidOut': 23000.00,
-    'expected': 250.00,
-    'averageHourlyRate': 23.83,
-    'hoursWorked': 975.50,
-    'bookings': 57
+    'EarningsEntryID': 1,
+    'Total': 320.00,
+    'PaidDate': '1/15/2018', 
+    'Duration': 180,
+    'PlatformName': 'TaskRabbit',
+    'JobTitleName': 'Handyman'
+  },
+  {
+    'EarningsEntryID': 2,
+    'Total': 50.00,
+    'PaidDate': '1/14/2018', 
+    'Duration': 30,
+    'PlatformName': 'Thumbtack',
+    'JobTitleName': 'Painter'
+  },
+  {
+    'EarningsEntryID': 3,
+    'Total': 100.00,
+    'PaidDate': '1/07/2018', 
+    'Duration': 100,
+    'PlatformName': 'NextDoor',
+    'JobTitleName': 'Handyman'
+  },
+  {
+    'EarningsEntryID': 4,
+    'Total': 90.00,
+    'PaidDate': '12/15/2017', 
+    'Duration': 180,
+    'PlatformName': 'Handy',
+    'JobTitleName': 'Cleaning Professional'
+  },
+  {
+    'EarningsEntryID': 5,
+    'Total': 500.00,
+    'PaidDate': '12/01/2017', 
+    'Duration': 300,
+    'PlatformName': 'TaskRabbit',
+    'JobTitleName': 'Handyman'
   }
 ];
 
@@ -70,7 +101,7 @@ export default class EarningsHistory extends Komponent {
 
         this.observeChanges(() => {
             const data = dummyData[0];
-            this.earningsSummary(data);
+            this.earningsHistory(data);
         });
     }
 }
