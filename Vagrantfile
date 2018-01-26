@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "inclusivedesign/windows10-eval"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -23,35 +23,59 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
-  config.vm.network :forwarded_port, guest: 8811, host: 8811
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
   #
-  config.vm.provider :virtualbox do |vb|
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    #   vb.gui = true
+
     # Customize the amount of memory on the VM:
-    vb.memory = "2048"
+    vb.memory = 2048
+    if RUBY_PLATFORM =~ /darwin/
+      vb.customize ["modifyvm", :id, '--audio', 'coreaudio', '--audiocontroller', 'hda'] # choices: hda sb16 ac97
+    elsif RUBY_PLATFORM =~ /linux/
+      vb.customize ["modifyvm", :id, '--audio', 'pulse', '--audiocontroller', 'hda']
+    elsif RUBY_PLATFORM =~ /mingw|mswin|bccwin|cygwin|emx/
+      vb.customize ["modifyvm", :id, '--audio', 'dsound', '--audiocontroller', 'ac97']
+    end
   end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision :shell, inline: <<-SHELL
-    curl -sL https://deb.nodesource.com/setup_9.x | bash -
-    cd /tmp
-    curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-    mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
-    sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
-    add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
-    apt-get update
-    apt-get install -y nodejs dotnet-sdk-2.1.3 mssql-server mssql-tools unixodbc-dev
-    export SQL_SERVER_PASSWORD='Loconomics!'
-    MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD=$SQL_SERVER_PASSWORD /opt/mssql/bin/mssql-conf -n setup
-    npm install -g yarn
-    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /home/ubuntu/.bash_profile
-    echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> /home/ubuntu/.bashrc
-    source /home/ubuntu/.bashrc
-    # sqlcmd -S localhost -U SA -P $SQL_SERVER_PASSWORD ...
+  config.vm.provision "shell", inline: <<-SHELL
+    Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install -y nvda yarn visualstudio2017community visualstudio2017-workload-netweb
+    # choco install IIS-WebServerRole IIS-ISAPIFilter IIS-ISAPIExtensions IIS-NetFxExtensibility IIS-ASPNET --source WindowsFeatures
+    # wget "https://go.microsoft.com/fwlink/?linkid=853017" -o "Desktop\SQL Server Installer.exe"
+    # See https://docs.microsoft.com/en-us/sql/database-engine/install-windows/install-sql-server-from-the-command-prompt#Install for the meaning of these switches.
+    # sqlserver /IACCEPTSQLSERVERLICENSETERMS /qs /action=Install /FEATURES=SQL,Tools /instancename=local /AGTSVCACCOUNT=loconomics /AGTSVCPASSWORD=loconomics /ASSVCACCOUNT=loconomics /ASSVCPASSWORD=loconomics /ASSYSADMINACCOUNTS=loconomics /SQLSVCACCOUNT=loconomics /SQLSVCPASSWORD=loconomics /SQLSYSADMINACCOUNTS=loconomics /TCPENABLED=1 /RSSVCACCOUNT=loconomics /RSSVCPASSWORD=loconomics
   SHELL
-
 end
