@@ -6,7 +6,7 @@
  */
 
 import '../../utilities/icon-dec';
-import '../../input/time-increment';
+import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
@@ -105,7 +105,7 @@ export default class EarningsEditor extends Komponent {
         /**
          * @member {KnockoutObservable<number>}
          */
-        this.duration = ko.observable(0);
+        this.duration = ko.observable(60);
 
         /**
          * @member {KnockoutObservable<number>}

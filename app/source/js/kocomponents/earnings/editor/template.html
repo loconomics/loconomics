@@ -1,3 +1,4 @@
+<button data-bind="visible: isAtStep(1)" class="btn btn-link btn-default" href="/earnings-copy">Copy recent entry</button>
 <form id="earningsEntryForm" aria-describedby="earningsEntryFormInstructions">
     <fieldset id="earningsEntryForm-StepOne" class="earnings-step"
         data-bind="visible: isAtStep(1)">
@@ -22,7 +23,7 @@
             <legend>How long did you work?</legend>
             <label for="paidDate">Hours</label>
             <div class="form-group">
-                <input-time-increment></input-time-increment>
+                <input-duration></input-duration>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
         </div>

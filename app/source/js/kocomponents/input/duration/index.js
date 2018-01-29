@@ -2,7 +2,7 @@
 /**
  * Used to view the details of an earnings entry.
  * 
- * @module kocomponents/input/time-increment
+ * @module kocomponents/input/duration
  *
  */
 
@@ -12,65 +12,65 @@ import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import template from './template.html';
 
-const TAG_NAME = 'input-time-increment';
+const TAG_NAME = 'input-duration';
 
 /**
  * Component
  */
-export default class InputTimeIncrement extends Komponent {
+export default class InputDuration extends Komponent {
 
     static get template() { return template; }
 
     /**
      * @param {object} params
      * @param [(number|KnockoutObservable<number>)] 
-     * [params.timeInput]
+     * [params.durationInput]
      * @param {(number|KnockoutObservable<number>)} 
-     * [params.timeStepValue]
+     * [params.durationStepValue]
      */
     constructor(params) {
         super();
 
         /**
-         * Holds the value of the time input.
+         * Holds the value of the duration input.
          * @member {KnockoutObservable<number>}
          */
-        this.timeInput = getObservable(params.timeInput || 175);
+        this.durationInput = getObservable(params.durationInput || 175);
 
         /**
          * The value of the step to increase and decrease.
          * @member {KnockoutObservable<number>}
          */
-        this.timeStepValue = getObservable(params.timeStepValue || 15);
+        this.durationStepValue = getObservable(params.durationStepValue || 15);
 
         /**
          * Takes the user to the next step in the form.
          * @member {KnockoutComputed<number>}
          */
-        this.increaseTime = function() {
-            this.timeInput(this.timeInput() + this.timeStepValue());
+        this.increaseDuration = function() {
+            this.durationInput(this.durationInput() + this.durationStepValue());
         }; 
 
         /**
-         * Decreases the time input by the time step value.
+         * Decreases the duration input by the duration step value.
          * @member {KnockoutComputed<number>}
          */
-        this.decreaseTime = function() {
-            this.timeInput(this.timeInput() - this.timeStepValue());
+        this.decreaseDuration = function() {
+            this.durationInput(this.durationInput() - this.durationStepValue());
         }; 
 
         /**
-         * Diplays the time in hours and minutes.
+         * Diplays the duration in hours and minutes.
          * @member {KnockoutComputed<string>}
          */
-        this.displayTime = ko.pureComputed( () => {
-            const time = this.timeInput()/60;
-            const hours = parseInt(time,10);
-            const minutes = this.timeInput() - (hours*60);
+        this.displayDuration = ko.pureComputed( () => {
+            const duration = this.durationInput()/60;
+            const hours = parseInt(duration,10);
+            const minutes = this.durationInput() - (hours*60);
             return hours + ' hours ' + minutes + ' minutes';
         }); 
     }
 }
 
-ko.components.register(TAG_NAME, InputTimeIncrement);
+ko.components.register(TAG_NAME, InputDuration);
 
