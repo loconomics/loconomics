@@ -188,7 +188,7 @@ namespace LcRest
         ";
         public static void Set(UserPaymentPlan data, LcDatabase sharedDb = null)
         {
-            using (var db = new LcDatabase(sharedDb.Db))
+            using (var db = new LcDatabase(sharedDb))
             {
                 db.Execute(sqlSet,
                     data.userPaymentPlanID,
