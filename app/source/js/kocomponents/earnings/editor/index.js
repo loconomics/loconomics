@@ -6,6 +6,7 @@
  */
 
 import '../../utilities/icon-dec';
+import '../../input/time-increment';
 import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';

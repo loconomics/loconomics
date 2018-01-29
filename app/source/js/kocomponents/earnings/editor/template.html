@@ -19,6 +19,17 @@
     <fieldset id="earningsEntryForm-StepTwo" class="earnings-step"
         data-bind="visible: isAtStep(2), autofocus: isAtStep(2)">
         <div class="col-xs-12">
+            <legend>How long did you work?</legend>
+            <label for="paidDate">Hours</label>
+            <div class="form-group">
+                <input-time-increment></input-time-increment>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+        </div>
+    </fieldset>
+    <fieldset id="earningsEntryForm-StepThree" class="earnings-step"
+        data-bind="visible: isAtStep(3), autofocus: isAtStep(3)">
+        <div class="col-xs-12">
             <legend>When were you paid?</legend>
             <label for="paidDate">Date</label>
             <div class="form-group">
@@ -32,8 +43,8 @@
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
         </div>
     </fieldset>
-    <fieldset id="earningsEntryForm-StepThree" class="earnings-step"
-        data-bind="visible: isAtStep(3), autofocus: isAtStep(3)">
+    <fieldset id="earningsEntryForm-StepFour" class="earnings-step"
+        data-bind="visible: isAtStep(4), autofocus: isAtStep(4)">
         <div class="col-xs-12">
             <legend>Where did you find the work?</legend>
             <label for="platformID">Platform name</label>
@@ -49,8 +60,8 @@
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
         </div>
     </fieldset>
-    <fieldset id="earningsEntryForm-StepFour" class="earnings-step"
-        data-bind="visible: isAtStep(4), autofocus: isAtStep(4)">
+    <fieldset id="earningsEntryForm-StepFive" class="earnings-step"
+        data-bind="visible: isAtStep(5), autofocus: isAtStep(5)">
         <div class="col-xs-12">
             <legend>Who did you work for?</legend>
             <label for="firstName">Client's first name</label>
