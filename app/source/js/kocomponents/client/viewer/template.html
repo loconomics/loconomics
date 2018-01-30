@@ -1,0 +1,16 @@
+<div data-bind="with: client">
+    <a data-bind="visible: editable, href: 'client-editor/' + clientUserID" class="btn btn-default btn-link">Edit</a>
+    <h2>First name</h2>
+    <p data-bind="text: firstName"></p>
+    <h2>Last name</h2>
+    <p data-bind="text: lastName"></p>
+    <h2>Phone number</h2>
+    <p data-bind="text: phone"></p>
+    <p data-bind="visible: canRecieveSms">Can receive texts</p>
+    <h2>Email</h2>
+    <p data-bind="text: email"></p>
+    <h2>Birthday</h2>
+    <p data-bind="text: birthMonthDay + '/' + birthMonthYear"></p>
+    <h2>Notes</h2>
+    <p data-bind="text: notesAboutClient"></p>
+</div>

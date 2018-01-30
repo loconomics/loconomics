@@ -5,6 +5,8 @@
  *
  */
 
+import '../../client/editor';
+import '../../client/list';
 import '../../utilities/icon-dec';
 import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
