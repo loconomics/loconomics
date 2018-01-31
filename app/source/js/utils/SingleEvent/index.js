@@ -49,7 +49,7 @@
  * value inside the function).
  * Defaults to the SingleEvent instance
  */
-function SingleEvent(context) {
+export default function SingleEvent(context) {
 
     // Defaults to the own instance
     context = context || this;
@@ -153,5 +153,3 @@ function SingleEvent(context) {
         unsubscribe: this.unsubscribe.bind(this)
     };
 }
-
-module.exports = SingleEvent;
