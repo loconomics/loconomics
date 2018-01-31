@@ -6,7 +6,17 @@
             <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + clientUserID() }">
                 <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
             </a> -->
-        <a href="#" class="ListingSummaryItem btn btn-link btn-block">
+        <button type="button" data-bind="visible: $component.listMode() == 'Select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
+            <div class="Item-content">
+                <p>
+                    <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
+                </p>
+            </div>
+            <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+        </button>
+        <a href="#" data-bind="visible: $component.listMode() == 'View', attr: {
+            href: ''
+        } " class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
                 <p>
                     <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
