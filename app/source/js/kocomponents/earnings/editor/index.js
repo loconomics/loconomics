@@ -21,7 +21,7 @@ dummyData[0] =
 {
     'Total': null,
     'PaidDate': null,
-    'Duration': null,
+    'Duration': 60,
     'PlatformID': null,
     'JobTitleID': null,
     'Notes': null,
@@ -31,7 +31,7 @@ dummyData[0] =
     'ClientEmail': null,
     'ClientPhoneNumber': null
 };
-dummyData[123] =
+dummyData[1] =
 {
     'Total': 320.00,
     'PaidDate': '1/15/2018', 
@@ -75,14 +75,14 @@ export default class EarningsEditor extends Komponent {
          * Copy:
          * @member {KnockoutObservable<string>}
          */
-        this.editorMode = getObservable(params.editorMode || null);
+        this.editorMode = getObservable(params.editorMode);
     
         /**
          * Holds the ID for an earnings entry if being edited or 
          * copied.
          * @member {KnockoutObservable<number>}
          */
-        this.earningsEntryID = getObservable(params.earningsEntryID || null);
+        this.earningsEntryID = getObservable(params.earningsEntryID || 0);
 
         /**
          * Holds the ID for a platform if being added from the
@@ -150,6 +150,15 @@ export default class EarningsEditor extends Komponent {
 
         /**
          * Earnings summary returned given query parameters.
+         * @method
+         */
+        this.selectClient = function(client) {
+            this.clientID(ko.unwrap(client.clientID));
+            this.goNextStep();
+        }.bind(this);
+
+        /**
+         * Earnings summary returned given query parameters.
          * @member {KnockoutObservable<object>}
          */
         this.earningsEntry = ko.observable();
@@ -187,24 +196,18 @@ export default class EarningsEditor extends Komponent {
             this.stepButtonLabel = 'Save';
         }; 
 
-        /**
+         /**
          * Takes the user to the next step in the form.
          * @member {KnockoutComputed<string>}
          */
-        this.stepButtonLabel = ko.observable('Save and Continue');
-
-        /**
-         * Takes the user to the next step in the form.
-         * @member {KnockoutComputed<string>}
-         */
-        // this.stepButtonLabel = ko.pureComputed( () => {
-        //     if (this.editorMode() == 'Add') {
-        //         return 'Save and Continue';
-        //     }
-        //     else {
-        //         return 'Save';
-        //     }
-        // }); 
+        this.stepButtonLabel = ko.pureComputed( () => {
+            if (this.editorMode() == 'Add') {
+                return 'Save and Continue';
+            }
+            else {
+                return 'Save';
+            }
+        }); 
         
         /**
          * Takes the user to the next step in the form.
@@ -213,11 +216,9 @@ export default class EarningsEditor extends Komponent {
         this.saveStep = function() {
             if (this.editorMode() == 'Add') {
                 this.goNextStep();
-                this.stepButtonLabel = 'Save and Continue';
             }
             else {
                 this.currentStep(0);
-                this.stepButtonLabel = 'Save';
             }
         }; 
 
@@ -244,7 +245,7 @@ export default class EarningsEditor extends Komponent {
         this.isLocked = this.isSaving;
  
         this.observeChanges(() => {
-            const data = dummyData[0];
+            const data = dummyData[this.earningsEntryID()];
             this.earningsEntry(data);
         });
     }
