@@ -27,33 +27,37 @@ export default class InputDuration extends Komponent {
      * [params.durationInput]
      * @param {(number|KnockoutObservable<number>)} 
      * [params.durationStepValue]
+     * @param {(string|KnockoutObservable<id>)} 
+     * [params.id]
      */
     constructor(params) {
         super();
 
         /**
-         * Holds the value of the duration input.
+         * Holds the value of the duration input in minutes.
          * @member {KnockoutObservable<number>}
          */
-        this.durationInput = getObservable(params.durationInput || 175);
+        this.durationInput = getObservable(params.durationInput || 180);
+
+        this.id = getObservable(params.id); 
 
         /**
-         * The value of the step to increase and decrease.
+         * The value of the step to increase and decrease in minutes.
          * @member {KnockoutObservable<number>}
          */
         this.durationStepValue = getObservable(params.durationStepValue || 15);
 
         /**
-         * Takes the user to the next step in the form.
-         * @member {KnockoutComputed<number>}
+         * Increases the durationInput by the durationStepValue (in minutes)
+         * @method
          */
         this.increaseDuration = function() {
             this.durationInput(this.durationInput() + this.durationStepValue());
         }; 
 
         /**
-         * Decreases the duration input by the duration step value.
-         * @member {KnockoutComputed<number>}
+         * Decreases the durationInput by the durationStepValue (in minutes)
+         * @method
          */
         this.decreaseDuration = function() {
             this.durationInput(this.durationInput() - this.durationStepValue());

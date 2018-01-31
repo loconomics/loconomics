@@ -1,21 +1,27 @@
 <button type="button" data-bind="
     click: decreaseDuration,
     attr: { 
-        id: 'decreaseDuration', 
-        'aria-label': 'decrease by ' + durationStepValue() + ' minutes'
+        id: 'decrease' + durationInput, 
+        'aria-label': 'decrease duration by ' + durationStepValue() + ' minutes'
     }"
     class="btn btn-default">-</button>
-<input type="number" data-bind="
+<span data-bind="
+    text: displayDuration,
+    attr: {
+        id: id
+    }" 
+    aria-live="assertive" aria-atomic="true"></span>
+<!-- <input type="number" data-bind="
     value: durationInput(),
     attr: {
-        id: 'durationInput'
+        id: id
     }"
-    disabled>
+    disabled> -->
 <button type="button" data-bind="
     click: increaseDuration,
     attr: { 
         id: 'increaseDuration', 
-        'aria-label': 'increase by ' + durationStepValue() + ' minutes'
+        'aria-label': 'increase duration by ' + durationStepValue() + ' minutes'
     }"
     class="btn btn-default">+</button>
-<div data-bind="text: displayDuration"></div>
+
