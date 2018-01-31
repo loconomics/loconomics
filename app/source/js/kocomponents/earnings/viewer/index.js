@@ -6,7 +6,6 @@
  *
  */
 
-import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -14,9 +13,9 @@ import template from './template.html';
 
 const TAG_NAME = 'earnings-viewer';
 const dummyData = {};
-dummyData[123] =
-{
-    'EarningsEntryID': 123,
+dummyData[1] ={
+    'EarningsEntryID': 1,
+    'PaidDate': '12/31/2017',
     'Total': 320.00,
     'Duration': 180,
     'PlatformID': 2,
@@ -51,8 +50,14 @@ export default class EarningsViewer extends Komponent {
          */
         this.earningsEntryID = getObservable(params.earningsEntryID || null);
 
+        /**
+         * Earnings entry returned for a given ID.
+         * @member {KnockoutObservable<object>}
+         */
+        this.earningsEntry = ko.observable();
+
         this.observeChanges(() => {
-            const data = dummyData[0];
+            const data = dummyData[this.earningsEntryID()];
             this.earningsEntry(data);
         });
     }
