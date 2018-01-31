@@ -9,6 +9,7 @@ import '../../kocomponents/earnings/viewer';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
+import ko from 'knockout';
 import template from './template.html';
 
 const ROUTE_NAME = 'earnings-view';
@@ -23,12 +24,22 @@ export default class EarningsViewActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSubsectionNavBar(null);
+        /**
+         * Creates a placeholder for the external listing ID
+         * to be populated using the show(state) method below.
+         */
+        this.earningsEntryID = ko.observable();
         this.title = 'View earnings';
     }
 
     show(state) {
         super.show(state);
-        // Check other examples for some code using 'state'
+        var params = state.route && state.route.segments;
+        /**
+         * earningsEntryID is the first segment in the activity 
+         * URL.
+         */
+        this.earningsEntryID(params[0] |0);
     }
 }
 
