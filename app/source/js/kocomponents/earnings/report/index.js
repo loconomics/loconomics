@@ -1,8 +1,8 @@
 /**
  * Used to capture a summary of earnings for a given 
  * set of parameters.
- *
- * @module kocomponents/_examples/b-basic-komponent
+ * 
+ * @module kocomponents/earnings/report
  *
  */
 
@@ -12,7 +12,7 @@ import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import template from './template.html';
 
-const TAG_NAME = 'earnings-summary';
+const TAG_NAME = 'earnings-report';
 const dummyData = {};
 dummyData[0] =
 {
@@ -31,7 +31,7 @@ dummyData[0] =
 /**
  * Component
  */
-export default class EarningsSummary extends Komponent {
+export default class EarningsReport extends Komponent {
 
     static get template() { return template; }
 
@@ -66,13 +66,13 @@ export default class EarningsSummary extends Komponent {
          * Earnings summary returned given query parameters.
          * @member {KnockoutObservable<object>}
          */
-        this.earningsSummary = ko.observable();
+        this.earningsReport = ko.observable();
 
         this.observeChanges(() => {
             const data = dummyData[0];
-            this.earningsSummary(data);
+            this.earningsReport(data);
         });
     }
 }
 
-ko.components.register(TAG_NAME, EarningsSummary);
+ko.components.register(TAG_NAME, EarningsReport);
