@@ -1,6 +1,6 @@
 'use strict';
 
-var SingleEvent = require('../../js/utils/SingleEvent');
+var SingleEvent = require('../../../js/utils/SingleEvent');
 
 describe('utils/SingleEvent', function() {
 
