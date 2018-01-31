@@ -1,9 +1,19 @@
 <div class="Boxes-sm">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <a class="btn btn-link btn-default" href="/earnings-add">Add earnings</a>
+            <div class="SectionHeading">
+                <h1 data-bind="text: title"></h1>
+                <a class="btn btn-link btn-default pull-right" href="/earnings-add">Add earnings</a>
+            </div>
+            <button type="button" data-bind="click: showFilters" class="btn btn-icon-link btn-default" aria-label="Filter Earnings Summary">
+                <span>Filter results
+                    <icon-dec params="icon: 'ion-android-funnel'"></icon-dec>
+                </span>
+            </button>
+            <form data-bind="visible: showFilter">
+                <select>A filter</select>
+            </form>
             <earnings-summary></earnings-summary>
             <a class="btn btn-link btn-default" href="/earnings-history">View earnings history</a>
         </div>
