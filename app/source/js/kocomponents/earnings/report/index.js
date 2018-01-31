@@ -14,7 +14,7 @@ import template from './template.html';
 
 const TAG_NAME = 'earnings-report';
 const dummyData = {};
-dummyData[0] =
+dummyData[540] =
 {
     'Total': 23250.00,
     'Period': '2017 Year-to-date',
@@ -37,12 +37,16 @@ export default class EarningsReport extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} [params.name=World] A name for the greating.
-     * @param {function<number,void>} [params.onCount] Callback executed each time the 'count'
-     * button is executed with the current counter.
+     * @param {KnockoutObservable<integer>} [params.userID] 
      */
     constructor(params) {
         super();
+
+        /**
+         * A job title for the summary query. Defualt value is all job titles.
+         * @member {KnockoutObservable<integer>}
+         */
+        this.userID = getObservable(params.userID);
 
         /**
          * A job title for the summary query. Defualt value is all job titles.
@@ -69,7 +73,7 @@ export default class EarningsReport extends Komponent {
         this.earningsReport = ko.observable();
 
         this.observeChanges(() => {
-            const data = dummyData[0];
+            const data = dummyData[this.userID()];
             this.earningsReport(data);
         });
     }
