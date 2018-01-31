@@ -6,6 +6,7 @@
  *
  */
 
+import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';

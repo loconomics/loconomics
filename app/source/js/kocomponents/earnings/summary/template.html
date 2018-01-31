@@ -1,12 +1,13 @@
 <div data-bind="with: earningsSummary">
-    <h2><span data-bind="
+    <h2>2017 Year-to-date Summary</h2>
+    <h3><span data-bind="
         text: Total, 
         format: { 
             type: 'number', 
             format: '$0,0' 
         }
-        "></span> earned</h2>
-    <p>Booked earnings for <span data-bind="text: Period"></span></p>
+        "></span> earned</h3>
+    <p>Booked earnings</p>
     <div data-bind="visible: PaidOut > 0">
         <span>Paid out</span>
         <span data-bind="
@@ -28,7 +29,7 @@
             }
             " class="pull-right"></span>
     </div>
-    <h2><span data-bind="text: Period"></span> performance</h2>
+    <h3>Performance</h3>
     <p><span data-bind="text: JobTitle"></span>, <span data-bind="text: Platform"></span></p>
     <div data-bind="visible: AverageHourlyRate > 0">
         <span>Average hourly rate</span>
