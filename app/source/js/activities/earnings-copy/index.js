@@ -8,9 +8,11 @@
  */
 
 import '../../kocomponents/earnings/editor';
+import '../../kocomponents/earnings/list';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
+import ko from 'knockout';
 import template from './template.html';
 import userProfile from '../../data/userProfile';
 
@@ -30,6 +32,16 @@ export default class EarningsCopyActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSubsectionNavBar(null);
+        this.earningsEntryID = ko.observable();
+        
+        /**
+         * Earnings to be copied.
+         * @method
+         */
+        this.selectEarnings = function(earnings) {
+            this.earningsEntryID(ko.unwrap(earnings.earningsEntryID));
+        }.bind(this);
+
         this.title = 'Copy earnings';
     }
 
