@@ -2,7 +2,7 @@
         visible: isAtStep(1),
         autofocus: isAtStep(1),
         attr: {
-            id: editorMode() + 'EarningsForm-StepOne'
+            id: editorMode() + 'EarningsForm-Total'
         }
         ">
     <div class="col-xs-12">
@@ -16,7 +16,7 @@
                 placeholder="$0.00"
                 data-bind="
                     value: earningsEntry().Total
-                " />
+                "/>
         </div>
         <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
     </div>
@@ -25,7 +25,7 @@
         visible: isAtStep(2), 
         autofocus: isAtStep(2),
         attr: {
-            id: editorMode() + 'EarningsForm-StepTwo'
+            id: editorMode() + 'EarningsForm-Duration'
         }
     ">
     <div class="col-xs-12">
@@ -42,7 +42,7 @@
         visible: isAtStep(3), 
         autofocus: isAtStep(3),
         attr: {
-            id: editorMode() + 'EarningsForm-StepThree'
+            id: editorMode() + 'EarningsForm-PaidDate'
         }
     ">
     <div class="col-xs-12">
@@ -64,7 +64,7 @@
         visible: isAtStep(4), 
         autofocus: isAtStep(4),
         attr: {
-            id: editorMode() + 'EarningsForm-StepFour'
+            id: editorMode() + 'EarningsForm-Platform'
         }
     ">
     <div class="col-xs-12">
@@ -87,7 +87,7 @@
         visible: isAtStep(5), 
         autofocus: isAtStep(5),
         attr: {
-            id: editorMode() + 'EarningsForm-StepFive'
+            id: editorMode() + 'EarningsForm-JobType'
         }
     ">
     <div class="col-xs-12">
@@ -110,12 +110,12 @@
         visible: isAtStep(6), 
         autofocus: isAtStep(6),
         attr: {
-            id: editorMode() + 'EarningsForm-StepSix'
+            id: editorMode() + 'EarningsForm-Client'
         }
     ">
     <div class="col-xs-12">
         <legend>Who did you work for?</legend>
-        <button type="button">Add new client</button>
+        <button type="button" data-bind="click: goToStep.bind($data, 7)" class="btn btn-default">Add new client</button>
         <p>Or select an existing client:</p>
         <client-list params="listMode: 'select', selectItem: selectClient"></client-list>
         <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
@@ -125,7 +125,21 @@
         visible: isAtStep(7), 
         autofocus: isAtStep(7),
         attr: {
-            id: editorMode() + 'EarningsForm-StepSeven'
+            id: editorMode() + 'EarningsForm-AddNewClient'
+        }
+    ">
+    <div class="col-xs-12">
+        <legend>Add new client</legend>
+        <client-editor params="editorMode: 'quickAdd'"></client-editor>
+        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+        <a data-bind="click: goToStep.bind($data, 6)" class="btn-block text-center">Go back to previous step</a>
+    </div>
+</fieldset>
+<fieldset data-bind="
+        visible: isAtStep(8), 
+        autofocus: isAtStep(8),
+        attr: {
+            id: editorMode() + 'EarningsForm-Notes'
         }
     ">
     <div class="col-xs-12">
@@ -151,7 +165,6 @@
         },
         with: earningsEntry
     ">
-    <p class="help-block">Please review your earnings below and submit if correct.</p>
     <div class="SectionHeading">
         <h2>Date Paid</h2>
         <button data-bind="click: $parent.goToStep.bind($data, 3)" aria-label= 'Edit date paid' class="btn btn-icon-link pull-right">
@@ -223,6 +236,7 @@
     </div>
     <p data-bind="text: Notes"></p>
     <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked">Submit</button>
+    <p class="help-block">Please review carefully before submitting.</p>
 </div>
 
     

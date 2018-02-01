@@ -32,14 +32,53 @@ export default class EarningsCopyActivity extends Activity {
 
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSubsectionNavBar(null);
+
+        /**
+         * Earnings summary returned given query parameters.
+         * @member {KnockoutObservable<boolean>}
+         */
+        // this.earningsSelected = ko.observable(false);
+        
+        // this.earningsSelected = function() {
+        //     if (this.earningsSelected() == false) {
+        //         this.earningsSelected(true);
+        //     }
+        //     else {
+        //         this.earningsSelected(false);
+        //     }
+        // }; 
+
         this.earningsEntryID = ko.observable();
         
+        /// Steps management
+        /**
+         * Keeps track of the current step being displayed
+         * @member {KnockoutObservable<number>}
+         */
+        this.currentStep = ko.observable(1);
+        
+        /**
+         * Returns which step the user is on in the form.
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.isAtStep = function(number) {
+            return ko.pureComputed( () => this.currentStep() === number);
+        }; 
+
+        /**
+         * Takes the user to the next step in the form.
+         * @member {KnockoutComputed<number>}
+         */
+        this.goNextStep = function() {
+            this.currentStep(this.currentStep() + 1);
+        }; 
         /**
          * Earnings to be copied.
          * @method
          */
         this.selectEarnings = function(earnings) {
             this.earningsEntryID(ko.unwrap(earnings.earningsEntryID));
+            this.goNextStep();
         }.bind(this);
 
         this.title = 'Copy earnings';

@@ -19,7 +19,7 @@ const TAG_NAME = 'earnings-editor';
 const dummyData = {};
 dummyData[0] =
 {
-    'Total': null,
+    'Total': 357,
     'PaidDate': null,
     'Duration': 60,
     'PlatformID': null,
@@ -56,12 +56,14 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} 
+     * @param {KnockoutObservable<string>}
      * [params.editorMode]
-     * @param {(number|KnockoutObservable<number>)} 
+     * @param {KnockoutObservable<integer>}
      * [params.earningsEntryID]
-     * @param {(number|KnockoutObservable<number>)} 
+     * @param {KnockoutObservable<integer>}
      * [params.platformID]
+     * @param {KnockoutObservable<integer>}
+     * [params.startAtStep]
      */
     constructor(params) {
         /* eslint max-statements:"off" */
@@ -166,9 +168,9 @@ export default class EarningsEditor extends Komponent {
         /// Steps management
         /**
          * Keeps track of the current step being displayed
-         * @member {KnockoutObservable<number>}
+         * @member {KnockoutObservable<integer>}
          */
-        this.currentStep = ko.observable(1);
+        this.currentStep = getObservable(params.startAtStep || 1);
 
         /**
          * Returns which step the user is on in the form.

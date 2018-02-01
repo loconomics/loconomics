@@ -12,7 +12,21 @@
         </div>
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <earnings-list params="userID: userID, listMode: 'Select', selectItem: selectEarnings"></earnings-list>
+            <form id="copyEarningsForm">
+                <fieldset id="copyEarningsForm-SelectEarnings" class="earnings-step"
+                data-bind="visible: isAtStep(1), autofocus: isAtStep(1)">
+                    <legend>Select an earnings entry to copy</legend>
+                    <earnings-list params="userID: userID, listMode: 'select', selectItem: selectEarnings"></earnings-list>
+                </fieldset>
+                <fieldset id="copyEarningsForm-ReviseEarnings" class="earnings-step"
+                data-bind="visible: isAtStep(2), autofocus: isAtStep(2)">
+                    <legend>Revise earnings and submit</legend>
+                    <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'copy', startAtStep: 0"></earnings-editor>
+                </fieldset>
+            </form>
+                <!-- data-bind="visible: 
+                !earningsSelected()" -->
+            <!-- <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'Copy'"></earnings-editor> -->
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>
