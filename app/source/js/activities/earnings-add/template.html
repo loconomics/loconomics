@@ -12,7 +12,10 @@
         </div>
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <earnings-editor params="editorMode: 'Add'"></earnings-editor>
+            <form id="addEarningsForm" aria-describedby="addEarningsFormInstructions">
+                <p id="addEarningsFormInstructions" class="help-block">Add earnings you've received not paid through Loconomics. Include as many details as possible.</p>
+                <earnings-editor params="editorMode: 'add'"></earnings-editor>
+            </form>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>
