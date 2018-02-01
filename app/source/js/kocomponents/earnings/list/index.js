@@ -1,6 +1,7 @@
 /**
- * Used to capture a summary of earnings for a given 
- * set of parameters.
+ * Diplays a list of a professional's earnings, and, 
+ * depending on the mode, allows the ability to select an 
+ * earnings entry to be used in other activities.
  *
  * @module kocomponents/earnings/list
  *
@@ -106,36 +107,31 @@ dummyData[141] =
  * Component
  */
 export default class EarningsList extends Komponent {
+  
+      static get template() { return template; }
 
-    static get template() { return template; }
-
-   /**
+     /**
      * @param {object} params
-     * @param {(number|KnockoutObservable<number>)} [params.userID] 
+     * @param {KnockoutObservable<integer>} [params.userID]
+     * @param {KnockoutObservable<string>} [params.listMode] 
      */
-
     constructor(params) {
       super();
 
       /**
-       * The userID the suggestions list is created for.
-       * @member {KnockoutObservable<string>}
+       * The userID the earnings list is created for.
+       * @member {KnockoutObservable<integer>}
        */
       this.userID = getObservable(params.userID);
 
         /**
-         * Captures from the activity which "mode" the editor
+         * Captures from the activity which "mode" the list
          * component is to be used. 
          * View: 
          * Select:
-         * Summary:
          * @member {KnockoutObservable<string>}
          */
         this.listMode = getObservable(params.listMode || 'View');
-        
-        if (typeof(params.selectItem) !== 'function') {
-          throw new Error('A selectItem callback is required');
-        }
         
         /**
          * @method selectItem
@@ -143,7 +139,7 @@ export default class EarningsList extends Komponent {
         this.selectItem = params.selectItem;
 
         /**
-         * Earnings summary returned given query parameters.
+         * Earnings list returned given query parameters.
          * @member {KnockoutObservable<array>}
          */
         this.earningsList = ko.observableArray();

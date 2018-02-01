@@ -12,7 +12,9 @@
                     <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                 </p>
             </div>
-            <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            <div class="Item-action">
+                <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+            </div>
         </button>
         <a href="#" data-bind="visible: $component.listMode() == 'View', attr: {
             href: ''
@@ -22,7 +24,9 @@
                     <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
                 </p>
             </div>
-            <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            <div class="Item-action">
+                <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            </div>
         </a>
     </li>
 </ul>
