@@ -25,7 +25,7 @@
  *   local: { fetch(), push(data), delete() } // returning Promises
  * }
  *
- * Check DataProviderDriver type definition at the bottom for remote/local.
+ * Check IDataProviderDriver type definition at separated file.
  *
  * Not all usages of this class as base can allow all the methods here: not
  * allowing 'delete' is common for lists and `save` for queries or prefixed/enforced
@@ -78,10 +78,10 @@ export default class CachedDataProvider {
      * Advice: to provide this value can be more expressive to use utils like momentjs 'duration'
      * type that let you specify time in units and convert it to milliseconds
      * as for example: `moment.duration({ hours: 1, minutes: 30 }).asMilliseconds()
-     * @param {DataProviderDriver} settings.remote Driver to interact with remote
+     * @param {IDataProviderDriver} settings.remote Driver to interact with remote
      * data, that is expected to have the 'source of truth' regarding the valid
      * data (and slower than local data).
-     * @param {DataProviderDriver} settings.local Driver to interact with local
+     * @param {IDataProviderDriver} settings.local Driver to interact with local
      * data, that is expected to be low latency, faster than remote and so
      * holding a cache. The driver provided doesn't need to know how is the
      * stored structure that includes both data and cache metadata, just
@@ -324,19 +324,6 @@ function mustRevalidate(latest, ttl) {
     var tdiff = latest && now - latest || Number.POSITIVE_INFINITY;
     return tdiff > ttl;
 }
-
-/**
- * @typedef {Object} DataProviderDriver Defines methods to interact with data,
- * as expected by a DataProvider class and connecting to a specific data driver.
- * @method fetch Accepts no arguments, returns a Promise that resolves with the
- * data
- * @method push Accepts one argument, the data to be sent for storage. Returns
- * a Promise that resolves with the data as given by the storage.
- * @method delete Accepts no arguments, request to delete the whole data. Returns
- * a Promise that can resolves with anything the storage wants to return
- * (dependent on the storage, can be nothing, a copy of deleted data, or
- * metadata about).
- */
 
 /**
  * @typedef {Object} CachedData Holds data and information about it's cached
