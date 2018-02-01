@@ -4,7 +4,7 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a data-bind="attr: { href: '/earnings-add/' + externalListingID() + '?mustReturn=earnings-add'+ '&returnText=Earnings History' }">
+                    <a data-bind="attr: { href: '/earnings-add/' + '?mustReturn=earnings'+ '&returnText=Earnings' }">
                         <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Add Earnings
                     </a>
                 </li>
@@ -12,7 +12,7 @@
         </div>
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'Copy'"></earnings-editor>
+            <earnings-list params="userID: userID, listMode: 'Select'"></earnings-list>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>
