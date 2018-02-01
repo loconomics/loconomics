@@ -27,13 +27,13 @@
  *
  * Check IDataProviderDriver type definition at separated file.
  *
- * Not all usages of this class as base can allow all the methods here: not
- * allowing 'delete' is common for lists and `save` for queries or prefixed/enforced
- * data. That's fine, and remote/local implementations don't need to include them,
- * use the module docs to specify what API is possible.
- *
- * IMPORTANT: Never use members prefixed with underscore, are expected to be
- * private and can change/break at any point.
+ * Not all cases where this class is used need to allow all the methods provided: not
+ * allowing 'delete' is common for lists APIs, same with `save` for queries or prefixed/enforced
+ * data. That's fine, and the remote/local implementations don't need to include them;
+ * use the data module docs to specify which APIs are possible.
+ *g
+ * IMPORTANT: Never use externally members prefixed with underscore, are expected to be
+ * private and can change/break at any point because of implementation details.
  *
  * NOTE: At the bottom are some inlined utilities and type definitions, plus
  * some IDEAs.
