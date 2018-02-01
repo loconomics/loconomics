@@ -70,9 +70,9 @@ export default class EarningsEditor extends Komponent {
         /**
          * Captures from the activity which "mode" the editor
          * component is to be used. 
-         * Add: no values 
-         * Edit:
-         * Copy:
+         * add: no values 
+         * edit:
+         * copy:
          * @member {KnockoutObservable<string>}
          */
         this.editorMode = getObservable(params.editorMode);
@@ -149,16 +149,16 @@ export default class EarningsEditor extends Komponent {
         this.clientPhoneNumber = ko.observable('');
 
         /**
-         * Earnings summary returned given query parameters.
+         * Client returned given query parameters.
          * @method
          */
         this.selectClient = function(client) {
             this.clientID(ko.unwrap(client.clientID));
-            this.goNextStep();
+            this.goToSummary();
         }.bind(this);
 
         /**
-         * Earnings summary returned given query parameters.
+         * Earnings entry returned given query parameters.
          * @member {KnockoutObservable<object>}
          */
         this.earningsEntry = ko.observable();
@@ -192,7 +192,7 @@ export default class EarningsEditor extends Komponent {
 
         this.goToSummary = function() {
             this.currentStep(0);
-            this.editorMode('Edit');
+            this.editorMode('edit');
             this.stepButtonLabel = 'Save';
         }; 
 
@@ -201,7 +201,7 @@ export default class EarningsEditor extends Komponent {
          * @member {KnockoutComputed<string>}
          */
         this.stepButtonLabel = ko.pureComputed( () => {
-            if (this.editorMode() == 'Add') {
+            if (this.editorMode() == 'add') {
                 return 'Save and Continue';
             }
             else {
@@ -214,7 +214,7 @@ export default class EarningsEditor extends Komponent {
          * @member {KnockoutComputed<number>}
          */
         this.saveStep = function() {
-            if (this.editorMode() == 'Add') {
+            if (this.editorMode() == 'add') {
                 this.goNextStep();
             }
             else {
