@@ -1,11 +1,6 @@
 <h2 data-bind="visible: clientList()">Existing clients</h2>
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: clientList">
     <li data-bind="attr: { id: 'client' + clientUserID }">
-
-<!-- 
-            <a href="#" class="btn btn-link btn-block" data-bind="event: { click: $root.isSelectionMode() && $root.selectClient }, attr: { href: $root.isSelectionMode() ? '#' : '/clientEditor/' + clientUserID() }">
-                <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
-            </a> -->
         <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
                 <p>
@@ -16,7 +11,7 @@
                 <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
             </div>
         </button>
-        <a href="#" data-bind="visible: $component.listMode() == 'view', attr: {
+        <!-- <a href="#" data-bind="visible: $component.listMode() == 'view', attr: {
             href: ''
         } " class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
@@ -27,6 +22,6 @@
             <div class="Item-action">
                 <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
             </div>
-        </a>
+        </a> -->
     </li>
 </ul>

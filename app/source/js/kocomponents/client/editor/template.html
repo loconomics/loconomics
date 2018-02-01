@@ -1,45 +1,52 @@
-<form id="clientEditorForm" aria-describedby="clientEditorFormInstructions" data-bind="with: client">
-    <fieldset id="clientEditorForm-contactInfo">
-        <legend><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s contact information:</span><span data-bind="visible: !firstName()">Client's contact information:</span></legend>
-        <div class="form-group">
-            <label for="firstName">First name:</label>
-            <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: firstName, disable: $root.isLocked">
+<fieldset data-bind="
+        attr: {
+            id: editorMode() + 'ClientForm-ContactInfo'
+        }
+        ">
+    <legend><span data-bind="visible: client().firstName(), text: client().firstName"></span><span data-bind="visible: client().firstName()">'s contact information:</span><span data-bind="visible: !client().firstName()">Client's contact information:</span></legend>
+    <div class="form-group">
+        <label for="firstName">First name:</label>
+        <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: client().firstName, disable: $root.isLocked">
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last name:</label>
+        <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: client().lastName, disable: $root.isLocked">
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone number:</label>
+        <input id="phone" type="tel" class="form-control" required data-bind="textInput: client().phone, disable: $root.isLocked">
+    </div>
+    <div class="form-group">
+        <label for="canReceiveSms">Does this number receive texts?</label>
+        <input id="canReceiveSms" type="checkbox" data-bind="checked: client().canReceiveSms, disable: $root.isLocked">
+    </div>
+    <div class="form-group">
+        <label for="email" for="phone">Email address:</label>
+        <input id="email" type="email" class="form-control" maxlength="145" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" 
+        data-bind="textInput: client().email, disable: $root.isLocked"/>
+    </div>
+</fieldset>
+<!-- <fieldset data-bind="
+    visible: (editorMode() == 'add' || editorMode() == 'edit'),
+    attr: {
+        id: editorMode() + 'ClientForm-AdditionInfo'
+    }
+    ">
+    <legend>Additional information about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName(), text: 'this client:'"></span></legend>
+    <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: client().firstName(), text: firstName"></span><span data-bind="visible: client().firstName()">'s birthday:</span><span data-bind="visible: !client().firstName()">Client's birthday:</span></label>  
+    <div class="row">
+        <div class="form-group col-sm-8">
+            <label for="selectedBirthMonth">Birth month:</label>
+            <select id="selectedBirthMonth" class="form-control" data-bind="textInput: $root.client().selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Select month', valueAllowUnset: true, disable: $root.isLocked"></select>
         </div>
-        <div class="form-group">
-            <label for="lastName">Last name:</label>
-            <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: lastName, disable: $root.isLocked">
+        <div class="form-group col-sm-4">
+            <label for="birthMonthDay">Birth day:</label>
+            <select id="birthMonthDay" class="form-control" data-bind="textInput: client().birthMonthDay, options: $root.monthDays, optionsCaption: 'Select day',  valueAllowUnset: true, disable: $root.isLocked"></select>
         </div>
-        <div class="form-group">
-            <label for="phone">Phone number:</label>
-            <input id="phone" type="tel" class="form-control" required data-bind="textInput: phone, disable: $root.isLocked">
-        </div>
-        <div class="form-group">
-            <label for="canReceiveSms">Does this number receive texts?</label>
-            <input id="canReceiveSms" type="checkbox" data-bind="checked: canReceiveSms, disable: $root.isLocked">
-        </div>
-        <div class="form-group">
-            <label for="email" for="phone">Email address:</label>
-            <input id="email" type="email" class="form-control" maxlength="145" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" 
-            data-bind="textInput: email, disable: $root.isLocked"/>
-        </div>
-    </fieldset>
-    <fieldset id="clientEditorForm-additionalInfo" data-bind="visible: $component.editorMode() == 'add'">
-        <legend>Additional information about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName(), text: 'this client:'"></span></legend>
-        <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s birthday:</span><span data-bind="visible: !firstName()">Client's birthday:</span></label>  
-        <div class="row">
-            <div class="form-group col-sm-8">
-                <label for="selectedBirthMonth">Birth month:</label>
-                <select id="selectedBirthMonth" class="form-control" data-bind="textInput: $root.selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Select month', valueAllowUnset: true, disable: $root.isLocked"></select>
-            </div>
-            <div class="form-group col-sm-4">
-                <label for="birthMonthDay">Birth day:</label>
-                <select id="birthMonthDay" class="form-control" data-bind="textInput: birthMonthDay, options: $root.monthDays, optionsCaption: 'Select day',  valueAllowUnset: true, disable: $root.isLocked"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="notesAboutClient">Notes about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName()">client:</span></label>  
-            <textarea id="notesAboutClient" class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
-            <p id="notesAboutClientInstructions">These notes can only be seen by you.</p>
-        </div>
-    </fieldset>
-</form>
+    </div>
+    <div class="form-group">
+        <label for="notesAboutClient">Notes about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName()">client:</span></label>  
+        <textarea id="notesAboutClient" class="form-control" data-bind="textInput: client().notesAboutClient, disable: $root.isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
+        <p id="notesAboutClientInstructions">These notes can only be seen by you.</p>
+    </div>
+</fieldset> -->

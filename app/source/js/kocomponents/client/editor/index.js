@@ -41,12 +41,15 @@ export default class ClientEditor extends Komponent {
 
     static get template() { return template; }
 
+
     /**
      * @param {object} params
-     * @param {(string|KnockoutObservable<string>)} [params.name=World] A name for the greating.
-     * @param {function<number,void>} [params.onCount] Callback executed each time the 'count'
-     * button is executed with the current counter.
+     * @param  {KnockoutObservable<string>}
+     * [params.editorMode]
+     * @param  {KnockoutObservable<integer>}
+     * [params.clientID]
      */
+
     constructor(params) {
         super();
 
@@ -65,6 +68,12 @@ export default class ClientEditor extends Komponent {
          * @member {KnockoutObservable<string>}
          */
         this.editorMode = getObservable(params.editorMode);
+
+        /**
+         * Captures the clientID to edit.
+         * @member {KnockoutObservable<object>}
+         */
+        this.clientID = getObservable(params.clientID || 0);
 
         // Birth month day
         // TODO l10n
@@ -105,12 +114,6 @@ export default class ClientEditor extends Komponent {
         for (var iday = 1; iday <= 31; iday++) {
             this.monthDays.push(iday);
         }
-
-        /**
-         * Earnings summary returned given query parameters.
-         * @member {KnockoutObservable<object>}
-         */
-        this.client = ko.observable([]);
 
         this.observeChanges(() => {
             const data = dummyData[0];
