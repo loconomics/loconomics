@@ -23,7 +23,7 @@
             data-bind="textInput: email, disable: $root.isLocked"/>
         </div>
     </fieldset>
-    <fieldset id="clientEditorForm-additionalInfo" data-bind="visible: $component.editorMode() == 'Add'">
+    <fieldset id="clientEditorForm-additionalInfo" data-bind="visible: $component.editorMode() == 'add'">
         <legend>Additional information about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName(), text: 'this client:'"></span></legend>
         <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s birthday:</span><span data-bind="visible: !firstName()">Client's birthday:</span></label>  
         <div class="row">

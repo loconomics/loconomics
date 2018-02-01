@@ -1,7 +1,7 @@
 <h2 data-bind="visible: earningsList()">Recent Earnings</h2>
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: earningsList">
     <li data-bind="attr: { id: 'earnings' + EarningsEntryID }">
-        <button type="button" data-bind="visible: $component.listMode() == 'Select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
+        <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
                 <p>
                     <strong><span data-bind="
@@ -33,7 +33,7 @@
                 <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
             </div>
         </button>
-        <a href="#" data-bind="visible: $component.listMode() == 'View', attr: { href: '/earnings-view/' + EarningsEntryID + '?mustReturn=earnings-history' + '&returnText=Earnings History' 
+        <a href="#" data-bind="visible: $component.listMode() == 'view', attr: { href: '/earnings-view/' + EarningsEntryID + '?mustReturn=earnings-history' + '&returnText=Earnings History' 
         } " class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
                 <p>

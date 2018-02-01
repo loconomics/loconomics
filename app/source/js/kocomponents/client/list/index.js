@@ -93,11 +93,11 @@ export default class ClientList extends Komponent {
         /**
          * Captures from the activity which "mode" the list
          * component is to be used. 
-         * View: 
-         * Select:
+         * view: 
+         * select:
          * @member {KnockoutObservable<string>}
          */
-        this.listMode = getObservable(params.listMode || 'View');
+        this.listMode = getObservable(params.listMode || 'view');
 
         /**
          * @method selectItem

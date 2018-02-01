@@ -59,9 +59,9 @@ export default class ClientEditor extends Komponent {
         /**
          * Captures from the activity which "mode" the editor
          * component is to be used. 
-         * Add: 
-         * Edit:
-         * QuickAdd:
+         * add: 
+         * edit:
+         * quickAdd:
          * @member {KnockoutObservable<string>}
          */
         this.editorMode = getObservable(params.editorMode);
