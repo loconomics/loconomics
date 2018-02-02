@@ -59,8 +59,6 @@
  * });
  * ```
  */
-// TODO: clear cache method, expected to be connected with app-specific
-// session.cacheCleaningRequested outside
 // TODO: ReactiveEvent for onData: automatically triggers a __sync on subscription,
 // making it can be used the same as onceLoaded
 // TODO: Restrict one sync task at a time, and return one in course when a new
@@ -312,6 +310,18 @@ export default class CachedDataProvider {
             // providing the result given by the remote and return that result
             .then(() => this.onDeleted.emit(remoteResultOrCopy) && remoteResultOrCopy);
         });
+    }
+
+    /**
+     * Request to clear the locally stored cache.
+     *
+     * NOTE: Can include removal of in-memory cache info too, even currently
+     * there is nothing there to clean-up, and is just a request for local deletion
+     *
+     * @returns {Promise}
+     */
+    clearCache() {
+        return this.__local.delete();
     }
 }
 
