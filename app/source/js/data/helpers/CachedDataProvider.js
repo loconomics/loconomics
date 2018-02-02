@@ -192,7 +192,7 @@ export default class CachedDataProvider {
          * other events; in the future could include other data changes).
          * @member {SingleEvent<any>}
          */
-        this.onData = new AggregatedEvent(this, [this.onLoaded, this.onSaved]);
+        this.onData = new AggregatedEvent([this.onLoaded, this.onSaved], this);
     }
 
     /**
