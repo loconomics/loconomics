@@ -67,8 +67,8 @@
 // request come in.
 // TODO: Implement onDataError event, automatic for onData, related only to that
 
-import AggregatedEvent from '../utils/SingleEvent/AggregatedEvent';
-import SingleEvent from '../utils/SingleEvent';
+import AggregatedEvent from '../../utils/SingleEvent/AggregatedEvent';
+import SingleEvent from '../../utils/SingleEvent';
 
 export default class CachedDataProvider {
     /**
