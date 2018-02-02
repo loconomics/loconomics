@@ -1,0 +1,55 @@
+﻿@*
+    Retrieving Platforms
+
+    Options:
+
+    - GET
+
+    - GET /@id
+
+    - @Result LcRest.Platform
+
+    EXAMPLE {
+        "Platforms": {
+            "url": "/api/v1/en-US/platforms",
+            "get": { }
+        },
+        "Platforms (item)": {
+            "url": "/api/v1/en-US/platforms/1",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestPlatforms: RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData[0].IsInt() && UrlData.Count == 1)
+            {
+                var id = UrlData[0].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var item = LcRest.Platform.Get(id, locale.languageID, locale.countryID);
+                if (item != null)
+                {
+
+                    return item;
+                }
+                else
+                {
+                    throw new HttpException(404, "Platform not found.");
+                }
+            }
+            else if (UrlData.Count == 0)
+            {
+                // Full list
+                var locale = LcRest.Locale.Current;
+                return LcRest.Platform.GetList(locale.languageID, locale.countryID);
+            }
+            return base.Get();
+        }
+    }
+}
+@{
+    new RestPlatforms().JsonResponse(this);
+}
