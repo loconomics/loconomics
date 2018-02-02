@@ -7,8 +7,6 @@
     override changes if server data is different that any local change.
 **/
 'use strict';
-
-import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 var PricingType = require('../models/PricingType');

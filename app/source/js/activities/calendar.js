@@ -1,7 +1,5 @@
 /** Calendar activity **/
 'use strict';
-
-import '../kocomponents/utilities/icon-dec';
 require('../components/DatePicker');
 var $ = require('jquery');
 var moment = require('moment');

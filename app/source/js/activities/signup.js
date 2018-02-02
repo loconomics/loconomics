@@ -3,7 +3,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var SignupVM = require('../viewmodels/Signup');
 
