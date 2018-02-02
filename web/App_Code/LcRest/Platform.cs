@@ -80,7 +80,7 @@ namespace LcRest
                 AND P.Active = 1
                 AND JP.Active = 1
                 JOIN UserProfilePositions as J
-                ON JP.JobTitleID = J.PositionID
+                ON (JP.JobTitleID = J.PositionID OR JP.JobTitleID = -1)
                 AND JP.LanguageID = J.LanguageID
                 AND JP.CountryID = J.CountryID
                 AND J.Active = 1
