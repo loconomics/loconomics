@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var ServiceProfessionalSearchResult = require('../models/ServiceProfessionalSearchResult');
 var ko = require('knockout');
 var Activity = require('../components/Activity');

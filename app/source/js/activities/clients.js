@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var $ = require('jquery');
 var ko = require('knockout');
 var Activity = require('../components/Activity');
@@ -17,8 +18,7 @@ var A = Activity.extend(function ClientsActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
-    this.navBar = Activity.createSubsectionNavBar('Clients', {
-        backLink: 'cms' , helpLink: this.viewModel.helpLink
+    this.navBar = Activity.createSubsectionNavBar('Clients', {helpLink: this.viewModel.helpLink
     });
     this.title('Your clients');
     // Save defaults to restore on updateNavBarState when needed:

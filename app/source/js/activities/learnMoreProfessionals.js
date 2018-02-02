@@ -3,6 +3,8 @@
     //used to get apisearch results by term, lat, long,
 **/
 'use strict';
+
+import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 var SignupVM = require('../viewmodels/Signup');

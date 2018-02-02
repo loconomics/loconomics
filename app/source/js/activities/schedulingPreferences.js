@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var weeklySchedule = require('../data/weeklySchedule');

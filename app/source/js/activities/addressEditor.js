@@ -14,6 +14,8 @@
     for model.serviceAdddresses for example.
 **/
 'use strict';
+
+import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 var Address = require('../models/Address');
 var Activity = require('../components/Activity');

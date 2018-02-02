@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var VocElementEnum = require('../models/VocElementEnum');
 var userProfile = require('../data/userProfile');

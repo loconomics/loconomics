@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 var getDateWithoutTime = require('../utils/getDateWithoutTime');
 

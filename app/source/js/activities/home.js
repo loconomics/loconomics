@@ -3,6 +3,8 @@
     //used to get apisearch results by term, lat, long,
 **/
 'use strict';
+
+import '../kocomponents/utilities/icon-dec';
 var $ = require('jquery');
 
 var MarketplaceSearchVM = require('../viewmodels/MarketplaceSearch');
