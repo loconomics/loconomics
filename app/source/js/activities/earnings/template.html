@@ -12,7 +12,13 @@
                 </span>
             </button>
             <form data-bind="visible: showFilter">
-                <select>A filter</select>
+                <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
+                    <option value="0">This month</option>
+                    <option value="0.5">This quarter</option>
+                    <option value="1">This year</option>
+                    <option value="2">Last month</option>
+                    <option value="3">Custom</option>
+                </select>
             </form>
             <earnings-report params="userID: userID"></earnings-report>
             <a class="btn btn-link btn-default" href="/earnings-history">View earnings history</a>

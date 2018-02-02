@@ -8,6 +8,7 @@
  */
 
 import '../../kocomponents/earnings/report';
+import '../../utils/Time';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
@@ -29,6 +30,36 @@ export default class EarningsActivity extends Activity {
          */
         this.userID = userProfile.data.userID;
 
+              /**
+         * A job title for the summary query. Defualt value is 
+         * null for all job titles.
+         * @member {KnockoutObservable<integer>}
+         */
+        this.jobTitleID = ko.observable(null);
+        
+        /**
+         * A start date for the summary query. Default value is 
+         * the 1st of the current month until today's date.
+         * @member {KnockoutObservable<string>}
+         */
+        this.timeRange = ko.observableArray({'2/1/2018': '2/2/2018'});
+
+        /**
+         * Earnings to be copied.
+         * @method
+         */
+        this.selectFilters = function(filters) {
+            this.earningsEntryID(ko.unwrap(filters.earningsEntryID));
+            this.goNextStep();
+        }.bind(this);
+
+        /**
+         * A platformID for the summary query. Defualt value is 
+         * null for all platforms.
+         * @member {KnockoutObservable<integer>}
+         */
+        this.platformID = ko.observable(null);
+        
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSectionNavBar(null);
         this.navBar.rightAction(null);
@@ -48,7 +79,6 @@ export default class EarningsActivity extends Activity {
                 this.showFilter(false);
             }
         }; 
-
 
         this.title = 'Earnings';
     }

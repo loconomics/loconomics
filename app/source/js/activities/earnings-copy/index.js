@@ -72,6 +72,7 @@ export default class EarningsCopyActivity extends Activity {
         this.goNextStep = function() {
             this.currentStep(this.currentStep() + 1);
         }; 
+        
         /**
          * Earnings to be copied.
          * @method

@@ -49,22 +49,39 @@ export default class EarningsReport extends Komponent {
         this.userID = getObservable(params.userID);
 
         /**
-         * A job title for the summary query. Defualt value is all job titles.
+         * A job title for the summary query. Defualt value is 
+         * null for all job titles.
          * @member {KnockoutObservable<integer>}
          */
-        this.jobTitleID = getObservable(params.jobTitleID || -1);
+        this.jobTitleID = getObservable(params.jobTitleID || null);
 
         /**
-         * A time range for the summary query. Default value is year-to-date.
+         * A start date for the summary query. Default value is 
+         * January 1st of the current year.
          * @member {KnockoutObservable<array>}
          */
-        this.timeRange = getObservable(params.timeRange || 'World');
+        this.timeRange = getObservable(params.timeRange || {'2/1/2018':'2/2/2018'});
 
         /**
-         * A platformID for the summary query. Defualt value is all platforms.
+         * A start date for the summary query. Default value is 
+         * January 1st of the current year.
          * @member {KnockoutObservable<string>}
          */
-        this.platformID = getObservable(params.platformID || -1);
+        this.startDate = getObservable(params.startDate || '1/1/2018');
+
+        /**
+         * An end date for the summary query. Default value is 
+         * today.
+         * @member {KnockoutObservable<string>}
+         */
+        this.endDate = getObservable(params.endDate || '2/2/2018');
+
+        /**
+         * A platformID for the summary query. Defualt value is 
+         * null for all platforms.
+         * @member {KnockoutObservable<integer>}
+         */
+        this.platformID = getObservable(params.platformID || null);
 
         /**
          * Earnings summary returned given query parameters.
