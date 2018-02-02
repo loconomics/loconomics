@@ -26,7 +26,7 @@ var A = Activity.extend(function ListingEditorActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Your listings', {
-        backLink: '/yourListings' , helpLink: this.viewModel.helpLink
+        backLink: '/listings' , helpLink: this.viewModel.helpLink
     });
     this.title = ko.pureComputed(function() {
         var user = this.user();

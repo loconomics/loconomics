@@ -1,5 +1,5 @@
 /**
-    yourListings activity
+    listings activity
 **/
 'use strict';
 import '../kocomponents/external-listing/list';
@@ -11,7 +11,7 @@ var moment = require('moment');
 var user = require('../data/userProfile').data;
 var marketplaceProfile = require('../data/marketplaceProfile');
 
-var A = Activity.extend(function YourListingsActivity() {
+var A = Activity.extend(function ListingsActivity() {
 
     Activity.apply(this, arguments);
 
@@ -19,7 +19,7 @@ var A = Activity.extend(function YourListingsActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    this.title('Your Listings');
+    this.title('Listings');
 
     this.viewModel.showMarketplaceInfo(true);
     this.viewModel.baseUrl('/listingEditor');

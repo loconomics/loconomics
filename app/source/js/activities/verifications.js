@@ -19,7 +19,7 @@ var A = Activity.extend(function VerificationsActivity() {
     // Defaults settings for navBar.
 
     this.navBar = Activity.createSubsectionNavBar('Marketplace profile', {
-        backLink: '/yourListings', helpLink: this.viewModel.helpLink
+        backLink: '/listings', helpLink: this.viewModel.helpLink
     });
     this.title('Verifications');
     // Share navBar with desktop nav through viewModel
