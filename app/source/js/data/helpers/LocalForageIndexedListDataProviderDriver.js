@@ -53,13 +53,16 @@ export default class LocalForageIndexedListDataProviderDriver {
          */
         this.fetch = function() {
             return localforage.getItem(listIndexKey)
-            .then(({ data: index, latest } = {}) => {
+            .then((cache) => {
                 // index is, if any, array of keys/IDs
-                if (index) {
+                if (cache && cache.data) {
+                    const index = cache.data;
                     // Get all local items from the array
                     // Basically, resolving IDs into its values
                     return Promise.all(index.map((id) => localforage.getItem(itemKey(id))))
-                    .then((all) => ({ latest, data: all.map((item) => item.data) }));
+                    // We must return a new CachedData-like object, including the
+                    // original cache metadata but with data being an array of all items
+                    .then((all) => (Object.assign({}, cache, { data: all.map((item) => item.data) })));
                 }
                 else {
                     return undefined;
@@ -69,22 +72,25 @@ export default class LocalForageIndexedListDataProviderDriver {
         /**
          * Store a list of items as an array of IDs in the index and individual
          * keys for items.
+         * @param {CachedData} cache
          * @returns {Promise}
          */
-        this.push = function({ data: list, latest }) {
+        this.push = function(cache) {
+            const { data: list } = cache;
             // Wrap around a promise even if synchronous, to properly reject rather than throw
-            // in case of error (easily can happens on wrongly storing an empty item).
+            // in case of error (easily can happens when trying to store an empty item --not allowed).
             const storeItems = new Promise((resolve) => {
                 // Store every item on it's own indexed key
-                const tasks = list.map((item) => localforage.setItem(itemKey(item[idPropertyName]), {
-                    latest,
+                // generating a new CachedData-like object, including the original list cache metadata
+                const tasks = list.map((item) => localforage.setItem(itemKey(item[idPropertyName]), Object.assign({}, cache, {
                     data: item
-                }));
+                })));
                 resolve(tasks);
             });
             return storeItems.then((all) => Promise.all(all))
-            // and the list of IDs on the index
-            .then(() => localforage.setItem(listIndexKey, { latest, data: list.map((item) => item[idPropertyName]) }));
+            // and the list of IDs on the index,
+            // as a CachedData-like object that includes original cache metadata
+            .then(() => localforage.setItem(listIndexKey, Object.assign({}, cache, { data: list.map((item) => item[idPropertyName]) })));
         };
         /**
          * Delete the whole list: the index and each stored list.
