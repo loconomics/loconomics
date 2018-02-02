@@ -16,7 +16,7 @@ const LOCAL_KEY = 'platforms';
 
 /**
  * Provides access to the list of all platforms available.
- * @returns {CachedDataProvider<Array<api/Platform>>}
+ * @returns {CachedDataProvider<Array<rest/Platform>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
  * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
@@ -31,7 +31,7 @@ export const list = new CachedDataProvider({
 /**
  * Provides access to an API to fetch a specific platform data.
  * @param {number} id The platformID
- * @returns {CachedDataProvider<api/Platform>}
+ * @returns {CachedDataProvider<rest/Platform>}
  * Usage:
  * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
  * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
