@@ -213,6 +213,33 @@ export default class KnockoutComponent {
     }
 
     /**
+     * It subscribes to the given object and automatically disposes the
+     * subscription at the end of life of the component.
+     * @param {ISubscribable} subscribable An object implementing the `subscribe`
+     * method, that lets to subscribe to notifications received in the callback
+     * and lets `dispose` that subscription to prevent memory leaks.
+     * Common used objects here are SingleEvents and Knockout Observables (as alternative to
+     * observeChanges when just one observable is watched and don't want a first
+     * time execution of the callback when connecting).
+     * @param {function} callback Function executed every time the subscribable
+     * notifies including data in the parameters.
+     * @returns {IDisposable} Returns back the subscription that allows disposal.
+     * Remember that manual disposal is not needed, except disposal before
+     * the end of life of the component is wanted.
+     */
+    subscribeTo(subscribable, callback) {
+        if (!subscribable || typeof(subscribable.subscribe) !== 'function') {
+            throw new Error('Given object is not subscribable', subscribable);
+        }
+        var disposable = subscribable.subscribe(callback);
+        if (!disposable || typeof(disposable.dispose) !== 'function') {
+            throw new Error('Given subscribable does not allows disposal', subscribable, disposable);
+        }
+        this.disposables.push(disposable);
+        return disposable;
+    }
+
+    /**
      * Creates an instance from the input parameters and DOM references of
      * the instantiated template and given children nodes.
      * It implements the execution of some common lifecycle steps.
