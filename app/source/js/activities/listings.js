@@ -19,7 +19,7 @@ var A = Activity.extend(function ListingsActivity() {
     this.viewModel = new ViewModel(this.app);
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    this.title('Listings');
+    this.title('Your Listings');
 
     this.viewModel.showMarketplaceInfo(true);
     this.viewModel.baseUrl('/listingEditor');
