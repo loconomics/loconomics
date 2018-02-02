@@ -30,8 +30,10 @@
  * Not all cases where this class is used need to allow all the methods provided: not
  * allowing 'delete' is common for lists APIs, same with `save` for queries or prefixed/enforced
  * data. That's fine, and the remote/local implementations don't need to include them;
- * use the data module docs to specify which APIs are possible.
- *g
+ * use the data module docs to specify which APIs are possible. But take care that
+ * the local 'delete' method is needed for cache removal, even if the related
+ * remote API does not allows deleting the data.
+ *
  * IMPORTANT: Never use externally members prefixed with underscore, are expected to be
  * private and can change/break at any point because of implementation details.
  *
@@ -59,11 +61,9 @@
  * });
  * ```
  */
-// TODO: ReactiveEvent for onData: automatically triggers a __sync on subscription,
-// making it can be used the same as onceLoaded
-// TODO: Implement onDataError event, automatic for onData, related only to that
 
 import AggregatedEvent from '../../utils/SingleEvent/AggregatedEvent';
+import ReactiveEvent from '../../utils/SingleEvent/ReactiveEvent';
 import SingleEvent from '../../utils/SingleEvent';
 
 export default class CachedDataProvider {
@@ -218,13 +218,31 @@ export default class CachedDataProvider {
          */
         this.onDeleted = new SingleEvent(this);
         /**
-         * Notification whenever there is incoming data, including a copy
-         * of the data. It's like listening to onLoaded and onSaved at the
-         * same time (this is recommended over explicitly listening to the
-         * other events; in the future could include other data changes).
-         * @member {SingleEvent<any>}
+         * Notification when an error happens at a sync operation that is
+         * triggered as a result of subscribe to the onData event
+         * @member {SingleEvent}
          */
-        this.onData = new AggregatedEvent([this.onLoaded, this.onSaved], this);
+        this.onDataError = new SingleEvent(this);
+        /**
+         * Reactive notification of incoming data.
+         * It notifies of both onLoaded and onSaved events, including a copy of the data,
+         * and reacts to subscriptions by requesting data synchronization/loading.
+         * This is recommended over explicitly listening to that other events
+         * and manually triggering sync; too, in the future could include
+         * reactions to other data changes.
+         * @member {ReactiveEvent<any>}
+         */
+        this.onData = ReactiveEvent.convert(
+            new AggregatedEvent([this.onLoaded, this.onSaved], this), {
+                afterSubscribe: () => {
+                    // Notify errors through specific onDataError event.
+                    this.__sync()
+                    .catch((error) => {
+                        this.onDataError.emit(error);
+                    });
+                }
+            }
+        );
     }
 
     /**
