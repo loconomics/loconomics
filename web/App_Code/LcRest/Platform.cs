@@ -73,19 +73,23 @@ namespace LcRest
                 p.signInURL,
                 p.updatedDate
             FROM Platform as P
-                JOIN JobTitlePlatform as JP
-                ON P.PlatformID = JP.PlatformID
-                AND P.LanguageID = JP.LanguageID
-                AND P.CountryID = JP.CountryID
-                AND P.Active = 1
-                AND JP.Active = 1
-                JOIN UserProfilePositions as J
-                ON (JP.JobTitleID = J.PositionID OR JP.JobTitleID = -1)
-                AND JP.LanguageID = J.LanguageID
-                AND JP.CountryID = J.CountryID
-                AND J.Active = 1
-                AND J.StatusID > 0
-            WHERE J.UserID = @0
+            WHERE
+                P.PlatformID IN (
+                    SELECT JP.PlatformID
+                    FROM JobTitlePlatform as JP
+                    JOIN UserProfilePositions as J
+                    ON (JP.JobTitleID = J.PositionID OR JP.JobTitleID = -1)
+                    AND JP.LanguageID = J.LanguageID
+                    AND JP.CountryID = J.CountryID
+                    AND J.Active = 1
+                    AND J.StatusID > 0
+                    WHERE P.PlatformID = JP.PlatformID
+                    AND P.LanguageID = JP.LanguageID
+                    AND P.CountryID = JP.CountryID
+                    AND P.Active = 1
+                    AND JP.Active = 1
+                    AND J.UserID = @0
+                )
                 AND P.LanguageID = @1 AND P.CountryID = @2
         ";
         const string sqlGetItem = sqlGetList + @"
