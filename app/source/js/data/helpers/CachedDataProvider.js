@@ -125,9 +125,13 @@ export default class CachedDataProvider {
                 // check if needs revalidation
                 // and return it when done
                 .then((dataCache) => ({
-                    data: dataCache.data,
-                    latest: dataCache.latest,
-                    mustRevalidate: mustRevalidate(dataCache.latest, settings.ttl)
+                    // Be careful: the cache may not exist, on that cases just
+                    // let every field being undefined
+                    data: dataCache && dataCache.data,
+                    latest: dataCache && dataCache.latest,
+                    // Again: cache may not exist, be careful too to validate some 'latest' exist
+                    // and fallback as 'true' (if no data, no time of latest copy, then sure needs revalidation)
+                    mustRevalidate: dataCache && dataCache.latest && mustRevalidate(dataCache.latest, settings.ttl) || true
                 }));
             },
             /**
