@@ -34,7 +34,7 @@ module.exports = {
     'privacySettings': require('./activities/privacySettings'),
     'addJobTitle': require('./activities/addJobTitle'),
     'serviceProfessionalServiceEditor': require('./activities/serviceProfessionalServiceEditor'),
-    'yourListings': require('./activities/yourListings'),
+    'listings': require('./activities/listings'),
     'servicesOverview': require('./activities/servicesOverview'),
     'verifications': require('./activities/verifications'),
     'education': require('./activities/education'),
