@@ -59,39 +59,52 @@ namespace LcRest
         #region SQLs
         const string sqlGetList = @"
             SELECT
-                platformID,
-                languageID,
-                countryID,
-                name,
-                shortDescription,
-                longDescription,
-                feesDescription,
-                positiveAspects,
-                negativeAspects,
-                advice,
-                signUpURL,
-                signInURL,
-                updatedDate
-            FROM Platform
-            WHERE LanguageID = @0 AND CountryID = @1
+                p.platformID,
+                p.languageID,
+                p.countryID,
+                p.name,
+                p.shortDescription,
+                p.longDescription,
+                p.feesDescription,
+                p.positiveAspects,
+                p.negativeAspects,
+                p.advice,
+                p.signUpURL,
+                p.signInURL,
+                p.updatedDate
+            FROM Platform as P
+                JOIN JobTitlePlatform as JP
+                ON P.PlatformID = JP.PlatformID
+                AND P.LanguageID = JP.LanguageID
+                AND P.CountryID = JP.CountryID
+                AND P.Active = 1
+                AND JP.Active = 1
+                JOIN UserProfilePositions as J
+                ON JP.JobTitleID = J.PositionID
+                AND JP.LanguageID = J.LanguageID
+                AND JP.CountryID = J.CountryID
+                AND J.Active = 1
+                AND J.StatusID > 0
+            WHERE J.UserID = @0
+                AND P.LanguageID = @1 AND P.CountryID = @2
         ";
         const string sqlGetItem = sqlGetList + @"
-        AND platformID = @2
-    ";
+                AND P.platformID = @3
+        ";
         #endregion
 
-        public static IEnumerable<Platform> GetList(int languageID, int countryID)
+        public static IEnumerable<Platform> GetList(int userID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, languageID, countryID).Select(FromDB);
+                return db.Query(sqlGetList, userID, languageID, countryID).Select(FromDB);
             }
         }
-        public static Platform Get(int platformID, int languageID, int countryID)
+        public static Platform Get(int userID, int platformID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, platformID, languageID, countryID));
+                return FromDB(db.QuerySingle(sqlGetItem, userID, languageID, countryID, platformID));
             }
         }
         #endregion
