@@ -27,7 +27,7 @@
  * });
  * ```
  */
-//TODO: Unit Tests
+
 /**
  * @typedef {Object} Hooks
  * @member {Function} [beforeSubscribe]
@@ -60,38 +60,41 @@ export default class ReactiveEvent extends SingleEvent {
     static convert(singleEvent, hooks) {
         if (hooks.beforeSubscribe || hooks.afterSubscribe) {
             const subscribe = singleEvent.subscribe;
-            singleEvent.subscribe = () => {
+            singleEvent.subscribe = (...args) => {
                 if (hooks.beforeSubscribe) {
-                    hooks.beforeSubscribe.apply(singleEvent, arguments);
+                    hooks.beforeSubscribe.apply(singleEvent, args);
                 }
-                const result = subscribe.apply(singleEvent, arguments);
+                const result = subscribe.apply(singleEvent, args);
                 if (hooks.afterSubscribe) {
-                    hooks.afterSubscribe.call(singleEvent, ...arguments, result);
+                    hooks.afterSubscribe.apply(singleEvent, [...args, result]);
                 }
+                return result;
             };
         }
         if (hooks.beforeUnsubscribe || hooks.afterUnsubscribe) {
             const unsubscribe = singleEvent.unsubscribe;
-            singleEvent.unsubscribe = () => {
+            singleEvent.unsubscribe = (...args) => {
                 if (hooks.beforeUnsubscribe) {
-                    hooks.beforeUnsubscribe.apply(singleEvent, arguments);
+                    hooks.beforeUnsubscribe.apply(singleEvent, args);
                 }
-                const result = unsubscribe.apply(singleEvent, arguments);
+                const result = unsubscribe.apply(singleEvent, args);
                 if (hooks.afterUnsubscribe) {
-                    hooks.afterUnsubscribe.call(singleEvent, ...arguments, result);
+                    hooks.afterUnsubscribe.apply(singleEvent, [...args, result]);
                 }
+                return result;
             };
         }
         if (hooks.beforeEmit || hooks.afterEmit) {
             const emit = singleEvent.emit;
-            singleEvent.emit = () => {
+            singleEvent.emit = (...args) => {
                 if (hooks.beforeEmit) {
-                    hooks.beforeEmit.apply(singleEvent, arguments);
+                    hooks.beforeEmit.apply(singleEvent, args);
                 }
-                const result = emit.apply(singleEvent, arguments);
+                const result = emit.apply(singleEvent, args);
                 if (hooks.afterEmit) {
-                    hooks.afterEmit.call(singleEvent, ...arguments, result);
+                    hooks.afterEmit.apply(singleEvent, [...args, result]);
                 }
+                return result;
             };
         }
         return singleEvent;
