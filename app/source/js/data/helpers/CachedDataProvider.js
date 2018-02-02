@@ -131,7 +131,7 @@ export default class CachedDataProvider {
                     latest: dataCache && dataCache.latest,
                     // Again: cache may not exist, be careful too to validate some 'latest' exist
                     // and fallback as 'true' (if no data, no time of latest copy, then sure needs revalidation)
-                    mustRevalidate: dataCache && dataCache.latest && mustRevalidate(dataCache.latest, settings.ttl) || true
+                    mustRevalidate: dataCache ? mustRevalidate(dataCache.latest, settings.ttl) : true
                 }));
             },
             /**
@@ -324,8 +324,17 @@ export default class CachedDataProvider {
  * plus TTL is smaller than current time, or latest is empty.
  */
 function mustRevalidate(latest, ttl) {
-    const now = (new Date()).toJSON();
-    var tdiff = latest && now - latest || Number.POSITIVE_INFINITY;
+    // If no 'latest' value, then must revalidate
+    if (!latest) {
+        return true;
+    }
+    // Build a date for 'latest', using ISO8601 is standard and well supported
+    // cross browser. We needed to be able to get a diff value.
+    latest = new Date(latest);
+    const now = new Date();
+    // Calculate diff in milliseconds
+    var tdiff = now - latest;
+    // When bigger diff than TTL, must revalidate
     return tdiff > ttl;
 }
 
