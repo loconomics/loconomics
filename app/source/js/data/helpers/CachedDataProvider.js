@@ -61,8 +61,6 @@
  */
 // TODO: ReactiveEvent for onData: automatically triggers a __sync on subscription,
 // making it can be used the same as onceLoaded
-// TODO: Restrict one sync task at a time, and return one in course when a new
-// request come in.
 // TODO: Implement onDataError event, automatic for onData, related only to that
 
 import AggregatedEvent from '../../utils/SingleEvent/AggregatedEvent';
@@ -165,6 +163,38 @@ export default class CachedDataProvider {
                     // null means no data to check, undefined means not loaded still
                     latest: null
                 }));
+            }
+        };
+
+        // We replace the instance __sync method by wrapping it in a 'just one task at a time'
+        // logic. The running task (promise) is saved, returned if in progress and clearer
+        // at the end (succes or error).
+        // The method signature and documentation remains the same, check it in the
+        // source implementation below.
+        // We don't implement this in the method itself to keep implementation more clear,
+        // focused on it's goal.
+        this.__syncTask = null;
+        const __syncOriginal = this.__sync.bind(this);
+        this.__sync = () => {
+            // Only one task at a time: check if there is a running task and return that
+            if (this.__syncTask) {
+                return this.__syncTask;
+            }
+            else {
+                this.__syncTask = __syncOriginal()
+                .then((data) => {
+                    // Clear running task
+                    this.__syncTask = null;
+                    // pass-through data
+                    return data;
+                }, (error) => {
+                    // On error, we need to clear running task too
+                    this.__syncTask = null;
+                    // and relay the error
+                    throw error;
+                });
+                // Return the running task
+                return this.__syncTask;
             }
         };
 
