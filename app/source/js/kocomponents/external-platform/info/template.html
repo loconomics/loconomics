@@ -1,14 +1,15 @@
 <div data-bind="with: externalPlatform">
     <h2>About</h2>
-    <p data-bind="text: LongDescription"></p>
+    <p data-bind="text: longDescription"></p>
     <h2>Commissions and fees</h2>
-    <p data-bind="text: FeesDescription"></p>
+    <p data-bind="foreach: { data: deesDescription, as: 'line' }"><!-- ko text: line --><!-- /ko --></p>
     <h2>Positive aspects</h2>
-    <p data-bind="text: PositiveAspects"></p>
+    <p data-bind="foreach: { data: positiveAspects, as: 'line' }"><!-- ko text: line --><!-- /ko --></p>
     <h2>What to watch out for</h2>
-    <p data-bind="text: NegativeAspects"></p>
+    <p data-bind="foreach: { data: negativeAspects, as: 'line' }"><!-- ko text: line --><!-- /ko --></p>
     <h2>How to stand out</h2>
-    <p data-bind="text: Advice"></p>
-    <a class="btn btn-default" target="_blank" data-bind="attr: { href: SignUpURL }">Visit <span data-bind="text: PlatformName"></span></a>
-    <a class="btn btn-primary" data-bind="visible: !$component.hideAddListing(), attr: {href: '/external-listing-add/' + PlatformID + '?mustReturn=external-platform-view/' + PlatformID + '&returnText=' + PlatformName + ' info' }">Add <span data-bind="text: PlatformName"></span> listing</a>
+    <p data-bind="foreach: { data: advice, as: 'line' }"><!-- ko text: line --><!-- /ko --></p>
+    <a class="btn btn-default" target="_blank" data-bind="attr: { href: signUpURL }">Visit <span data-bind="text: name"></span></a>
+    <a class="btn btn-primary" data-bind="visible: !$component.hideAddListing(),
+        attr: { href: $component.linkToAdd }">Add <span data-bind="text: PlatformName"></span> listing</a>
 </div>
