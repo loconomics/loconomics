@@ -42,8 +42,8 @@ export default class ExternalPlatformSuggestionsList extends Komponent {
          */
         this.subscribeTo(platformsList.onDataError, (err) => {
             showError({
-              title: 'There was an error loading the platforms',
-              error: err
+                title: 'There was an error loading the platforms',
+                error: err
             });
         });
     }
