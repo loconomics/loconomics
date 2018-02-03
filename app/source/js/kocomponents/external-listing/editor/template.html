@@ -1,5 +1,5 @@
 <form id="externalyListingEntryForm" aria-describedby="externalyListingEntryFormInstructions">
-    <fieldset>
+    <fieldset data-bind="with: externalListing">
         <div class="col-xs-12">
             <legend>Listing details</legend>
             <label for="listingTitle">Title</label>
@@ -9,7 +9,7 @@
                     type="text"
                     placeholder=""
                     data-bind="
-                        value: externalListing().ListingTitle
+                        value: title
                     " />
             </div>
             <label for="jobTitles">Job Titles</label>
@@ -19,7 +19,7 @@
                     type="text"
                     placeholder=""
                     data-bind="
-                        value: externalListing().JobTitles
+                        value: jobTitles
                     " />
             </div>
             <!-- <div class="isolated inset">
@@ -36,7 +36,7 @@
                     rows="5"
                     placeholder=""
                     data-bind="
-                        value: externalListing().Notes
+                        value: notes
                     "></textarea>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg">Save</button>

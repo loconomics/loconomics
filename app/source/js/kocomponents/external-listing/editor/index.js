@@ -11,21 +11,11 @@ import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import { item as platformsItem } from '../../../data/platforms';
 import template from './template.html';
 
 const TAG_NAME = 'external-listing-editor';
 const dummyData = {};
-const dummyPlatformData = {};
-dummyPlatformData[1] = {
-    'PlatformID': 1,
-    'PlatformName': '99designs',
-    'SignInURL': 'https://99designs.com/designers/'
-};
-dummyPlatformData[2] = {
-    'PlatformID': 2,
-    'PlatformName': 'TaskRabbit',
-    'SignInURL':  'https://TaskRabbit.com/'
-};
 dummyData[214] = {
     'externalListingID': 214,
     'PlatformID': 1,
@@ -97,18 +87,27 @@ export default class ExternalListingEditor extends Komponent {
          * platform of the listing being added.
          * @member {KnockoutObservable<object>}
          */
-        this.externalPlatformBasicInfo = ko.observable();
+        this.externalPlatformInfo = ko.observable();
 
+        /**
+         * Loads the information about the platform, returning and placing it
+         * at the member externalPlatformInfo and updating member platformName.
+         * @private
+         */
         const loadPlatformInfo = (id) => {
-            let data;
+            let promise;
             if (id) {
-                data = dummyPlatformData[id];
+                promise = platformsItem(id).onceLoaded();
+                console.log('platform', id, promise);
             }
             else {
-                data = {};
+                promise = Promise.resolve({});
             }
-            this.externalPlatformBasicInfo(data);
-            this.platformName(data.PlatformName);
+            return promise.then((data) => {
+                this.externalPlatformInfo(data);
+                this.platformName(data.name);
+                return data;
+            });
         };
 
         this.observeChanges(() => {
@@ -116,19 +115,19 @@ export default class ExternalListingEditor extends Komponent {
             if (id) {
                 const data = dummyData[id];
                 this.externalListing(data);
-                loadPlatformInfo(data.PlatformID);
+                loadPlatformInfo(data.platformID);
             }
             else {
-                loadPlatformInfo(this.externalPlatformID());
-                this.externalListing({
-                    externalListingID: 0,
-                    PlatformID: this.externalPlatformID(),
-                    ListingTitle: 'My ' + this.platformName() + ' listing',
-                    JobTitles: '',
-                    Notes: '',
-                    CreatedDate: '',
-                    ModifiedDate: false,
-                    Active: true
+                loadPlatformInfo(this.externalPlatformID())
+                .then(() => {
+                    this.externalListing({
+                        externalListingID: 0,
+                        platformID: this.externalPlatformID(),
+                        title: 'My ' + this.platformName() + ' listing',
+                        jobTitles: '',
+                        notes: '',
+                        modifiedDate: false
+                    });
                 });
             }
         });
