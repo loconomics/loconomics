@@ -69,7 +69,7 @@ export default class ExternalPlatformInfo extends Komponent {
         this.linkToAdd = ko.pureComputed(() => {
             const platform = this.externalPlatform();
             if (platform) {
-                const text = encodeURIComponent(`${platform.platformName} info`);
+                const text = encodeURIComponent(`${platform.name} info`);
                 return `/external-listing-add/${platform.platformID}?mustReturn=external-platform-view/${platform.platformID}&returnText=${text}`;
             }
             else {
