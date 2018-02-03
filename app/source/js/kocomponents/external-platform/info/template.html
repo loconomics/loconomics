@@ -11,5 +11,5 @@
     <p data-bind="foreach: { data: advice, as: 'line' }"><!-- ko text: line --><!-- /ko --></p>
     <a class="btn btn-default" target="_blank" data-bind="attr: { href: signUpURL }">Visit <span data-bind="text: name"></span></a>
     <a class="btn btn-primary" data-bind="visible: !$component.hideAddListing(),
-        attr: { href: $component.linkToAdd }">Add <span data-bind="text: PlatformName"></span> listing</a>
+        attr: { href: $component.linkToAdd }">Add <span data-bind="text: name"></span> listing</a>
 </div>

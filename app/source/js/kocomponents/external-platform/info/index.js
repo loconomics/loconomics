@@ -70,7 +70,7 @@ export default class ExternalPlatformInfo extends Komponent {
             const platform = this.externalPlatform();
             if (platform) {
                 const text = encodeURIComponent(`${platform.platformName} info`);
-                return `/external-listing-add/${platform.platformID}?mustReturn=external-platform-view/'${platform.platformID}&returnText=${text}`;
+                return `/external-listing-add/${platform.platformID}?mustReturn=external-platform-view/${platform.platformID}&returnText=${text}`;
             }
             else {
                 return '';
@@ -118,7 +118,7 @@ export default class ExternalPlatformInfo extends Komponent {
                 // Load platform data
                 dataSubscription = this.subscribeTo(item.onData, (data) => {
                     this.externalPlatform(data);
-                    this.platformName(data.PlatformName);
+                    this.platformName(data.name);
                 });
                 // Notify data load errors
                 dataErrorSubscription = this.subscribeTo(item.onDataError, (err) => {
