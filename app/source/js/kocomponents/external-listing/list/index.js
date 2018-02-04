@@ -4,30 +4,13 @@
  * @module kocomponents/external-listing/list
  *
  */
-
 import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
-import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import template from './template.html';
+import { list as userExternalListingsList } from '../../../data/userExternalListings';
 
 const TAG_NAME = 'external-listing-list';
-const dummyData = {};
-dummyData[540] =
-[
-  {
-    'externalListingID': 214,
-    'PlatformID': 2,
-    'PlatformName': 'Upwork',
-    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
-  },
-  {
-    'externalListingID': 215,
-    'PlatformID': 3,
-    'PlatformName': '99designs',
-    'JobTitles': ["Graphic Designer", "Graphic Artist", "Front-end Developer"]
-  }
-];
 
 /**
  * Component
@@ -36,19 +19,8 @@ export default class ExternalListingList extends Komponent {
 
     static get template() { return template; }
 
-    /**
-     * @param {object} params
-     * @param {(number|KnockoutObservable<number>)} 
-     * [params.userID]
-     */
-    constructor(params) {
+    constructor() {
         super();
-
-        /**
-         * The user's ID whom we're getting a list for.
-         * @member {KnockoutObservable<number>}
-         */
-        this.userID = getObservable(params.userID || -1);
 
         /**
          * An array containing the external listings for the
@@ -57,10 +29,18 @@ export default class ExternalListingList extends Komponent {
          */
         this.externalListing = ko.observableArray();
 
-        this.observeChanges(() => {
-            const data = dummyData[this.userID()];
-            this.externalListing(data);
-        });
+        /**
+         * For a userExternalListing (an item in the array), returns a string
+         * with all the job titles in one line, comma separated.
+         * @param {rest/UserExternalListing} listingItem
+         */
+        this.getJobTitlesLine = (listingItem) => Object.values(listingItem.jobTitles).join(', ');
+
+        /**
+         * Suscribe to data coming for the list and put them in our
+         * externalListing propery.
+         */
+        this.subscribeTo(userExternalListingsList.onData, this.externalListing);
     }
 }
 
