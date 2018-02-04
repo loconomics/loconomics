@@ -146,6 +146,59 @@ describe('utils/SingleEvent', function() {
         });
     });
 
+    describe('count', function() {
+        var event = new SingleEvent();
+        var touched = false;
+        var subscription;
+        var subs2;
+
+        it('should be zero before any subscription', function() {
+            expect(event.count).to.be.equals(0);
+        });
+
+        it('should be one after a subscription', function() {
+            subscription = event.subscribe(function() {
+                touched = true;
+            });
+            expect(event.count).to.be.equals(1);
+        });
+
+
+        it('should be two after a second subscription', function() {
+            subs2 = event.subscribe(function(){});
+            expect(event.count).to.be.equals(2);
+        });
+
+        it('should be equals to value returned by "emit"', function() {
+            var count = event.emit();
+
+            expect(touched).to.be.true;
+            expect(count).to.equal(event.count);
+        });
+
+        it('should be one again after unsubscribe one of them', function() {
+            // Unsubscribe
+            event.unsubscribe(subscription.id);
+            var count = event.emit();
+
+            expect(event.count).to.equal(1);
+            expect(count).to.equal(event.count);
+        });
+
+        it('should be zero again after dispose last of them', function() {
+            subs2.dispose();
+
+            expect(event.count).to.equal(0);
+        });
+
+        it('should never being less than zero even trying duped unsubscriptions', function() {
+            subscription.dispose();
+            event.unsubscribe(subs2.id);
+
+            expect(event.count).to.equal(0);
+        });
+    });
+
     describe('subscriber', function() {
         var event = new SingleEvent();
         var subscriber = event.subscriber;
