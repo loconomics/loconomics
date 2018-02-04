@@ -98,6 +98,9 @@ Activity.prototype.show = function show(options) {
         if (!this.viewModel.title) {
             this.viewModel.title = this.title;
         }
+        if (!this.viewModel.isShown) {
+            this.viewModel.isShown = this.isShown;
+        }
         // Set-up dynamic update of the title on observable value change
         if (ko.isObservable(this.title)) {
             this.registerHandler({
