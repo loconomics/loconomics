@@ -335,7 +335,7 @@ export default class CachedDataProvider {
         return this.__remote.push(data)
         // Store the returning data locally with cache info
         // (remote must send the data back, updating any server calculated value)
-        .then((data) => this.__local.push(data))
+        .then((data) => this.__localCache.push(data))
         // Notify it was saved, providing a copy of the data and returning it
         .then((cache) => this.onSaved.emit(cache.data) && cache.data);
     }
@@ -353,7 +353,7 @@ export default class CachedDataProvider {
         return this.__remote.delete()
         .then((remoteResultOrCopy) => {
             // Delete from local,
-            this.__local.delete()
+            this.__localCache.delete()
             // Notify it was deleted,
             // providing the result given by the remote and return that result
             .then(() => this.onDeleted.emit(remoteResultOrCopy) && remoteResultOrCopy);
@@ -369,7 +369,7 @@ export default class CachedDataProvider {
      * @returns {Promise}
      */
     clearCache() {
-        return this.__local.delete();
+        return this.__localCache.delete();
     }
 }
 
