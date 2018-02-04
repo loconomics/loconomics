@@ -78,6 +78,21 @@ export default class ExternalListingEditor extends Komponent {
         this.selectedJobTitles = ko.observableArray([]);
 
         /**
+         * State flag for the 'save' task
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isSaving = ko.observable(false);
+
+        /**
+         * Dynamic label text for the 'save' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.saveButtonLabel = ko.pureComputed(() => {
+            const text = this.isSaving() ? 'Saving...' : 'Save';
+            return text;
+        });
+
+        /**
          * Loads the information about the platform, returning and placing it
          * at the member externalPlatformInfo and updating member platformName.
          * @param {number} id
@@ -160,18 +175,28 @@ export default class ExternalListingEditor extends Komponent {
      * Save current form data
      */
     save() {
-        // Copy data to send
-        const data = Object.assign({}, this.externalListing());
-        // Replace the object of job titles with the list of selected IDs
-        data.jobTitles = this.selectedJobTitles().map((jt) => jt.id);
-        userExternalListingItem(this.externalListingID())
-        .save(data)
+        // Prevent twice execution
+        if (this.isSaving()) return;
+        // Initial sync code wrappein a promise, so in case of error we
+        // catch it later.
+        return new Promise((resolve, reject) => {
+            this.isSaving(true);
+            // Copy data to send
+            const data = Object.assign({}, this.externalListing());
+            // Replace the object of job titles with the list of selected IDs
+            data.jobTitles = this.selectedJobTitles().map((jt) => jt.id);
+            // Sent data
+            const item = userExternalListingItem(this.externalListingID());
+            item.save(data).then(resolve, reject);
+        })
         // Update with server data
         .then((serverData) => {
+            this.isSaving(false);
             this.externalListing(serverData);
             this.externalListingID(serverData.userExternalListingID);
         })
         .catch((error) => {
+            this.isSaving(false);
             showError({
                 title: 'There was an error saving your changes',
                 error

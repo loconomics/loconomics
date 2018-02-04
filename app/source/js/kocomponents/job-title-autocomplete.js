@@ -51,6 +51,8 @@ var Target = {
  * The label text for the input-autocomplete.
  * @param {(boolean|KnockoutObservable<boolean>)} [params.visuallyHiddenLabel=false]
  * Whether the label should be visually hidden (hidden but available to screen readers) or not.
+ * @param {(boolean|KnockoutObservable<boolean>)} [params.isDisabled=false]
+ * Whether the input should be disabled or not (to prevent user interaction).
  * @param {(Target|KnockoutObservable<Target>)} [params.target=Target.search] Which use
  * is targetting the autocomplete instance: searching for job titles or displaying
  * suggestions to a proffesional that is adding a job title to its listing.
@@ -143,6 +145,10 @@ function ViewModel(params) {
      * @member {Target}
      */
     this.target = getObservable(params.target);
+    /**
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isDisabled = getObservable(params.isDisabled);
     /**
      * Whether we are in target 'addJobTitle' mode.
      * Anything else is managed as default target 'search'
