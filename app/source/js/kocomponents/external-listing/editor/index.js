@@ -12,30 +12,11 @@ import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import { item as platformsItem } from '../../../data/platforms';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
+import { item as userExternalListingItem } from '../../../data/userExternalListings';
 
 const TAG_NAME = 'external-listing-editor';
-const dummyData = {};
-dummyData[214] = {
-    'externalListingID': 214,
-    'PlatformID': 1,
-    'ListingTitle': 'Amazing Designer',
-    'JobTitles': 'Graphic Designer, Graphic Artist, Front-end Developer',
-    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-    'CreatedDate': '-Global demand',
-    'ModifiedDate': '-Zero pay if design not chosen↵-High commissions if chosen',
-    'Active': 1
-};
-dummyData[215] = {
-    'externalListingID': 215,
-    'PlatformID': 2,
-    'ListingTitle': 'Amazing Rabbit',
-    'JobTitles': 'Graphic Designer, Graphic Artist, Front-end Developer',
-    'Notes': '-$0 sign-up fee↵-20% commission if design chosen',
-    'CreatedDate': '-Global demand',
-    'ModifiedDate': '-Zero pay if design not chosen↵-High commissions if chosen',
-    'Active': 1
-};
 
 /**
  * Component
@@ -92,13 +73,13 @@ export default class ExternalListingEditor extends Komponent {
         /**
          * Loads the information about the platform, returning and placing it
          * at the member externalPlatformInfo and updating member platformName.
+         * @param {number} id
          * @private
          */
         const loadPlatformInfo = (id) => {
             let promise;
             if (id) {
                 promise = platformsItem(id).onceLoaded();
-                console.log('platform', id, promise);
             }
             else {
                 promise = Promise.resolve({});
@@ -110,12 +91,31 @@ export default class ExternalListingEditor extends Komponent {
             });
         };
 
+        /**
+         * Displays the error returned while loading the data
+         * @param {Error} err
+         */
+        const loadingError = function(error) {
+            showError({
+                title: 'There was an error loading the listing',
+                error
+            });
+        };
+
+        /**
+         * When the given listing ID changes, load the data or set-up a new
+         * entry for a platformID specified.
+         */
         this.observeChanges(() => {
             const id = this.externalListingID();
             if (id) {
-                const data = dummyData[id];
-                this.externalListing(data);
-                loadPlatformInfo(data.platformID);
+                userExternalListingItem(id)
+                .onceLoaded()
+                .then((data) => {
+                    this.externalListing(data);
+                    loadPlatformInfo(data.platformID);
+                })
+                .catch(loadingError);
             }
             else {
                 loadPlatformInfo(this.externalPlatformID())
@@ -128,7 +128,8 @@ export default class ExternalListingEditor extends Komponent {
                         notes: '',
                         modifiedDate: false
                     });
-                });
+                })
+                .catch(loadingError);
             }
         });
     }
