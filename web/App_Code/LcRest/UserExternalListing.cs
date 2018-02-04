@@ -16,6 +16,7 @@ namespace LcRest
         public Dictionary<int, string> jobTitles { get; set; }
         public string notes { get; set; }
 
+        public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
         #endregion
 
@@ -42,6 +43,7 @@ namespace LcRest
                 jobTitles = ParseJsonJobTitles((string)record.jobTitles),
                 notes = record.notes,
 
+                createdDate = record.createdDate,
                 updatedDate = record.updatedDate
             };
         }
@@ -57,6 +59,7 @@ namespace LcRest
                 title,
                 jobTitles,
                 notes,
+                createdDate,
                 updatedDate
             FROM UserExternalListing
             WHERE Active = 1

@@ -1,16 +1,14 @@
 <div data-bind="with: externalListing">
     <h2>Created</h2>
-    <p data-bind="text: CreatedDate"></p>
-    <h2>URL</h2>
-    <p data-bind="text: URL"></p>
+    <p data-bind="text: createdDate, format: { type: 'datetime', format: 'LLLL' }"></p>
     <h2>Last Modified</h2>
-    <p data-bind="text: ModifiedDate"></p>
+    <p data-bind="text: updatedDate, format: { type: 'datetime', format: 'LLLL' }"></p>
     <h2>Notes</h2>
-    <p data-bind="text: Notes"></p>
+    <p data-bind="text: notes"></p>
     <h2>Job Titles</h2>
-    <p data-bind="text: JobTitles"></p>
-    <button class="btn btn-default" data-bind=" attr: { href: SignInURL }">Sign in</button>
-    <h2>About <span data-bind="text: PlatformName"></span></h2>
-    <external-platform-info params="platformID: $component.platformID, platformName: $component.platformName, hideAddListing: true"></external-platform-info>
+    <ul class="list-unstyled" data-bind="foreach: Object.values(jobTitles)">
+        <li data-bind="text: $data"></li>
+    </ul>
+    <h2>About <span data-bind="text: $component.platformName"></span></h2>
+    <external-platform-info params="platformID: platformID, platformName: $component.platformName, hideAddListing: true"></external-platform-info>
  </div>
-
