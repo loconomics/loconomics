@@ -70,11 +70,11 @@
         {
             Validation.RequireField("title", "Title is required");
             Validation.RequireField("jobTitles[]", "Almost 1 related job title must be specified");
-            var jobTitlesList = Request.Form.GetValues("jobTitles[]").Select((value) => value.AsInt());
-            if (!Validation.IsValid() || !ModelState.IsValid)
+            if (!Validation.IsValid())
             {
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
+            var jobTitlesList = Request.Form.GetValues("jobTitles[]").Select((value) => value.AsInt());
             return jobTitlesList;
         }
 

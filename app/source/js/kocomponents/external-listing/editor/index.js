@@ -8,6 +8,7 @@
 // import '../../job-title-autocomplete.js'; ASKIAGO how to add multiple job titles-may need new component as current job-title-autocomplete only allows one job title to be added.
 // import '../../../../html/kocomponents/job-title-autocomplete.html';
 import '../../utilities/icon-dec.js';
+import { ActionForValue } from '../../job-title-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
@@ -71,6 +72,12 @@ export default class ExternalListingEditor extends Komponent {
         this.externalPlatformInfo = ko.observable();
 
         /**
+         * Holds a list of Job Title IDs selected by the user using the autocomplete.
+         * The list will be populated too with saved data when a listing is loaded.
+         */
+        this.selectedJobTitles = ko.observableArray([]);
+
+        /**
          * Loads the information about the platform, returning and placing it
          * at the member externalPlatformInfo and updating member platformName.
          * @param {number} id
@@ -103,6 +110,19 @@ export default class ExternalListingEditor extends Komponent {
         };
 
         /**
+         * React to changes to the instance used as external listing:
+         * - populate list of editable/selected Job Title IDs
+         */
+        this.subscribeTo(this.externalListing, (data) => {
+            const list = Object.keys(data.jobTitles)
+            .map((id) => ({
+                id,
+                name: data.jobTitles[id]
+            }));
+            this.selectedJobTitles(list);
+        });
+
+        /**
          * When the given listing ID changes, load the data or set-up a new
          * entry for a platformID specified.
          */
@@ -113,7 +133,7 @@ export default class ExternalListingEditor extends Komponent {
                 .onceLoaded()
                 .then((data) => {
                     this.externalListing(data);
-                    loadPlatformInfo(data.platformID);
+                    return loadPlatformInfo(data.platformID);
                 })
                 .catch(loadingError);
             }
@@ -124,14 +144,58 @@ export default class ExternalListingEditor extends Komponent {
                         externalListingID: 0,
                         platformID: this.externalPlatformID(),
                         title: 'My ' + this.platformName() + ' listing',
-                        jobTitles: '',
+                        jobTitles: {},
                         notes: '',
                         modifiedDate: false
                     });
+                    // Empty list of selected job titles
+                    this.selectedJobTitles([]);
                 })
                 .catch(loadingError);
             }
         });
+    }
+
+    /**
+     * Save current form data
+     */
+    save() {
+        // Copy data to send
+        const data = Object.assign({}, this.externalListing());
+        // Replace the object of job titles with the list of selected IDs
+        data.jobTitles = this.selectedJobTitles().map((jt) => jt.id);
+        userExternalListingItem(this.externalListingID())
+        .save(data)
+        // Update with server data
+        .then((serverData) => {
+            this.externalListing(serverData);
+            this.externalListingID(serverData.userExternalListingID);
+        })
+        .catch((error) => {
+            showError({
+                title: 'There was an error saving your changes',
+                error
+            });
+        });
+    }
+
+    onSelectJobTitle(textValue, data) {
+        if (!data) return;
+        if (data.jobTitleID) {
+            const id = data.jobTitleID();
+            // Add to list of selected ones
+            this.selectedJobTitles.push({
+                id,
+                name: textValue
+            });
+        }
+        return {
+            value: ActionForValue.clear
+        };
+    }
+
+    unselectJobTitle(jobTitleItem) {
+        this.selectedJobTitles.remove(jobTitleItem);
     }
 }
 

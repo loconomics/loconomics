@@ -1,4 +1,5 @@
-<form id="externalyListingEntryForm" aria-describedby="externalyListingEntryFormInstructions">
+<form id="externalListingEntryForm" aria-describedby="externalListingEntryFormInstructions"
+    data-bind="event: { submit: save }">
     <fieldset data-bind="with: externalListing">
         <div class="col-xs-12">
             <legend>Listing details</legend>
@@ -12,23 +13,22 @@
                         value: title
                     " />
             </div>
-            <label for="jobTitles">Job Titles</label>
-            <div class="form-group">
-                <input class="form-control"
-                    id="jobTitles"
-                    type="text"
-                    placeholder=""
-                    data-bind="
-                        value: jobTitles
-                    " />
-            </div>
-            <!-- <div class="isolated inset">
+            <div class="isolated">
                 <job-title-autocomplete params="suggestionButtonText: 'Add',
-                    target: 'addJobTitle',
-                    onSelect: onSelectJobTitle,
+                    target: 'search',
+                    onSelect: $component.onSelectJobTitle.bind($component),
                     label: 'Search and select a job title',
-                    id: 'jobTitleToAdd'"></job-title-autocomplete>
-            </div> -->
+                    id: 'externalListingEditorJobTitles'"></job-title-autocomplete>
+                <ul class="list-unstyled" data-bind="foreach: $component.selectedJobTitles">
+                    <li class="IconContentItem">
+                        <div class="Item-content" data-bind="text: name"></div>
+                        <button type="button" class="btn btn-link" aria-label="Unselect"
+                            data-bind="click: $component.unselectJobTitle.bind($component)">
+                            <span aria-hidden="true" class="fa ion ion-close"></span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
             <label for="notes">Notes</label>
             <div class="form-group">
                 <textarea class="form-control"
@@ -39,7 +39,7 @@
                         value: notes
                     "></textarea>
             </div>
-            <button type="button" class="btn btn-secondary btn-block btn-lg">Save</button>
+            <button type="submit" class="btn btn-secondary btn-block btn-lg">Save</button>
         </div>
     </fieldset>
 </form>
