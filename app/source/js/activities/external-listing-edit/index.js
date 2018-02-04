@@ -1,7 +1,7 @@
 /**
- * Allows a professional to edit their external listing's 
+ * Allows a professional to edit their external listing's
  * information.
- * 
+ *
  * @module activities/external-listing-edit
  *
  */
@@ -31,7 +31,7 @@ export default class ExternalListingEditActivity extends Activity {
          * populated by the component.
          */
         this.platformName = ko.observable('');
-        
+
         /**
          * Creates a placeholder for the external listing ID to
          * be populated using the show(state) method below.
@@ -43,6 +43,13 @@ export default class ExternalListingEditActivity extends Activity {
          * is updated.
          */
         this.title = ko.pureComputed( () => 'Edit ' + this.platformName() + ' listing');
+
+        /**
+         * After data being saved, notice and go back
+         */
+        this.onSaved = () => {
+            app.successSave();
+        };
     }
 
     /**
@@ -51,7 +58,7 @@ export default class ExternalListingEditActivity extends Activity {
     show(state) {
         super.show(state);
         var params = state.route && state.route.segments;
-        
+
         /**
          * externalListingID is the first segment in the activity
          * URL

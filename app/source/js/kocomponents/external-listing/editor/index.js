@@ -72,10 +72,20 @@ export default class ExternalListingEditor extends Komponent {
         this.externalPlatformInfo = ko.observable();
 
         /**
-         * Holds a list of Job Title IDs selected by the user using the autocomplete.
+         * Holds a list of Job Title selected by the user using the autocomplete.
          * The list will be populated too with saved data when a listing is loaded.
+         * @member {KnockoutObservableArray<Object>}
          */
         this.selectedJobTitles = ko.observableArray([]);
+
+        /**
+         * Callback executed after a succesfully 'save' task, providing
+         * the updated data.
+         * When there is no one, the data returned by the server is used to
+         * update currently displayd data.
+         * @member {Function<rest/UserExternalListing>}
+         */
+        this.onSaved = ko.unwrap(params.onSaved);
 
         /**
          * State flag for the 'save' task
@@ -192,8 +202,13 @@ export default class ExternalListingEditor extends Komponent {
         // Update with server data
         .then((serverData) => {
             this.isSaving(false);
-            this.externalListing(serverData);
-            this.externalListingID(serverData.userExternalListingID);
+            if (this.onSaved) {
+                this.onSaved(serverData);
+            }
+            else {
+                this.externalListing(serverData);
+                this.externalListingID(serverData.userExternalListingID);
+            }
         })
         .catch((error) => {
             this.isSaving(false);
