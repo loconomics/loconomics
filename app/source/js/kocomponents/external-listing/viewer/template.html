@@ -10,9 +10,13 @@
         <li>- <span data-bind="text: $data"></span></li>
     </ul>
     <a target="_blank" class="btn btn-link btn-default" data-bind="
+        visible: $component.platformName,
         attr: {
             href: $component.platformSignInURL
-            }"> Sign in to <span data-bind="text: $component.platformName"></span></a>
+        }">
+        Sign in to
+        <span data-bind="text: $component.platformName"></span>
+    </a>
     <h2>About <span data-bind="text: $component.platformName"></span></h2>
     <external-platform-info params="platformID: platformID, platformName: $component.platformName, platformSignInURL: $component.platformSignInURL, hideAddListing: true"></external-platform-info>
  </div>

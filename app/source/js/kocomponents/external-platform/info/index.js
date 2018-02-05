@@ -67,7 +67,7 @@ export default class ExternalPlatformInfo extends Komponent {
          * for use in showing in the external listing activity.
          * @member {KnockoutObservable<string>}
          */
-        this.platformSignInURL = params.platformSignInURL;
+        this.platformSignInURL = getObservable(params.platformSignInURL);
 
         /**
          * Creates a link to the 'add external listing' activity for current
