@@ -93,8 +93,8 @@ namespace LcRest
             	AND P.PlatformID NOT IN (
                 	SELECT UL.PlatformID
                 	FROM UserExternalListing UL
-                	WHERE UL.UserID = 540
-                	)
+                	WHERE UL.UserID = @0
+                )
                 AND P.LanguageID = @1 AND P.CountryID = @2
         ";
         const string sqlGetItem = sqlGetList + @"
