@@ -248,7 +248,16 @@ export default class CachedDataProvider {
                     // Notify errors through specific onDataError event.
                     this.__sync()
                     .catch((error) => {
-                        this.onDataError.emit(error);
+                        // We emit the error, with care of if any subscriber
+                        // exists...
+                        if (this.onDataError.count) {
+                            this.onDataError.emit(error);
+                        }
+                        else {
+                            // ...otherwise, we log an error since is important
+                            // that errors get explictly managed
+                            console.error('Unhandled onDataError', error, this);
+                        }
                     });
                 }
             }
