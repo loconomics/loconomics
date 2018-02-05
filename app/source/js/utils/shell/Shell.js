@@ -291,7 +291,7 @@ Shell.prototype.replace = function replace(state) {
             // load and inject the content in the page
             // then try the replace again
             // TODO: Loader screen
-            promise = this.loader.load(state.route).then(function(html) {
+            promise = this.loader.load(state.route, this).then(function(html) {
                 // Add to the items (the manager takes care you
                 // add only the item, if there is one)
                 shell.items.inject(state.route.name, html);

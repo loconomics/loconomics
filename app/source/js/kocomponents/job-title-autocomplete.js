@@ -26,8 +26,24 @@ var MIN_LENGTH = 3;
  * the UI of suggestions to better accomodate well defined use cases.
  */
 var Target = {
+    /**
+     * Search target: suggestions for a client searching professionals by job title
+     * It displays specific description text for search.
+     */
     search: 'search',
-    addJobTitle: 'addJobTitle'
+    /**
+     * AddJobTitle target: suggestions for a professional when adding a job title
+     * to its profile. It allows to select a non-existent job title that will
+     * be created with the name provided.
+     * It displays specific description text for professionals.
+     */
+    addJobTitle: 'addJobTitle',
+    /**
+     * Professionals target: suggestions for a service professional looking
+     * for an existent job title.
+     * It displays specific description text for professionals.
+     */
+    professionals: 'professionals'
 };
 
 /**
@@ -51,6 +67,8 @@ var Target = {
  * The label text for the input-autocomplete.
  * @param {(boolean|KnockoutObservable<boolean>)} [params.visuallyHiddenLabel=false]
  * Whether the label should be visually hidden (hidden but available to screen readers) or not.
+ * @param {(boolean|KnockoutObservable<boolean>)} [params.isDisabled=false]
+ * Whether the input should be disabled or not (to prevent user interaction).
  * @param {(Target|KnockoutObservable<Target>)} [params.target=Target.search] Which use
  * is targetting the autocomplete instance: searching for job titles or displaying
  * suggestions to a proffesional that is adding a job title to its listing.
@@ -144,12 +162,39 @@ function ViewModel(params) {
      */
     this.target = getObservable(params.target);
     /**
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isDisabled = getObservable(params.isDisabled);
+    /**
      * Whether we are in target 'addJobTitle' mode.
-     * Anything else is managed as default target 'search'
      * @member {KnockoutComputed<boolean>}
      */
     this.isAddJobTitle = ko.pureComputed(function() {
         return this.target() === Target.addJobTitle;
+    }, this);
+
+    /**
+     * Whether we are in target 'search' mode.
+     * @member {KnockoutComputed<boolean>}
+     */
+    this.isSearchTarget = ko.pureComputed(function() {
+        return this.target() === Target.search;
+    }, this);
+
+    /**
+     * Placeholder text for the input, suggested based on the target
+     * @member {KnockoutComputed<string>}
+     */
+    this.placeholder = ko.pureComputed(function() {
+        switch (this.target()) {
+            case Target.addJobTitle:
+            case Target.professionals:
+                return 'Search for your profession';
+            case Target.search:
+                return 'Search for professionals';
+            default:
+                return '';
+        }
     }, this);
 
     /// Performing search

@@ -3,9 +3,8 @@ node_js:
 - node
 
 before_script:
-  - npm install -g grunt-cli
   - cd app
   - npm install
 
 script:
-  - npm test
+  - npm run build

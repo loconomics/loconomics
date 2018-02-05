@@ -11,12 +11,11 @@
   "phonegapbuildId": 1266913,
   "main": "build/app.html",
   "scripts": {
-    "test": "grunt build test-after-build",
+    "test": "grunt test",
     "watch": "grunt watch",
     "build": "grunt",
     "lint": "eslint ./source/js --fix",
-    "browserslist": "browserslist",
-    "build-all": "grunt build build-landingPages build-webapp"
+    "browserslist": "browserslist"
   },
   "repository": "loconomics/loconomics",
   "private": true,
@@ -36,8 +35,8 @@
     "common-shakeify": "^0.4.5",
     "deepmerge": "^2.0.1",
     "detect_swipe": "^2.1.4",
-    "eslint": "^4.13.1",
-    "eslint-plugin-compat": "^2.1.0",
+    "eslint": "^4.17.0",
+    "eslint-plugin-compat": "^2.2.0",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "grunt": "^1.0.1",

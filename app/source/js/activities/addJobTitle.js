@@ -25,7 +25,7 @@ var A = Activity.extend(function AddJobTitleActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     this.viewModel = new ViewModel(this.app);
     this.navBar = Activity.createSubsectionNavBar('Scheduler', {
-        backLink: '/yourListings' , helpLink: this.viewModel.helpLink
+        backLink: '/listings' , helpLink: this.viewModel.helpLink
     });
     this.title('Create a new listing');
     this.helpLink = '/help/relatedArticles/201211055-adding-job-profiles';
@@ -36,7 +36,7 @@ exports.init = A.init;
 
 A.prototype.updateNavBarState = function updateNavBarState() {
     var referrer = this.app.shell.referrerRoute;
-    referrer = referrer && referrer.url || '/yourListings';
+    referrer = referrer && referrer.url || '/listings';
     var link = this.requestData.cancelLink || referrer;
 
     if (!onboarding.updateNavBar(this.navBar)) {

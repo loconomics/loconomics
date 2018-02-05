@@ -49,7 +49,7 @@
  * value inside the function).
  * Defaults to the SingleEvent instance
  */
-function SingleEvent(context) {
+export default function SingleEvent(context) {
 
     // Defaults to the own instance
     context = context || this;
@@ -70,11 +70,26 @@ function SingleEvent(context) {
     var unsubscriptionsCount = 0;
 
     /**
+     * Number of active subscriptions or subscribers.
+     * It's recommended to be checked before doing a heavy or slow task whose only
+     * purpose is to prepare values for emitting the event.
+     * @member {number} count
+     */
+    Object.defineProperty(this, 'count', {
+        get() {
+            // Removed subscriptions (using 'unsubcribe' or 'dispose') are taken into account
+            // through use of unsubscriptionsCount, because the array length
+            // will still count the holes.
+            return subscriptions.length - unsubscriptionsCount;
+        },
+        enumerable: true
+    });
+
+    /**
      * Emits an event occurrence, executing
      * all the subscribed hanlders.
      * AKA: triggerEvent
-     * @param {...any} values Data to provide
-     * to each handler
+     * @param {...any} values Data to provide to each handler
      * @returns {number} Count of handlers executed
      */
     this.emit = function() {
@@ -84,6 +99,7 @@ function SingleEvent(context) {
         subscriptions.forEach(function (sub) {
             sub.handler.apply(context, values);
         });
+        // Same as computed 'count' property:
         return subscriptions.length - unsubscriptionsCount;
     };
 
@@ -153,5 +169,3 @@ function SingleEvent(context) {
         unsubscribe: this.unsubscribe.bind(this)
     };
 }
-
-module.exports = SingleEvent;

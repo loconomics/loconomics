@@ -34,10 +34,10 @@
     <a data-bind="attr: { href: isInOnboarding() ? null : '/inbox' }"><i class="fa fa-fw ion-ios-email-outline" aria-hidden="true"></i> Inbox</a>
 </li>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'cms' }">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/cms' }"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Client Manager</a>
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/cms' }"><i class="fa fa-fw ion-android-contacts" aria-hidden="true"></i> Clients</a>
 </li>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'active' }">
-    <a data-bind="attr: { href: isInOnboarding() ? null : '/yourListings' }"><i class="fa fa-fw ion-ios-list-outline" aria-hidden="true"></i> Your Listings</a>
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/listings' }"><i class="fa fa-fw ion-ios-list-outline" aria-hidden="true"></i> Listings</a>
 </li>
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'active' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/earnings' }"><i class="fa fa-fw ion-social-usd-outline" aria-hidden="true"></i> Earnings</a>

@@ -17,7 +17,7 @@ var CacheControl = require('./helpers/CacheControl');
 var moment = require('moment');
 var session = require('./session');
 var remote = require('./drivers/restClient');
-var SingleEvent = require('../utils/SingleEvent');
+var SingleEvent = require('../utils/SingleEvent').default;
 
 var cache = {
     times: {/*
