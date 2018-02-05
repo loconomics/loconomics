@@ -12,7 +12,7 @@
                     placeholder=""
                     data-bind="
                         value: title,
-                        disable: $component.isSaving
+                        disable: $component.isWorking
                     " />-->
             </div>
             <div class="isolated">
@@ -20,13 +20,13 @@
                     target: 'search',
                     onSelect: $component.onSelectJobTitle.bind($component),
                     label: 'Search and select a job title',
-                    isDisabled: $component.isSaving,
+                    isDisabled: $component.isWorking,
                     id: 'externalListingEditorJobTitles'"></job-title-autocomplete>
                 <ul class="list-unstyled" data-bind="foreach: $component.selectedJobTitles">
                     <li class="IconContentItem">
                         <div class="Item-content" data-bind="text: name"></div>
                         <button type="button" class="btn btn-link" aria-label="Unselect"
-                            data-bind="click: $component.unselectJobTitle.bind($component), disable: $component.isSaving">
+                            data-bind="click: $component.unselectJobTitle.bind($component), disable: $component.isWorking">
                             <span aria-hidden="true" class="fa ion ion-close"></span>
                         </button>
                     </li>
@@ -40,11 +40,15 @@
                     placeholder=""
                     data-bind="
                         value: notes,
-                        disable: $component.isSaving
+                        disable: $component.isWorking
                     "></textarea>
             </div>
             <button type="submit" class="btn btn-secondary btn-block btn-lg"
-                data-bind="text: $component.saveButtonLabel, disable: $component.isSaving"></button>
+                data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>
+            <button type="button" class="btn btn-danger btn-link"
+                data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
+                disable: $component.isWorking,
+                visible: $component.externalListingID"></button>
         </div>
     </fieldset>
 </form>

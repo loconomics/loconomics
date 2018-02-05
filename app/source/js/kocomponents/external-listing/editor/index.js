@@ -13,6 +13,7 @@ import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import { item as platformsItem } from '../../../data/platforms';
+import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
 import { item as userExternalListingItem } from '../../../data/userExternalListings';
@@ -82,7 +83,7 @@ export default class ExternalListingEditor extends Komponent {
          * Callback executed after a succesfully 'save' task, providing
          * the updated data.
          * When there is no one, the data returned by the server is used to
-         * update currently displayd data.
+         * update currently displayed data.
          * @member {Function<rest/UserExternalListing>}
          */
         this.onSaved = ko.unwrap(params.onSaved);
@@ -101,6 +102,35 @@ export default class ExternalListingEditor extends Komponent {
             const text = this.isSaving() ? 'Saving...' : 'Save';
             return text;
         });
+
+        /**
+         * Callback executed after a succesfully 'delete' task.
+         * When there is no one, the current data and ID are cleared.
+         * @member {Function}
+         */
+        this.onDeleted = ko.unwrap(params.onDeleted);
+
+        /**
+         * State flag for the 'delete' task
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isDeleting = ko.observable(false);
+
+        /**
+         * Dynamic label text for the 'delete' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.deleteButtonLabel = ko.pureComputed(() => {
+            const text = this.isDeleting() ? 'Deleting...' : 'Delete';
+            return text;
+        });
+
+        /**
+         * State flag. Whether a task is in progress, then user editing should
+         * not be allowed.
+         * @member {KnockoutComputed<boolean>}
+         */
+        this.isWorking = ko.pureComputed(() => this.isSaving() || this.isDeleting());
 
         /**
          * Loads the information about the platform, returning and placing it
@@ -236,6 +266,53 @@ export default class ExternalListingEditor extends Komponent {
 
     unselectJobTitle(jobTitleItem) {
         this.selectedJobTitles.remove(jobTitleItem);
+    }
+
+    /**
+     * Request to delete a listing, with user confirmation.
+     * It triggers 'onDeleted' param, or remove current data and ID.
+     * @returns {Promise}
+     */
+    deleteListing() {
+        // Only a deletion task at a time
+        if (this.isDeleting()) return;
+        // Only do something if data loaded
+        const listing = this.externalListing();
+        if (listing && listing.userExternalListingID) {
+            return showConfirm({
+                title: 'Delete listing',
+                message: `Are you sure to delete '${listing.title}'?`,
+                yes: 'Delete',
+                no: 'Keep'
+            })
+            .then(() => {
+                this.isDeleting(true);
+                return userExternalListingItem(listing.userExternalListingID)
+                .delete()
+                .then(() => {
+                    this.isDeleting(false);
+                    if (this.onDeleted) {
+                        this.onDeleted();
+                    }
+                    else {
+                        this.externalListing(null);
+                        this.externalListingID(null);
+                    }
+                });
+            })
+            .catch((error) => {
+                // Only on error; error is undefined when user declined
+                if (error) {
+                    showError({
+                        title: 'There was an error when deleting your listing',
+                        error
+                    });
+                }
+            });
+        }
+        else {
+            return Promise.resolve();
+        }
     }
 }
 

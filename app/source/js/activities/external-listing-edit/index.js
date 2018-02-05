@@ -50,6 +50,16 @@ export default class ExternalListingEditActivity extends Activity {
         this.onSaved = () => {
             app.successSave();
         };
+
+        /**
+         * After listing being deleted, notice and go back to listing
+         */
+        this.onDeleted = () => {
+            app.successSave({
+                message: 'Successfully deleted',
+                link: '/listings'
+            });
+        };
     }
 
     /**
