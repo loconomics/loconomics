@@ -4,6 +4,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var ko = require('knockout');

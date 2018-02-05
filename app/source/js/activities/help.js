@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var onboarding = require('../data/onboarding');
 var help = require('../data/help');

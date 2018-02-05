@@ -4,6 +4,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var clients = require('../data/clients');
@@ -18,7 +19,7 @@ var A = Activity.extend(function CmsActivity() {
     this.accessLevel = this.app.UserType.loggedUser;
     // null for logo
     this.navBar = Activity.createSectionNavBar(null);
-    this.title('Client manager');
+    this.title('Clients');
 });
 
 exports.init = A.init;

@@ -3,6 +3,7 @@
 **/
 'use strict';
 
+import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var is = require('is_js');
 var ServicesSummaryPresenter = require('../viewmodels/presenters/ServicesSummaryPresenter');
