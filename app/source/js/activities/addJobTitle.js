@@ -9,7 +9,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
