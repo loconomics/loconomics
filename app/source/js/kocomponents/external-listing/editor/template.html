@@ -5,14 +5,15 @@
             <legend>Listing details</legend>
             <label for="listingTitle">Title</label>
             <div class="form-group">
-                <input class="form-control"
+                <span class="form-control-static" data-bind="text: title"></span>
+                <!--<input class="form-control"
                     id="listingTitle"
                     type="text"
                     placeholder=""
                     data-bind="
                         value: title,
                         disable: $component.isSaving
-                    " />
+                    " />-->
             </div>
             <div class="isolated">
                 <job-title-autocomplete params="suggestionButtonText: 'Add',
