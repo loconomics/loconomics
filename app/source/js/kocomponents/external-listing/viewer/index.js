@@ -49,7 +49,7 @@ export default class ExternalListingViewer extends Komponent {
          * for professionals to sign into their accounts.
          * @member {KnockoutObservable<string>}
          */
-        this.platformSignInURL = params.platformSignInURL;
+        this.platformSignInURL = ko.observable(null);
 
         /**
          * An "out" parameter that fills the platformID
