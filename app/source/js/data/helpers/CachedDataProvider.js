@@ -155,7 +155,7 @@ export default class CachedDataProvider {
              */
             delete() {
                 // Delete cached data from local
-                settings.local.delete()
+                return settings.local.delete()
                 // and return and empty cached data
                 .then(() => ({
                     // null means data don't exists (was deleted; undefined means not loaded still)
@@ -362,13 +362,12 @@ export default class CachedDataProvider {
     delete() {
         // Delete from remote store
         return this.__remote.delete()
-        .then((remoteResultOrCopy) => {
-            // Delete from local,
-            this.__localCache.delete()
+        // Delete from local,
+        .then((remoteResultOrCopy) => this.__localCache.delete()
             // Notify it was deleted,
             // providing the result given by the remote and return that result
-            .then(() => this.onDeleted.emit(remoteResultOrCopy) && remoteResultOrCopy);
-        });
+            .then(() => this.onDeleted.emit(remoteResultOrCopy) && remoteResultOrCopy)
+        );
     }
 
     /**
