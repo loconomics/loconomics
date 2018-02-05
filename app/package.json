@@ -11,12 +11,11 @@
   "phonegapbuildId": 1266913,
   "main": "build/app.html",
   "scripts": {
-    "test": "grunt build test-after-build",
+    "test": "grunt test",
     "watch": "grunt watch",
     "build": "grunt",
     "lint": "eslint ./source/js --fix",
-    "browserslist": "browserslist",
-    "build-all": "grunt build build-landingPages build-webapp"
+    "browserslist": "browserslist"
   },
   "repository": "loconomics/loconomics",
   "private": true,

@@ -1,25 +1,25 @@
 'use strict';
 
 module.exports = {
+    // Default task builds everything and run tests (linting included in 'build-js' as part of 'build')
     'default': [
+        'prepare-for-build',
         'build',
-        'test-after-build'
+        'build-landingPages',
+        'build-webapp',
+        'test'
     ],
-    // If wants to run 'test' after a build, this task prevents doing duplicated work
-    'test-after-build': [
-        'browserify:tests',
-        'mocha'
+    // Any preparation of the folder where building results will go
+    'prepare-for-build': [
+        'mkdir:build-assets-js',
     ],
     // Run JavaScript testing
     'test': [
-        'mkdir:build-assets-js',
-        //'browserify:appCommon',
         'browserify:tests',
         'mocha'
     ],
     'build-js': [
         'eslint',
-        'mkdir:build-assets-js',
         'browserify:appCommon',
         'uglify:appCommon'
     ],
