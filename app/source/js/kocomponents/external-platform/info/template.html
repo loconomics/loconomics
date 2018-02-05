@@ -3,19 +3,19 @@
     <p data-bind="text: longDescription"></p>
     <h2>Commissions and fees</h2>
     <ul data-bind="foreach: { data: feesDescription, as: 'line' }" class="list-unstyled">
-        <li data-bind="text: line"></li>
+            <li>- <span data-bind="text: line"></span></li>
     </ul>
     <h2>Positive aspects</h2>
     <ul data-bind="foreach: { data: positiveAspects, as: 'line' }" class="list-unstyled">
-        <li data-bind="text: line"></li>
+        <li>- <span data-bind="text: line"></span></li>
     </ul>
     <h2>What to watch out for</h2>
     <ul data-bind="foreach: { data: negativeAspects, as: 'line' }" class="list-unstyled">
-        <li data-bind="text: line"></li>
+            <li>- <span data-bind="text: line"></span></li>
     </ul>
     <h2>How to stand out</h2>
     <ul data-bind="foreach: { data: advice, as: 'line' }" class="list-unstyled">
-        <li data-bind="text: line"></li>
+            <li>- <span data-bind="text: line"></span></li>
     </ul>
     <a class="btn btn-default" target="_blank" data-bind="attr: { href: signUpURL }">Visit <span data-bind="text: name"></span></a>
     <a class="btn btn-primary" data-bind="visible: !$component.hideAddListing(),
