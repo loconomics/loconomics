@@ -45,6 +45,13 @@ export default class ExternalListingViewer extends Komponent {
         this.platformName = params.platformName;
 
         /**
+         * An "out" parameter that fills the URL of the platform
+         * for professionals to sign into their accounts.
+         * @member {KnockoutObservable<string>}
+         */
+        this.platformSignInURL = params.platformSignInURL;
+
+        /**
          * An "out" parameter that fills the platformID
          * to enable information about the platform to
          * be displayed.

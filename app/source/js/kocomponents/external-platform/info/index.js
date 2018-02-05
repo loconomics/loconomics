@@ -28,6 +28,7 @@ export default class ExternalPlatformInfo extends Komponent {
     /**
      * @param {object} params
      * @param {(string|KnockoutObservable<string>)} [params.platformName]
+     * @param {(string|KnockoutObservable<string>)} [params.platformSignInURL]
      * @param {(number|KnockoutObservable<number>)}  [params.platformID]
      * @param {(boolean|KnockoutObservable<boolean>)} [params.showAddListing]
      **/
@@ -60,6 +61,13 @@ export default class ExternalPlatformInfo extends Komponent {
          * @member {KnockoutObservable<string>}
          */
         this.platformName = params.platformName;
+
+        /**
+         * An "out" parameter that fills the platform signInURL
+         * for use in showing in the external listing activity.
+         * @member {KnockoutObservable<string>}
+         */
+        this.platformSignInURL = params.platformSignInURL;
 
         /**
          * Creates a link to the 'add external listing' activity for current
@@ -119,6 +127,7 @@ export default class ExternalPlatformInfo extends Komponent {
                 dataSubscription = this.subscribeTo(item.onData, (data) => {
                     this.externalPlatform(data);
                     this.platformName(data.name);
+                    this.platformSignInURL(data.signInURL);
                 });
                 // Notify data load errors
                 dataErrorSubscription = this.subscribeTo(item.onDataError, (err) => {

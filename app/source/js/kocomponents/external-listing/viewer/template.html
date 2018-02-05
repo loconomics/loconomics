@@ -7,8 +7,12 @@
     <p data-bind="text: notes"></p>
     <h2>Job Titles</h2>
     <ul class="list-unstyled" data-bind="foreach: Object.values(jobTitles)">
-        <li data-bind="text: $data"></li>
+        <li>- <span data-bind="text: $data"></span></li>
     </ul>
+    <a target="_blank" class="btn btn-link btn-default" data-bind="
+        attr: {
+            href: $component.platformSignInURL
+            }"> Sign in to <span data-bind="text: $component.platformName"></span></a>
     <h2>About <span data-bind="text: $component.platformName"></span></h2>
-    <external-platform-info params="platformID: platformID, platformName: $component.platformName, hideAddListing: true"></external-platform-info>
+    <external-platform-info params="platformID: platformID, platformName: $component.platformName, platformSignInURL: $component.platformSignInURL, hideAddListing: true"></external-platform-info>
  </div>
