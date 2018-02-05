@@ -7,7 +7,7 @@
         suggestions: suggestions,
         onSelect: onSelect,
         isDisabled: isDisabled,
-        extraData: { suggestionButtonText: suggestionButtonText, isAddJobTitle: isAddJobTitle }">
+        extraData: { suggestionButtonText: suggestionButtonText, isAddJobTitle: isAddJobTitle, isSearchTarget: isSearchTarget }">
         <template slot="suggestions">
             <div class="SearchResultsPreview">
                 <h3 data-bind="if: extraData.isAddJobTitle" class="SearchResultsPreview-h">Sound like you?</h3>
@@ -19,7 +19,7 @@
                             }">
                             <div class="Result-info">
                                 <span class="Result-name" data-bind="text: singularName"></span>
-                                <span class="Result-description" data-bind="text: $parent.extraData.isAddJobTitle() ? description : searchDescription"></span>
+                                <span class="Result-description" data-bind="text: $parent.extraData.isSearchTarget() ? searchDescription : description"></span>
                             </div>
                             <div aria-hidden="true" class="btn btn-secondary btn-md btn-inline"
                                 data-bind="visible: $parent.extraData.suggestionButtonText, text: $parent.extraData.suggestionButtonText"></div>
