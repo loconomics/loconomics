@@ -13,7 +13,7 @@ module.exports = {
     // Run JavaScript testing
     'test': [
         'mkdir:build-assets-js',
-        'browserify:appCommon',
+        //'browserify:appCommon',
         'browserify:tests',
         'mocha'
     ],

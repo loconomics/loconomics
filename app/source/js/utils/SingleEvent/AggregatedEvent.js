@@ -35,10 +35,58 @@ export default class AggregatedEvent extends SingleEvent {
         // ...so we can remove it as a method, then not allowing this new
         // event to emit explicitly (only replayes other events)
         delete this.emit;
-        events.forEach((event) => {
-            event.subscribe((...params) => {
-                emit(...params);
-            });
-        });
+
+        /**
+         * Keep an array of subscriptions to source events (one per event).
+         * Is null when there are no subscriptions to the aggregated event.
+         * @private {Array<SingleEvent/Subscription>}
+         */
+        let subscriptionsToSourceEvents = null;
+
+        /**
+         * Original subscribe method, will be replaced but reused inside
+         * @private {Function}
+         */
+        const subscribe = this.subscribe;
+        /**
+         * Subscribe to event notifications, happening when the source events
+         * emit.
+         * Check SingleEvent..subscribe documentation for detailed parameters
+         * @param {Array<any>} args
+         */
+        this.subscribe = (...args) => {
+            var result = subscribe.apply(this, args);
+            if (this.count === 1) {
+                // First time, need to suscribe to source events
+                subscriptionsToSourceEvents = events
+                .map((event) => event.subscribe((...params) => {
+                        emit(...params);
+                    })
+                );
+            }
+            return result;
+        };
+
+        /**
+         * Original unsubscribe method, will be replaced but reused inside
+         * @private {Function}
+         */
+        const unsubscribe = this.unsubscribe;
+        /**
+         * Remove a subscription to the event; it will remove subscription to
+         * source events if no active subscriptions to the aggregated.
+         * Check SingleEvent..unsubscribe documentation for detailed parameters
+         * @param {Array<any>} args
+         */
+        this.unsubscribe = (...args) => {
+            var result = unsubscribe.apply(this, args);
+            if (this.count === 0 && subscriptionsToSourceEvents) {
+                // If no remaining subscriptions, no need to keep subscribed
+                // to source events
+                subscriptionsToSourceEvents.forEach((subs) => subs.dispose());
+                subscriptionsToSourceEvents = null;
+            }
+            return result;
+        };
     }
 }
