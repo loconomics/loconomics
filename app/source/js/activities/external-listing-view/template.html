@@ -10,11 +10,11 @@
                 </li>
             </ul>
         </div>
-        <div class="col-xs-12 col-sm-12 SectionHeading">
-            <h1 data-bind="text: title"></h1>
-            <a data-bind="attr: { href: '/external-listing-edit/' + externalListingID() + '?mustReturn=/external-listing-view/' + externalListingID() + '&returnText=' + title(),'aria-label': 'Edit your ' + platformName() + ' listing' }" class="btn btn-default pull-right">Edit</a>
-        </div>
         <div class="col-md-7 col-sm-reset">
+            <div class="SectionHeading">
+                <h1 data-bind="text: title"></h1>
+                <a data-bind="attr: { href: '/external-listing-edit/' + externalListingID() + '?mustReturn=/external-listing-view/' + externalListingID() + '&returnText=' + title(),'aria-label': 'Edit your ' + platformName() + ' listing' }" class="btn btn-default pull-right">Edit</a>
+            </div>
             <external-listing-viewer params="externalListingID: externalListingID, platformName: platformName"></external-listing-viewer>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
