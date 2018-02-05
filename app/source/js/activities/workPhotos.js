@@ -3,7 +3,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 var $ = require('jquery');
 var Activity = require('../components/Activity');
@@ -23,7 +22,7 @@ var A = Activity.extend(function WorkPhotosActivity() {
     this.viewModel = new ViewModel(this.app);
 
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/yourListings', helpLink: this.viewModel.helpLink
+        backLink: '/listings', helpLink: this.viewModel.helpLink
     });
     this.title('Your work photos');
 

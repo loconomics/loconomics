@@ -16,6 +16,10 @@
  * and [baseName + / + ID] keys must be used there (is the pattern used at
  * LocalForageItemDataProviderDriver, a good fit)
  *
+ * IMPORTANT: Additionally to interface methods, additional ones are added
+ * only for advanced use needed to keep 'item providers' in sync with this
+ * 'list provider'; all ones dedicated to manipulate the registry/index.
+ *
  * IMPORTANT: While 'DataProviderDrivers' usually don't need to know about the
  * scheme of the data being stored, this case is special and needs to deal
  * with the content. It's important to know that this is built for DataProvider
@@ -47,12 +51,69 @@ export default class LocalForageIndexedListDataProviderDriver {
         const listIndexKey = baseName + '/';
 
         /**
+         * Read the list index cache
+         * @returns {Promise<CachedData>}
+         * @private
+         */
+        const readIndex = function() {
+            return localforage.getItem(listIndexKey);
+        };
+        /**
+         * Writes the list index cache, providing the list index separated
+         * as it will create a new cache object without modifying the original.
+         * @param {CachedData} cache
+         * @param {Array<number>} index Raw data, the list index (of IDs)
+         * @returns {Promise}
+         * @private
+         */
+        const writeIndex = function(cache, index) {
+            return localforage.setItem(listIndexKey, Object.assign({}, cache, { data: index }));
+        };
+
+        /**
+         * Adds an ID to the list index (if didn't existed -dupes are avoided).
+         * Use carefull, since touching the 'registry' without having a related
+         * store key with that ID will produce errors.
+         * @param {number} id
+         * @returns {Promise}
+         */
+        this.registerID = function(id) {
+            return readIndex()
+            .then((cache) => {
+                // If not registered
+                if (!~cache.data.indexOf(id)) {
+                    // Add to list and write
+                    return writeIndex(cache, cache.data.concat(id));
+                }
+            });
+        };
+
+        /**
+         * Removes an ID from the list index.
+         * Use carefull, since touching the 'registry' without having a related
+         * store key with that ID will produce errors.
+         * @param {number} id
+         * @returns {Promise}
+         */
+        this.unregisterID = function(id) {
+            return readIndex()
+            .then((cache) => {
+                // If registered
+                const i = cache.data.indexOf(id);
+                if (~i) {
+                    cache.data.splice(i, 1);
+                    return writeIndex(cache, cache.data);
+                }
+            });
+        };
+
+        /**
          * Get the list of items; it will contain the full items, resolving
          * from the stored IDs into the item data.
          * @returns {Promise<CachedData,Error>}
          */
         this.fetch = function() {
-            return localforage.getItem(listIndexKey)
+            return readIndex()
             .then((cache) => {
                 // index is, if any, array of keys/IDs
                 if (cache && cache.data) {
@@ -90,7 +151,7 @@ export default class LocalForageIndexedListDataProviderDriver {
             return storeItems.then((all) => Promise.all(all))
             // and the list of IDs on the index,
             // as a CachedData-like object that includes original cache metadata
-            .then(() => localforage.setItem(listIndexKey, Object.assign({}, cache, { data: list.map((item) => item[idPropertyName]) })));
+            .then(() => writeIndex(cache, list.map((item) => item[idPropertyName])));
         };
         /**
          * Delete the whole list: the index and each stored list.

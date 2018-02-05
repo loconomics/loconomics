@@ -1,9 +1,9 @@
 /**
-    yourListings activity
+    listings activity
 **/
 'use strict';
-
-import '../kocomponents/utilities/icon-dec';
+import '../kocomponents/external-listing/list';
+import '../kocomponents/utilities/icon-dec.js';
 var Activity = require('../components/Activity');
 var UserJobProfileViewModel = require('../viewmodels/UserJobProfile');
 var ko = require('knockout');
@@ -11,7 +11,7 @@ var moment = require('moment');
 var user = require('../data/userProfile').data;
 var marketplaceProfile = require('../data/marketplaceProfile');
 
-var A = Activity.extend(function YourListingsActivity() {
+var A = Activity.extend(function ListingsActivity() {
 
     Activity.apply(this, arguments);
 

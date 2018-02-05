@@ -3,7 +3,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 
 var Activity = require('../components/Activity');

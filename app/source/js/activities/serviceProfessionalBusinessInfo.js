@@ -4,7 +4,6 @@
 
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var ListingVM = require('../viewmodels/ListingVM');

@@ -3,7 +3,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 
@@ -15,7 +14,7 @@ var A = Activity.extend(function BackgroundCheckActivity() {
     this.viewModel = new ViewModel(this.app);
     // Defaults settings for navBar.
     this.navBar = Activity.createSubsectionNavBar('Marketplace Profile', {
-        backLink: '/yourListings'
+        backLink: '/listings'
     });
     this.title(' Your background checks');
 

@@ -9,7 +9,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 require('../kocomponents/payout/preference-view');
 

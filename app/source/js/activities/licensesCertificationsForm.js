@@ -3,7 +3,6 @@
 **/
 'use strict';
 
-import '../kocomponents/utilities/icon-dec';
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var photoTools = require('../utils/photoTools');
@@ -24,7 +23,7 @@ var A = Activity.extend(function LicensesCertificationsFormActivity() {
     this.accessLevel = this.app.UserType.serviceProfessional;
 
     this.navBar = Activity.createSubsectionNavBar('Job Title', {
-        backLink: '/yourListings', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
+        backLink: '/listings', helpLink: '/help/relatedArticles/201967966-adding-professional-licenses-and-certifications'
     });
     this.title('Your credentials');
     this.defaultNavBarSettings = this.navBar.model.toPlainObject(true);
