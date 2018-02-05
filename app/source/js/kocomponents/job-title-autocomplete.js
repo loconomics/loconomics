@@ -181,6 +181,22 @@ function ViewModel(params) {
         return this.target() === Target.search;
     }, this);
 
+    /**
+     * Placeholder text for the input, suggested based on the target
+     * @member {KnockoutComputed<string>}
+     */
+    this.placeholder = ko.pureComputed(function() {
+        switch (this.target()) {
+            case Target.addJobTitle:
+            case Target.professionals:
+                return 'Search for your profession';
+            case Target.search:
+                return 'Search for professionals';
+            default:
+                return '';
+        }
+    }, this);
+
     /// Performing search
     /**
      * Performs an API search by term
