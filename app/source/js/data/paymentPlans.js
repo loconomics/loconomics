@@ -11,9 +11,10 @@
 // TODO store-jsdocs
 'use strict';
 
-var PaymentPlan = require('../models/PaymentPlan');
-var ListRemoteModel = require('./helpers/ListRemoteModel');
-var session = require('./session');
+import ListRemoteModel from './helpers/ListRemoteModel';
+import PaymentPlan from '../models/PaymentPlan';
+import ko from 'knockout';
+import session from './session';
 
 // PRESET
 var data = [
@@ -21,25 +22,36 @@ var data = [
         paymentPlanID: '',
         name: 'Free',
         summary: '$0',
+        partnership: false,
         description: require('../../html/parts/PaymentPlanFree.html')
     },
     {//new PaymentPlan({
         paymentPlanID: 'OwnerGrowth',
         name: 'Owner Growth',
         summary: '$19 charged once a month',
+        partnership: false,
         description: require('../../html/parts/PaymentPlanGrowth.html')
     },
     {//new PaymentPlan({
         paymentPlanID: 'OwnerPro',
         name: 'Owner Pro',
         summary: '$39 charged once a month',
+        partnership: false,
         description: require('../../html/parts/PaymentPlanPro.html')
     },
     {//new PaymentPlan({
         paymentPlanID: 'OwnerProAnnual',
         name: 'Owner Pro Annual',
         summary: '$390 charged once a year (Save $78 with this option)',
+        partnership: false,
         description: require('../../html/parts/PaymentPlanProAnnual.html')
+    },
+    {//new PaymentPlan({
+        paymentPlanID: 'CccPlan',
+        name: 'CCC Plan',
+        summary: 'Free for California Community Colleges students and professors',
+        partnership: true,
+        description: require('../../html/parts/PaymentPlanCccPlan.html')
     }
 ];
 
@@ -65,3 +77,13 @@ api.list = data;
 api.getList = function() {
     return Promise.resolve(api.list());
 };
+
+/**
+ * Gives a list o plans available to users to be choosen.
+ * This excludes partnership plans, only given under special situations in
+ * other ways.
+ * @member {KnockoutComputed<Array>}
+ */
+api.availablePlans = ko.pureComputed(function() {
+    return api.list().filter((plan) => !plan.partnership());
+});

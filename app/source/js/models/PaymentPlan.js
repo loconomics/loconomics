@@ -12,6 +12,10 @@ function PaymentPlan(values) {
         paymentPlanID: '',
         name: '',
         summary: '',
+        /**
+         * Whether this plan is available for specific partnerships
+         */
+        partnership: false,
         description: ''
     }, values);
 }

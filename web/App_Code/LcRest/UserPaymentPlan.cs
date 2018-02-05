@@ -186,9 +186,9 @@ namespace LcRest
                 )
             END
         ";
-        public static void Set(UserPaymentPlan data)
+        public static void Set(UserPaymentPlan data, LcDatabase sharedDb = null)
         {
-            using (var db = new LcDatabase())
+            using (var db = new LcDatabase(sharedDb))
             {
                 db.Execute(sqlSet,
                     data.userPaymentPlanID,
@@ -209,8 +209,19 @@ namespace LcRest
 
                 try
                 {
-                    // Run Membership Checks to enable/disable member (OwnerStatus update)
-                    UserProfile.CheckAndSaveOwnerStatus(data.userID);
+                    // Set OwnerStatus
+                    if (IsPartnershipPlan(data.paymentPlan))
+                    {
+                        var ow = new Owner();
+                        ow.userID = data.userID;
+                        ow.statusID = (int)OwnerStatus.notYetAnOwner;
+                        Owner.Set(ow);
+                    }
+                    else
+                    {
+                        // Run Membership Checks to enable/disable member (OwnerStatus update)
+                        UserProfile.CheckAndSaveOwnerStatus(data.userID);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -384,6 +395,71 @@ namespace LcRest
             return userPlan;
         }
 
+        /// <summary>
+        /// Whether the given plan is a partnerthip plan or not
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <returns></returns>
+        public static bool IsPartnershipPlan(SubscriptionPlan plan)
+        {
+            return (short)plan > 100 && (short)plan < 200;
+        }
+
+        /// <summary>
+        /// Duration in days of a subscription created for a CCC partnership
+        /// </summary>
+        const int CccPartnershipSubscriptionDurationDays = 180;
+
+        /// <summary>
+        /// Creates a special subscription that has not a payment with the user
+        /// but with a Partner, and as part of it the user (that related with the Partner)
+        /// gets free access for a Loconomics plan.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="plan"></param>
+        /// <param name="paymentMethod"></param>
+        /// <returns></returns>
+        public static UserPaymentPlan CreatePartnershipSubscription(
+            int userID,
+            SubscriptionPlan plan,
+            LcDatabase db)
+        {
+            // Validate plan
+            if (!IsPartnershipPlan(plan))
+            {
+                throw new ConstraintException("Invalid subscription plan for a partnership");
+            }
+            // Setup of the plan
+            var durationDays = 0;
+            switch (plan)
+            {
+                case SubscriptionPlan.CccPlan:
+                    durationDays = CccPartnershipSubscriptionDurationDays;
+                    break;
+            }
+            // Prepare object
+            var userPlan = new UserPaymentPlan()
+            {
+                userID = userID,
+                paymentPlan = plan,
+                subscriptionEndDate = null,
+                subscriptionID = "",
+                paymentPlanLastChangedDate = DateTimeOffset.Now,
+                nextPaymentDueDate = DateTimeOffset.Now.Add(new TimeSpan(durationDays, 0, 0, 0)),
+                nextPaymentAmount = null,
+                firstBillingDate = DateTimeOffset.Now,
+                planStatus = "ACTIVE",
+                daysPastDue = 0,
+                paymentExpiryDate = null,
+                paymentMethodToken = "",
+                paymentMethod = "",
+            };
+            
+            // Persist subscription on database
+            Set(userPlan, db);
+            return userPlan;
+        }
+
         /*
            Reading payment subscription:
            var subscriptionID = GetUserActivePlan(userID).subscriptionID;
@@ -497,11 +573,18 @@ namespace LcRest
         /// <summary>
         /// Get active subscriptions, all ones with a non final status (Active, Pending, Past_due)
         /// </summary>
+        /// <param name="onlyPaymentEnabled">Includes only subscriptions that have a payment enabled; useful
+        /// to get only subscriptions that should exist at Braintree, excluding ones like partnership subscriptions.</param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(LcDatabase db)
+        public static IEnumerable<UserPaymentPlan> QueryActiveSubscriptions(bool onlyPaymentEnabled, LcDatabase db)
         {
-            return db.Query(sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)",
+            var sql = (sqlSelectAll + sqlConditionOnlyActivePlans + " WHERE planStatus IN (@0, @1, @2)");
+            if (onlyPaymentEnabled)
+            {
+                sql += " AND paymentMethod <> ''";
+            }
+            return db.Query(sql,
                 Braintree.SubscriptionStatus.PENDING.ToString(),
                 Braintree.SubscriptionStatus.PAST_DUE.ToString(),
                 Braintree.SubscriptionStatus.ACTIVE.ToString())

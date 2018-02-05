@@ -31,16 +31,23 @@
                     <li>
                         <a class="IconContentItem" href="/userFees">
                             <icon-dec class="Item-icon" params="icon: 'ion-levels'"></icon-dec>
+                            <!-- ko if: activePaymentPlan() -->
                             <div class="Item-content" data-bind="visible: !activeUserPaymentPlan.isNew()">
-                                <div>Plan: <strong data-bind="text: activeUserPaymentPlan.paymentPlan"></strong></div>
+                                <div>Plan: <strong data-bind="text: activePaymentPlan().name"></strong></div>
+                                <!-- ko ifnot: activePaymentPlan().partnership -->
                                 <em>Billed to <span data-bind="text: activeUserPaymentPlan.paymentMethod"></em>
+                                <!-- /ko -->
+                                <!-- ko if: activePaymentPlan().partnership -->
+                                <em>Expires on <span data-bind="text: activeUserPaymentPlan.nextPaymentDueDate, format: { type: 'datetime', format: 'LL' }"></em>
+                                <!-- /ko -->
                             </div>
+                            <!-- /ko -->
                             <div class="Item-content" data-bind="visible: activeUserPaymentPlan.isNew">
                                 <p>Choose a plan</p>
                             </div>
                         </a>
                     </li>
-                    <li data-bind="visible: !activeUserPaymentPlan.isNew()">
+                    <li data-bind="visible: activeUserPaymentPlan.paymentMethod">
                         <a class="IconContentItem" href="/userFees">
                             <icon-dec class="Item-icon" params="icon: 'fa-dollar'"></icon-dec>
                             <div class="Item-content">
