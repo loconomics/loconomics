@@ -140,6 +140,33 @@ function SignupVM() {
 
     this.emailIsLocked = ko.observable(false);
 
+    /// CCC Specific signup properties
+    /**
+     * Configuration option (has no reset) to enable only for CCC
+     * (California Community Colleges) landing page signup.
+     * @member {KnockoutObservable<boolean>}
+     */
+    this.isCccMember = ko.observable(false);
+    /**
+     * ID from institutions table.
+     * Required for isCccMember==true
+     * @member {KnockoutObservable<number>}
+     */
+    this.institutionID = new Field();
+    /**
+     * ID from FieldOfStudy table.
+     * Required for isCccMember==true
+     * @member {KnockoutObservable<number>}
+     */
+    this.fieldOfStudyID = new Field();
+    /**
+     * The type of CCC member, from a close list: student, proffesor, administrator
+     * Value for CCCUsers.UserType.
+     * Required for isCccMember==true
+     * @member {KnockoutObservable<string>}
+     */
+    this.cccUserType = new Field();
+
     this.reset = function() {
         this.atBooking(false);
         this.confirmationCode(null);
@@ -159,6 +186,9 @@ function SignupVM() {
         this.jobTitleID(null);
         this.jobTitleName(null);
         this.isEmailSignupDisplayed(false);
+        this.institutionID('');
+        this.fieldOfStudyID('');
+        this.cccUserType('');
     };
 
     this.submitText = ko.pureComputed(function() {
@@ -201,7 +231,11 @@ function SignupVM() {
             facebookAccessToken: this.facebookAccessToken(),
             profileType: this.profile(),
             jobTitleID: this.jobTitleID(),
-            jobTitleName: this.jobTitleName()
+            jobTitleName: this.jobTitleName(),
+            isCccMember: this.isCccMember(),
+            institutionID: this.institutionID(),
+            fieldOfStudyID: this.fieldOfStudyID(),
+            cccUserType: this.cccUserType()
         };
 
         return auth.signup(plainData)
