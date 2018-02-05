@@ -7,6 +7,7 @@
 import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import ko from 'knockout';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 import { list as userExternalListingsList } from '../../../data/userExternalListings';
 
@@ -41,6 +42,16 @@ export default class ExternalListingList extends Komponent {
          * externalListing propery.
          */
         this.subscribeTo(userExternalListingsList.onData, this.externalListing);
+
+        /**
+         * Notify data load errors
+         */
+        this.subscribeTo(userExternalListingsList.onDataError, (err) => {
+            showError({
+                title: 'There was an error loading your external listings',
+                error: err
+            });
+        });
     }
 }
 
