@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-02-06 20:46+11:00\n"
-"PO-Revision-Date: 2018-02-06 20:52+1100\n"
+"POT-Creation-Date: 2018-02-06 21:20+11:00\n"
+"PO-Revision-Date: 2018-02-06 21:21+1100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -173,6 +173,10 @@ msgstr "Dame un error"
 #: App_Code\LcRessources.cs:12
 msgid "Great work!"
 msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:20
+msgid "Hourly service"
+msgstr "Servicio por hora"
 
 #: api\v1\me\privacy-settings.cshtml:86
 msgid "Include my profile in search listings preference is required"

@@ -17,7 +17,7 @@ public static partial class LcPricingModel
             1,
             new PackageBaseConfig {
                 PricingTypeID = 1,
-                SingularName = "Hourly service",
+                SingularName = "[[[Hourly service]]]",
                 PluralName = "Hourly services",
                 SlugName = "hourlyservice",
                 AddNewLabel = "Add hourly services",
