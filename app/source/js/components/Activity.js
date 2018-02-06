@@ -19,12 +19,6 @@ function Activity($activity, app) {
     this.$activity = $activity;
     this.app = app;
 
-    /**
-     * CSS to style this activity.
-     * @private {string}
-     */
-    this.style = null;
-
     // Default access level: anyone
     // Activities can use the enumeration: this.app.UserType
     this.accessLevel = null;
@@ -57,7 +51,6 @@ function Activity($activity, app) {
      * @member {KnockoutObservable<string>|string}
      */
     this.title = ko.observable('');
-
 
     // Knockout binding of viewModel delayed to first show
     // to avoid problems with subclasses replacing the viewModel property
@@ -105,6 +98,9 @@ Activity.prototype.show = function show(options) {
         if (!this.viewModel.title) {
             this.viewModel.title = this.title;
         }
+        if (!this.viewModel.isShown) {
+            this.viewModel.isShown = this.isShown;
+        }
         // Set-up dynamic update of the title on observable value change
         if (ko.isObservable(this.title)) {
             this.registerHandler({
@@ -125,7 +121,7 @@ Activity.prototype.show = function show(options) {
          * Enable the own activity style CSS, if there is someone.
          * @private
          */
-        this.__styleElement = this.style && insertCss(this.style, {
+        this.__styleElement = this.constructor.style && insertCss(this.constructor.style, {
             container: this.$activity.get(0)
         });
     }
@@ -222,6 +218,10 @@ Activity.prototype.hide = function hide() {
 
 /**
  * Dispose any ressources that cannot be done automatically.
+ *
+ * IMPORTANT: Currently, this is only executed on activities that are removed
+ * from DOM and 'singleton' instance; that's applied only to new folder-based
+ * bundle activities, aplying the new activity lifecycle #457.
  */
 Activity.prototype.dispose = function() {
     if (this.__styleElement) {
@@ -386,6 +386,27 @@ var createSingleton = function createSingleton(ActivityClass, $activity, app, na
 // Example of use
 //exports.init = createSingleton.bind(null, ActivityClass);
 
+// #457 workaround:
+// IMPORTANT: Workaround used in conjuntion with shell/loader
+// regarding a new activity lifecycle (#457) that disposes the instance
+// and html-DOM when the activity stop being used.
+// This new lifecycle applies only to folder-based activities, bundle individually
+// with it's copy of html and css. Most activities still are *legacy*, and
+// this is not used on that case.
+// The new lifecycle allows to make safer assumptions on how the code runs
+// (specially working with components) and result is a more clear code and less
+// memory wasted.
+//
+// This method just removes the activity 'singleton' instance created, so is
+// recreated next time, while DOM removal is at shell/loader.
+Activity.deleteSingletonInstance = function(ActivityClass, name) {
+    var key = ActivityClass.name + '::' + (name || '');
+    if (singletonInstances[key] instanceof ActivityClass) {
+        singletonInstances[key].dispose();
+        delete singletonInstances[key];
+    }
+};
+
 /**
     Static method extends to help inheritance.
     Additionally, it adds a static init method ready for the new class
@@ -397,7 +418,9 @@ Activity.extend = function extendsActivity(ClassFn) {
 
     ClassFn._inherits(Activity);
 
-    ClassFn.init = createSingleton.bind(null, ClassFn);
+    ClassFn.init = function($activity, app, name) {
+        return createSingleton(ClassFn, $activity, app, name);
+    };
 
     return ClassFn;
 };
@@ -405,3 +428,23 @@ Activity.extend = function extendsActivity(ClassFn) {
 Activity.init = function($activity, app, name) {
     return createSingleton(this, $activity, app, name);
 };
+
+/**
+ * Must be implemented by derived classes
+ * @static @member {string}
+ */
+Object.defineProperty(Activity, 'template', {
+    get: function() { throw new Error('No activity template defined'); },
+    enumerable: true,
+    configurable: true
+});
+
+/**
+ * CSS text defining the style created for the activity.
+ * @static @member {string}
+ */
+Object.defineProperty(Activity, 'style', {
+    get: function() { return undefined; },
+    enumerable: true,
+    configurable: true
+});

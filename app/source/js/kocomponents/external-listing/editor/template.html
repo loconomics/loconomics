@@ -1,0 +1,54 @@
+<form id="externalListingEntryForm" aria-describedby="externalListingEntryFormInstructions"
+    data-bind="event: { submit: save }">
+    <fieldset data-bind="with: externalListing">
+        <div class="col-xs-12">
+            <legend>Listing details</legend>
+            <label for="listingTitle">Title</label>
+            <div class="form-group">
+                <span class="form-control-static" data-bind="text: title"></span>
+                <!--<input class="form-control"
+                    id="listingTitle"
+                    type="text"
+                    placeholder=""
+                    data-bind="
+                        value: title,
+                        disable: $component.isWorking
+                    " />-->
+            </div>
+            <div class="isolated">
+                <job-title-autocomplete params="suggestionButtonText: 'Add',
+                    target: 'professionals',
+                    onSelect: $component.onSelectJobTitle.bind($component),
+                    label: 'Job title(s) in this listing',
+                    isDisabled: $component.isWorking,
+                    id: 'externalListingEditorJobTitles'"></job-title-autocomplete>
+                <ul class="list-unstyled" data-bind="foreach: $component.selectedJobTitles">
+                    <li class="IconContentItem">
+                        <div class="Item-content" data-bind="text: name"></div>
+                        <button type="button" class="btn btn-link" aria-label="Unselect"
+                            data-bind="click: $component.unselectJobTitle.bind($component), disable: $component.isWorking">
+                            <span aria-hidden="true" class="fa ion ion-close"></span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <label for="notes">Notes</label>
+            <div class="form-group">
+                <textarea class="form-control"
+                    id="notes"
+                    rows="5"
+                    placeholder=""
+                    data-bind="
+                        value: notes,
+                        disable: $component.isWorking
+                    "></textarea>
+            </div>
+            <button type="submit" class="btn btn-secondary btn-block btn-lg"
+                data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>
+            <button type="button" class="btn btn-danger btn-link"
+                data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
+                disable: $component.isWorking,
+                visible: $component.externalListingID"></button>
+        </div>
+    </fieldset>
+</form>

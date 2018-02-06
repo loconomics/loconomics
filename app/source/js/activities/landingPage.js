@@ -12,12 +12,8 @@ var onboarding = require('../data/onboarding');
 var A = Activity.extend(function LandingPageActivity() {
     Activity.apply(this, arguments);
 
-    this.viewModel = new ViewModel();
-});
+    this.title = 'Welcome';
 
-exports.init = A.init;
-
-function ViewModel() {
     /**
      * Navigate to onboarding or dashboard.
      * It's a simplified and adapted version of app.goDashboard that
@@ -43,4 +39,6 @@ function ViewModel() {
     };
 
     this.profile = SignupVM.profileType.serviceProfessional;
-}
+});
+
+exports.init = A.init;

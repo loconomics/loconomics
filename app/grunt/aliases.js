@@ -1,12 +1,20 @@
 'use strict';
 
 module.exports = {
+    // Default task builds everything and run tests (linting included in 'build-js' as part of 'build')
     'default': [
+        'prepare-for-build',
         'build',
+        'build-landingPages',
+        'build-webapp',
         'test'
     ],
+    // Any preparation of the folder where building results will go
+    'prepare-for-build': [
+        'mkdir:build-assets-js',
+    ],
+    // Run JavaScript testing
     'test': [
-        'browserify:appCommon',
         'browserify:tests',
         'mocha'
     ],

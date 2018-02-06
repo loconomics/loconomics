@@ -18,6 +18,15 @@ var TEMPLATE = require('../../html/modals/confirm.html');
 var createElement = require('./utils/createElement');
 require('../utils/jquery.multiline');
 
+/**
+ * Display a modal asking for confirmation to perform a task
+ * @param {Object} options
+ * @param {string} [options.message=Are you sure?] Descriptive text for the task or question.
+ * @param {string} [options.title=Are you sure?] Title of the modal
+ * @param {string} [options.yes=Yes] Label for the button answering positively (accepting).
+ * @param {string} [options.no=No] Label for the button answering negatively (declining).
+ * @returns {Promise} Resolves if accepted, rejects with no error if declined
+ */
 exports.show = function (options) {
     var modal = createElement(TEMPLATE);
     fixFocus(modal);

@@ -1,0 +1,23 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a href="/market-externally" data-bind="attr: { href: '/market-externally' + '?mustReturn=external-platform-view/' + platformID() + '&returnText=' + + title() }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Market externally
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <external-platform-info params="platformID: platformID, platformName: platformName"></external-platform-info>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'externalListing'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>
+
+
