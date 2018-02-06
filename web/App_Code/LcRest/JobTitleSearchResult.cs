@@ -70,7 +70,8 @@ namespace LcRest
                 FROM
                     positions
                 WHERE
-                    LanguageID = @LanguageID
+                    Active = 1
+                    AND LanguageID = @LanguageID
                     AND CountryID = @CountryID
                     AND Approved = 1 
                     AND (PositionSingular like '%' + @searchTerm + '%'

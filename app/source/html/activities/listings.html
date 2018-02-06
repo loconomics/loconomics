@@ -1,5 +1,5 @@
-<!-- yourListings activity.-->
-<div data-activity="yourListings" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
+<!-- listings activity.-->
+<div data-activity="listings" data-bind="css: { 'is-loading': isLoading }" class="Boxes-sm animated">
   <app-inline-user-menu></app-inline-user-menu>
   <div class="container">
       <div class="row">
@@ -7,19 +7,26 @@
         <div data-bind="css: { 'is-loading': isLoading }">
             <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
         </div>
-        <div class="col-md-7 col-sm-reset">
+        <div class="col-md-7 col-sm-reset" data-bind="if: isShown">
             <div data-bind="visible: user.isServiceProfessional">
-                <h2 class="SectionTitle">Listings by job title</h2>
+                <h2 class="SectionTitle">Listings on Loconomics.com</h2>
                 <app-job-titles-list params="jobTitles: userJobProfile, selectJobTitle: selectJobTitle, showMarketplaceInfo: showMarketplaceInfo"></app-job-titles-list>
-                <h2 class="SectionTitle">Add a new listing</h2>
                 <a class="IconContentItem" href="/addJobTitle">
                     <icon-dec class="Item-icon" params="icon: 'ion-plus'"></icon-dec>
                     <div class="Item-content">
-                        <p>Search for a job title</p>
+                        <p>Add new Loconomics listing</p>
                     </div>
                 </a>
+                <h2 class="SectionTitle">Listings elsewhere</h2>
+                <external-listing-list params="userID: 540"></external-listing-list>
+                <a class="IconContentItem" href="/market-externally?mustReturn=listings&returnText=Listings">
+                    <div class="Item-content">
+                        <p>Find places to market yourself</p>
+                    </div>
+                    <icon-dec class="Item-icon" params="icon: 'ion-ios-arrow-right'"></icon-dec>
+                </a>
                 <h2 class="SectionTitle">Availability settings</h2>
-                <a class="IconContentItem" href="/schedulingPreferences?mustReturn=yourListings&returnText=Your Listings">
+                <a class="IconContentItem" href="/schedulingPreferences?mustReturn=listings&returnText=Listings">
                     <icon-dec class="Item-icon" params="icon: 'ion-ios-settings'"></icon-dec>
                     <div class="Item-content">
                         <p>Adjust your availability</p>

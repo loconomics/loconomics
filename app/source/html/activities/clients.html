@@ -6,7 +6,7 @@
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li data-bind="visible: !isSelectionMode()">
-                        <a href="/cms"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> Client Manager</a>
+                        <a href="/cms"><i class="fa fa-fw ion-ios-arrow-thin-left"></i> My Clients</a>
                     </li>
                     <li data-bind="visible: isSelectionMode()">
                         <a data-bind="href: cancelLink" href="/cms">Cancel</a>
@@ -26,9 +26,9 @@
                             <span class="fa ion ion-ios-search"></span>
                             <span class="sr-only">Search</span>
                         </span>
-                        <input type="text" class="form-control" placeholder="search clients" data-bind="textInput: searchText">
+                        <input type="text" class="form-control" placeholder="Search clients or add a new one" data-bind="textInput: searchText">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-secondary" data-bind="click: addNew">Add</button>
+                            <button type="button" class="btn btn-secondary" data-bind="click: addNew">Add New</button>
                         </span>
                     </div><!-- /input-group -->
                 </div>

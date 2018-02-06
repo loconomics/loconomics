@@ -1103,6 +1103,34 @@
                 "referredByUserID": 123,
                 "referredByEmail": "user@test.one"
             }
+        },
+        "Platforms (available to me)": {
+            "url": "/api/v1/en-US/me/platforms",
+            "get": { }
+        },
+        "Platforms (item, available to me)": {
+            "url": "/api/v1/en-US/me/platforms/1",
+            "get": { }
+        },
+        "User External Listings": {
+            "url": "/api/v1/en-US/me/external-listings",
+            "get": {},
+            "post": {
+                "platformID": 1,
+                "jobTitles": [106],
+                "title": "My listing at LC",
+                "notes": "Something public about me"
+            }
+        },
+        "User External Listing (item)": {
+            "url": "/api/v1/en-US/me/external-listings/1",
+            "get": {},
+            "put": {
+                "jobTitles": [106],
+                "title": "My listing at LC",
+                "notes": "Something public about me"
+            },
+            "delete": {}
         }
     };
 

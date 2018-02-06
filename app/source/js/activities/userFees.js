@@ -43,7 +43,7 @@ function ViewModel(app) {
 
     this.helpLink = '/help/relatedArticles/201964153-how-owner-user-fees-work';
 
-    this.plans = paymentPlans.list;
+    this.plans = paymentPlans.availablePlans;
     this.activeUserPaymentPlan = userPaymentPlan.data;
 
     this.selectedPaymentPlanID = ko.observable('');
