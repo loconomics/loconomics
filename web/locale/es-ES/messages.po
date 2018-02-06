@@ -1,15 +1,35 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-02-06 21:20+11:00\n"
-"PO-Revision-Date: 2018-02-06 21:21+1100\n"
+"POT-Creation-Date: 2018-02-06 23:15+11:00\n"
+"PO-Revision-Date: 2018-02-06 23:15+11:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: es_ES\n"
+"X-Generator: i18n.POTGenerator\n"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:136
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:179
+msgid "(enter 0.00 if free)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:62
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:99
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:226
+msgid "(this should be all-inclusive)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:29
+msgid "[Describe to your potential clients in detail the services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
+msgid "{0} ({2} consultation)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:149
+msgid "{0} ({2} estimate)"
+msgstr ""
 
 #: App_Code\LcRessources.cs:18
 msgid "{0} has a not valid value"
@@ -19,17 +39,111 @@ msgstr ""
 msgid "{0} is required"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:338 api\v1\me\client-booking.cshtml:208
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:197
+msgid "{0}, {1} ({3} consultation)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:150
+msgid "{0}, {1} ({3} estimation)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:76
+msgid "{0}, {2} appointments - {1} each"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:74
+msgid "{1} appointments - {0} each"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:170
+msgid "Add a consultation"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:54
+msgid "Add a package"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:217
+msgid "Add a service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:92
+msgid "Add an add-on service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:127
+msgid "Add an estimate visit"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:319
+msgid "Add deep cleaning services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:23
+msgid "Add hourly services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:251
+msgid "Add light cleaning services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:285
+msgid "Add routine cleaning services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:105
+msgid "Add/Edit add-ons"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:194
+msgid "Add/Edit consultations"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:147
+msgid "Add/Edit estimates"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:71
+msgid "Add/Edit packages"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:32
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:263
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:297
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:331
+msgid "Add/Edit pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:232
+msgid "Add/Edit services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:89
+msgid "Add-On"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:104
+msgid "Add-on removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:90
+msgid "Add-Ons"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:338
+#: api\v1\me\client-booking.cshtml:208
 #: api\v1\me\service-professional-booking.cshtml:100
 msgid "Address Line 1 must be fewer than 100 characters."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:339 api\v1\me\client-booking.cshtml:209
+#: api\v1\me\addresses.cshtml:339
+#: api\v1\me\client-booking.cshtml:209
 #: api\v1\me\service-professional-booking.cshtml:101
 msgid "Address Line 2 must be fewer than 100 characters."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:337 api\v1\me\client-booking.cshtml:210
+#: api\v1\me\addresses.cshtml:337
+#: api\v1\me\client-booking.cshtml:210
 #: api\v1\me\service-professional-booking.cshtml:102
 msgid "Address Name must be fewer than 50 characters."
 msgstr ""
@@ -54,6 +168,14 @@ msgstr ""
 msgid "An Item ID is required at the URL"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:176
+msgid "Approx. length of consultation:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:133
+msgid "Approximate length of visit:"
+msgstr ""
+
 #: api\v1\me\external-listings.cshtml:72
 msgid "At least 1 related job title must be specified"
 msgstr ""
@@ -74,7 +196,8 @@ msgstr ""
 msgid "Birth Month must be an number"
 msgstr ""
 
-#: api\v1\me\bookings.cshtml:50 api\v1\me\client-booking.cshtml:177
+#: api\v1\me\bookings.cshtml:50
+#: api\v1\me\client-booking.cshtml:177
 #: api\v1\me\service-professional-booking.cshtml:73
 #: api\v1\me\service-professional-booking.cshtml:272
 msgid "Booking not found."
@@ -100,7 +223,8 @@ msgstr "No se puede POST a un elemento"
 msgid "Choose a plan"
 msgstr ""
 
-#: api\v1\me\client-booking.cshtml:224 api\v1\me\client-booking.cshtml:230
+#: api\v1\me\client-booking.cshtml:224
+#: api\v1\me\client-booking.cshtml:230
 #: api\v1\me\service-professional-booking.cshtml:116
 #: api\v1\me\service-professional-booking.cshtml:122
 msgid "Choose at least one service"
@@ -115,8 +239,77 @@ msgstr ""
 msgid "Co-branded promotions preference is required"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:167
+msgid "Consultation"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:193
+msgid "Consultation removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:187
+msgid "Consultation type:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:168
+msgid "Consultations"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:316
+msgid "Deep cleaning service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:317
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:324
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:325
+msgid "Deep cleaning services"
+msgstr ""
+
 #: api\v1\me\addresses.cshtml:616
 msgid "DELETE is not allowed"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:218
+msgid "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:102
+msgid "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:93
+msgid "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:320
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:326
+msgid "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:252
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:258
+msgid "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:286
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:292
+msgid "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:227
+msgid "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:24
+msgid "Describe to your potential clients in detail the service you provide and include what makes your services unique."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:66
+msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:55
+msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)."
 msgstr ""
 
 #: api\v1\me\service-professional-services.cshtml:197
@@ -125,6 +318,10 @@ msgstr ""
 
 #: api\v1\me\service-professional-services.cshtml:205
 msgid "Duration must be the number of minutes without decimals"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:64
+msgid "Duration:"
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:452
@@ -143,13 +340,33 @@ msgstr ""
 msgid "Error, you need to upload an image first"
 msgstr ""
 
-#: api\v1\me\events.cshtml:165 api\v1\me\events.cshtml:179
-#: api\v1\me\events.cshtml:254 api\v1\me\events.cshtml:285
-#: api\v1\me\events.cshtml:301 api\vx\icalendar\events.cshtml:89
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:124
+msgid "Estimate"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:146
+msgid "Estimate removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:125
+msgid "Estimates"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:144
+msgid "Estimation type:"
+msgstr ""
+
+#: api\v1\me\events.cshtml:165
+#: api\v1\me\events.cshtml:179
+#: api\v1\me\events.cshtml:254
+#: api\v1\me\events.cshtml:285
+#: api\v1\me\events.cshtml:301
+#: api\vx\icalendar\events.cshtml:89
 msgid "Event not found."
 msgstr ""
 
-#: api\v1\me\external-listings.cshtml:54 api\v1\me\external-listings.cshtml:142
+#: api\v1\me\external-listings.cshtml:54
+#: api\v1\me\external-listings.cshtml:142
 #: api\v1\me\external-listings.cshtml:165
 msgid "External Listing not found."
 msgstr ""
@@ -174,9 +391,56 @@ msgstr "Dame un error"
 msgid "Great work!"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:116
+msgid "Here you can add additional services that clients can request with a service allowing them to customize their experience with you."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:240
+msgid "Here you can add each individual service you provide and communicate to clients the time you'll need and the price you charge. Add a package if you'd also like to bundle services or offer discounts for multiple appointments."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:81
+msgid "Here you can communicate a bundle of services that occur in a single appointment or multiple appointments of a service. For example, you could offer six appointments for a discounted price."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:40
+msgid "Here you can create one or more hourly services that you offer. If you have more than one, tell clients how they differ."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:153
+msgid "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:200
+msgid "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:259
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:293
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:327
+msgid "Hourly rate"
+msgstr ""
+
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:20
 msgid "Hourly service"
 msgstr "Servicio por hora"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:21
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:28
+msgid "Hourly services"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:140
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:183
+msgid "I prefer not to state"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:158
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:205
+msgid ""
+"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.\n"
+"                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
+msgstr ""
 
 #: api\v1\me\privacy-settings.cshtml:86
 msgid "Include my profile in search listings preference is required"
@@ -215,7 +479,8 @@ msgstr ""
 msgid "Is required to indicate whether is service professional or not"
 msgstr ""
 
-#: api\v1\job-titles.cshtml:60 api\v1\users\job-profile.cshtml:77
+#: api\v1\job-titles.cshtml:60
+#: api\v1\users\job-profile.cshtml:77
 msgid "Job Title not found."
 msgstr ""
 
@@ -223,9 +488,66 @@ msgstr ""
 msgid "Last Name must be fewer than 145 characters."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:334 api\v1\me\client-booking.cshtml:212
+#: api\v1\me\addresses.cshtml:334
+#: api\v1\me\client-booking.cshtml:212
 #: api\v1\me\service-professional-booking.cshtml:104
 msgid "Latitude must be a number"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:154
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:201
+msgid "learn more"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:115
+msgid "Learn more about add-on pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:199
+msgid "Learn more about consultation pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:338
+msgid "Learn more about deep cleaning services pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:152
+msgid "Learn more about estimate pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:39
+msgid "Learn more about hourly service pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:270
+msgid "Learn more about light cleaning services pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:80
+msgid "Learn more about package pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:304
+msgid "Learn more about routine cleaning services pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:239
+msgid "Learn more about service pricing"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:100
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:223
+msgid "Length of service:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:248
+msgid "Light cleaning service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:249
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:256
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:257
+msgid "Light cleaning services"
 msgstr ""
 
 #: api\v1\me\privacy-settings.cshtml:82
@@ -236,7 +558,8 @@ msgstr ""
 msgid "Loconomics marketing messages preference is required"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:335 api\v1\me\client-booking.cshtml:213
+#: api\v1\me\addresses.cshtml:335
+#: api\v1\me\client-booking.cshtml:213
 #: api\v1\me\service-professional-booking.cshtml:105
 msgid "Longitude must be a number"
 msgstr ""
@@ -246,7 +569,8 @@ msgid "Marketing e-mails about Loconomics Service Providers preference is requir
 msgstr ""
 
 #: api\v1\me\licenses-certifications.cshtml:93
-#: api\v1\me\profile-picture.cshtml:126 api\v1\me\work-photos.cshtml:119
+#: api\v1\me\profile-picture.cshtml:126
+#: api\v1\me\work-photos.cshtml:119
 msgid "Maximum request length exceeded"
 msgstr ""
 
@@ -258,8 +582,10 @@ msgstr ""
 msgid "Method not allowed"
 msgstr ""
 
-#: api\v1\me\client-booking.cshtml:163 api\v1\me\client-booking.cshtml:175
-#: api\v1\me\events.cshtml:270 api\v1\me\events.cshtml:283
+#: api\v1\me\client-booking.cshtml:163
+#: api\v1\me\client-booking.cshtml:175
+#: api\v1\me\events.cshtml:270
+#: api\v1\me\events.cshtml:283
 #: api\v1\me\events.cshtml:299
 #: api\v1\me\service-professional-booking.cshtml:259
 #: api\v1\me\service-professional-booking.cshtml:270
@@ -277,50 +603,89 @@ msgstr ""
 msgid "Must specify the platform"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:138
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:141
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:181
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:184
+msgid "My rates start at:"
+msgstr ""
+
 #: api\v1\me\service-professional-services.cshtml:194
 msgid "Name must be fewer than 50 characters."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:171
+msgid "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services."
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:279
 msgid "Not allowed"
 msgstr "No permitido"
 
-#: api\v1\search.cshtml:225 api\v1\me\addresses.cshtml:229
-#: api\v1\me\addresses.cshtml:241 api\v1\me\addresses.cshtml:328
-#: api\v1\me\addresses.cshtml:477 api\v1\me\addresses.cshtml:518
-#: api\v1\me\addresses.cshtml:571 api\v1\me\addresses.cshtml:621
-#: api\v1\me\calendar-syncing.cshtml:48 api\v1\me\calendar-syncing.cshtml:77
+#: api\v1\search.cshtml:225
+#: api\v1\me\addresses.cshtml:229
+#: api\v1\me\addresses.cshtml:241
+#: api\v1\me\addresses.cshtml:328
+#: api\v1\me\addresses.cshtml:477
+#: api\v1\me\addresses.cshtml:518
+#: api\v1\me\addresses.cshtml:571
+#: api\v1\me\addresses.cshtml:621
+#: api\v1\me\calendar-syncing.cshtml:48
+#: api\v1\me\calendar-syncing.cshtml:77
 #: api\v1\me\marketplace-profile.cshtml:56
-#: api\v1\me\marketplace-profile.cshtml:65 api\v1\me\messaging.cshtml:125
-#: api\v1\me\messaging.cshtml:144 api\v1\me\messaging.cshtml:151
-#: api\v1\me\messaging.cshtml:167 api\v1\me\messaging.cshtml:178
-#: api\v1\me\messaging.cshtml:263 api\v1\me\messaging.cshtml:270
+#: api\v1\me\marketplace-profile.cshtml:65
+#: api\v1\me\messaging.cshtml:125
+#: api\v1\me\messaging.cshtml:144
+#: api\v1\me\messaging.cshtml:151
+#: api\v1\me\messaging.cshtml:167
+#: api\v1\me\messaging.cshtml:178
+#: api\v1\me\messaging.cshtml:263
+#: api\v1\me\messaging.cshtml:270
 #: api\v1\me\owner-acknowledgment.cshtml:29
-#: api\v1\me\owner-acknowledgment.cshtml:37 api\v1\me\payment-account.cshtml:55
-#: api\v1\me\payment-account.cshtml:64 api\v1\me\payment-plan.cshtml:57
-#: api\v1\me\payment-plan.cshtml:63 api\v1\me\privacy-settings.cshtml:64
-#: api\v1\me\privacy-settings.cshtml:73 api\v1\me\profile-picture.cshtml:182
-#: api\v1\me\profile.cshtml:99 api\v1\me\profile.cshtml:135
-#: api\v1\me\profile.cshtml:141 api\v1\me\profile.cshtml:148
+#: api\v1\me\owner-acknowledgment.cshtml:37
+#: api\v1\me\payment-account.cshtml:55
+#: api\v1\me\payment-account.cshtml:64
+#: api\v1\me\payment-plan.cshtml:57
+#: api\v1\me\payment-plan.cshtml:63
+#: api\v1\me\privacy-settings.cshtml:64
+#: api\v1\me\privacy-settings.cshtml:73
+#: api\v1\me\profile-picture.cshtml:182
+#: api\v1\me\profile.cshtml:99
+#: api\v1\me\profile.cshtml:135
+#: api\v1\me\profile.cshtml:141
+#: api\v1\me\profile.cshtml:148
 #: api\v1\me\scheduling-preferences.cshtml:42
 #: api\v1\me\scheduling-preferences.cshtml:51
 msgid "Not found"
 msgstr ""
 
-#: api\v1\job-titles.cshtml:63 api\v1\postal-codes.cshtml:43
-#: api\v1\auth\change-password.cshtml:48 api\v1\auth\login.cshtml:58
-#: api\v1\auth\signup.cshtml:102 api\v1\me\client-booking.cshtml:111
-#: api\v1\me\client-booking.cshtml:122 api\v1\me\client-booking.cshtml:147
-#: api\v1\me\clients.cshtml:97 api\v1\me\clients.cshtml:145
-#: api\v1\me\clients.cshtml:192 api\v1\me\education.cshtml:64
-#: api\v1\me\education.cshtml:112 api\v1\me\education.cshtml:154
+#: api\v1\job-titles.cshtml:63
+#: api\v1\postal-codes.cshtml:43
+#: api\v1\auth\change-password.cshtml:48
+#: api\v1\auth\login.cshtml:58
+#: api\v1\auth\signup.cshtml:102
+#: api\v1\me\client-booking.cshtml:111
+#: api\v1\me\client-booking.cshtml:122
+#: api\v1\me\client-booking.cshtml:147
+#: api\v1\me\clients.cshtml:97
+#: api\v1\me\clients.cshtml:145
+#: api\v1\me\clients.cshtml:192
+#: api\v1\me\education.cshtml:64
+#: api\v1\me\education.cshtml:112
+#: api\v1\me\education.cshtml:154
 #: api\v1\me\service-professional-booking.cshtml:238
 #: api\v1\me\service-professional-services.cshtml:160
-#: api\v1\me\weekly-schedule.cshtml:125 api\v1\users\job-profile.cshtml:54
+#: api\v1\me\weekly-schedule.cshtml:125
+#: api\v1\users\job-profile.cshtml:54
 #: api\v1\users\service-addresses.cshtml:74
 #: api\v1\users\service-professional-services.cshtml:74
 msgid "Not Found"
 msgstr "Extraviado"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:157
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:204
+msgid "not recommended"
+msgstr ""
 
 #: api\v1\Test.cshtml:110
 msgid "Num must be a number"
@@ -334,7 +699,8 @@ msgstr ""
 msgid "Number of occurrences must be a number"
 msgstr ""
 
-#: App_Code\LcRessources.cs:13 api\v1\me\profile.cshtml:131
+#: App_Code\LcRessources.cs:13
+#: api\v1\me\profile.cshtml:131
 msgid "OK"
 msgstr ""
 
@@ -342,9 +708,28 @@ msgstr ""
 msgid "Only registered users can refer professionals"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:51
+msgid "Package"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:70
+msgid "Package removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:52
+msgid "Packages"
+msgstr ""
+
 #: _specialRoutes\Login.cshtml:15
 msgid "Password"
 msgstr "Contraseña"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:139
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:142
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:182
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:185
+msgid "per"
+msgstr ""
 
 #: api\v1\me\platforms.cshtml:42
 msgid "Platform not found."
@@ -378,6 +763,38 @@ msgstr ""
 msgid "Preferred start date and time is not valid"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:339
+msgid "Price and list your services for what you consider a deep cleaning of a home. We're talking about the client's mother coming to visit or a spring cleaning. Customize by selecting attributes above."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:271
+msgid "Price and list your services for what you consider a light cleaning of a home. Some clients just want a quick clean and aren't too concerned about spring cleaning. Customize by selecting attributes above."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:305
+msgid "Price and list your services for what you consider a routine cleaning of a home. It's more than making the beds but isn't a spring cleaning either. Customize by selecting attributes above."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:98
+msgid "Price for add-on service:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:178
+msgid "Price for consultation:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:135
+msgid "Price for estimate:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:61
+msgid "Price for package:"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:225
+msgid "Price for service:"
+msgstr ""
+
 #: api\v1\me\service-professional-services.cshtml:202
 msgid "Price must be a number and not contain the $ symbol."
 msgstr ""
@@ -391,6 +808,11 @@ msgstr ""
 
 #: api\v1\pricing-types.cshtml:130
 msgid "Pricing Type not found."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:143
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:186
+msgid "Pricing will be disclosed during consultation."
 msgstr ""
 
 #: api\v1\me\marketplace-profile.cshtml:71
@@ -413,6 +835,16 @@ msgstr ""
 msgid "Request sent!"
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:282
+msgid "Routine cleaning service"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:283
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:290
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:291
+msgid "Routine cleaning services"
+msgstr ""
+
 #: App_Code\LcRessources.cs:14
 msgid "Saved"
 msgstr ""
@@ -429,12 +861,29 @@ msgstr ""
 msgid "Server Error: impossible to create the address at this time."
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:404 api\v1\me\addresses.cshtml:460
+#: api\v1\me\addresses.cshtml:404
+#: api\v1\me\addresses.cshtml:460
 msgid "Server Error: Invalid address Kind specified."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:214
+msgid "Service"
 msgstr ""
 
 #: api\v1\me\addresses.cshtml:336
 msgid "Service Radius must be a number"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:31
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:231
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:262
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:296
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:330
+msgid "Service removed successfully"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:215
+msgid "Services"
 msgstr ""
 
 #: api\v1\Test.cshtml:108
@@ -454,12 +903,14 @@ msgstr ""
 msgid "Something goes wrong"
 msgstr ""
 
-#: api\v1\me\addresses.cshtml:340 api\v1\me\client-booking.cshtml:211
+#: api\v1\me\addresses.cshtml:340
+#: api\v1\me\client-booking.cshtml:211
 #: api\v1\me\service-professional-booking.cshtml:103
 msgid "Special instructions must be fewer than 1,000 characters."
 msgstr ""
 
-#: api\v1\me\client-booking.cshtml:258 api\v1\me\client-booking.cshtml:334
+#: api\v1\me\client-booking.cshtml:258
+#: api\v1\me\client-booking.cshtml:334
 msgid "Start date and time is not valid"
 msgstr ""
 
@@ -475,6 +926,14 @@ msgstr ""
 #: api\v1\lead-generation\newsletter.cshtml:90
 #: api\v1\lead-generation\referral.cshtml:269
 msgid "Subscription failed"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:180
+msgid "Tell your clients what they can expect during the consultation and what to prepare."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:137
+msgid "Tell your clients what they can expect when you speak with them and what to prepare."
 msgstr ""
 
 #: api\v1\me\clients.cshtml:170
@@ -493,7 +952,8 @@ msgstr ""
 msgid "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"
 msgstr ""
 
-#: App_Code\LcAuthHelper.cs:353 api\v1\lead-generation\newsletter.cshtml:70
+#: App_Code\LcAuthHelper.cs:353
+#: api\v1\lead-generation\newsletter.cshtml:70
 #: api\v1\lead-generation\referral.cshtml:186
 #: api\v1\lead-generation\referral.cshtml:246
 msgid "The email is not valid."
@@ -513,7 +973,8 @@ msgstr ""
 msgid "The Item ID must be an integer"
 msgstr ""
 
-#: api\v1\users\job-profile.cshtml:51 api\v1\users\service-addresses.cshtml:71
+#: api\v1\users\job-profile.cshtml:51
+#: api\v1\users\service-addresses.cshtml:71
 #: api\v1\users\service-professional-services.cshtml:71
 msgid "The Job Title ID has bad format (must be an integer number)"
 msgstr ""
@@ -542,8 +1003,43 @@ msgstr ""
 msgid "The Website URL is too long, please keep it under 2000 characters."
 msgstr ""
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:188
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:189
+msgid "This consultation is available to first-time clients only"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:67
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:68
+msgid "This package is available to first-time clients only"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:228
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:229
+msgid "This service is available to first-time clients only"
+msgstr ""
+
 #: api\v1\me\external-listings.cshtml:71
 msgid "Title is required"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:97
+msgid "Type the name of the add-on service (be descriptive and creative)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
+msgid "Type the name of the consultation, e.g. \\"Initial consultation\\", \\"Introductory meeting\\"."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
+msgid "Type the name of the estimate visit, e.g. \\"Work assessment visit\\", \\"Pricing estimate visit\\""
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:59
+msgid "Type the name of the package (be descriptive and creative)"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:222
+msgid "Type the name of the service (be descriptive and creative)"
 msgstr ""
 
 #: api\v1\me\owner-acknowledgment.cshtml:54
@@ -554,12 +1050,18 @@ msgstr ""
 msgid "User doesn't exists"
 msgstr "El usuario no existe"
 
-#: api\v1\users\availability.cshtml:47 api\v1\users\availability.cshtml:66
-#: api\v1\users\index.cshtml:46 api\v1\users\index.cshtml:53
-#: api\v1\users\profile.cshtml:35 api\v1\users\profile.cshtml:40
-#: api\v1\users\ratings.cshtml:43 api\v1\users\ratings.cshtml:61
-#: api\v1\users\ratings.cshtml:67 api\v1\users\reviews.cshtml:46
-#: api\v1\users\reviews.cshtml:57 api\v1\users\service-attributes.cshtml:21
+#: api\v1\users\availability.cshtml:47
+#: api\v1\users\availability.cshtml:66
+#: api\v1\users\index.cshtml:46
+#: api\v1\users\index.cshtml:53
+#: api\v1\users\profile.cshtml:35
+#: api\v1\users\profile.cshtml:40
+#: api\v1\users\ratings.cshtml:43
+#: api\v1\users\ratings.cshtml:61
+#: api\v1\users\ratings.cshtml:67
+#: api\v1\users\reviews.cshtml:46
+#: api\v1\users\reviews.cshtml:57
+#: api\v1\users\service-attributes.cshtml:21
 #: api\v1\users\service-attributes.cshtml:29
 #: api\v1\users\verifications-summary.cshtml:62
 #: api\v1\users\verifications-summary.cshtml:81
@@ -571,9 +1073,15 @@ msgstr ""
 msgid "Username"
 msgstr "Nombre de usuario"
 
-#: api\v1\Test.cshtml:126 api\v1\Test.cshtml:136 api\v1\Test.cshtml:146
+#: api\v1\Test.cshtml:126
+#: api\v1\Test.cshtml:136
+#: api\v1\Test.cshtml:146
 msgid "Validation rules"
 msgstr "Reglas de validación"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:128
+msgid "We know you're not psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate."
+msgstr ""
 
 #: App_Code\LcAuthHelper.cs:234
 msgid ""
@@ -597,6 +1105,18 @@ msgstr ""
 
 #: api\v1\me\client-booking.cshtml:433
 msgid "We weren't able to process your payment, please review"
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:202
+msgid ""
+"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.\n"
+"                    You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:155
+msgid ""
+"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.\n"
+"                    You can discuss your full pricing when you speak and add any materials/parts required to get the job done right."
 msgstr ""
 
 #: api\v1\me\marketplace-profile.cshtml:106
@@ -639,12 +1159,23 @@ msgstr ""
 msgid "You must select user type."
 msgstr ""
 
-#: App_Code\LcAuthHelper.cs:66 App_Code\LcAuthHelper.cs:370
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:260
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:294
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:328
+msgid "You must set your hourly rate"
+msgstr ""
+
+#: App_Code\LcAuthHelper.cs:66
+#: App_Code\LcAuthHelper.cs:370
 msgid "You must specify a password."
 msgstr "Debes especificar una contraseña."
 
 #: api\v1\me\messaging.cshtml:211
 msgid "You must specify a recipient."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:191
+msgid "You must specify a starting rate or check 'I prefer not to state'"
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:65
@@ -667,6 +1198,10 @@ msgstr "Debes especificar tu apellido."
 msgid "You must specify your mobile phone number."
 msgstr "Debes especificar tu número de teléfono móvil."
 
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:192
+msgid "You need to specify a price unit along with your rate or mark 'I prefer not to state'"
+msgstr ""
+
 #: App_Code\LcAuthHelper.cs:191
 msgid "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent."
 msgstr "Su cuenta aún no ha sido confirmada. Por favor revise su bandeja de entrada y carpetas de correo no deseado y haga clic en el correo electrónico enviado."
@@ -680,7 +1215,7 @@ msgid "Your password has been updated. Please log in again with your new passwor
 msgstr "Su contraseña ha sido actualizada. Por favor inicie sesión de nuevo con su nueva contraseña"
 
 #: api\v1\me\weekly-schedule.cshtml:192
-msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\\"all days/times\\\"."
+msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\"all days/times\\"."
 msgstr ""
 
 #~ msgid "Dashboard"
@@ -700,3 +1235,4 @@ msgstr ""
 
 #~ msgid "You must be logged in"
 #~ msgstr "Usted debe estar conectado"
+
