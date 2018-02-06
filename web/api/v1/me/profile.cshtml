@@ -96,7 +96,7 @@
             public override dynamic Get()
             {
                 if (UrlData.Count > 0) {
-                    throw new HttpException(404, "Not found");
+                    throw new HttpException(404, "[[[Not found]]]");
                 }
 
                 return GetData();
@@ -123,38 +123,38 @@
                     {
                         if (LcRest.UserProfile.Get(WebSecurity.CurrentUserId).isServiceProfessional)
                         {
-                            return "Already a service professional";
+                            return "[[[Already a service professional]]]";
                         }
                         else
                         {
                             LcAuth.BecomeProvider(WebSecurity.CurrentUserId, null, true);
-                            return "OK";
+                            return "[[[OK]]]";
                         }
                     }
                 }
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
 
             public override dynamic Put()
             {
                 if (UrlData.Count > 1) {
-                    throw new HttpException(404, "Not found");
+                    throw new HttpException(404, "[[[Not found]]]");
                 }
                 else if (UrlData.Count == 1) {
                     if (UrlData[0] == "tracking") {
                         return PutTracking();
                     }
                     else {
-                        throw new HttpException(404, "Not found");
+                        throw new HttpException(404, "[[[Not found]]]");
                     }
                 }
 
                 // Validation
                 Validation.RequireField("firstname", LcRessources.RequiredField("First name"));
                 Validation.RequireField("lastname", LcRessources.RequiredField("Last name"));
-                Validation.Add("alternativeEmail", Validator.Regex(LcValidators.EmailAddressRegexPattern, "The alternative email is not valid."));
-                Validation.Add("birthMonthDay", Validator.Integer("Birth Day must be an number (day of the month)"));
-                Validation.Add("birthMonth", Validator.Integer("Birth Month must be an number"));
+                Validation.Add("alternativeEmail", Validator.Regex(LcValidators.EmailAddressRegexPattern, "[[[The alternative email is not valid.]]]"));
+                Validation.Add("birthMonthDay", Validator.Integer("[[[Birth Day must be an number (day of the month)]]]"));
+                Validation.Add("birthMonth", Validator.Integer("[[[Birth Month must be an number]]]"));
 
                 if (!Validation.IsValid() || !ModelState.IsValid) {
                     throw new HttpException(400, LcRessources.ValidationSummaryTitle);

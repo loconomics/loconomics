@@ -1,18 +1,162 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-01-23 23:27+11:00\n"
+"POT-Creation-Date: 2018-02-06 20:46+11:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: i18n.POTGenerator\n"
 
+#: App_Code\LcRessources.cs:18
+msgid "{0} has a not valid value"
+msgstr ""
+
+#: App_Code\LcRessources.cs:17
+msgid "{0} is required"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:338
+#: api\v1\me\client-booking.cshtml:208
+#: api\v1\me\service-professional-booking.cshtml:100
+msgid "Address Line 1 must be fewer than 100 characters."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:339
+#: api\v1\me\client-booking.cshtml:209
+#: api\v1\me\service-professional-booking.cshtml:101
+msgid "Address Line 2 must be fewer than 100 characters."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:337
+#: api\v1\me\client-booking.cshtml:210
+#: api\v1\me\service-professional-booking.cshtml:102
+msgid "Address Name must be fewer than 50 characters."
+msgstr ""
+
+#: api\v1\me\profile.cshtml:126
+msgid "Already a service professional"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:343
+msgid "Alternative date and time 1 is not valid"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:350
+msgid "Alternative date and time 2 is not valid"
+msgstr ""
+
+#: api\v1\lead-generation\referral.cshtml:191
+msgid "An email or phone number is required"
+msgstr ""
+
+#: api\v1\Test.cshtml:138
+msgid "An Item ID is required at the URL"
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:72
+msgid "At least 1 related job title must be specified"
+msgstr ""
+
+#: api\v1\me\profile.cshtml:156
+msgid "Birth Day must be an number (day of the month)"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:166
+msgid "Birth Month Day must be a number between 1 and 31"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:164
+msgid "Birth Month must be a number between 1 and 12"
+msgstr ""
+
+#: api\v1\me\profile.cshtml:157
+msgid "Birth Month must be an number"
+msgstr ""
+
+#: api\v1\me\bookings.cshtml:50
+#: api\v1\me\client-booking.cshtml:177
+#: api\v1\me\service-professional-booking.cshtml:73
+#: api\v1\me\service-professional-booking.cshtml:272
+msgid "Booking not found."
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:81
+msgid "Bookings by Phone preference is required"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:80
+msgid "Bookings by SMS preference is required"
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:72
+msgid "Business name must be fewer than 145 characters"
+msgstr ""
+
 #: api\v1\Test.cshtml:68
 msgid "Cannot POST to an item"
 msgstr ""
 
+#: api\v1\me\payment-plan.cshtml:69
+msgid "Choose a plan"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:224
+#: api\v1\me\client-booking.cshtml:230
+#: api\v1\me\service-professional-booking.cshtml:116
+#: api\v1\me\service-professional-booking.cshtml:122
+msgid "Choose at least one service"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:136
+#: api\v1\me\service-professional-services.cshtml:157
+msgid "Client not found"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:88
+msgid "Co-branded promotions preference is required"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:616
+msgid "DELETE is not allowed"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:197
+msgid "Description must be fewer than 1000 characters."
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:205
+msgid "Duration must be the number of minutes without decimals"
+msgstr ""
+
 #: App_Code\LcAuthHelper.cs:452
 msgid "E-mail address is already in use."
+msgstr ""
+
+#: api\v1\me\events.cshtml:199
+msgid "End date/time is not valid"
+msgstr ""
+
+#: api\v1\me\education.cshtml:129
+msgid "End year is invalid, please re-enter"
+msgstr ""
+
+#: api\v1\me\profile-picture.cshtml:160
+msgid "Error, you need to upload an image first"
+msgstr ""
+
+#: api\v1\me\events.cshtml:165
+#: api\v1\me\events.cshtml:179
+#: api\v1\me\events.cshtml:254
+#: api\v1\me\events.cshtml:285
+#: api\v1\me\events.cshtml:301
+#: api\vx\icalendar\events.cshtml:89
+msgid "Event not found."
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:54
+#: api\v1\me\external-listings.cshtml:142
+#: api\v1\me\external-listings.cshtml:165
+msgid "External Listing not found."
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:383
@@ -23,8 +167,20 @@ msgstr ""
 msgid "Facebook account does not exists."
 msgstr ""
 
+#: api\v1\me\clients.cshtml:167
+msgid "First Name must be fewer than 50 characters."
+msgstr ""
+
 #: api\v1\Test.cshtml:38
 msgid "Give me an error"
+msgstr ""
+
+#: App_Code\LcRessources.cs:12
+msgid "Great work!"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:86
+msgid "Include my profile in search listings preference is required"
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:579
@@ -47,19 +203,182 @@ msgstr ""
 msgid "Invalid Facebook credentials"
 msgstr ""
 
+#: api\v1\pricing-types.cshtml:134
+msgid "Invalid format for the Pricing Type ID"
+msgstr ""
+
+#: api\v1\me\payment-plan.cshtml:114
+msgid "Invalid payment plan"
+msgstr ""
+
+#: api\v1\lead-generation\newsletter.cshtml:73
+#: api\v1\lead-generation\referral.cshtml:249
+msgid "Is required to indicate whether is service professional or not"
+msgstr ""
+
+#: api\v1\job-titles.cshtml:60
+#: api\v1\users\job-profile.cshtml:77
+msgid "Job Title not found."
+msgstr ""
+
+#: api\v1\me\clients.cshtml:168
+msgid "Last Name must be fewer than 145 characters."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:334
+#: api\v1\me\client-booking.cshtml:212
+#: api\v1\me\service-professional-booking.cshtml:104
+msgid "Latitude must be a number"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:82
+msgid "Loconomics community messages preference is required"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:87
+msgid "Loconomics marketing messages preference is required"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:335
+#: api\v1\me\client-booking.cshtml:213
+#: api\v1\me\service-professional-booking.cshtml:105
+msgid "Longitude must be a number"
+msgstr ""
+
+#: api\v1\me\privacy-settings.cshtml:83
+msgid "Marketing e-mails about Loconomics Service Providers preference is required"
+msgstr ""
+
+#: api\v1\me\licenses-certifications.cshtml:93
+#: api\v1\me\profile-picture.cshtml:126
+#: api\v1\me\work-photos.cshtml:119
+msgid "Maximum request length exceeded"
+msgstr ""
+
+#: App_Code\LcRessources.cs:16
+msgid "Message was sent"
+msgstr ""
+
+#: api\v1\me\calendar-syncing.cshtml:74
+msgid "Method not allowed"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:163
+#: api\v1\me\client-booking.cshtml:175
+#: api\v1\me\events.cshtml:270
+#: api\v1\me\events.cshtml:283
+#: api\v1\me\events.cshtml:299
+#: api\v1\me\service-professional-booking.cshtml:259
+#: api\v1\me\service-professional-booking.cshtml:270
+#: api\v1\me\service-professional-services.cshtml:285
+#: api\v1\me\service-professional-services.cshtml:304
+#: api\v1\me\service-professional-services.cshtml:342
+msgid "Method not allowed."
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:231
+msgid "Must be a client ID or one of the predefined constants"
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:90
+msgid "Must specify the platform"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:194
+msgid "Name must be fewer than 50 characters."
+msgstr ""
+
 #: App_Code\LcAuthHelper.cs:279
 msgid "Not allowed"
 msgstr ""
 
+#: api\v1\search.cshtml:225
+#: api\v1\me\addresses.cshtml:229
+#: api\v1\me\addresses.cshtml:241
+#: api\v1\me\addresses.cshtml:328
+#: api\v1\me\addresses.cshtml:477
+#: api\v1\me\addresses.cshtml:518
+#: api\v1\me\addresses.cshtml:571
+#: api\v1\me\addresses.cshtml:621
+#: api\v1\me\calendar-syncing.cshtml:48
+#: api\v1\me\calendar-syncing.cshtml:77
+#: api\v1\me\marketplace-profile.cshtml:56
+#: api\v1\me\marketplace-profile.cshtml:65
+#: api\v1\me\messaging.cshtml:125
+#: api\v1\me\messaging.cshtml:144
+#: api\v1\me\messaging.cshtml:151
+#: api\v1\me\messaging.cshtml:167
+#: api\v1\me\messaging.cshtml:178
+#: api\v1\me\messaging.cshtml:263
+#: api\v1\me\messaging.cshtml:270
+#: api\v1\me\owner-acknowledgment.cshtml:29
+#: api\v1\me\owner-acknowledgment.cshtml:37
+#: api\v1\me\payment-account.cshtml:55
+#: api\v1\me\payment-account.cshtml:64
+#: api\v1\me\payment-plan.cshtml:57
+#: api\v1\me\payment-plan.cshtml:63
+#: api\v1\me\privacy-settings.cshtml:64
+#: api\v1\me\privacy-settings.cshtml:73
+#: api\v1\me\profile-picture.cshtml:182
+#: api\v1\me\profile.cshtml:99
+#: api\v1\me\profile.cshtml:135
+#: api\v1\me\profile.cshtml:141
+#: api\v1\me\profile.cshtml:148
+#: api\v1\me\scheduling-preferences.cshtml:42
+#: api\v1\me\scheduling-preferences.cshtml:51
+msgid "Not found"
+msgstr ""
+
+#: api\v1\job-titles.cshtml:63
+#: api\v1\postal-codes.cshtml:43
 #: api\v1\auth\change-password.cshtml:48
 #: api\v1\auth\login.cshtml:58
-#: api\v1\auth\signup.cshtml:74
+#: api\v1\auth\signup.cshtml:102
+#: api\v1\me\client-booking.cshtml:111
+#: api\v1\me\client-booking.cshtml:122
+#: api\v1\me\client-booking.cshtml:147
+#: api\v1\me\clients.cshtml:97
+#: api\v1\me\clients.cshtml:145
+#: api\v1\me\clients.cshtml:192
+#: api\v1\me\education.cshtml:64
+#: api\v1\me\education.cshtml:112
+#: api\v1\me\education.cshtml:154
+#: api\v1\me\service-professional-booking.cshtml:238
+#: api\v1\me\service-professional-services.cshtml:160
+#: api\v1\me\weekly-schedule.cshtml:125
+#: api\v1\users\job-profile.cshtml:54
+#: api\v1\users\service-addresses.cshtml:74
+#: api\v1\users\service-professional-services.cshtml:74
 msgid "Not Found"
 msgstr ""
 
-#: _specialRoutes\app.html:3810
+#: api\v1\Test.cshtml:110
+msgid "Num must be a number"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:209
+msgid "Number of appointments included must be a number without decimals"
+msgstr ""
+
+#: api\v1\me\events.cshtml:201
+msgid "Number of occurrences must be a number"
+msgstr ""
+
+#: App_Code\LcRessources.cs:13
+#: api\v1\me\profile.cshtml:131
+msgid "OK"
+msgstr ""
+
+#: api\v1\lead-generation\referral.cshtml:207
+msgid "Only registered users can refer professionals"
+msgstr ""
+
 #: _specialRoutes\Login.cshtml:15
 msgid "Password"
+msgstr ""
+
+#: api\v1\me\platforms.cshtml:42
+msgid "Platform not found."
 msgstr ""
 
 #: api\v1\auth\reset-password.cshtml:52
@@ -74,16 +393,230 @@ msgstr ""
 msgid "Please provide a valid reset token."
 msgstr ""
 
+#: api\v1\me\messaging.cshtml:216
+msgid "Please, don't send messages to yourself :-)"
+msgstr ""
+
+#: api\v1\me\work-photos.cshtml:114
+msgid "Please, include a photo"
+msgstr ""
+
+#: api\v1\postal-codes.cshtml:40
+msgid "Postal Code Not Valid."
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:339
+msgid "Preferred start date and time is not valid"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:202
+msgid "Price must be a number and not contain the $ symbol."
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:173
+#: api\v1\me\service-professional-services.cshtml:306
+#: api\v1\me\service-professional-services.cshtml:323
+#: api\v1\me\service-professional-services.cshtml:344
+msgid "Pricing not found."
+msgstr ""
+
+#: api\v1\pricing-types.cshtml:130
+msgid "Pricing Type not found."
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:71
+msgid "Public Bio must be fewer than 4000 characters"
+msgstr ""
+
+#: api\v1\lead-generation\referral.cshtml:229
+msgid "Referral failed"
+msgstr ""
+
+#: api\v1\me\events.cshtml:200
+msgid "'Repeat every' must be a number"
+msgstr ""
+
+#: api\v1\me\events.cshtml:202
+msgid "Repetition End Date is not valid"
+msgstr ""
+
+#: App_Code\LcRessources.cs:15
+msgid "Request sent!"
+msgstr ""
+
+#: App_Code\LcRessources.cs:14
+msgid "Saved"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:169
+msgid "Second Last Name must be fewer than 145 characters."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:258
+msgid "Server Error: Address Kind not managed."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:436
+msgid "Server Error: impossible to create the address at this time."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:404
+#: api\v1\me\addresses.cshtml:460
+msgid "Server Error: Invalid address Kind specified."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:336
+msgid "Service Radius must be a number"
+msgstr ""
+
+#: api\v1\Test.cshtml:108
+msgid "Short must be 5 or less"
+msgstr ""
+
+#: api\v1\me\service-professional-services.cshtml:244
+msgid "Some specified attributes are wrong"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:239
+#: api\v1\me\service-professional-booking.cshtml:131
+msgid "Some specified services are incorrect"
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:138
+msgid "Something goes wrong"
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:340
+#: api\v1\me\client-booking.cshtml:211
+#: api\v1\me\service-professional-booking.cshtml:103
+msgid "Special instructions must be fewer than 1,000 characters."
+msgstr ""
+
+#: api\v1\me\client-booking.cshtml:258
+#: api\v1\me\client-booking.cshtml:334
+msgid "Start date and time is not valid"
+msgstr ""
+
+#: api\v1\me\events.cshtml:198
+#: api\v1\me\service-professional-booking.cshtml:154
+msgid "Start date/time is not valid"
+msgstr ""
+
+#: api\v1\me\education.cshtml:128
+msgid "Start year is invalid, please re-enter"
+msgstr ""
+
+#: api\v1\lead-generation\newsletter.cshtml:90
+#: api\v1\lead-generation\referral.cshtml:269
+msgid "Subscription failed"
+msgstr ""
+
+#: api\v1\me\clients.cshtml:170
+msgid "That e-mail is not valid"
+msgstr ""
+
+#: api\v1\me\profile.cshtml:155
+msgid "The alternative email is not valid."
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:77
+msgid "The custom URL is too long, please keep it under 80 characters."
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:73
+msgid "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"
+msgstr ""
+
 #: App_Code\LcAuthHelper.cs:353
+#: api\v1\lead-generation\newsletter.cshtml:70
+#: api\v1\lead-generation\referral.cshtml:186
+#: api\v1\lead-generation\referral.cshtml:246
 msgid "The email is not valid."
+msgstr ""
+
+#: api\v1\me\licenses-certifications.cshtml:131
+#: api\v1\me\work-photos.cshtml:161
+msgid "The file is too large"
+msgstr ""
+
+#: api\v1\me\licenses-certifications.cshtml:127
+#: api\v1\me\work-photos.cshtml:157
+msgid "The file is too large, maximum file size is {0}"
+msgstr ""
+
+#: api\v1\Test.cshtml:148
+msgid "The Item ID must be an integer"
+msgstr ""
+
+#: api\v1\users\job-profile.cshtml:51
+#: api\v1\users\service-addresses.cshtml:71
+#: api\v1\users\service-professional-services.cshtml:71
+msgid "The Job Title ID has bad format (must be an integer number)"
+msgstr ""
+
+#: api\v1\me\owner-acknowledgment.cshtml:63
+msgid "The name is not correct"
+msgstr ""
+
+#: api\v1\auth\reset-password.cshtml:63
+msgid "The password reset token is incorrect or may be expired"
+msgstr ""
+
+#: api\v1\me\messaging.cshtml:237
+msgid "The recipient does not exists."
+msgstr ""
+
+#: api\v1\me\addresses.cshtml:346
+msgid "The service address must be a service location or a service area."
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:86
+msgid "The Website URL is not valid, check that is complete"
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:92
+msgid "The Website URL is too long, please keep it under 2000 characters."
+msgstr ""
+
+#: api\v1\me\external-listings.cshtml:71
+msgid "Title is required"
+msgstr ""
+
+#: api\v1\me\owner-acknowledgment.cshtml:54
+msgid "Type your full name as acknowlegment"
 msgstr ""
 
 #: api\v1\auth\facebook-user.cshtml:47
 msgid "User doesn't exists"
 msgstr ""
 
+#: api\v1\users\availability.cshtml:47
+#: api\v1\users\availability.cshtml:66
+#: api\v1\users\index.cshtml:46
+#: api\v1\users\index.cshtml:53
+#: api\v1\users\profile.cshtml:35
+#: api\v1\users\profile.cshtml:40
+#: api\v1\users\ratings.cshtml:43
+#: api\v1\users\ratings.cshtml:61
+#: api\v1\users\ratings.cshtml:67
+#: api\v1\users\reviews.cshtml:46
+#: api\v1\users\reviews.cshtml:57
+#: api\v1\users\service-attributes.cshtml:21
+#: api\v1\users\service-attributes.cshtml:29
+#: api\v1\users\verifications-summary.cshtml:62
+#: api\v1\users\verifications-summary.cshtml:81
+#: api\v1\users\verifications-summary.cshtml:87
+msgid "User Not Found"
+msgstr ""
+
 #: _specialRoutes\Login.cshtml:14
 msgid "Username"
+msgstr ""
+
+#: api\v1\Test.cshtml:126
+#: api\v1\Test.cshtml:136
+#: api\v1\Test.cshtml:146
+msgid "Validation rules"
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:234
@@ -100,13 +633,57 @@ msgid ""
 "        Please follow its instructions. We can't wait to get you on board!"
 msgstr ""
 
+#: api\v1\me\client-booking.cshtml:433
+msgid "We weren't able to process your payment, please review"
+msgstr ""
+
+#: api\v1\me\marketplace-profile.cshtml:106
+msgid "We're sorry, that custom URL is unavailable, please choose other."
+msgstr ""
+
+#: api\v1\me\owner-acknowledgment.cshtml:47
+msgid "You already submitted your acknowlegment of this disclosure"
+msgstr ""
+
+#: api\v1\lead-generation\referral.cshtml:242
+msgid "You are already logged in!"
+msgstr ""
+
+#: api\v1\lead-generation\newsletter.cshtml:66
+msgid "You are already logged in! Review your account preferences to enable the newsletter."
+msgstr ""
+
+#: api\v1\auth\reset-password.cshtml:59
+msgid "You can now log-in with your new password"
+msgstr ""
+
 #: api\v1\Test.cshtml:48
 msgid "You have not positions. Logged?"
+msgstr ""
+
+#: api\v1\me\payment-account.cshtml:83
+msgid "You must agree the terms of service"
+msgstr ""
+
+#: api\v1\auth\signup.cshtml:164
+msgid "You must select a field of study."
+msgstr ""
+
+#: api\v1\auth\signup.cshtml:163
+msgid "You must select an institution."
+msgstr ""
+
+#: api\v1\auth\signup.cshtml:165
+msgid "You must select user type."
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:66
 #: App_Code\LcAuthHelper.cs:370
 msgid "You must specify a password."
+msgstr ""
+
+#: api\v1\me\messaging.cshtml:211
+msgid "You must specify a recipient."
 msgstr ""
 
 #: App_Code\LcAuthHelper.cs:65
@@ -139,5 +716,9 @@ msgstr ""
 
 #: api\v1\auth\change-password.cshtml:38
 msgid "Your password has been updated. Please log in again with your new password"
+msgstr ""
+
+#: api\v1\me\weekly-schedule.cshtml:192
+msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\"all days/times\\"."
 msgstr ""
 

@@ -61,7 +61,7 @@
                 }
             }
 
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
 
         public override dynamic Post()
@@ -109,7 +109,7 @@
                 var item = LcRest.Education.Get(userID, itemID);
 
                 if (item == null) {
-                    throw new HttpException(404, "Not Found");
+                    throw new HttpException(404, "[[[Not Found]]]");
                 }
 
                 // Delete
@@ -125,8 +125,8 @@
         private bool IsValid() {
 
             Validation.RequireField("institutionName", LcRessources.RequiredField("School"));
-            Validation.Add("fromYearAttended", Validator.Range(1900, 2900, "Start year is invalid, please re-enter"));
-            Validation.Add("toYearAttended", Validator.Range(1900, 2900, "End year is invalid, please re-enter"));
+            Validation.Add("fromYearAttended", Validator.Range(1900, 2900, "[[[Start year is invalid, please re-enter]]]"));
+            Validation.Add("toYearAttended", Validator.Range(1900, 2900, "[[[End year is invalid, please re-enter]]]"));
            
             return Validation.IsValid() && ModelState.IsValid;
         }
@@ -151,7 +151,7 @@
                 // new generated ID, so is not zero if created successfully).
                 if (item.educationID == 0)
                 {
-                    throw new HttpException(404, "Not Found");
+                    throw new HttpException(404, "[[[Not Found]]]");
                 }
                 
                 // Returns the updated client data

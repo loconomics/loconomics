@@ -39,7 +39,7 @@
             }
 
             if (!UrlData[0].IsEmpty()) {
-                throw new HttpException(404, "Not found: (" + UrlData[0] + ")");
+                throw new HttpException(404, string.Format( "Not found: ({0})", UrlData[0]));
             }
 
             if (Request["name"] == "userpos") {
@@ -105,9 +105,9 @@
 
         dynamic editItem() {
 
-            Validation.Add("short", Validator.StringLength(5, 0, "Short must be 5 or less"));
+            Validation.Add("short", Validator.StringLength(5, 0, "[[[Short must be 5 or less]]]"));
             Validation.RequireField("name", LcRessources.RequiredField("Name"));
-            Validation.Add("num", Validator.Decimal("Num must be a number"));
+            Validation.Add("num", Validator.Decimal("[[[Num must be a number]]]"));
 
             if (Validation.IsValid()) {
 
@@ -123,7 +123,7 @@
             }
             else {
                 // Bad request, input data incorrect because of validation rules
-                throw new HttpException(400, "Validation rules");
+                throw new HttpException(400, "[[[Validation rules]]]");
             }
         }
 
@@ -133,9 +133,9 @@
                 // Bad Request
                 StatusCode = 400;
                 return new {
-                    errorMessage = "Validation rules",
+                    errorMessage = "[[[Validation rules]]]",
                     errors = new {
-                        id = "An Item ID is required at the URL"
+                        id = "[[[An Item ID is required at the URL]]]"
                     }
                 };
             }
@@ -143,9 +143,9 @@
                 // Bad Request
                 WebPage.Response.StatusCode = 400;
                 return new {
-                    errorMessage = "Validation rules",
+                    errorMessage = "[[[Validation rules]]]",
                     errors = new {
-                        id = "The Item ID must be an integer"
+                        id = "[[[The Item ID must be an integer]]]"
                     }
                 };
             }

@@ -45,7 +45,7 @@
  	            return GetData();
             }
             else {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
         }
 
@@ -71,10 +71,10 @@
                 return GetData();
             }
             else if (UrlData.Count == 0) {
-                throw new HttpException(405, "Method not allowed");
+                throw new HttpException(405, "[[[Method not allowed]]]");
             }
             else {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
         }
     }

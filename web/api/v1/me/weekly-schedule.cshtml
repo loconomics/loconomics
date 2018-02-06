@@ -122,7 +122,7 @@
         public override dynamic Get()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not Found");
+                throw new HttpException(404, "[[[Not Found]]]");
             }
 
             var userID = WebSecurity.CurrentUserId;
@@ -189,7 +189,7 @@
                 }
                 
                 if (whdays.Count == 0) {
-                    throw new HttpException(400, "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \"all days/times\".");
+                    throw new HttpException(400, "[[[Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \"all days/times\".]]]");
                 }
 
                 // Save it!

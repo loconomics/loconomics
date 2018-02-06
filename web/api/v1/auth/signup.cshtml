@@ -160,9 +160,9 @@
         {
             if (Request["isCccMember"].AsBool(false))
             {
-                Validation.RequireField("institutionID", "You must select an institution.");
-                Validation.RequireField("fieldOfStudyID", "You must select a field of study.");
-                Validation.RequireField("cccUserType", "You must select user type.");
+                Validation.RequireField("institutionID", "[[[You must select an institution.]]]");
+                Validation.RequireField("fieldOfStudyID", "[[[You must select a field of study.]]]");
+                Validation.RequireField("cccUserType", "[[[You must select user type.]]]");
             }
         }
 
