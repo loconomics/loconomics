@@ -6,6 +6,12 @@ be copied+renamed to implement a new one.
 *Note:* let's name this 'examples' rather than 'templates' to do not confuse
 with the html templates used by the components.
 
+## Learning
+If is your first time here, please read carefull this README and take a look
+to the examples following the alphabetic order of their names; you will see
+that an initial letter is being used to sort them, starting from the most simple
+and adding details based on concepts learnt in previous examples.
+
 ## Naming
 Remember that each new component must go in a folder that groups
 a set of components (a *package*, related by the app feature they implements or

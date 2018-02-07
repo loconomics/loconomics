@@ -1,6 +1,6 @@
 {
   "name": "LoconomicsApp",
-  "version": "1.7.2",
+  "version": "1.8.2",
   "description": "Loconomics.com mobile app",
   "author": "Loconomics Cooperative, Inc.",
   "appId": "com.loconomics.app",
@@ -25,7 +25,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
-    "bliss": "~1.0.1",
+    "bliss": "git://github.com/cstivers78/bliss.git#54c7da14babc80b39734b771c539ac7ee07b1255",
     "blueimp-file-upload": "^9.19.1",
     "browserify": "^14.5.0",
     "browserify-casesensitiverequire": "^1.0.1",
@@ -35,8 +35,8 @@
     "common-shakeify": "^0.4.5",
     "deepmerge": "^2.0.1",
     "detect_swipe": "^2.1.4",
-    "eslint": "^4.13.1",
-    "eslint-plugin-compat": "^2.1.0",
+    "eslint": "^4.17.0",
+    "eslint-plugin-compat": "^2.2.0",
     "exorcist": "git://github.com/IagoSRL/exorcist.git#fix_missing_sourcemap_pipethrough",
     "factor-bundle": "^2.5.0",
     "grunt": "^1.0.1",
@@ -137,5 +137,8 @@
         "jquery"
       ]
     }
+  },
+  "dependencies": {
+    "load-script2": "^1.0.0"
   }
 }

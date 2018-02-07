@@ -10,7 +10,7 @@
 
 var local = require('./drivers/localforage');
 var userAuthKeyStore = require('./userAuthKey');
-var SingleEvent = require('../utils/SingleEvent');
+var SingleEvent = require('../utils/SingleEvent').default;
 
 /**
  * Tracks internally if a session is opened (through open/restore),

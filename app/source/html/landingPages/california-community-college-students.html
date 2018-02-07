@@ -1,0 +1,343 @@
+@render('../parts/landingPageHead.html')
+<div id="landingPage" data-activity="california-community-college-students" class="LandingPage">
+    <div role="main">
+        <div class="landingpage-background">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-7 col-sm-reset landingpage-copy">
+                        <div class="landingpage-brand"></div>
+                        <div class="landingpage-copyBackground">
+                            <h1 class="landingpage-title">Welcome, California Community Colleges</h1>
+                            <p class="landingpage-tagline">Find clients, community, tools and resources. Grow and manage your business on your terms.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <app-signup params="isCountryVisible: false, onSignedUp: redirect, profile: profile, isCccMember: true">
+                            <h2 class="sr-only">Sign up for Loconomics</h2>
+                            <h5 class="SignupLogin-prompt">Which community college are you attending?</h5>
+                            <div class="form-group">
+                                <select class="form-control" data-bind="value: institutionID">
+                                    <option selected disabled value="">Choose one</option>
+                                    <option value="222">Cabrillo College</option>
+                                    <option value="197">College of Alameda</option>
+                                    <option value="401">College of Marin</option>
+                                    <option value="263">College of the Canyons</option>
+                                    <option value="539">College of the Siskiyous</option>
+                                    <option value="293">Cosumnes River College</option>
+                                    <option value="296">Cuesta College</option>
+                                    <option value="310">East Los Angeles College</option>
+                                    <option value="314">El Camino College</option>
+                                    <option value="320">Evergreen Valley College</option>
+                                    <option value="341">Golden West College</option>
+                                    <option value="416">Merritt College</option>
+                                    <option value="429">Moorpark College</option>
+                                    <option value="464">Oxnard College</option>
+                                    <option value="476">Palomar College</option>
+                                    <option value="478">Pasadena City College</option>
+                                    <option value="497">Riverside City College</option>
+                                    <option value="313">San Diego Continuing Education</option>
+                                    <option value="521">San Jose City College</option>
+                                    <option value="528">Santa Monica College</option>
+                                    <option value="535">Sierra College</option>
+                                    <option value="541">Skyline College</option>
+                                    <option value="9890">Southwestern College</option>
+                                    <option value="573">West Hills College Coalinga</option>
+                                    <option value="8919">West Hills College Lemoore</option>
+                                </select>
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+                            <h5 class="SignupLogin-prompt">What is your primary field of study?</h5>
+                            <div class="form-group">
+                                <select class="form-control" data-bind="value: fieldOfStudyID">
+                                    <option selected disabled value="">Choose one</option>
+                                    <option value="1">Accounting</option>
+                                    <option value="2">Administration of Justice</option>
+                                    <option value="3">Aeronautical and Aviation Technology</option>
+                                    <option value="4">Agricultural Power Equipment Technology</option>
+                                    <option value="5">Agriculture and Natural Resources</option>
+                                    <option value="6">Agriculture Technology and Sciences, Gen</option>
+                                    <option value="7">Animal Science</option>
+                                    <option value="8">Applied Design</option>
+                                    <option value="9">Applied Photography</option>
+                                    <option value="10">Architecture and Architectural Technology</option>
+                                    <option value="11">Athletic Training and Sports Medicine</option>
+                                    <option value="12">Audio/Visual Technician</option>
+                                    <option value="13">Automotive Collision Repair</option>
+                                    <option value="14">Automotive Technology</option>
+                                    <option value="15">Aviation and Airport Management and Service</option>
+                                    <option value="16">Banking and Finance</option>
+                                    <option value="17">Biotechnology and Biomedical Technology</option>
+                                    <option value="18">Business Administration</option>
+                                    <option value="19">Business and Commerce, General</option>
+                                    <option value="20">Business and Management</option>
+                                    <option value="21">Business Management</option>
+                                    <option value="22">Cardiovascular Technician</option>
+                                    <option value="23">Chemical Technology</option>
+                                    <option value="24">Child Development/Early Care and Education</option>
+                                    <option value="25">Cinematography</option>
+                                    <option value="26">Civil and Construction Management Technology</option>
+                                    <option value="27">Commercial Art</option>
+                                    <option value="28">Commercial Music</option>
+                                    <option value="29">Commercial Services</option>
+                                    <option value="30">Commercial Services, General</option>
+                                    <option value="31">Community Health Care Worker</option>
+                                    <option value="32">Community Services, General</option>
+                                    <option value="33">Computer Information Systems</option>
+                                    <option value="34">Computer Infrastructure and Support</option>
+                                    <option value="35">Computer Programming</option>
+                                    <option value="36">Computer Software Development</option>
+                                    <option value="37">Construction Crafts Technology</option>
+                                    <option value="38">Cosmetology and Barbering</option>
+                                    <option value="39">Custodial Services</option>
+                                    <option value="40">Customer Service</option>
+                                    <option value="41">Dance</option>
+                                    <option value="42">Dental Occupations</option>
+                                    <option value="43">Dental Technician</option>
+                                    <option value="44">Diagnostic Medical Sonography</option>
+                                    <option value="45">Diesel Technology</option>
+                                    <option value="46">Digital Media</option>
+                                    <option value="47">Drafting and Design Technology</option>
+                                    <option value="48">Drafting Technology</option>
+                                    <option value="49">Dramatic Arts</option>
+                                    <option value="50">Dry Cleaning</option>
+                                    <option value="51">Educational Aide Teacher Assistant</option>
+                                    <option value="52">Educational Technology</option>
+                                    <option value="53">Electro-Diagnostic Technology</option>
+                                    <option value="54">Electro-Mechanical Technology</option>
+                                    <option value="55">Electro-Neurodiagnostic Technology</option>
+                                    <option value="56">Electrocardiography</option>
+                                    <option value="57">Electronics and Electric Technology</option>
+                                    <option value="58">Emergency Medical Services</option>
+                                    <option value="59">Engineering Technology, General</option>
+                                    <option value="60">Environmental Control Technology HVAC</option>
+                                    <option value="61">Environmental Technology</option>
+                                    <option value="62">Family and Consumer Sciences</option>
+                                    <option value="63">Family and Consumer Sciences, General</option>
+                                    <option value="64">Family Studies</option>
+                                    <option value="65">Fashion</option>
+                                    <option value="66">Film Studies</option>
+                                    <option value="67">Fire Technology</option>
+                                    <option value="68">Food Processing and Related Technologies</option>
+                                    <option value="69">Food Service Technology</option>
+                                    <option value="70">Forestry</option>
+                                    <option value="71">General Studies</option>
+                                    <option value="72">General Work Experience</option>
+                                    <option value="73">Geography</option>
+                                    <option value="74">Geology</option>
+                                    <option value="75">Gerontology</option>
+                                    <option value="76">Graphic Art and Design</option>
+                                    <option value="77">Health</option>
+                                    <option value="78">Health Information Technology</option>
+                                    <option value="79">Health Occupations, General</option>
+                                    <option value="80">Health Professions, Transfer Core Curriculum</option>
+                                    <option value="81">Horticulture</option>
+                                    <option value="82">Hospital and Health Care Administration</option>
+                                    <option value="83">Hospital Central Service Technician</option>
+                                    <option value="84">Hospitality</option>
+                                    <option value="85">Human Services</option>
+                                    <option value="86">Human Services</option>
+                                    <option value="87">Industrial Systems Technology and Maintenance</option>
+                                    <option value="88">Information Technology</option>
+                                    <option value="89">Information Technology, General</option>
+                                    <option value="90">Institutional Housekeeping</option>
+                                    <option value="91">Instrumentation Technology</option>
+                                    <option value="92">Insurance</option>
+                                    <option value="93">Interior Design</option>
+                                    <option value="94">Interior Design and Merchandising</option>
+                                    <option value="95">International Business and Trade</option>
+                                    <option value="96">Journalism</option>
+                                    <option value="97">Labor and Industrial Relations</option>
+                                    <option value="98">Laboratory Science Technology</option>
+                                    <option value="99">Law, General</option>
+                                    <option value="100">Legal and Community Interpretation</option>
+                                    <option value="101">Library Science, General</option>
+                                    <option value="102">Library Technician Aide</option>
+                                    <option value="103">Life Management</option>
+                                    <option value="104">Logistics and Materials Transportation</option>
+                                    <option value="105">Manufacturing and Industrial Technology</option>
+                                    <option value="106">Marine Technology</option>
+                                    <option value="107">Marketing and Distribution</option>
+                                    <option value="108">Mass Communications</option>
+                                    <option value="109">Massage Therapy</option>
+                                    <option value="110">Media and Communications, General</option>
+                                    <option value="111">Medical Assisting</option>
+                                    <option value="112">Medical Laboratory Technology</option>
+                                    <option value="113">Mortuary Science</option>
+                                    <option value="114">Music</option>
+                                    <option value="115">Musical Instrument Repair</option>
+                                    <option value="116">Natural Resources</option>
+                                    <option value="117">Nursing</option>
+                                    <option value="118">Nursing, R.N.</option>
+                                    <option value="119">Nutrition, Foods, and Culinary Arts</option>
+                                    <option value="120">Occupational Therapy Technology</option>
+                                    <option value="121">Ocean Technology</option>
+                                    <option value="122">Oceanography</option>
+                                    <option value="123">Office Technology/Office Computer Applications</option>
+                                    <option value="124">Optical Technology</option>
+                                    <option value="125">Optics</option>
+                                    <option value="126">Orthopedic Assistant</option>
+                                    <option value="139">Paralegal</option>
+                                    <option value="140">Paramedic</option>
+                                    <option value="141">Parks and Recreation Management</option>
+                                    <option value="142">Pharmacy Technology</option>
+                                    <option value="143">Photography</option>
+                                    <option value="144">Physical Education</option>
+                                    <option value="145">Physical Therapy Assistant</option>
+                                    <option value="146">Physicians Assistant</option>
+                                    <option value="147">Plant Science</option>
+                                    <option value="148">Podiatry</option>
+                                    <option value="149">Polysomnography</option>
+                                    <option value="150">Printing and Lithography</option>
+                                    <option value="151">Psychiatric Technician</option>
+                                    <option value="152">Public Administration</option>
+                                    <option value="153">Public Relations</option>
+                                    <option value="154">Radiation Technology (Non-Medical)</option>
+                                    <option value="155">Radiation Therapy Technician</option>
+                                    <option value="156">Radio and Television</option>
+                                    <option value="157">Radio, Motion Picture, and Television</option>
+                                    <option value="158">Radiologic Technology</option>
+                                    <option value="159">Real Estate</option>
+                                    <option value="160">Recreation</option>
+                                    <option value="161">Recreation Therapy</option>
+                                    <option value="162">Respiratory Care/Therapy</option>
+                                    <option value="163">School Health Clerk</option>
+                                    <option value="164">Sign Language</option>
+                                    <option value="165">Special Education</option>
+                                    <option value="166">Special Education, General</option>
+                                    <option value="167">Speech/Language Pathology and Audiology</option>
+                                    <option value="168">Surgical Technician</option>
+                                    <option value="169">Technical Communication</option>
+                                    <option value="170">Technical Theater</option>
+                                    <option value="171">Technologies and Occupational Curricula</option>
+                                    <option value="172">Tool and Machine Design Technology</option>
+                                    <option value="173">Travel Services and Tourism</option>
+                                    <option value="174">Viticulture, Enology, and Wine Business</option>
+                                    <option value="175">Vocational ESL</option>
+                                    <option value="176">Water and Wastewater Technology</option>
+                                    <option value="177">World Wide Web Administration</option>
+                                    <option value="127">Other Agriculture and Natural Resources</option>
+                                    <option value="128">Other Architecture and Environmental Des</option>
+                                    <option value="129">Other Business and Management</option>
+                                    <option value="130">Other Commercial Services</option>
+                                    <option value="131">Other Education</option>
+                                    <option value="132">Other Engineering and Related Industrial</option>
+                                    <option value="133">Other Family and Consumer Sciences</option>
+                                    <option value="134">Other Fine and Applied Arts</option>
+                                    <option value="135">Other Health Occupations</option>
+                                    <option value="136">Other Information Technology</option>
+                                    <option value="137">Other Media and Communications</option>
+                                    <option value="138">Other Public and Protective Services</option>
+                                </select>
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+                            <h5 class="SignupLogin-prompt">I'm a:</h5>
+                            <div class="form-group">
+                                <select class="form-control" data-bind="value: cccUserType">
+                                    <option value="student">Student</option>
+                                    <option value="professor">Professor</option>
+                                    <option value="administrator">Administrator</option>
+                                </select>
+                                <i class="fa form-control-feedback text-muted pull-right icon-right icon ion-android-arrow-dropdown" style="color: black" aria-hidden="true"></i>
+                            </div>
+                        </app-signup>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="landingpage-hiw">
+            <h2 class="landingpage-title">How it works:</h2>
+            <div class="container landingpage-hiw-list">
+                <ul class="row list-unstyled">
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-list-outline"></i>
+                        <h3>Create free listing</h3>
+                        <p>It takes five minutes. Show off your skills. Invite your network.</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-ios-chatboxes-outline"></i>
+                        <h3>Join the conversation</h3>
+                        <p>We host regular, casual meetups & online forums. Build your network in a way that fits your personality.</p>
+                    </li>
+                    <li class="col-sm-4">
+                        <i aria-hidden="true" class="fa ion ion-arrow-graph-up-right"></i>
+                        <h3>Grow your business</h3>
+                        <p>Attract and manage clients. Stay organized with our tools. Succeed.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 Testimonials">
+                    <div class="carousel slide" data-ride="carousel" id="quote-carousel" data-interval="false">
+                        <!-- Carousel Slides / Quotes -->
+                        <div class="carousel-inner text-center">
+                            <!-- Quote 1 -->
+                            <div class="item active">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I like that I run my own business but have the support of Loconomics to keep my schedule flowing and organized.</p>
+                                            <small>YaVette Holts, One Presence Massage</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- Quote 2 -->
+                            <div class="item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I love being part of something bigger and radical. Loconomics is bringing local service professionals together with a progressive team of technologists to facilitate our success. Even better, I share the profits and help influence decisions.</p>
+                                            <small>Christopher Tellez, SF Reiki Center</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                            <!-- Quote 3 -->
+                            <div class="item">
+                                <blockquote>
+                                    <div class="row">
+                                        <div class="col-sm-8 col-sm-offset-2">
+                                            <p>I've worked for 7 years in different cooperatives and am proud to be part of Loconomics. We work as a team and at the same time I can own my own business with the confidence that we share the profits of this platform with nobody else. We learn and share leadership positions, make decisions and grow personally.</p>
+                                            <small>Anahi Rojas, Professional Eco-Cleaning</small>
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <!-- Bottom Carousel Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#quote-carousel" data-slide-to="0" class="active"><img class="img-responsive " src="/assets/images/YaVette.png" alt="">
+                            </li>
+                            <li data-target="#quote-carousel" data-slide-to="1"><img class="img-responsive" src="/assets/images/christopher.png" alt="">
+                            </li>
+                            <li data-target="#quote-carousel" data-slide-to="2"><img class="img-responsive" src="/assets/images/anahi.png" alt="">
+                            </li>
+                        </ol>
+                        <!-- Carousel Buttons Next/Prev -->
+                        <a data-slide="prev" href="#quote-carousel" class="left carousel-control"><i class="fa ion-ios-arrow-left"></i></a>
+                        <a data-slide="next" href="#quote-carousel" class="right carousel-control"><i class="fa ion-ios-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Press">
+                <a class="pressLogo pressLogo-NYT" href="https://www.nytimes.com/2016/07/21/business/smallbusiness/a-new-wrinkle-in-the-gig-economy-workers-get-most-of-the-money.html?_r=0" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-SFChronicle" href="http://www.sfgate.com/business/article/Cooperatives-give-new-meaning-to-sharing-economy-5502879.php" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-TheNation" href="https://www.thenation.com/article/5-ways-take-back-tech/" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-Shareable" href="http://www.shareable.net/blog/owning-is-the-new-sharing" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-FastCompany" href="https://www.fastcompany.com/3051845/the-peoples-uber-why-the-sharing-economy-must-share-ownership" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-EastBayExpress" href="http://www.eastbayexpress.com/oakland/the-true-sharing-economy/Content?oid=4563249" target="_blank">
+                </a>
+                <a class="pressLogo pressLogo-FT" href="https://www.ft.com/content/beb85bdc-1f8e-11e7-b7d3-163f5a7f229c" target="_blank">
+                </a>
+        </div>
+    </div>
+</div>
+@render('../parts/landingPageFoot.html')

@@ -41,9 +41,15 @@ public class LcDatabase : IDisposable
     public LcDatabase(LcDatabase db)
     {
         // Reuse internal connection directly
-        // (if null is passed in, the other method overload manage it :-)
-        this.db = db.db;
-        isShared = true;
+        isShared = db != null;
+        if (isShared)
+        {
+            this.db = db.db;
+        }
+        else
+        {
+            this.db = Database.Open("sqlloco");
+        }
     }
 
     public System.Data.Common.DbConnection Connection

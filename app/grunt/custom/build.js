@@ -13,12 +13,22 @@ const TASK_NAME = 'build';
  * Tasks list to build for Production environment
  * @const {Array<string>}
  */
-const PRODUCTION_TASKS = ['parallel:build-app'];
+const PRODUCTION_TASKS = [
+    //// Using parallel mode:
+    //'parallel:build-app'
+    // Using standard sequential mode:
+    'build-js',
+    'build-css',
+    'build-html',
+    'build-images',
+    'build-fonts'
+];
 /**
  * Tasks list to build for Development environment
  * @const {Array<string>}
  */
 const DEV_TASKS = [
+    'mkdir:build-assets-js',
     'browserify:appCommon',
     'prepare-bootstrap-variables',
     'concat:css-libs',
