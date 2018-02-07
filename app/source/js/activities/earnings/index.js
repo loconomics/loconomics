@@ -37,21 +37,22 @@ export default class EarningsActivity extends Activity {
          */
         this.jobTitleID = ko.observable(null);
         
+        /** Filters -  @iagosrl - WIP */
         /**
          * A start date for the summary query. Default value is 
          * the 1st of the current month until today's date.
          * @member {KnockoutObservable<string>}
          */
-        this.timeRange = ko.observableArray({'2/1/2018': '2/2/2018'});
+        // this.timeRange = ko.observableArray({'2/1/2018': '2/2/2018'});
 
         /**
-         * Earnings to be copied.
+         * 
          * @method
          */
-        this.selectFilters = function(filters) {
-            this.earningsEntryID(ko.unwrap(filters.earningsEntryID));
-            this.goNextStep();
-        }.bind(this);
+        // this.selectFilters = function(filters) {
+        //     this.earningsEntryID(ko.unwrap(filters.earningsEntryID));
+        //     this.goNextStep();
+        // }.bind(this);
 
         /**
          * A platformID for the summary query. Defualt value is 
