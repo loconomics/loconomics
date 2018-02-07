@@ -13,6 +13,7 @@
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
             <form id="copyEarningsForm">
+                <!-- @iagosrl I made this a form with the editor component inside so it could be done in one activity. We want to add a warning message if the user doesn't change anything in the editor -->
                 <fieldset id="copyEarningsForm-SelectEarnings" class="earnings-step"
                 data-bind="visible: isAtStep(1), autofocus: isAtStep(1)">
                     <legend>Select an earnings entry to copy</legend>
@@ -21,12 +22,11 @@
                 <fieldset id="copyEarningsForm-ReviseEarnings" class="earnings-step"
                 data-bind="visible: isAtStep(2), autofocus: isAtStep(2)">
                     <legend>Revise earnings and submit</legend>
+
+                    <!-- @iagosrl I tried to get the earnings-editor to start at the summary (step(0)) but couldn't figure it out -->
                     <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'copy', startAtStep: 0"></earnings-editor>
                 </fieldset>
             </form>
-                <!-- data-bind="visible: 
-                !earningsSelected()" -->
-            <!-- <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'Copy'"></earnings-editor> -->
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>

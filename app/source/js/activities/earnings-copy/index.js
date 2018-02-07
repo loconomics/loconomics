@@ -33,21 +33,6 @@ export default class EarningsCopyActivity extends Activity {
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSubsectionNavBar(null);
 
-        /**
-         * Earnings summary returned given query parameters.
-         * @member {KnockoutObservable<boolean>}
-         */
-        // this.earningsSelected = ko.observable(false);
-        
-        // this.earningsSelected = function() {
-        //     if (this.earningsSelected() == false) {
-        //         this.earningsSelected(true);
-        //     }
-        //     else {
-        //         this.earningsSelected(false);
-        //     }
-        // }; 
-
         this.earningsEntryID = ko.observable();
         
         /// Steps management
@@ -74,7 +59,7 @@ export default class EarningsCopyActivity extends Activity {
         }; 
         
         /**
-         * Earnings to be copied.
+         * Earnings to be copied. @iagosrl please review.
          * @method
          */
         this.selectEarnings = function(earnings) {
