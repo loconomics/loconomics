@@ -1,4 +1,3 @@
-<h2 data-bind="visible: clientList()">Existing clients</h2>
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: clientList">
     <li data-bind="attr: { id: 'client' + clientUserID }">
         <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
