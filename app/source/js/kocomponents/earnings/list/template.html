@@ -1,19 +1,18 @@
 <h2 data-bind="visible: earningsList()">Recent Earnings</h2>
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: earningsList">
     <li data-bind="attr: { id: 'earnings' + EarningsEntryID }">
-        <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
-            <!-- @iagosrl not sure why the entire Item is bold -->
+        <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem">
             <div class="Item-content">
                 <p>
                     <strong><span data-bind="
-                        text: Total, 
-                        format: { 
-                            type: 'number', 
-                            format: '$0,0.00' 
+                        text: Total,
+                        format: {
+                            type: 'number',
+                            format: '$0,0.00'
                         }
                         ">
                     </span></strong>
-                        on 
+                        on
                     <span data-bind="text: PaidDate"></span>
                 </p>
                 <p>
@@ -24,7 +23,7 @@
                             format: '0.00'
                         }
                         ">
-                    </span>  hours of 
+                    </span>  hours of
                     <span data-bind="
                         text: JobTitleName + ' services on ' + PlatformName
                     "></span>
@@ -34,19 +33,19 @@
                 <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
             </div>
         </button>
-        <a href="#" data-bind="visible: $component.listMode() == 'view', attr: { href: '/earnings-view/' + EarningsEntryID + '?mustReturn=earnings-history' + '&returnText=Earnings History' 
+        <a href="#" data-bind="visible: $component.listMode() == 'view', attr: { href: '/earnings-view/' + EarningsEntryID + '?mustReturn=earnings-history' + '&returnText=Earnings History'
         } " class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
                 <p>
                     <strong><span data-bind="
-                        text: Total, 
-                        format: { 
-                            type: 'number', 
-                            format: '$0,0.00' 
+                        text: Total,
+                        format: {
+                            type: 'number',
+                            format: '$0,0.00'
                         }
                         ">
                     </span></strong>
-                        on 
+                        on
                     <span data-bind="text: PaidDate"></span>
                 </p>
                 <p>
@@ -57,7 +56,7 @@
                             format: '0.00'
                         }
                         ">
-                    </span>  hours of 
+                    </span>  hours of
                     <span data-bind="
                         text: JobTitleName + ' services on ' + PlatformName
                     "></span>
