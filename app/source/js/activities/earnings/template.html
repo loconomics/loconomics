@@ -21,6 +21,12 @@
                     <option value="2">Last month</option>
                     <option value="3">Custom</option>
                 </select>
+                <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
+                    <option value="0">Job titles</option>
+                </select>
+                <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
+                    <option value="0">Platform</option>
+                </select>
             </form> -->
             <earnings-report params="userID: userID"></earnings-report>
             <br>
