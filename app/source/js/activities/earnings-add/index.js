@@ -31,6 +31,7 @@ export default class EarningsAddActivity extends Activity {
     show(state) {
         super.show(state);
         // Check other examples for some code using 'state'
+        // @iagosrl - we will want to add a button to external-listing-view to add earnings and pass in the platformID. Again, can be a later release
     }
 }
 

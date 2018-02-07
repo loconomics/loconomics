@@ -19,7 +19,7 @@ const TAG_NAME = 'earnings-editor';
 const dummyData = {};
 dummyData[0] =
 {
-    'Total': 357,
+    'Total': 0.00,
     'PaidDate': null,
     'Duration': 60,
     'PlatformID': null,
@@ -66,7 +66,6 @@ export default class EarningsEditor extends Komponent {
      * [params.startAtStep]
      */
     constructor(params) {
-        /* eslint max-statements:"off" */
         super();
         
         /**
@@ -87,68 +86,16 @@ export default class EarningsEditor extends Komponent {
         this.earningsEntryID = getObservable(params.earningsEntryID || 0);
 
         /**
-         * Holds the ID for a platform if being added from the
-         * external-listing-view activity.
-         * @member {KnockoutObservable<number>}
-         */
-        this.platformID = getObservable(params.platformID || null);
-
-        /// Form data
-        /**
-         * Holds the email user to register the current anonymous 
-         * user after atStep One
-         * @member {KnockoutObservable<number>}
-         */
-        this.total = ko.observable(null);
-
-        /**
-         * @member {KnockoutObservable<date>}
-         */                 
-        this.date = ko.observable('');
-
-        /**
-         * @member {KnockoutObservable<number>}
-         */
-        this.duration = ko.observable(60);
-
-        /**
-         * @member {KnockoutObservable<number>}
-         */
-        this.platformID = ko.observable(0);
-
-        /**
-         * @member {KnockoutObservable<string>}
-         */
-
-        this.notes = ko.observable('');
-        /**
          * @member {KnockoutObservable<number>}
          */
         this.clientID = ko.observable(0);
         
         /**
-         * Stores the client's first name.
-         * @member {KnockoutObservable<string>}
+         * Holds the ID for a platform if being added from the
+         * external-listing-view activity.
+         * @member {KnockoutObservable<number>}
          */
-        this.clientFirstName = ko.observable('');
-
-        /**
-         * Stores the client's last name.
-         * @member {KnockoutObservable<string>}
-         */
-        this.clientLastName = ko.observable('');
-
-        /**
-         * Stores the client's email address.
-         * @member {KnockoutObservable<string>}
-         */
-        this.clientEmail = ko.observable('');
-
-        /**
-         * Stores the client's phone number.
-         * @member {KnockoutObservable<string>}
-         */
-        this.clientPhoneNumber = ko.observable('');
+        this.platformID = getObservable(params.platformID || null);
 
         /**
          * Client returned given query parameters.
@@ -163,7 +110,7 @@ export default class EarningsEditor extends Komponent {
          * Earnings entry returned given query parameters.
          * @member {KnockoutObservable<object>}
          */
-        this.earningsEntry = ko.observable();
+        this.earningsEntry = ko.observable(null);
 
         /// Steps management
         /**
