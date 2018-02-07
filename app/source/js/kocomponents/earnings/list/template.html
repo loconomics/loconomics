@@ -2,6 +2,7 @@
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: earningsList">
     <li data-bind="attr: { id: 'earnings' + EarningsEntryID }">
         <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
+            <!-- @iagosrl not sure why the entire Item is bold -->
             <div class="Item-content">
                 <p>
                     <strong><span data-bind="

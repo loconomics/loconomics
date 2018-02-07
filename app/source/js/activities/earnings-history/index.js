@@ -29,11 +29,6 @@ export default class EarningsHistoryActivity extends Activity {
         this.navBar = Activity.createSubsectionNavBar(null);
         this.title = 'Earnings History';
     }
-
-    show(state) {
-        super.show(state);
-        // Check other examples for some code using 'state'
-    }
 }
 
 activities.register(ROUTE_NAME, EarningsHistoryActivity);
