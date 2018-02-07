@@ -127,11 +127,11 @@ export default class EarningsList extends Komponent {
         /**
          * Captures from the activity which "mode" the list
          * component is to be used. 
-         * view: 
+         * link: 
          * select:
          * @member {KnockoutObservable<string>}
          */
-        this.listMode = getObservable(params.listMode || 'view');
+        this.listMode = getObservable(params.listMode || 'link');
         
         /**
          * @method selectItem
