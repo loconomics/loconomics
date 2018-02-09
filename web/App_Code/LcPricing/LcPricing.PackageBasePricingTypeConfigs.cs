@@ -26,7 +26,7 @@ public static partial class LcPricingModel
                 SelectionGroups = new string[]{"package"},
 
                 NamePlaceHolder = "[[[Hourly services]]]",
-                DescriptionPlaceHolder = "[[[[Describe to your potential clients in detail the services you provide and include what makes your services unique.]]]",
+                DescriptionPlaceHolder = "[[[Describe to your potential clients in detail the services you provide and include what makes your services unique.]]]",
 
                 SuccessOnDelete = "[[[Service removed successfully]]]",
                 SuccessOnSave = "[[[Add/Edit pricing]]]",

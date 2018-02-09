@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-02-06 23:15+11:00\n"
+"POT-Creation-Date: 2018-02-09 20:42+11:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,10 +16,6 @@ msgstr ""
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:99
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:226
 msgid "(this should be all-inclusive)"
-msgstr ""
-
-#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:29
-msgid "[Describe to your potential clients in detail the services you provide and include what makes your services unique."
 msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
@@ -309,6 +305,10 @@ msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:55
 msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)."
+msgstr ""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:29
+msgid "Describe to your potential clients in detail the services you provide and include what makes your services unique."
 msgstr ""
 
 #: api\v1\me\service-professional-services.cshtml:197
