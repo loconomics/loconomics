@@ -1,0 +1,58 @@
+﻿@using WebMatrix.WebData;
+@*
+    Retrieving Platforms available for the user, based on its listings.
+
+    Options:
+
+    - GET /
+      All platforms available for the user based on its job titles and relation between job titles and platforms
+
+    - GET /@id
+      Get a single platform by ID, if available to the user
+
+    - @Result LcRest.Platform
+
+    EXAMPLE {
+        "Platforms (available to me)": {
+            "url": "/api/v1/en-US/me/platforms",
+            "get": { }
+        },
+        "Platforms (item, available to me)": {
+            "url": "/api/v1/en-US/me/platforms/1",
+            "get": { }
+        }
+    }
+*@
+@functions{
+    public class RestPlatforms: RestWebPage
+    {
+        public override dynamic Get()
+        {
+            if (UrlData[0].IsInt() && UrlData.Count == 1)
+            {
+                var id = UrlData[0].AsInt(0);
+                var locale = LcRest.Locale.Current;
+                var item = LcRest.Platform.Get(WebSecurity.CurrentUserId, id, locale.languageID, locale.countryID);
+                if (item != null)
+                {
+                    return item;
+                }
+                else
+                {
+                    throw new HttpException(404, "Platform not found.");
+                }
+            }
+            else if (UrlData.Count == 0)
+            {
+                // Full list
+                var locale = LcRest.Locale.Current;
+                return LcRest.Platform.GetList(WebSecurity.CurrentUserId, locale.languageID, locale.countryID);
+            }
+            return base.Get();
+        }
+    }
+}
+@{
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestPlatforms().JsonResponse(this);
+}

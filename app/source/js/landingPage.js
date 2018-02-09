@@ -90,7 +90,7 @@ var appInit = function appInit() {
             }
         }
     };
-    $(document).on('click', '[href^=#]', fragmentNavigationHandler);
+    $(document).on('click', '[href^="#"]', fragmentNavigationHandler);
 
     var alertError = function(err) {
         showError({

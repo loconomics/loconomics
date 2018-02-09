@@ -1,0 +1,22 @@
+<div data-bind="with: externalListing">
+    <h2>Created</h2>
+    <p data-bind="text: createdDate, format: { type: 'datetime', format: 'LLLL' }"></p>
+    <h2>Last Modified</h2>
+    <p data-bind="text: updatedDate, format: { type: 'datetime', format: 'LLLL' }"></p>
+    <h2>Notes</h2>
+    <p data-bind="text: notes"></p>
+    <h2>Job Titles</h2>
+    <ul class="list-unstyled" data-bind="foreach: Object.values(jobTitles)">
+        <li>- <span data-bind="text: $data"></span></li>
+    </ul>
+    <a target="_blank" class="btn btn-link btn-default" data-bind="
+        visible: $component.platformSignInURL,
+        attr: {
+            href: $component.platformSignInURL
+        }">
+        Sign in to
+        <span data-bind="text: $component.platformName"></span>
+    </a>
+    <h2>About <span data-bind="text: $component.platformName"></span></h2>
+    <external-platform-info params="platformID: platformID, platformName: $component.platformName, platformSignInURL: $component.platformSignInURL, hideAddListing: true"></external-platform-info>
+ </div>

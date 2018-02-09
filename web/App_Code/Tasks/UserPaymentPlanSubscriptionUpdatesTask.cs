@@ -93,6 +93,45 @@ namespace Tasks
             ItemsReviewed += reviewed;
             ItemsProcessed += processed;
         }
+        /// <summary>
+        /// Check the due date of partnership plan subscriptions, setting them as expired is out of date.
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="logger"></param>
+        private void EnforceDueDate(IEnumerable<LcRest.UserPaymentPlan> list, LcLogger logger)
+        {
+            long reviewed = 0;
+            long processed = 0;
+            foreach (var userPlan in list)
+            {
+                try
+                {
+                    // CCCPlan subscriptions
+                    if (userPlan.paymentPlan == LcEnum.SubscriptionPlan.CccPlan &&
+                        userPlan.nextPaymentDueDate.HasValue)
+                    {
+                        reviewed++;
+                        if (userPlan.nextPaymentDueDate.Value < DateTimeOffset.Now)
+                        {
+                            // Set as ended
+                            userPlan.subscriptionEndDate = DateTimeOffset.Now;
+                            // Set as expired, same value as Gateway/Braintree
+                            userPlan.planStatus = Braintree.SubscriptionStatus.EXPIRED.ToString();
+                            // Update DB
+                            LcRest.UserPaymentPlan.Set(userPlan);
+                            processed++;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogEx("Check partnership subscriptions date for Past Due", ex);
+                }
+            }
+            logger.Log("Partnership subscriptions updated because of Past Due: {0} from total reviewed {1}", processed, reviewed);
+            ItemsReviewed += reviewed;
+            ItemsProcessed += processed;
+        }
 
         public static UserPaymentPlanSubscriptionUpdatesTask Run(LcLogger logger)
         {
@@ -100,8 +139,11 @@ namespace Tasks
 
             using (var db = new LcDatabase())
             {
-                var list = LcRest.UserPaymentPlan.QueryActiveSubscriptions(db);
+                // Subcriptions that need udpate from Gateway
+                var list = LcRest.UserPaymentPlan.QueryActiveSubscriptions(true, db);
                 task.UpdateFromGateway(list, logger);
+                // No-payment subscriptions, currently just partnership plans, that need manual check of due date
+                task.EnforceDueDate(LcRest.UserPaymentPlan.QueryActiveSubscriptions(false, db), logger);
             }
 
             task.TaskEnded = DateTime.Now;

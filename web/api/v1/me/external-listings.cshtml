@@ -1,0 +1,180 @@
+﻿@using WebMatrix.WebData;
+@*
+    Get the list and details of job titles attached to the logged user (a service professional) and any alerts for those job titles.
+    The collection of job titles is called the "User Job Profile".
+    It allows to edit the data of each one, and special actions on each like deactive/reactive.
+    We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals.
+
+    EXAMPLES {
+        "User External Listings": {
+            "url": "/api/v1/en-US/me/external-listings",
+            "get": { },
+            "post": {
+                "platformID": 1,
+                "jobTitles": [106],
+                "title": "My listing at LC",
+                "notes": "Something public about me"
+            }
+        },
+        "User External Listing (item)": {
+            "url": "/api/v1/en-US/me/external-listings/1",
+            "get": { },
+            "put": {
+                "jobTitles": [106],
+                "title": "My listing at LC",
+                "notes": "Something public about me"
+            },
+            "delete": { }
+        }
+    }
+*@
+@functions {
+    public class RestMeExternalListings : RestWebPage
+    {
+        /// <summary>
+        /// Retrieve the external listings of the user
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Get()
+        {
+            // Parameters
+            int userID = WebSecurity.CurrentUserId;
+
+            // Item ID
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var itemID = UrlData[0].AsInt(0);
+                var item = LcRest.UserExternalListing.Get(userID, itemID);
+
+                if (item != null)
+                {
+                    return item;
+                }
+
+                throw new HttpException(404, "External Listing not found.");
+            }
+            else if (UrlData.Count == 0)
+            {
+                return LcRest.UserExternalListing.GetList(userID);
+            }
+            return base.Get();
+        }
+
+        /// <summary>
+        /// Set-up validation rules for fields that can be edited and run validations,
+        /// throwing as expected on error.
+        /// For insert operations, add additional rules before call this
+        /// </summary>
+        /// <returns>List of job title IDs parsed</returns>
+        IEnumerable<int> ValidateEditableFields()
+        {
+            Validation.RequireField("title", "Title is required");
+            Validation.RequireField("jobTitles[]", "Almost 1 related job title must be specified");
+            if (!Validation.IsValid())
+            {
+                throw new HttpException(400, LcRessources.ValidationSummaryTitle);
+            }
+            var jobTitlesList = Request.Form.GetValues("jobTitles[]").Select((value) => value.AsInt());
+            return jobTitlesList;
+        }
+
+        /// <summary>
+        /// Add a new external listing
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Post()
+        {
+            if (UrlData.Count == 0)
+            {
+                // Validation
+                Validation.RequireField("platformID", "Must specify the platform");
+                var jobTitlesList = ValidateEditableFields();
+                // Parameters
+                int userID = WebSecurity.CurrentUserId;
+                var platformID = Request["platformID"].AsInt(0);
+                var title = Request["title"];
+                var notes = Request["notes"];
+                var record = new LcRest.UserExternalListing {
+                    userID = userID,
+                    platformID = platformID,
+                    title = title,
+                    notes = notes
+                };
+                var locale = LcRest.Locale.Current;
+                record.FillJobTitlesWithIds(jobTitlesList, locale.languageID, locale.countryID);
+
+                var itemID = LcRest.UserExternalListing.Insert(record);
+                return LcRest.UserExternalListing.Get(userID, itemID);
+            }
+            else
+            {
+                return base.Post();
+            }
+        }
+
+        /// <summary>
+        /// Update an external listing
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Put()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                // Validation
+                var jobTitlesList = ValidateEditableFields();
+                // Parameters
+                var itemID = UrlData[0].AsInt();
+                int userID = WebSecurity.CurrentUserId;
+                var title = Request["title"];
+                var notes = Request["notes"];
+                var record = new LcRest.UserExternalListing
+                {
+                    userExternalListingID = itemID,
+                    userID = userID,
+                    title = title,
+                    notes = notes
+                };
+                var locale = LcRest.Locale.Current;
+                record.FillJobTitlesWithIds(jobTitlesList, locale.languageID, locale.countryID);
+
+                if (!LcRest.UserExternalListing.Update(record))
+                {
+                    throw new HttpException(404, "External Listing not found.");
+                }
+                return LcRest.UserExternalListing.Get(userID, itemID);
+            }
+            else
+            {
+                return base.Put();
+            }
+        }
+
+        /// <summary>
+        /// Deletes an external listing from user profile
+        /// </summary>
+        /// <returns></returns>
+        public override dynamic Delete()
+        {
+            if (UrlData.Count == 1 && UrlData[0].IsInt())
+            {
+                var userID = WebSecurity.CurrentUserId;
+                var itemID = UrlData[0].AsInt();
+                var deleted = LcRest.UserExternalListing.Get(userID, itemID);
+                if (!LcRest.UserExternalListing.Delete(userID, itemID))
+                {
+                    throw new HttpException(404, "External Listing not found.");
+                }
+                return deleted;
+            }
+            else
+            {
+                return base.Delete();
+            }
+        }
+    }
+    }
+@{
+    // We allow client-only users to use the POST API, the others are restricted per method to ServiceProfessionals
+    Response.RestRequiresUser(LcData.UserInfo.UserType.ServiceProfessional);
+    new RestMeExternalListings().JsonResponse(this);
+}

@@ -557,12 +557,12 @@ exports.registerAll = function(app) {
                     }
                 });
                 // Let set a handler for each event emitted
-                if (typeof (params.onSignedUp) == 'function') {
+                if (typeof params.onSignedUp == 'function') {
                     vm.on('signedup', function(signedupData) {
                         params.onSignedUp.call(vm, signedupData);
                     });
                 }
-                if (typeof (params.onSignUpError) == 'function') {
+                if (typeof params.onSignUpError == 'function') {
                     vm.on('signuperror', function(error) {
                         params.onSignUpError.call(vm, error);
                     });
