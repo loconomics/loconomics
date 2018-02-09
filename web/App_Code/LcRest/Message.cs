@@ -198,6 +198,7 @@ namespace LcRest
                 if (SentByFreelancer)
                 {
                     // NOTE: Message from freelancer to client, answering an inquiry started by the client.
+                    // TODO: i18n
                     LcMessaging.SendMail(clientEmail, "A Message From a Loconomics Freelancer",
                         LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                         new Dictionary<string, object> {
@@ -212,6 +213,7 @@ namespace LcRest
                 else
                 {
                     // NOTE: Copy to the author. The author is a freelancer, answering to a client that started the inquiry.
+                    // TODO: i18n
                     LcMessaging.SendMail(serviceProfessionalEmail, "A Message From a Loconomics Client",
                         LcMessaging.ApplyTemplate(LcUrl.LangPath + "Email/EmailInquiry/",
                         new Dictionary<string, object> {

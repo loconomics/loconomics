@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2018-02-09 20:42+11:00\n"
+"POT-Creation-Date: 2018-02-09 22:59+11:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,6 +18,10 @@ msgstr ""
 msgid "(this should be all-inclusive)"
 msgstr ""
 
+#: App_Code\LcRest\UserJobTitleServiceAttributes.cs:222
+msgid "\\"{0}\\" requires at least one selection"
+msgstr ""
+
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
 msgid "{0} ({2} consultation)"
 msgstr ""
@@ -26,12 +30,21 @@ msgstr ""
 msgid "{0} ({2} estimate)"
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:1566
+msgid "{0} {1}'s phone number: {2}"
+msgstr ""
+
 #: App_Code\LcRessources.cs:18
 msgid "{0} has a not valid value"
 msgstr ""
 
 #: App_Code\LcRessources.cs:17
 msgid "{0} is required"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2156
+#: App_Code\LcRest\Booking.cs:2688
+msgid "{0} services"
 msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:197
@@ -48,6 +61,10 @@ msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:74
 msgid "{1} appointments - {0} each"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2490
+msgid "A valid date must be chosen to confirm the booking request"
 msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:170
@@ -137,10 +154,22 @@ msgstr ""
 msgid "Address Line 2 must be fewer than 100 characters."
 msgstr ""
 
+#: App_Code\LcRest\Address.cs:676
+msgid "Address must contain a country code or country ID"
+msgstr ""
+
+#: App_Code\LcRest\Address.cs:694
+msgid "Address must contain a postal code"
+msgstr ""
+
 #: api\v1\me\addresses.cshtml:337
 #: api\v1\me\client-booking.cshtml:210
 #: api\v1\me\service-professional-booking.cshtml:102
 msgid "Address Name must be fewer than 50 characters."
+msgstr ""
+
+#: App_Code\LcRest\ServiceProfessionalService.cs:189
+msgid "All services must be selected from the same job title"
 msgstr ""
 
 #: api\v1\me\profile.cshtml:126
@@ -175,6 +204,10 @@ msgstr ""
 msgid "At least 1 related job title must be specified"
 msgstr ""
 
+#: App_Code\LcRest\UserPaymentPlan.cs:38
+msgid "Bad stored payment plan"
+msgstr ""
+
 #: api\v1\me\profile.cshtml:156
 msgid "Birth Day must be an number (day of the month)"
 msgstr ""
@@ -191,11 +224,37 @@ msgstr ""
 msgid "Birth Month must be an number"
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:2545
+#: App_Code\LcRest\Booking.cs:2841
+#: App_Code\LcRest\Booking.cs:2865
+msgid "Booking cannot be cancelled. Status:"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2472
+msgid "Booking cannot be confirmed. Status: "
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2569
+msgid "Booking cannot be declined. Status:"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2910
+msgid "Booking cannot be updated"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2076
+msgid "Booking cannot set as expired. Status: "
+msgstr ""
+
 #: api\v1\me\bookings.cshtml:50
 #: api\v1\me\client-booking.cshtml:177
 #: api\v1\me\service-professional-booking.cshtml:73
 #: api\v1\me\service-professional-booking.cshtml:272
 msgid "Booking not found."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1308
+msgid "Booking update not allowed"
 msgstr ""
 
 #: api\v1\me\privacy-settings.cshtml:81
@@ -206,8 +265,27 @@ msgstr ""
 msgid "Bookings by SMS preference is required"
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:2133
+#: App_Code\LcRest\Booking.cs:2143
+#: App_Code\LcRest\Booking.cs:2260
+#: App_Code\LcRest\Booking.cs:2272
+#: App_Code\LcRest\Booking.cs:2652
+#: App_Code\LcRest\Booking.cs:2663
+#: App_Code\LcRest\Booking.cs:2921
+#: App_Code\LcRest\Booking.cs:2932
+msgid "Bookings require the selection of at least one service"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:878
+msgid "BookingTypeID must be set before calling FillUserJobTitle"
+msgstr ""
+
 #: api\v1\me\marketplace-profile.cshtml:72
 msgid "Business name must be fewer than 145 characters"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1573
+msgid "Call Loconomics for help: (415) 735-6025"
 msgstr ""
 
 #: api\v1\Test.cshtml:68
@@ -223,6 +301,16 @@ msgstr ""
 #: api\v1\me\service-professional-booking.cshtml:116
 #: api\v1\me\service-professional-booking.cshtml:122
 msgid "Choose at least one service"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1652
+#: App_Code\LcRest\UserPaymentPlan.cs:297
+msgid "Chosen payment method has expired"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2141
+#: App_Code\LcRest\Booking.cs:2661
+msgid "Chosen services does not belong to the Job Title"
 msgstr ""
 
 #: api\v1\me\service-professional-services.cshtml:136
@@ -327,6 +415,10 @@ msgstr ""
 msgid "E-mail address is already in use."
 msgstr ""
 
+#: App_Code\LcRest\LeadGeneration.cs:25
+msgid "Email is already registered, please log-in or request a password reset"
+msgstr ""
+
 #: api\v1\me\events.cshtml:199
 msgid "End date/time is not valid"
 msgstr ""
@@ -378,8 +470,16 @@ msgstr ""
 msgid "Facebook account does not exists."
 msgstr ""
 
+#: App_Code\LcRest\UserPaymentPlan.cs:392
+msgid "Failed subscription"
+msgstr ""
+
 #: api\v1\me\clients.cshtml:167
 msgid "First Name must be fewer than 50 characters."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1574
+msgid "Full details at "
 msgstr ""
 
 #: api\v1\Test.cshtml:38
@@ -434,11 +534,38 @@ msgstr ""
 msgid "I prefer not to state"
 msgstr ""
 
+#: App_Code\LcRest\JobTitle.cs:193
+msgid "I specialize in"
+msgstr ""
+
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:158
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:205
 msgid ""
 "If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.\n"
 "                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1461
+msgid "Impossible to calculate payment without pricing summary values"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2270
+#: App_Code\LcRest\Booking.cs:2930
+msgid "Impossible to change the services of a booking to another Job Title"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2138
+#: App_Code\LcRest\Booking.cs:2657
+msgid "Impossible to create a booking for that Job Title."
+msgstr ""
+
+#: App_Code\LcRest\ServiceProfessionalService.cs:175
+msgid "Impossible to retrieve information for the ServiceID:"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2264
+#: App_Code\LcRest\Booking.cs:2925
+msgid "Impossible to update the booking for that Job Title."
 msgstr ""
 
 #: api\v1\me\privacy-settings.cshtml:86
@@ -469,13 +596,33 @@ msgstr ""
 msgid "Invalid format for the Pricing Type ID"
 msgstr ""
 
+#: App_Code\LcRest\UserExternalListing.cs:111
+msgid "Invalid Job Title ID"
+msgstr ""
+
 #: api\v1\me\payment-plan.cshtml:114
 msgid "Invalid payment plan"
+msgstr ""
+
+#: App_Code\LcRest\Address.cs:552
+msgid "Invalid postal code"
+msgstr ""
+
+#: App_Code\LcRest\UserPaymentPlan.cs:430
+msgid "Invalid subscription plan for a partnership"
+msgstr ""
+
+#: App_Code\LcRest\LeadGeneration.cs:119
+msgid "Invalid user"
 msgstr ""
 
 #: api\v1\lead-generation\newsletter.cshtml:73
 #: api\v1\lead-generation\referral.cshtml:249
 msgid "Is required to indicate whether is service professional or not"
+msgstr ""
+
+#: App_Code\LcRest\PaymentAccount.cs:176
+msgid "It looks like you already have an account set up with Braintree. Please contact us, and we can help."
 msgstr ""
 
 #: api\v1\job-titles.cshtml:60
@@ -723,6 +870,30 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:1613
+msgid "Payment already collected for this booking"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1819
+msgid "Payment authorized for this booking already"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1817
+msgid "Payment not collected for this booking, cannot be authorized"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1885
+msgid "Payment not collected for this booking, cannot be released"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1852
+msgid "Payment not collected for this booking, cannot be settle"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:1611
+msgid "Payment not enabled for this booking"
+msgstr ""
+
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:139
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:142
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:182
@@ -752,6 +923,10 @@ msgstr ""
 
 #: api\v1\me\work-photos.cshtml:114
 msgid "Please, include a photo"
+msgstr ""
+
+#: App_Code\LcRest\PaymentAccount.cs:127
+msgid "Postal Code is not valid."
 msgstr ""
 
 #: api\v1\postal-codes.cshtml:40
@@ -805,6 +980,10 @@ msgstr ""
 msgid "Pricing not found."
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:1567
+msgid "Pricing summary:"
+msgstr ""
+
 #: api\v1\pricing-types.cshtml:130
 msgid "Pricing Type not found."
 msgstr ""
@@ -852,6 +1031,12 @@ msgstr ""
 msgid "Second Last Name must be fewer than 145 characters."
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:2365
+#: App_Code\LcRest\Booking.cs:2748
+#: App_Code\LcRest\Booking.cs:2980
+msgid "Selected location is not valid."
+msgstr ""
+
 #: api\v1\me\addresses.cshtml:258
 msgid "Server Error: Address Kind not managed."
 msgstr ""
@@ -867,6 +1052,10 @@ msgstr ""
 
 #: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:214
 msgid "Service"
+msgstr ""
+
+#: App_Code\LcRest\Address.cs:591
+msgid "Service Area"
 msgstr ""
 
 #: api\v1\me\addresses.cshtml:336
@@ -908,6 +1097,10 @@ msgstr ""
 msgid "Special instructions must be fewer than 1,000 characters."
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:1569
+msgid "Special instructions:"
+msgstr ""
+
 #: api\v1\me\client-booking.cshtml:258
 #: api\v1\me\client-booking.cshtml:334
 msgid "Start date and time is not valid"
@@ -943,6 +1136,14 @@ msgstr ""
 msgid "The alternative email is not valid."
 msgstr ""
 
+#: App_Code\LcRest\Booking.cs:2153
+msgid "The chosen time is not available, it conflicts with a recent appointment!"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2286
+msgid "The chosen time is unavailable, it conflicts with a recent appointment!"
+msgstr ""
+
 #: api\v1\me\marketplace-profile.cshtml:77
 msgid "The custom URL is too long, please keep it under 80 characters."
 msgstr ""
@@ -966,6 +1167,10 @@ msgstr ""
 #: api\v1\me\licenses-certifications.cshtml:127
 #: api\v1\me\work-photos.cshtml:157
 msgid "The file is too large, maximum file size is {0}"
+msgstr ""
+
+#: App_Code\LcRest\Client.cs:366
+msgid "The given e-mail already exists for other client at loconomics.com and cannot be saved."
 msgstr ""
 
 #: api\v1\Test.cshtml:148
@@ -992,6 +1197,10 @@ msgstr ""
 
 #: api\v1\me\addresses.cshtml:346
 msgid "The service address must be a service location or a service area."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2590
+msgid "The time {0} is not available, it conflicts with a recent appointment!"
 msgstr ""
 
 #: api\v1\me\marketplace-profile.cshtml:86
@@ -1043,6 +1252,27 @@ msgstr ""
 
 #: api\v1\me\owner-acknowledgment.cshtml:54
 msgid "Type your full name as acknowlegment"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2546
+#: App_Code\LcRest\Booking.cs:2570
+#: App_Code\LcRest\Booking.cs:2842
+#: App_Code\LcRest\Booking.cs:2866
+msgid "Type:"
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2131
+#: App_Code\LcRest\Booking.cs:2258
+#: App_Code\LcRest\Booking.cs:2650
+#: App_Code\LcRest\Booking.cs:2919
+msgid "Unable to retrieve the client's info. Their profile may no longer exist."
+msgstr ""
+
+#: App_Code\LcRest\Booking.cs:2129
+#: App_Code\LcRest\Booking.cs:2256
+#: App_Code\LcRest\Booking.cs:2648
+#: App_Code\LcRest\Booking.cs:2917
+msgid "Unable to retrieve the service professional's info. Their profile may no longer exist."
 msgstr ""
 
 #: api\v1\auth\facebook-user.cshtml:47
@@ -1130,6 +1360,14 @@ msgstr ""
 
 #: api\v1\auth\reset-password.cshtml:59
 msgid "You can now log-in with your new password"
+msgstr ""
+
+#: App_Code\LcRest\Client.cs:367
+msgid "You can perform a search by that email and add it as your client."
+msgstr ""
+
+#: App_Code\LcRest\UserLicenseCertification.cs:207
+msgid "You have already registered that license, please try to update it if you want to submit a new file."
 msgstr ""
 
 #: api\v1\Test.cshtml:48

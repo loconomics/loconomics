@@ -35,7 +35,7 @@ namespace LcRest
             SubscriptionPlan plan = SubscriptionPlan.Free;
             if (!Enum.TryParse<SubscriptionPlan>(record.paymentPlan, true, out plan))
             {
-                throw new FormatException("Bad stored payment plan");
+                throw new FormatException("[[[Bad stored payment plan]]]");
             }
 
             return new UserPaymentPlan
@@ -294,7 +294,7 @@ namespace LcRest
                 {
                     // Since we have not input data to save, we can only throw an error
                     // invalidSavedPaymentMethod
-                    throw new ConstraintException("Chosen payment method has expired");
+                    throw new ConstraintException("[[[Chosen payment method has expired]]]");
                 }
             }
             else
@@ -389,7 +389,7 @@ namespace LcRest
                 }
 
                 // The exception needs to be communicated anyway, so re-throw
-                throw new Exception("Failed subscription", ex);
+                throw new Exception("[[[Failed subscription]]]", ex);
             }
 
             return userPlan;
@@ -427,7 +427,7 @@ namespace LcRest
             // Validate plan
             if (!IsPartnershipPlan(plan))
             {
-                throw new ConstraintException("Invalid subscription plan for a partnership");
+                throw new ConstraintException("[[[Invalid subscription plan for a partnership]]]");
             }
             // Setup of the plan
             var durationDays = 0;
