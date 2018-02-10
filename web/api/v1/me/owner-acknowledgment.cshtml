@@ -26,7 +26,7 @@
                 var data = GetData();
                 if (data == null)
                 {
-                    throw new HttpException(404, "Not found");
+                    throw new HttpException(404, "[[[Not found]]]");
                 }
                 else
                 {
@@ -34,7 +34,7 @@
                 }
             }
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
 
         public override dynamic Post()
@@ -44,14 +44,14 @@
             var itExists = GetData() != null;
             if (itExists)
             {
-                ModelState.AddFormError("You already submitted your acknowlegment of this disclosure");
+                ModelState.AddFormError("[[[You already submitted your acknowlegment of this disclosure]]]");
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
 
             var name = Request.Form["ownerFullName"];
             if (String.IsNullOrWhiteSpace(name))
             {
-                ModelState.AddError("ownerFullName", "Type your full name as acknowlegment");
+                ModelState.AddError("ownerFullName", "[[[Type your full name as acknowlegment]]]");
             }
             else
             {
@@ -60,7 +60,7 @@
                 var profileName = String.Join(" ", names.Where<string>(x => !String.IsNullOrWhiteSpace(x)));
                 if (profileName != name)
                 {
-                    ModelState.AddError("ownerFullName", "The name is not correct");
+                    ModelState.AddError("ownerFullName", "[[[The name is not correct]]]");
                 }
             }
 

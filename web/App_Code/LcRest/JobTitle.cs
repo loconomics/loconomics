@@ -190,7 +190,7 @@ namespace LcRest
                         SELECT @PositionID As PositionID
                     ", languageID, countryID, singularName,
                     // L10N
-                    "I specialize in",
+                    "[[[I specialize in]]]",
                     enteredByUserID);
             }
         }

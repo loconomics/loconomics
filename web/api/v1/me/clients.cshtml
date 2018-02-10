@@ -94,7 +94,7 @@
                 return LcRest.Client.PublicSearch(serviceProfessionalUserID, Request.QueryString["fullName"], Request.QueryString["email"], Request.QueryString["phone"]);
             }
 
-            throw new HttpException(404, "Not Found");
+            throw new HttpException(404, "[[[Not Found]]]");
         }
 
         public override dynamic Post()
@@ -142,7 +142,7 @@
                 var item = LcRest.Client.GetServiceProfessionalClient(serviceProfessionalUserID, itemID);
 
                 if (item == null) {
-                    throw new HttpException(404, "Not Found");
+                    throw new HttpException(404, "[[[Not Found]]]");
                 }
 
                 // Delete
@@ -161,13 +161,13 @@
             Validation.RequireField("lastName", LcRessources.RequiredField("Last Name"));
             //Validation.RequireField("email", LcRessources.RequiredField("Email"));
             // Allowing the 0 for unset values (is not a required field)
-            Validation.Add("birthMonth", Validator.Range(0, 12, "Birth Month must be a number between 1 and 12"));
+            Validation.Add("birthMonth", Validator.Range(0, 12, "[[[Birth Month must be a number between 1 and 12]]]"));
             // Allowing the 0 for unset values (is not a required field)
-            Validation.Add("birthMonthDay", Validator.Range(0, 31, "Birth Month Day must be a number between 1 and 31"));
-            Validation.Add("firstName", Validator.StringLength(50, 0, "First Name must be fewer than 50 characters."));
-            Validation.Add("lastName", Validator.StringLength(145, 0, "Last Name must be fewer than 145 characters."));
-            Validation.Add("secondLastName", Validator.StringLength(145, 0, "Second Last Name must be fewer than 145 characters."));
-            Validation.Add("email", Validator.Regex(LcValidators.EmailAddressRegexPattern, "That e-mail is not valid"));
+            Validation.Add("birthMonthDay", Validator.Range(0, 31, "[[[Birth Month Day must be a number between 1 and 31]]]"));
+            Validation.Add("firstName", Validator.StringLength(50, 0, "[[[First Name must be fewer than 50 characters.]]]"));
+            Validation.Add("lastName", Validator.StringLength(145, 0, "[[[Last Name must be fewer than 145 characters.]]]"));
+            Validation.Add("secondLastName", Validator.StringLength(145, 0, "[[[Second Last Name must be fewer than 145 characters.]]]"));
+            Validation.Add("email", Validator.Regex(LcValidators.EmailAddressRegexPattern, "[[[That e-mail is not valid]]]"));
            
             return Validation.IsValid() && ModelState.IsValid;
         }
@@ -189,7 +189,7 @@
                 // (for cases of new, when passed ID is zero, the returned is the 
                 // new generated ID, so is not zero if created successfully).
                 if (itemID == 0) {
-                    throw new HttpException(404, "Not Found");
+                    throw new HttpException(404, "[[[Not Found]]]");
                 }
                 
                 // Returns the updated client data

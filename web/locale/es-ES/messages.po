@@ -1,0 +1,1413 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-02-09 22:59+11:00\n"
+"PO-Revision-Date: 2018-02-09 23:09+1100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_ES\n"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:136
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:179
+msgid "(enter 0.00 if free)"
+msgstr "(ingrese 0.00 si es gratis)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:62
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:99
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:226
+msgid "(this should be all-inclusive)"
+msgstr "(Esto debe ser todo incluido)"
+
+#: App_Code\LcRest\UserJobTitleServiceAttributes.cs:222
+msgid "\\\"{0}\\\" requires at least one selection"
+msgstr "\\\"{0} \\\" requiere al menos una selección"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:196
+msgid "{0} ({2} consultation)"
+msgstr "{0} ({2} consulta)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:149
+msgid "{0} ({2} estimate)"
+msgstr "{0} ({2} estimación)"
+
+#: App_Code\LcRest\Booking.cs:1566
+msgid "{0} {1}'s phone number: {2}"
+msgstr "Número de teléfono de {0} {1}: {2}"
+
+#: App_Code\LcRessources.cs:18
+msgid "{0} has a not valid value"
+msgstr "{0} tiene un valor no válido"
+
+#: App_Code\LcRessources.cs:17
+msgid "{0} is required"
+msgstr "{0} es obligatorio"
+
+#: App_Code\LcRest\Booking.cs:2156 App_Code\LcRest\Booking.cs:2688
+msgid "{0} services"
+msgstr "{0} servicios"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:197
+msgid "{0}, {1} ({3} consultation)"
+msgstr "{0}, {1} ({3} consulta)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:150
+msgid "{0}, {1} ({3} estimation)"
+msgstr "{0}, {1} ({3} estimación)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:76
+msgid "{0}, {2} appointments - {1} each"
+msgstr "{0}, {2} citas: {1} cada una"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:74
+msgid "{1} appointments - {0} each"
+msgstr "{1} citas: {0} cada una"
+
+#: App_Code\LcRest\Booking.cs:2490
+msgid "A valid date must be chosen to confirm the booking request"
+msgstr "Se debe elegir una fecha válida para confirmar la solicitud de reserva"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:170
+msgid "Add a consultation"
+msgstr "Añadir una consulta"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:54
+msgid "Add a package"
+msgstr "Agrega un paquete"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:217
+msgid "Add a service"
+msgstr "Agrega un servicio"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:92
+msgid "Add an add-on service"
+msgstr "Agregar un servicio complementario"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:127
+msgid "Add an estimate visit"
+msgstr "Agregar una visita de estimación"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:319
+msgid "Add deep cleaning services"
+msgstr "Añadir servicios de limpieza profunda"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:23
+msgid "Add hourly services"
+msgstr "Agregar servicios por hora"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:251
+msgid "Add light cleaning services"
+msgstr "Añadir servicios de limpieza ligera"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:285
+msgid "Add routine cleaning services"
+msgstr "Agregar servicios de limpieza de rutina"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:105
+msgid "Add/Edit add-ons"
+msgstr "Agregar / Editar complementos"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:194
+msgid "Add/Edit consultations"
+msgstr "Añadir / editar consultas"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:147
+msgid "Add/Edit estimates"
+msgstr "Agregar / Editar estimaciones"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:71
+msgid "Add/Edit packages"
+msgstr "Agregar / editar paquetes"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:32
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:263
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:297
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:331
+msgid "Add/Edit pricing"
+msgstr "Agregar / editar precios"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:232
+msgid "Add/Edit services"
+msgstr "Agregar / Editar servicios"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:89
+msgid "Add-On"
+msgstr "Añadir"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:104
+msgid "Add-on removed successfully"
+msgstr "Complemento eliminado con éxito"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:90
+msgid "Add-Ons"
+msgstr "Complementos"
+
+#: api\v1\me\addresses.cshtml:338 api\v1\me\client-booking.cshtml:208
+#: api\v1\me\service-professional-booking.cshtml:100
+msgid "Address Line 1 must be fewer than 100 characters."
+msgstr "La línea de dirección debe tener menos de 100 caracteres."
+
+#: api\v1\me\addresses.cshtml:339 api\v1\me\client-booking.cshtml:209
+#: api\v1\me\service-professional-booking.cshtml:101
+msgid "Address Line 2 must be fewer than 100 characters."
+msgstr "La línea de dirección debe tener menos de 100 caracteres."
+
+#: App_Code\LcRest\Address.cs:676
+msgid "Address must contain a country code or country ID"
+msgstr "La dirección debe contener un código de país o ID de país"
+
+#: App_Code\LcRest\Address.cs:694
+msgid "Address must contain a postal code"
+msgstr "La dirección debe contener un código postal"
+
+#: api\v1\me\addresses.cshtml:337 api\v1\me\client-booking.cshtml:210
+#: api\v1\me\service-professional-booking.cshtml:102
+msgid "Address Name must be fewer than 50 characters."
+msgstr "El nombre de la dirección debe tener menos de 50 caracteres."
+
+#: App_Code\LcRest\ServiceProfessionalService.cs:189
+msgid "All services must be selected from the same job title"
+msgstr "Todos los servicios deben ser seleccionados del mismo título de trabajo"
+
+#: api\v1\me\profile.cshtml:126
+msgid "Already a service professional"
+msgstr "Ya soy un profesional del servicio"
+
+#: api\v1\me\client-booking.cshtml:343
+msgid "Alternative date and time 1 is not valid"
+msgstr "La fecha y hora alternativa 1 no es válida"
+
+#: api\v1\me\client-booking.cshtml:350
+msgid "Alternative date and time 2 is not valid"
+msgstr "La fecha y la hora alternativa 2 no son válidas"
+
+#: api\v1\lead-generation\referral.cshtml:191
+msgid "An email or phone number is required"
+msgstr "Se requiere un correo electrónico o número de teléfono"
+
+#: api\v1\Test.cshtml:138
+msgid "An Item ID is required at the URL"
+msgstr "Se requiere una identificación de artículo en la URL"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:176
+msgid "Approx. length of consultation:"
+msgstr "Aprox. duración de la consulta:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:133
+msgid "Approximate length of visit:"
+msgstr "Duración aproximada de la visita:"
+
+#: api\v1\me\external-listings.cshtml:72
+msgid "At least 1 related job title must be specified"
+msgstr "Se debe especificar al menos 1 título de trabajo relacionado"
+
+#: App_Code\LcRest\UserPaymentPlan.cs:38
+msgid "Bad stored payment plan"
+msgstr "Mal plan de pago almacenado"
+
+#: api\v1\me\profile.cshtml:156
+msgid "Birth Day must be an number (day of the month)"
+msgstr "El día del nacimiento debe ser un número (día del mes)"
+
+#: api\v1\me\clients.cshtml:166
+msgid "Birth Month Day must be a number between 1 and 31"
+msgstr "Birth Month Day debe ser un número entre 1 y 31"
+
+#: api\v1\me\clients.cshtml:164
+msgid "Birth Month must be a number between 1 and 12"
+msgstr "Mes de nacimiento debe ser un número entre 1 y 12"
+
+#: api\v1\me\profile.cshtml:157
+msgid "Birth Month must be an number"
+msgstr "Mes de nacimiento debe ser un número"
+
+#: App_Code\LcRest\Booking.cs:2545 App_Code\LcRest\Booking.cs:2841
+#: App_Code\LcRest\Booking.cs:2865
+msgid "Booking cannot be cancelled. Status:"
+msgstr "La reserva no puede ser cancelada. Estado:"
+
+#: App_Code\LcRest\Booking.cs:2472
+msgid "Booking cannot be confirmed. Status: "
+msgstr "La reserva no puede ser confirmada. Estado:"
+
+#: App_Code\LcRest\Booking.cs:2569
+msgid "Booking cannot be declined. Status:"
+msgstr "La reserva no puede ser rechazada. Estado:"
+
+#: App_Code\LcRest\Booking.cs:2910
+msgid "Booking cannot be updated"
+msgstr "La reserva no se puede actualizar"
+
+#: App_Code\LcRest\Booking.cs:2076
+msgid "Booking cannot set as expired. Status: "
+msgstr "La reserva no puede establecerse como caducada. Estado:"
+
+#: api\v1\me\bookings.cshtml:50 api\v1\me\client-booking.cshtml:177
+#: api\v1\me\service-professional-booking.cshtml:73
+#: api\v1\me\service-professional-booking.cshtml:272
+msgid "Booking not found."
+msgstr "Reserva no encontrada."
+
+#: App_Code\LcRest\Booking.cs:1308
+msgid "Booking update not allowed"
+msgstr "Actualización de reserva no permitida"
+
+#: api\v1\me\privacy-settings.cshtml:81
+msgid "Bookings by Phone preference is required"
+msgstr "Se requiere reservar por teléfono"
+
+#: api\v1\me\privacy-settings.cshtml:80
+msgid "Bookings by SMS preference is required"
+msgstr "Se requiere reservar por SMS."
+
+#: App_Code\LcRest\Booking.cs:2133 App_Code\LcRest\Booking.cs:2143
+#: App_Code\LcRest\Booking.cs:2260 App_Code\LcRest\Booking.cs:2272
+#: App_Code\LcRest\Booking.cs:2652 App_Code\LcRest\Booking.cs:2663
+#: App_Code\LcRest\Booking.cs:2921 App_Code\LcRest\Booking.cs:2932
+msgid "Bookings require the selection of at least one service"
+msgstr "Las reservas requieren la selección de al menos un servicio"
+
+#: App_Code\LcRest\Booking.cs:878
+msgid "BookingTypeID must be set before calling FillUserJobTitle"
+msgstr "BookingTypeID se debe establecer antes de llamar a FillUserJobTitle"
+
+#: api\v1\me\marketplace-profile.cshtml:72
+msgid "Business name must be fewer than 145 characters"
+msgstr "El nombre comercial debe tener menos de 145 caracteres"
+
+#: App_Code\LcRest\Booking.cs:1573
+msgid "Call Loconomics for help: (415) 735-6025"
+msgstr "Llame a Loconomics para obtener ayuda: (415) 735-6025"
+
+#: api\v1\Test.cshtml:68
+msgid "Cannot POST to an item"
+msgstr "No se puede POST a un elemento"
+
+#: api\v1\me\payment-plan.cshtml:69
+msgid "Choose a plan"
+msgstr "Elija un plan"
+
+#: api\v1\me\client-booking.cshtml:224 api\v1\me\client-booking.cshtml:230
+#: api\v1\me\service-professional-booking.cshtml:116
+#: api\v1\me\service-professional-booking.cshtml:122
+msgid "Choose at least one service"
+msgstr "Elija al menos un servicio"
+
+#: App_Code\LcRest\Booking.cs:1652 App_Code\LcRest\UserPaymentPlan.cs:297
+msgid "Chosen payment method has expired"
+msgstr "El método de pago elegido ha expirado"
+
+#: App_Code\LcRest\Booking.cs:2141 App_Code\LcRest\Booking.cs:2661
+msgid "Chosen services does not belong to the Job Title"
+msgstr "Los servicios elegidos no pertenecen al Título del trabajo"
+
+#: api\v1\me\service-professional-services.cshtml:136
+#: api\v1\me\service-professional-services.cshtml:157
+msgid "Client not found"
+msgstr "Cliente no encontrado"
+
+#: api\v1\me\privacy-settings.cshtml:88
+msgid "Co-branded promotions preference is required"
+msgstr "Se requiere preferencia de promociones de marca compartida"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:167
+msgid "Consultation"
+msgstr "Consulta"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:193
+msgid "Consultation removed successfully"
+msgstr "Consulta eliminada con éxito"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:187
+msgid "Consultation type:"
+msgstr "Tipo de consulta:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:168
+msgid "Consultations"
+msgstr "Consultas"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:316
+msgid "Deep cleaning service"
+msgstr "Servicio de limpieza profunda"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:317
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:324
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:325
+msgid "Deep cleaning services"
+msgstr "Servicios de limpieza profunda"
+
+#: api\v1\me\addresses.cshtml:616
+msgid "DELETE is not allowed"
+msgstr "ELIMINAR no está permitido"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:218
+msgid "Describe the service you offer, the price, and the time it'll take, and we'll do the rest to get you clients. Please include any products that come with the service."
+msgstr "Describa el servicio que ofrece, el precio y el tiempo que tomará, y nosotros haremos el resto para obtener sus clientes. Por favor incluya cualquier producto que venga con el servicio."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:102
+msgid "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)"
+msgstr "Describa a sus clientes potenciales en detalle el servicio adicional que recibirán e incluya una descripción de los productos incluidos (si corresponde)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:93
+msgid "Describe to your potential clients in detail the add-on service they'll receive and include a description of any products included (if applicable)."
+msgstr "Describa a sus clientes potenciales en detalle el servicio complementario que recibirán e incluya una descripción de los productos incluidos (si corresponde)."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:320
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:326
+msgid "Describe to your potential clients in detail the deep cleaning services you provide and include what makes your services unique."
+msgstr "Describa a sus clientes potenciales en detalle los servicios de limpieza profunda que brinda e incluya lo que hace que sus servicios sean únicos."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:252
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:258
+msgid "Describe to your potential clients in detail the light cleaning services you provide and include what makes your services unique."
+msgstr "Describa a sus clientes potenciales en detalle los servicios de limpieza ligera que brinda e incluya lo que hace que sus servicios sean únicos."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:286
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:292
+msgid "Describe to your potential clients in detail the routine cleaning services you provide and include what makes your services unique."
+msgstr "Describa a sus posibles clientes en detalle los servicios de limpieza de rutina que brinda e incluya lo que hace que sus servicios sean únicos."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:227
+msgid "Describe to your potential clients in detail the service you provide and include a description of any products included (if applicable)."
+msgstr "Describa a sus clientes potenciales en detalle el servicio que brinda e incluya una descripción de los productos incluidos (si corresponde)."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:24
+msgid "Describe to your potential clients in detail the service you provide and include what makes your services unique."
+msgstr "Describa a sus clientes potenciales en detalle el servicio que brinda e incluya lo que hace que sus servicios sean únicos."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:66
+msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)"
+msgstr "Describa a sus clientes potenciales en detalle los servicios que brinda e incluya una descripción de los productos incluidos (si corresponde)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:55
+msgid "Describe to your potential clients in detail the service(s) you provide and include a description of any products included (if applicable)."
+msgstr "Describa a sus posibles clientes en detalle los servicios que brinda e incluya una descripción de los productos incluidos (si corresponde)."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:29
+msgid "Describe to your potential clients in detail the services you provide and include what makes your services unique."
+msgstr "Describa a sus clientes potenciales en detalle los servicios que brinda e incluya lo que hace que sus servicios sean únicos."
+
+#: api\v1\me\service-professional-services.cshtml:197
+msgid "Description must be fewer than 1000 characters."
+msgstr "La descripción debe tener menos de 1000 caracteres."
+
+#: api\v1\me\service-professional-services.cshtml:205
+msgid "Duration must be the number of minutes without decimals"
+msgstr "La duración debe ser la cantidad de minutos sin decimales"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:64
+msgid "Duration:"
+msgstr "Duración:"
+
+#: App_Code\LcAuthHelper.cs:452
+msgid "E-mail address is already in use."
+msgstr "Dirección de correo electrónico ya está en uso."
+
+#: App_Code\LcRest\LeadGeneration.cs:25
+msgid "Email is already registered, please log-in or request a password reset"
+msgstr "El correo electrónico ya está registrado, inicie sesión o solicite un restablecimiento de contraseña"
+
+#: api\v1\me\events.cshtml:199
+msgid "End date/time is not valid"
+msgstr "La fecha / hora de finalización no es válida"
+
+#: api\v1\me\education.cshtml:129
+msgid "End year is invalid, please re-enter"
+msgstr "El año final no es válido, vuelva a ingresar"
+
+#: api\v1\me\profile-picture.cshtml:160
+msgid "Error, you need to upload an image first"
+msgstr "Error, primero debes subir una imagen"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:124
+msgid "Estimate"
+msgstr "Estimar"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:146
+msgid "Estimate removed successfully"
+msgstr "Estimación eliminada con éxito"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:125
+msgid "Estimates"
+msgstr "Estimados"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:144
+msgid "Estimation type:"
+msgstr "Tipo de estimación:"
+
+#: api\v1\me\events.cshtml:165 api\v1\me\events.cshtml:179
+#: api\v1\me\events.cshtml:254 api\v1\me\events.cshtml:285
+#: api\v1\me\events.cshtml:301 api\vx\icalendar\events.cshtml:89
+msgid "Event not found."
+msgstr "Evento no encontrado."
+
+#: api\v1\me\external-listings.cshtml:54 api\v1\me\external-listings.cshtml:142
+#: api\v1\me\external-listings.cshtml:165
+msgid "External Listing not found."
+msgstr "Listado externo no encontrado."
+
+#: App_Code\LcAuthHelper.cs:383
+msgid "Facebook account already connected. Sign in."
+msgstr "Cuenta de Facebook ya conectada. Registrarse."
+
+#: App_Code\LcAuthHelper.cs:500
+msgid "Facebook account does not exists."
+msgstr "La cuenta de Facebook no existe."
+
+#: App_Code\LcRest\UserPaymentPlan.cs:392
+msgid "Failed subscription"
+msgstr "Suscripción fallida"
+
+#: api\v1\me\clients.cshtml:167
+msgid "First Name must be fewer than 50 characters."
+msgstr "El primer nombre debe tener menos de 50 caracteres."
+
+#: App_Code\LcRest\Booking.cs:1574
+msgid "Full details at "
+msgstr "Detalles completos en "
+
+#: api\v1\Test.cshtml:38
+msgid "Give me an error"
+msgstr "Dame un error"
+
+#: App_Code\LcRessources.cs:12
+msgid "Great work!"
+msgstr "¡Buen trabajo!"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:116
+msgid "Here you can add additional services that clients can request with a service allowing them to customize their experience with you."
+msgstr "Aquí puede agregar servicios adicionales que los clientes pueden solicitar con un servicio que les permite personalizar su experiencia con usted."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:240
+msgid "Here you can add each individual service you provide and communicate to clients the time you'll need and the price you charge. Add a package if you'd also like to bundle services or offer discounts for multiple appointments."
+msgstr "Aquí puede agregar cada servicio individual que brinda y comunicar a los clientes el tiempo que necesitará y el precio que cobra. Agregue un paquete si también desea agrupar servicios u ofrecer descuentos para varias citas."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:81
+msgid "Here you can communicate a bundle of services that occur in a single appointment or multiple appointments of a service. For example, you could offer six appointments for a discounted price."
+msgstr "Aquí puede comunicar un conjunto de servicios que se producen en una sola cita o múltiples citas de un servicio. Por ejemplo, podría ofrecer seis citas por un precio con descuento."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:40
+msgid "Here you can create one or more hourly services that you offer. If you have more than one, tell clients how they differ."
+msgstr "Aquí puede crear uno o más servicios por hora que ofrece. Si tiene más de uno, dígales a los clientes cómo difieren."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:153
+msgid "Here you can discuss with clients your services and assess an accurate price estimate for their individual needs. You and your client will then determine next steps together (we're currently working on ways to help you out with this)."
+msgstr "Aquí puede analizar con los clientes sus servicios y evaluar un presupuesto preciso para sus necesidades individuales. Usted y su cliente determinarán los siguientes pasos juntos (actualmente estamos trabajando en formas de ayudarlo con esto)."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:200
+msgid "Here you can discuss with clients your services and work with them to decide next steps and pricing (we're currently working on ways to help you out with this)."
+msgstr "Aquí puede analizar con los clientes sus servicios y trabajar con ellos para decidir los próximos pasos y precios (actualmente estamos trabajando en formas de ayudarlo con esto)."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:259
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:293
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:327
+msgid "Hourly rate"
+msgstr "Tarifa por hora"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:20
+msgid "Hourly service"
+msgstr "Servicio por hora"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:21
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:28
+msgid "Hourly services"
+msgstr "Servicios por hora"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:140
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:183
+msgid "I prefer not to state"
+msgstr "Prefiero no decir"
+
+#: App_Code\LcRest\JobTitle.cs:193
+msgid "I specialize in"
+msgstr "Me especializo en"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:158
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:205
+msgid ""
+"If you decline to state your hourly rate, we'll display this as 'Pricing will be disclosed during consultation'.\n"
+"                    We recommended giving clients a 'from' rate to ensure you attract the clients that can afford your services."
+msgstr ""
+"Si no indica su tarifa por hora, la mostraremos como \"El precio se revelará durante la consulta\".\n"
+"                     Recomendamos darles a los clientes una tarifa \"de\" para garantizar que atraiga a los clientes que pueden pagar sus servicios."
+
+#: App_Code\LcRest\Booking.cs:1461
+msgid "Impossible to calculate payment without pricing summary values"
+msgstr "Imposible calcular el pago sin valores de resumen de precios"
+
+#: App_Code\LcRest\Booking.cs:2270 App_Code\LcRest\Booking.cs:2930
+msgid "Impossible to change the services of a booking to another Job Title"
+msgstr "Imposible cambiar los servicios de una reserva a otro Título de trabajo"
+
+#: App_Code\LcRest\Booking.cs:2138 App_Code\LcRest\Booking.cs:2657
+msgid "Impossible to create a booking for that Job Title."
+msgstr "Imposible crear una reserva para ese Título del trabajo."
+
+#: App_Code\LcRest\ServiceProfessionalService.cs:175
+msgid "Impossible to retrieve information for the ServiceID:"
+msgstr "Imposible recuperar información para el ServiceID:"
+
+#: App_Code\LcRest\Booking.cs:2264 App_Code\LcRest\Booking.cs:2925
+msgid "Impossible to update the booking for that Job Title."
+msgstr "Imposible actualizar la reserva para ese Título del trabajo."
+
+#: api\v1\me\privacy-settings.cshtml:86
+msgid "Include my profile in search listings preference is required"
+msgstr "Incluir mi perfil en la lista de búsqueda es obligatorio"
+
+#: App_Code\LcAuthHelper.cs:579
+msgid "Incorrect user"
+msgstr "Usuario incorrecto"
+
+#: App_Code\LcAuthHelper.cs:96
+msgid "Incorrect username or password."
+msgstr "Nombre de usuario o contraseña incorrecta."
+
+#: api\v1\auth\reset-password.cshtml:47
+msgid "Instructions to reset your password have been sent to {0}. Please check your spam folder if you don't see it."
+msgstr "Las instrucciones para restablecer su contraseña han sido enviadas a {0}. Por favor revisa tu carpeta de spam si no la ves."
+
+#: api\v1\auth\change-password.cshtml:45
+msgid "Invalid email address or password"
+msgstr "Dirección de correo electrónico o contraseña no válidos"
+
+#: App_Code\LcAuthHelper.cs:590
+msgid "Invalid Facebook credentials"
+msgstr "Credenciales de Facebook inválidas"
+
+#: api\v1\pricing-types.cshtml:134
+msgid "Invalid format for the Pricing Type ID"
+msgstr "Formato inválido para el tipo de precio ID"
+
+#: App_Code\LcRest\UserExternalListing.cs:111
+msgid "Invalid Job Title ID"
+msgstr "ID de título de trabajo inválido"
+
+#: api\v1\me\payment-plan.cshtml:114
+msgid "Invalid payment plan"
+msgstr "Plan de pago inválido"
+
+#: App_Code\LcRest\Address.cs:552
+msgid "Invalid postal code"
+msgstr "Código postal inválido"
+
+#: App_Code\LcRest\UserPaymentPlan.cs:430
+msgid "Invalid subscription plan for a partnership"
+msgstr "Plan de suscripción no válido para una asociación"
+
+#: App_Code\LcRest\LeadGeneration.cs:119
+msgid "Invalid user"
+msgstr "Usuario invalido"
+
+#: api\v1\lead-generation\newsletter.cshtml:73
+#: api\v1\lead-generation\referral.cshtml:249
+msgid "Is required to indicate whether is service professional or not"
+msgstr "Se requiere indicar si el servicio es profesional o no"
+
+#: App_Code\LcRest\PaymentAccount.cs:176
+msgid "It looks like you already have an account set up with Braintree. Please contact us, and we can help."
+msgstr "Parece que ya tienes una cuenta configurada con Braintree. Por favor contáctenos, y podemos ayudarlo."
+
+#: api\v1\job-titles.cshtml:60 api\v1\users\job-profile.cshtml:77
+msgid "Job Title not found."
+msgstr "Título del trabajo no encontrado."
+
+#: api\v1\me\clients.cshtml:168
+msgid "Last Name must be fewer than 145 characters."
+msgstr "El apellido debe tener menos de 145 caracteres."
+
+#: api\v1\me\addresses.cshtml:334 api\v1\me\client-booking.cshtml:212
+#: api\v1\me\service-professional-booking.cshtml:104
+msgid "Latitude must be a number"
+msgstr "Latitude debe ser un número"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:154
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:201
+msgid "learn more"
+msgstr "aprende más"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:115
+msgid "Learn more about add-on pricing"
+msgstr "Obtenga más información sobre los precios agregados"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:199
+msgid "Learn more about consultation pricing"
+msgstr "Obtenga más información sobre precios de consulta"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:338
+msgid "Learn more about deep cleaning services pricing"
+msgstr "Conozca más sobre los precios de los servicios de limpieza profunda"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:152
+msgid "Learn more about estimate pricing"
+msgstr "Obtenga más información sobre la estimación de precios"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:39
+msgid "Learn more about hourly service pricing"
+msgstr "Obtenga más información sobre los precios del servicio por hora"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:270
+msgid "Learn more about light cleaning services pricing"
+msgstr "Conozca más sobre los precios de los servicios de limpieza de la luz"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:80
+msgid "Learn more about package pricing"
+msgstr "Obtenga más información sobre los precios de los paquetes"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:304
+msgid "Learn more about routine cleaning services pricing"
+msgstr "Obtenga más información sobre los precios de los servicios de limpieza de rutina"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:239
+msgid "Learn more about service pricing"
+msgstr "Obtenga más información sobre los precios de los servicios"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:100
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:223
+msgid "Length of service:"
+msgstr "Duración del servicio:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:248
+msgid "Light cleaning service"
+msgstr "Servicio de limpieza ligera"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:249
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:256
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:257
+msgid "Light cleaning services"
+msgstr "Servicios de limpieza livianos"
+
+#: api\v1\me\privacy-settings.cshtml:82
+msgid "Loconomics community messages preference is required"
+msgstr "Se requiere preferencia de mensajes de la comunidad Loconomics"
+
+#: api\v1\me\privacy-settings.cshtml:87
+msgid "Loconomics marketing messages preference is required"
+msgstr "Se requiere preferencia de mensajes de marketing de Loconomics"
+
+#: api\v1\me\addresses.cshtml:335 api\v1\me\client-booking.cshtml:213
+#: api\v1\me\service-professional-booking.cshtml:105
+msgid "Longitude must be a number"
+msgstr "La longitud debe ser un número"
+
+#: api\v1\me\privacy-settings.cshtml:83
+msgid "Marketing e-mails about Loconomics Service Providers preference is required"
+msgstr "Se requieren correos electrónicos de marketing sobre la preferencia de los proveedores de servicios de Loconomics"
+
+#: api\v1\me\licenses-certifications.cshtml:93
+#: api\v1\me\profile-picture.cshtml:126 api\v1\me\work-photos.cshtml:119
+msgid "Maximum request length exceeded"
+msgstr "Longitud máxima solicitada excedida"
+
+#: App_Code\LcRessources.cs:16
+msgid "Message was sent"
+msgstr "El mensaje fue enviado"
+
+#: api\v1\me\calendar-syncing.cshtml:74
+msgid "Method not allowed"
+msgstr "Método no permitido"
+
+#: api\v1\me\client-booking.cshtml:163 api\v1\me\client-booking.cshtml:175
+#: api\v1\me\events.cshtml:270 api\v1\me\events.cshtml:283
+#: api\v1\me\events.cshtml:299
+#: api\v1\me\service-professional-booking.cshtml:259
+#: api\v1\me\service-professional-booking.cshtml:270
+#: api\v1\me\service-professional-services.cshtml:285
+#: api\v1\me\service-professional-services.cshtml:304
+#: api\v1\me\service-professional-services.cshtml:342
+msgid "Method not allowed."
+msgstr "Método no permitido."
+
+#: api\v1\me\service-professional-services.cshtml:231
+msgid "Must be a client ID or one of the predefined constants"
+msgstr "Debe ser un ID de cliente o una de las constantes predefinidas"
+
+#: api\v1\me\external-listings.cshtml:90
+msgid "Must specify the platform"
+msgstr "Debe especificar la plataforma"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:138
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:141
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:181
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:184
+msgid "My rates start at:"
+msgstr "Mis tarifas comienzan en:"
+
+#: api\v1\me\service-professional-services.cshtml:194
+msgid "Name must be fewer than 50 characters."
+msgstr "El nombre debe tener menos de 50 caracteres."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:171
+msgid "Need to speak or meet with your client before determining a price? We'll help you facilitate an in-person meeting or phone call to discuss your services."
+msgstr "¿Necesita hablar o reunirse con su cliente antes de determinar un precio? Lo ayudaremos a facilitar una reunión en persona o una llamada telefónica para analizar sus servicios."
+
+#: App_Code\LcAuthHelper.cs:279
+msgid "Not allowed"
+msgstr "No permitido"
+
+#: api\v1\search.cshtml:225 api\v1\me\addresses.cshtml:229
+#: api\v1\me\addresses.cshtml:241 api\v1\me\addresses.cshtml:328
+#: api\v1\me\addresses.cshtml:477 api\v1\me\addresses.cshtml:518
+#: api\v1\me\addresses.cshtml:571 api\v1\me\addresses.cshtml:621
+#: api\v1\me\calendar-syncing.cshtml:48 api\v1\me\calendar-syncing.cshtml:77
+#: api\v1\me\marketplace-profile.cshtml:56
+#: api\v1\me\marketplace-profile.cshtml:65 api\v1\me\messaging.cshtml:125
+#: api\v1\me\messaging.cshtml:144 api\v1\me\messaging.cshtml:151
+#: api\v1\me\messaging.cshtml:167 api\v1\me\messaging.cshtml:178
+#: api\v1\me\messaging.cshtml:263 api\v1\me\messaging.cshtml:270
+#: api\v1\me\owner-acknowledgment.cshtml:29
+#: api\v1\me\owner-acknowledgment.cshtml:37 api\v1\me\payment-account.cshtml:55
+#: api\v1\me\payment-account.cshtml:64 api\v1\me\payment-plan.cshtml:57
+#: api\v1\me\payment-plan.cshtml:63 api\v1\me\privacy-settings.cshtml:64
+#: api\v1\me\privacy-settings.cshtml:73 api\v1\me\profile-picture.cshtml:182
+#: api\v1\me\profile.cshtml:99 api\v1\me\profile.cshtml:135
+#: api\v1\me\profile.cshtml:141 api\v1\me\profile.cshtml:148
+#: api\v1\me\scheduling-preferences.cshtml:42
+#: api\v1\me\scheduling-preferences.cshtml:51
+msgid "Not found"
+msgstr "Extraviado"
+
+#: api\v1\job-titles.cshtml:63 api\v1\postal-codes.cshtml:43
+#: api\v1\auth\change-password.cshtml:48 api\v1\auth\login.cshtml:58
+#: api\v1\auth\signup.cshtml:102 api\v1\me\client-booking.cshtml:111
+#: api\v1\me\client-booking.cshtml:122 api\v1\me\client-booking.cshtml:147
+#: api\v1\me\clients.cshtml:97 api\v1\me\clients.cshtml:145
+#: api\v1\me\clients.cshtml:192 api\v1\me\education.cshtml:64
+#: api\v1\me\education.cshtml:112 api\v1\me\education.cshtml:154
+#: api\v1\me\service-professional-booking.cshtml:238
+#: api\v1\me\service-professional-services.cshtml:160
+#: api\v1\me\weekly-schedule.cshtml:125 api\v1\users\job-profile.cshtml:54
+#: api\v1\users\service-addresses.cshtml:74
+#: api\v1\users\service-professional-services.cshtml:74
+msgid "Not Found"
+msgstr "Extraviado"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:157
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:204
+msgid "not recommended"
+msgstr "no recomendado"
+
+#: api\v1\Test.cshtml:110
+msgid "Num must be a number"
+msgstr "Num debe ser un número"
+
+#: api\v1\me\service-professional-services.cshtml:209
+msgid "Number of appointments included must be a number without decimals"
+msgstr "El número de citas incluidas debe ser un número sin decimales"
+
+#: api\v1\me\events.cshtml:201
+msgid "Number of occurrences must be a number"
+msgstr "El número de ocurrencias debe ser un número"
+
+#: App_Code\LcRessources.cs:13 api\v1\me\profile.cshtml:131
+msgid "OK"
+msgstr "DE ACUERDO"
+
+#: api\v1\lead-generation\referral.cshtml:207
+msgid "Only registered users can refer professionals"
+msgstr "Solo usuarios registrados pueden referir profesionales"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:51
+msgid "Package"
+msgstr "Paquete"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:70
+msgid "Package removed successfully"
+msgstr "Paquete eliminado con éxito"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:52
+msgid "Packages"
+msgstr "Paquetes"
+
+#: _specialRoutes\Login.cshtml:15
+msgid "Password"
+msgstr "Contraseña"
+
+#: App_Code\LcRest\Booking.cs:1613
+msgid "Payment already collected for this booking"
+msgstr "Pago ya cobrado por esta reserva"
+
+#: App_Code\LcRest\Booking.cs:1819
+msgid "Payment authorized for this booking already"
+msgstr "Pago autorizado para esta reserva ya"
+
+#: App_Code\LcRest\Booking.cs:1817
+msgid "Payment not collected for this booking, cannot be authorized"
+msgstr "El pago no recaudado para esta reserva, no puede ser autorizado"
+
+#: App_Code\LcRest\Booking.cs:1885
+msgid "Payment not collected for this booking, cannot be released"
+msgstr "El pago no recaudado para esta reserva, no puede ser liberado"
+
+#: App_Code\LcRest\Booking.cs:1852
+msgid "Payment not collected for this booking, cannot be settle"
+msgstr "El pago no recaudado para esta reserva no puede liquidarse"
+
+#: App_Code\LcRest\Booking.cs:1611
+msgid "Payment not enabled for this booking"
+msgstr "Pago no habilitado para esta reserva"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:139
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:142
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:182
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:185
+msgid "per"
+msgstr "por"
+
+#: api\v1\me\platforms.cshtml:42
+msgid "Platform not found."
+msgstr "Plataforma no encontrada."
+
+#: api\v1\auth\reset-password.cshtml:52
+msgid "Please enter a new password."
+msgstr "Por favor ingrese una nueva contraseña."
+
+#: App_Code\LcRessources.cs:11
+msgid "Please fix these issues and try again:"
+msgstr "Corrija estos problemas y vuelva a intentarlo:"
+
+#: api\v1\auth\reset-password.cshtml:51
+msgid "Please provide a valid reset token."
+msgstr "Proporciona un token de restablecimiento válido."
+
+#: api\v1\me\messaging.cshtml:216
+msgid "Please, don't send messages to yourself :-)"
+msgstr "Por favor, no te envíes mensajes a ti mismo :-)"
+
+#: api\v1\me\work-photos.cshtml:114
+msgid "Please, include a photo"
+msgstr "Por favor, incluye una foto"
+
+#: App_Code\LcRest\PaymentAccount.cs:127
+msgid "Postal Code is not valid."
+msgstr "El codigo postal no es valido."
+
+#: api\v1\postal-codes.cshtml:40
+msgid "Postal Code Not Valid."
+msgstr "Código postal no válido."
+
+#: api\v1\me\client-booking.cshtml:339
+msgid "Preferred start date and time is not valid"
+msgstr "La fecha y hora de inicio preferidas no son válidas"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:339
+msgid "Price and list your services for what you consider a deep cleaning of a home. We're talking about the client's mother coming to visit or a spring cleaning. Customize by selecting attributes above."
+msgstr "Precio y enumere sus servicios para lo que considera una limpieza profunda de una casa. Estamos hablando de la visita de la madre del cliente o de una limpieza de primavera. Personalice seleccionando los atributos de arriba."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:271
+msgid "Price and list your services for what you consider a light cleaning of a home. Some clients just want a quick clean and aren't too concerned about spring cleaning. Customize by selecting attributes above."
+msgstr "Precio y enumere sus servicios para lo que considera una limpieza ligera de una casa. Algunos clientes solo quieren una limpieza rápida y no están demasiado preocupados por la limpieza de primavera. Personalice seleccionando los atributos de arriba."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:305
+msgid "Price and list your services for what you consider a routine cleaning of a home. It's more than making the beds but isn't a spring cleaning either. Customize by selecting attributes above."
+msgstr "Precio y enumere sus servicios para lo que considera una limpieza de rutina de una casa. Es más que hacer las camas, pero tampoco es una limpieza de primavera. Personalice seleccionando los atributos de arriba."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:98
+msgid "Price for add-on service:"
+msgstr "Precio por servicio adicional:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:178
+msgid "Price for consultation:"
+msgstr "Precio por consulta:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:135
+msgid "Price for estimate:"
+msgstr "Precio por estimación:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:61
+msgid "Price for package:"
+msgstr "Precio por paquete:"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:225
+msgid "Price for service:"
+msgstr "Precio por servicio:"
+
+#: api\v1\me\service-professional-services.cshtml:202
+msgid "Price must be a number and not contain the $ symbol."
+msgstr "El precio debe ser un número y no contener el símbolo $."
+
+#: api\v1\me\service-professional-services.cshtml:173
+#: api\v1\me\service-professional-services.cshtml:306
+#: api\v1\me\service-professional-services.cshtml:323
+#: api\v1\me\service-professional-services.cshtml:344
+msgid "Pricing not found."
+msgstr "Precios no encontrados."
+
+#: App_Code\LcRest\Booking.cs:1567
+msgid "Pricing summary:"
+msgstr "Resumen de precios:"
+
+#: api\v1\pricing-types.cshtml:130
+msgid "Pricing Type not found."
+msgstr "Tipo de precio no encontrado."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:143
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:186
+msgid "Pricing will be disclosed during consultation."
+msgstr "El precio será revelado durante la consulta."
+
+#: api\v1\me\marketplace-profile.cshtml:71
+msgid "Public Bio must be fewer than 4000 characters"
+msgstr "Public Bio debe tener menos de 4000 caracteres"
+
+#: api\v1\lead-generation\referral.cshtml:229
+msgid "Referral failed"
+msgstr "Remisión fallida"
+
+#: api\v1\me\events.cshtml:200
+msgid "'Repeat every' must be a number"
+msgstr "'Repita cada' debe ser un número"
+
+#: api\v1\me\events.cshtml:202
+msgid "Repetition End Date is not valid"
+msgstr "La fecha de finalización de la repetición no es válida"
+
+#: App_Code\LcRessources.cs:15
+msgid "Request sent!"
+msgstr "¡Solicitud enviada!"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:282
+msgid "Routine cleaning service"
+msgstr "Servicio de limpieza de rutina"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:283
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:290
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:291
+msgid "Routine cleaning services"
+msgstr "Servicios de limpieza de rutina"
+
+#: App_Code\LcRessources.cs:14
+msgid "Saved"
+msgstr "Salvado"
+
+#: api\v1\me\clients.cshtml:169
+msgid "Second Last Name must be fewer than 145 characters."
+msgstr "El segundo apellido debe tener menos de 145 caracteres."
+
+#: App_Code\LcRest\Booking.cs:2365 App_Code\LcRest\Booking.cs:2748
+#: App_Code\LcRest\Booking.cs:2980
+msgid "Selected location is not valid."
+msgstr "La ubicación seleccionada no es válida."
+
+#: api\v1\me\addresses.cshtml:258
+msgid "Server Error: Address Kind not managed."
+msgstr "Error del servidor: tipo de dirección no administrada."
+
+#: api\v1\me\addresses.cshtml:436
+msgid "Server Error: impossible to create the address at this time."
+msgstr "Error del servidor: imposible crear la dirección en este momento."
+
+#: api\v1\me\addresses.cshtml:404 api\v1\me\addresses.cshtml:460
+msgid "Server Error: Invalid address Kind specified."
+msgstr "Error del servidor: dirección no válida especificada."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:214
+msgid "Service"
+msgstr "Servicio"
+
+#: App_Code\LcRest\Address.cs:591
+msgid "Service Area"
+msgstr "Área de servicio"
+
+#: api\v1\me\addresses.cshtml:336
+msgid "Service Radius must be a number"
+msgstr "El radio de servicio debe ser un número"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:31
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:231
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:262
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:296
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:330
+msgid "Service removed successfully"
+msgstr "Servicio eliminado con éxito"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:215
+msgid "Services"
+msgstr "Servicios"
+
+#: api\v1\Test.cshtml:108
+msgid "Short must be 5 or less"
+msgstr "Corto debe ser 5 o menos"
+
+#: api\v1\me\service-professional-services.cshtml:244
+msgid "Some specified attributes are wrong"
+msgstr "Algunos atributos especificados son incorrectos"
+
+#: api\v1\me\client-booking.cshtml:239
+#: api\v1\me\service-professional-booking.cshtml:131
+msgid "Some specified services are incorrect"
+msgstr "Algunos servicios especificados son incorrectos"
+
+#: api\v1\me\client-booking.cshtml:138
+msgid "Something goes wrong"
+msgstr "Algo va mal"
+
+#: api\v1\me\addresses.cshtml:340 api\v1\me\client-booking.cshtml:211
+#: api\v1\me\service-professional-booking.cshtml:103
+msgid "Special instructions must be fewer than 1,000 characters."
+msgstr "Las instrucciones especiales deben tener menos de 1,000 caracteres."
+
+#: App_Code\LcRest\Booking.cs:1569
+msgid "Special instructions:"
+msgstr "Instrucciones especiales:"
+
+#: api\v1\me\client-booking.cshtml:258 api\v1\me\client-booking.cshtml:334
+msgid "Start date and time is not valid"
+msgstr "La fecha y la hora de inicio no son válidas"
+
+#: api\v1\me\events.cshtml:198
+#: api\v1\me\service-professional-booking.cshtml:154
+msgid "Start date/time is not valid"
+msgstr "La fecha / hora de inicio no es válida"
+
+#: api\v1\me\education.cshtml:128
+msgid "Start year is invalid, please re-enter"
+msgstr "El año de inicio no es válido, vuelva a ingresar"
+
+#: api\v1\lead-generation\newsletter.cshtml:90
+#: api\v1\lead-generation\referral.cshtml:269
+msgid "Subscription failed"
+msgstr "Suscripción fallida"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:180
+msgid "Tell your clients what they can expect during the consultation and what to prepare."
+msgstr "Dígales a sus clientes qué pueden esperar durante la consulta y qué deben preparar."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:137
+msgid "Tell your clients what they can expect when you speak with them and what to prepare."
+msgstr "Dígales a sus clientes qué pueden esperar cuando hable con ellos y qué preparar."
+
+#: api\v1\me\clients.cshtml:170
+msgid "That e-mail is not valid"
+msgstr "Ese correo electrónico no es válido"
+
+#: api\v1\me\profile.cshtml:155
+msgid "The alternative email is not valid."
+msgstr "El correo electrónico alternativo no es válido."
+
+#: App_Code\LcRest\Booking.cs:2153
+msgid "The chosen time is not available, it conflicts with a recent appointment!"
+msgstr "La hora elegida no está disponible, ¡entra en conflicto con una cita reciente!"
+
+#: App_Code\LcRest\Booking.cs:2286
+msgid "The chosen time is unavailable, it conflicts with a recent appointment!"
+msgstr "¡La hora elegida no está disponible, entra en conflicto con una cita reciente!"
+
+#: api\v1\me\marketplace-profile.cshtml:77
+msgid "The custom URL is too long, please keep it under 80 characters."
+msgstr "La URL personalizada es demasiado larga, por favor manténgala en 80 caracteres."
+
+#: api\v1\me\marketplace-profile.cshtml:73
+msgid "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"
+msgstr "La URL personalizada que ingresaste no es válida. Recuerde: solo palabras y guiones, sin espacios en blanco, sin barras"
+
+#: App_Code\LcAuthHelper.cs:353 api\v1\lead-generation\newsletter.cshtml:70
+#: api\v1\lead-generation\referral.cshtml:186
+#: api\v1\lead-generation\referral.cshtml:246
+msgid "The email is not valid."
+msgstr "El correo electrónico no es válido."
+
+#: api\v1\me\licenses-certifications.cshtml:131
+#: api\v1\me\work-photos.cshtml:161
+msgid "The file is too large"
+msgstr "El archivo es demasiado grande"
+
+#: api\v1\me\licenses-certifications.cshtml:127
+#: api\v1\me\work-photos.cshtml:157
+msgid "The file is too large, maximum file size is {0}"
+msgstr "El archivo es demasiado grande, el tamaño máximo de archivo es {0}"
+
+#: App_Code\LcRest\Client.cs:366
+msgid "The given e-mail already exists for other client at loconomics.com and cannot be saved."
+msgstr "El correo electrónico dado ya existe para otro cliente en loconomics.com y no se puede guardar."
+
+#: api\v1\Test.cshtml:148
+msgid "The Item ID must be an integer"
+msgstr "El archivo es demasiado grande, el tamaño máximo de archivo es {0}"
+
+#: api\v1\users\job-profile.cshtml:51 api\v1\users\service-addresses.cshtml:71
+#: api\v1\users\service-professional-services.cshtml:71
+msgid "The Job Title ID has bad format (must be an integer number)"
+msgstr "El ID del título del trabajo tiene un formato incorrecto (debe ser un número entero)"
+
+#: api\v1\me\owner-acknowledgment.cshtml:63
+msgid "The name is not correct"
+msgstr "El nombre no es correcto"
+
+#: api\v1\auth\reset-password.cshtml:63
+msgid "The password reset token is incorrect or may be expired"
+msgstr "El token de restablecimiento de contraseña es incorrecto o puede haber caducado"
+
+#: api\v1\me\messaging.cshtml:237
+msgid "The recipient does not exists."
+msgstr "El destinatario no existe."
+
+#: api\v1\me\addresses.cshtml:346
+msgid "The service address must be a service location or a service area."
+msgstr "La dirección del servicio debe ser una ubicación de servicio o un área de servicio."
+
+#: App_Code\LcRest\Booking.cs:2590
+msgid "The time {0} is not available, it conflicts with a recent appointment!"
+msgstr "¡El tiempo {0} no está disponible, entra en conflicto con una cita reciente!"
+
+#: api\v1\me\marketplace-profile.cshtml:86
+msgid "The Website URL is not valid, check that is complete"
+msgstr "La URL del sitio web no es válida, verifique que esté completa"
+
+#: api\v1\me\marketplace-profile.cshtml:92
+msgid "The Website URL is too long, please keep it under 2000 characters."
+msgstr "La URL del sitio web es demasiado larga, manténgala por debajo de 2000 caracteres."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:188
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:189
+msgid "This consultation is available to first-time clients only"
+msgstr "Esta consulta solo está disponible para clientes primerizos"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:67
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:68
+msgid "This package is available to first-time clients only"
+msgstr "Este paquete está disponible solo para clientes primerizos"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:228
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:229
+msgid "This service is available to first-time clients only"
+msgstr "Este servicio está disponible solo para clientes primerizos"
+
+#: api\v1\me\external-listings.cshtml:71
+msgid "Title is required"
+msgstr "Título es requerido"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:97
+msgid "Type the name of the add-on service (be descriptive and creative)"
+msgstr "Escriba el nombre del servicio complementario (sea descriptivo y creativo)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:175
+msgid "Type the name of the consultation, e.g. \\\"Initial consultation\\\", \\\"Introductory meeting\\\"."
+msgstr "Escriba el nombre de la consulta, p. \\\"Consulta inicial \\\", \\\"Reunión introductoria \\\"."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:132
+msgid "Type the name of the estimate visit, e.g. \\\"Work assessment visit\\\", \\\"Pricing estimate visit\\\""
+msgstr "Escriba el nombre de la visita de estimación, p. \\\"Visita de evaluación de trabajo \\\", \\\"Visita de estimación de precio \\\""
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:59
+msgid "Type the name of the package (be descriptive and creative)"
+msgstr "Escriba el nombre del paquete (sea descriptivo y creativo)"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:222
+msgid "Type the name of the service (be descriptive and creative)"
+msgstr "Escriba el nombre del servicio (sea descriptivo y creativo)"
+
+#: api\v1\me\owner-acknowledgment.cshtml:54
+msgid "Type your full name as acknowlegment"
+msgstr "Escriba su nombre completo como reconocimiento"
+
+#: App_Code\LcRest\Booking.cs:2546 App_Code\LcRest\Booking.cs:2570
+#: App_Code\LcRest\Booking.cs:2842 App_Code\LcRest\Booking.cs:2866
+msgid "Type:"
+msgstr "Tipo:"
+
+#: App_Code\LcRest\Booking.cs:2131 App_Code\LcRest\Booking.cs:2258
+#: App_Code\LcRest\Booking.cs:2650 App_Code\LcRest\Booking.cs:2919
+msgid "Unable to retrieve the client's info. Their profile may no longer exist."
+msgstr "No se puede recuperar la información del cliente. Su perfil puede no existir más."
+
+#: App_Code\LcRest\Booking.cs:2129 App_Code\LcRest\Booking.cs:2256
+#: App_Code\LcRest\Booking.cs:2648 App_Code\LcRest\Booking.cs:2917
+msgid "Unable to retrieve the service professional's info. Their profile may no longer exist."
+msgstr "No se pudo recuperar la información del profesional del servicio. Su perfil puede no existir más."
+
+#: api\v1\auth\facebook-user.cshtml:47
+msgid "User doesn't exists"
+msgstr "El usuario no existe"
+
+#: api\v1\users\availability.cshtml:47 api\v1\users\availability.cshtml:66
+#: api\v1\users\index.cshtml:46 api\v1\users\index.cshtml:53
+#: api\v1\users\profile.cshtml:35 api\v1\users\profile.cshtml:40
+#: api\v1\users\ratings.cshtml:43 api\v1\users\ratings.cshtml:61
+#: api\v1\users\ratings.cshtml:67 api\v1\users\reviews.cshtml:46
+#: api\v1\users\reviews.cshtml:57 api\v1\users\service-attributes.cshtml:21
+#: api\v1\users\service-attributes.cshtml:29
+#: api\v1\users\verifications-summary.cshtml:62
+#: api\v1\users\verifications-summary.cshtml:81
+#: api\v1\users\verifications-summary.cshtml:87
+msgid "User Not Found"
+msgstr "Usuario no encontrado"
+
+#: _specialRoutes\Login.cshtml:14
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: api\v1\Test.cshtml:126 api\v1\Test.cshtml:136 api\v1\Test.cshtml:146
+msgid "Validation rules"
+msgstr "Reglas de validación"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:128
+msgid "We know you're not psychic (or are you?) and probably need to visit the client and review the work before determining a price. We'll help facilitate."
+msgstr "Sabemos que usted no es psíquico (¿o sí lo es?) Y probablemente necesite visitar al cliente y revisar el trabajo antes de determinar un precio. Ayudaremos a facilitar."
+
+#: App_Code\LcAuthHelper.cs:234
+msgid ""
+"We see one of our service professionals has already scheduled services for you in the past.\n"
+"        We've just sent an invitation to create your account to {0}.\n"
+"        Please follow its instructions. We can't wait to get you on board!"
+msgstr ""
+"Vemos que uno de nuestros profesionales de servicios ya programó servicios para usted en el pasado.\n"
+"         Acabamos de enviar una invitación para crear su cuenta a {0}.\n"
+"         Por favor, siga sus instrucciones. ¡No podemos esperar para subirte a bordo!"
+
+#: App_Code\LcAuthHelper.cs:239
+msgid ""
+"We see you have subscribed previously to our newsletter or referrenced a service professional.\n"
+"        We've just sent an invitation to create your account to {0}.\n"
+"        Please follow its instructions. We can't wait to get you on board!"
+msgstr ""
+"Vemos que se suscribió previamente a nuestro boletín o remitió a un profesional del servicio.\n"
+"         Acabamos de enviar una invitación para crear su cuenta a {0}.\n"
+"         Por favor, siga sus instrucciones. ¡No podemos esperar para subirte a bordo!"
+
+#: api\v1\me\client-booking.cshtml:433
+msgid "We weren't able to process your payment, please review"
+msgstr "No pudimos procesar su pago, revise"
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:202
+msgid ""
+"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.\n"
+"                    You can discuss your full pricing during the consultation and add any materials/parts required to get the job done right."
+msgstr ""
+"Mostraremos esto como una tasa \"de\" en su perfil para brindar a sus clientes potenciales una idea de los costos de sus servicios.\n"
+"                     Puede discutir los precios completos durante la consulta y agregar los materiales / piezas necesarios para realizar el trabajo correctamente."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:155
+msgid ""
+"We'll show this as a 'from' rate on your profile to give your potential clients an idea of the costs of your services.\n"
+"                    You can discuss your full pricing when you speak and add any materials/parts required to get the job done right."
+msgstr ""
+"Mostraremos esto como una tasa \"de\" en su perfil para brindar a sus clientes potenciales una idea de los costos de sus servicios.\n"
+"                     Puede hablar sobre los precios completos cuando hable y agregar los materiales / piezas necesarios para hacer bien el trabajo."
+
+#: api\v1\me\marketplace-profile.cshtml:106
+msgid "We're sorry, that custom URL is unavailable, please choose other."
+msgstr "Lo sentimos, esa URL personalizada no está disponible, elija otra."
+
+#: api\v1\me\owner-acknowledgment.cshtml:47
+msgid "You already submitted your acknowlegment of this disclosure"
+msgstr "Usted ya envió su reconocimiento de esta divulgación"
+
+#: api\v1\lead-generation\referral.cshtml:242
+msgid "You are already logged in!"
+msgstr "¡Ya se ha autentificado!"
+
+#: api\v1\lead-generation\newsletter.cshtml:66
+msgid "You are already logged in! Review your account preferences to enable the newsletter."
+msgstr "¡Ya se ha autentificado! Revise las preferencias de su cuenta para habilitar el boletín."
+
+#: api\v1\auth\reset-password.cshtml:59
+msgid "You can now log-in with your new password"
+msgstr "Ahora puede iniciar sesión con su nueva contraseña"
+
+#: App_Code\LcRest\Client.cs:367
+msgid "You can perform a search by that email and add it as your client."
+msgstr "Puede realizar una búsqueda por ese correo electrónico y agregarlo como su cliente."
+
+#: App_Code\LcRest\UserLicenseCertification.cs:207
+msgid "You have already registered that license, please try to update it if you want to submit a new file."
+msgstr "Ya ha registrado esa licencia, intente actualizarla si desea enviar un nuevo archivo."
+
+#: api\v1\Test.cshtml:48
+msgid "You have not positions. Logged?"
+msgstr "No tienes posiciones. ¿Registrado?"
+
+#: api\v1\me\payment-account.cshtml:83
+msgid "You must agree the terms of service"
+msgstr "Debe aceptar los términos del servicio"
+
+#: api\v1\auth\signup.cshtml:164
+msgid "You must select a field of study."
+msgstr "Debe seleccionar un campo de estudio."
+
+#: api\v1\auth\signup.cshtml:163
+msgid "You must select an institution."
+msgstr "Debe seleccionar una institución."
+
+#: api\v1\auth\signup.cshtml:165
+msgid "You must select user type."
+msgstr "Debe seleccionar el tipo de usuario."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:260
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:294
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:328
+msgid "You must set your hourly rate"
+msgstr "Debes establecer tu tarifa por hora"
+
+#: App_Code\LcAuthHelper.cs:66 App_Code\LcAuthHelper.cs:370
+msgid "You must specify a password."
+msgstr "Debes especificar una contraseña."
+
+#: api\v1\me\messaging.cshtml:211
+msgid "You must specify a recipient."
+msgstr "Debes especificar un destinatario."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:191
+msgid "You must specify a starting rate or check 'I prefer not to state'"
+msgstr "Debe especificar una tasa de inicio o marcar 'Prefiero no indicar'"
+
+#: App_Code\LcAuthHelper.cs:65
+msgid "You must specify a user name."
+msgstr "Debes especificar un nombre de usuario."
+
+#: App_Code\LcAuthHelper.cs:350
+msgid "You must specify an email."
+msgstr "Debe especificar un correo electrónico."
+
+#: App_Code\LcAuthHelper.cs:391
+msgid "You must specify your first name."
+msgstr "Debes especificar tu primer nombre."
+
+#: App_Code\LcAuthHelper.cs:392
+msgid "You must specify your last name."
+msgstr "Debes especificar tu apellido."
+
+#: App_Code\LcAuthHelper.cs:390
+msgid "You must specify your mobile phone number."
+msgstr "Debes especificar tu número de teléfono móvil."
+
+#: App_Code\LcPricing\LcPricing.PackageBasePricingTypeConfigs.cs:192
+msgid "You need to specify a price unit along with your rate or mark 'I prefer not to state'"
+msgstr "Debe especificar una unidad de precio junto con su tasa o marca 'Prefiero no indicar'"
+
+#: App_Code\LcAuthHelper.cs:191
+msgid "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent."
+msgstr "Su cuenta aún no ha sido confirmada. Por favor revise su bandeja de entrada y carpetas de correo no deseado y haga clic en el correo electrónico enviado."
+
+#: _specialRoutes\Login.cshtml:14
+msgid "Your e-mail"
+msgstr "Tu correo electrónico"
+
+#: api\v1\auth\change-password.cshtml:38
+msgid "Your password has been updated. Please log in again with your new password"
+msgstr "Su contraseña ha sido actualizada. Por favor inicie sesión de nuevo con su nueva contraseña"
+
+#: api\v1\me\weekly-schedule.cshtml:192
+msgid "Your weekly schedule is required. If you are available at all times or prefer to approve appointment times, check \\\"all days/times\\\"."
+msgstr "Su horario semanal es obligatorio. Si está disponible en todo momento o prefiere aprobar los horarios de las citas, marque \\\"todos los días / horas \\\"."
+
+#~ msgid "Dashboard"
+#~ msgstr "Salpicadero"
+
+#~ msgid "hello from %1, today is %0"
+#~ msgstr "hola desde %1, hoy es %0"
+
+#~ msgid "Home Page"
+#~ msgstr "Lorem ipsum dolor sit amet"
+
+#~ msgid "Modify this template to jump-start your ASP.NET Web Pages application."
+#~ msgstr "Integer diam ex, egestas et felis sit amet, ultrices lacinia tortor. Quisque eget ornare metus."
+
+#~ msgid "To learn more about ASP.NET Web Pages, visit"
+#~ msgstr "Suspendisse in porttitor tellus. In interdum enim arcu"
+
+#~ msgid "You must be logged in"
+#~ msgstr "Usted debe estar conectado"

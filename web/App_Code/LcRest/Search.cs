@@ -38,6 +38,7 @@ namespace LcRest
         public const decimal DEFAULT_LOCATION_LAT = 37.788479M;
         public const decimal DEFAULT_LOCATION_LNG = -122.40297199999998M;
         public const int DEFAULT_LOCATION_SEARCH_DISTANCE = 30;
+        // TODO: set config value
         public const string DEFAULT_LOCATION_CITY = "San Francisco, CA USA";
         #endregion
     }

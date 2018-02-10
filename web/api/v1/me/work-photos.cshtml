@@ -75,7 +75,7 @@
 
             return base.Get();
         }
-        
+
         public override dynamic Post()
         {
             if (UrlData.Count == 1) {
@@ -83,7 +83,7 @@
             }
             return base.Post();
         }
-        
+
         public override dynamic Put()
         {
             if (UrlData.Count == 2)
@@ -101,7 +101,7 @@
             // Will be just 0 on new records, it doesn't matters
             // (and a previous UrlData.Count check prevents from receive a value on POST calls)
             var photoID = UrlData[1].AsInt(0);
-            
+
             try {
                 Stream photoStream = null;
                 var fileuploaded = Request.Files["photo"];
@@ -111,12 +111,12 @@
                 }
                 if (photoStream == null && photoID == 0)
                 {
-                    ModelState.AddFormError("Please, include a photo");
+                    ModelState.AddFormError("[[[Please, include a photo]]]");
                 }
                 else if (photoStream != null && photoStream.Length == 0 && photoID == 0)
                 {
                     // DOUBT: to check for this error, must be the photoStream or Request.InputStream.Length? Double check
-                    ModelState.AddFormError("Maximum request length exceeded");
+                    ModelState.AddFormError("[[[Maximum request length exceeded]]]");
                 }
                 else
                 {
@@ -144,6 +144,7 @@
 
                 // We don't want the ugly default asp.net message for file-size-exceeded
                 // As of #454 (https://github.com/joshdanielson/Loconomics/issues/454#issuecomment-37782181)
+                //TODO: fix for localisation of strings
                 if (errMsg.Contains("Maximum request length exceeded"))
                 {
                     //LcHelpers.DebugLogger.Log("PUT profile-picture:notvalid:max request length exceeded");
@@ -153,11 +154,11 @@
                     {
                         printMax = LcHelpers.PrettyFileSize(max * 1024);
 
-                        errMsg = "The file is too large, maximum file size is " + printMax;
+                        errMsg = string.Format("[[[The file is too large, maximum file size is {0}]]]", printMax);
                     }
                     else
                     {
-                        errMsg = "The file is too large";
+                        errMsg = "[[[The file is too large]]]";
                     }
                     throw new ValidationException(errMsg, "profilePicture");
                 }

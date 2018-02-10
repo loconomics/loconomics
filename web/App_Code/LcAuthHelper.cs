@@ -62,8 +62,8 @@ public static class LcAuthHelper
 
     public static LoginResult Login(WebPage page) {
 
-        page.Validation.RequireField("username", "You must specify a user name.");
-	    page.Validation.RequireField("password", "You must specify a password.");
+        page.Validation.RequireField("username", "[[[You must specify a user name.]]]");
+	    page.Validation.RequireField("password", "[[[You must specify a password.]]]");
         
         if (page.Validation.IsValid()) {
             var username = Request.Form["username"];
@@ -93,7 +93,7 @@ public static class LcAuthHelper
             return GetLoginResultForID(userId, returnProfile);
         }
         else {
-            throw new HttpException(400, "Incorrect username or password.");
+            throw new HttpException(400, "[[[Incorrect username or password.]]]");
         }
     }
 
@@ -188,7 +188,7 @@ public static class LcAuthHelper
                 }
 
                 /// http 409:Conflict
-                throw new HttpException(409, "Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.");
+                throw new HttpException(409, "[[[Your account has not yet been confirmed. Please check your inbox and spam folders and click on the e-mail sent.]]]");
             }
         }
     }
@@ -231,14 +231,14 @@ public static class LcAuthHelper
         );
     }
     const string UserIsServiceProfessionalClientMessage = @"
-        We see one of our service professionals has already scheduled services for you in the past.
+        [[[We see one of our service professionals has already scheduled services for you in the past.
         We've just sent an invitation to create your account to {0}.
-        Please follow its instructions. We can't wait to get you on board!
+        Please follow its instructions. We can't wait to get you on board!]]]
     ";
     const string UserIsSubscriberMessage = @"
-        We see you have subscribed previously to our newsletter or referrenced a service professional.
+        [[[We see you have subscribed previously to our newsletter or referrenced a service professional.
         We've just sent an invitation to create your account to {0}.
-        Please follow its instructions. We can't wait to get you on board!
+        Please follow its instructions. We can't wait to get you on board!]]]
     ";
     /// <summary>
     /// Convert a user record with 'Not Enabled Account' into a standard enabled account. See IsUserButNotEnabledAccount
@@ -276,7 +276,7 @@ public static class LcAuthHelper
         }
         else
         {
-            throw new Exception("Not allowed");
+            throw new Exception("[[[Not allowed]]]");
         }
         var errMsg = String.Format(errTpl, email);
 
@@ -347,10 +347,10 @@ public static class LcAuthHelper
     /// <returns></returns>
     public static LoginResult Signup(WebPage page)
     {
-        page.Validation.RequireField("email", "You must specify an email.");
+        page.Validation.RequireField("email", "[[[You must specify an email.]]]");
         // Username is an email currently, so need to be restricted
         page.Validation.Add("email",
-            Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+            Validator.Regex(LcValidators.EmailAddressRegexPattern, "[[[The email is not valid.]]]"));
 
         // First data
         var profileTypeStr = Request.Form["profileType"] ?? "";
@@ -367,7 +367,7 @@ public static class LcAuthHelper
         var useFacebookConnect = facebookUserID > 0 && !String.IsNullOrEmpty(facebookAccessToken);
         if (!useFacebookConnect)
         {
-            page.Validation.RequireField("password", "You must specify a password.");
+            page.Validation.RequireField("password", "[[[You must specify a password.]]]");
             // We manually validate if a password was given, in order to prevent
             // showing up the validation format message additionally to the 'required password' message
             if (!String.IsNullOrWhiteSpace(Request.Form["password"]))
@@ -380,16 +380,16 @@ public static class LcAuthHelper
             var prevFbUser = LcAuth.GetFacebookUser(facebookUserID);
             if (prevFbUser != null)
             {
-                throw new HttpException(409, "Facebook account already connected. Sign in.");
+                throw new HttpException(409, "[[[Facebook account already connected. Sign in.]]]");
             }
         }
 
         // For a signup at a client booking, we require more fields
         if (atBooking)
         {
-            page.Validation.RequireField("phone", "You must specify your mobile phone number.");
-            page.Validation.RequireField("firstName", "You must specify your first name.");
-            page.Validation.RequireField("lastName", "You must specify your last name.");
+            page.Validation.RequireField("phone", "[[[You must specify your mobile phone number.]]]");
+            page.Validation.RequireField("firstName", "[[[You must specify your first name.]]]");
+            page.Validation.RequireField("lastName", "[[[You must specify your last name.]]]");
         }
 
         if (page.Validation.IsValid())
@@ -449,7 +449,7 @@ public static class LcAuthHelper
                     catch (HttpException)
                     {
                         // Not valid log-in, throw a 'email exists' error with Conflict http code
-                        throw new HttpException(409, "E-mail address is already in use.");
+                        throw new HttpException(409, "[[[E-mail address is already in use.]]]");
                     }
                 }
 
@@ -497,7 +497,7 @@ public static class LcAuthHelper
                     // Verify Facebook ID and accessToken contacting to Facebook Servers
                     if (LcFacebook.GetUserFromAccessToken(facebookUserID.ToString(), facebookAccessToken) == null)
                     {
-                        throw new HttpException(400, "Facebook account does not exists.");
+                        throw new HttpException(400, "[[[Facebook account does not exists.]]]");
                     }
                 }
 
@@ -576,7 +576,7 @@ public static class LcAuthHelper
                 }
                 else
                 {
-                    throw new HttpException(400, "Incorrect user");
+                    throw new HttpException(400, "[[[Incorrect user]]]");
                 }
             }
 
@@ -587,7 +587,7 @@ public static class LcAuthHelper
             return ret;
         }
         else {
-            throw new HttpException(500, "Invalid Facebook credentials");
+            throw new HttpException(500, "[[[Invalid Facebook credentials]]]");
         }
     }
 

@@ -172,7 +172,7 @@ namespace LcRest
                     var service = Get(serviceID, serviceProfessionalUserID);
 
                     if (service == null)
-                        throw new ConstraintException("Impossible to retrieve information for the ServiceID: " + serviceID);
+                        throw new ConstraintException("[[[Impossible to retrieve information for the ServiceID:]]] " + serviceID);
 
                     // Get and double check position
                     if (jobTitleID == 0)
@@ -186,7 +186,7 @@ namespace LcRest
                         countryID != service.countryID)
                     {
                         // All services must be part of the same position
-                        throw new ConstraintException("All services must be selected from the same job title");
+                        throw new ConstraintException("[[[All services must be selected from the same job title]]]");
                     }
 
                     yield return service;

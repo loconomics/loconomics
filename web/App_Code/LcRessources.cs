@@ -8,14 +8,14 @@ using System.Web;
 /// </summary>
 public static class LcRessources
 {
-    public const string ValidationSummaryTitle = "Please fix these issues and try again:";
-    public const string DataSaved = "Great work!";
-    public const string OK = "OK";
-    public const string ShortDataSaved = "Saved";
-    public const string RequestSent = "Request sent!";
-    public const string MessageSent = "Message was sent";
-    public const string FieldXIsRequired = "{0} is required";
-    public const string InvalidValueForField = "{0} has a not valid value";
+    public const string ValidationSummaryTitle = "[[[Please fix these issues and try again:]]]";
+    public const string DataSaved = "[[[Great work!]]]";
+    public const string OK = "[[[OK]]]";
+    public const string ShortDataSaved = "[[[Saved]]]";
+    public const string RequestSent = "[[[Request sent!]]]";
+    public const string MessageSent = "[[[Message was sent]]]";
+    public const string FieldXIsRequired = "[[[{0} is required]]]";
+    public const string InvalidValueForField = "[[[{0} has a not valid value]]]";
     public const string MoneySymbolPrefix = "$"; // For Spain: ""
     public const string MoneySymbolSufix = ""; // For Spain: "€"
 

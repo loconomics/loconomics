@@ -39,7 +39,7 @@
         public override dynamic Get()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
             
  	        return GetData();
@@ -48,7 +48,7 @@
         public override dynamic Put()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
             
             var userID = WebSecurity.CurrentUserId;

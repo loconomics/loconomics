@@ -1,0 +1,87 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "[[[Home Page]]]";
+    Page.Culture = System.Globalization.CultureInfo.CurrentUICulture;
+    var db = Database.Open("StarterSite");
+    var languageID = LcData.GetCurrentLanguageID();
+    var countryID = LcData.GetCurrentCountryID();
+    var selectedData = db.Query("SELECT * FROM [Positions] as p where p.LanguageID = @0 AND p.CountryID = @1", languageID, countryID);
+    var grid = new WebGrid(source: selectedData);
+    var hello = string.Format("[[[hello from %1, today is %0|||{0}|||{1}]]]", DateTime.Now.ToString("ddd", System.Globalization.CultureInfo.CurrentUICulture), "@samwa");
+    Page.Hello = hello;
+}
+
+@section featured {
+<section class="featured">
+    <div class="content-wrapper">
+        <hgroup class="title">
+            <h1>@Page.Title - @Page.Culture.Name</h1>
+            <h2>[[[Modify this template to jump-start your ASP.NET Web Pages application.]]]</h2>
+        </hgroup>
+        <p>
+            [[[To learn more about ASP.NET Web Pages, visit]]]
+            <a href="http://asp.net/webpages" title="ASP.NET Web Pages Website">http://asp.net/webpages</a>.
+            The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET Web Pages.
+            If you have any questions about ASP.NET Web Pages, visit
+            <a href="http://forums.iis.net/1166.aspx" title="ASP.NET Web Pages Forum">our forums</a>.
+        </p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Position ID</th>
+                <th>Language ID</th>
+                <th>Country ID</th>
+                <th>Position Singular</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var row in selectedData)
+    {
+                <tr>
+                    <td>@row.PositionID</td>
+                    <td>@row.LanguageID</td>
+                    <td>@row.CountryID</td>
+                    <td>@row.PositionSingular</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <dl>
+        <dt>Sunday</dt>
+        <dd>@Page.Culture.DateTimeFormat.GetDayName(DayOfWeek.Sunday)</dd>
+    </dl>
+    <dl>
+        <dt>Localisation with formatting</dt>
+        <dd>@Page.Hello</dd>
+    </dl>
+
+    @ServerInfo.GetHtml();
+</section>
+}
+
+<h3>We suggest the following:</h3>
+
+<ol class="round">
+    <li class="one">
+        <h5>Getting Started</h5>
+        ASP.NET Web Pages and the new Razor syntax provide a fast, approachable, and lightweight way to combine server code with HTML
+        to create dynamic web content. Connect to databases, add video, link to social networking sites, and include many more features
+        that let you create beautiful sites using the latest web standards.
+        <a href="http://go.microsoft.com/fwlink/?LinkId=245139">Learn more…</a>
+    </li>
+
+    <li class="two">
+        <h5>Add NuGet packages and jump start your coding</h5>
+        NuGet makes it easy to install and update free libraries and tools.
+        <a href="http://go.microsoft.com/fwlink/?LinkId=245140">Learn more…</a>
+    </li>
+
+    <li class="three">
+        <h5>Find Web Hosting</h5>
+        You can easily find a web hosting company that offers the right mix of features and price for your applications.
+        <a href="http://go.microsoft.com/fwlink/?LinkId=245143">Learn more…</a>
+    </li>
+</ol>

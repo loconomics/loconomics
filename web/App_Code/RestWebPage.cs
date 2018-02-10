@@ -225,7 +225,7 @@ public class RestWebPage
             DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Local
         }));
         //Json.Write(jsondata, Response.Output);
-        WebPage.Response.End();
+        //WebPage.Response.End();
     }
 
     public void RequiresUser(LcData.UserInfo.UserType userType)
