@@ -18,7 +18,9 @@ var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
 var userLicensesCertifications = require('../data/userLicensesCertifications');
 var AlertLink = require('../viewmodels/AlertLink');
+require('../kocomponents/badge/collection');
 require('../kocomponents/badge/view');
+require('../kocomponents/badge/viewer');
 
 var A = Activity.extend(function ListingEditorActivity() {
 

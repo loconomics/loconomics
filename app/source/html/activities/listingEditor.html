@@ -163,7 +163,9 @@
                         <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
                     </div>
 
+                    <badge-collection params="src: 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035'"></badge-collection>
                     <badge-view params="src: 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0'"></badge-view>
+                    <badge-viewer params="src: 'https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w.json?v=2_0'"></badge-viewer>
                     <ul data-bind="template: { name: 'license-card-edit-template', foreach: $root.submittedUserLicensesCertifications }"></ul>
 
                 </div>
