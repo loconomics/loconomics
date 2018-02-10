@@ -1,0 +1,30 @@
+<form id="badgeEntryForm" aria-describedby="badgeEntryFormInstructions"
+    data-bind="event: { submit: save }">
+    <p id="badgeEntryFormInstructions" class="help-block">Sign into your <a href="https://badgr.io/auth/login">Badgr account</a> to find badges or collections. Make them public, and then click "Share" to find the URL to paste below.</p>
+    <fieldset data-bind="with: userJobTitleBadge">
+        <div class="col-xs-12">
+            <legend>Badgr badge or collection</legend>
+            <label for="badgrURL">URL</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="badgrURL"
+                    type="url"
+                    placeholder="https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0"
+                    data-bind="
+                        value: badgrURL,
+                        disable: $component.isWorking
+                    " />
+            </div>
+            <label for="type">Type</label>
+            <div class="form-group">
+                <span class="form-control-static" data-bind="text: type"></span>
+            </div>
+            <button type="submit" class="btn btn-secondary btn-block btn-lg"
+                data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>
+            <button type="button" class="btn btn-danger btn-link"
+                data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
+                disable: $component.isWorking,
+                visible: $component.badgrURL"></button>
+        </div>
+    </fieldset>
+</form>
