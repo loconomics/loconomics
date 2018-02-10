@@ -35,7 +35,7 @@
         public override dynamic Get()
         {
             if (!Request["givemeerror"].IsEmpty()) {                
-                throw new HttpException(Request["givemeerror"].AsInt(), Request["givemeerror"] + "[[[Give me an error]]]");
+                throw new HttpException(Request["givemeerror"].AsInt(), Request["givemeerror"] + " [[[Give me an error]]]");
             }
 
             if (!UrlData[0].IsEmpty()) {
