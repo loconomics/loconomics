@@ -22,6 +22,35 @@ require('../kocomponents/badge/collection');
 require('../kocomponents/badge/view');
 require('../kocomponents/badge/viewer');
 
+const dummyData =
+[
+  {
+    'UserJobTitleBadgeID': 1,
+    'BadgrURL': 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035',
+    'Type': 'collection'
+  },
+  {
+    'UserJobTitleBadgeID': 2,
+    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'Type': 'badge'
+  },
+  {
+    'UserJobTitleBadgeID': 3,
+    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'Type': 'badge'
+  },
+  {
+    'UserJobTitleBadgeID': 4,
+    'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
+    'Type': 'badge'
+  },
+  {
+    'UserJobTitleBadgeID': 5,
+    'BadgrURL': 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035',
+    'Type': 'collection'
+  }
+];
+
 var A = Activity.extend(function ListingEditorActivity() {
 
     Activity.apply(this, arguments);
@@ -130,6 +159,7 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.jobTitle = ko.observable(null);
     this.userJobTitle = ko.observable(null);
+    this.userBadges =  ko.observable(dummyData);
 
     this.jobTitleName = ko.pureComputed(function() {
         return this.jobTitle() && this.jobTitle().singularName() || 'Job Title';
