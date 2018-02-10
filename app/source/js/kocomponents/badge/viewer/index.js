@@ -49,18 +49,18 @@ export default class BadgeViewer extends Komponent {
         super();
 
         /**
-         * The src URL for the badge collection.
+         * The Badgr URL for the badge or collection.
          * @member {KnockoutObservable<string>}
          */
-        this.src = getObservable(params.src);
-        const src = this.src();
+        this.badgrURL = getObservable(params.badgrURL);
+        const src = this.badgrURL();
 
         /**
-         * Replaces src with version 2.0 url
+         * The type of URL – either 'badge' or 'collection'.
+         * @member {KnockoutObservable<string>}
          */
-        if(src) {
-            this.src = src.replace(/\?v=.+$/, '?v=2_0');
-        }
+        this.type = getObservable(params.type || 'badge');
+        const srcType = this.type();
  
          /**
          * Holds the id of the badge assertion.
@@ -129,7 +129,7 @@ export default class BadgeViewer extends Komponent {
             });
         };
     
-        if(src) {
+        if(src && srcType == 'badge') {
             fetch(src, {headers})
             .then((r) => {
                 if(r.ok)
