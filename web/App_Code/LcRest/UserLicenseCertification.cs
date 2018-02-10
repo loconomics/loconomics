@@ -204,7 +204,7 @@ namespace LcRest
                         item.userID, item.jobTitleID, item.licenseCertificationID);
                     if (many > 0)
                     {
-                        throw new ConstraintException("You have already registered that license, please try to update it if you want to submit a new file.");
+                        throw new ConstraintException("[[[You have already registered that license, please try to update it if you want to submit a new file.]]]");
                     }
                 }
 
@@ -302,8 +302,9 @@ namespace LcRest
             {
                 photo.CopyTo(file);
             }
-            
+            // TODO: i18n
             var msg = "UserID: " + item.userID + " submitted a photo of their License/Certification to being verified and added. It can be found in the FTP an folder: " + virtualPath;
+            // TODO create config value
             var email = "support@loconomics.zendesk.com";
             LcMessaging.SendMail(email, "License/Certification Verification Request", msg);
 

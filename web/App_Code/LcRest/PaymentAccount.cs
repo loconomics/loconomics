@@ -124,7 +124,7 @@ namespace LcRest
             };
             if (!LcRest.Address.AutosetByCountryPostalCode(add))
             {
-                throw new ValidationException("Postal Code is not valid.", "postalCode");
+                throw new ValidationException("[[[Postal Code is not valid.]]]", "postalCode");
             }
             else
             {
@@ -173,7 +173,7 @@ namespace LcRest
                 
                 if (result == null)
                 {
-                    throw new ValidationException("It looks like you already have an account set up with Braintree. Please contact us, and we can help.");
+                    throw new ValidationException("[[[It looks like you already have an account set up with Braintree. Please contact us, and we can help.]]]");
                 }
                 else if (!result.IsSuccess())
                 {

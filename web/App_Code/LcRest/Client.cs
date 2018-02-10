@@ -363,8 +363,8 @@ namespace LcRest
                     if (emailOwnerID > 0)
                     {
                         // Notify error
-                        throw new ValidationException("The given e-mail already exists for other client at loconomics.com and cannot be saved." +
-                            " You can perform a search by that email and add it as your client.", "email", "client");
+                        throw new ValidationException("[[[The given e-mail already exists for other client at loconomics.com and cannot be saved.]]]" +
+                            " [[[You can perform a search by that email and add it as your client.]]]", "email", "client");
                     }
 
                     // Set Client User

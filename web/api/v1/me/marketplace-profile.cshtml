@@ -53,7 +53,7 @@
         public override dynamic Get()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
             
  	        return GetData();
@@ -62,19 +62,19 @@
         public override dynamic Put()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
             
             var userID = WebSecurity.CurrentUserId;
             
             // Validation
-            Validation.Add("publicBio", Validator.StringLength(4000, 0, "Public Bio must be fewer than 4000 characters"));
-            Validation.Add("businessName", Validator.StringLength(145, 0, "Business name must be fewer than 145 characters"));
-            Validation.Add("serviceProfessionalProfileUrlSlug", Validator.Regex(@"^[a-zA-Z][\w\-]*$", "The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes"));
+            Validation.Add("publicBio", Validator.StringLength(4000, 0, "[[[Public Bio must be fewer than 4000 characters]]]"));
+            Validation.Add("businessName", Validator.StringLength(145, 0, "[[[Business name must be fewer than 145 characters]]]"));
+            Validation.Add("serviceProfessionalProfileUrlSlug", Validator.Regex(@"^[a-zA-Z][\w\-]*$", "[[[The custom URL you've entered is invalid. Remember: just words and dashes, no white space, no slashes]]]"));
             // IMPORTANT: Limiting custom URL (that goes on top of loconomics.com/the-custom-url) to 80 characters as maximum
             // just to avoid excesive URLs that hide part of the loconomics.com. On database, the limit is excesive higher right now with 2078
             // as for regular, complete URLs, but since this is buil on top on our URL is better to keep it too much shorter.
-            Validation.Add("serviceProfessionalProfileUrlSlug", Validator.StringLength(80, 0, "The custom URL is too long, please keep it under 80 characters."));
+            Validation.Add("serviceProfessionalProfileUrlSlug", Validator.StringLength(80, 0, "[[[The custom URL is too long, please keep it under 80 characters.]]]"));
             
             // Automatically add http:// if users doesn't put a protocol on its website url. Before validation!
             var webUrl = Request.Form["serviceProfessionalWebsiteUrl"];
@@ -83,13 +83,13 @@
                     webUrl = "http://" + webUrl;
                 }
                 if (!LcValidators.IsUrl(webUrl)) {
-                    ModelState.AddError("serviceProfessionalWebsiteUrl", "The Website URL is not valid, check that is complete");
+                    ModelState.AddError("serviceProfessionalWebsiteUrl", "[[[The Website URL is not valid, check that is complete]]]");
                 }
                 else if (webUrl.Length > 2000) {
                     // IMPORTANT: Limiting URL length to 2000 characters as maximum. On database, it slightly higher with 2078,
                     // but a great StackOverflow research post recommends 2000 as limit
                     // (http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers)
-                    ModelState.AddError("serviceProfessionalWebsiteUrl", "The Website URL is too long, please keep it under 2000 characters.");
+                    ModelState.AddError("serviceProfessionalWebsiteUrl", "[[[The Website URL is too long, please keep it under 2000 characters.]]]");
                 }
             }
             
@@ -103,7 +103,7 @@
             // after the first check
             var profileUrlSlug = (Request.Form["serviceProfessionalProfileUrlSlug"] ?? "").Trim();
             if (!LcRest.MarketplaceProfile.IsProfileUrlAvailable(userID, profileUrlSlug)) {
-                ModelState.AddError("serviceProfessionalProfileUrlSlug", "We're sorry, that custom URL is unavailable, please choose other.");
+                ModelState.AddError("serviceProfessionalProfileUrlSlug", "[[[We're sorry, that custom URL is unavailable, please choose other.]]]");
             }
 
             // Second validation check: just, there are errros?

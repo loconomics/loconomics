@@ -54,19 +54,19 @@
             {
                 return LcRest.UserPaymentPlan.GetByUser(WebSecurity.CurrentUserId);
             }
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
 
         public override dynamic Post()
         {
             if (UrlData.Count > 0) {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
 
             var userId = WebSecurity.CurrentUserId;
 
             // Validation
-            Validation.RequireField("paymentPlan", "Choose a plan");
+            Validation.RequireField("paymentPlan", "[[[Choose a plan]]]");
 
             // For payment, we need either a paymentMethodID or the data
             // and that includes a billing address
@@ -111,7 +111,7 @@
             if (!Enum.TryParse<LcEnum.SubscriptionPlan>(Request.Form["paymentPlan"], true, out plan))
             {
                 // Parse error, bad plan ID given
-                ModelState.AddError("paymentPlan", "Invalid payment plan");
+                ModelState.AddError("paymentPlan", "[[[Invalid payment plan]]]");
             }
 
 

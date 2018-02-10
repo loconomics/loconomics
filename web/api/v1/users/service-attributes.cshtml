@@ -18,7 +18,7 @@
             var userID = this.WebPage.Context.GetRouteValue("userID").AsInt(0);
             if (userID <= 0)
             {
-                throw new HttpException(404, "User Not Found");
+                throw new HttpException(404, "[[[User Not Found]]]");
             }
             
             if (UrlData.Count == 1 && UrlData[0].IsInt()) {
@@ -26,7 +26,7 @@
                 var locale = LcRest.Locale.Current;
                 var data = LcRest.PublicUserJobTitleServiceAttributes.Get(userID, jobTitleID, locale.languageID, locale.countryID);
                 if (data == null) {
-                    throw new HttpException(404, "User Not Found");
+                    throw new HttpException(404, "[[[User Not Found]]]");
                 }
                 return data;
             }

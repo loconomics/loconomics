@@ -63,6 +63,7 @@
 
                 // We don't want the ugly default asp.net message for file-size-exceeded
                 // As of #454 (https://github.com/joshdanielson/Loconomics/issues/454#issuecomment-37782181)
+                //TODO: fix for localisation of strings
                 if (errMsg.Contains("Maximum request length exceeded"))
                 {
                     //LcHelpers.DebugLogger.Log("PUT profile-picture:notvalid:max request length exceeded");
@@ -84,7 +85,7 @@
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
         }
-        
+
         public override dynamic Put()
         {
             if (UrlData.Count > 0) {
@@ -116,13 +117,13 @@
                         );
 
                         // File saved, change the user preference at the database:
-                        LcData.Photo.UpdateProfilePictureOnDb(userID, true);                        
+                        LcData.Photo.UpdateProfilePictureOnDb(userID, true);
                     }
                     else
                     {
                         //LcHelpers.DebugLogger.Log("PUT profile-picture:input-stream=0");
                         // Emulate standard error, next its replaced by better message
-                        ModelState.AddFormError("Maximum request length exceeded");
+                        ModelState.AddFormError("[[[Maximum request length exceeded]]]");
                     }
                 }
             }
@@ -156,7 +157,7 @@
                 {
                     var angle = Request["rotationAngle"].AsFloat();
                     if (!LcData.Photo.EditEditableProfilePicture(userID, angle)) {
-                        ModelState.AddFormError("Error, you need to upload an image first");
+                        ModelState.AddFormError("[[[Error, you need to upload an image first]]]");
                     }
                     else {
                         LcData.Photo.SaveProfilePicture(userID,
@@ -178,7 +179,7 @@
                 return LastValidationAndReturnData(userID);
             }
             else {
-                throw new HttpException(404, "Not found");
+                throw new HttpException(404, "[[[Not found]]]");
             }
         }
     }

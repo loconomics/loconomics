@@ -226,7 +226,7 @@
             if (address != null)
                 return address;
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
         
         private dynamic GetBillingAddress(int addressID)
@@ -238,7 +238,7 @@
             if (address != null)
                 return address;
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
         
         private LcRest.Address GetAddress(int userId, int jobTitleID, int addressID, string kind = null) {
@@ -255,7 +255,7 @@
                 default:
                     // Is 'impossible' to reach this if every case was implemented,
                     // mostly an error for dev/debug time
-                    throw new HttpException(500, "Server Error: Address Kind not managed.");
+                    throw new HttpException(500, "[[[Server Error: Address Kind not managed.]]]");
             }
         }
 
@@ -325,25 +325,25 @@
                 }
             }
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
         
         private bool IsValidAddress(int jobTitleID, string kind) {
 
             Validation.RequireField("postalCode", LcRessources.RequiredField("Zip Code"));
-            Validation.Add("latitude", Validator.Decimal("Latitude must be a number"));
-            Validation.Add("longitude", Validator.Decimal("Longitude must be a number"));
-            Validation.Add("serviceRadius", Validator.Decimal("Service Radius must be a number"));
-            Validation.Add("addressName", Validator.StringLength(50, 0, "Address Name must be fewer than 50 characters."));
-            Validation.Add("addressLine1", Validator.StringLength(100, 0, "Address Line 1 must be fewer than 100 characters."));
-            Validation.Add("addressLine2", Validator.StringLength(100, 0, "Address Line 2 must be fewer than 100 characters."));
-            Validation.Add("specialInstructions", Validator.StringLength(1000, 0, "Special instructions must be fewer than 1,000 characters."));
+            Validation.Add("latitude", Validator.Decimal("[[[Latitude must be a number]]]"));
+            Validation.Add("longitude", Validator.Decimal("[[[Longitude must be a number]]]"));
+            Validation.Add("serviceRadius", Validator.Decimal("[[[Service Radius must be a number]]]"));
+            Validation.Add("addressName", Validator.StringLength(50, 0, "[[[Address Name must be fewer than 50 characters.]]]"));
+            Validation.Add("addressLine1", Validator.StringLength(100, 0, "[[[Address Line 1 must be fewer than 100 characters.]]]"));
+            Validation.Add("addressLine2", Validator.StringLength(100, 0, "[[[Address Line 2 must be fewer than 100 characters.]]]"));
+            Validation.Add("specialInstructions", Validator.StringLength(1000, 0, "[[[Special instructions must be fewer than 1,000 characters.]]]"));
            
             if (jobTitleID != LcRest.Address.NotAJobTitleID) {
                 // One of the service flags is required
                 if (!Request.Form["isServiceLocation"].AsBool() &&
                     !Request.Form["isServiceArea"].AsBool()) {
-                    ModelState.AddFormError("The service address must be a service location or a service area.");
+                    ModelState.AddFormError("[[[The service address must be a service location or a service area.]]]");
                 }
             }
 
@@ -401,7 +401,7 @@
             // validate kind
             if (!LcRest.Address.AddressKind.IsValid(kind))
             {
-                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+                throw new HttpException(500, "[[[Server Error: Invalid address Kind specified.]]]");
             }
 
             // Validation
@@ -433,7 +433,7 @@
 					// OR a code udpate on the SQL code broke the creation or retrieval off the @AddressID
 					// OR new constraints added to SetAddress() allowed to return zero rather than raise an exception, the recommended
 					// way.
-					throw new HttpException(500, "Server Error: impossible to create the address at this time.");
+					throw new HttpException(500, "[[[Server Error: impossible to create the address at this time.]]]");
 				}
 
 				// Return created/updated address
@@ -457,7 +457,7 @@
 
             // Validate Kind first
             if (!LcRest.Address.AddressKind.IsValid(kind)) {
-                throw new HttpException(500, "Server Error: Invalid address Kind specified.");
+                throw new HttpException(500, "[[[Server Error: Invalid address Kind specified.]]]");
             }
             
             // Grab a copy of the address
@@ -474,7 +474,7 @@
             }
 
             // Does not exists, or not on that Kind
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
 
         public override dynamic Post()
@@ -515,7 +515,7 @@
                 }
             }
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
 
         public override dynamic Put()
@@ -568,7 +568,7 @@
                 }
             }
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
         
         public override dynamic Delete()
@@ -613,14 +613,13 @@
                         break;
                     }
                     case "home": {
-                        throw new HttpException(405, "DELETE is not allowed");
+                        throw new HttpException(405, "[[[DELETE is not allowed]]]");
                     }
                 }
             }
 
-            throw new HttpException(404, "Not found");
+            throw new HttpException(404, "[[[Not found]]]");
         }
-    }
     }
 }
 @{

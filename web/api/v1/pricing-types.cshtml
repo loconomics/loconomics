@@ -127,11 +127,11 @@
                     return ConvertPricingType(LcPricingModel.PackageBasePricingTypeConfigs[id]);
                 }
                 else {
-                    throw new HttpException(404, "Pricing Type not found.");
+                    throw new HttpException(404, "[[[Pricing Type not found.]]]");
                 }
             }
             else if (UrlData.Count == 1) {
-                throw new HttpException(400, "Invalid format for the Pricing Type ID");
+                throw new HttpException(400, "[[[Invalid format for the Pricing Type ID]]]");
             }
             else
             {

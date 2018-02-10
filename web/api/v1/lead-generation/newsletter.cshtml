@@ -63,14 +63,14 @@
             {
                 if (WebSecurity.IsAuthenticated)
                 {
-                    throw new HttpException(400, "You are already logged in! Review your account preferences to enable the newsletter.");
+                    throw new HttpException(400, "[[[You are already logged in! Review your account preferences to enable the newsletter.]]]");
                 }
                 Validation.RequireField("email", LcRessources.RequiredField("E-mail"));
                 Validation.Add("email",
-                    Validator.Regex(LcValidators.EmailAddressRegexPattern, "The email is not valid."));
+                    Validator.Regex(LcValidators.EmailAddressRegexPattern, "[[[The email is not valid.]]]"));
                 if (!Request.Form["isServiceProfessional"].IsBool())
                 {
-                    ModelState.AddError("isServiceProfessional", "Is required to indicate whether is service professional or not");
+                    ModelState.AddError("isServiceProfessional", "[[[Is required to indicate whether is service professional or not]]]");
                 }
                 if (Validation.IsValid() && ModelState.IsValid)
                 {
@@ -87,7 +87,7 @@
                     }
                     else
                     {
-                        throw new HttpException(500, "Subscription failed");
+                        throw new HttpException(500, "[[[Subscription failed]]]");
                     }
                 }
                 else
