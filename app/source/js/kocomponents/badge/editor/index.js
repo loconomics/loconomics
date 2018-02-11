@@ -12,7 +12,7 @@ import ko from 'knockout';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
-// import { item as userJobTitleBadgeItem } from '../../../data/userJobTitleBadges';
+// import { item as userBadgeItem } from '../../../data/userBadges';
 
 const TAG_NAME = 'badge-editor';
 
@@ -28,7 +28,7 @@ export default class BadgeEditor extends Komponent {
      * @param {(number|KnockoutObservable<number>)}
      * [params.jobTitleID]
      * @param {(number|KnockoutObservable<number>)}
-     * [params.userJobTitleBadgeID]
+     * [params.userBadgeID]
      */
 
     constructor(params) {
@@ -39,7 +39,7 @@ export default class BadgeEditor extends Komponent {
          * edited.
          * @member {KnockoutObservable<number>}
          */
-        this.userJobTitleBadgeID = getObservable(params.userJobTitleBadgeID);
+        this.userBadgeID = getObservable(params.userBadgeID);
 
         /**
          * Holds the ID for the job title of the badge being 
@@ -53,7 +53,7 @@ export default class BadgeEditor extends Komponent {
          * Holds the data of the badge or collection.
          * @member {KnockoutObservable<object>}
          */
-        this.userJobTitleBadge = ko.observable(null);
+        this.userBadge = ko.observable(null);
  
         /**
          * Holds the data of the badgr source – can be 
@@ -74,7 +74,7 @@ export default class BadgeEditor extends Komponent {
          * the updated data.
          * When there is no one, the data returned by the server is used to
          * update currently displayed data.
-         * @member {Function<rest/UserJobTitleBadge>}
+         * @member {Function<rest/userBadge>}
          */
         this.onSaved = ko.unwrap(params.onSaved);
 
@@ -138,19 +138,19 @@ export default class BadgeEditor extends Komponent {
          * entry for a platformID specified.
          */
     //     this.observeChanges(() => {
-    //         const id = this.userJobTitleBadgeID();
+    //         const id = this.userBadgeID();
     //         if (id) {
-    //             userJobTitleBadgeItem(id)
+    //             userBadgeItem(id)
     //             .onceLoaded()
     //             .then((data) => {
-    //                 this.userJobTitleBadge(data);
+    //                 this.userBadge(data);
     //             })
     //             .catch(loadingError);
     //         }
     //         else {
     //             (() => {
-    //                 this.userJobTitleBadge({
-    //                     userJobTitleBadgeID: 0,
+    //                 this.userBadge({
+    //                     userBadgeID: 0,
     //                     jobTitleID: this.jobTitleID(),
     //                     badgrURL: this.badgrURL(),
     //                     type: this.type(),
@@ -189,9 +189,9 @@ export default class BadgeEditor extends Komponent {
     //     return new Promise((resolve, reject) => {
     //         this.isSaving(true);
     //         // Copy data to send
-    //         const data = Object.assign({}, this.userJobTitleBadge());
+    //         const data = Object.assign({}, this.userBadge());
     //         // Sent data
-    //         const item = userJobTitleBadgeItem(this.userJobTitleBadgeID());
+    //         const item = userBadgeItem(this.userBadgeID());
     //         item.save(data).then(resolve, reject);
     //     })
     //     // Update with server data
@@ -201,8 +201,8 @@ export default class BadgeEditor extends Komponent {
     //             this.onSaved(serverData);
     //         }
     //         else {
-    //             this.userJobTitleBadge(serverData);
-    //             this.userJobTitleBadgeID(serverData.userJobTitleBadgeID);
+    //             this.userBadge(serverData);
+    //             this.userBadgeID(serverData.userBadgeID);
     //         }
     //     })
     //     .catch((error) => {
@@ -224,8 +224,8 @@ export default class BadgeEditor extends Komponent {
     //     // Only a deletion task at a time
     //     if (this.isDeleting()) return;
     //     // Only do something if data loaded
-    //     const badge = this.userJobTitleBadgeID();
-    //     if (badge && badge.userJobTitleBadgeID) {
+    //     const badge = this.userBadgeID();
+    //     if (badge && badge.userBadgeID) {
     //         return showConfirm({
     //             title: 'Delete badge',
     //             message: `Are you sure to delete this '${badge.type}'?`,
@@ -234,7 +234,7 @@ export default class BadgeEditor extends Komponent {
     //         })
     //         .then(() => {
     //             this.isDeleting(true);
-    //             return userJobTitleBadgeItem(badge.userJobTitleBadgeID)
+    //             return userBadgeItem(badge.userBadgeID)
     //             .delete()
     //             .then(() => {
     //                 this.isDeleting(false);
@@ -242,8 +242,8 @@ export default class BadgeEditor extends Komponent {
     //                     this.onDeleted();
     //                 }
     //                 else {
-    //                     this.userJobTitleBadge(null);
-    //                     this.userJobTitleBadgeID(null);
+    //                     this.userBadge(null);
+    //                     this.userBadgeID(null);
     //                 }
     //             });
     //         })
