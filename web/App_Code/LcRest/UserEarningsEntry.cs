@@ -77,6 +77,12 @@ namespace LcRest
         const string sqlAndID = @"
                 AND earningsEntryID = @1
         ";
+        private const string sqlOrderDesc = @"
+            ORDER BY T.paidDate DESC
+        ";
+        private const string sqlOrderAsc = @"
+            ORDER BY T.paidDate ASC
+        ";
         public static UserEarningsEntry Get(int userID, int earningsEntryID)
         {
             using (var db = new LcDatabase())
@@ -85,13 +91,41 @@ namespace LcRest
             }
         }
 
-        public static List<UserEarningsEntry> GetList(int userID)
+        public static IEnumerable<UserEarningsEntry> GetList(int userID, int limit, int? untilID = null, int? sinceID = null)
         {
+            // Limits: Minimum: 1, Maximum: 100
+            Math.Max(1, Math.Min(limit, 100));
+
+            var sql = sqlSelect + sqlOrderDesc;
+
+            // Generally, we get the more recent records (order desc), except
+            // if the parameter sinceID was set without an untilID: we
+            // want the closest records to that, in other words, 
+            // the older records that are more recent that sinceID.
+            // A final sorting is done to return rows in descending as ever.
+            var usingSinceOnly = sinceID.HasValue && !untilID.HasValue;
+            if (usingSinceOnly)
+            {
+                sql = sqlSelect + sqlOrderAsc;
+            }
+
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlSelect, userID)
-                .Select(FromDB)
-                .ToList();
+                // db.Query has a bug not processiong parameters in 'select top @1'
+                // so manual replacement
+                sql = sql.Replace("@1", limit.ToString());
+
+                var data = db.Query(sqlSelect, userID, limit, untilID, sinceID)
+                .Select(FromDB);
+
+                if (usingSinceOnly)
+                {
+                    // Since rows were get in ascending, records need to be inverted
+                    // so we ever return data in descending order (latest first).
+                    data.Reverse();
+                }
+
+                return data;
             }
         }
         #endregion
