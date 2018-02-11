@@ -167,21 +167,21 @@
 
             var item = GetItemFromForm();
             item.userID = userID;
-            item.userExternalListingID = itemID;
+            item.earningsEntryID = itemID;
 
-            item.userExternalListingID = LcRest.UserEarningsEntry.Set(item);
+            item.earningsEntryID = LcRest.UserEarningsEntry.Set(item);
 
             // If returned ID is zero rather than the provided one
             // is because the requested ID was not found.
             // (for cases of new, when passed ID is zero, the returned is the
             // new generated ID, so is not zero if created successfully).
-            if (item.userExternalListingID == 0)
+            if (item.earningsEntryID == 0)
             {
                 throw new HttpException(404, "Not Found");
             }
 
             // Returns the updated client data
-            return LcRest.UserEarningsEntry.Get(userID, item.userExternalListingID);
+            return LcRest.UserEarningsEntry.Get(userID, item.earningsEntryID);
         }
 
         private LcRest.UserEarningsEntry GetItemFromForm()

@@ -66,6 +66,7 @@ namespace LcRest
                 userExternalListingID,
                 jobTitleID,
                 clientUserID,
+                notes,
                 createdDate,
                 updatedDate
             FROM
@@ -94,7 +95,7 @@ namespace LcRest
         public static IEnumerable<UserEarningsEntry> GetList(int userID, int limit, int? untilID = null, int? sinceID = null)
         {
             // Limits: Minimum: 1, Maximum: 100
-            Math.Max(1, Math.Min(limit, 100));
+            limit = Math.Max(1, Math.Min(limit, 100));
 
             var sql = sqlSelect + sqlOrderDesc;
 
@@ -132,7 +133,8 @@ namespace LcRest
 
         #region Delete
         const string sqlDelete = @"
-            DELETE FROM UserEarningsEntry
+            UPDATE UserEarningsEntry
+            SET Active = 0
             WHERE UserID = @0 AND EarningsEntryID = @1
         ";
         /// <summary>
@@ -152,7 +154,7 @@ namespace LcRest
         #region Create/Update
         const string sqlSet = @"
             DECLARE @userID int = @0
-            DECLARE @earningsEntryID int = @0
+            DECLARE @earningsEntryID int = @1
 
             IF EXISTS (SELECT earningsEntryID FROM UserEarningsEntry WHERE earningsEntryID = @earningsEntryID AND UserID = @userID)
                 UPDATE UserEarningsEntry SET
@@ -161,16 +163,21 @@ namespace LcRest
                     ,userExternalListingID = @4
                     ,jobTitleID = @5
                     ,clientUserID = @6
-                    ,notes = @7
-                    ,ModifiedDate = getdate()
+                    ,Notes = @7
+                    ,updatedDate = getdate()
                     ,ModifiedBy = 'user'
                 WHERE UserID = @userID AND earningsEntryID = @earningsEntryID
+                    AND Active = 1
             ELSE BEGIN
                 -- 'Calculate' new ID, restricted to user
                 SELECT TOP 1 @earningsEntryID = earningsEntryID + 1
                 FROM UserEarningsEntry WITH (TABLOCKX)
                 WHERE UserID = @userID
                 ORDER BY earningsEntryID DESC
+
+                -- Fallback to 1 if no entries still (or will get zero, no valid)
+                IF @earningsEntryID = 0
+                SET @earningsEntryID = 1
 
                 INSERT INTO UserEarningsEntry (
                     UserID
@@ -182,7 +189,7 @@ namespace LcRest
                     ,ClientUserID
                     ,Notes
                     ,CreatedDate
-                    ,ModifiedDate
+                    ,updatedDate
                     ,ModifiedBy
                     ,Active
                 ) VALUES (
