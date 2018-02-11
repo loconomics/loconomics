@@ -58,7 +58,7 @@ namespace LcRest
 
         #region Fetch
         const string sqlSelect = @"
-            SELECT 
+            SELECT TOP @1
                 userID,
                 earningsEntryID,
                 paidDate,
@@ -74,15 +74,19 @@ namespace LcRest
             WHERE
                 Active = 1
                 AND UserID = @0
+                AND
+                (@2 is null OR earningsEntryID < @2)
+                AND
+                (@3 is null OR earningsEntryID > @3)
         ";
         const string sqlAndID = @"
                 AND earningsEntryID = @1
         ";
         private const string sqlOrderDesc = @"
-            ORDER BY T.paidDate DESC
+            ORDER BY paidDate DESC
         ";
         private const string sqlOrderAsc = @"
-            ORDER BY T.paidDate ASC
+            ORDER BY paidDate ASC
         ";
         public static UserEarningsEntry Get(int userID, int earningsEntryID)
         {
@@ -116,7 +120,7 @@ namespace LcRest
                 // so manual replacement
                 sql = sql.Replace("@1", limit.ToString());
 
-                var data = db.Query(sqlSelect, userID, limit, untilID, sinceID)
+                var data = db.Query(sql, userID, limit, untilID, sinceID)
                 .Select(FromDB);
 
                 if (usingSinceOnly)
