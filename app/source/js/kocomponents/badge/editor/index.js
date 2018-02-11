@@ -9,7 +9,7 @@ import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
-import { show as showConfirm } from '../../../modals/confirm';
+// import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
 // import { item as userBadgeItem } from '../../../data/userBadges';
@@ -126,12 +126,12 @@ export default class BadgeEditor extends Komponent {
          * Displays the error returned while loading the data
          * @param {Error} err
          */
-        const loadingError = function(error) {
-            showError({
-                title: 'There was an error loading the badge/collection',
-                error
-            });
-        };
+        // const loadingError = function(error) {
+        //     showError({
+        //         title: 'There was an error loading the badge/collection',
+        //         error
+        //     });
+        // };
 
         /**
          * When the given listing ID changes, load the data or set-up a new

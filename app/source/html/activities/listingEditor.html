@@ -168,9 +168,9 @@
                         <h3>Badges earned</h3>
                         <a data-bind="attr: {href: '/badge-add/' + $root.returnLinkJobTitleActivity() + '/' + jobTitleSingularName(),'aria-label': 'Add '+ jobTitleSingularName() + ' badge or badge collection' }" class="btn btn-default pull-right">Add</a>
                     </div>
-                    <div data-bind="foreach: $root.userBadges">
+                    <ul data-bind="foreach: $root.userBadges">
                         <badge-viewer params="badgrURL: BadgrURL, type: Type"></badge-viewer>
-                    </div>
+                    </ul>
                     <badge-collection params="src: 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035'"></badge-collection>
                     <badge-view params="src: 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0'"></badge-view>
                     <badge-viewer params="src: 'https://api.badgr.io/public/assertions/XmE3ncMeRP-1JLr7LfGd_w.json?v=2_0'"></badge-viewer>

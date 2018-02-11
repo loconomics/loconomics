@@ -25,11 +25,6 @@ require('../kocomponents/badge/viewer');
 const dummyData =
 [
   {
-    'userBadgeID': 1,
-    'BadgrURL': 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035',
-    'Type': 'collection'
-  },
-  {
     'userBadgeID': 2,
     'BadgrURL': 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0',
     'Type': 'badge'

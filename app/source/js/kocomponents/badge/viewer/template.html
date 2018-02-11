@@ -1,7 +1,21 @@
 <div class="BadgeViewer">
-<a data-bind="attr: {href: id}"><img data-bind="attr: {src: image, alt: narrative}"></a>
+    <li class="col-xs-11 col-sm-5 BadgeViewer-card" data-bind="attr: {href: id}">
+        <div class="Card-heading">
+            <div class="Card-title">
+                <img data-bind="attr: {src: image, alt: narrative}">
+                <h5 data-bind="text: badgeName"></h5>
+            </div>
+        </div>
+        <div class="Card-description">
+            <hr>
+            <p data-bind="text: narrative"></p>
+        </div>
+    </li>
+    <div class="BadgeViewer-details">
+            <img data-bind="attr: {src: image, alt: narrative}">
+            <h5 data-bind="text: badgeName"></h5>
+
+            <p data-bind="text: badgeDescription"></p>
+            <p data-bind="text: evidence"></p>
+    </div>
 </div>
-<h3 data-bind="text: badgeName"></h3>
-<p data-bind="text: narrative"></p>
-<p data-bind="text: badgeDescription"></p>
-<p data-bind="text: evidence"></p>
