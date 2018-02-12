@@ -61,8 +61,9 @@ export default class EarningsViewer extends Komponent {
          * @returns {string}
          */
         this.displayDuration = (item) => {
-            var minutes = item.durationMinutes;
-            return `${minutes} minutes`;
+            const hours = Math.floor(item.durationMinutes / 60);
+            const minutes = item.durationMinutes - (hours * 60);
+            return `${hours} hours ${minutes} minutes`;
         };
 
         /**
