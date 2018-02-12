@@ -17,14 +17,16 @@
                 <fieldset id="copyEarningsForm-SelectEarnings" class="earnings-step"
                 data-bind="visible: isAtStep(1), autofocus: isAtStep(1)">
                     <legend>Select an earnings entry to copy</legend>
-                    <earnings-list params="userID: userID, listMode: 'select', selectItem: selectEarnings"></earnings-list>
+                    <earnings-list params="listMode: 'select', selectItem: selectEarnings"></earnings-list>
                 </fieldset>
+                <!-- We use the 'if' binding to enforce that the editor is only created once an ID was choosen,
+                    using ressources correctly, and the editor need this because is for one use only; if this is
+                    not done, the editor will not get the ID (check its params docs) -->
                 <fieldset id="copyEarningsForm-ReviseEarnings" class="earnings-step"
-                data-bind="visible: isAtStep(2), autofocus: isAtStep(2)">
+                data-bind="if: isAtStep(2), visible: isAtStep(2), autofocus: isAtStep(2)">
                     <legend>Revise earnings and submit</legend>
-
-                    <!-- @iagosrl I tried to get the earnings-editor to start at the summary (step(0)) but couldn't figure it out -->
-                    <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'copy', startAtStep: 0"></earnings-editor>
+                    <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'copy', startAtStep: 0, onSaved: onSaved"
+                    ></earnings-editor>
                 </fieldset>
             </form>
         </div>

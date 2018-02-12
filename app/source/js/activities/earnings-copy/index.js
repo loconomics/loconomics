@@ -14,7 +14,6 @@ import Activity from '../../components/Activity';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import template from './template.html';
-import userProfile from '../../data/userProfile';
 
 const ROUTE_NAME = 'earnings-copy';
 
@@ -25,30 +24,26 @@ export default class EarningsCopyActivity extends Activity {
     constructor($activity, app) {
 
         super($activity, app);
-        /**
-         * Passes in the current user's ID as an observable.
-         */
-        this.userID = userProfile.data.userID;
 
         this.accessLevel = UserType.serviceProfessional;
         this.navBar = Activity.createSubsectionNavBar(null);
 
         this.earningsEntryID = ko.observable();
-        
+
         /// Steps management
         /**
          * Keeps track of the current step being displayed
          * @member {KnockoutObservable<number>}
          */
         this.currentStep = ko.observable(1);
-        
+
         /**
          * Returns which step the user is on in the form.
          * @member {KnockoutComputed<boolean>}
          */
         this.isAtStep = function(number) {
             return ko.pureComputed( () => this.currentStep() === number);
-        }; 
+        };
 
         /**
          * Takes the user to the next step in the form.
@@ -56,23 +51,27 @@ export default class EarningsCopyActivity extends Activity {
          */
         this.goNextStep = function() {
             this.currentStep(this.currentStep() + 1);
-        }; 
-        
+        };
+
         /**
-         * Earnings to be copied. @iagosrl please review.
+         * Prepare given earnings entry to be copied by the editor and go there.
          * @method
          */
-        this.selectEarnings = function(earnings) {
-            this.earningsEntryID(ko.unwrap(earnings.earningsEntryID));
+        this.selectEarnings = (entry) => {
+            this.earningsEntryID(ko.unwrap(entry.earningsEntryID));
             this.goNextStep();
-        }.bind(this);
+        };
 
         this.title = 'Copy earnings';
-    }
 
-    show(state) {
-        super.show(state);
-        // Check other examples for some code using 'state'
+        /**
+         * After data being saved, notice and go back
+         */
+        this.onSaved = () => {
+            app.successSave({
+                link: '/earnings'
+            });
+        };
     }
 }
 
