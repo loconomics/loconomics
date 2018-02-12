@@ -47,9 +47,10 @@ export function item(id) {
     });
     // List is dirty once an item is updated on cache directly. We can not
     // update the list correctly because of the list order or elements limits
-    itemProvider.onRemoteLoaded.subscribe(list.invalidateCache);
-    itemProvider.onDeleted.subscribe(list.invalidateCache);
-    itemProvider.onSaved.subscribe(list.invalidateCache);
+    const invalidateList = list.invalidateCache.bind(list);
+    itemProvider.onRemoteLoaded.subscribe(invalidateList);
+    itemProvider.onDeleted.subscribe(invalidateList);
+    itemProvider.onSaved.subscribe(invalidateList);
 
     /* **Same problem as in userExternalListings**
      In theory, if an updated load of the list happens in the meantime with
