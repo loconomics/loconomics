@@ -39,6 +39,9 @@
 <li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'active' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/listings' }"><i class="fa fa-fw ion-ios-list-outline" aria-hidden="true"></i> Listings</a>
 </li>
+<li data-bind="visible: isServiceProfessional, css: { 'is-disabled': isInOnboarding, active: active() === 'active' }">
+    <a data-bind="attr: { href: isInOnboarding() ? null : '/earnings' }"><i class="fa fa-fw ion-social-usd-outline" aria-hidden="true"></i> Earnings</a>
+</li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'userProfile' }">
     <a data-bind="attr: { href: isInOnboarding() ? null : '/userProfile' }"><i class="fa fa-fw ion-android-contact" aria-hidden="true"></i> Profile</a></li>
 <li data-bind="visible: !isAnonymous(), css: { 'is-disabled': isInOnboarding, active: active() === 'account' }">
