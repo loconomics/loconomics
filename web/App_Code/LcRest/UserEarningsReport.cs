@@ -67,11 +67,11 @@ namespace LcRest
         ) AS T
     ";
         #endregion
-        public static IEnumerable<UserEarningsReport> Query(int userID)
+        public static UserEarningsReport Query(int userID)
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlQuery, userID).Select(FromDB);
+                return FromDB(db.QuerySingle(sqlQuery, userID));
             }
         }
         #endregion

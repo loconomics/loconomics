@@ -66,7 +66,7 @@ export default class EarningsReport extends Komponent {
          * Earnings summary returned given query parameters.
          * @member {KnockoutObservable<object>}
          */
-        this.earningsReport = ko.observable();
+        this.earningsReport = ko.observable(null);
 
         // Request data and subscribes to updates
         this.subscribeTo(report.onData, this.earningsReport);

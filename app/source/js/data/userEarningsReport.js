@@ -9,7 +9,7 @@ import localforage from './drivers/localforage';
 import rest from './drivers/restClient';
 
 const API_NAME = 'me/earnings/report';
-const LOCAL_KEY = 'earnings';
+const LOCAL_KEY = 'earnings-report';
 
 /**
  * Gives a report with the global results of the user (without filtering).
