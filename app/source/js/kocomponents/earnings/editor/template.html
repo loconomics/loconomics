@@ -53,8 +53,20 @@
         ">
         <div class="col-xs-12">
             <legend>How did you find the work?</legend>
-            <label for="earningsEditor-externalListingID">Listing</label>
-            <!-- @iagosrl - please include a dropdown with:
+            <h2>Stored listings:</h2>
+            <ul class="TilesList TilesList--openEnd" data-bind="foreach: userExternalListings">
+                <li>
+                    <button type="button" data-bind="click: $component.selectListing" class="ListingSummaryItem">
+                        <div class="Item-content">
+                            <p data-bind="text: title"></p>
+                        </div>
+                        <div class="Item-action">
+                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                        </div>
+                    </button>
+                </li>
+            </ul>
+            <!--
                 Stored listings:
                 My Loconomics listing
                 My Thumbtack listing
@@ -68,7 +80,6 @@
                 Offline (My offline work)
                 Other (platform name)
             -->
-            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
             <a data-bind="click: goToStep.bind($data, 3)" class="btn-block text-center">Go back to previous step</a>
         </div>
     </fieldset>

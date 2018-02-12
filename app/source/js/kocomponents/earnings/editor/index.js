@@ -17,6 +17,7 @@ import ko from 'knockout';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
 import { item as userEarningsItem } from '../../../data/userEarnings';
+import { list as userExternalListingsList } from '../../../data/userExternalListings';
 
 const TAG_NAME = 'earnings-editor';
 
@@ -84,13 +85,30 @@ export default class EarningsEditor extends Komponent {
          * @param {Object} client
          * @method
          */
-        this.selectClient = function(client) {
+        this.selectClient = (client) => {
             // Updates edited entry with the client ID selected
             this.earningsEntry.clientUserID(client.clientID);
             // Save a reference, to display name and other info
             this.selectedClient(client);
             this.goToSummary();
-        }.bind(this);
+        };
+
+        /**
+         * Makes given listing the one selected
+         * @param {Object} listing
+         * @method
+         */
+        this.selectListing = (listing) => {
+            this.earningsEntry.userExternalListingID(listing.userExternalListingID);
+            this.earningsEntry.listingTitle(listing.title);
+            this.goToSummary();
+        };
+
+        /**
+         * Holds a list of the user external listings, available to be selected
+         * as the earnings entry listing.
+         */
+        this.userExternalListings = ko.observable();
 
         /// Steps management
 
@@ -183,47 +201,18 @@ export default class EarningsEditor extends Komponent {
 
         /// Data Operations
 
-        // We create an item manager to operate on the data for the requested ID
-        // (allows to load, save, delete).
-        const item = userEarningsItem(this.earningsEntry.earningsEntryID());
-
         /**
-         * Save data in the server
-         * @returns {Promise<object>}
+         * We create an item manager to operate on the data for the requested ID
+         * (allows to load, save, delete).
          */
-        this.save = () => {
-            if (!item) return;
-
-            this.isSaving(true);
-
-            item
-            .save(this.earningsEntry())
-            .then((freshData) => {
-                this.isSaving(false);
-                if (this.onSaved) {
-                    // Notify
-                    this.onSaved(freshData);
-                }
-                else {
-                    // Use updated/created data
-                    this.earningsEntry.model.updateWith(freshData);
-                }
-            })
-            .catch((error) => {
-                this.isSaving(false);
-                showError({
-                    title: 'There was an error saving the earnings entry',
-                    error
-                });
-            });
-        };
+        this.dataManager = userEarningsItem(this.earningsEntry.earningsEntryID());
 
         // When we have an ID, we need to load it first
         if (this.earningsEntry.earningsEntryID()) {
 
             this.isLoading(true);
 
-            item.onceLoaded()
+            this.dataManager.onceLoaded()
             .then((data) => {
                 this.isLoading(false);
                 if (this.editorMode() === EditorMode.copy) {
@@ -242,6 +231,55 @@ export default class EarningsEditor extends Komponent {
                 });
             });
         }
+    }
+
+    beforeBinding() {
+        /**
+         * Suscribe to data coming for the list and put them in our
+         * externalListing propery.
+         */
+        this.subscribeTo(userExternalListingsList.onData, this.userExternalListings);
+
+        /**
+         * Notify data load errors
+         */
+        this.subscribeTo(userExternalListingsList.onDataError, (err) => {
+            showError({
+                title: 'There was an error loading your external listings',
+                error: err
+            });
+        });
+    }
+
+    /**
+     * Save data in the server
+     * @returns {Promise<object>}
+     */
+    save() {
+        if (this.isSaving()) return;
+
+        this.isSaving(true);
+
+        this.dataManager
+        .save(this.earningsEntry())
+        .then((freshData) => {
+            this.isSaving(false);
+            if (this.onSaved) {
+                // Notify
+                this.onSaved(freshData);
+            }
+            else {
+                // Use updated/created data
+                this.earningsEntry.model.updateWith(freshData);
+            }
+        })
+        .catch((error) => {
+            this.isSaving(false);
+            showError({
+                title: 'There was an error saving the earnings entry',
+                error
+            });
+        });
     }
 }
 
