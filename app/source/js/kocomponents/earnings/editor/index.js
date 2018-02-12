@@ -13,23 +13,11 @@ import '../../../utils/autofocusBindingHandler';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
+import { item as userEarningsItem } from '../../../data/userEarnings';
 
 const TAG_NAME = 'earnings-editor';
-const dummyData = {
-    'Total': 320.00,
-    'PaidDate': '1/15/2018',
-    'Duration': 180,
-    'PlatformID': 2,
-    'JobTitleID': 106,
-    'Notes': 'Really enjoyed meeting Kyra and hope to work with her again.',
-    'ClientID': 141,
-    'ClientFirstName': 'Kyra',
-    'ClientLastName': 'Harrington',
-    'ClientEmail': 'kyra@loconomics.com',
-    'ClientPhoneNumber': '4159026022'
-};
-
 
 /**
  * Component
@@ -40,14 +28,10 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * @param {object} params
-     * @param {KnockoutObservable<string>}
-     * [params.editorMode]
-     * @param {KnockoutObservable<integer>}
-     * [params.earningsEntryID]
-     * @param {KnockoutObservable<integer>}
-     * [params.platformID]
-     * @param {KnockoutObservable<integer>}
-     * [params.startAtStep]
+     * @param {KnockoutObservable<string>} [params.editorMode]
+     * @param {KnockoutObservable<integer>} [params.earningsEntryID]
+     * @param {KnockoutObservable<integer>} [params.platformID]
+     * @param {KnockoutObservable<integer>} [params.startAtStep]
      */
     constructor(params) {
         super();
@@ -70,9 +54,9 @@ export default class EarningsEditor extends Komponent {
         this.earningsEntryID = getObservable(params.earningsEntryID || 0);
 
         /**
-         * @member {KnockoutObservable<number>}
+         * @member {KnockoutObservable<object>}
          */
-        this.clientID = ko.observable(0);
+        this.client = ko.observable(null);
 
         /**
          * Holds the ID for a platform if being added from the
@@ -81,12 +65,32 @@ export default class EarningsEditor extends Komponent {
          */
         this.platformID = getObservable(params.platformID || null);
 
+        this.duration = ko.pureComputed({
+            read: () => {
+                var e = this.earningsEntry();
+                return e && e.durationMinutes || 0;
+            },
+            write: (value) => {
+                var e = this.earningsEntry();
+                if (e) {
+                    e.durationMinutes = value;
+                }
+            }
+        });
+
+        /**
+         * Callback executed when the form is saved successfully, giving
+         * a copy of the server data
+         * @member {function}
+         */
+        this.onSaved = params.onSaved;
+
         /**
          * Client returned given query parameters.
          * @method
          */
         this.selectClient = function(client) {
-            this.clientID(ko.unwrap(client.clientID));
+            this.earningsEntry.clientUserID = client.clientID;
             this.goToSummary();
         }.bind(this);
 
@@ -94,7 +98,7 @@ export default class EarningsEditor extends Komponent {
          * Earnings entry returned given query parameters.
          * @member {KnockoutObservable<object>}
          */
-        this.earningsEntry = ko.observable(null);
+        this.earningsEntry = ko.observable({});
 
         /// Steps management
         // startAtStep parameter defaults to 1 when no value, BUT 0 is a valid value asking to start
@@ -185,10 +189,54 @@ export default class EarningsEditor extends Komponent {
          */
         this.isLocked = this.isSaving;
 
+        let item;
+
+        // On ID change, request to load the entry data
         this.observeChanges(() => {
-            this.earningsEntryID();
-            this.earningsEntry(dummyData);
+            const id = this.earningsEntryID();
+            item = userEarningsItem(id);
+            item.onceLoaded()
+            .then(this.earningsEntry)
+            .catch((error) => {
+                showError({
+                    title: 'There was an error loading the earnings entry',
+                    error
+                });
+            });
         });
+
+        /**
+         * Save data in the server
+         * @returns {Promise<object>}
+         */
+        this.save = () => {
+            if (!item) return;
+            if (!this.earningsEntry()) return;
+
+            this.isSaving(true);
+
+            item
+            .save(this.earningsEntry())
+            .then((freshData) => {
+                this.isSaving(false);
+                if (this.onSaved) {
+                    // Notify
+                    this.onSaved(freshData);
+                }
+                else {
+                    // Use updated/created data
+                    this.earningsEntry(freshData);
+                    this.earningsEntryID(freshData.earningsEntryID);
+                }
+            })
+            .catch((error) => {
+                this.isSaving(false);
+                showError({
+                    title: 'There was an error saving the earnings entry',
+                    error
+                });
+            });
+        };
     }
 }
 

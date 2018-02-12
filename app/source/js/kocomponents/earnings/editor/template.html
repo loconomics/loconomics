@@ -1,256 +1,259 @@
-<fieldset data-bind="
-        visible: isAtStep(1),
-        autofocus: isAtStep(1),
-        attr: {
-            id: editorMode() + 'EarningsForm-Total'
-        }
+<form data-bind="event: { submit: save }">
+    <fieldset data-bind="
+            visible: isAtStep(1),
+            autofocus: isAtStep(1),
+            attr: {
+                id: editorMode() + 'EarningsForm-Total'
+            }
+            ">
+        <div class="col-xs-12">
+            <button data-bind="visible: editorMode() == 'add'" class="btn btn-link btn-default" href="/earnings-copy">Copy recent entry</button>
+            <legend>How much were you paid?</legend>
+            <label for="total">Total</label>
+            <div class="form-group">
+                <input class="form-control"
+                    id="total"
+                    type="number"
+                    placeholder="$0.00"
+                    data-bind="
+                        value: earningsEntry().amount
+                    "/>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+        </div>
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(2),
+            autofocus: isAtStep(2),
+            attr: {
+                id: editorMode() + 'EarningsForm-Duration'
+            }
         ">
-    <div class="col-xs-12">
-        <button data-bind="visible: editorMode() == 'add'" class="btn btn-link btn-default" href="/earnings-copy">Copy recent entry</button>
-        <legend>How much were you paid?</legend>
-        <label for="total">Total</label>
-        <div class="form-group">
-            <input class="form-control"
-                id="total"
-                type="number"
-                placeholder="$0.00"
-                data-bind="
-                    value: earningsEntry().Total
-                "/>
+        <div class="col-xs-12">
+            <legend>How long did you work?</legend>
+            <label for="duration">Duration</label>
+            <div class="form-group">
+                <input-duration params="id: 'duration', durationInput: duration, durationStepValue: 15"></input-duration>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+            <a data-bind="click: goToStep.bind($data, 1)" class="btn-block text-center">Go back to previous step</a>
         </div>
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(2), 
-        autofocus: isAtStep(2),
-        attr: {
-            id: editorMode() + 'EarningsForm-Duration'
-        }
-    ">
-    <div class="col-xs-12">
-        <legend>How long did you work?</legend>
-        <label for="duration">Duration</label>
-        <div class="form-group">
-            <input-duration params="id: 'duration', durationInput: $component.duration, durationStepValue: 15"></input-duration>
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(3),
+            autofocus: isAtStep(3),
+            attr: {
+                id: editorMode() + 'EarningsForm-PaidDate'
+            }
+        ">
+        <div class="col-xs-12">
+            <legend>When were you paid?</legend>
+            <label for="paidDate">Date</label>
+            <!-- @iagosrl - please insert our date picker here -->
+            <div class="form-group">
+                <input class="form-control"
+                    id="paidDate"
+                    type="date"
+                    data-bind="
+                        value: earningsEntry().paidDate
+                    " />
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+            <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
         </div>
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-        <a data-bind="click: goToStep.bind($data, 1)" class="btn-block text-center">Go back to previous step</a>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(3), 
-        autofocus: isAtStep(3),
-        attr: {
-            id: editorMode() + 'EarningsForm-PaidDate'
-        }
-    ">
-    <div class="col-xs-12">
-        <legend>When were you paid?</legend>
-        <label for="paidDate">Date</label>
-        <!-- @iagosrl - please insert our date picker here -->
-        <div class="form-group">
-            <input class="form-control"
-                id="paidDate"
-                type="date"
-                data-bind="
-                    value: earningsEntry().PaidDate
-                " />
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(4),
+            autofocus: isAtStep(4),
+            attr: {
+                id: editorMode() + 'EarningsForm-Platform'
+            }
+        ">
+        <div class="col-xs-12">
+            <legend>How did you find the work?</legend>
+            <label for="platformID">Platform name</label>
+            <!-- @iagosrl - please include a dropdown with:
+                Stored listings:
+                My Loconomics listing
+                My Thumbtack listing
+                My Taskrabbit
+                More +
+                (suggested platforms)
+                99designs
+                Upwork
+                More +
+                (all platforms except suggested)
+                Offline (My offline work)
+                Other (platform name)
+            -->
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+            <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
         </div>
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-        <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(4), 
-        autofocus: isAtStep(4),
-        attr: {
-            id: editorMode() + 'EarningsForm-Platform'
-        }
-    ">
-    <div class="col-xs-12">
-        <legend>How did you find the work?</legend>
-        <label for="platformID">Platform name</label>
-        <!-- @iagosrl - please include a dropdown with:
-            Stored listings:
-            My Loconomics listing 
-            My Thumbtack listing
-            My Taskrabbit
-            More +
-            (suggested platforms)
-            99designs
-            Upwork
-            More +
-            (all platforms except suggested)
-            Offline (My offline work)
-            Other (platform name)
-          -->
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-        <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(5), 
-        autofocus: isAtStep(5),
-        attr: {
-            id: editorMode() + 'EarningsForm-JobType'
-        }
-    ">
-    <div class="col-xs-12">
-        <legend>What kind of services did you perform?</legend>
-        <label for="platformID">Job title(s)</label>
-        <!-- @iagosrl - add job-title-autocomplete here. It should allow just one job title -->
-        <div class="form-group">
-            <input class="form-control"
-                id="jobTitleID"
-                type="text"
-                placeholder=""
-                data-bind="
-                    value: earningsEntry().JobTitleID
-                " />
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(5),
+            autofocus: isAtStep(5),
+            attr: {
+                id: editorMode() + 'EarningsForm-JobType'
+            }
+        ">
+        <div class="col-xs-12">
+            <legend>What kind of services did you perform?</legend>
+            <label for="platformID">Job title(s)</label>
+            <!-- @iagosrl - add job-title-autocomplete here. It should allow just one job title -->
+            <div class="form-group">
+                <input class="form-control"
+                    id="jobTitleID"
+                    type="text"
+                    placeholder=""
+                    data-bind="
+                        value: earningsEntry().jobTitleID
+                    " />
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+            <a data-bind="click: goToStep.bind($data, 3)" class="btn-block text-center">Go back to previous step</a>
         </div>
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-        <a data-bind="click: goToStep.bind($data, 3)" class="btn-block text-center">Go back to previous step</a>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(6), 
-        autofocus: isAtStep(6),
-        attr: {
-            id: editorMode() + 'EarningsForm-Client'
-        }
-    ">
-    <div class="col-xs-12">
-        <legend>Who did you work for?</legend>
-        <!-- @iagosrl - I added a new step (7) to add a new client below if they click Add New Client and it jumps to that step. Not sure if that's the best route.  -->
-        <button type="button" data-bind="click: goToStep.bind($data, 7)" class="btn btn-link btn-default">Add new client</button>
-        <br>
-        <br>
-        <div class="form-group">
-            <label for="clientID">Select a current client</label>
-            <client-list id="clientID" params="listMode: 'select', selectItem: selectClient"></client-list>
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(6),
+            autofocus: isAtStep(6),
+            attr: {
+                id: editorMode() + 'EarningsForm-Client'
+            }
+        ">
+        <div class="col-xs-12">
+            <legend>Who did you work for?</legend>
+            <!-- @iagosrl - I added a new step (7) to add a new client below if they click Add New Client and it jumps to that step. Not sure if that's the best route.  -->
+            <button type="button" data-bind="click: goToStep.bind($data, 7)" class="btn btn-link btn-default">Add new client</button>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="clientID">Select a current client</label>
+                <client-list id="clientID" params="listMode: 'select', selectItem: selectClient"></client-list>
+            </div>
+            <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
         </div>
-        <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(7), 
-        autofocus: isAtStep(7),
-        attr: {
-            id: editorMode() + 'EarningsForm-AddNewClient'
-        }
-    ">
-    <div class="col-xs-12">
-        <legend>Add new client</legend>
-        <!-- @iagosrl - client-editor isn't working yet and needs a lot of work, but I added an editorMode for quickAdd to just have the first and last name, phone and email fields show. -->
-        <client-editor params="editorMode: 'quickAdd'"></client-editor>
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-        <a data-bind="click: goToStep.bind($data, 6)" class="btn-block text-center">Go back to previous step</a>
-    </div>
-</fieldset>
-<fieldset data-bind="
-        visible: isAtStep(8), 
-        autofocus: isAtStep(8),
-        attr: {
-            id: editorMode() + 'EarningsForm-Notes'
-        }
-    ">
-    <div class="col-xs-12">
-        <!-- @iagosrl - I purposefully skipped this step (similar to the booking) to save time and let them add notes if they want in the review step -->
-        <legend>Any notes about these earnings?</legend>        
-        <label for="notes">Notes</label>
-        <div class="form-group">
-            <textarea class="form-control"
-                id="notes"
-                rows="5"
-                placeholder=""
-                data-bind="
-                    value: earningsEntry().Notes
-                "></textarea>
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(7),
+            autofocus: isAtStep(7),
+            attr: {
+                id: editorMode() + 'EarningsForm-AddNewClient'
+            }
+        ">
+        <div class="col-xs-12">
+            <legend>Add new client</legend>
+            <!-- @iagosrl - client-editor isn't working yet and needs a lot of work, but I added an editorMode for quickAdd to just have the first and last name, phone and email fields show. -->
+            <client-editor params="editorMode: 'quickAdd'"></client-editor>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+            <a data-bind="click: goToStep.bind($data, 6)" class="btn-block text-center">Go back to previous step</a>
         </div>
-        <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+    </fieldset>
+    <fieldset data-bind="
+            visible: isAtStep(8),
+            autofocus: isAtStep(8),
+            attr: {
+                id: editorMode() + 'EarningsForm-Notes'
+            }
+        ">
+        <div class="col-xs-12">
+            <!-- @iagosrl - I purposefully skipped this step (similar to the booking) to save time and let them add notes if they want in the review step -->
+            <legend>Any notes about these earnings?</legend>
+            <label for="notes">Notes</label>
+            <div class="form-group">
+                <textarea class="form-control"
+                    id="notes"
+                    rows="5"
+                    placeholder=""
+                    data-bind="
+                        value: earningsEntry().notes
+                    "></textarea>
+            </div>
+            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+        </div>
+    </fieldset>
+    <div data-bind="
+            visible: isAtStep(0),
+            autofocus: isAtStep(0),
+            attr: {
+                id: editorMode() + 'EarningsForm-Summary'
+            },
+            with: isAtStep(0) && earningsEntry
+        ">
+        <div class="SectionHeading">
+            <h2>Date Paid</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 3)" aria-label= 'Edit date paid' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: paidDate" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !paidDate"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: paidDate"></p>
+        <div class="SectionHeading">
+            <h2>Total</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 1)" aria-label= 'Edit total' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: amount" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !amount"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: amount"></p>
+        <div class="SectionHeading">
+            <h2>Time Worked</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 2)" aria-label= 'Edit the time you worked' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: durationMinutes" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !durationMinutes"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: durationMinutes"></p>
+        <div class="SectionHeading">
+            <h2>Listing</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 4)" aria-label= 'Edit the platform' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: listingTitle" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !listingTitle"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: listingTitle"></p>
+        <div class="SectionHeading">
+            <h2>Job title</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 5)" aria-label= 'Edit the job title' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: jobTitleID" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !jobTitleID"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: jobTitleID"></p>
+        <div class="SectionHeading">
+            <h2>Client</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 6)" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: clientUserID" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !clientUserID"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="if: $component.client">
+            <span data-bind="text: $component.client().firstName"></span>
+            <span data-bind="text: $component.client().lastName"></span>
+        </p>
+        <div class="SectionHeading">
+            <h2>Notes</h2>
+            <button data-bind="click: $parent.goToStep.bind($data, 7)" aria-label= 'Edit the notes about your earnings' class="btn btn-icon-link pull-right">
+                <span>
+                    <icon-dec data-bind="visible: notes" params="icon: 'ion-edit'"></icon-dec>
+                    <icon-dec data-bind="visible: !notes"  params="icon: 'ion-plus'"></icon-dec>
+                </span>
+            </button>
+        </div>
+        <p data-bind="text: notes"></p>
+        <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked">Submit</button>
+        <p class="help-block">Please review carefully before submitting.</p>
     </div>
-</fieldset>
-<div data-bind="
-        visible: isAtStep(0), 
-        autofocus: isAtStep(0),
-        attr: {
-            id: editorMode() + 'EarningsForm-Summary'
-        },
-        with: earningsEntry
-    ">
-    <div class="SectionHeading">
-        <h2>Date Paid</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 3)" aria-label= 'Edit date paid' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: PaidDate" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !PaidDate"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p data-bind="text: PaidDate"></p>
-    <div class="SectionHeading">
-        <h2>Total</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 1)" aria-label= 'Edit total' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: Total" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !Total"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p data-bind="text: Total"></p>
-    <div class="SectionHeading">
-        <h2>Time Worked</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 2)" aria-label= 'Edit the time you worked' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: Duration" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !Duration"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p data-bind="text: Duration"></p>
-    <div class="SectionHeading">
-        <h2>Platform</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 4)" aria-label= 'Edit the platform' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: PlatformID" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !PlatformID"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p data-bind="text: PlatformID"></p>
-    <div class="SectionHeading">
-        <h2>Job title</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 5)" aria-label= 'Edit the job title' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: JobTitleID" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !JobTitleID"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p data-bind="text: JobTitleID"></p>
-    <div class="SectionHeading">
-        <h2>Client</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 6)" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: ClientFirstName" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !ClientFirstName"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p><span data-bind="visible: ClientFirstName, text: ClientFirstName"></span><span data-bind="visible: ClientLastName, text: ' ' + ClientLastName"></span></p>
-    <div class="SectionHeading">
-        <h2>Notes</h2>
-        <button data-bind="click: $parent.goToStep.bind($data, 7)" aria-label= 'Edit the notes about your earnings' class="btn btn-icon-link pull-right">
-            <span>
-                <icon-dec data-bind="visible: Notes" params="icon: 'ion-edit'"></icon-dec>
-                <icon-dec data-bind="visible: !Notes"  params="icon: 'ion-plus'"></icon-dec>
-            </span>
-        </button>
-    </div>
-    <p data-bind="text: Notes"></p>
-    <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="disable: isLocked">Submit</button>
-    <p class="help-block">Please review carefully before submitting.</p>
-</div>
-
-    
+</form>

@@ -30,13 +30,30 @@ export default class EarningsEditActivity extends Activity {
          */
         this.earningsEntryID = ko.observable();
         this.title = 'Edit earnings';
+
+        /**
+         * After data being saved, notice and go back
+         */
+        this.onSaved = () => {
+            app.successSave();
+        };
+
+        /**
+         * After being deleted, notice and go back to earnings
+         */
+        this.onDeleted = () => {
+            app.successSave({
+                message: 'Successfully deleted',
+                link: '/earnings-history'
+            });
+        };
     }
 
     show(state) {
         super.show(state);
         var params = state.route && state.route.segments;
         /**
-         * externalListingID is the first segment in the activity 
+         * externalListingID is the first segment in the activity
          * URL.
          */
         this.earningsEntryID(params[0] |0);
