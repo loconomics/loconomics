@@ -10,6 +10,7 @@ namespace LcRest
         #region Fields
         public int userID;
         public int earningsEntryID;
+        public decimal amount;
         public DateTimeOffset paidDate;
         public int durationMinutes;
         public int userExternalListingID;
@@ -44,6 +45,7 @@ namespace LcRest
             {
                 userID = record.userID,
                 earningsEntryID = record.earningsEntryID,
+                amount = record.amount,
                 paidDate = record.paidDate,
                 durationMinutes = record.durationMinutes,
                 userExternalListingID = record.userExternalListingID,
@@ -61,6 +63,7 @@ namespace LcRest
             SELECT TOP @1
                 userID,
                 earningsEntryID,
+                amount,
                 paidDate,
                 durationMinutes,
                 userExternalListingID,
@@ -168,6 +171,7 @@ namespace LcRest
                     ,jobTitleID = @5
                     ,clientUserID = @6
                     ,Notes = @7
+                    ,amount = @8
                     ,updatedDate = getdate()
                     ,ModifiedBy = 'user'
                 WHERE UserID = @userID AND earningsEntryID = @earningsEntryID
@@ -192,6 +196,7 @@ namespace LcRest
                     ,JobTitleID
                     ,ClientUserID
                     ,Notes
+                    ,Amount
                     ,CreatedDate
                     ,updatedDate
                     ,ModifiedBy
@@ -205,6 +210,7 @@ namespace LcRest
                     ,@5
                     ,@6
                     ,@7
+                    ,@8
                     ,getdate()
                     ,getdate()
                     ,'user'
@@ -226,7 +232,8 @@ namespace LcRest
                     entry.userExternalListingID,
                     entry.jobTitleID,
                     entry.clientUserID,
-                    entry.notes
+                    entry.notes,
+                    entry.amount
                 );
             }
         }
