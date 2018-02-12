@@ -102,7 +102,7 @@ export default class EarningsEditor extends Komponent {
         this.selectListing = (listing) => {
             this.earningsEntry.userExternalListingID(listing.userExternalListingID);
             this.earningsEntry.listingTitle(listing.title);
-            this.goToSummary();
+            this.saveStep();
         };
 
         /**
