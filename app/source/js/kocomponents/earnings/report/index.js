@@ -8,20 +8,10 @@ import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import { globalReport as report } from '../../../data/userEarningsReport';
 import template from './template.html';
 
 const TAG_NAME = 'earnings-report';
-const dummyData = {
-    'Total': 23250.00,
-    'Period': '2017 Year-to-date',
-    'JobTitle': 'All job titles',
-    'Platform': 'all platforms',
-    'PaidOut': 23000.00,
-    'Expected': 250.00,
-    'AverageHourlyRate': 23.83,
-    'HoursWorked': 975.50,
-    'Bookings': 57
-};
 
 /**
  * Component
@@ -78,8 +68,8 @@ export default class EarningsReport extends Komponent {
          */
         this.earningsReport = ko.observable();
 
-        // Testing with dummy data
-        this.earningsReport(dummyData);
+        // Request data and subscribes to updates
+        this.subscribeTo(report.onData, this.earningsReport);
     }
 }
 
