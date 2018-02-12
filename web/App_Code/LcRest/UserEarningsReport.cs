@@ -19,6 +19,14 @@ namespace LcRest
                 return total / (totalDurationMinutes / 60M);
             }
         }
+        /// <summary>
+        /// Job title name or 'all' depending on the report query
+        /// </summary>
+        public string jobTitleName = "All job titles";
+        /// <summary>
+        /// Listing title or 'all' depending on the report query
+        /// </summary>
+        public string listingTitle = "All listings/platforms";
         #endregion
 
         #region Instances
