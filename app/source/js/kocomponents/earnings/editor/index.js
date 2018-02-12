@@ -270,10 +270,11 @@ export default class EarningsEditor extends Komponent {
             .then((data) => {
                 this.isLoading(false);
                 if (this.editorMode() === EditorMode.copy) {
-                    // On copy mode, we need to reset the ID so it forces to
-                    // create a new entry (otherwise it will actually update
-                    // the original one)
+                    // On copy mode, we need to reset the ID and dataManager
+                    // so it forces to create a new entry (otherwise it will
+                    // actually update the original one)
                     data.earningsEntryID = 0;
+                    this.dataManager = userEarningsItem(0);
                 }
                 this.earningsEntry.model.updateWith(data);
             })
