@@ -15,7 +15,7 @@ namespace LcRest
         public int durationMinutes;
         public int userExternalListingID;
         public int jobTitleID;
-        public int clientUserID;
+        public int? clientUserID;
         public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
         public string notes;

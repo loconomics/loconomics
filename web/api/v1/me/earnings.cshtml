@@ -157,7 +157,6 @@
             Validation.RequireField("durationMinutes", LcRessources.RequiredField("Duration"));
             Validation.RequireField("userExternalListingID", LcRessources.RequiredField("Listing"));
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
-            Validation.RequireField("clientUserID", LcRessources.RequiredField("Client"));
             Validation.Add("amount", Validator.Decimal("The total must be a valid number"));
 
             return Validation.IsValid() && ModelState.IsValid;
@@ -199,7 +198,7 @@
                 durationMinutes = Request.Form["durationMinutes"].AsInt(),
                 userExternalListingID = Request.Form["userExternalListingID"].AsInt(),
                 jobTitleID = Request.Form["jobTitleID"].AsInt(),
-                clientUserID = Request.Form["clientUserID"].AsInt(),
+                clientUserID = Request.Form["clientUserID"].IsInt() ? Request.Form["clientUserID"].AsInt() : (int?)null,
                 amount = Request.Form["amount"].AsDecimal(),
                 notes = Request.Form["notes"]
             };
