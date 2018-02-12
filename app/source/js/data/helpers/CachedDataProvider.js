@@ -146,8 +146,13 @@ export default class CachedDataProvider {
                 };
                 // Replace cached data
                 return settings.local.push(cachedData)
-                // and return it when done
-                .then(() => cachedData);
+                .then(() => {
+                    // Notify the change
+                    this.onCachedData.emit(cachedData);
+                    this.onCacheChanged.emit(cachedData);
+                    // and return it when done
+                    return cachedData;
+                });
             },
             /**
              * Deletes local cached data.
@@ -162,7 +167,11 @@ export default class CachedDataProvider {
                     data: null,
                     // null means no data to check, undefined means not loaded still
                     latest: null
-                }));
+                }))
+                .then(() => {
+                    // Notify the change
+                    this.onCacheChanged.emit(null);
+                });
             },
             /**
              * Marks cached data as invalid by touching a flag, while keeping
@@ -180,7 +189,10 @@ export default class CachedDataProvider {
                         // next time
                         latest: null
                     })
-                );
+                )
+                .then(() => {
+                    this.onCacheInvalidated.emit();
+                });
             }
         };
 
@@ -280,6 +292,36 @@ export default class CachedDataProvider {
                 }
             }
         );
+        /**
+         * Notification when data has being stored in the cache.
+         * It includes the data.
+         * NOTE: data is stored in the cache usually as a result of onRemoteLoaded
+         * and onSaved; that's a write operation excluding removal.
+         * @member {SingleEvent<any>}
+         */
+        this.onCachedData = new SingleEvent(this);
+        /**
+         * Notification when the content of the cache has changed, any write
+         * operation on the data, but not on metadata, meaning that some
+         * data was stored or removed.
+         * It includes the data except when is a removal that is null.
+         * NOTE: the cache changes usually as a result of onRemoteLoaded,
+         * onSaved, onDeleted, or a cache clearing operation.
+         * NOTE: invalidating the cache is not notified, since only the metadata
+         * and not the content data has changed.
+         * @member {SingleEvent<any>}
+         */
+        this.onCacheChanged = new SingleEvent(this);
+        /**
+         * Notification when the content of the cache has being marked
+         * as invalid.
+         * Does not receive parameters.
+         * NOTE: invalidation means the data has not changed, but marked as
+         * requires an update on next use. Use onCacheChanged or onCachedData
+         * to get actual updates on data.
+         * @member {SingleEvent}
+         */
+        this.onCacheInvalidated = new SingleEvent(this);
     }
 
     /**
