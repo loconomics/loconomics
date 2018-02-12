@@ -19,6 +19,8 @@ namespace LcRest
         public DateTimeOffset createdDate;
         public DateTimeOffset updatedDate;
         public string notes;
+        public string jobTitleName;
+        public string listingTitle;
         #endregion
 
         #region Computed fields
@@ -53,7 +55,9 @@ namespace LcRest
                 clientUserID = record.clientUserID,
                 createdDate = record.createdDate,
                 updatedDate = record.updatedDate,
-                notes = record.notes
+                notes = record.notes,
+                jobTitleName = record.jobTitleName,
+                listingTitle = record.listingTitle
             };
         }
         #endregion
@@ -61,35 +65,41 @@ namespace LcRest
         #region Fetch
         const string sqlSelect = @"
             SELECT TOP @1
-                userID,
-                earningsEntryID,
-                amount,
-                paidDate,
-                durationMinutes,
-                userExternalListingID,
-                jobTitleID,
-                clientUserID,
-                notes,
-                createdDate,
-                updatedDate
+                e.userID,
+                e.earningsEntryID,
+                e.amount,
+                e.paidDate,
+                e.durationMinutes,
+                e.userExternalListingID,
+                e.jobTitleID,
+                e.clientUserID,
+                e.notes,
+                j.positionSingular as jobTitleName,
+                l.title as listingTitle,
+                e.createdDate,
+                e.updatedDate
             FROM
-                UserEarningsEntry
+                UserEarningsEntry as e
+                INNER JOIN positions as j
+                ON e.jobTitleID = j.positionID
+                INNER JOIN UserExternalListing as l
+                ON l.userExternalListingID = e.userExternalListingID
             WHERE
-                Active = 1
-                AND UserID = @0
+                e.Active = 1
+                AND e.UserID = @0
                 AND
-                (@2 is null OR earningsEntryID < @2)
+                (@2 is null OR e.earningsEntryID < @2)
                 AND
-                (@3 is null OR earningsEntryID > @3)
+                (@3 is null OR e.earningsEntryID > @3)
         ";
         const string sqlAndID = @"
-                AND earningsEntryID = @1
+                AND e.earningsEntryID = @1
         ";
         private const string sqlOrderDesc = @"
-            ORDER BY paidDate DESC
+            ORDER BY e.paidDate DESC
         ";
         private const string sqlOrderAsc = @"
-            ORDER BY paidDate ASC
+            ORDER BY e.paidDate ASC
         ";
         public static UserEarningsEntry Get(int userID, int earningsEntryID)
         {
