@@ -1,5 +1,5 @@
 /**
- * Manages the user earnings entries, get reporting statistics.
+ * Manages the user earnings entries.
  */
 import CachedDataProvider from './helpers/CachedDataProvider';
 import LocalForageIndexedListDataProviderDriver from './helpers/LocalForageIndexedListDataProviderDriver';
