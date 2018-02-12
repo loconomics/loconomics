@@ -1,34 +1,11 @@
 <h2 data-bind="visible: earningsList()">Recent Earnings</h2>
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: earningsList">
-    <li data-bind="attr: { id: 'earnings' + EarningsEntryID }">
+    <li data-bind="attr: { id: 'earnings' + earningsEntryID }">
         <!-- ko if: $component.listMode() == 'select' -->
         <button type="button" data-bind="click: $component.selectItem" class="ListingSummaryItem">
             <div class="Item-content">
-                <p>
-                    <strong><span data-bind="
-                        text: Total,
-                        format: {
-                            type: 'number',
-                            format: '$0,0.00'
-                        }
-                        ">
-                    </span></strong>
-                        on
-                    <span data-bind="text: PaidDate"></span>
-                </p>
-                <p>
-                    <span data-bind="
-                        text: Duration/60,
-                        format: {
-                            type: 'number',
-                            format: '0.00'
-                        }
-                        ">
-                    </span>  hours of
-                    <span data-bind="
-                        text: JobTitleName + ' services on ' + PlatformName
-                    "></span>
-                </p>
+                <p data-bind="text: $component.firstLine($data)"></p>
+                <p data-bind="text: $component.secondLine($data)"></p>
             </div>
             <div class="Item-action">
                 <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
@@ -36,34 +13,10 @@
         </button>
         <!-- /ko -->
         <!-- ko if: $component.listMode() == 'link' -->
-        <a href="#" data-bind="attr: { href: '/earnings-view/' + EarningsEntryID + '?mustReturn=earnings-history' + '&returnText=Earnings History'
-        } " class="ListingSummaryItem">
+        <a href="#" data-bind="attr: { href: $component.linkToItemView($data) } " class="ListingSummaryItem">
             <div class="Item-content">
-                <p>
-                    <strong><span data-bind="
-                        text: Total,
-                        format: {
-                            type: 'number',
-                            format: '$0,0.00'
-                        }
-                        ">
-                    </span></strong>
-                        on
-                    <span data-bind="text: PaidDate"></span>
-                </p>
-                <p>
-                    <span data-bind="
-                        text: Duration/60,
-                        format: {
-                            type: 'number',
-                            format: '0.00'
-                        }
-                        ">
-                    </span>  hours of
-                    <span data-bind="
-                        text: JobTitleName + ' services on ' + PlatformName
-                    "></span>
-                </p>
+                    <p data-bind="text: $component.firstLine($data)"></p>
+                    <p data-bind="text: $component.secondLine($data)"></p>
             </div>
             <div class="Item-action">
                 <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>

@@ -10,7 +10,10 @@ import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import moment from 'moment';
+import numeral from 'numeral';
 import template from './template.html';
+import { list as userEarningsList } from '../../../data/userEarnings';
 
 const TAG_NAME = 'earnings-list';
 
@@ -37,7 +40,7 @@ export default class EarningsList extends Komponent {
      * to the item object.
      */
     constructor(params) {
-      super();
+        super();
 
         /**
          * Captures from the activity which "mode" the list
@@ -59,9 +62,36 @@ export default class EarningsList extends Komponent {
          */
         this.earningsList = ko.observableArray();
 
-        this.observeChanges(() => {
-            this.earningsList({});
-        });
+        // Use earnings data when available
+        this.subscribeTo(userEarningsList.onData, this.earningsList);
+
+        /**
+         * Creats link to an expanded view of the item
+         * @param {Object} item An earnings entry plain object
+         * @returns {string}
+         */
+        this.linkToItemView = (item) => `/earnings-view/${item.earningsEntryID}?mustReturn=earnings-history&returnText=Earnings History`;
+
+        /**
+         * Text to display about an earning on the first line
+         * @param {Object} item An earnings entry plain object
+         * @returns {string}
+         */
+        this.firstLine = (item) => {
+            const amount = numeral(item.amount).format('$0,0.00');
+            const date = moment(item.paidDate).format('LLL');
+            return `${amount} on ${date}`;
+        };
+
+        /**
+         * Text to display about an earning on the second line
+         * @param {Object} item An earnings entry plain object
+         * @returns {string}
+         */
+        this.secondLine = (item) => {
+            const hours = numeral(item.durationMinutes / 60).format('0.00');
+            return `${hours} hours of ${item.jobTitleName} services on ${item.listingTitle}`;
+        };
     }
 }
 
