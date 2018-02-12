@@ -62,8 +62,9 @@
             var limit = Request["limit"].AsInt(40);
             int? untilID = Request["untilID"].IsInt() ? Request["untilID"].AsInt() : (int?)null;
             int? sinceID = Request["sinceID"].IsInt() ? Request["sinceID"].AsInt() : (int?)null;
+            var locale = LcRest.Locale.Current;
 
-            return LcRest.UserEarningsEntry.GetList(userID, limit, untilID, sinceID);
+            return LcRest.UserEarningsEntry.GetList(userID, locale.languageID, locale.countryID, limit, untilID, sinceID);
         }
 
         public override dynamic Get()
@@ -80,7 +81,8 @@
             {
                 var userID = WebSecurity.CurrentUserId;
                 var itemID = UrlData[0].AsInt();
-                var item = LcRest.UserEarningsEntry.Get(userID, itemID);
+                var locale = LcRest.Locale.Current;
+                var item = LcRest.UserEarningsEntry.Get(userID, itemID, locale.languageID, locale.countryID);
                 if (item != null)
                 {
                     return item;
@@ -128,9 +130,10 @@
             {
                 var userID = WebSecurity.CurrentUserId;
                 var itemID = UrlData[0].AsInt();
+                var locale = LcRest.Locale.Current;
 
                 // Get a copy before deletion to send later
-                var item = LcRest.UserEarningsEntry.Get(userID, itemID);
+                var item = LcRest.UserEarningsEntry.Get(userID, itemID, locale.languageID, locale.countryID);
 
                 if (item == null)
                 {
@@ -181,7 +184,8 @@
             }
 
             // Returns the updated client data
-            return LcRest.UserEarningsEntry.Get(userID, item.earningsEntryID);
+            var locale = LcRest.Locale.Current;
+            return LcRest.UserEarningsEntry.Get(userID, item.earningsEntryID, locale.languageID, locale.countryID);
         }
 
         private LcRest.UserEarningsEntry GetItemFromForm()

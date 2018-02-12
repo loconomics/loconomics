@@ -64,7 +64,7 @@ namespace LcRest
 
         #region Fetch
         const string sqlSelect = @"
-            SELECT TOP @1
+            SELECT TOP @LIMIT
                 e.userID,
                 e.earningsEntryID,
                 e.amount,
@@ -87,13 +87,15 @@ namespace LcRest
             WHERE
                 e.Active = 1
                 AND e.UserID = @0
+                AND j.languageID = @1
+                AND j.countryID = @2
                 AND
-                (@2 is null OR e.earningsEntryID < @2)
+                (@4 is null OR e.earningsEntryID < @4)
                 AND
-                (@3 is null OR e.earningsEntryID > @3)
+                (@5 is null OR e.earningsEntryID > @5)
         ";
         const string sqlAndID = @"
-                AND e.earningsEntryID = @1
+                AND e.earningsEntryID = @3
         ";
         private const string sqlOrderDesc = @"
             ORDER BY e.paidDate DESC
@@ -101,15 +103,15 @@ namespace LcRest
         private const string sqlOrderAsc = @"
             ORDER BY e.paidDate ASC
         ";
-        public static UserEarningsEntry Get(int userID, int earningsEntryID)
+        public static UserEarningsEntry Get(int userID, int earningsEntryID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlSelect + sqlAndID, userID, earningsEntryID));
+                return FromDB(db.QuerySingle(sqlSelect + sqlAndID, userID, languageID, countryID, earningsEntryID));
             }
         }
 
-        public static IEnumerable<UserEarningsEntry> GetList(int userID, int limit, int? untilID = null, int? sinceID = null)
+        public static IEnumerable<UserEarningsEntry> GetList(int userID, int languageID, int countryID, int limit, int? untilID = null, int? sinceID = null)
         {
             // Limits: Minimum: 1, Maximum: 100
             limit = Math.Max(1, Math.Min(limit, 100));
@@ -129,11 +131,11 @@ namespace LcRest
 
             using (var db = new LcDatabase())
             {
-                // db.Query has a bug not processiong parameters in 'select top @1'
-                // so manual replacement
-                sql = sql.Replace("@1", limit.ToString());
+                // db.Query has a bug not processing parameters as part of a 'select top @0'
+                // so we do manual replacement, and for convenience we use a name
+                sql = sql.Replace("@LIMIT", limit.ToString());
 
-                var data = db.Query(sql, userID, limit, untilID, sinceID)
+                var data = db.Query(sql, userID, languageID, countryID, limit, untilID, sinceID)
                 .Select(FromDB);
 
                 if (usingSinceOnly)
