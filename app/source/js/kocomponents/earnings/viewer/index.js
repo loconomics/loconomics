@@ -1,33 +1,18 @@
-
 /**
  * Used to view the details of an earnings entry.
- * 
+ *
  * @module kocomponents/earnings/viewer
  *
  */
-
 import Komponent from '../../helpers/KnockoutComponent';
+import clients from '../../../data/clients';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
+import { item as userEarningsItem } from '../../../data/userEarnings';
 
 const TAG_NAME = 'earnings-viewer';
-const dummyData = {};
-dummyData[1] ={
-    'EarningsEntryID': 1,
-    'PaidDate': '12/31/2017',
-    'Total': 320.00,
-    'Duration': 180,
-    'PlatformID': 2,
-    'JobTitleID': 106,
-    'Notes': 'Really enjoyed meeting Kyra and hope to work with her again.',
-    'ClientID': 141,
-    'ClientFirstName': 'Kyra',
-    'ClientLastName': 'Harrington',
-    'ClientEmail': 'kyra@loconomics.com',
-    'ClientPhoneNumber': '4159026022'
-};
-
 
 /**
  * Component
@@ -38,7 +23,7 @@ export default class EarningsViewer extends Komponent {
 
     /**
      * @param {object} params
-     * @param {(number|KnockoutObservable<number>)} 
+     * @param {(number|KnockoutObservable<number>)}
      * [params.earningsEntryID]
      */
     constructor(params) {
@@ -56,9 +41,106 @@ export default class EarningsViewer extends Komponent {
          */
         this.earningsEntry = ko.observable();
 
+        /**
+         * Gets a (aria) label for the edit link
+         * @param {object} item Earnings entry plain object
+         * @returns {string}
+         */
+        this.getEditLinkLabel = (item) => `Edit earnings entry ${item.earningsEntryID}`;
+
+        /**
+         * Build a link to edit the item
+         * @param {object} item Earnings entry plain object
+         * @returns {string}
+         */
+        this.linkToEdit = (item) => `/earnings-edit/${item.earningsEntryID}?mustReturn=earnings-view/${item.earningsEntryID}&returnText=View Earnings`;
+
+        /**
+         * Display the duration of an entry
+         * @param {object} item Earnings entry plain object
+         * @returns {string}
+         */
+        this.displayDuration = (item) => {
+            var minutes = item.durationMinutes;
+            return `${minutes} minutes`;
+        };
+
+        /**
+         * Holds an object with the client information
+         * @member {KnockoutObservable<models/Client>}
+         */
+        this.client = ko.observable(null);
+
+        /**
+         * Display the client name/info of the current earning entry
+         * @member {KnockoutComputed<string>}
+         */
+        this.displayClient = ko.pureComputed(() => {
+            const c = this.client();
+            if (c) {
+                return c.fullName();
+            }
+            else {
+                return '';
+            }
+        });
+
+        /**
+         * Holds a subscription to updates about data for a specific item
+         * @private {SingleEvent/Subscription}
+         */
+        let dataSubscription;
+        /**
+         * Holds a subscription to error notifications load data for a specific item
+         * @private {SingleEvent/Subscription}
+         */
+        let dataErrorSubscription;
+        /**
+         * Reset current data displayed and remove previous subscriptions
+         * to data updates.
+         * Useful when the ID changes, in order to prevent displaying previous ID
+         * data and stop receiving notifications for that.
+         * @private
+         * @method
+         */
+        const resetData = () => {
+            this.earningsEntry(null);
+            this.client(null);
+            if (dataSubscription) {
+                dataSubscription.dispose();
+            }
+            if (dataErrorSubscription) {
+                dataErrorSubscription.dispose();
+            }
+        };
+
+        /**
+         * When the ID changes, the information is
+         * updated for the specific platform.
+         */
         this.observeChanges(() => {
-            const data = dummyData[this.earningsEntryID()];
-            this.earningsEntry(data);
+            const id = this.earningsEntryID();
+            // reset data and previous ID notifications
+            resetData();
+            if (id) {
+                const item = userEarningsItem(id);
+                // Load item data
+                dataSubscription = this.subscribeTo(item.onData, (data) => {
+                    this.earningsEntry(data);
+                    // Load info about the client of this entry
+                    clients.getItem(data.clientUserID)
+                    .then((client) => {
+                        this.client(client);
+                    });
+                });
+                // Notify data load errors
+                dataErrorSubscription = this.subscribeTo(item.onDataError, (err) => {
+                    showError({
+                        title: 'There was an error loading the earning entry',
+                        error: err
+                    });
+                });
+            }
         });
     }
 }

@@ -1,21 +1,25 @@
 <div data-bind="with: earningsEntry">
     <div class="SectionHeading">
-        <h2>Earnings entry #<span data-bind="text: EarningsEntryID"></span></h2>
-        <a class="btn btn-icon-link btn-default pull-right" data-bind="attr: { 'aria-label': 'Edit earnings entry '+ EarningsEntryID, href: '/earnings-edit/' + EarningsEntryID + '?mustReturn=earnings-view/' + EarningsEntryID + '&returnText=View Earnings' }">Edit</a>
+        <h2>Earnings entry #<span data-bind="text: earningsEntryID"></span></h2>
+        <a class="btn btn-icon-link btn-default pull-right" data-bind="attr: {
+            'aria-label': $component.getEditLinkLabel($data),
+            href: $component.linkToEdit($data) }">
+            Edit
+        </a>
     </div>
     <h2>Date Paid</h2>
-    <p data-bind="text: PaidDate"></p>
+    <p data-bind="text: paidDate, format: { type: 'datetime', format: 'LLL' }"></p>
     <h2>Total</h2>
-    <p data-bind="text: Total"></p>
+    <p data-bind="text: amount, format: { type: 'number', format: '$0,0.00' }"></p>
     <h2>Time worked</h2>
-    <p data-bind="text: Duration"></p>
-    <h2>Platform</h2>
-    <p data-bind="text: PlatformID"></p>
+    <p data-bind="text: $component.displayDuration($data)"></p>
+    <h2>Listing</h2>
+    <p data-bind="text: listingTitle"></p>
     <h2>Job title</h2>
-    <p data-bind="text: JobTitleID"></p>
+    <p data-bind="text: jobTitleName"></p>
     <h2>Notes</h2>
-    <p data-bind="text: Notes"></p>
+    <p data-bind="text: notes"></p>
     <h2>Client</h2>
-    <p data-bind="text: ClientFirstName + ' ' + ClientLastName"></p>
+    <p data-bind="text: $component.displayClient()"></p>
 </div>
-   
+

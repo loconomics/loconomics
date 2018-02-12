@@ -4,7 +4,6 @@
  * @module activities/earnings-view
  *
  */
-
 import '../../kocomponents/earnings/viewer';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
@@ -36,7 +35,7 @@ export default class EarningsViewActivity extends Activity {
         super.show(state);
         var params = state.route && state.route.segments;
         /**
-         * earningsEntryID is the first segment in the activity 
+         * earningsEntryID is the first segment in the activity
          * URL.
          */
         this.earningsEntryID(params[0] |0);
