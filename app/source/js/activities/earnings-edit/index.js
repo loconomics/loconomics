@@ -53,7 +53,7 @@ export default class EarningsEditActivity extends Activity {
         super.show(state);
         var params = state.route && state.route.segments;
         /**
-         * externalListingID is the first segment in the activity
+         * ID is the first segment in the activity
          * URL.
          */
         this.earningsEntryID(params[0] |0);
