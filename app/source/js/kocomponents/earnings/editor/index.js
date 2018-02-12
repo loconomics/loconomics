@@ -10,6 +10,7 @@ import '../../client/list';
 import '../../utilities/icon-dec';
 import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
+import '../../input/date';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserEarningsEntry from '../../../models/UserEarningsEntry';
 import ko from 'knockout';

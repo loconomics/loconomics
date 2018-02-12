@@ -40,14 +40,8 @@
         <div class="col-xs-12">
             <legend>When were you paid?</legend>
             <label for="earningsEditor-paidDate">Date</label>
-            <!-- @iagosrl - please insert our date picker here -->
             <div class="form-group">
-                <input class="form-control"
-                    id="earningsEditor-paidDate"
-                    type="date"
-                    data-bind="
-                        textInput: earningsEntry.paidDate
-                    " />
+                <input-date params="selectedDate: earningsEntry.paidDate"></input-date>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
             <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
@@ -165,7 +159,7 @@
                 </span>
             </button>
         </div>
-        <p data-bind="text: paidDate, format: { type: 'datetime', format: 'LLL' }"></p>
+        <p data-bind="text: paidDate, format: { type: 'datetime', format: 'LL' }"></p>
 
         <div class="SectionHeading">
             <h2>Total</h2>
