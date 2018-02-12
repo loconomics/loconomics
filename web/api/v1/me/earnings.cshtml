@@ -34,6 +34,7 @@
                 "userExternalListingID": 1,
                 "jobTitleID": 106,
                 "clientUserID": 141,
+                "amount": 120.40,
                 "notes": "Something else"
             }
         },
@@ -46,6 +47,7 @@
                 "userExternalListingID": 1,
                 "jobTitleID": 106,
                 "clientUserID": 141,
+                "amount": 120.40,
                 "notes": "Something else"
             },
             "delete": { }
@@ -156,6 +158,7 @@
             Validation.RequireField("userExternalListingID", LcRessources.RequiredField("Listing"));
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
             Validation.RequireField("clientUserID", LcRessources.RequiredField("Client"));
+            Validation.Add("amount", Validator.Decimal("The total must be a valid number"));
 
             return Validation.IsValid() && ModelState.IsValid;
         }
@@ -197,6 +200,7 @@
                 userExternalListingID = Request.Form["userExternalListingID"].AsInt(),
                 jobTitleID = Request.Form["jobTitleID"].AsInt(),
                 clientUserID = Request.Form["clientUserID"].AsInt(),
+                amount = Request.Form["amount"].AsDecimal(),
                 notes = Request.Form["notes"]
             };
         }
