@@ -3,7 +3,8 @@
 **/
 'use strict';
 
-var Model = require('./Model');
+import Model from './Model';
+import ko from 'knockout';
 
 class UserEarningsEntry {
     constructor(values) {
@@ -12,7 +13,7 @@ class UserEarningsEntry {
         this.model.defProperties({
             userID: 0,
             earningsEntryID: 0,
-            amount: 0,
+            amount: null,
             paidDate: null,
             durationMinutes: 0,
             userExternalListingID: null,
@@ -24,6 +25,16 @@ class UserEarningsEntry {
             createdDate: null,
             updatedDate: null
         }, values);
+
+        /**
+         * Display the duration in human friendly format
+         * @returns {string}
+         */
+        this.displayDuration = ko.pureComputed(() => {
+            const hours = Math.floor(this.durationMinutes() / 60);
+            const minutes = this.durationMinutes() - (hours * 60);
+            return `${hours} hours ${minutes} minutes`;
+        });
     }
 }
 
