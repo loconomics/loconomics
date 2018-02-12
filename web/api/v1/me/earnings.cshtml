@@ -38,7 +38,7 @@
                 "notes": "Something else"
             }
         },
-        "Earnigs entry (udpate and delete": {
+        "Earnings entry (udpate and delete": {
             "url": "/api/v1/en-US/me/earnings/123",
             "get": { },
             "put": {
@@ -51,6 +51,10 @@
                 "notes": "Something else"
             },
             "delete": { }
+        },
+        "Earnings Report (queries)": {
+            "url": "/api/v1/en-US/me/earnings/report",
+            "get": { }
         }
     }
 *@
@@ -77,7 +81,7 @@
             }
             else if (UrlData[0] == "report" && UrlData.Count == 1)
             {
-                // TODO
+                return LcRest.UserEarningsReport.Query(WebSecurity.CurrentUserId);
             }
             else if (UrlData[0].IsInt() && UrlData.Count == 1)
             {
