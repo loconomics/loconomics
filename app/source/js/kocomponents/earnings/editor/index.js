@@ -16,25 +16,9 @@ import ko from 'knockout';
 import template from './template.html';
 
 const TAG_NAME = 'earnings-editor';
-const dummyData = {};
-dummyData[0] =
-{
-    'Total': 0.00,
-    'PaidDate': null,
-    'Duration': 60,
-    'PlatformID': null,
-    'JobTitleID': null,
-    'Notes': null,
-    'ClientID': null,
-    'ClientFirstName': null,
-    'ClientLastName': null,
-    'ClientEmail': null,
-    'ClientPhoneNumber': null
-};
-dummyData[1] =
-{
+const dummyData = {
     'Total': 320.00,
-    'PaidDate': '1/15/2018', 
+    'PaidDate': '1/15/2018',
     'Duration': 180,
     'PlatformID': 2,
     'JobTitleID': 106,
@@ -67,19 +51,19 @@ export default class EarningsEditor extends Komponent {
      */
     constructor(params) {
         super();
-        
+
         /**
          * Captures from the activity which "mode" the editor
-         * component is to be used. 
-         * add: no values 
+         * component is to be used.
+         * add: no values
          * edit:
          * copy:
          * @member {KnockoutObservable<string>}
          */
         this.editorMode = getObservable(params.editorMode);
-    
+
         /**
-         * Holds the ID for an earnings entry if being edited or 
+         * Holds the ID for an earnings entry if being edited or
          * copied.
          * @member {KnockoutObservable<number>}
          */
@@ -89,7 +73,7 @@ export default class EarningsEditor extends Komponent {
          * @member {KnockoutObservable<number>}
          */
         this.clientID = ko.observable(0);
-        
+
         /**
          * Holds the ID for a platform if being added from the
          * external-listing-view activity.
@@ -113,11 +97,19 @@ export default class EarningsEditor extends Komponent {
         this.earningsEntry = ko.observable(null);
 
         /// Steps management
+        // startAtStep parameter defaults to 1 when no value, BUT 0 is a valid value asking to start
+        // at the summary
+        let startAtStep = ko.unwrap(params.startAtStep);
+        if (startAtStep === null || typeof startAtStep === 'undefined') {
+            // Default value
+            startAtStep = 1;
+        }
+
         /**
          * Keeps track of the current step being displayed
          * @member {KnockoutObservable<integer>}
          */
-        this.currentStep = getObservable(params.startAtStep || 1);
+        this.currentStep = ko.observable(startAtStep);
 
         /**
          * Returns which step the user is on in the form.
@@ -125,7 +117,7 @@ export default class EarningsEditor extends Komponent {
          */
         this.isAtStep = function(number) {
             return ko.pureComputed( () => this.currentStep() === number);
-        }; 
+        };
 
         /**
          * Takes the user to the next step in the form.
@@ -133,7 +125,7 @@ export default class EarningsEditor extends Komponent {
          */
         this.goNextStep = function() {
             this.currentStep(this.currentStep() + 1);
-        }; 
+        };
 
         this.goToStep = (step) => {
             this.currentStep(step);
@@ -143,7 +135,7 @@ export default class EarningsEditor extends Komponent {
             this.currentStep(0);
             this.editorMode('edit');
             this.stepButtonLabel = 'Save';
-        }; 
+        };
 
          /**
          * Takes the user to the next step in the form.
@@ -156,8 +148,8 @@ export default class EarningsEditor extends Komponent {
             else {
                 return 'Save';
             }
-        }); 
-        
+        });
+
         /**
          * Takes the user to the next step in the form.
          * @member {KnockoutComputed<number>}
@@ -169,7 +161,7 @@ export default class EarningsEditor extends Komponent {
             else {
                 this.currentStep(0);
             }
-        }; 
+        };
 
         /// Statuses
 
@@ -186,16 +178,16 @@ export default class EarningsEditor extends Komponent {
         this.isSaving = ko.observable(false);
 
         /**
-         * When edition must be locked because of in progress 
-         * operations. Just an alias for saving in this case, but 
+         * When edition must be locked because of in progress
+         * operations. Just an alias for saving in this case, but
          * expected to be used properly at the data-binds
          * @member {KnockoutComputed<boolean>}
          */
         this.isLocked = this.isSaving;
- 
+
         this.observeChanges(() => {
-            const data = dummyData[this.earningsEntryID()];
-            this.earningsEntry(data);
+            this.earningsEntryID();
+            this.earningsEntry(dummyData);
         });
     }
 }
