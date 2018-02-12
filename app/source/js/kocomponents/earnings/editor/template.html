@@ -124,7 +124,11 @@
         <div class="col-xs-12">
             <legend>Who did you work for?</legend>
             <!-- @iagosrl - I added a new step (7) to add a new client below if they click Add New Client and it jumps to that step. Not sure if that's the best route.  -->
-            <button type="button" data-bind="click: goToStep.bind($data, 7)" class="btn btn-link btn-default">Add new client</button>
+            <div class="col-xs-12">
+                <button type="button" data-bind="click: goToStep.bind($data, 7)" class="btn btn-link btn-default">Add new client</button>
+                <a data-bind="click: goToSummary" class="text-center pull-right">Skip this step</a>
+            </div>
+            <br>
             <br>
             <br>
             <div class="form-group">
