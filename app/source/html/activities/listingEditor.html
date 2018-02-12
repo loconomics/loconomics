@@ -152,24 +152,11 @@
             <section id="listing-editor-credentials-verifications" class="row" title="">
                 <div class="col-xs-12 col-sm-12 SectionHeading" data-bind="with: selectedJobTitle">
                     <h2><icon-dec params="icon: 'fa-id-card-o'"></icon-dec> Credentials and verifications</h2>
-                    <a data-bind="visible: licensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(), 'aria-label': 'Edit your '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Edit</a>
-                    <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: {href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' credentials' }" class="btn btn-default pull-right">Add</a>
+                    <a data-bind="attr: { href: '/credentials-add/' + $root.jobTitleID() + '/' + jobTitleSingularName() + '/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add ' + jobTitleSingularName() + ' credentials and general verifications' }" class="btn btn-default pull-right">Add</a>
                 </div>
                 <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
-                    <div class="col-xs-12 SectionHeading">
-                        <h3 data-bind="visible: $root.submittedUserLicensesCertifications().length">Professional credentials</h3>
-                        <a data-bind="visible: $root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Edit your '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Edit</a>
-                        <a data-bind="visible: !$root.submittedUserLicensesCertifications().length, attr: { href: '#!licensesCertifications/' + $root.returnLinkJobTitleActivity(),'aria-label': 'Add '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
-                        <em data-bind="visible: !$root.submittedUserLicensesCertifications().length">List any <span data-bind="text: jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active. <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span></em>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12" data-bind="with: selectedJobTitle">
-                    <div class="col-xs-12 SectionHeading">
-                        <h3>Badges earned</h3>
-                        <a data-bind="attr: {href: '/badge-add/' + $root.returnLinkJobTitleActivity() + '/' + jobTitleSingularName(),'aria-label': 'Add '+ jobTitleSingularName() + ' badge or badge collection' }" class="btn btn-default pull-right">Add</a>
-                    </div>
                     <ul data-bind="foreach: $root.userBadges">
-                        <badge-viewer params="badgrURL: BadgrURL, type: Type"></badge-viewer>
+                        <badge-viewer params="badgrURL: BadgrURL, userBadgeID: UserBadgeID, jobTitleID: $root.jobTitleID(), type: Type, viewMode: 'card'"></badge-viewer>
                     </ul>
                     <badge-collection params="src: 'https://api.badgr.io/public/collections/fcfad6d9e51bd635c9c88248587dc035'"></badge-collection>
                     <badge-view params="src: 'https://api.badgr.io/public/assertions/ZwxV7sqTTqa-r_vK51VsdA.json?v=2_0'"></badge-view>

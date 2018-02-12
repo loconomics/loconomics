@@ -23,11 +23,11 @@
 
 import '../../utilities/icon-dec.js';
 import Komponent from '../../helpers/KnockoutComponent';
+import UserType from '../../../enums/UserType';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import style from './style.styl';
 import template from './template.html';
-
 const TAG_NAME = 'badge-viewer';
 
 /**
@@ -47,6 +47,20 @@ export default class BadgeViewer extends Komponent {
      */
     constructor(params) {
         super();
+        
+        /**
+         * Holds the ID for the badge being
+         * edited.
+         * @member {KnockoutObservable<number>}
+         */
+        this.userBadgeID = getObservable(params.userBadgeID);
+
+        /**
+         * Holds the ID for the badge being
+         * edited.
+         * @member {KnockoutObservable<number>}
+         */
+        this.jobTitleID = getObservable(params.jobTitleID);
 
         /**
          * The Badgr URL for the badge or collection.
@@ -61,7 +75,16 @@ export default class BadgeViewer extends Komponent {
          */
         this.type = getObservable(params.type || 'badge');
         const srcType = this.type();
- 
+
+        /**
+         * The mode the viewer is to be shown.
+         * 'card':
+         * 'fullDetails':
+         * @member {KnockoutObservable<string>}
+         */
+        this.viewMode = getObservable(params.viewMode || 'card');
+        this.isServiceProfessional = UserType.serviceProfessional;
+
          /**
          * Holds the id of the badge assertion.
          * @member {KnockoutObservable<integer>}
@@ -98,12 +121,6 @@ export default class BadgeViewer extends Komponent {
          */
         this.badgeDescription = ko.observable();
 
-        /**
-         * Holds the image of the badge assertion.
-         * @member {KnockoutObservable<object>}
-         */
-        this.assertion = ko.observable();
-
         const headers = new Headers({
             'Accept': 'application/json'
           });
@@ -136,7 +153,7 @@ export default class BadgeViewer extends Komponent {
                 return r.json();
             }).then((json) => populateObservables(json));
             } else {
-            populateObservables(this.assertion());
+            populateObservables(this.badgrURL());
         }     
     }
 }

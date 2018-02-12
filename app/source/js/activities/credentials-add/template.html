@@ -1,0 +1,38 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a href="/listingEditor/ + jobTitleID()">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> Listing Editor
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <div class="col-xs-12 SectionHeading">
+                <h3>Professional licenses and certifications</h3><a data-bind="attr: { href: '/licensesCertifications/' + jobTitleID() + '/' + '?mustReturn=credentials-add/' + jobTitleID() + '&returnText=Add Credentials','aria-label': 'Add '+ jobTitleSingularName() + ' professional credentials' }" class="btn btn-default pull-right">Add</a>
+            </div>
+            <div class="col-xs-12">           
+                <em>List any <span data-bind="text: jobTitleSingularName()"></span> professional licenses, certifications, training, and education you've obtained. Depending on your location, we may need to verify credentials for your listing to become active.</em>
+                <!-- <span data-bind="visible: !serviceAddresses().length"><a data-bind="attr: { href: '#!serviceAddresses/' + $root.returnLinkJobTitleActivity() }">Add a location</a> to determine credentials needed.</span> -->
+            </div>
+            <div class="col-xs-12 SectionHeading">
+                <h3>Education credentials</h3>
+                <a aria-label="Add education" data-bind="attr: { href: '/education/' + '?mustReturn=credentials-add/' + jobTitleID() + '&returnText=Add Credentials' }" class="btn btn-default pull-right">Add</a>
+            </div>
+            <div class="col-xs-12 SectionHeading">
+                <h3>Digital badges</h3>
+                <a data-bind="attr: {href: '/badge-add/' + $root.returnLinkJobTitleActivity() + '/' + jobTitleSingularName(),'aria-label': 'Add '+ jobTitleSingularName() + ' badge or badge collection' }" class="btn btn-default pull-right">Add</a>
+            </div>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'externalListing'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>
+
+
+
