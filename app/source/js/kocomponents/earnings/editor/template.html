@@ -150,7 +150,7 @@
             autofocus: isAtStep(0),
             with: earningsEntry
         ">
-        <div class="SectionHeading">
+        <div class="SectionHeading SectionHeading--full">
             <h2>Date Paid</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 3)" aria-label='Edit date paid' class="btn btn-icon-link pull-right">
                 <span>
@@ -161,7 +161,7 @@
         </div>
         <p data-bind="text: paidDate, format: { type: 'datetime', format: 'LL' }"></p>
 
-        <div class="SectionHeading">
+        <div class="SectionHeading SectionHeading--full">
             <h2>Total</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 1)" aria-label='Edit total' class="btn btn-icon-link pull-right">
                 <span>
@@ -172,7 +172,7 @@
         </div>
         <p data-bind="text: amount, format: { type: 'number', format: '$0,0.00' }"></p>
 
-        <div class="SectionHeading">
+        <div class="SectionHeading SectionHeading--full">
             <h2>Time Worked</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 2)" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
                 <span>
@@ -183,7 +183,7 @@
         </div>
         <p data-bind="text: displayDuration"></p>
 
-        <div class="SectionHeading">
+        <div class="SectionHeading SectionHeading--full">
             <h2>Listing</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 4)" aria-label='Edit the platform' class="btn btn-icon-link pull-right">
                 <span>
@@ -194,7 +194,7 @@
         </div>
         <p data-bind="text: listingTitle"></p>
 
-        <div class="SectionHeading">
+        <div class="SectionHeading SectionHeading--full">
             <h2>Job title</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 5)" aria-label='Edit the job title' class="btn btn-icon-link pull-right">
                 <span>
@@ -205,7 +205,7 @@
         </div>
         <p data-bind="text: jobTitleID"></p>
 
-        <!--<div class="SectionHeading">
+        <!--<div class="SectionHeading SectionHeading--full">
             <h2>Client</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 6)" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
                 <span>
@@ -219,7 +219,7 @@
             <span data-bind="text: $component.client().lastName"></span>
         </p>-->
 
-        <div class="SectionHeading">
+        <div class="SectionHeading SectionHeading--full">
             <h2>Notes</h2>
             <button type="button" data-bind="click: $parent.goToStep.bind($data, 6)" aria-label='Edit the notes about your earnings' class="btn btn-icon-link pull-right">
                 <span>
