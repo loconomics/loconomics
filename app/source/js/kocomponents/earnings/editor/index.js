@@ -297,7 +297,7 @@ export default class EarningsEditor extends Komponent {
         this.isSaving(true);
 
         this.dataManager
-        .save(this.earningsEntry())
+        .save(this.earningsEntry.model.toPlainObject(true))
         .then((freshData) => {
             this.isSaving(false);
             if (this.onSaved) {
