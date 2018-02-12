@@ -16,7 +16,7 @@ namespace LcRest
         {
             get
             {
-                return total / (totalDurationMinutes / 60M);
+                return totalDurationMinutes == 0 ? 0 : total / (totalDurationMinutes / 60M);
             }
         }
         /// <summary>
@@ -37,11 +37,11 @@ namespace LcRest
             if (record == null) return null;
             return new UserEarningsReport
             {
-                total = record.total,
-                paidOut = record.paidOut,
-                expected = record.expected,
-                entriesCount = record.entriesCount,
-                totalDurationMinutes = record.totalDurationMinutes
+                total = record.total ?? 0,
+                paidOut = record.paidOut ?? 0,
+                expected = record.expected ?? 0,
+                entriesCount = record.entriesCount ?? 0,
+                totalDurationMinutes = record.totalDurationMinutes ?? 0
             };
         }
         #endregion
