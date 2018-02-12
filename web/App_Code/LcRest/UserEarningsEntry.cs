@@ -89,6 +89,8 @@ namespace LcRest
                 AND e.UserID = @0
                 AND j.languageID = @1
                 AND j.countryID = @2
+        ";
+        const string sqlAndLimits = @"
                 AND
                 (@4 is null OR e.earningsEntryID < @4)
                 AND
@@ -127,7 +129,7 @@ namespace LcRest
             var usingSinceOnly = sinceID.HasValue && !untilID.HasValue;
             if (usingSinceOnly)
             {
-                sql = sqlSelect + sqlOrderAsc;
+                sql = sqlSelect + sqlAndLimits + sqlOrderAsc;
             }
 
             using (var db = new LcDatabase())
