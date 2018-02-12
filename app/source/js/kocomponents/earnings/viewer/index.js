@@ -129,16 +129,25 @@ export default class EarningsViewer extends Komponent {
                 dataSubscription = this.subscribeTo(item.onData, (data) => {
                     this.earningsEntry(data);
                     // Load info about the client of this entry
-                    clients.getItem(data.clientUserID)
-                    .then((client) => {
-                        this.client(client);
-                    });
+                    // It's optional, so careful since can be null
+                    if (data.clientUserID) {
+                        clients.getItem(data.clientUserID)
+                        .then((client) => {
+                            this.client(client);
+                        })
+                        .catch((error) => {
+                            showError({
+                                title: 'There was an error loading the client information at the entry',
+                                error
+                            });
+                        });
+                    }
                 });
                 // Notify data load errors
-                dataErrorSubscription = this.subscribeTo(item.onDataError, (err) => {
+                dataErrorSubscription = this.subscribeTo(item.onDataError, (error) => {
                     showError({
                         title: 'There was an error loading the earning entry',
-                        error: err
+                        error
                     });
                 });
             }
