@@ -107,7 +107,8 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlSelect + sqlAndID, userID, languageID, countryID, earningsEntryID));
+                var sql = (sqlSelect + sqlAndID).Replace("@LIMIT", "1");
+                return FromDB(db.QuerySingle(sql, userID, languageID, countryID, earningsEntryID));
             }
         }
 
