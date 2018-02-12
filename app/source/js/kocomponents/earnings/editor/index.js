@@ -18,6 +18,7 @@ import { show as showError } from '../../../modals/error';
 import template from './template.html';
 import { item as userEarningsItem } from '../../../data/userEarnings';
 import { list as userExternalListingsList } from '../../../data/userExternalListings';
+import { list as userListingsList } from '../../../data/userListings';
 
 const TAG_NAME = 'earnings-editor';
 
@@ -105,10 +106,28 @@ export default class EarningsEditor extends Komponent {
         };
 
         /**
+         * Gets the job title from the given user listings and use it as the
+         * selected job title of the earnings entry
+         * @param {Object} listing
+         * @method
+         */
+        this.selectListingJobTitle = (listing) => {
+            this.earningsEntry.jobTitleID(listing.jobTitleID);
+            this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
+            this.goToSummary();
+        };
+
+        /**
          * Holds a list of the user external listings, available to be selected
          * as the earnings entry listing.
          */
-        this.userExternalListings = ko.observable();
+        this.userExternalListings = ko.observableArray([]);
+
+        /**
+         * Holds a list of the user listings at Loconomics, available to allow
+         * quick selection of job title.
+         */
+        this.userListings = ko.observableArray([]);
 
         /// Steps management
 
@@ -206,6 +225,41 @@ export default class EarningsEditor extends Komponent {
          * (allows to load, save, delete).
          */
         this.dataManager = userEarningsItem(this.earningsEntry.earningsEntryID());
+    }
+
+    beforeBinding() {
+
+        /**
+         * Suscribe to data coming for the list and put them in our
+         * userListings propery.
+         */
+        this.subscribeTo(userListingsList.onData, this.userListings);
+
+        /**
+         * Notify data load errors
+         */
+        this.subscribeTo(userListingsList.onDataError, (err) => {
+            showError({
+                title: 'There was an error loading your listings',
+                error: err
+            });
+        });
+
+        /**
+         * Suscribe to data coming for the list and put them in our
+         * userExternalListings propery.
+         */
+        this.subscribeTo(userExternalListingsList.onData, this.userExternalListings);
+
+        /**
+         * Notify data load errors
+         */
+        this.subscribeTo(userExternalListingsList.onDataError, (err) => {
+            showError({
+                title: 'There was an error loading your external listings',
+                error: err
+            });
+        });
 
         // When we have an ID, we need to load it first
         if (this.earningsEntry.earningsEntryID()) {
@@ -231,24 +285,6 @@ export default class EarningsEditor extends Komponent {
                 });
             });
         }
-    }
-
-    beforeBinding() {
-        /**
-         * Suscribe to data coming for the list and put them in our
-         * externalListing propery.
-         */
-        this.subscribeTo(userExternalListingsList.onData, this.userExternalListings);
-
-        /**
-         * Notify data load errors
-         */
-        this.subscribeTo(userExternalListingsList.onDataError, (err) => {
-            showError({
-                title: 'There was an error loading your external listings',
-                error: err
-            });
-        });
     }
 
     /**
