@@ -14,6 +14,12 @@ namespace LcRest
         public DateTimeOffset paidDate;
         public int durationMinutes;
         public int userExternalListingID;
+        /// <summary>
+        /// The platformID of the userExternalListingID in use.
+        /// It's read from related table, or used to create a listing
+        /// automatically for the platform in a write operation.
+        /// </summary>
+        public int platformID;
         public int jobTitleID;
         public int? clientUserID;
         public DateTimeOffset createdDate;
@@ -51,6 +57,7 @@ namespace LcRest
                 paidDate = record.paidDate,
                 durationMinutes = record.durationMinutes,
                 userExternalListingID = record.userExternalListingID,
+                platformID = record.platformID,
                 jobTitleID = record.jobTitleID,
                 clientUserID = record.clientUserID,
                 createdDate = record.createdDate,
@@ -76,6 +83,7 @@ namespace LcRest
                 e.notes,
                 j.positionSingular as jobTitleName,
                 l.title as listingTitle,
+                l.platformID as platformID,
                 e.createdDate,
                 e.updatedDate
             FROM
@@ -239,7 +247,41 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
-                return (int)db.QueryValue(sqlSet,
+                db.Query("BEGIN TRANSACTION");
+                // On no listingID, create one for the given platform..
+                if (entry.userExternalListingID <= 0 && entry.platformID > 0)
+                {
+                    // If  exists one..
+                    var byPlatform = UserExternalListing.GetByPlatformID(entry.userID, entry.platformID).FirstOrDefault();
+                    if (byPlatform != null)
+                    {
+                        // ..use it
+                        entry.userExternalListingID = byPlatform.userExternalListingID;
+                    }
+                    else
+                    {
+                        // ..otherwise, create a new one with all data we can know for it
+                        var newForPlatform = new UserExternalListing
+                        {
+                            userID = entry.userID,
+                            platformID = entry.platformID,
+                            title = String.Format("My {0} listing", Platform.GetItem(entry.platformID).name),
+                            notes = ""
+                        };
+                        var locale = Locale.Current;
+                        newForPlatform.FillJobTitlesWithIds(new int[] { entry.jobTitleID }, locale.languageID, locale.countryID);
+                        // insert and get the ID
+                        entry.userExternalListingID = UserExternalListing.Insert(newForPlatform);
+                    }
+                }
+                // ..or throw if no one of boths values is included
+                else if (entry.userExternalListingID <= 0 && entry.platformID <= 0)
+                {
+                    throw new ConstraintException("A listing or platform must be specified for the earnings entry");
+                }
+                // ..otherwise, it will just use the given listingID
+
+                var resultID = (int)db.QueryValue(sqlSet,
                     entry.userID,
                     entry.earningsEntryID,
                     entry.paidDate,
@@ -250,6 +292,8 @@ namespace LcRest
                     entry.notes,
                     entry.amount
                 );
+                db.Query("COMMIT TRANSACTION");
+                return resultID;
             }
         }
         #endregion

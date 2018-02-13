@@ -57,7 +57,7 @@
             <!--<h2>Your stored listings:</h2>-->
             <ul class="TilesList TilesList--openEnd" data-bind="foreach: userExternalListings">
                 <li>
-                    <button type="button" data-bind="click: $component.selectListing" class="ListingSummaryItem">
+                    <button type="button" data-bind="click: $component.selectListing.bind($component)" class="ListingSummaryItem">
                         <div class="Item-content">
                             <p data-bind="text: title"></p>
                         </div>
@@ -70,7 +70,7 @@
             <h2>Suggested platforms:</h2>
             <ul class="TilesList TilesList--openEnd" data-bind="foreach: suggestedPlatforms">
                 <li>
-                    <button type="button" data-bind="click: $component.selectPlatform" class="ListingSummaryItem">
+                    <button type="button" data-bind="click: $component.selectPlatform.bind($component)" class="ListingSummaryItem">
                         <div class="Item-content">
                             <p data-bind="text: name"></p>
                         </div>
@@ -102,7 +102,7 @@
             <!--<h2>Your job titles:</h2>-->
             <ul class="TilesList TilesList--openEnd" data-bind="foreach: userListings">
                 <li>
-                    <button type="button" data-bind="click: $component.selectListingJobTitle" class="ListingSummaryItem">
+                    <button type="button" data-bind="click: $component.selectListingJobTitle.bind($component)" class="ListingSummaryItem">
                         <div class="Item-content">
                             <p data-bind="text: jobTitleSingularName"></p>
                         </div>
@@ -145,7 +145,7 @@
             <br>
             <div class="form-group">
                 <label for="clientID">Select a current client</label>
-                <client-list id="clientID" params="listMode: 'select', selectItem: selectClient"></client-list>
+                <client-list id="clientID" params="listMode: 'select', selectItem: selectClient.bind($component)"></client-list>
             </div>
             <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
         </div>

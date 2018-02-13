@@ -68,6 +68,9 @@ namespace LcRest
         const string sqlGetItem = sqlGetList + @"
                 AND userExternalListingID = @1
         ";
+        const string sqlGetByPlatformID = sqlGetList + @"
+                AND platformID = @1
+        ";
         #endregion
 
         public static IEnumerable<UserExternalListing> GetList(int userID)
@@ -82,6 +85,13 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(sqlGetItem, userID, userExternalListingID));
+            }
+        }
+        public static IEnumerable<UserExternalListing> GetByPlatformID(int userID, int platformID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetByPlatformID, userID, platformID).Select(FromDB);
             }
         }
         #endregion

@@ -11,6 +11,7 @@ import '../../utilities/icon-dec';
 import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
 import '../../input/date';
+import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserEarningsEntry from '../../../models/UserEarningsEntry';
 import ko from 'knockout';
@@ -82,42 +83,6 @@ export default class EarningsEditor extends Komponent {
         this.onSaved = params.onSaved;
 
         /**
-         * Makes given client current one selected.
-         * @param {Object} client
-         * @method
-         */
-        this.selectClient = (client) => {
-            // Updates edited entry with the client ID selected
-            this.earningsEntry.clientUserID(client.clientID);
-            // Save a reference, to display name and other info
-            this.selectedClient(client);
-            this.goToSummary();
-        };
-
-        /**
-         * Makes given listing the one selected
-         * @param {Object} listing
-         * @method
-         */
-        this.selectListing = (listing) => {
-            this.earningsEntry.userExternalListingID(listing.userExternalListingID);
-            this.earningsEntry.listingTitle(listing.title);
-            this.saveStep();
-        };
-
-        /**
-         * Gets the job title from the given user listings and use it as the
-         * selected job title of the earnings entry
-         * @param {Object} listing
-         * @method
-         */
-        this.selectListingJobTitle = (listing) => {
-            this.earningsEntry.jobTitleID(listing.jobTitleID);
-            this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
-            this.goToSummary();
-        };
-
-        /**
          * Holds a list of the user external listings, available to be selected
          * as the earnings entry listing.
          */
@@ -128,6 +93,13 @@ export default class EarningsEditor extends Komponent {
          * quick selection of job title.
          */
         this.userListings = ko.observableArray([]);
+
+        /**
+         * Holds a list of suggested platforms, available to be selected
+         * as the earnigns entry listing, but while is not a listing it will
+         * create a listing for that platform automatically.
+         */
+        this.suggestedPlatforms = ko.observableArray([]);
 
         /// Steps management
 
@@ -261,6 +233,19 @@ export default class EarningsEditor extends Komponent {
             });
         });
 
+        /**
+         * Load suggestions.
+         */
+        this.subscribeTo(suggestedPlatformsList.onData, this.suggestedPlatforms);
+
+        /// Notify data load errors
+        this.subscribeTo(suggestedPlatformsList.onDataError, (err) => {
+            showError({
+                title: 'There was an error loading the platforms',
+                error: err
+            });
+        });
+
         // When we have an ID, we need to load it first
         if (this.earningsEntry.earningsEntryID()) {
 
@@ -289,6 +274,58 @@ export default class EarningsEditor extends Komponent {
     }
 
     /**
+     * Makes given client current one selected.
+     * @param {Object} client
+     * @method
+     */
+    selectClient(client) {
+        // Updates edited entry with the client ID selected
+        this.earningsEntry.clientUserID(client.clientID);
+        // Save a reference, to display name and other info
+        this.selectedClient(client);
+        this.goToSummary();
+    }
+
+    /**
+     * Makes given listing the one selected
+     * @param {Object} listing
+     * @method
+     */
+    selectListing(listing) {
+        this.earningsEntry.userExternalListingID(listing.userExternalListingID);
+        this.earningsEntry.listingTitle(listing.title);
+        // for integrity, makes platform matches listing (not needed to save the data)
+        this.earningsEntry.platformID(listing.platformID);
+        this.saveStep();
+    }
+
+    /**
+     * Gets the job title from the given user listings and use it as the
+     * selected job title of the earnings entry
+     * @param {Object} listing
+     * @method
+     */
+    selectListingJobTitle(listing) {
+        this.earningsEntry.jobTitleID(listing.jobTitleID);
+        this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
+        this.goToSummary();
+    }
+
+    /**
+     * Makes given platform as the selected listing, which means a listing
+     * will be created for that platform
+     * @param {rest/Platform} platform
+     */
+    selectPlatform(platform) {
+        this.earningsEntry.platformID(platform.platformID);
+        // resets listingID or will not take effect
+        this.earningsEntry.userExternalListingID(null);
+        // Something to display to the user
+        this.earningsEntry.listingTitle(`My ${platform.name} listing`);
+        this.saveStep();
+    }
+
+    /**
      * Save data in the server
      * @returns {Promise<object>}
      */
@@ -297,8 +334,10 @@ export default class EarningsEditor extends Komponent {
 
         this.isSaving(true);
 
+        const data = this.earningsEntry.model.toPlainObject(true);
+
         this.dataManager
-        .save(this.earningsEntry.model.toPlainObject(true))
+        .save(data)
         .then((freshData) => {
             this.isSaving(false);
             if (this.onSaved) {
