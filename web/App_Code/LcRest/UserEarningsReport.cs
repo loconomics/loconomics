@@ -49,23 +49,23 @@ namespace LcRest
         #region Query
         #region SQL
         const string sqlQuery = @"
-        SELECT
-	        SUM(amount) as total
-	        ,SUM(paidOut) as paidOut
-	        ,SUM(expected) as expected
-	        ,count(*) as entriesCount
-	        ,SUM(durationMinutes) as totalDurationMinutes
-        FROM (
-          SELECT 
-              amount
-              ,CASE WHEN PaidDate < GETDATE() THEN amount ELSE 0 END as paidOut
-              ,CASE WHEN PaidDate >= GETDATE() THEN amount ELSE 0 END as expected
-              ,DurationMinutes
+            SELECT
+	            SUM(amount) as total
+	            ,SUM(paidOut) as paidOut
+	            ,SUM(expected) as expected
+	            ,count(*) as entriesCount
+	            ,SUM(durationMinutes) as totalDurationMinutes
+            FROM (
+              SELECT 
+                  amount
+                  ,CASE WHEN PaidDate < GETDATE() THEN amount ELSE 0 END as paidOut
+                  ,CASE WHEN PaidDate >= GETDATE() THEN amount ELSE 0 END as expected
+                  ,DurationMinutes
       
-          FROM [UserEarningsEntry]
-          WHERE active = 1 and UserID = 141
-        ) AS T
-    ";
+              FROM [UserEarningsEntry]
+              WHERE active = 1 and UserID = @0
+            ) AS T
+        ";
         #endregion
         public static UserEarningsReport Query(int userID)
         {
