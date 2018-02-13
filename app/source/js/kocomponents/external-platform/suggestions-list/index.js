@@ -8,12 +8,11 @@
  *
  */
 import '../../utilities/icon-dec.js';
+import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
 import Komponent from '../../helpers/KnockoutComponent';
 import ko from 'knockout';
-import { list as platformsList } from '../../../data/platforms';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
-import { list as userExternalListingList } from '../../../data/userExternalListings';
 
 const TAG_NAME = 'external-platform-suggestions-list';
 
@@ -28,45 +27,15 @@ export default class ExternalPlatformSuggestionsList extends Komponent {
         super();
 
         /**
-         * List of all platforms available.
-         * @member {KnockoutObservable<Array<rest/Platform>>}
-         */
-        this.platforms = ko.observableArray();
-
-        /**
-         * List of external listings the user has. Used to filter out
-         * the suggested list of platforms
-         * @member {KnockoutObservable<Array<rest/UserExternalListing>>}
-         */
-        this.externalListings = ko.observableArray();
-
-        /**
          * List of platforms suggested.
          * @member {KnockoutComputed<Array<rest/Platform>>}
          */
-        this.suggestedPlatforms = ko.pureComputed(() => {
-            const platforms = this.platforms();
-            const listings = this.externalListings();
-            if (platforms && platforms.length && listings) {
-                // Filter platforms by one already registered as a listing
-                const platformsAdded = listings.map((l) => l.platformID);
-                return platforms.filter((platform) => platformsAdded.indexOf(platform.platformID) === -1);
-            }
-            else {
-                // No platforms
-                return [];
-            }
-        });
+        this.suggestedPlatforms = ko.observableArray();
 
         /**
-         * Load platforms data.
+         * Load suggestions.
          */
-        this.subscribeTo(platformsList.onData, this.platforms);
-
-        /**
-         * Load listing data.
-         */
-        this.subscribeTo(userExternalListingList.onData, this.externalListings);
+        this.subscribeTo(suggestedPlatformsList.onData, this.suggestedPlatforms);
 
         /// Notify data load errors
         const notifyError = (err) => {
@@ -75,8 +44,7 @@ export default class ExternalPlatformSuggestionsList extends Komponent {
                 error: err
             });
         };
-        this.subscribeTo(platformsList.onDataError, notifyError);
-        this.subscribeTo(userExternalListingList.onDataError, notifyError);
+        this.subscribeTo(suggestedPlatformsList.onDataError, notifyError);
     }
 }
 
