@@ -61,18 +61,23 @@ export const onDataError = new AggregatedEvent([
  */
 export const onData = {
     subscribe: (callback) => {
+        // IMPORTANT: both source data properties (platforms and externalListings)
+        // are just observables with null by default rather than observableArray
+        // to easily detect first load, preventing some computation when no
+        // enough data still
+
         /**
          * List of all platforms available.
          * @member {KnockoutObservable<Array<rest/Platform>>}
          */
-        const platforms = ko.observableArray();
+        const platforms = ko.observable(null);
 
         /**
          * List of external listings the user has. Used to filter out
          * the suggested list of platforms
          * @member {KnockoutObservable<Array<rest/UserExternalListing>>}
          */
-        const externalListings = ko.observableArray();
+        const externalListings = ko.observable(null);
 
         // Get all platforms data
         const pSub = platformsList.onData.subscribe(platforms);
@@ -82,7 +87,7 @@ export const onData = {
         // Create computed that filters the data producing a new set
         // whenever source data changes, and notify the result
         // to the external callback
-        var cSub = ko.computed(() => {
+        var computedTask = ko.computed(() => {
             // Just in case there is an error (wrong data or anything)
             try {
                 return filter(platforms(), externalListings());
@@ -92,16 +97,18 @@ export const onData = {
         })
         // Prevents too much executions, specially when both datasets comes immediatly
         // that would trigger two consecutive processing, we force it to be just one
-        // with rateLimit
-        .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } })
+        // with rateLimit, but for a very small (so just move to another subtask without
+        // delaying usage, like UI, unnecesarry)
+        .extend({ rateLimit: { timeout: 1, method: 'notifyWhenChangesStop' } });
         // Subscribe with external callback
-        .subscribe(callback);
+        var cSub = computedTask.subscribe(callback);
 
         // We return a disposable object, that disposes all our internal subscriptions
         return {
             dispose: () => {
                 pSub.dispose();
                 lSub.dispose();
+                computedTask.dispose();
                 cSub.dispose();
             }
         };
