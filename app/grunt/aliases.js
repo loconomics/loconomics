@@ -9,6 +9,18 @@ module.exports = {
         'build-webapp',
         'test'
     ],
+    // Make a clean* build of everything to publish a version on the web
+    // *clean web directories from here is not allowed by grunt-clean
+    // /web files to copy over: /web/assets, /web/welcome, /web/_specialRoutes/app.html
+    'build-web-release': [
+        'clean:build',
+        'prepare-for-build',
+        'build',
+        'build-webapp',
+        'build-landingPages',
+        'publish-landingPages',
+        'test'
+    ],
     // Any preparation of the folder where building results will go
     'prepare-for-build': [
         'mkdir:build-assets-js',
