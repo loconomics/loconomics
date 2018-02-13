@@ -206,17 +206,22 @@ namespace LcRest
                 return affected > 0;
             }
         }
-
+        
+        /// <summary>
+        /// Soft delete the external listing
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="userExternalListingID"></param>
+        /// <returns></returns>
         public static bool Delete(int userID, int userExternalListingID)
         {
             using (var db = new LcDatabase())
             {
                 // Set StatusID to 0 'deleted by user'
                 int affected = db.Execute(@"
-                    DELETE FROM UserExternalListing
-                    WHERE
-                        UserID = @0
-                        AND UserExternalListingID = @1
+                    UPDATE UserEarningsEntry
+                    SET Active = 0
+                    WHERE UserID = @0 AND userExternalListingID = @1
                 ", userID, userExternalListingID);
 
                 // Task done? Almost a record must be affected to be a success
