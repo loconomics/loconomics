@@ -70,13 +70,13 @@ export default class BadgeViewActivity extends Activity {
          * jobTitleID is the first segment in the activity
          * URL
          */
-        this.jobTitleID(params[0] || -1);
+        this.badgrURL(params[0] || -1);
 
         /**
          * jobTitleSingularName is the second segment in the activity
          * URL
          */
-        this.jobTitleSingularName(params[1] || '');
+        this.Type(params[1] || '');
     }
 }
 
