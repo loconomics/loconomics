@@ -46,6 +46,13 @@ exports.clearCache = function clearCache() {
     cache.userJobTitles = {};
 };
 
+/**
+ * Tags cache as invalid, forcing a refresh next time data is accessed
+*/
+exports.invalidateCache = function() {
+    cache.userJobProfile.cache.latest = null;
+};
+
 session.on.cacheCleaningRequested.subscribe(function() {
     exports.clearCache();
 });

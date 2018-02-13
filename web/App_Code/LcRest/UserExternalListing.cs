@@ -118,12 +118,37 @@ namespace LcRest
 
         #region Changes
         /// <summary>
+        /// Checks whether the included job titles are already in the user listing at Loconomics
+        /// (AKA UseJobTitles, UserProfilePositions), adding them when not.
+        /// That way, we ensure that any job title added into an external listing, is available
+        /// in the regular listing at Loconomics account.
+        /// This MUST be run whenever an external listing is being stored.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="jobTitles"></param>
+        void AutoRegisterUserJobTitles()
+        {
+            foreach(var jobTitleID in jobTitles.Keys)
+            {
+                if (!UserJobTitle.HasItem(userID, jobTitleID))
+                {
+                    UserJobTitle.Create(new UserJobTitle
+                    {
+                        userID = userID,
+                        jobTitleID = jobTitleID
+                    });
+                }
+            }
+        }
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="externalListing"></param>
         /// <returns>Generated ID</returns>
         public static int Insert(UserExternalListing externalListing)
         {
+            externalListing.AutoRegisterUserJobTitles();
+
             var sqlInsert = @"
                 INSERT INTO UserExternalListing (
                     UserID, PlatformID,
@@ -153,6 +178,8 @@ namespace LcRest
 
         public static bool Update(UserExternalListing externalListing)
         {
+            externalListing.AutoRegisterUserJobTitles();
+
             var sqlUpdate = @"
                 UPDATE  UserExternalListing
                 SET     title = @2,
