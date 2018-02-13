@@ -67,11 +67,20 @@
                     </button>
                 </li>
             </ul>
+            <h2>Suggested platforms:</h2>
+            <ul class="TilesList TilesList--openEnd" data-bind="foreach: suggestedPlatforms">
+                <li>
+                    <button type="button" data-bind="click: $component.selectPlatform" class="ListingSummaryItem">
+                        <div class="Item-content">
+                            <p data-bind="text: name"></p>
+                        </div>
+                        <div class="Item-action">
+                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                        </div>
+                    </button>
+                </li>
+            </ul>
             <!--
-                Stored listings:
-                My Loconomics listing
-                My Thumbtack listing
-                My Taskrabbit
                 TODO: More +
                 (suggested platforms)
                 99designs

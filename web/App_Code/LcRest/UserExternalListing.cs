@@ -219,7 +219,7 @@ namespace LcRest
             {
                 // Set StatusID to 0 'deleted by user'
                 int affected = db.Execute(@"
-                    UPDATE UserEarningsEntry
+                    UPDATE UserExternalListing
                     SET Active = 0
                     WHERE UserID = @0 AND userExternalListingID = @1
                 ", userID, userExternalListingID);
