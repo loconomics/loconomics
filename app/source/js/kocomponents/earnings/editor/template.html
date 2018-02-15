@@ -127,7 +127,7 @@
                             <p data-bind="text: jobTitleSingularName"></p>
                         </div>
                         <div class="Item-action">
-                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                            <icon-dec params="icon: $component.earningsEntry.jobTitleID() === jobTitleID ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></icon-dec>
                         </div>
                     </button>
                 </li>
