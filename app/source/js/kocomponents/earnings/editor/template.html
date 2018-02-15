@@ -1,4 +1,17 @@
 <form data-bind="event: { submit: save }">
+    <script type="text/template" id="earnings-editor-back-step">
+        <!-- Expected data: { step:1, context:$data } -->
+        <a href="#back" class="btn-block text-center" data-bind="
+            click: context.goToStep.bind($data, step),
+            visible: !context.isAtReview()">
+            Go back to previous step
+        </a>
+        <a href="#back" class="btn-block text-center" data-bind="
+            click: context.goToSummary,
+            visible: context.isAtReview">
+            Go back to summary
+        </a>
+    </script>
     <fieldset data-bind="
             visible: isAtStep(1),
             autofocus: isAtStep(1)
@@ -18,6 +31,13 @@
                     "/>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+            <p class="isolated">
+                <a href="#back" class="btn-block text-center" data-bind="
+                    click: goToSummary,
+                    visible: isAtReview">
+                    Go back to summary
+                </a>
+            </p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -31,7 +51,7 @@
                 <input-duration params="id: 'earningsEditor-duration', durationInput: earningsEntry.durationMinutes, durationStepValue: 15"></input-duration>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-            <a data-bind="click: goToStep.bind($data, 1)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 1 } }"></p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -45,7 +65,7 @@
                 <input-date params="selectedDate: earningsEntry.paidDate"></input-date>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-            <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 2 } }"></p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -90,7 +110,7 @@
                 Offline (My offline work)
                 Other (platform name)
             -->
-            <a data-bind="click: goToStep.bind($data, 3)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 3 } }"></p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -119,7 +139,7 @@
                 isDisabled: $component.isLocked,
                 id: 'earningsEditorSelectJobTitle'">
             </job-title-autocomplete>
-            <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 4 } }"></p>
         </div>
     </fieldset>
     <!--<fieldset data-bind="
@@ -140,7 +160,7 @@
                 <label for="clientID">Select a current client</label>
                 <client-list id="clientID" params="listMode: 'select', selectItem: selectClient.bind($component)"></client-list>
             </div>
-            <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 5 } }"></p>
         </div>
     </fieldset>-->
     <!--<fieldset data-bind="
@@ -151,7 +171,7 @@
             <legend>Add new client</legend>
             <client-editor params="editorMode: 'quickAdd'"></client-editor>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-            <a data-bind="click: goToStep.bind($data, 6)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 6 } }"></p>
         </div>
     </fieldset>-->
     <fieldset data-bind="
@@ -172,6 +192,7 @@
                     "></textarea>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 5 } }"></p>
         </div>
     </fieldset>
     <div data-bind="
