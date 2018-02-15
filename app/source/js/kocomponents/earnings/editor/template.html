@@ -112,20 +112,13 @@
                     </button>
                 </li>
             </ul>
-            <!-- add job-title-autocomplete here. It should allow just one job title -->
-            <!--
-            <label for="earningsEditor-jobTitleID">Choose other job title</label>
-            <div class="form-group">
-                <input class="form-control"
-                    id="earningsEditor-jobTitleID"
-                    type="text"
-                    placeholder=""
-                    data-bind="
-                        textInput: earningsEntry.jobTitleID
-                    " />
-            </div>
-            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-            -->
+            <job-title-autocomplete class="isolated" params="suggestionButtonText: 'Select',
+                target: 'professionals',
+                onSelect: $component.selectJobTitle.bind($component),
+                label: 'Look for a job title you have not added in your listings still',
+                isDisabled: $component.isLocked,
+                id: 'earningsEditorSelectJobTitle'">
+            </job-title-autocomplete>
             <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
         </div>
     </fieldset>

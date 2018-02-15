@@ -12,6 +12,7 @@ import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
 import '../../input/date';
 import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
+import { ActionForValue } from '../../job-title-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserEarningsEntry from '../../../models/UserEarningsEntry';
 import ko from 'knockout';
@@ -309,6 +310,24 @@ export default class EarningsEditor extends Komponent {
         this.earningsEntry.jobTitleID(listing.jobTitleID);
         this.earningsEntry.jobTitleName(listing.jobTitleSingularName);
         this.goToSummary();
+    }
+
+    /**
+     * Gets the job title from a job title selected from the autocomplete
+     * and use it as the selected job title of the earnings entry
+     * @param {string} textValue User input text searching a job title
+     * @param {models/JobTitle} data Selected job title model
+     */
+    selectJobTitle(textValue, data) {
+        if (!data || !data.jobTitleID) return;
+
+        const id = data.jobTitleID();
+        this.earningsEntry.jobTitleID(id);
+        this.earningsEntry.jobTitleName(data.singularName());
+        this.goToSummary();
+        return {
+            value: ActionForValue.clear
+        };
     }
 
     /**
