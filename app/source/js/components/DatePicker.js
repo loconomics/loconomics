@@ -101,6 +101,12 @@ var DPGlobal = {
     },
     parseDate: function(date, format) {
         /* eslint complexity:"off" */
+        // On any case, support the ISO format as input trying that first
+        try {
+            // will throw if invalid/not matching standard format
+            return new Date(date);
+        } catch(e) {}
+        // with fallback to the given, display, format:
         var parts = date.split(format.separator);
         var val;
         date = new Date();
