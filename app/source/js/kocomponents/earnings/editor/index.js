@@ -109,7 +109,9 @@ export default class EarningsEditor extends Komponent {
          */
         this.suggestedPlatforms = ko.observableArray([]);
 
-        this.__setupStepsManagement(params);
+        // Starts in review mode when we are editing or copying an entry,
+        // so anything else but 'add'
+        this.__setupStepsManagement(params.editorMode !== EditorMode.add);
 
         this.__setupStatusFlags();
 
@@ -136,31 +138,46 @@ export default class EarningsEditor extends Komponent {
 
     /**
      * Define members to implement a step based interface.
-     * @param {Object} params Reference to parameters given to the constructor
+     * @param {boolean} [startInReview=false] Whether the interface must start at the
+     * summary step with review enabled.
      * @private
      */
-    __setupStepsManagement(params) {
-        // startAtStep parameter defaults to 1 when no value, BUT 0 is a valid value asking to start
-        // at the summary
-        let startAtStep = ko.unwrap(params.startAtStep);
-        if (startAtStep === null || typeof startAtStep === 'undefined') {
-            // Default value
-            startAtStep = 1;
-        }
-
+    __setupStepsManagement(startInReview) {
         /**
-         * Keeps track of the current step being displayed
+         * Magic number for the step where is the summary.
+         * @const {number}
+         * @private
+         */
+        const SUMMARY_STEP = 0;
+        /**
+         * Keeps track of the current step being displayed.
+         * By default is 1, first step, except when starting at review that will
+         * be 0 (the summary).
+         * This default is in sync with isAtReview initialization.
          * @member {KnockoutObservable<integer>}
          */
-        this.currentStep = ko.observable(startAtStep);
+        this.currentStep = ko.observable(startInReview ? SUMMARY_STEP : 1);
 
         /**
          * Returns which step the user is on in the form.
          * @member {KnockoutComputed<boolean>}
          */
         this.isAtStep = function(number) {
-            return ko.pureComputed( () => this.currentStep() === number);
+            return ko.pureComputed(() => this.currentStep() === number);
         };
+
+        /**
+         * Whether the user has completed the steps almost once and is free
+         * to jump between the summary and steps in order to do touch ups.
+         * By default is false, which means the user is restricted to follow
+         * the steps in order until finalize and reach the summary, when
+         * this flag switchs to true.
+         * Can be set.
+         * By default is false, except when starting at review that will be true.
+         * This default is in sync with currentStep initialization.
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isAtReview = ko.observable(!!startInReview);
 
         /**
          * Takes the user to the next step in the form.
@@ -170,14 +187,22 @@ export default class EarningsEditor extends Komponent {
             this.currentStep(this.currentStep() + 1);
         };
 
+        /**
+         * Takes the user to the specified step
+         * @param {number} step Step number
+         */
         this.goToStep = (step) => {
             this.currentStep(step);
         };
 
+        /**
+         * Takes the user to the summary.
+         * Will enable review mode too.
+         */
         this.goToSummary = () => {
-            this.currentStep(0);
-            this.editorMode('edit');
-            this.stepButtonLabel = 'Save';
+            this.currentStep(SUMMARY_STEP);
+            // Reached the summary, all steps done so enters review mode
+            this.isAtReview(true);
         };
 
          /**
@@ -185,24 +210,25 @@ export default class EarningsEditor extends Komponent {
          * @member {KnockoutComputed<string>}
          */
         this.stepButtonLabel = ko.pureComputed(() => {
-            if (this.editorMode() == 'add') {
-                return 'Save and Continue';
+            if (this.isAtReview()) {
+                return 'Save';
             }
             else {
-                return 'Save';
+                return 'Save and Continue';
             }
         });
 
         /**
-         * Takes the user to the next step in the form.
+         * Takes the user to the next step in the form (in standard mode),
+         * or to the summary (when in review mode).
          * @member {KnockoutComputed<number>}
          */
         this.saveStep = () => {
-            if (this.editorMode() == 'add') {
-                this.goNextStep();
+            if (this.isAtReview()) {
+                this.currentStep(SUMMARY_STEP);
             }
             else {
-                this.currentStep(0);
+                this.goNextStep();
             }
         };
     }
@@ -238,10 +264,10 @@ export default class EarningsEditor extends Komponent {
         this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading() || this.isDeleting());
 
         /**
-         * Whether the item is a new record or is being edited
+         * Whether the item is a new record or is being edited.
          * @member {KnockoutObservable<boolean>}
          */
-        this.isNew = ko.pureComputed(() => this.editorMode() !== EditorMode.edit);
+        this.isNew = ko.pureComputed(() => this.editorMode() !== EditorMode.edit && this.earningsEntry.earningsEntryID());
     }
 
     /**
