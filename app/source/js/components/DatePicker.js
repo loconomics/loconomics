@@ -2,7 +2,7 @@
  * DatePicker JS Component, with several
  * modes and optional inline-permanent visualization.
  *
- * Copyright 2014 Loconomics Coop.
+ * Copyright 2018 Loconomics Coop.
  *
  * Based on:
  * bootstrap-datepicker.js
@@ -542,8 +542,20 @@ DatePicker.prototype = {
         }
     },
 
+
     getValue: function() {
         return this.date;
+    },
+
+    setViewDate: function(newViewDate) {
+        if (typeof newViewDate === 'string') {
+            this.viewDate = DPGlobal.parseDate(newViewDate, this.format);
+        } else {
+            this.viewDate = new Date(newViewDate);
+        }
+        this.fill();
+        this._triggerViewDateChange();
+        this.set();
     },
 
     getViewDate: function() {
