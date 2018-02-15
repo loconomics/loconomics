@@ -181,7 +181,7 @@
         ">
         <div class="SectionHeading SectionHeading--full">
             <h2>Date Paid</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 3)" aria-label='Edit date paid' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 3), disable: $component.isLocked" aria-label='Edit date paid' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: paidDate" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !paidDate()"  params="icon: 'ion-plus'"></icon-dec>
@@ -192,7 +192,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Total</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 1)" aria-label='Edit total' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 1), disable: $component.isLocked" aria-label='Edit total' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: amount" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !amount()"  params="icon: 'ion-plus'"></icon-dec>
@@ -203,7 +203,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Time Worked</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2)" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: durationMinutes" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !durationMinutes()"  params="icon: 'ion-plus'"></icon-dec>
@@ -214,7 +214,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Listing</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 4)" aria-label='Edit the platform' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 4), disable: $component.isLocked" aria-label='Edit the platform' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: listingTitle" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !listingTitle()"  params="icon: 'ion-plus'"></icon-dec>
@@ -225,7 +225,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Job title</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 5)" aria-label='Edit the job title' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 5), disable: $component.isLocked" aria-label='Edit the job title' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: jobTitleID" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !jobTitleID()"  params="icon: 'ion-plus'"></icon-dec>
@@ -236,7 +236,7 @@
 
         <!--<div class="SectionHeading SectionHeading--full">
             <h2>Client</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6)" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6), disable: $component.isLocked" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: clientUserID" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !clientUserID()"  params="icon: 'ion-plus'"></icon-dec>
@@ -250,7 +250,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Notes</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6)" aria-label='Edit the notes about your earnings' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6), disable: $component.isLocked" aria-label='Edit the notes about your earnings' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: notes" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !notes()"  params="icon: 'ion-plus'"></icon-dec>
@@ -261,7 +261,10 @@
         <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
         <p class="help-block isolated">Please review carefully before submitting.</p>
         <p class="isolated" data-bind="visible: !$component.isNew()">
-            <button type="button" class="btn btn-link" data-bind="text: $component.deleteButtonText, click: $component.confirmDelete.bind($component)"></button>
+            <button type="button" class="btn btn-link" data-bind="
+                text: $component.deleteButtonText,
+                disable: $component.isLocked,
+                click: $component.confirmDelete.bind($component)"></button>
         </p>
     </div>
 </form>
