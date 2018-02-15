@@ -11,6 +11,7 @@ import localforage from './drivers/localforage';
 import marketplaceProfile from './marketplaceProfile';
 import rest from './drivers/restClient';
 import userJobProfile from './userJobProfile';
+import { list as userListingsList } from './userListings';
 
 const API_NAME = 'me/external-listings';
 const LOCAL_KEY = 'external-listings';
@@ -115,6 +116,7 @@ export function item(id) {
 const invalidateListings = () => {
     userJobProfile.invalidateCache();
     marketplaceProfile.invalidateCache();
+    userListingsList.invalidateCache();
 };
 list.onCacheChanged.subscribe(invalidateListings);
 list.onCacheInvalidated.subscribe(invalidateListings);
