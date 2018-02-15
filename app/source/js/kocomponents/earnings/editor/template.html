@@ -278,7 +278,7 @@
                 </span>
             </button>
         </div>
-        <p data-bind="text: notes"></p>
+        <p data-bind="text: notes" style="white-space: pre;"></p>
         <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
         <p class="help-block isolated">Please review carefully before submitting.</p>
         <p class="isolated" data-bind="visible: !$component.isNew()">
