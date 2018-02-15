@@ -129,7 +129,7 @@ export default class EarningsEditor extends Komponent {
          * @member {KnockoutComputed<string>}
          */
         this.saveButtonText = ko.pureComputed(() => {
-            var itIs = this.isDeleting();
+            var itIs = this.isSaving();
             return itIs ? 'Submitting..' : 'Submit';
         });
 
@@ -468,7 +468,7 @@ export default class EarningsEditor extends Komponent {
         const id = this.earningsEntry.earningsEntryID();
 
         return showConfirm({
-            title: 'Are you sure',
+            title: 'Are you sure?',
             message: 'Delete ernings entry #' + id,
             yes: 'Delete',
             no: 'Keep'
