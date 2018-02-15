@@ -109,8 +109,37 @@ export default class EarningsEditor extends Komponent {
          */
         this.suggestedPlatforms = ko.observableArray([]);
 
-        /// Steps management
+        this.__setupStepsManagement(params);
 
+        this.__setupStatusFlags();
+
+        /**
+         * Label text for the 'delete' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.deleteButtonText = ko.pureComputed(() => {
+            var itIs = this.isDeleting();
+            return itIs ? 'Deleting..' : 'Delete entry';
+        });
+
+        /**
+         * Label text for the 'save' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.saveButtonText = ko.pureComputed(() => {
+            var itIs = this.isDeleting();
+            return itIs ? 'Submitting..' : 'Submit';
+        });
+
+        this.__setupDataOperations();
+    }
+
+    /**
+     * Define members to implement a step based interface.
+     * @param {Object} params Reference to parameters given to the constructor
+     * @private
+     */
+    __setupStepsManagement(params) {
         // startAtStep parameter defaults to 1 when no value, BUT 0 is a valid value asking to start
         // at the summary
         let startAtStep = ko.unwrap(params.startAtStep);
@@ -137,7 +166,7 @@ export default class EarningsEditor extends Komponent {
          * Takes the user to the next step in the form.
          * @member {KnockoutComputed<number>}
          */
-        this.goNextStep = function() {
+        this.goNextStep = () => {
             this.currentStep(this.currentStep() + 1);
         };
 
@@ -145,7 +174,7 @@ export default class EarningsEditor extends Komponent {
             this.currentStep(step);
         };
 
-        this.goToSummary = function() {
+        this.goToSummary = () => {
             this.currentStep(0);
             this.editorMode('edit');
             this.stepButtonLabel = 'Save';
@@ -155,7 +184,7 @@ export default class EarningsEditor extends Komponent {
          * Takes the user to the next step in the form.
          * @member {KnockoutComputed<string>}
          */
-        this.stepButtonLabel = ko.pureComputed( () => {
+        this.stepButtonLabel = ko.pureComputed(() => {
             if (this.editorMode() == 'add') {
                 return 'Save and Continue';
             }
@@ -168,7 +197,7 @@ export default class EarningsEditor extends Komponent {
          * Takes the user to the next step in the form.
          * @member {KnockoutComputed<number>}
          */
-        this.saveStep = function() {
+        this.saveStep = () => {
             if (this.editorMode() == 'add') {
                 this.goNextStep();
             }
@@ -176,28 +205,6 @@ export default class EarningsEditor extends Komponent {
                 this.currentStep(0);
             }
         };
-
-        this.__setupStatusFlags();
-
-        /**
-         * Label text for the 'delete' button
-         * @member {KnockoutComputed<string>}
-         */
-        this.deleteButtonText = ko.pureComputed(() => {
-            var itIs = this.isDeleting();
-            return itIs ? 'Deleting..' : 'Delete entry';
-        });
-
-        /**
-         * Label text for the 'save' button
-         * @member {KnockoutComputed<string>}
-         */
-        this.saveButtonText = ko.pureComputed(() => {
-            var itIs = this.isDeleting();
-            return itIs ? 'Submitting..' : 'Submit';
-        });
-
-        this.__setupDataOperations();
     }
 
     /**
