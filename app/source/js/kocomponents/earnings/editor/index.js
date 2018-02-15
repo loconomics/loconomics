@@ -267,7 +267,7 @@ export default class EarningsEditor extends Komponent {
          * Whether the item is a new record or is being edited.
          * @member {KnockoutObservable<boolean>}
          */
-        this.isNew = ko.pureComputed(() => this.editorMode() !== EditorMode.edit && this.earningsEntry.earningsEntryID());
+        this.isNew = ko.pureComputed(() => this.editorMode() !== EditorMode.edit);
     }
 
     /**
