@@ -82,7 +82,7 @@
                             <p data-bind="text: title"></p>
                         </div>
                         <div class="Item-action">
-                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                            <icon-dec params="icon: $component.earningsEntry.userExternalListingID() === userExternalListingID ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></icon-dec>
                         </div>
                     </button>
                 </li>
@@ -95,7 +95,7 @@
                             <p data-bind="text: name"></p>
                         </div>
                         <div class="Item-action">
-                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                            <icon-dec params="icon: $component.earningsEntry.platformID() === platformID ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></icon-dec>
                         </div>
                     </button>
                 </li>
