@@ -1,10 +1,8 @@
-
 /**
  * Used for adding, editing, and copying earnings entries.
  * @module kocomponents/earnings/editor
  *
  */
-
 import '../../client/editor';
 import '../../client/list';
 import '../../utilities/icon-dec';
@@ -16,6 +14,7 @@ import { ActionForValue } from '../../job-title-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserEarningsEntry from '../../../models/UserEarningsEntry';
 import ko from 'knockout';
+import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
 import { item as userEarningsItem } from '../../../data/userEarnings';
@@ -50,6 +49,8 @@ export default class EarningsEditor extends Komponent {
      * @param {(number|KnockoutObservable<number>)} [params.userExternalListingID] Input only ID to preset the external listing,
      * this let's add an earning from a listing component as a shortcut.
      * @param {KnockoutObservable<integer>} [params.startAtStep] Input only value setting-up the initial step for the component.
+     * @param {function} [params.onSaved] Callback to notify after save the item, with the updated data included
+     * @param {function} [params.onDeleted] Callback to notify after delete the item
      */
     constructor(params) {
         super();
@@ -82,6 +83,12 @@ export default class EarningsEditor extends Komponent {
          * @member {function}
          */
         this.onSaved = params.onSaved;
+
+        /**
+         * Callback executed when the entry was deleted successfully
+         * @member {function}
+         */
+        this.onDeleted = params.onDeleted;
 
         /**
          * Holds a list of the user external listings, available to be selected
@@ -170,8 +177,34 @@ export default class EarningsEditor extends Komponent {
             }
         };
 
-        /// Statuses
+        this.__setupStatusFlags();
 
+        /**
+         * Label text for the 'delete' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.deleteButtonText = ko.pureComputed(() => {
+            var itIs = this.isDeleting();
+            return itIs ? 'Deleting..' : 'Delete entry';
+        });
+
+        /**
+         * Label text for the 'save' button
+         * @member {KnockoutComputed<string>}
+         */
+        this.saveButtonText = ko.pureComputed(() => {
+            var itIs = this.isDeleting();
+            return itIs ? 'Submitting..' : 'Submit';
+        });
+
+        this.__setupDataOperations();
+    }
+
+    /**
+     * Define members for all the status flags needed.
+     * @private
+     */
+    __setupStatusFlags() {
         /**
          * When a loading request it's on the works
          * @member {KnockoutObservable<boolean>}
@@ -185,22 +218,36 @@ export default class EarningsEditor extends Komponent {
         this.isSaving = ko.observable(false);
 
         /**
+         * When a deletion request it's on the works
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isDeleting = ko.observable(false);
+
+        /**
          * When edition must be locked because of in progress
          * operations.
          * @member {KnockoutComputed<boolean>}
          */
-        this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading());
+        this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading() || this.isDeleting());
 
-        /// Data Operations
+        /**
+         * Whether the item is a new record or is being edited
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isNew = ko.pureComputed(() => this.editorMode() !== EditorMode.edit);
+    }
 
+    /**
+     * Define members, prepare subscriptions to work with the code
+     * and start any initial request for data
+     * @private
+     */
+    __setupDataOperations() {
         /**
          * We create an item manager to operate on the data for the requested ID
          * (allows to load, save, delete).
          */
         this.dataManager = userEarningsItem(this.earningsEntry.earningsEntryID());
-    }
-
-    beforeBinding() {
 
         /**
          * Suscribe to data coming for the list and put them in our
@@ -349,13 +396,13 @@ export default class EarningsEditor extends Komponent {
      * @returns {Promise<object>}
      */
     save() {
-        if (this.isSaving()) return;
+        if (this.isSaving()) return Promise.reject();
 
         this.isSaving(true);
 
         const data = this.earningsEntry.model.toPlainObject(true);
 
-        this.dataManager
+        return this.dataManager
         .save(data)
         .then((freshData) => {
             this.isSaving(false);
@@ -374,6 +421,46 @@ export default class EarningsEditor extends Komponent {
                 title: 'There was an error saving the earnings entry',
                 error
             });
+        });
+    }
+
+    /**
+     * Delete the entry being edited after confirmation
+     * @returns {Promise}
+     */
+    confirmDelete() {
+        if (this.isDeleting()) return Promise.reject();
+
+        this.isDeleting(true);
+        const id = this.earningsEntry.earningsEntryID();
+
+        return showConfirm({
+            title: 'Are you sure',
+            message: 'Delete ernings entry #' + id,
+            yes: 'Delete',
+            no: 'Keep'
+        })
+        .then(() =>  this.dataManager.delete())
+        .then(() => {
+            this.isDeleting(false);
+            if (this.onDeleted) {
+                // Notify
+                this.onDeleted();
+            }
+            else {
+                // Reset to new item
+                this.earningsEntry.model.reset();
+                this.editorMode(EditorMode.add);
+            }
+        })
+        .catch((error) => {
+            this.isDeleting(false);
+            if (error) {
+                showError({
+                    title: 'There was an error deleting the earnings entry',
+                    error
+                });
+            }
         });
     }
 }

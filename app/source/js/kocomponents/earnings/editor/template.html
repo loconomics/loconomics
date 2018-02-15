@@ -258,7 +258,10 @@
             </button>
         </div>
         <p data-bind="text: notes"></p>
-        <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked">Submit</button>
-        <p class="help-block">Please review carefully before submitting.</p>
+        <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
+        <p class="help-block isolated">Please review carefully before submitting.</p>
+        <p class="isolated" data-bind="visible: !$component.isNew()">
+            <button type="button" class="btn btn-link" data-bind="text: $component.deleteButtonText, click: $component.confirmDelete.bind($component)"></button>
+        </p>
     </div>
 </form>
