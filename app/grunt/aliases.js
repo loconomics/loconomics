@@ -21,7 +21,8 @@ module.exports = {
     'build-js': [
         'eslint',
         'browserify:appCommon',
-        'uglify:appCommon'
+        'uglify:appCommon',
+        'uglify:appActivities'
     ],
     'build-css': [
         'prepare-bootstrap-variables',
