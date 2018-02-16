@@ -77,8 +77,15 @@ module.exports = {
                 return;
             }
             //console.debug('Shell loading on demand', route.name, route);
+            // We need versioned URLs to prevent cache problems, at build time a version
+            // was generated and attached to the html element. But supporting too
+            // cases when is no needed, as a native app or local builds, so can be empty
+            let jsVersion = document.documentElement.getAttribute('data-js-version');
+            jsVersion = jsVersion && '.' + jsVersion || '';
+            // Build the URL
+            const url = module.exports.baseUrl + folder + route.name + jsVersion + '.js';
             loadScript(
-                module.exports.baseUrl + folder + route.name + '.js',
+                url,
                 function(err) {
                     if (err) { reject(err); }
                     else {

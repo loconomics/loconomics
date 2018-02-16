@@ -1,6 +1,9 @@
-@*context: {debug:bool, includedFiles:[], cordovajs:bool, siteUrl:string} *@
+@*context: {debug:bool, includedFiles:[], cordovajs:bool, siteUrl:string, appVersion:string, jsVersion:string, cssVersion.string, facebookLang:string, facebookAppID:string, appId:string, appName:string} *@
 <!DOCTYPE html>
-<html lang="en" class="App" data-app-version="@(appVersion)" data-site-url="" data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)" data-culture="en-US" data-app-id="@(appId)" data-app-name="@(appName)">
+<html lang="en" class="App" data-site-url=""
+    data-app-version="@(appVersion)" data-js-version="@(jsVersion)"
+    data-facebook-language="@(facebookLang)" data-facebook-appid="@(facebookAppID)"
+    data-culture="en-US" data-app-id="@(appId)" data-app-name="@(appName)">
     <head>
         <meta charset="utf-8">
         <!-- VERY IMPORTANT: We run a SPA at the website with URLs with multiple segments
