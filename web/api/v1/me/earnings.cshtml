@@ -159,7 +159,12 @@
         {
             Validation.RequireField("paidDate", LcRessources.RequiredField("Date Paid"));
             Validation.RequireField("durationMinutes", LcRessources.RequiredField("Duration"));
-            Validation.RequireField("userExternalListingID", LcRessources.RequiredField("Listing"));
+            // If a listingID is not given, a platformID is used as alternative to create it automatically
+            // so we require almost one of both fields
+            if (Request.Form["platformID"].IsEmpty() && Request.Form["userExternalListingID"].IsEmpty())
+            {
+                ModelState.AddError("userExternalListingID", "A listing or platform must be specified for the earnings entry");
+            }
             Validation.RequireField("jobTitleID", LcRessources.RequiredField("Job Title"));
             Validation.Add("amount", Validator.Decimal("The total must be a valid number"));
 
@@ -201,6 +206,7 @@
                 paidDate = DateTimeOffsetFromISO(Request.Form["paidDate"]).Value,
                 durationMinutes = Request.Form["durationMinutes"].AsInt(),
                 userExternalListingID = Request.Form["userExternalListingID"].AsInt(),
+                platformID = Request.Form["platformID"].AsInt(),
                 jobTitleID = Request.Form["jobTitleID"].AsInt(),
                 clientUserID = Request.Form["clientUserID"].IsInt() ? Request.Form["clientUserID"].AsInt() : (int?)null,
                 amount = Request.Form["amount"].AsDecimal(),

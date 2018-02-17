@@ -17,6 +17,7 @@ class UserEarningsEntry {
             paidDate: null,
             durationMinutes: 0,
             userExternalListingID: null,
+            platformID: null,
             jobTitleID: null,
             clientUserID: null,
             notes: null,

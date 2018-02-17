@@ -490,7 +490,7 @@ export default class CachedDataProvider {
             // no data expected as a result of this method.
             .then(() => {})
             // fallback to just mark the cache as invalid in any error
-            .catch(() => this.__localCache.invalidate);
+            .catch(() => this.__localCache.invalidate());
         }
         else {
             return this.__localCache.invalidate();

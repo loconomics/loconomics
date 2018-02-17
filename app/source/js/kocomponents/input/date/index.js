@@ -53,9 +53,14 @@ export default class InputDate extends Komponent {
             }
         });
 
-        // Force first refresh on datepicker to allow
-        // event handlers to get notified on first time:
-        $datePicker.datepicker('fill');
+        // Set the date given externally as first value as selected and view
+        // (can be null for non selected)
+        $datePicker.datepicker('setValue', this.selectedDate(), true);
+        // if is null, we must place the view at current date (or, cause previous
+        // call with null, it keeps initiliazed at 1970!)
+        if (!this.selectedDate()) {
+            $datePicker.datepicker('setViewDate', new Date());
+        }
     }
 }
 

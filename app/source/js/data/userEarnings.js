@@ -8,6 +8,7 @@ import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
 import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
 import localforage from './drivers/localforage';
 import rest from './drivers/restClient';
+import { list as userExternalListingsList } from './userExternalListings';
 
 const API_NAME = 'me/earnings';
 const LOCAL_KEY = 'earnings';
@@ -80,3 +81,12 @@ export function item(id) {
     // Return the instance
     return itemProvider;
 }
+
+// Whenever a change is know in earnings,
+// we must invalidate the external listings data since one could have
+// being added automatically as of selecting a new platform for an earnings entry.
+const invalidateListings = () => {
+    userExternalListingsList.invalidateCache();
+};
+list.onCacheChanged.subscribe(invalidateListings);
+list.onCacheInvalidated.subscribe(invalidateListings);

@@ -14,6 +14,12 @@ namespace LcRest
         public DateTimeOffset paidDate;
         public int durationMinutes;
         public int userExternalListingID;
+        /// <summary>
+        /// The platformID of the userExternalListingID in use.
+        /// It's read from related table, or used to create a listing
+        /// automatically for the platform in a write operation.
+        /// </summary>
+        public int platformID;
         public int jobTitleID;
         public int? clientUserID;
         public DateTimeOffset createdDate;
@@ -51,6 +57,7 @@ namespace LcRest
                 paidDate = record.paidDate,
                 durationMinutes = record.durationMinutes,
                 userExternalListingID = record.userExternalListingID,
+                platformID = record.platformID,
                 jobTitleID = record.jobTitleID,
                 clientUserID = record.clientUserID,
                 createdDate = record.createdDate,
@@ -76,6 +83,7 @@ namespace LcRest
                 e.notes,
                 j.positionSingular as jobTitleName,
                 l.title as listingTitle,
+                l.platformID as platformID,
                 e.createdDate,
                 e.updatedDate
             FROM
@@ -239,7 +247,81 @@ namespace LcRest
         {
             using (var db = new LcDatabase(sharedDb))
             {
-                return (int)db.QueryValue(sqlSet,
+                db.Query("BEGIN TRANSACTION");
+                // There is only one case where job title is already added to listing and external listing
+                // and will switch next flag, otherwise we need to double check.
+                var skipJobTitleCheck = false;
+                // On no listingID, create one for the given platform..
+                if (entry.userExternalListingID <= 0 && entry.platformID > 0)
+                {
+                    // If  exists one..
+                    var byPlatform = UserExternalListing.GetByPlatformID(entry.userID, entry.platformID).FirstOrDefault();
+                    if (byPlatform != null)
+                    {
+                        // ..use it
+                        entry.userExternalListingID = byPlatform.userExternalListingID;
+                    }
+                    else
+                    {
+                        // ..otherwise, create a new one with all data we can know for it
+                        var newForPlatform = new UserExternalListing
+                        {
+                            userID = entry.userID,
+                            platformID = entry.platformID,
+                            title = String.Format("My {0} listing", Platform.GetItem(entry.platformID).name),
+                            notes = ""
+                        };
+                        var locale = Locale.Current;
+                        newForPlatform.FillJobTitlesWithIds(new int[] { entry.jobTitleID }, locale.languageID, locale.countryID);
+                        // insert and get the ID
+                        entry.userExternalListingID = UserExternalListing.Insert(newForPlatform);
+                        // this inserts the job title in the user Loconomics listing too if not exists
+                        skipJobTitleCheck = true;
+                    }
+                }
+                // ..or throw if no one of boths values is included
+                else if (entry.userExternalListingID <= 0 && entry.platformID <= 0)
+                {
+                    throw new ConstraintException("A listing or platform must be specified for the earnings entry");
+                }
+                // ..otherwise, it will just use the given listingID
+
+                // Selected job title could have being selected from an existent listing, but not exists on the external listing selected
+                // or was selected as another job title from an autocomplete, then no in this external listing and no in the user listing
+                // we need to add it if is not, on each place,
+                // except we well know exists and skip this step, using the flag
+                if (!skipJobTitleCheck)
+                {
+                    // Check if job title exist at user listing
+                    if (!UserJobTitle.HasItem(entry.userID, entry.jobTitleID))
+                    {
+                        // then create a new one, with mostly default options
+                        UserJobTitle.Create(new UserJobTitle
+                        {
+                            userID = entry.userID,
+                            jobTitleID = entry.jobTitleID
+                        });
+                    }
+                    // Get external listing
+                    var externalListing = UserExternalListing.Get(entry.userID, entry.userExternalListingID);
+                    if (externalListing == null)
+                    {
+                        throw new ConstraintException("The listing specified does not exists");
+                    }
+                    // Check if job title exist at the external listing
+                    if (!externalListing.jobTitles.ContainsKey(entry.jobTitleID))
+                    {
+                        // then add it
+                        var jobTitleIds = externalListing.jobTitles.Keys.ToList();
+                        jobTitleIds.Add(entry.jobTitleID);
+                        var locale = Locale.Current;
+                        externalListing.FillJobTitlesWithIds(jobTitleIds, locale.languageID, locale.countryID);
+                        // and save it
+                        UserExternalListing.Update(externalListing);
+                    }
+                }
+
+                var resultID = (int)db.QueryValue(sqlSet,
                     entry.userID,
                     entry.earningsEntryID,
                     entry.paidDate,
@@ -250,6 +332,8 @@ namespace LcRest
                     entry.notes,
                     entry.amount
                 );
+                db.Query("COMMIT TRANSACTION");
+                return resultID;
             }
         }
         #endregion

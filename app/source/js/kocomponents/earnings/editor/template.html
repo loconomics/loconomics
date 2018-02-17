@@ -1,4 +1,17 @@
 <form data-bind="event: { submit: save }">
+    <script type="text/template" id="earnings-editor-back-step">
+        <!-- Expected data: { step:1, context:$data } -->
+        <a href="#back" class="btn-block text-center" data-bind="
+            click: context.goToStep.bind($data, step),
+            visible: !context.isAtReview()">
+            Go back to previous step
+        </a>
+        <a href="#back" class="btn-block text-center" data-bind="
+            click: context.goToSummary,
+            visible: context.isAtReview">
+            Go back to summary
+        </a>
+    </script>
     <fieldset data-bind="
             visible: isAtStep(1),
             autofocus: isAtStep(1)
@@ -18,6 +31,13 @@
                     "/>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
+            <p class="isolated">
+                <a href="#back" class="btn-block text-center" data-bind="
+                    click: goToSummary,
+                    visible: isAtReview">
+                    Go back to summary
+                </a>
+            </p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -31,7 +51,7 @@
                 <input-duration params="id: 'earningsEditor-duration', durationInput: earningsEntry.durationMinutes, durationStepValue: 15"></input-duration>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-            <a data-bind="click: goToStep.bind($data, 1)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 1 } }"></p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -45,7 +65,7 @@
                 <input-date params="selectedDate: earningsEntry.paidDate"></input-date>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
-            <a data-bind="click: goToStep.bind($data, 2)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 2 } }"></p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -57,21 +77,30 @@
             <!--<h2>Your stored listings:</h2>-->
             <ul class="TilesList TilesList--openEnd" data-bind="foreach: userExternalListings">
                 <li>
-                    <button type="button" data-bind="click: $component.selectListing" class="ListingSummaryItem">
+                    <button type="button" data-bind="click: $component.selectListing.bind($component)" class="ListingSummaryItem">
                         <div class="Item-content">
                             <p data-bind="text: title"></p>
                         </div>
                         <div class="Item-action">
-                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                            <icon-dec params="icon: $component.earningsEntry.userExternalListingID() === userExternalListingID ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></icon-dec>
+                        </div>
+                    </button>
+                </li>
+            </ul>
+            <h2>Suggested platforms:</h2>
+            <ul class="TilesList TilesList--openEnd" data-bind="foreach: suggestedPlatforms">
+                <li>
+                    <button type="button" data-bind="click: $component.selectPlatform.bind($component)" class="ListingSummaryItem">
+                        <div class="Item-content">
+                            <p data-bind="text: name"></p>
+                        </div>
+                        <div class="Item-action">
+                            <icon-dec params="icon: $component.earningsEntry.platformID() === platformID ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></icon-dec>
                         </div>
                     </button>
                 </li>
             </ul>
             <!--
-                Stored listings:
-                My Loconomics listing
-                My Thumbtack listing
-                My Taskrabbit
                 TODO: More +
                 (suggested platforms)
                 99designs
@@ -81,7 +110,7 @@
                 Offline (My offline work)
                 Other (platform name)
             -->
-            <a data-bind="click: goToStep.bind($data, 3)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 3 } }"></p>
         </div>
     </fieldset>
     <fieldset data-bind="
@@ -93,31 +122,24 @@
             <!--<h2>Your job titles:</h2>-->
             <ul class="TilesList TilesList--openEnd" data-bind="foreach: userListings">
                 <li>
-                    <button type="button" data-bind="click: $component.selectListingJobTitle" class="ListingSummaryItem">
+                    <button type="button" data-bind="click: $component.selectListingJobTitle.bind($component)" class="ListingSummaryItem">
                         <div class="Item-content">
                             <p data-bind="text: jobTitleSingularName"></p>
                         </div>
                         <div class="Item-action">
-                            <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
+                            <icon-dec params="icon: $component.earningsEntry.jobTitleID() === jobTitleID ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></icon-dec>
                         </div>
                     </button>
                 </li>
             </ul>
-            <!-- add job-title-autocomplete here. It should allow just one job title -->
-            <!--
-            <label for="earningsEditor-jobTitleID">Choose other job title</label>
-            <div class="form-group">
-                <input class="form-control"
-                    id="earningsEditor-jobTitleID"
-                    type="text"
-                    placeholder=""
-                    data-bind="
-                        textInput: earningsEntry.jobTitleID
-                    " />
-            </div>
-            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-            -->
-            <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
+            <job-title-autocomplete class="isolated" params="suggestionButtonText: 'Select',
+                target: 'professionals',
+                onSelect: $component.selectJobTitle.bind($component),
+                label: 'Look for a job title you have not at your listings still',
+                isDisabled: $component.isLocked,
+                id: 'earningsEditorSelectJobTitle'">
+            </job-title-autocomplete>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 4 } }"></p>
         </div>
     </fieldset>
     <!--<fieldset data-bind="
@@ -136,9 +158,9 @@
             <br>
             <div class="form-group">
                 <label for="clientID">Select a current client</label>
-                <client-list id="clientID" params="listMode: 'select', selectItem: selectClient"></client-list>
+                <client-list id="clientID" params="listMode: 'select', selectItem: selectClient.bind($component)"></client-list>
             </div>
-            <a data-bind="click: goToStep.bind($data, 4)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 5 } }"></p>
         </div>
     </fieldset>-->
     <!--<fieldset data-bind="
@@ -149,7 +171,7 @@
             <legend>Add new client</legend>
             <client-editor params="editorMode: 'quickAdd'"></client-editor>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
-            <a data-bind="click: goToStep.bind($data, 6)" class="btn-block text-center">Go back to previous step</a>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 6 } }"></p>
         </div>
     </fieldset>-->
     <fieldset data-bind="
@@ -170,6 +192,7 @@
                     "></textarea>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: goToSummary"></button>
+            <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 5 } }"></p>
         </div>
     </fieldset>
     <div data-bind="
@@ -179,7 +202,7 @@
         ">
         <div class="SectionHeading SectionHeading--full">
             <h2>Date Paid</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 3)" aria-label='Edit date paid' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 3), disable: $component.isLocked" aria-label='Edit date paid' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: paidDate" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !paidDate()"  params="icon: 'ion-plus'"></icon-dec>
@@ -190,7 +213,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Total</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 1)" aria-label='Edit total' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 1), disable: $component.isLocked" aria-label='Edit total' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: amount" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !amount()"  params="icon: 'ion-plus'"></icon-dec>
@@ -201,7 +224,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Time Worked</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2)" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 2), disable: $component.isLocked" aria-label='Edit the time you worked' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: durationMinutes" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !durationMinutes()"  params="icon: 'ion-plus'"></icon-dec>
@@ -212,7 +235,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Listing</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 4)" aria-label='Edit the platform' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 4), disable: $component.isLocked" aria-label='Edit the platform' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: listingTitle" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !listingTitle()"  params="icon: 'ion-plus'"></icon-dec>
@@ -223,7 +246,7 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Job title</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 5)" aria-label='Edit the job title' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 5), disable: $component.isLocked" aria-label='Edit the job title' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: jobTitleID" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !jobTitleID()"  params="icon: 'ion-plus'"></icon-dec>
@@ -234,7 +257,7 @@
 
         <!--<div class="SectionHeading SectionHeading--full">
             <h2>Client</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6)" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6), disable: $component.isLocked" aria-label= 'Edit the client' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: clientUserID" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !clientUserID()"  params="icon: 'ion-plus'"></icon-dec>
@@ -248,15 +271,21 @@
 
         <div class="SectionHeading SectionHeading--full">
             <h2>Notes</h2>
-            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6)" aria-label='Edit the notes about your earnings' class="btn btn-icon-link pull-right">
+            <button type="button" data-bind="click: $parent.goToStep.bind($data, 6), disable: $component.isLocked" aria-label='Edit the notes about your earnings' class="btn btn-icon-link pull-right">
                 <span>
                     <icon-dec data-bind="visible: notes" params="icon: 'ion-edit'"></icon-dec>
                     <icon-dec data-bind="visible: !notes()"  params="icon: 'ion-plus'"></icon-dec>
                 </span>
             </button>
         </div>
-        <p data-bind="text: notes"></p>
-        <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked">Submit</button>
-        <p class="help-block">Please review carefully before submitting.</p>
+        <p data-bind="text: notes" style="white-space: pre;"></p>
+        <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
+        <p class="help-block isolated">Please review carefully before submitting.</p>
+        <p class="isolated" data-bind="visible: !$component.isNew()">
+            <button type="button" class="btn btn-link" data-bind="
+                text: $component.deleteButtonText,
+                disable: $component.isLocked,
+                click: $component.confirmDelete.bind($component)"></button>
+        </p>
     </div>
 </form>

@@ -68,6 +68,9 @@ namespace LcRest
         const string sqlGetItem = sqlGetList + @"
                 AND userExternalListingID = @1
         ";
+        const string sqlGetByPlatformID = sqlGetList + @"
+                AND platformID = @1
+        ";
         #endregion
 
         public static IEnumerable<UserExternalListing> GetList(int userID)
@@ -82,6 +85,13 @@ namespace LcRest
             using (var db = new LcDatabase())
             {
                 return FromDB(db.QuerySingle(sqlGetItem, userID, userExternalListingID));
+            }
+        }
+        public static IEnumerable<UserExternalListing> GetByPlatformID(int userID, int platformID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return db.Query(sqlGetByPlatformID, userID, platformID).Select(FromDB);
             }
         }
         #endregion
@@ -118,12 +128,37 @@ namespace LcRest
 
         #region Changes
         /// <summary>
+        /// Checks whether the included job titles are already in the user listing at Loconomics
+        /// (AKA UseJobTitles, UserProfilePositions), adding them when not.
+        /// That way, we ensure that any job title added into an external listing, is available
+        /// in the regular listing at Loconomics account.
+        /// This MUST be run whenever an external listing is being stored.
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="jobTitles"></param>
+        void AutoRegisterUserJobTitles()
+        {
+            foreach(var jobTitleID in jobTitles.Keys)
+            {
+                if (!UserJobTitle.HasItem(userID, jobTitleID))
+                {
+                    UserJobTitle.Create(new UserJobTitle
+                    {
+                        userID = userID,
+                        jobTitleID = jobTitleID
+                    });
+                }
+            }
+        }
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="externalListing"></param>
         /// <returns>Generated ID</returns>
         public static int Insert(UserExternalListing externalListing)
         {
+            externalListing.AutoRegisterUserJobTitles();
+
             var sqlInsert = @"
                 INSERT INTO UserExternalListing (
                     UserID, PlatformID,
@@ -153,6 +188,8 @@ namespace LcRest
 
         public static bool Update(UserExternalListing externalListing)
         {
+            externalListing.AutoRegisterUserJobTitles();
+
             var sqlUpdate = @"
                 UPDATE  UserExternalListing
                 SET     title = @2,
@@ -179,17 +216,22 @@ namespace LcRest
                 return affected > 0;
             }
         }
-
+        
+        /// <summary>
+        /// Soft delete the external listing
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <param name="userExternalListingID"></param>
+        /// <returns></returns>
         public static bool Delete(int userID, int userExternalListingID)
         {
             using (var db = new LcDatabase())
             {
                 // Set StatusID to 0 'deleted by user'
                 int affected = db.Execute(@"
-                    DELETE FROM UserExternalListing
-                    WHERE
-                        UserID = @0
-                        AND UserExternalListingID = @1
+                    UPDATE UserExternalListing
+                    SET Active = 0
+                    WHERE UserID = @0 AND userExternalListingID = @1
                 ", userID, userExternalListingID);
 
                 // Task done? Almost a record must be affected to be a success
