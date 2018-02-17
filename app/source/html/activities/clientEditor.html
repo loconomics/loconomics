@@ -2,7 +2,7 @@
 <div data-activity="clientEditor" class="Boxes-sm animated">
     <app-inline-user-menu></app-inline-user-menu>
     <div class="container">
-        <div class="row">  
+        <div class="row">
             <div class="SubSectionNavBar hidden-xs hidden-sm">
                 <ul>
                     <li>
@@ -12,7 +12,7 @@
             </div>
             <div class="col-md-7 col-sm-reset">
                 <h1><icon-dec params="icon: 'ion-android-contact'"></icon-dec> <span data-bind="text: title"></span></h1>
-                <form id="clientEditorForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="clientEditorFormInstructions"> 
+                <form id="clientEditorForm" class="container-fluid LightForm" role="form" data-bind="submit: save" aria-describedby="clientEditorFormInstructions">
                     <p id="clientEditorFormInstructions" class="help-block">Store your client's contact and other information here and create offerings only they can see.</p>
                     <div data-bind="css: { 'is-loading': isLoading }">
                         <app-loading-spinner params="mod: 'row bigger'"></app-loading-spinner>
@@ -43,7 +43,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="email" for="phone">Email address:</label>
-                                <input id="email" type="email" class="form-control" maxlength="145" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" 
+                                <input id="email" type="email" class="form-control" maxlength="145" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                                 data-bind="textInput: email, disable: $root.isLocked, attr: { readonly: $root.isReadOnly }"/>
                                 <!-- <span class="input-group-btn" data-bind="visible: $root.validEmail()">
                                     <a href="#" data-bind="attr: { href: 'mailto:' + $root.validEmail() }" class="btn btn-info">
@@ -54,7 +54,7 @@
                         </fieldset>
                         <fieldset>
                             <legend>Additional information about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName(), text: 'this client:'"></span></legend>
-                            <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s birthday:</span><span data-bind="visible: !firstName()">Client's birthday:</span></label>    
+                            <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: firstName(), text: firstName"></span><span data-bind="visible: firstName()">'s birthday:</span><span data-bind="visible: !firstName()">Client's birthday:</span></label>
                             <div class="row">
                                 <div class="form-group col-sm-8">
                                     <label for="selectedBirthMonth">Birth month:</label>
@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="notesAboutClient">Notes about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName()">client:</span></label>  
+                                <label for="notesAboutClient">Notes about <span data-bind="visible: firstName(), text: firstName() + ':'"></span><span data-bind="visible: !firstName()">client:</span></label>
                                 <textarea id="notesAboutClient" class="form-control" data-bind="textInput: notesAboutClient, disable: $root.isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
                                 <p id="notesAboutClientInstructions">These notes can only be seen by you.</p>
                             </div>
@@ -107,4 +107,4 @@
             </div>
         </div>
     </div>
-</div>  
+</div>
