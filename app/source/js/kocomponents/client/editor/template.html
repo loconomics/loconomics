@@ -23,7 +23,7 @@
     </div>
     <div class="form-group">
         <label for="email" for="phone">Email address:</label>
-        <input id="email" type="email" class="form-control" maxlength="145" pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" 
+        <input id="email" type="email" class="form-control" maxlength="145" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
         data-bind="textInput: client().email, disable: $root.isLocked"/>
     </div>
 </fieldset>
@@ -34,7 +34,7 @@
     }
     ">
     <legend>Additional information about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName(), text: 'this client:'"></span></legend>
-    <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: client().firstName(), text: firstName"></span><span data-bind="visible: client().firstName()">'s birthday:</span><span data-bind="visible: !client().firstName()">Client's birthday:</span></label>  
+    <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: client().firstName(), text: firstName"></span><span data-bind="visible: client().firstName()">'s birthday:</span><span data-bind="visible: !client().firstName()">Client's birthday:</span></label>
     <div class="row">
         <div class="form-group col-sm-8">
             <label for="selectedBirthMonth">Birth month:</label>
@@ -46,7 +46,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="notesAboutClient">Notes about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName()">client:</span></label>  
+        <label for="notesAboutClient">Notes about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName()">client:</span></label>
         <textarea id="notesAboutClient" class="form-control" data-bind="textInput: client().notesAboutClient, disable: $root.isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
         <p id="notesAboutClientInstructions">These notes can only be seen by you.</p>
     </div>
