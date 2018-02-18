@@ -1,15 +1,13 @@
 /**
- * Diplays a list of a professional's clients, and, depending on the 
- * mode, allows the ability to select a client to be used in other 
+ * Diplays a list of a professional's clients, and, depending on the
+ * mode, allows the ability to select a client to be used in other
  * activities.
  *
  * @module kocomponents/client/list
- *
  */
 
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
-import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import template from './template.html';
 
@@ -18,7 +16,7 @@ const dummyData = {};
 dummyData[0] =
 [
   {
-    'clientUserID': 1,  
+    'clientUserID': 1,
     'firstName': 'Joshua',
     'lastName': 'Danielson',
     'secondLastName': '',
@@ -27,14 +25,14 @@ dummyData[0] =
     'canReceiveSms': true,
     'birthMonthDay': 10,
     'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
+    'notesAboutClient': 'tall and detail-oriented',
     'createdDate': '12/10/2017',
     'updatedDate': '12/10/2017',
     'editable': false,
     'deleted': false
   },
   {
-    'clientUserID': 2,  
+    'clientUserID': 2,
     'firstName': 'Kyra',
     'lastName': 'Harrington',
     'secondLastName': '',
@@ -43,14 +41,14 @@ dummyData[0] =
     'canReceiveSms': true,
     'birthMonthDay': 10,
     'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
+    'notesAboutClient': 'tall and detail-oriented',
     'createdDate': '12/10/2017',
     'updatedDate': '12/10/2017',
     'editable': false,
     'deleted': false
   },
   {
-    'clientUserID': 3,  
+    'clientUserID': 3,
     'firstName': 'Iago',
     'lastName': 'Lorenzo',
     'secondLastName': '',
@@ -59,7 +57,7 @@ dummyData[0] =
     'canReceiveSms': true,
     'birthMonthDay': 10,
     'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
+    'notesAboutClient': 'tall and detail-oriented',
     'createdDate': '12/10/2017',
     'updatedDate': '12/10/2017',
     'editable': false,
@@ -77,27 +75,11 @@ export default class ClientList extends Komponent {
 
      /**
      * @param {object} params
-     * @param {KnockoutObservable<integer>} [params.userID]
-     * @param {KnockoutObservable<string>} [params.listMode]
-     * @param {KnockoutObservable<method>} [params.selectItem] 
+     * @param {Function<rest/Client>} [params.selectItem] Callback with the data for the client
+     * selected by the user
      */
     constructor(params) {
         super();
-
-      /**
-       * The userID the client list is created for.
-       * @member {KnockoutObservable<integer>}
-       */
-      this.userID = getObservable(params.userID);
-
-        /**
-         * Captures from the activity which "mode" the list
-         * component is to be used. 
-         * view: 
-         * select:
-         * @member {KnockoutObservable<string>}
-         */
-        this.listMode = getObservable(params.listMode || 'view');
 
         /**
          * @method selectItem
@@ -105,7 +87,7 @@ export default class ClientList extends Komponent {
         this.selectItem = params.selectItem;
 
         /**
-         * Client list returned given query parameters.
+         * Client list.
          * @member {KnockoutObservable<array>}
          */
         this.clientList = ko.observableArray();
