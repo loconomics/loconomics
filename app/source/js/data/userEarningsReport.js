@@ -16,7 +16,7 @@ const LOCAL_KEY = 'earnings-report';
  * @returns {CachedDataProvider<rest/UserExternalReport>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - list.onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export const globalReport = new CachedDataProvider({
     // 10 minutes
