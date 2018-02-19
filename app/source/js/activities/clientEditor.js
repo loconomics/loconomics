@@ -14,6 +14,7 @@ var pricingTypes = require('../data/pricingTypes');
 var ko = require('knockout');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
+var Client = require('../models/Client');
 
 var A = Activity.extend(function ClientEditionActivity() {
 
@@ -104,21 +105,15 @@ A.prototype.show = function show(state) {
     if (clientID) {
         this.viewModel.clientID(clientID);
 
-        /*this.viewModel.client.sync(clientID)
-        .catch(function (err) {
-            showError({
-                title: 'Error loading client data',
-                error: err
-            });
-        });*/
-
-        clients.createItemVersion(clientID)
-        .then(function (clientVersion) {
-            if (clientVersion) {
-                this.viewModel.clientVersion(clientVersion);
+        clients.item(clientID).onceLoaded()
+        .then(function (client) {
+            if (client) {
+                this.viewModel.client(new Client(client));
+                this.viewModel.dataTimestamp(this.viewModel.client().model.dataTimestamp());
                 this.viewModel.header('Edit client');
             } else {
-                this.viewModel.clientVersion(null);
+                this.viewModel.client(null);
+                this.viewModel.dataTimestamp(null);
                 this.viewModel.header('Deleted or unknown client');
             }
         }.bind(this))
@@ -143,9 +138,9 @@ A.prototype.show = function show(state) {
             presetData.editable = true;
         }
 
-        /*this.viewModel.client.newItem(presetData);*/
         // New client
-        this.viewModel.clientVersion(clients.newItem(presetData));
+        this.viewModel.client(new Client(presetData));
+        this.viewModel.dataTimestamp(this.viewModel.client().model.dataTimestamp());
         this.viewModel.header('Add a client');
 
         // Extra preset data
@@ -206,31 +201,31 @@ function ViewModel(app) {
 
     this.clientID = ko.observable(0);
 
-    this.clientVersion = ko.observable(null);
-    this.client = ko.pureComputed(function() {
-        var v = this.clientVersion();
-        if (v) {
-            return v.version;
-        }
-        return null;
-    }, this);
-    //this.client = clients.createWildcardItem();
+    this.dataTimestamp = ko.observable(null);
+    this.client = ko.observable(null);
+
+    this.state = {
+        isLoading: ko.observable(false),
+        isSaving: ko.observable(false),
+        isDeleting: ko.observable(false),
+    };
+    this.state.isLocked = ko.pureComputed(() => this.state.isLoading() && this.state.isSaving() && this.state.isDeleting());
 
     this.header = ko.observable('');
 
     this.isLoadingServices = ko.observable(false);
     this.isLoading = ko.pureComputed(function() {
         return (
-            clients.state.isLoading() ||
+            this.state.isLoading() ||
             this.isLoadingServices()
         );
     }, this);
 
-    this.isSyncing = clients.state.isSyncing;
-    this.isSaving = clients.state.isSaving;
+    this.isSyncing = this.state.isSyncing;
+    this.isSaving = this.state.isSaving;
     this.isLocked = ko.pureComputed(function() {
         return (
-            clients.state.isLocked() ||
+            this.state.isLocked() ||
             this.isDeleting()
         );
     }, this);
@@ -239,7 +234,7 @@ function ViewModel(app) {
         return c && !c.editable();
     }, this);
 
-    this.isDeleting = clients.state.isDeleting;
+    this.isDeleting = this.state.isDeleting;
 
     this.wasRemoved = ko.observable(false);
 
@@ -282,7 +277,8 @@ function ViewModel(app) {
     };
 
     this.submitText = ko.pureComputed(function() {
-        var v = this.clientVersion();
+        var c = this.client();
+        var hasChanges = c && this.dataTimestamp() !== c.model.dataTimestamp();
         return (
             this.isLoading() ?
                 'Loading...' :
@@ -290,16 +286,16 @@ function ViewModel(app) {
                     'Saving changes' :
                     this.isNew() ?
                         'Add client' :
-                        v && v.areDifferent() ?
+                        hasChanges ?
                             'Save changes to client' :
                             'Client saved'
         );
     }, this);
 
-    this.unsavedChanges = ko.pureComputed(function() {
-        var v = this.clientVersion();
-        return v && v.areDifferent();
-    }, this);
+    this.unsavedChanges = ko.pureComputed(() => {
+        var c = this.client();
+        return c && this.dataTimestamp() !== c.model.dataTimestamp();
+    });
 
     this.deleteText = ko.pureComputed(function() {
         return (
@@ -315,13 +311,12 @@ function ViewModel(app) {
 
     this.save = function() {
 
-        clients.setItem(this.client().model.toPlainObject())
+        clients
+        .item(this.client().clientUserID())
+        .save(this.client().model.toPlainObject())
         .then(function(serverData) {
-            // Update version with server data.
             this.client().model.updateWith(serverData);
-            // Push version so it appears as saved
-            this.clientVersion().push({ evenIfObsolete: true });
-
+            this.dataTimestamp(this.client().model.dataTimestamp());
             // Special save, function provided by the activity on set-up
             this.onSave(serverData.clientUserID);
         }.bind(this))
@@ -348,7 +343,9 @@ function ViewModel(app) {
 
     this.remove = function() {
 
-        clients.delItem(this.clientID())
+        clients
+        .item(this.clientID())
+        .delete()
         .then(function() {
             this.wasRemoved(true);
             // Go out the deleted location

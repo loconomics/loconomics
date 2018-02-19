@@ -131,7 +131,8 @@ export default class EarningsViewer extends Komponent {
                     // Load info about the client of this entry
                     // It's optional, so careful since can be null
                     if (data.clientUserID) {
-                        clients.getItem(data.clientUserID)
+                        clients.item(data.clientUserID)
+                        .onceLoaded()
                         .then((client) => {
                             this.client(client);
                         })
