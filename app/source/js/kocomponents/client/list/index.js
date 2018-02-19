@@ -8,63 +8,12 @@
 
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
+import clientsData from '../../../data/clients';
 import ko from 'knockout';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
 const TAG_NAME = 'client-list';
-const dummyData = {};
-dummyData[0] =
-[
-  {
-    'clientUserID': 1,
-    'firstName': 'Joshua',
-    'lastName': 'Danielson',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented',
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  },
-  {
-    'clientUserID': 2,
-    'firstName': 'Kyra',
-    'lastName': 'Harrington',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented',
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  },
-  {
-    'clientUserID': 3,
-    'firstName': 'Iago',
-    'lastName': 'Lorenzo',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented',
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  }
-];
-
 
 /**
  * Component
@@ -92,9 +41,13 @@ export default class ClientList extends Komponent {
          */
         this.clientList = ko.observableArray();
 
-        this.observeChanges(() => {
-            const data = dummyData[0];
-            this.clientList(data);
+        // Get and keep notified with clients data and any error
+        this.subscribeTo(clientsData.list.onData, this.clientList);
+        this.subscribeTo(clientsData.list.onDataError, (error) => {
+            showError({
+                title: 'There was an error loading clients',
+                error
+            });
         });
     }
 }
