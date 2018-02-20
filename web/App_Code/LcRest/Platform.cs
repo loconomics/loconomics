@@ -57,7 +57,7 @@ namespace LcRest
 
         #region Fetch
         #region SQLs
-        const string sqlGetList = @"
+        const string sqlSelect = @"
             SELECT
                 p.platformID,
                 p.languageID,
@@ -73,6 +73,8 @@ namespace LcRest
                 p.signInURL,
                 p.updatedDate
             FROM Platform as P
+        ";
+        const string sqlGetUserList = sqlSelect + @"
             WHERE
                 P.PlatformID IN (
                     SELECT JP.PlatformID
@@ -92,8 +94,11 @@ namespace LcRest
                 )
                 AND P.LanguageID = @1 AND P.CountryID = @2
         ";
-        const string sqlGetItem = sqlGetList + @"
+        const string sqlGetUserItem = sqlGetUserList + @"
                 AND P.platformID = @3
+        ";
+        const string sqlGetItem = sqlSelect + @"
+                WHERE P.platformID = @0
         ";
         #endregion
 
@@ -101,14 +106,21 @@ namespace LcRest
         {
             using (var db = new LcDatabase())
             {
-                return db.Query(sqlGetList, userID, languageID, countryID).Select(FromDB);
+                return db.Query(sqlGetUserList, userID, languageID, countryID).Select(FromDB);
             }
         }
         public static Platform Get(int userID, int platformID, int languageID, int countryID)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlGetItem, userID, languageID, countryID, platformID));
+                return FromDB(db.QuerySingle(sqlGetUserItem, userID, languageID, countryID, platformID));
+            }
+        }
+        public static Platform GetItem(int platformID)
+        {
+            using (var db = new LcDatabase())
+            {
+                return FromDB(db.QuerySingle(sqlGetItem, platformID));
             }
         }
         #endregion

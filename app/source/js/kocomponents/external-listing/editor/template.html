@@ -6,14 +6,6 @@
             <label for="listingTitle">Title</label>
             <div class="form-group">
                 <span class="form-control-static" data-bind="text: title"></span>
-                <!--<input class="form-control"
-                    id="listingTitle"
-                    type="text"
-                    placeholder=""
-                    data-bind="
-                        value: title,
-                        disable: $component.isWorking
-                    " />-->
             </div>
             <div class="isolated">
                 <job-title-autocomplete params="suggestionButtonText: 'Add',
@@ -45,10 +37,11 @@
             </div>
             <button type="submit" class="btn btn-secondary btn-block btn-lg"
                 data-bind="text: $component.saveButtonLabel, disable: $component.isWorking"></button>
-            <button type="button" class="btn btn-danger btn-link"
-                data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
-                disable: $component.isWorking,
-                visible: $component.externalListingID"></button>
+            <p class="isolated" data-bind="visible: $component.externalListingID">
+                <button type="button" class="btn btn-danger btn-link"
+                    data-bind="click: $component.deleteListing.bind($component), text: $component.deleteButtonLabel,
+                    disable: $component.isWorking"></button>
+            </p>
         </div>
     </fieldset>
 </form>

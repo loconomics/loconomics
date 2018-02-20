@@ -89,6 +89,15 @@ module.exports = {
             //open: true
         }
     },
+    build: {
+        options: {
+            port: 8811,
+            hostname: 'localhost',
+            base: 'build',
+            keepalive: true
+            //open: true
+        }
+    },
     phonegap: {
         options: {
             port: 8812,

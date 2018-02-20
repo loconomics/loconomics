@@ -1,0 +1,22 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="SubSectionNavBar hidden-xs hidden-sm">
+            <ul>
+                <li>
+                    <a data-bind="attr: { href: '/earnings-view/' + earningsEntryID() + '?mustReturn=earnings-history'+ '&returnText=Earnings History' }">
+                        <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> View Earnings
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <h1 data-bind="text: title"></h1>
+        <div class="col-md-7 col-sm-reset">
+            <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'edit',
+                onSaved: onSaved, onDeleted: onDeleted"></earnings-editor>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>
