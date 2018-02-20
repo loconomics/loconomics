@@ -63,9 +63,8 @@
             <legend>When were you paid?</legend>
             <label for="earningsEditor-paidDate">Date</label>
             <div class="form-group">
-                <input-date params="selectedDate: earningsEntry.paidDate"></input-date>
+                <input-date params="value: earningsEntry.paidDate, onSelect: saveStep"></input-date>
             </div>
-            <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
             <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 2 } }"></p>
         </div>
     </fieldset>
