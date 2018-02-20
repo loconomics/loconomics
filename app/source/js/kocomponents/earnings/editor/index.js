@@ -13,6 +13,7 @@ import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
 import { ActionForValue } from '../../job-title-autocomplete';
 import Komponent from '../../helpers/KnockoutComponent';
 import UserEarningsEntry from '../../../models/UserEarningsEntry';
+import { item as clientsDataItem } from '../../../data/clients';
 import ko from 'knockout';
 import { show as showConfirm } from '../../../modals/confirm';
 import { show as showError } from '../../../modals/error';
@@ -343,6 +344,29 @@ export default class EarningsEditor extends Komponent {
                     this.dataManager = userEarningsItem(0);
                 }
                 this.earningsEntry.model.updateWith(data);
+                // Load info about the client of this entry
+                // It's optional, so careful since can be null
+                if (data.clientUserID) {
+                    clientsDataItem(data.clientUserID)
+                    .onceLoaded()
+                    .then((client) => {
+                        // IMPORTANT: Be careful (again), because if something was slow
+                        // loading, user could have picked (edited/added) a new client
+                        // in the editor, and we do not want to replace that info,
+                        // check if there is no data, or that data has the same ID
+                        // that the one we have loaded
+                        if (!this.selectedClient() ||
+                            this.selectedClient().clientUserID === client.clientUserID) {
+                            this.selectedClient(client);
+                        }
+                    })
+                    .catch((error) => {
+                        showError({
+                            title: 'There was an error loading the client information at the entry',
+                            error
+                        });
+                    });
+                }
             })
             .catch((error) => {
                 this.isLoading(false);
@@ -361,7 +385,7 @@ export default class EarningsEditor extends Komponent {
      */
     selectClient(client) {
         // Updates edited entry with the client ID selected
-        this.earningsEntry.clientUserID(client.clientID);
+        this.earningsEntry.clientUserID(client.clientUserID);
         // Save a reference, to display name and other info
         this.selectedClient(client);
         this.goToSummary();
@@ -484,6 +508,7 @@ export default class EarningsEditor extends Komponent {
                 // Reset to new item
                 this.earningsEntry.model.reset();
                 this.editorMode(EditorMode.add);
+                this.dataManager = userEarningsItem(0);
             }
         })
         .catch((error) => {

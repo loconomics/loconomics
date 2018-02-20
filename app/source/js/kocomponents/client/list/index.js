@@ -8,7 +8,7 @@
 
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
-import clientsData from '../../../data/clients';
+import { list as clientsDataList } from '../../../data/clients';
 import ko from 'knockout';
 import { show as showError } from '../../../modals/error';
 import template from './template.html';
@@ -42,8 +42,8 @@ export default class ClientList extends Komponent {
         this.clientList = ko.observableArray();
 
         // Get and keep notified with clients data and any error
-        this.subscribeTo(clientsData.list.onData, this.clientList);
-        this.subscribeTo(clientsData.list.onDataError, (error) => {
+        this.subscribeTo(clientsDataList.onData, this.clientList);
+        this.subscribeTo(clientsDataList.onDataError, (error) => {
             showError({
                 title: 'There was an error loading clients',
                 error
