@@ -1,5 +1,9 @@
 /**
     ClientEditor activity
+
+    IMPORTANT: A client/editor component is on the works, used already but without
+    all the needed options. It lacks: services/offerings, validations and public search
+    TODO: Complete the component and use it here.
 **/
 'use strict';
 

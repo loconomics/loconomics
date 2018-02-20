@@ -1,53 +1,75 @@
-<!-- @iagosrl <div data-bind="visible: editorMode() == quickAdd" -->
-<fieldset data-bind="
-        attr: {
-            id: editorMode() + 'ClientForm-ContactInfo'
-        }
-        ">
-    <legend><span data-bind="visible: client().firstName(), text: client().firstName"></span><span data-bind="visible: client().firstName()">'s contact information:</span><span data-bind="visible: !client().firstName()">Client's contact information:</span></legend>
+<fieldset>
+    <legend data-bind="text: contactInfoLegend"></legend>
     <div class="form-group">
         <label for="firstName">First name:</label>
-        <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50" data-bind="textInput: client().firstName, disable: $root.isLocked">
+        <input id="firstName" type="text" class="form-control" required minlength="2" maxlength="50"
+            data-bind="textInput: client.firstName, disable: isLocked, attr: { readonly: isReadOnly }">
     </div>
     <div class="form-group">
         <label for="lastName">Last name:</label>
-        <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145" data-bind="textInput: client().lastName, disable: $root.isLocked">
+        <input id="lastName" type="text" class="form-control" required minlength="2" maxlength="145"
+            data-bind="textInput: client.lastName, disable: isLocked, attr: { readonly: isReadOnly }">
     </div>
     <div class="form-group">
         <label for="phone">Phone number:</label>
-        <input id="phone" type="tel" class="form-control" required data-bind="textInput: client().phone, disable: $root.isLocked">
+        <input id="phone" type="tel" class="form-control" required
+            data-bind="textInput: client.phone, disable: isLocked, attr: { readonly: isReadOnly }">
+        <!-- Useful link to trigger phone dialer, but disabled for unknow reason at original clientEditor
+            It could be a btn-addon
+            <span class="input-group-btn" data-bind="visible: validPhone()">
+            <a href="#" data-bind="attr: { href: 'tel:' + validPhone() }" class="btn btn-info">
+                <span class="sr-only">Call to this phone</span><span class="fa ion ion-ios-telephone-outline"></span>
+            </a>
+        </span> -->
     </div>
     <div class="form-group">
         <label for="canReceiveSms">Does this number receive texts?</label>
-        <input id="canReceiveSms" type="checkbox" data-bind="checked: client().canReceiveSms, disable: $root.isLocked">
+        <input id="canReceiveSms" type="checkbox"
+            data-bind="checked: client.canReceiveSms, disable: isLocked, attr: { readonly: isReadOnly }">
     </div>
     <div class="form-group">
         <label for="email" for="phone">Email address:</label>
-        <input id="email" type="email" class="form-control" maxlength="145" pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-        data-bind="textInput: client().email, disable: $root.isLocked"/>
+        <input id="email" type="email" class="form-control" maxlength="145"
+            pattern="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+            data-bind="textInput: client.email, disable: isLocked, attr: { readonly: isReadOnly }"/>
+        <!-- Useful link to trigger email client, but disabled for unknow reason at original clientEditor
+            It could be a btn-addon
+            <span class="input-group-btn" data-bind="visible: validEmail()">
+            <a href="#" data-bind="attr: { href: 'mailto:' + validEmail() }" class="btn btn-info">
+                <span class="sr-only">Write e-mail</span>
+                <span class="fa ion ion-ios-at-outline"></span></a>
+        </span> -->
     </div>
 </fieldset>
-<!-- <fieldset data-bind="
-    visible: (editorMode() == 'add' || editorMode() == 'edit'),
-    attr: {
-        id: editorMode() + 'ClientForm-AdditionInfo'
-    }
-    ">
-    <legend>Additional information about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName(), text: 'this client:'"></span></legend>
-    <label for="selectedBirthMonth birthMonthDay"><span data-bind="visible: client().firstName(), text: firstName"></span><span data-bind="visible: client().firstName()">'s birthday:</span><span data-bind="visible: !client().firstName()">Client's birthday:</span></label>
+<button type="button" class="btn btn-info" data-bind="click: showMore, visible: !isMoreVisible()">Show additional information</button>
+<fieldset data-bind="visible: isMoreVisible">
+    <legend data-bind="text: moreInfoLegend"></legend>
+    <label for="selectedBirthMonth birthMonthDay" data-bind="text: birthdayGroupLabel"></label>
     <div class="row">
         <div class="form-group col-sm-8">
             <label for="selectedBirthMonth">Birth month:</label>
-            <select id="selectedBirthMonth" class="form-control" data-bind="textInput: $root.client().selectedBirthMonth, options: $root.months, optionsText: 'name', optionsCaption: 'Select month', valueAllowUnset: true, disable: $root.isLocked"></select>
+            <select id="selectedBirthMonth" class="form-control"
+                data-bind="textInput: selectedBirthMonth, options: months, optionsText: 'name',
+                optionsCaption: 'Select month', valueAllowUnset: true,
+                disable: isLocked() || isReadOnly()"></select>
         </div>
         <div class="form-group col-sm-4">
             <label for="birthMonthDay">Birth day:</label>
-            <select id="birthMonthDay" class="form-control" data-bind="textInput: client().birthMonthDay, options: $root.monthDays, optionsCaption: 'Select day',  valueAllowUnset: true, disable: $root.isLocked"></select>
+            <select id="birthMonthDay" class="form-control"
+                data-bind="textInput: client.birthMonthDay, options: monthDays,
+                optionsCaption: 'Select day', valueAllowUnset: true,
+                disable: isLocked() || isReadOnly()"></select>
         </div>
     </div>
     <div class="form-group">
-        <label for="notesAboutClient">Notes about <span data-bind="visible: client().firstName(), text: client().firstName() + ':'"></span><span data-bind="visible: !client().firstName()">client:</span></label>
-        <textarea id="notesAboutClient" class="form-control" data-bind="textInput: client().notesAboutClient, disable: $root.isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
+        <label for="notesAboutClient" data-bind="text: notesLabel"></label>
+        <textarea id="notesAboutClient" class="form-control" data-bind="textInput: client.notesAboutClient, disable: isLocked" aria-describedby="notesAboutClientInstructions"></textarea>
         <p id="notesAboutClientInstructions">These notes can only be seen by you.</p>
     </div>
-</fieldset> -->
+</fieldset>
+<div class="LightForm-submitBar">
+    <button type="submit" class="btn btn-primary btn-block"
+        data-bind="click: save, text: saveButtonText, disable: isLocked() || !hasUnsavedChanges(), css: { 'btn-danger': isSaving() }"></button>
+    <button type="button" class="btn btn-danger btn-block"
+        data-bind="click: confirmDelete, deleteButtontExt, disable: isLocked(), visible: !isNew()"></button>
+</div>
