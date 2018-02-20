@@ -169,7 +169,7 @@
         <!-- IMPORTANT: forced recreation of the content by using 'if' to ensure the editor has the correct state -->
         <div class="col-xs-12" data-bind="if: isAtStep(7)">
             <legend>Add new client</legend>
-            <client-editor params="onSaved: selectClient, clientUserID: earningsEntry.clientUserID"></client-editor>
+            <client-editor params="onSaved: selectClient.bind($component)"></client-editor>
             <p class="isolated" data-bind="template: { name: 'earnings-editor-back-step', data: { context: $data, step: 6 } }"></p>
         </div>
     </fieldset>
