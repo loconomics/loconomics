@@ -117,7 +117,7 @@ export default class ClientEditor extends Komponent {
          */
         this.contactInfoLegend = ko.pureComputed(() => {
             var name = this.client.firstName() || 'Client';
-            return `${name}'contact information`;
+            return `${name}'s contact information`;
         });
 
         /**
@@ -127,7 +127,7 @@ export default class ClientEditor extends Komponent {
          */
         this.moreInfoLegend = ko.pureComputed(() => {
             var name = this.client.firstName() || 'Client';
-            return `${name}'additional information`;
+            return `${name}'s additional information`;
         });
 
         /**
