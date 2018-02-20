@@ -95,6 +95,39 @@ export default class CachedDataProvider {
             throw new Error('Setting "local" is required');
         }
 
+        /// Cache Events
+        // (declared before __localCache so is available for the internal references)
+        /**
+         * Notification when data has being stored in the cache.
+         * It includes the data.
+         * NOTE: data is stored in the cache usually as a result of onRemoteLoaded
+         * and onSaved; that's a write operation excluding removal.
+         * @member {SingleEvent<any>}
+         */
+        this.onCachedData = new SingleEvent(this);
+        /**
+         * Notification when the content of the cache has changed, any write
+         * operation on the data, but not on metadata, meaning that some
+         * data was stored or removed.
+         * It includes the data except when is a removal that is null.
+         * NOTE: the cache changes usually as a result of onRemoteLoaded,
+         * onSaved, onDeleted, or a cache clearing operation.
+         * NOTE: invalidating the cache is not notified, since only the metadata
+         * and not the content data has changed.
+         * @member {SingleEvent<any>}
+         */
+        this.onCacheChanged = new SingleEvent(this);
+        /**
+         * Notification when the content of the cache has being marked
+         * as invalid.
+         * Does not receive parameters.
+         * NOTE: invalidation means the data has not changed, but marked as
+         * requires an update on next use. Use onCacheChanged or onCachedData
+         * to get actual updates on data.
+         * @member {SingleEvent}
+         */
+        this.onCacheInvalidated = new SingleEvent(this);
+
         /// Private fields
         /**
          * Remote provider driver
@@ -110,10 +143,14 @@ export default class CachedDataProvider {
          * @private
          */
         this.__localCache = {
+            /// Internal references to cache events, same documentation applies
+            onCachedData: this.onCachedData,
+            onCacheChanged: this.onCacheChanged,
+            onCacheInvalidated: this.onCacheInvalidated,
             /**
              * Loads data from local storage, returning the cache object,
              * with `cache.data` holding the data or empty if nothing stored.
-             * @returns {Promise<CachedData, Error>}
+             * @returns {Promise<CachedData,Error>}
              */
             fetch() {
                 // Get cached data from local,
@@ -136,7 +173,7 @@ export default class CachedDataProvider {
              * -does not need mustRevalidate as value matches the default, falsy).
              * @param {Object} data The plain object representing the data model
              * to be locally stored.
-             * @returns {Promise<CachedData, Error>} Stored
+             * @returns {Promise<CachedData,Error>} Stored
              */
             push(data) {
                 // Prepare cache info
@@ -146,12 +183,17 @@ export default class CachedDataProvider {
                 };
                 // Replace cached data
                 return settings.local.push(cachedData)
-                // and return it when done
-                .then(() => cachedData);
+                .then(() => {
+                    // Notify the change
+                    this.onCachedData.emit(cachedData);
+                    this.onCacheChanged.emit(cachedData);
+                    // and return it when done
+                    return cachedData;
+                });
             },
             /**
              * Deletes local cached data.
-             * @returns {Promise<CachedData, Error>} Empty cache
+             * @returns {Promise<CachedData,Error>} Empty cache
              */
             delete() {
                 // Delete cached data from local
@@ -162,7 +204,32 @@ export default class CachedDataProvider {
                     data: null,
                     // null means no data to check, undefined means not loaded still
                     latest: null
-                }));
+                }))
+                .then(() => {
+                    // Notify the change
+                    this.onCacheChanged.emit(null);
+                });
+            },
+            /**
+             * Marks cached data as invalid by touching a flag, while keeping
+             * the stored data.
+             * Soft alternative to 'delete'
+             * @returns {Promise<Error>}
+             */
+            invalidate() {
+                // Get current cache
+                return settings.local.fetch()
+                .then((dataCache) => settings.local.push({
+                        // Be careful: the cache may not exist and we need to keep the data!
+                        data: dataCache && dataCache.data,
+                        // reset mark, will force 'mustRevalidate' to calculate as 'true'
+                        // next time
+                        latest: null
+                    })
+                )
+                .then(() => {
+                    this.onCacheInvalidated.emit();
+                });
             }
         };
 
@@ -265,6 +332,30 @@ export default class CachedDataProvider {
     }
 
     /**
+     * Request to load data from remote and update the cache with the result
+     * when successfully, notifying events.
+     * @returns {Promise<any,Error>}
+     */
+    refresh() {
+        return this.__remote.fetch()
+        // Update local cache
+        .then((remoteData) => this.__localCache.push(remoteData))
+        .then((freshCache) => {
+            // notify load with the 'fresh' remote data already saved in the cache
+            // NOTE: remoteData at previous promise and freshCache.data are
+            // currently the same object instance
+            this.onRemoteLoaded.emit(freshCache.data);
+            this.onLoaded.emit(freshCache.data);
+            // return the data
+            return freshCache.data;
+        });
+        // NOTE: it's important to prevent race conditions, unstable state
+        // and to make the code more predictable, because of that we notify
+        // the remoteData after successfully store it in the cache and not
+        // immediatly after receive it
+    }
+
+    /**
      * Request to sync local-remote data, by getting the local copy, checking
      * it has an up-to-date data, otherwise gets the remote data, storing
      * a copy it in the local with cache info.
@@ -303,22 +394,7 @@ export default class CachedDataProvider {
             // "else" no data
             // or local data must be revalidated:
             // enforces a remote load and wait for it
-            return this.__remote.fetch()
-            // Update local cache
-            .then((remoteData) => this.__localCache.push(remoteData))
-            .then((freshCache) => {
-                // notify load with the 'fresh' remote data already saved in the cache
-                // NOTE: remoteData at previous promise and freshCache.data are
-                // currently the same object instance
-                this.onRemoteLoaded.emit(freshCache.data);
-                this.onLoaded.emit(freshCache.data);
-                // return the data
-                return freshCache.data;
-            });
-            // NOTE: it's important to prevent race conditions, unstable state
-            // and to make the code more predictable, because of that we notify
-            // the remoteData after successfully store it in the cache and not
-            // immediatly after receive it
+            return this.refresh();
         });
     }
 
@@ -389,6 +465,36 @@ export default class CachedDataProvider {
      */
     clearCache() {
         return this.__localCache.delete();
+    }
+
+    /**
+     * Request to state that the cache is invalid, that will enforce to update
+     * with content from remote.
+     *
+     * In details:
+     * If there are listeners for new data ('onLoaded'), a remote load is triggered
+     * immediately so we store latest data and notify them. If fails for any reason
+     * (like no connection), fallbacks to mark the cache as invalid.
+     * Otherwise, we just mark current cached data as no
+     * valid enforcing that next time is accessed, a remote load will be triggered;
+     * in opposite to clearCache, we keep the outdated data, this way we have
+     * still some data for quick usage.
+     *
+     * @returns {Promise} When it ends refreshing the cache or marking the cache as invalid.
+     */
+    invalidateCache() {
+        // If someone subscribed to new data
+        if (this.onLoaded.count) {
+            // Trigger a remote load immediately,
+            return this.refresh()
+            // no data expected as a result of this method.
+            .then(() => {})
+            // fallback to just mark the cache as invalid in any error
+            .catch(() => this.__localCache.invalidate());
+        }
+        else {
+            return this.__localCache.invalidate();
+        }
     }
 }
 

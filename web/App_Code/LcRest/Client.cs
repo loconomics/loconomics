@@ -321,7 +321,7 @@ namespace LcRest
         /// <param name="serviceProfessionalUserID"></param>
         /// <param name="client"></param>
         /// <returns></returns>
-        public static int SetClient(int serviceProfessionalUserID, Client client)
+        public static int SetClient(int serviceProfessionalUserID, Client client, int languageID, int countryID)
         {
             // If it has ID, we need to read it from database
             // to ensure it can be edited, else only the serviceProfessional fields
@@ -368,7 +368,7 @@ namespace LcRest
                     }
 
                     // Set Client User
-                    SetClientUser(serviceProfessionalUserID, client);
+                    SetClientUser(serviceProfessionalUserID, client, languageID, countryID);
                 }
 
                 // Set relationship data
@@ -382,7 +382,7 @@ namespace LcRest
                 if (emailOwnerID == 0)
                 {
                     // Create new user, getting the generated ID
-                    client.clientUserID = SetClientUser(serviceProfessionalUserID, client);
+                    client.clientUserID = SetClientUser(serviceProfessionalUserID, client, languageID, countryID);
                     // Create link with serviceProfessional
                     SetServiceProfessionalClient(serviceProfessionalUserID, client);
                 }
@@ -424,7 +424,7 @@ namespace LcRest
         /// Create or updates a User account for the given client information.
         /// </summary>
         /// <param name="client"></param>
-        private static int SetClientUser(int serviceProfessionalUserID, Client client)
+        private static int SetClientUser(int serviceProfessionalUserID, Client client, int languageID, int countryID)
         {
             using (var db = Database.Open("sqlloco"))
             {
@@ -489,7 +489,9 @@ namespace LcRest
 		                ModifiedBy,
 		                Active,
                         AccountStatusID,
-                        ReferredByUserID
+                        ReferredByUserID,
+                        PreferredLanguageID,
+                        PreferredCountryID
                     ) VALUES (
                         @UserID,
                         @2,
@@ -508,7 +510,8 @@ namespace LcRest
                         'sys',
                         1, -- Active
                         6, -- Is a ServiceProfessional's Client (it means is still editable by the serviceProfessional that create it)
-                        @9 -- ServiceProfessional's ID that create this
+                        @9, -- ServiceProfessional's ID that create this
+                        @10, @11 -- Locale
                     )
 
                     -- NOTE: since there is no Membership record with password, is not an actual Loconomics User Account
@@ -531,7 +534,9 @@ namespace LcRest
                  client.canReceiveSms,
                  client.birthMonth,
                  client.birthMonthDay,
-                 serviceProfessionalUserID);
+                 serviceProfessionalUserID,
+                 languageID,
+                 countryID);
             }
         }
         #endregion

@@ -2,7 +2,7 @@
  * DatePicker JS Component, with several
  * modes and optional inline-permanent visualization.
  *
- * Copyright 2014 Loconomics Coop.
+ * Copyright 2018 Loconomics Coop.
  *
  * Based on:
  * bootstrap-datepicker.js
@@ -101,6 +101,12 @@ var DPGlobal = {
     },
     parseDate: function(date, format) {
         /* eslint complexity:"off" */
+        // On any case, support the ISO format as input trying that first
+        try {
+            // will throw if invalid/not matching standard format
+            return new Date(date);
+        } catch(e) {}
+        // with fallback to the given, display, format:
         var parts = date.split(format.separator);
         var val;
         date = new Date();
@@ -542,8 +548,20 @@ DatePicker.prototype = {
         }
     },
 
+
     getValue: function() {
         return this.date;
+    },
+
+    setViewDate: function(newViewDate) {
+        if (typeof newViewDate === 'string') {
+            this.viewDate = DPGlobal.parseDate(newViewDate, this.format);
+        } else {
+            this.viewDate = new Date(newViewDate);
+        }
+        this.fill();
+        this._triggerViewDateChange();
+        this.set();
     },
 
     getViewDate: function() {

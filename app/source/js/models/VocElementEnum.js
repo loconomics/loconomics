@@ -26,5 +26,6 @@ module.exports = {
     dashboard: 18,
     booking: 19,
     welcome: 20,
-    externalListing: 21
+    externalListing: 21,
+    earningsTracking: 22
 };
