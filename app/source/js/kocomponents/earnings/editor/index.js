@@ -8,6 +8,7 @@ import '../../client/list';
 import '../../utilities/icon-dec';
 import '../../input/duration';
 import '../../../utils/autofocusBindingHandler';
+import '../../../utils/pressEnterBindingHandler';
 import '../../input/date';
 import * as suggestedPlatformsList from '../../../data/suggestedPlatforms';
 import { ActionForValue } from '../../job-title-autocomplete';
