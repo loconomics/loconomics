@@ -4,8 +4,6 @@
  * @module kocomponents/client/editor
  * TODO: services/offerings, validations and public search (migrate from original
  * clientEditor.js activity, and replace that code with an instance of this)
- * TODO: deletion is implemented but button not in place, thinking that at some
- * places can make no sense to allow deletion
  */
 
 import '../../utilities/icon-dec';
@@ -271,7 +269,7 @@ export default class ClientEditor extends Komponent {
          * about the client.
          * @member {KnockoutComputed<boolean>}
          */
-        this.isReadOnly = ko.pureComputed(() => !this.client.editable());
+        this.isReadOnly = ko.pureComputed(() => !!(this.client.clientUserID() && !this.client.editable()));
     }
 
     /**
