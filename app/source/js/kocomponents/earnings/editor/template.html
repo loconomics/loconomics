@@ -27,7 +27,8 @@
                     placeholder="$0.00"
                     step="0.01"
                     data-bind="
-                        textInput: earningsEntry.amount
+                        textInput: earningsEntry.amount,
+                        pressEnter: saveStep
                     "/>
             </div>
             <button type="button" class="btn btn-secondary btn-block btn-lg" data-bind="text: stepButtonLabel, disable: isLocked, click: saveStep"></button>
