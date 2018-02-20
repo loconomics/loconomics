@@ -1,0 +1,39 @@
+<div class="Boxes-sm">
+    <app-inline-user-menu></app-inline-user-menu>
+    <div class="container">
+        <div class="col-md-7 col-sm-reset">
+            <div class="SectionHeading">
+                <h1 data-bind="text: title"></h1>
+                <a class="btn btn-link btn-default pull-right" href="/earnings-add">Add earnings</a>
+            </div>
+
+        <!-- @iagosrl - I started the filters here but need help. We can push this back a release if need be. -->
+            <!-- <button type="button" data-bind="click: showFilters" class="btn btn-icon-link btn-default" aria-label="Filter Earnings Summary">
+                <span>Filter results
+                    <icon-dec params="icon: 'ion-android-funnel'"></icon-dec>
+                </span>
+            </button>
+            <form data-bind="visible: showFilter">
+                <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
+                    <option value="0">This month</option>
+                    <option value="0.5">This quarter</option>
+                    <option value="1">This year</option>
+                    <option value="2">Last month</option>
+                    <option value="3">Custom</option>
+                </select>
+                <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
+                    <option value="0">Job titles</option>
+                </select>
+                <select id="schedulingPrefs-advanceTime" data-bind="value: prefs.advanceTime, disable: isLocked" class="form-control">
+                    <option value="0">Platform</option>
+                </select>
+            </form> -->
+            <earnings-report></earnings-report>
+            <br>
+            <a class="btn btn-link btn-default text-center" href="/earnings-history">View earnings history</a>
+        </div>
+        <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
+           <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>
+        </div>
+    </div>
+</div>

@@ -1,17 +1,27 @@
 .SectionHeading {
     display: table;
     margin: 1em 0em;
-    h1,
-    h2,
-    h3,
-    h4,
-    h5 {
+    > h1 {
+        margin: 0em 0em;
+    }
+    > h1,
+    > h2,
+    > h3,
+    > h4,
+    > h5
+    > legend {
+        display: table-cell !important;
+        width: 90% !important;
+        vertical-align: middle !important;
+
+    }
+    > a
+    > button {
         display: table-cell;
-        width: 90%;
         vertical-align: middle;
     }
-    a {
-        display: table-cell;
-        vertical-align: middle;
+
+    &.SectionHeading--full {
+        width: 100%;
     }
 }

@@ -113,10 +113,10 @@
         {
             if (UrlData.Count == 1 &&
                 UrlData[0].IsInt()) {
-                
+
                 var serviceProfessionalUserID = WebSecurity.CurrentUserId;
                 var itemID = UrlData[0].AsInt();
-                
+
                 if (itemID == 0) {
                     // Not allowed
                     return base.Put();
@@ -137,7 +137,7 @@
 
                 var serviceProfessionalUserID = WebSecurity.CurrentUserId;
                 var itemID = UrlData[0].AsInt();
-                
+
                 // Get a copy before deletio to send later
                 var item = LcRest.Client.GetServiceProfessionalClient(serviceProfessionalUserID, itemID);
 
@@ -150,11 +150,11 @@
 
                 return item;
             }
-            
+
             // method not allowed
             return base.Delete();
         }
-        
+
         private bool IsValidClient() {
 
             Validation.RequireField("firstName", LcRessources.RequiredField("First Name"));
@@ -171,7 +171,7 @@
            
             return Validation.IsValid() && ModelState.IsValid;
         }
-        
+
         private LcRest.Client SetClient(int serviceProfessionalUserID, int clientUserID = 0) {
             // Validation
             var exists = clientUserID == 0 ? null : LcRest.Client.GetServiceProfessionalClient(serviceProfessionalUserID, clientUserID);
@@ -181,8 +181,10 @@
 
             var client = GetClientFromForm();
             client.clientUserID = clientUserID;
-            try {
-                var itemID = LcRest.Client.SetClient(serviceProfessionalUserID, client);
+            try
+            {
+                var locale = LcRest.Locale.Current;
+                var itemID = LcRest.Client.SetClient(serviceProfessionalUserID, client, locale.languageID, locale.countryID);
 
                 // If returned ID is zero rather than the provided one
                 // is because the requested ID was not found.
@@ -191,7 +193,7 @@
                 if (itemID == 0) {
                     throw new HttpException(404, "[[[Not Found]]]");
                 }
-                
+
                 // Returns the updated client data
                 return LcRest.Client.GetServiceProfessionalClient(serviceProfessionalUserID, itemID);
             }
@@ -200,7 +202,7 @@
                 throw new HttpException(400, LcRessources.ValidationSummaryTitle);
             }
         }
-        
+
         private LcRest.Client GetClientFromForm()
         {
             var client = new LcRest.Client {

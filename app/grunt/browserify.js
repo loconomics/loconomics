@@ -25,6 +25,7 @@ var browserifyBundles = require('./shared/browserifyBundles');
 require('common-shakeify');
 var browserifyStylus = require('./shared/browserifyStylus');
 var envOptions = require('./shared/envOptions');
+var queryActivities = require('./shared/queryActivities');
 
 module.exports = function(grunt) {
     /// External parameters
@@ -76,34 +77,26 @@ module.exports = function(grunt) {
             map: dev && './build/assets/js/welcome.js.map'
         }
     ];
-    // We query all activities defined and add them as on-demand bundles
-    // (all defined properly as folder and index file; old style activities
-    // cannot be generated this way, that keeps working as before included
-    // inside the App entry point)
-    const activitiesBasePath = './source/js/activities/';
-    const appCommonActivities = grunt.file.expand({
-        cwd: activitiesBasePath,
-        filter: grunt.file.isFile
-    }, ['*/index.js']);
-    const buildActivitiesBasePath = './build/assets/js/activities/';
+    // Query activities paths
+    const {
+        appCommonActivities,
+        activitiesBasePath,
+        buildPathForActivity
+    } = queryActivities.query(grunt);
     // We convert the array of activities files into BundleSettings,
     // and are appended to the bundles collection
     appCommonBundles.push(...appCommonActivities.map((activityPath) => {
-        // activityPath is a string like 'about/index.js' thanks to the set-up
-        // of the 'grunt.file.expand' task before, so to get the activity name
-        // is just split the first part up to before the path separator (even in
-        // Windows returns '/' as separator).
         // We rebuild the original path relative to app directory as source
         // and create the destination using the activity name
-        const name = activityPath.substr(0, activityPath.indexOf('/'));
+        const buildPath = buildPathForActivity(activityPath);
         // Create returned object (in comments, example of values to be created)
         return {
             // source: './source/js/activities/about/index.js',
             source: activitiesBasePath + activityPath,
             // dest: './build/assets/js/activities/about.js',
-            dest: buildActivitiesBasePath + name + '.js',
+            dest: buildPath,
             // map: dev && './build/assets/js/activities/about.js.map'
-            map: dev && (buildActivitiesBasePath + name + '.js.map')
+            map: dev && (buildPath + '.map')
         };
     }));
 

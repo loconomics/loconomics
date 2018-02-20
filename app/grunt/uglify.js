@@ -1,5 +1,7 @@
 'use strict';
 
+var queryActivities = require('./shared/queryActivities');
+
 var conservativeOptions = {
     // Custom optimizations to avoid bugs:
     // - #709: use of Function.name by Models/Activities;
@@ -44,13 +46,43 @@ var conservativeOptions = {
     mangle: false
 };
 
-module.exports = {
-    'appCommon': {
-        'options': conservativeOptions,
-        'files': {
-            './build/assets/js/common.min.js': ['./build/assets/js/common.js'],
-            './build/assets/js/app.min.js': ['./build/assets/js/app.js'],
-            './build/assets/js/welcome.min.js': ['./build/assets/js/welcome.js']
+/**
+ * Map a list as an object, using the given callback to create the property
+ * key name based on the item and index; there is a callback to map the value
+ * too.
+ * @param {Array} list
+ * @param {Function} keyCb
+ * @param {Function} [valueCb] Defaults to use the item as the value
+ * @returns {Object}
+ */
+const mapAsObject = function(list, keyCb, valueCb) {
+    const obj = {};
+    list.forEach((item, index) => {
+        obj[keyCb(item, index)] = valueCb ? valueCb(item, index) : item;
+    });
+    return obj;
+};
+
+module.exports = function(grunt) {
+
+    const {
+        appCommonActivities,
+        buildPathForActivity
+    } = queryActivities.query(grunt);
+
+    return {
+        'appCommon': {
+            'options': conservativeOptions,
+            'files': {
+                './build/assets/js/common.min.js': ['./build/assets/js/common.js'],
+                './build/assets/js/app.min.js': ['./build/assets/js/app.js'],
+                './build/assets/js/welcome.min.js': ['./build/assets/js/welcome.js']
+            }
+        },
+        'appActivities': {
+            'options': conservativeOptions,
+            // Creates the files object with key and value being the same location
+            files: mapAsObject(appCommonActivities, buildPathForActivity, buildPathForActivity)
         }
-    }
+    };
 };
