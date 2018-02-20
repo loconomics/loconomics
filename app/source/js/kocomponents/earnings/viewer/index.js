@@ -4,8 +4,9 @@
  * @module kocomponents/earnings/viewer
  *
  */
+import Client from '../../../models/Client';
 import Komponent from '../../helpers/KnockoutComponent';
-import clients from '../../../data/clients';
+import { item as clientsDataItem } from '../../../data/clients';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
 import { show as showError } from '../../../modals/error';
@@ -77,7 +78,7 @@ export default class EarningsViewer extends Komponent {
          * @member {KnockoutComputed<string>}
          */
         this.displayClient = ko.pureComputed(() => {
-            const c = this.client();
+            const c = new Client(this.client());
             if (c) {
                 return c.fullName();
             }
@@ -131,7 +132,7 @@ export default class EarningsViewer extends Komponent {
                     // Load info about the client of this entry
                     // It's optional, so careful since can be null
                     if (data.clientUserID) {
-                        clients.item(data.clientUserID)
+                        clientsDataItem(data.clientUserID)
                         .onceLoaded()
                         .then((client) => {
                             this.client(client);
