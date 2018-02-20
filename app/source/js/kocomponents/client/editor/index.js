@@ -7,32 +7,13 @@
 
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
+import { item as clientsDataItem } from '../../../data/clients';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
 const TAG_NAME = 'client-editor';
-const dummyData = {};
-dummyData[0] =
-[
-  {
-    'clientUserID': 1,  
-    'firstName': 'Joshua',
-    'lastName': 'Danielson',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  }
-];
-
 
 /**
  * Component
@@ -54,15 +35,9 @@ export default class ClientEditor extends Komponent {
         super();
 
         /**
-         * A job title for the summary query. Defualt value is all job titles.
-         * @member {KnockoutObservable<integer>}
-         */
-        this.userID = getObservable(params.userID);
-
-        /**
          * Captures from the activity which "mode" the editor
-         * component is to be used. 
-         * add: 
+         * component is to be used.
+         * add:
          * edit:
          * quickAdd:
          * @member {KnockoutObservable<string>}
@@ -73,7 +48,7 @@ export default class ClientEditor extends Komponent {
          * Captures the clientID to edit.
          * @member {KnockoutObservable<object>}
          */
-        this.clientID = getObservable(params.clientID || 0);
+        this.clientID = ko.unwrap(params.clientID || 0);
 
         // Birth month day
         // TODO l10n
@@ -115,10 +90,24 @@ export default class ClientEditor extends Komponent {
             this.monthDays.push(iday);
         }
 
-        this.observeChanges(() => {
-            const data = dummyData[0];
-            this.client(data);
+        // Access the client data
+        var item = clientsDataItem(this.clientID);
+
+        // Start-up load of data
+        item.onceLoaded
+        .then(this.client)
+        .catch((error) => {
+            showError({
+                title: 'There was an error loading the client data',
+                error
+            });
         });
+
+        /**
+         * Save changes to the client
+         * @returns {Promise}
+         */
+        this.save = () => item.save(this.client());
     }
 }
 
