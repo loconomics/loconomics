@@ -43,7 +43,7 @@ export default class ClientEditor extends Komponent {
          * @member {Client}
          */
         this.client = new Client({
-            clientUserID: params.clientUserID || 0
+            clientUserID: ko.unwrap(params.clientUserID) || 0
         });
 
         /**
