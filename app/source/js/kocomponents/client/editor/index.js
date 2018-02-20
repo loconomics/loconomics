@@ -203,20 +203,6 @@ export default class ClientEditor extends Komponent {
         ]);
 
         /**
-         * Give us which month is selected and let us change it.
-         * @member {KnockoutComputed<Month>}
-         */
-        this.selectedBirthMonth = ko.computed({
-            read: () => {
-                var birthMonth = this.client.birthMonth();
-                return birthMonth ? this.months()[birthMonth - 1] : null;
-            },
-            write: (month) => {
-                this.client.birthMonth(month && month.id || null);
-            }
-        });
-
-        /**
          * All month days (numbers from 1 to 31)
          * @member {KnockoutObservableArray<number>}
          */

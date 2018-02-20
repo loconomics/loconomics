@@ -49,14 +49,15 @@
         <div class="form-group col-sm-8">
             <label for="selectedBirthMonth">Birth month:</label>
             <select id="selectedBirthMonth" class="form-control"
-                data-bind="textInput: selectedBirthMonth, options: months, optionsText: 'name',
+                data-bind="value: client.birthMonth, options: months,
+                optionsText: 'name', optionsValue: 'id',
                 optionsCaption: 'Select month', valueAllowUnset: true,
                 disable: isLocked() || isReadOnly()"></select>
         </div>
         <div class="form-group col-sm-4">
             <label for="birthMonthDay">Birth day:</label>
             <select id="birthMonthDay" class="form-control"
-                data-bind="textInput: client.birthMonthDay, options: monthDays,
+                data-bind="value: client.birthMonthDay, options: monthDays,
                 optionsCaption: 'Select day', valueAllowUnset: true,
                 disable: isLocked() || isReadOnly()"></select>
         </div>
