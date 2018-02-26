@@ -137,16 +137,18 @@ export default class EarningsFilter extends Komponent {
         this.platformID = ko.observable();
 
         /**
-         * Beggining date for a custom time range
+         * Beggining date for a custom time range.
+         * Defaults to start of the week
          * @member {KnockoutObservable<Date>}
          */
-        this.fromDate = ko.observable();
+        this.fromDate = ko.observable(moment().startOf('week').toDate());
 
         /**
-         * Ending date for a custom time range
+         * Ending date for a custom time range.
+         * Defaults to end of the week
          * @member {KnockoutObservable<Date>}
          */
-        this.toDate = ko.observable();
+        this.toDate = ko.observable(moment().endOf('week').toDate());
 
         /**
          * List of options available for time-range, that are later converted
@@ -176,7 +178,7 @@ export default class EarningsFilter extends Komponent {
                 // Return custom range (as like id being TimeRangeOption.custom, or anything without a converter)
                 return {
                     from: this.fromDate(),
-                    to: this.toDate()
+                    to: this.fromDate()
                 };
             }
         });
@@ -208,16 +210,17 @@ export default class EarningsFilter extends Komponent {
          * Automatically trigger onSelect on options changes
          */
         ko.computed(() => {
-            // Gives properties 'from' and 'to' directly, rather than wrapped
-            // under timeRange, along with the other filters
-            params.onSelect(Object.assign({}, this.timeRange(), {
+            const range = this.timeRange();
+            params.onSelect({
+                fromDate: range.from,
+                toDate: range.to,
                 jobTitleID: this.jobTitleID(),
                 platformID: this.platformID(),
                 // Includes the predefined option, so allow for other UI to
                 // keep in sync with it if more specialized usage than just
                 // custom range is needed (like different title and so).
                 timeRangeOption: this.timeRangeOption()
-            }));
+            });
         })
         // Prevent that several, automated/related changes, trigger too much notifications.
         .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } });

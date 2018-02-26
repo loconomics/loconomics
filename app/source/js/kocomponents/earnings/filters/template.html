@@ -7,12 +7,18 @@
         </select>
     </div>
     <!-- ko if: isCustomTimeRangeVisible -->
-    <div class="row">
+    <div class="form-horizontal">
         <div class="form-group">
-            <label for="earnings-filters-from" class="col-xs-2">From</label>
-            <input id="earnings-filters-from" class="col-xs-4" data-bind="textInput: fromDate" type="date" />
-            <label for="earnings-filters-to" class="col-xs-2">to</label>
-            <input id="earnings-filters-to" class="col-xs-4" data-bind="textInput: toDate" type="date" />
+            <label for="earnings-filters-from" class="col-xs-6 col-sm-3">From</label>
+            <div class="col-xs-6 col-sm-9">
+                <input id="earnings-filters-from" class="form-control" data-bind="textInput: fromDate" type="date" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="earnings-filters-to" class="col-xs-6 col-sm-3">to</label>
+            <div class="col-xs-6 col-sm-9">
+                <input id="earnings-filters-to" class="form-control" data-bind="textInput: toDate" type="date" />
+            </div>
         </div>
     </div>
     <!-- /ko -->
