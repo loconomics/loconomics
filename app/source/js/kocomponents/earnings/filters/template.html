@@ -1,17 +1,33 @@
 <form>
-    <label for="earnings-filters-period" class="sr-only">Period</label>
-    <select id="earnings-filters-period" class="form-control" data-bind="
-        value: timeRangeOption, options: presetTimeRangeOptions,
-        optionsValue: 'id', optionsText: 'option'">
-    </select>
-    <label for="earnings-filters-job-title" class="sr-only">Job Title</label>
-    <select id="earnings-filters-job-title" class="form-control" data-bind="value: jobTitleID,
-        options: listings, optionsCaption: 'Job titles', optionsValue: 'jobTitleID',
-        optionsText: 'jobTitleSingularName'">
-    </select>
-    <label for="earnings-filters-platform" class="sr-only">Platform</label>
-    <select id="earnings-filters-platform" class="form-control" data-bind="value: platformID,
-        options: externalListings, optionsCaption: 'Platforms', optionsValue: 'platformID',
-        optionsText: 'title'">
-    </select>
+    <div class="form-group">
+        <label for="earnings-filters-period" class="sr-only">Period</label>
+        <select id="earnings-filters-period" class="form-control" data-bind="
+            value: timeRangeOption, optionsCaption: ' Dates', options: presetTimeRangeOptions,
+            optionsValue: 'id', optionsText: 'option'">
+        </select>
+    </div>
+    <!-- ko if: isCustomTimeRangeVisible -->
+    <div class="row">
+        <div class="form-group">
+            <label for="earnings-filters-from" class="col-xs-2">From</label>
+            <input id="earnings-filters-from" class="col-xs-4" data-bind="textInput: fromDate" type="date" />
+            <label for="earnings-filters-to" class="col-xs-2">to</label>
+            <input id="earnings-filters-to" class="col-xs-4" data-bind="textInput: toDate" type="date" />
+        </div>
+    </div>
+    <!-- /ko -->
+    <div class="form-group">
+        <label for="earnings-filters-job-title" class="sr-only">Job Title</label>
+        <select id="earnings-filters-job-title" class="form-control" data-bind="value: jobTitleID,
+            options: listings, optionsCaption: ' Job titles', optionsValue: 'jobTitleID',
+            optionsText: 'jobTitleSingularName'">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="earnings-filters-platform" class="sr-only">Platform</label>
+        <select id="earnings-filters-platform" class="form-control" data-bind="value: platformID,
+            options: externalListings, optionsCaption: ' Platforms', optionsValue: 'platformID',
+            optionsText: 'title'">
+        </select>
+    </div>
 </form>

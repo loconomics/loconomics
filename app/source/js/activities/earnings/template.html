@@ -12,7 +12,7 @@
                     <icon-dec params="icon: 'ion-android-funnel'"></icon-dec>
                 </span>
             </button>
-            <earnings-filters params="onSelect: reportFilters" data-bind="visible: areFiltersVisible"></earnings-filters>
+            <earnings-filters params="onSelect: reportFilters, defaultTimeRangeOption: defaultTimeRangeOption" data-bind="visible: areFiltersVisible" class="isolated"></earnings-filters>
             <earnings-report params="filters: reportFilters"></earnings-report>
             <br>
             <a class="btn btn-link btn-default text-center" href="/earnings-history">View earnings history</a>

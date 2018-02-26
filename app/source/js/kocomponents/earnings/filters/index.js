@@ -14,6 +14,18 @@ import { list as userListings } from '../../../data/userListings';
 const TAG_NAME = 'earnings-filters';
 
 /**
+ * TimeRangeOption enum with available time rage predefined options.
+ * @enum {number}
+ */
+export const TimeRangeOption = {
+    thisMonth: 1,
+    thisQuarter: 2,
+    thisYear: 3,
+    lastMonth: 4,
+    custom: 5
+};
+
+/**
  * Describes a specific range of time giving two dates, both inclusive
  * @typedef {Object} TimeRange
  * @property {Date} from
@@ -25,12 +37,13 @@ const TAG_NAME = 'earnings-filters';
  * @property {TimeRange} timeRange
  * @property {number} jobTitleID
  * @property {number} platformID
+ * @property {TimeRangeOption} timeRangeOption
  */
 
 /**
  * Represents an option available for selection, as in a <select/> element.
  * @typedef {Object} Option
- * @property {number} id
+ * @property {(string|number)} id
  * @property {string} option
  */
 
@@ -48,7 +61,7 @@ const timeRangeOptionConverters = {
     /**
      * This Month
      */
-    1: function() {
+    [TimeRangeOption.thisMonth]: function() {
         return {
             from: moment().startOf('month').toDate(),
             to: moment().endOf('month').toDate()
@@ -57,7 +70,7 @@ const timeRangeOptionConverters = {
     /**
      * This Quarter
      */
-    2: function() {
+    [TimeRangeOption.thisQuarter]: function() {
         return {
             from: moment().startOf('quarter').toDate(),
             to: moment().endOf('quarter').toDate()
@@ -66,7 +79,7 @@ const timeRangeOptionConverters = {
     /**
      * This Year
      */
-    3: function() {
+    [TimeRangeOption.thisYear]: function() {
         return {
             from: moment().startOf('year').toDate(),
             to: moment().endOf('year').toDate()
@@ -75,10 +88,10 @@ const timeRangeOptionConverters = {
     /**
      * Last Month
      */
-    4: function() {
+    [TimeRangeOption.lastMonth]: function() {
         return {
-            from: moment().substract(1, 'month').startOf('month').toDate(),
-            to: moment().substract(1, 'month').endOf('month').toDate()
+            from: moment().subtract(1, 'month').startOf('month').toDate(),
+            to: moment().subtract(1, 'month').endOf('month').toDate()
         };
     }
 };
@@ -95,6 +108,7 @@ export default class EarningsFilter extends Komponent {
      * @param {Function} params.onSelect Callback executed when the user
      * changes the selected values for the filters, It includes as parameter
      * a EarningsFilterValues object.
+     * @param {TimeRangeOption} params.defaultTimeRangeOption
      */
     constructor(params) {
         super();
@@ -108,7 +122,7 @@ export default class EarningsFilter extends Komponent {
          * Predefined Time Range option selected
          * @member {KnockoutObservable<number>}
          */
-        this.timeRangeOption = ko.observable();
+        this.timeRangeOption = ko.observable(params.defaultTimeRangeOption);
 
         /**
          * Job title ID selected
@@ -123,17 +137,29 @@ export default class EarningsFilter extends Komponent {
         this.platformID = ko.observable();
 
         /**
+         * Beggining date for a custom time range
+         * @member {KnockoutObservable<Date>}
+         */
+        this.fromDate = ko.observable();
+
+        /**
+         * Ending date for a custom time range
+         * @member {KnockoutObservable<Date>}
+         */
+        this.toDate = ko.observable();
+
+        /**
          * List of options available for time-range, that are later converted
          * into specific dates
          * @property {Array<Option>}
          * @todo i18n the texts
         */
         this.presetTimeRangeOptions = [
-            { id: 1, option: 'This month' },
-            { id: 2, option: 'This quarter' },
-            { id: 3, option: 'This year' },
-            { id: 4, option: 'Last month' },
-            { id: 5, option: 'Custom' }
+            { id: TimeRangeOption.thisMonth, option: 'This month' },
+            { id: TimeRangeOption.thisQuarter, option: 'This quarter' },
+            { id: TimeRangeOption.thisYear, option: 'This year' },
+            { id: TimeRangeOption.lastMonth, option: 'Last month' },
+            { id: TimeRangeOption.custom, option: 'Custom' }
         ];
 
         /**
@@ -146,7 +172,22 @@ export default class EarningsFilter extends Komponent {
             if (converter) {
                 return converter();
             }
-            return null;
+            else {
+                // Return custom range (as like id being TimeRangeOption.custom, or anything without a converter)
+                return {
+                    from: this.fromDate(),
+                    to: this.toDate()
+                };
+            }
+        });
+
+        /**
+         * Whether the fields for user input for a custom time range should display.
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.isCustomTimeRangeVisible = ko.pureComputed(() => {
+            const id = this.timeRangeOption();
+            return id === TimeRangeOption.custom;
         });
 
         /**
@@ -167,14 +208,19 @@ export default class EarningsFilter extends Komponent {
          * Automatically trigger onSelect on options changes
          */
         ko.computed(() => {
-            params.onSelect({
-                timeRange: this.timeRange(),
+            // Gives properties 'from' and 'to' directly, rather than wrapped
+            // under timeRange, along with the other filters
+            params.onSelect(Object.assign({}, this.timeRange(), {
                 jobTitleID: this.jobTitleID(),
-                platformID: this.platformID()
-            });
+                platformID: this.platformID(),
+                // Includes the predefined option, so allow for other UI to
+                // keep in sync with it if more specialized usage than just
+                // custom range is needed (like different title and so).
+                timeRangeOption: this.timeRangeOption()
+            }));
         })
-        // Prevent that several, automated changes trigger too much.
-        .extend({ rateLimit: { timeout: 30, method: 'notifyWhenChangesStop' } });
+        // Prevent that several, automated/related changes, trigger too much notifications.
+        .extend({ rateLimit: { timeout: 100, method: 'notifyWhenChangesStop' } });
 
         this.__setupDataOperations();
     }
