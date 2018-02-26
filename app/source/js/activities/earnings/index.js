@@ -3,11 +3,12 @@
  * a summary of their total earnings in and outside of
  * Loconomics.
  *
- * @module activities/_examples/a-basic-activity
+ * @module activities/earnings
  *
  */
 
 import '../../kocomponents/earnings/report';
+import '../../kocomponents/earnings/filters';
 import '../../utils/Time';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
@@ -32,23 +33,6 @@ export default class EarningsActivity extends Activity {
          */
         this.jobTitleID = ko.observable(null);
 
-        /** Filters -  @iagosrl - WIP */
-        /**
-         * A start date for the summary query. Default value is
-         * the 1st of the current month until today's date.
-         * @member {KnockoutObservable<string>}
-         */
-        // this.timeRange = ko.observableArray({'2/1/2018': '2/2/2018'});
-
-        /**
-         *
-         * @method
-         */
-        // this.selectFilters = function(filters) {
-        //     this.earningsEntryID(ko.unwrap(filters.earningsEntryID));
-        //     this.goNextStep();
-        // }.bind(this);
-
         /**
          * A platformID for the summary query. Defualt value is
          * null for all platforms.
@@ -61,19 +45,21 @@ export default class EarningsActivity extends Activity {
         this.navBar.rightAction(null);
 
         /**
-         * Earnings summary returned given query parameters.
+         * Whether to display filters or not.
          * @member {KnockoutObservable<boolean>}
          */
-        this.showFilter = ko.observable(false);
+        this.areFiltersVisible = ko.observable(false);
 
-        this.showFilters = function() {
-            if (this.showFilter() == false) {
-                this.showFilter(true);
-            }
-            else {
-                this.showFilter(false);
-            }
+        this.showFilters = () => {
+            this.areFiltersVisible(!this.areFiltersVisible());
         };
+
+        /**
+         * Holds the of filtering values, as given by the earnings-filters
+         * and accepted by the earnings-report
+         * @member {KnockoutObservable<boolean>}
+         */
+        this.reportFilters = ko.observable(null);
 
         this.title = 'Earnings';
     }

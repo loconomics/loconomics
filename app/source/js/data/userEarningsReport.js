@@ -4,12 +4,19 @@
 import * as userEarnings from './userEarnings';
 import CachedDataProvider from './helpers/CachedDataProvider';
 import LocalForageSingleDataProviderDriver from './helpers/LocalForageSingleDataProviderDriver';
-import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
 import localforage from './drivers/localforage';
 import rest from './drivers/restClient';
 
 const API_NAME = 'me/earnings/report';
 const LOCAL_KEY = 'earnings-report';
+
+/**
+ * Gives a report filtered by the given query data.
+ * @returns {Promis<rest/UserExternalReport>}
+ */
+export function query(filters) {
+    return rest.get(API_NAME, filters);
+}
 
 /**
  * Gives a report with the global results of the user (without filtering).
@@ -21,7 +28,9 @@ const LOCAL_KEY = 'earnings-report';
 export const globalReport = new CachedDataProvider({
     // 10 minutes
     ttl: 10 * 60 * 1000,
-    remote: new RestSingleDataProviderDriver(rest, API_NAME),
+    remote: {
+        fetch: () => rest.get(API_NAME)
+    },
     local: new LocalForageSingleDataProviderDriver(localforage, LOCAL_KEY)
 });
 

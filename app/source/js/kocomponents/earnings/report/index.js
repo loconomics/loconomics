@@ -5,10 +5,11 @@
  * @module kocomponents/earnings/report
  */
 import '../../utilities/icon-dec';
+import * as report from '../../../data/userEarningsReport';
 import Komponent from '../../helpers/KnockoutComponent';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
-import { globalReport as report } from '../../../data/userEarningsReport';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
 const TAG_NAME = 'earnings-report';
@@ -22,54 +23,62 @@ export default class EarningsReport extends Komponent {
 
     /**
      * @param {object} params
-     * @param {KnockoutObservable<integer>} [params.userID]
+     * @param {KnockoutObservable<kocomponents/earnings/filters/EarningsFilterValues>} [params.filters]
+     * Optional observable to dynamic filters to apply to report data
      */
     constructor(params) {
         super();
 
         /**
-         * A job title for the summary query. Defualt value is
-         * null for all job titles.
-         * @member {KnockoutObservable<integer>}
+         * Incoming data filters, as a dynamic change that can change externally
+         * forcing us to update the report data.
+         * @member {KnockoutObservable<kocomponents/earnings/filters/EarningsFilterValues>}
          */
-        this.jobTitleID = getObservable(params.jobTitleID || null);
-
-        /**
-         * A start date for the summary query. Default value is
-         * January 1st of the current year.
-         * @member {KnockoutObservable<array>}
-         */
-        this.timeRange = getObservable(params.timeRange || {'2/1/2018':'2/2/2018'});
-
-        /**
-         * A start date for the summary query. Default value is
-         * January 1st of the current year.
-         * @member {KnockoutObservable<string>}
-         */
-        this.startDate = getObservable(params.startDate || '1/1/2018');
-
-        /**
-         * An end date for the summary query. Default value is
-         * today.
-         * @member {KnockoutObservable<string>}
-         */
-        this.endDate = getObservable(params.endDate || '2/2/2018');
-
-        /**
-         * A platformID for the summary query. Defualt value is
-         * null for all platforms.
-         * @member {KnockoutObservable<integer>}
-         */
-        this.platformID = getObservable(params.platformID || null);
+        this.filters = getObservable(params.filters || null);
 
         /**
          * Earnings summary returned given query parameters.
-         * @member {KnockoutObservable<object>}
+         * @member {KnockoutObservable<rest/EarningsReport>}
          */
         this.earningsReport = ko.observable(null);
 
-        // Request data and subscribes to updates
-        this.subscribeTo(report.onData, this.earningsReport);
+        // Notify errors when loading global report data
+        this.subscribeTo(report.globalReport.onDataError, (error) => {
+            showError({
+                title: 'There was an error loading the report',
+                error
+            });
+        });
+
+        /**
+         * Keep the last subscription to fetch the global report.
+         * @private {Subscription}
+         */
+        let globalReportSubscription = null;
+
+        // Request filtered data on filters changes
+        ko.computed(() => {
+            const filters = this.filters();
+            if (filters) {
+                // Prevent all-data to be loaded
+                if (globalReportSubscription) globalReportSubscription.dispose();
+                // Request filtered data
+                report.query(filters)
+                .then((data) => {
+                    // Use server data
+                    this.earningsReport(data);
+                })
+                .catch((error) => {
+                    showError({
+                        title: 'There was an error loading the report',
+                        error
+                    });
+                });
+            }
+            else {
+                globalReportSubscription = this.subscribeTo(report.globalReport.onData, this.earningsReport);
+            }
+        });
     }
 }
 
