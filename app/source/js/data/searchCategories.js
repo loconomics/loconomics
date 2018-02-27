@@ -1,21 +1,18 @@
 /**
- * Manages the user postings. GIG Postings made by the logged user.
+ * Access all the search categories available.
  *
  * IMPORTANT: Using DUMMY DATA rather than connected to the REST API for now
  */
 import CachedDataProvider from './helpers/CachedDataProvider';
-import LocalForageIndexedListDataProviderDriver from './helpers/LocalForageIndexedListDataProviderDriver';
-import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProviderDriver';
-//import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
+import LocalForageSingleDataProviderDriver from './helpers/LocalForageSingleDataProviderDriver';
 //import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
 import localforage from './drivers/localforage';
 //import rest from './drivers/restClient';
 
 //const API_NAME = 'searchCategories';
 const LOCAL_KEY = 'searchCategories';
-const ID_PROPERTY_NAME = 'searchCategoryID';
 
-const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage, LOCAL_KEY, ID_PROPERTY_NAME);
+const localListDriver = new LocalForageSingleDataProviderDriver(localforage, LOCAL_KEY);
 
 /// DUMMY DATA
 // Note: more data can be added, keeping the IDs consecutive
@@ -84,51 +81,19 @@ const DUMMY_DATA_LIST = [{
     bannerImage: '',
     displayRank: 50,
     active: 1
-  }];
+  }
+];
+
 // Dummy driver for the whole list
 const remoteListDriver = {
-    fetch: () =>  Promise.resolve(DUMMY_DATA_LIST),
-    /* The whole list cannot be replaced, only item by item */
-    push: (/*data*/) => Promise.resolve(),
-    /* The whole list cannot be removed, only item by item */
-    delete: () => Promise.resolve()
+    fetch: () =>  Promise.resolve(DUMMY_DATA_LIST)
 };
-// Dummy driver for items by id
-const remoteItemDriver = (id) => ({
-    fetch: () => {
-        if (DUMMY_DATA_LIST.length < id) {
-            return Promise.resolve(DUMMY_DATA_LIST[id - 1]);
-        }
-        else {
-            return Promise.reject('Not Found');
-        }
-    },
-    push: (data) => {
-        if (DUMMY_DATA_LIST.length < id) {
-            DUMMY_DATA_LIST[id - 1] = data;
-            return Promise.resolve(DUMMY_DATA_LIST[id - 1]);
-        }
-        else {
-            return Promise.reject('Not Found');
-        }
-    },
-    delete: () => {
-        if (DUMMY_DATA_LIST.length < id) {
-            const deletedCopy = DUMMY_DATA_LIST[id - 1];
-            DUMMY_DATA_LIST.splice(id - 1, 1);
-            return Promise.resolve(deletedCopy);
-        }
-        else {
-            return Promise.reject('Not Found');
-        }
-    }
-});
 
 /// Public API
 
 /**
- * Provides access to the list of all external listings.
- * @returns {CachedDataProvider<Array<rest/UserExternalListing>>}
+ * Provides access to the list of all items.
+ * @returns {CachedDataProvider<Array<rest/SearchCategories>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
  * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
@@ -139,55 +104,3 @@ export const list = new CachedDataProvider({
     remote: remoteListDriver,
     local: localListDriver
 });
-
-/**
- * Provides access to an API to fetch a specific record.
- * @param {number} id The userExternalListingID
- * @returns {CachedDataProvider<rest/UserExternalListing>}
- * Usage:
- * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
- */
-export function item(id) {
-    const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);
-    const itemProvider = new CachedDataProvider({
-        // 1 minutes
-        ttl: 1 * 60 * 1000,
-        remote: remoteItemDriver(id),
-        local: localItemDriver
-    });
-    // List is dirty once an item is updated on cache directly. We can not
-    // update the list correctly because of the list order or elements limits
-    const invalidateList = list.invalidateCache.bind(list);
-    itemProvider.onRemoteLoaded.subscribe(invalidateList);
-    itemProvider.onDeleted.subscribe(invalidateList);
-    itemProvider.onSaved.subscribe(invalidateList);
-
-    /* **Same problem as in userExternalListings**
-     In theory, if an updated load of the list happens in the meantime with
-        an item() in use, we must notify the item of that new data.
-        It's very strange for this to happens because of use cases, but in theory can happens.
-        Next commented code can do that, BUT it will leak memory if we don't
-        add an explicit disposal of the subscription when 'itemProvider' is
-        not used anymore. With subscriptions in previous lines don't happens
-        because are done to the own instance, while this subscription is done on the list
-        and inside it holds a reference to 'itemProvider', preventing it from GC'ed.
-
-    list.onRemoteLoaded.subscribe((list) => {
-        const found = list.some((item) => {
-            if (item[ID_PROPERTY_NAME] === id) {
-                itemProvider.onLoaded.emit(item);
-                return true;
-            }
-        });
-        // If not found in updated list, means was deleted in the middle, notify
-        // (actual deletion of local data happens already as part of the list
-        // synching process, before of this).
-        if (!found) {
-            itemProvider.onDeleted.emit();
-        }
-    });
-    */
-    // Return the instance
-    return itemProvider;
-}
