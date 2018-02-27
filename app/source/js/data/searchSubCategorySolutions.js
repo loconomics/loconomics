@@ -11,8 +11,8 @@ import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProv
 import localforage from './drivers/localforage';
 //import rest from './drivers/restClient';
 
-//const API_NAME = 'me/postings';
-const LOCAL_KEY = 'userPostings';
+//const API_NAME = 'searchSubCategorySolutions';
+const LOCAL_KEY = 'searchSubCategorySolutions';
 const ID_PROPERTY_NAME = 'userPostingID';
 
 const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage, LOCAL_KEY, ID_PROPERTY_NAME);

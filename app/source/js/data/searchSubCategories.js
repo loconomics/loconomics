@@ -11,17 +11,17 @@ import LocalForageItemDataProviderDriver from './helpers/LocalForageItemDataProv
 import localforage from './drivers/localforage';
 //import rest from './drivers/restClient';
 
-//const API_NAME = 'me/postings';
-const LOCAL_KEY = 'userPostings';
-const ID_PROPERTY_NAME = 'userPostingID';
+//const API_NAME = 'searchSubCategories';
+const LOCAL_KEY = 'searchSubCategories';
+const ID_PROPERTY_NAME = 'searchSubCategoryID';
 
 const localListDriver = new LocalForageIndexedListDataProviderDriver(localforage, LOCAL_KEY, ID_PROPERTY_NAME);
 
 /// DUMMY DATA
 // Note: more data can be added, keeping the IDs consecutive
 const DUMMY_DATA_LIST = [{
-    SearchSubCategoryID: 1,
-    SearchCategoryID: 1,
+    searchSubCategoryID: 1,
+    searchCategoryID: 1,
     name: 'Most Used',
     shortDescription: '',
     longDescription: '',
@@ -31,8 +31,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 2,
-    SearchCategoryID: 1,
+    searchSubCategoryID: 2,
+    searchCategoryID: 1,
     name: 'Everyday',
     shortDescription: '',
     longDescription: '',
@@ -42,8 +42,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 3,
-    SearchCategoryID: 1,
+    searchSubCategoryID: 3,
+    searchCategoryID: 1,
     name: 'Improvement',
     shortDescription: '',
     longDescription: '',
@@ -53,8 +53,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 4,
-    SearchCategoryID: 1,
+    searchSubCategoryID: 4,
+    searchCategoryID: 1,
     name: 'Transportation',
     shortDescription: '',
     longDescription: '',
@@ -64,8 +64,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 5,
-    SearchCategoryID: 1,
+    searchSubCategoryID: 5,
+    searchCategoryID: 1,
     name: 'Technology',
     shortDescription: '',
     longDescription: '',
@@ -75,8 +75,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 6,
-    SearchCategoryID: 1,
+    searchSubCategoryID: 6,
+    searchCategoryID: 1,
     name: 'Legal and Finances',
     shortDescription: '',
     longDescription: '',
@@ -86,8 +86,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 7,
-    SearchCategoryID: 2,
+    searchSubCategoryID: 7,
+    searchCategoryID: 2,
     name: 'Most Used',
     shortDescription: '',
     longDescription: '',
@@ -97,8 +97,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 8,
-    SearchCategoryID: 2,
+    searchSubCategoryID: 8,
+    searchCategoryID: 2,
     name: 'Body',
     shortDescription: '',
     longDescription: '',
@@ -108,8 +108,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 9,
-    SearchCategoryID: 2,
+    searchSubCategoryID: 9,
+    searchCategoryID: 2,
     name: 'Mind',
     shortDescription: '',
     longDescription: '',
@@ -119,8 +119,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 10,
-    SearchCategoryID: 2,
+    searchSubCategoryID: 10,
+    searchCategoryID: 2,
     name: 'Soul',
     shortDescription: '',
     longDescription: '',
@@ -130,8 +130,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 11,
-    SearchCategoryID: 2,
+    searchSubCategoryID: 11,
+    searchCategoryID: 2,
     name: 'Lessons and Tutoring',
     shortDescription: '',
     longDescription: '',
@@ -141,8 +141,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 12,
-    SearchCategoryID: 2,
+    searchSubCategoryID: 12,
+    searchCategoryID: 2,
     name: 'Legal and Finances',
     shortDescription: '',
     longDescription: '',
@@ -152,8 +152,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 13,
-    SearchCategoryID: 3,
+    searchSubCategoryID: 13,
+    searchCategoryID: 3,
     name: 'Most Used',
     shortDescription: '',
     longDescription: '',
@@ -163,8 +163,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 14,
-    SearchCategoryID: 3,
+    searchSubCategoryID: 14,
+    searchCategoryID: 3,
     name: 'Wellness',
     shortDescription: '',
     longDescription: '',
@@ -174,8 +174,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 15,
-    SearchCategoryID: 3,
+    searchSubCategoryID: 15,
+    searchCategoryID: 3,
     name: 'Caretaking',
     shortDescription: '',
     longDescription: '',
@@ -185,8 +185,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 16,
-    SearchCategoryID: 3,
+    searchSubCategoryID: 16,
+    searchCategoryID: 3,
     name: 'Lessons and Tutoring',
     shortDescription: '',
     longDescription: '',
@@ -196,8 +196,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 17,
-    SearchCategoryID: 3,
+    searchSubCategoryID: 17,
+    searchCategoryID: 3,
     name: 'Legal and Finances',
     shortDescription: '',
     longDescription: '',
@@ -207,8 +207,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 18,
-    SearchCategoryID: 4,
+    searchSubCategoryID: 18,
+    searchCategoryID: 4,
     name: 'Most Used',
     shortDescription: '',
     longDescription: '',
@@ -218,8 +218,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 19,
-    SearchCategoryID: 4,
+    searchSubCategoryID: 19,
+    searchCategoryID: 4,
     name: 'Cats',
     shortDescription: '',
     longDescription: '',
@@ -229,8 +229,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 20,
-    SearchCategoryID: 4,
+    searchSubCategoryID: 20,
+    searchCategoryID: 4,
     name: 'Dogs',
     shortDescription: '',
     longDescription: '',
@@ -240,8 +240,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 21,
-    SearchCategoryID: 4,
+    searchSubCategoryID: 21,
+    searchCategoryID: 4,
     name: 'Other Pets',
     shortDescription: '',
     longDescription: '',
@@ -251,8 +251,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 22,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 22,
+    searchCategoryID: 5,
     name: 'Most Used',
     shortDescription: '',
     longDescription: '',
@@ -262,8 +262,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 23,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 23,
+    searchCategoryID: 5,
     name: 'Legal and Finances',
     shortDescription: '',
     longDescription: '',
@@ -273,8 +273,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 24,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 24,
+    searchCategoryID: 5,
     name: 'App and Web Development',
     shortDescription: '',
     longDescription: '',
@@ -284,8 +284,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 25,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 25,
+    searchCategoryID: 5,
     name: 'IT and Networking',
     shortDescription: '',
     longDescription: '',
@@ -295,8 +295,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 26,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 26,
+    searchCategoryID: 5,
     name: 'Data and Analytics',
     shortDescription: '',
     longDescription: '',
@@ -306,8 +306,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 27,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 27,
+    searchCategoryID: 5,
     name: 'Creative and Design',
     shortDescription: '',
     longDescription: '',
@@ -317,8 +317,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 28,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 28,
+    searchCategoryID: 5,
     name: 'Writing, Editing, and Translation',
     shortDescription: '',
     longDescription: '',
@@ -328,8 +328,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 29,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 29,
+    searchCategoryID: 5,
     name: 'Engineering and Architecture',
     shortDescription: '',
     longDescription: '',
@@ -339,8 +339,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 30,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 30,
+    searchCategoryID: 5,
     name: 'Marketing',
     shortDescription: '',
     longDescription: '',
@@ -350,8 +350,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 31,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 31,
+    searchCategoryID: 5,
     name: 'Operations',
     shortDescription: '',
     longDescription: '',
@@ -361,8 +361,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 32,
-    SearchCategoryID: 5,
+    searchSubCategoryID: 32,
+    searchCategoryID: 5,
     name: 'Events',
     shortDescription: '',
     longDescription: '',
@@ -372,8 +372,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 33,
-    SearchCategoryID: 6,
+    searchSubCategoryID: 33,
+    searchCategoryID: 6,
     name: 'Most Used',
     shortDescription: '',
     longDescription: '',
@@ -383,8 +383,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 34,
-    SearchCategoryID: 6,
+    searchSubCategoryID: 34,
+    searchCategoryID: 6,
     name: 'Food and Drink',
     shortDescription: '',
     longDescription: '',
@@ -394,8 +394,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 35,
-    SearchCategoryID: 6,
+    searchSubCategoryID: 35,
+    searchCategoryID: 6,
     name: 'Entertainment',
     shortDescription: '',
     longDescription: '',
@@ -405,8 +405,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 36,
-    SearchCategoryID: 6,
+    searchSubCategoryID: 36,
+    searchCategoryID: 6,
     name: 'Planning and Decorations',
     shortDescription: '',
     longDescription: '',
@@ -416,8 +416,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 37,
-    SearchCategoryID: 6,
+    searchSubCategoryID: 37,
+    searchCategoryID: 6,
     name: 'Officiation',
     shortDescription: '',
     longDescription: '',
@@ -427,8 +427,8 @@ const DUMMY_DATA_LIST = [{
     active: 1
   },
   {
-    SearchSubCategoryID: 38,
-    SearchCategoryID: 6,
+    searchSubCategoryID: 38,
+    searchCategoryID: 6,
     name: 'Wedding',
     shortDescription: '',
     longDescription: '',
