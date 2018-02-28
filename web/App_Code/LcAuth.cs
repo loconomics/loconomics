@@ -81,6 +81,7 @@ public static class LcAuth
             // with operations done by WebSecurity calls, the first step must
             // be protected manually.
             string token = null;
+            int userid = 0;
 
             try
             {
@@ -90,10 +91,16 @@ public static class LcAuth
                 // Create and associate a new entry in the membership database (is connected automatically
                 // with the previous record created using the automatic UserID generated for it).
                 token = WebSecurity.CreateAccount(email, password, true);
+                userid = WebSecurity.GetUserId(email);
+                RegisterAuthorizationForUser(userid);
             }
             catch (Exception ex)
             {
                 // Manual rollback previous operation:
+                if (userid > 0)
+                {
+                    RemoveUserAuthorizations(userid);
+                }
                 // If CreateAccount failed, nothing was persisted there so nothing require rollback,
                 // only the UserProfile record
                 db.Execute("DELETE FROM UserProfile WHERE Email like @0", email);
@@ -103,8 +110,6 @@ public static class LcAuth
             }
 
             // Create Loconomics Customer user
-            int userid = WebSecurity.GetUserId(email);
-
             try
             {
                 // Automatic transaction can be used now:
@@ -183,7 +188,11 @@ public static class LcAuth
         {
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
-        return WebSecurity.ResetPassword(token, password);
+        var userID = WebSecurity.GetUserIdFromPasswordResetToken(token);
+        var result = WebSecurity.ResetPassword(token, password);
+        // Update registration based on new header token
+        RegisterAuthorizationForUser(userID);
+        return result;
     }
 
     public static bool ChangePassword(string email, string currentPassword, string newPassword)
@@ -193,7 +202,11 @@ public static class LcAuth
         {
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
-        return WebSecurity.ChangePassword(email, currentPassword, newPassword);
+        var userID = WebSecurity.GetUserId(email);
+        var result = WebSecurity.ChangePassword(email, currentPassword, newPassword);
+        // Update registration based on new header token
+        RegisterAuthorizationForUser(userID);
+        return result;
     }
 
     public static void BecomeProvider(int userID, Database db = null, bool perserveOnboardingStep = false)
