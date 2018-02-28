@@ -5,10 +5,11 @@ GO
 CREATE TABLE dbo.authorizations
 (
 	AuthorizationID int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
-	Token varchar(216) ,
+	Token varchar(216) NOT NULL,
 	UserID int NOT NULL,
-	Scope varchar(100),
-	CreatedDate datetimeoffset(0),
+	Scope varchar(100) NOT NULL,
+	CreatedDate datetimeoffset(0) NOT NULL,
+	DeletedDate datetimeoffset(0),
 	ClientAddress varchar(64),
 	UserAgent text
 )

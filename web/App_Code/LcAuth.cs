@@ -545,7 +545,7 @@ public static class LcAuth
     {
         using (var db = new LcDatabase())
         {
-            return (int?)db.QueryValue("SELECT UserID FROM authorizations WHERE token like @0", token);
+            return (int?)db.QueryValue("SELECT UserID FROM authorizations WHERE DeletedDate is null AND token like @0", token);
         }
     }
 
@@ -618,7 +618,7 @@ public static class LcAuth
     {
         using (var db = new LcDatabase())
         {
-            db.Execute("DELETE FROM authorizations WHERE UserID=@0", userID);
+            db.Execute("UPDATE authorizations SET DeletedDate=@1 WHERE UserID=@0", userID, DateTimeOffset.Now);
         }
     }
 
@@ -635,9 +635,9 @@ public static class LcAuth
         using (var db = new LcDatabase())
         {
             db.Execute(@"INSERT INTO authorizations
-                (Token, UserID, CreatedDate, ClientAddress, UserAgent)
-                VALUES (@0, @1, @2, @3, @4)",
-                token, userID, DateTimeOffset.Now, userAddress, userAgent);
+                (Token, UserID, Scope, CreatedDate, ClientAddress, UserAgent)
+                VALUES (@0, @1, @2, @3, @4, @5)",
+                token, userID, "", DateTimeOffset.Now, userAddress, userAgent);
         }
     }
 
