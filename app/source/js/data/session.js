@@ -81,15 +81,6 @@ exports.restore = function() {
         isSessionOpened = true;
         restoredEvent.emit(userAuthKey);
         return userAuthKey;
-    })
-    .catch(function() {
-        // No need to trigger errors (nothing to restore,
-        // or local userAuthKey corrupted, anyway will
-        // require a new user login keeping current session
-        // as closed/anonymous)
-
-        // Notice no userAuthKey:
-        return null;
     });
 };
 

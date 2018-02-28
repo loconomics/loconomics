@@ -565,15 +565,38 @@ var appInit = function appInit() {
         });
     };
 
+    // keep track if a login was requested
+    var loginRequired = false;
     // Try to restore a user session ('remember login')
     var session = require('./data/session');
     session.restore()
     .then(preloadUserProfile)
     .then(setupOnboarding)
+    .catch((exception) => {
+        // There are known exceptions from session.restore, that prevents loading profile
+        // and onboarding:
+        // The exception can be of type BadAuthorization or NotFound.
+        // There is no problem with NotFound, is just anonymous user:
+        if (exception.name === 'NotFound') {
+            // recover from error just continuing
+            return;
+        }
+        else if (exception.name === 'BadAuthorization') {
+            // BadAuthorization means that there was a saved authorization but is
+            // invalid in format, requiring to re-login the user
+            loginRequired = true;
+            // Code after initialization will redirect to login
+        }
+    })
     .then(app.shell.run.bind(app.shell))
     .then(connectUserNavbar)
     .then(resumeOnboarding)
     .then(setAppAsReady)
+    .then(() => {
+        if (loginRequired) {
+            app.shell.go('/login');
+        }
+    })
     .catch(alertError);
 
     // DEBUG

@@ -34,7 +34,7 @@ var setAuthorization = function(authorizationValue) {
  * @returns {string}
  */
 var authorizationValueFromUserAuthorization = function(userAuthKey) {
-    return 'Bearer ' + userAuthKey.authToken;
+    return 'Bearer ' + (userAuthKey.authToken || '');
 };
 
 /**

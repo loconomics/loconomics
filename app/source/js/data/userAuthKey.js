@@ -38,17 +38,29 @@ var seemsValidData = function(userAuthKey) {
 /**
  * Returns the stored user auth key data,
  * or throws error if not found or looks corrupt
- * @returns {Promise<UserAuthKey>}
+ * @returns {Promise<UserAuthKey,Exception>} Explicit exceptions thrown are
+ * NotFound and BadAuthorization, take care of better way to support them
  */
 exports.get = function() {
     return local
     .getItem(STORE_NAME)
     .then(function(userAuthKey) {
-        if (seemsValidData(userAuthKey)) {
+        if (!userAuthKey) {
+            // If there is no data, is just not saved authorization
+            throw {
+                name: 'NotFound',
+                message: 'There are no saved authorization'
+            };
+        }
+        else if (seemsValidData(userAuthKey)) {
             return userAuthKey;
         }
         else {
-            throw new Error('User Auth Key data not found');
+            // There is data, but is malformed/obsolete format
+            throw {
+                name: 'BadAuthorization',
+                message: 'Authorization expired, needs to login again'
+            };
         }
     });
 };
