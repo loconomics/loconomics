@@ -597,7 +597,7 @@ public static class LcAuth
     static bool StartSessionWithAuthorizationHeader(string authorizationHeaderValue)
     {
         // #827 Simple token Authorization header
-        var tokenMatch = System.Text.RegularExpressions.Regex.Match(authorizationHeaderValue, "^Token (.+)$");
+        var tokenMatch = System.Text.RegularExpressions.Regex.Match(authorizationHeaderValue, "^Bearer (.+)$");
         if (tokenMatch.Success)
         {
             var token = tokenMatch.Groups[1].Value;
@@ -651,7 +651,7 @@ public static class LcAuth
     /// </summary>
     /// <param name="userid"></param>
     /// <returns></returns>
-    static string CreateTokenFromUserPassword(int userID)
+    public static string CreateTokenFromUserPassword(int userID)
     {
         try
         {

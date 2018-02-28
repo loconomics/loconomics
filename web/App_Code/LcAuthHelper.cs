@@ -55,6 +55,10 @@ public static class LcAuthHelper
         /// that we need now for the secure session-less REST calls
         /// </summary>
         public string authKey;
+        /// <summary>
+        /// Authorization token, used as value for header `Authorization: Bearer authToken`
+        /// </summary>
+        public string authToken;
         public LcRest.UserProfile profile;
         public string onboardingStep;
         public int onboardingJobTitleID;
@@ -110,6 +114,7 @@ public static class LcAuthHelper
             redirectUrl = getRedirectUrl(userID),
             userID = userID,
             authKey = authKey,
+            authToken = LcAuth.CreateTokenFromUserPassword(userID),
             profile = profile,
             onboardingStep = profile == null ? null : profile.onboardingStep
         };
