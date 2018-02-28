@@ -9,13 +9,13 @@ var STORE_NAME = 'userAuthKey';
 var local = require('./drivers/localforage');
 
 /**
- * User authentication key and identification,
+ * User authentication token and identification,
  * with optional copy of it's profile, as of current
  * remote response data for a succesfully logged user
  * @typedef {Object} UserAuthKey
  * @property {string} username
  * @property {number} userID
- * @property {string} authKey Authentification key for future requests
+ * @property {string} authToken Authentification token for requests
  * @property {UserProfile} profile Basic profile information of the user
  */
 
@@ -31,7 +31,7 @@ var seemsValidData = function(userAuthKey) {
         userAuthKey &&
         userAuthKey.userID &&
         userAuthKey.username &&
-        userAuthKey.authKey
+        userAuthKey.authToken
     );
 };
 
@@ -66,7 +66,7 @@ exports.set = function(userAuthKey) {
         return local.setItem(STORE_NAME, {
             userID: userAuthKey.userID,
             username: userAuthKey.username,
-            authKey: userAuthKey.authKey
+            authToken: userAuthKey.authToken
         });
     }
     else {

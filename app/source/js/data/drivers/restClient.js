@@ -18,23 +18,23 @@ var rest = new Rest(presets.siteUrl + API_BASE_URL);
 module.exports = rest;
 
 /**
- * Sets the authorization value for all future requests
+ * Sets the authorization header value for all future requests
  * @private
- * @param {string} authKey
+ * @param {string} authorizationValue
  */
-var setAuthorization = function(authKey) {
+var setAuthorization = function(authorizationValue) {
     rest.extraHeaders = rest.extraHeaders || {};
-    rest.extraHeaders.Authorization = authKey;
+    rest.extraHeaders.Authorization = authorizationValue;
 };
 
 /**
- * Formats an authentication key string for requests (authKey)
- * given a Credentials object
- * @param {Credentials} credentials
+ * Formats an authentication token for requests as a value for the Authorization
+ * header
+ * @param {UserAuthKey} userAuthKey
  * @returns {string}
  */
-var authKeyFromCredentials = function(credentials) {
-    return 'LC alu=' + credentials.userID + ',alk=' + credentials.authKey;
+var authorizationValueFromUserAuthorization = function(userAuthKey) {
+    return 'Bearer ' + userAuthKey.authToken;
 };
 
 /**
@@ -57,21 +57,21 @@ session.on.closed.subscribe(function() {
 /**
  * Handler for new session notifications (open, restore).
  * It set-ups the client with the authorization
- * credentials so the user is identified in each
+ * so the user is identified in each
  * new request.
- * @param {Credentials} credentials
+ * @param {UserAuthKey} userAuthKey
  */
-var newSessionHandler = function(credentials) {
+var newSessionHandler = function(userAuthKey) {
     // use authorization key for each new request
-    setAuthorization(authKeyFromCredentials(credentials));
+    setAuthorization(authorizationValueFromUserAuthorization(userAuthKey));
 };
 /**
  * When opening a session, set-ups authorization
- * @param {Credentials} credentials
+ * @param {UserAuthKey} userAuthKey
  */
 session.on.opened.subscribe(newSessionHandler);
 /**
  * When opening a session, set-ups authorization
- * @param {Credentials} credentials
+ * @param {UserAuthKey} userAuthKey
  */
 session.on.restored.subscribe(newSessionHandler);
