@@ -9,7 +9,7 @@
 'use strict';
 
 var local = require('./drivers/localforage');
-var userAuthKeyStore = require('./userAuthKey');
+var userAuthorizationStore = require('./userAuthorization');
 var SingleEvent = require('../utils/SingleEvent').default;
 
 /**
@@ -69,18 +69,18 @@ var clearLocalData = function () {
  * Expected to be call at app start-up,
  * will prevent execution if a session is
  * running.
- * @returns {Promise<UserAuthKey>} Null if no saved data
+ * @returns {Promise<UserAuthorization>} Null if no saved data
  */
 exports.restore = function() {
     if (isSessionOpened) return Promise.resolve(null);
 
     // If there are data saved
-    return userAuthKeyStore.get()
-    .then(function(userAuthKey) {
+    return userAuthorizationStore.get()
+    .then(function(userAuthorization) {
         // Track session as opened
         isSessionOpened = true;
-        restoredEvent.emit(userAuthKey);
-        return userAuthKey;
+        restoredEvent.emit(userAuthorization);
+        return userAuthorization;
     });
 };
 
@@ -91,21 +91,21 @@ exports.restore = function() {
  * stores the login authorization
  * and set-up the new session.
  * This is the next-step after a remote login
- * @param {UserAuthKey} loginData Response data from an auth login/signup
+ * @param {UserAuthorization} loginData Response data from an auth login/signup
  * describing the user authorization and profile
- * @returns {Promise<UserAuthKey>}
+ * @returns {Promise<UserAuthorization>}
  */
-exports.open = function(userAuthKey) {
+exports.open = function(userAuthorization) {
     // Remove any previous local data if any:
     return clearLocalData()
     .then(function() {
         // async local save, don't wait
-        userAuthKeyStore.set(userAuthKey);
+        userAuthorizationStore.set(userAuthorization);
 
         // Track session as opened
         isSessionOpened = true;
-        openedEvent.emit(userAuthKey);
-        return userAuthKey;
+        openedEvent.emit(userAuthorization);
+        return userAuthorization;
     });
 };
 
@@ -118,7 +118,7 @@ exports.open = function(userAuthKey) {
  */
 exports.close = function() {
     return Promise.all([
-        userAuthKeyStore.clear(),
+        userAuthorizationStore.clear(),
         // Local data clean-up!
         clearLocalData()
     ]).

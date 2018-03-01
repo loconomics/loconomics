@@ -30,11 +30,11 @@ var setAuthorization = function(authorizationValue) {
 /**
  * Formats an authentication token for requests as a value for the Authorization
  * header
- * @param {UserAuthKey} userAuthKey
+ * @param {UserAuthorization} userAuthorization
  * @returns {string}
  */
-var authorizationValueFromUserAuthorization = function(userAuthKey) {
-    return 'Bearer ' + (userAuthKey.authToken || '');
+var authorizationValueFromUserAuthorization = function(userAuthorization) {
+    return 'Bearer ' + (userAuthorization.authToken || '');
 };
 
 /**
@@ -59,19 +59,19 @@ session.on.closed.subscribe(function() {
  * It set-ups the client with the authorization
  * so the user is identified in each
  * new request.
- * @param {UserAuthKey} userAuthKey
+ * @param {UserAuthorization} userAuthorization
  */
-var newSessionHandler = function(userAuthKey) {
+var newSessionHandler = function(userAuthorization) {
     // use authorization key for each new request
-    setAuthorization(authorizationValueFromUserAuthorization(userAuthKey));
+    setAuthorization(authorizationValueFromUserAuthorization(userAuthorization));
 };
 /**
  * When opening a session, set-ups authorization
- * @param {UserAuthKey} userAuthKey
+ * @param {UserAuthorization} userAuthorization
  */
 session.on.opened.subscribe(newSessionHandler);
 /**
  * When opening a session, set-ups authorization
- * @param {UserAuthKey} userAuthKey
+ * @param {UserAuthorization} userAuthorization
  */
 session.on.restored.subscribe(newSessionHandler);

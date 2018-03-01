@@ -13,32 +13,34 @@ var userProfile = require('./userProfile');
 
 /**
  * @callback LocalLoginCb
- * @param {UserAuthKey} credentials Response data from login/signup
- * @returns {Promise<UserAuthKey>}
+ * @param {UserAuthorization} authorization Response data from login/signup
+ * @returns {Promise<UserAuthorization>}
  */
 
 /**
  * Provides a function that expects the remote
- * credentials from a login/signup
+ * authorization from a login/signup
  * and open the new user session.
  * @private
  * @param {string} username
   * @returns {LocalLoginCb}
  */
 var performLocalLogin = function (username) {
-    return function (credentials) {
-        // Complete the credentials object adding the username (needed for
-        // session and stored credentials)
-        credentials.username = username;
+    return function (authorization) {
+        // Complete the authorization object adding the username (needed for
+        // session and stored authorization)
+        authorization.username = username;
         // Starts the user session
-        return session.open(credentials)
-        .then(function(credentials) {
+        return session.open(authorization)
+        // It gives the as parameter the same given authorization object that
+        // we have already in the closure
+        .then(function(/*authorization*/) {
             // If it includes profile data, save it
-            if (credentials.profile) {
-                // Set user data (credentials includes an optional profile copy for
-                // convenience, but is not saved in the credentials store
+            if (authorization.profile) {
+                // Set user data (authorization includes an optional profile copy for
+                // convenience, but is not saved in the authorization store
                 // but at userProfile)
-                userProfile.data.model.updateWith(credentials.profile);
+                userProfile.data.model.updateWith(authorization.profile);
                 // IMPORTANT: Local name kept in sync with set-up at userProfile module
                 userProfile.saveLocal();
             }
@@ -46,7 +48,7 @@ var performLocalLogin = function (username) {
                 // No profile included, request it (without wait for it)
                 userProfile.sync();
             }
-            return credentials;
+            return authorization;
         });
     };
 };
@@ -56,7 +58,7 @@ var performLocalLogin = function (username) {
  * the provided credentials.
  * @param {string} username
  * @param {string} password
- * @returns {Promise<UserAuthKey>}
+ * @returns {Promise<UserAuthorization>}
  */
 exports.login = function (username, password) {
 
@@ -75,7 +77,7 @@ exports.login = function (username, password) {
  * Performs a login attempt with the API by using
  * a Facebook accessToken.
  * @param {string} accessToken Token given by the Facebook API
- * @returns {Promise<UserAuthKey>}
+ * @returns {Promise<UserAuthorization>}
  */
 exports.facebookLogin = function (accessToken) {
 
@@ -91,7 +93,7 @@ exports.facebookLogin = function (accessToken) {
 };
 
 /**
- * Performs a logout, removing cached credentials
+ * Performs a logout, removing cached authorization
  * and profile so the app can be filled up with
  * new user information (closes user session).
  * It calls to the API logout call too, to remove
@@ -126,7 +128,7 @@ exports.logout = function logout() {
  * @param {string} [data.confirmationCode]
  * @param {number} [data.jobTitleID]
  * @param {string} [data.jobTitleName]
- * @returns {Promise<UserAuthKey>}
+ * @returns {Promise<UserAuthorization>}
  */
 exports.signup = function (data) {
 

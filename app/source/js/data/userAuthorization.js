@@ -2,17 +2,17 @@
  * Manages the locally stored user authentication key data.
  * This let identify the user and authorize it
  * at the remote webservice.
- * @module data/userAuthKey
+ * @module data/userAuthorization
  */
 'use strict';
-var STORE_NAME = 'userAuthKey';
+var STORE_NAME = 'userAuthorization';
 var local = require('./drivers/localforage');
 
 /**
  * User authentication token and identification,
  * with optional copy of it's profile, as of current
  * remote response data for a succesfully logged user
- * @typedef {Object} UserAuthKey
+ * @typedef {Object} UserAuthorization
  * @property {string} username
  * @property {number} userID
  * @property {string} authToken Authentification token for requests
@@ -24,36 +24,36 @@ var local = require('./drivers/localforage');
  * valid user auth key data by checking for almost a
  * value on required properties.
  * @private
- * @param {UserAuthKey} userAuthKey
+ * @param {UserAuthorization} userAuthorization
  */
-var seemsValidData = function(userAuthKey) {
+var seemsValidData = function(userAuthorization) {
     return !!(
-        userAuthKey &&
-        userAuthKey.userID &&
-        userAuthKey.username &&
-        userAuthKey.authToken
+        userAuthorization &&
+        userAuthorization.userID &&
+        userAuthorization.username &&
+        userAuthorization.authToken
     );
 };
 
 /**
  * Returns the stored user auth key data,
  * or throws error if not found or looks corrupt
- * @returns {Promise<UserAuthKey,Exception>} Explicit exceptions thrown are
+ * @returns {Promise<UserAuthorization,Exception>} Explicit exceptions thrown are
  * NotFound and BadAuthorization, take care of better way to support them
  */
 exports.get = function() {
     return local
     .getItem(STORE_NAME)
-    .then(function(userAuthKey) {
-        if (!userAuthKey) {
+    .then(function(userAuthorization) {
+        if (!userAuthorization) {
             // If there is no data, is just not saved authorization
             throw {
                 name: 'NotFound',
                 message: 'There are no saved authorization'
             };
         }
-        else if (seemsValidData(userAuthKey)) {
-            return userAuthKey;
+        else if (seemsValidData(userAuthorization)) {
+            return userAuthorization;
         }
         else {
             // There is data, but is malformed/obsolete format
@@ -70,15 +70,15 @@ exports.get = function() {
  * Let's the app to keep the user logged between executions
  * until explicitely removes them.
  * It throws error if given data don't seem valid
- * @param {UserAuthKey} userAuthKey
+ * @param {UserAuthorization} userAuthorization
  * @returns {Promise}
  */
-exports.set = function(userAuthKey) {
-    if (seemsValidData(userAuthKey)) {
+exports.set = function(userAuthorization) {
+    if (seemsValidData(userAuthorization)) {
         return local.setItem(STORE_NAME, {
-            userID: userAuthKey.userID,
-            username: userAuthKey.username,
-            authToken: userAuthKey.authToken
+            userID: userAuthorization.userID,
+            username: userAuthorization.username,
+            authToken: userAuthorization.authToken
         });
     }
     else {
@@ -98,11 +98,11 @@ exports.clear = function() {
  * It detects old local store and
  * migrates that to the current name.
  *
- * THIS IS TEMPORARY CODE
+ * THIS IS TEMPORARY CODE, TODO: remove when every instance is up-to-date
  * @private
  */
 function migrateConfig() {
-    var data = localStorage["LoconomicsApp/credentials"];
+    var data = localStorage['LoconomicsApp/credentials'] || localStorage['LoconomicsApp/userAuthKey'];
     if (data) {
         try {
             data = JSON.parse(data);
