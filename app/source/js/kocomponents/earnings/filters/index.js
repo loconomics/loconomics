@@ -3,9 +3,9 @@
  *
  * @module kocomponents/earnings/filters
  */
-import 'browsernizr/test/inputtypes';
 import Komponent from '../../helpers/KnockoutComponent';
 import TimeRangeOption from './TimeRangeOption';
+import { create as createEditableDate } from '../../../utils/inputEditableComputedDate';
 import ko from 'knockout';
 import moment from 'moment';
 import { show as showError } from '../../../modals/error';
@@ -141,6 +141,22 @@ export default class EarningsFilter extends Komponent {
         this.toDate = ko.observable(moment().endOf('week').toDate());
 
         /**
+         * Let's access the date in a string format suitable for edition from
+         * an input control, based on browser support for input[type=date]
+         * Source date is a Date instance.
+         * @member {KnockoutComputed<string>}
+         */
+        this.editableFromDate = createEditableDate(this.fromDate);
+
+        /**
+         * Let's access the date in a string format suitable for edition from
+         * an input control, based on browser support for input[type=date]
+         * Source date is a Date instance.
+         * @member {KnockoutComputed<string>}
+         */
+        this.editableToDate = createEditableDate(this.toDate);
+
+        /**
          * List of options available for time-range, that are later converted
          * into specific dates
          * @property {Array<Option>}
@@ -168,7 +184,7 @@ export default class EarningsFilter extends Komponent {
                 // Return custom range (as like id being TimeRangeOption.custom, or anything without a converter)
                 return {
                     from: this.fromDate(),
-                    to: this.fromDate()
+                    to: this.toDate()
                 };
             }
         });

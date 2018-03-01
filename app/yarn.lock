@@ -1132,6 +1132,10 @@ browserify@^14.5.0:
     vm-browserify "~0.0.1"
     xtend "^4.0.0"
 
+browsernizr@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/browsernizr/-/browsernizr-2.2.0.tgz#6ef6e4f1276f4b86de35a1c2b9e92ae278c4e11e"
+
 browserslist@^2.1.2, browserslist@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.10.0.tgz#bac5ee1cc69ca9d96403ffb8a3abdc5b6aed6346"
