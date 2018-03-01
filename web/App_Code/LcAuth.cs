@@ -315,6 +315,7 @@ public static class LcAuth
 
         if (logged)
         {
+            RegisterAuthorizationForUser(WebSecurity.CurrentUserId);
             LcData.UserInfo.RegisterLastLoginTime(0, email);
 
             // mark the user as logged in via a normal account,
@@ -596,6 +597,52 @@ public static class LcAuth
         return true;
     }
 
+    class UserAuthorization
+    {
+        public int userID;
+        public string token;
+    }
+
+    static UserAuthorization GetUserAuthorizationFromHeader(string authorizationHeaderValue)
+    {
+        if (String.IsNullOrWhiteSpace(authorizationHeaderValue)) return null;
+
+        var tokenMatch = System.Text.RegularExpressions.Regex.Match(authorizationHeaderValue, "^Bearer (.+)$");
+        if (tokenMatch.Success)
+        {
+            var token = tokenMatch.Groups[1].Value;
+            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
+            if (userID.HasValue)
+            {
+                return new UserAuthorization
+                {
+                    userID = userID.Value,
+                    token = token
+                };
+            }
+        }
+        return null;
+    }
+
+    static UserAuthorization GetUserAuthorizationFromQueryString(System.Collections.Specialized.NameValueCollection queryString)
+    {
+        // #827 Simple token Authorization header
+        var token = queryString["access_token"];
+        if (!String.IsNullOrEmpty(token))
+        {
+            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
+            if (userID.HasValue)
+            {
+                return new UserAuthorization
+                {
+                    userID = userID.Value,
+                    token = token
+                };
+            }
+        }
+        return null;
+    }
+
     /// <summary>
     /// Validate the given bearer authorization value (the value as is in the Authorization header, including the
     /// Bearer type) and start a session for the user
@@ -606,15 +653,10 @@ public static class LcAuth
     static bool StartSessionWithAuthorizationHeader(string authorizationHeaderValue)
     {
         // #827 Simple token Authorization header
-        var tokenMatch = System.Text.RegularExpressions.Regex.Match(authorizationHeaderValue, "^Bearer (.+)$");
-        if (tokenMatch.Success)
+        var auth = GetUserAuthorizationFromHeader(authorizationHeaderValue);
+        if (auth != null)
         {
-            var token = tokenMatch.Groups[1].Value;
-            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
-            if (userID.HasValue)
-            {
-                return StartSessionAsUser(userID.Value);
-            }
+            return StartSessionAsUser(auth.userID);
         }
         return false;
     }
@@ -628,15 +670,10 @@ public static class LcAuth
     /// <returns></returns>
     static bool StartSessionWithAuthorizationQueryString(System.Collections.Specialized.NameValueCollection queryString)
     {
-        // #827 Simple token Authorization header
-        var token = queryString["access_token"];
-        if (!String.IsNullOrEmpty(token))
+        var auth = GetUserAuthorizationFromQueryString(queryString);
+        if (auth != null)
         {
-            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
-            if (userID.HasValue)
-            {
-                return StartSessionAsUser(userID.Value);
-            }
+            return StartSessionAsUser(auth.userID);
         }
         return false;
     }
@@ -654,12 +691,48 @@ public static class LcAuth
     }
 
     /// <summary>
+    /// Removes the given authorization token
+    /// </summary>
+    /// <param name="auth"></param>
+    static void RemoveUserAuthorization(UserAuthorization auth)
+    {
+        using (var db = new LcDatabase())
+        {
+            db.Execute("UPDATE authorizations SET DeletedDate=@0 WHERE UserID=@1 AND Token=@2", DateTimeOffset.Now, auth.userID, auth.token);
+        }
+    }
+
+    /// <summary>
+    /// Gets the user and authorization from current web context/request
+    /// </summary>
+    static UserAuthorization GetCurrentUserAuthorization()
+    {
+        var Request = HttpContext.Current.Request;
+        var header = Request.Headers["Authorization"];
+        var auth = GetUserAuthorizationFromHeader(header);
+        return auth ?? GetUserAuthorizationFromQueryString(Request.QueryString);
+    }
+
+    /// <summary>
+    /// Removes the user authorization from current web context/request
+    /// </summary>
+    public static void RemovesCurrentUserAuthorization()
+    {
+        var auth = GetCurrentUserAuthorization();
+        if (auth != null)
+        {
+            RemoveUserAuthorization(auth);
+        }
+    }
+
+    /// <summary>
     /// Creates an authorization record for the given userID using the current
     /// token generator.
     /// </summary>
     /// <param name="userID"></param>
     static void RegisterAuthorizationForUser(int userID)
     {
+        RemovesCurrentUserAuthorization();
         var token = CreateTokenFromUserPassword(userID);
         var userAgent = HttpContext.Current.Request.UserAgent;
         var userAddress = HttpContext.Current.Request.UserHostAddress;

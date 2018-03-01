@@ -123,6 +123,7 @@ public static class LcAuthHelper
 
     #region Logout
     public static void Logout() {
+        LcAuth.RemovesCurrentUserAuthorization();
         // Log out of the current user context
         WebSecurity.Logout();
         Session.Clear();
