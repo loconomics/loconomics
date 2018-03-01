@@ -1,0 +1,6 @@
+<form data-bind="event: { submit: save }">
+    <listing-solutions-suggestions-list>
+    </listing-solutions-suggestions-list>
+    <solutions-autocomplete></solutions-autocomplete>
+    <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
+</form>
