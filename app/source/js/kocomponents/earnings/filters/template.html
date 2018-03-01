@@ -24,15 +24,15 @@
     <!-- /ko -->
     <div class="form-group">
         <label for="earnings-filters-job-title" class="sr-only">Job Title</label>
-        <select id="earnings-filters-job-title" class="form-control" data-bind="value: jobTitleID,
-            options: listings, optionsCaption: ' Job titles', optionsValue: 'jobTitleID',
+        <select id="earnings-filters-job-title" class="form-control" data-bind="value: jobTitle,
+            options: listings, optionsCaption: ' Job titles',
             optionsText: 'jobTitleSingularName'">
         </select>
     </div>
     <div class="form-group">
         <label for="earnings-filters-platform" class="sr-only">Platform</label>
-        <select id="earnings-filters-platform" class="form-control" data-bind="value: platformID,
-            options: externalListings, optionsCaption: ' Platforms', optionsValue: 'platformID',
+        <select id="earnings-filters-platform" class="form-control" data-bind="value: externalListing,
+            options: externalListings, optionsCaption: ' Platforms',
             optionsText: 'title'">
         </select>
     </div>

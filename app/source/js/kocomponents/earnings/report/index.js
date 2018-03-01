@@ -95,6 +95,26 @@ export default class EarningsReport extends Komponent {
             }
         });
 
+        /**
+         * Text describing the filtered job title, or fallback for all
+         * @member {KnockoutComputed<string>}
+         */
+        this.selectedJobTitleText = ko.pureComputed(() => {
+            const filters = this.appliedFilters();
+            const hasSelected = filters && filters.jobTitleID > 0;
+            return hasSelected ? filters.jobTitleText : 'All job titles';
+        });
+
+        /**
+         * Text describing the filtered platform, or fallback for all
+         * @member {KnockoutComputed<string>}
+         */
+        this.selectedPlatformText = ko.pureComputed(() => {
+            const filters = this.appliedFilters();
+            const hasSelected = filters && filters.platformID > 0;
+            return hasSelected ? filters.platformText : 'All listings/platforms';
+        });
+
         this.__setupDataOperations();
     }
 

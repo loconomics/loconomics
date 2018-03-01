@@ -23,11 +23,21 @@ const TAG_NAME = 'earnings-filters';
  */
 
 /**
+ * Describes values for a set of selected filters.
+ * Properties described as 'filtering value' are the actual values that must be
+ * used for filtering, the rest are just information for the UI.
  * @typedef {Object} EarningsFilterValues
- * @property {TimeRange} timeRange
- * @property {number} jobTitleID
- * @property {number} platformID
- * @property {TimeRangeOption} timeRangeOption
+ * @property {Date} fromDate Filtering value for inclusive initial date
+ * @property {Date} toDate Filtering value for inclusive final date
+ * @property {number} jobTitleID Filtering value for job title
+ * @property {number} platformID Fitlering value for platform
+ * @property {TimeRangeOption} timeRangeOption Option used to fill
+ * the fromDate and toDate properties, provided only to allow customization of
+ * the display for the time range but must not be used as the actual value to
+ * filter by.
+ * @property {string} jobTitleText Display value, name matching the jobTitleID
+ * @property {string} platformText Display value, name or title matching the
+ * platformID
  */
 
 /**
@@ -115,16 +125,22 @@ export default class EarningsFilter extends Komponent {
         this.timeRangeOption = ko.observable(params.defaultTimeRangeOption);
 
         /**
-         * Job title ID selected
-         * @member {KnockoutObservable<number>}
+         * Job title object selected.
+         * @member {KnockoutObservable<object>}
          */
-        this.jobTitleID = ko.observable();
+        this.jobTitle = ko.observable();
 
         /**
          * Platform ID selected
          * @member {KnockoutObservable<number>}
          */
         this.platformID = ko.observable();
+
+        /**
+         * External listing object selected.
+         * @member {KnockoutObservable<object>}
+         */
+        this.externalListing = ko.observable();
 
         /**
          * Beggining date for a custom time range.
@@ -217,15 +233,19 @@ export default class EarningsFilter extends Komponent {
          */
         ko.computed(() => {
             const range = this.timeRange();
+            const jobTitle = this.jobTitle();
+            const externalListing = this.externalListing();
             params.onSelect({
                 fromDate: range.from,
                 toDate: range.to,
-                jobTitleID: this.jobTitleID(),
-                platformID: this.platformID(),
+                jobTitleID: jobTitle && jobTitle.jobTitleID,
+                platformID: externalListing && externalListing.platformID,
                 // Includes the predefined option, so allow for other UI to
                 // keep in sync with it if more specialized usage than just
                 // custom range is needed (like different title and so).
-                timeRangeOption: this.timeRangeOption()
+                timeRangeOption: this.timeRangeOption(),
+                jobTitleText: jobTitle && jobTitle.jobTitleSingularName,
+                platformText: externalListing && externalListing.title
             });
         })
         // Prevent that several, automated/related changes, trigger too much notifications.
