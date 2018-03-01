@@ -3,7 +3,9 @@
  *
  * @module kocomponents/earnings/filters
  */
+import 'browsernizr/test/inputtypes';
 import Komponent from '../../helpers/KnockoutComponent';
+import TimeRangeOption from './TimeRangeOption';
 import ko from 'knockout';
 import moment from 'moment';
 import { show as showError } from '../../../modals/error';
@@ -12,18 +14,6 @@ import { list as userExternalListings } from '../../../data/userExternalListings
 import { list as userListings } from '../../../data/userListings';
 
 const TAG_NAME = 'earnings-filters';
-
-/**
- * TimeRangeOption enum with available time rage predefined options.
- * @enum {number}
- */
-export const TimeRangeOption = {
-    thisMonth: 1,
-    thisQuarter: 2,
-    thisYear: 3,
-    lastMonth: 4,
-    custom: 5
-};
 
 /**
  * Describes a specific range of time giving two dates, both inclusive

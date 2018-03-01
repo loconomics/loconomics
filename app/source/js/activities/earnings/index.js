@@ -7,11 +7,12 @@
  *
  */
 
+import '../../kocomponents/earnings/filters';
 import '../../kocomponents/earnings/report';
 import '../../utils/Time';
 import * as activities from '../index';
 import Activity from '../../components/Activity';
-import { TimeRangeOption } from '../../kocomponents/earnings/filters';
+import TimeRangeOption from '../../kocomponents/earnings/filters/TimeRangeOption';
 import UserType from '../../enums/UserType';
 import ko from 'knockout';
 import template from './template.html';
