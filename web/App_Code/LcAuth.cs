@@ -92,7 +92,6 @@ public static class LcAuth
                 // with the previous record created using the automatic UserID generated for it).
                 token = WebSecurity.CreateAccount(email, password, true);
                 userid = WebSecurity.GetUserId(email);
-                RegisterAuthorizationForUser(userid);
             }
             catch (Exception ex)
             {
@@ -189,10 +188,7 @@ public static class LcAuth
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
         var userID = WebSecurity.GetUserIdFromPasswordResetToken(token);
-        var result = WebSecurity.ResetPassword(token, password);
-        // Update registration based on new header token
-        RegisterAuthorizationForUser(userID);
-        return result;
+        return WebSecurity.ResetPassword(token, password);
     }
 
     public static bool ChangePassword(string email, string currentPassword, string newPassword)
@@ -203,10 +199,7 @@ public static class LcAuth
             throw new ConstraintException(PasswordValidator.InvalidPasswordErrorMessage);
         }
         var userID = WebSecurity.GetUserId(email);
-        var result = WebSecurity.ChangePassword(email, currentPassword, newPassword);
-        // Update registration based on new header token
-        RegisterAuthorizationForUser(userID);
-        return result;
+        return WebSecurity.ChangePassword(email, currentPassword, newPassword);
     }
 
     public static void BecomeProvider(int userID, Database db = null, bool perserveOnboardingStep = false)
@@ -306,7 +299,7 @@ public static class LcAuth
         return WebSecurity.IsAccountLockedOut(email, 4, 5 * 60);
     }
 
-    public static bool Login(string email, string password, bool persistCookie = false)
+    public static UserAuthorization Login(string email, string password, bool persistCookie = false)
     {
         if (IsAccountLockedOut(email))
             throw new ConstraintException(AccountLockedErrorMessage);
@@ -315,12 +308,19 @@ public static class LcAuth
 
         if (logged)
         {
-            RegisterAuthorizationForUser(WebSecurity.CurrentUserId);
-            LcData.UserInfo.RegisterLastLoginTime(0, email);
+            var userID = WebSecurity.GetUserId(email);
+            var token = RegisterAuthorizationForUser(userID);
+            LcData.UserInfo.RegisterLastLoginTime(userID, email);
 
             // mark the user as logged in via a normal account,
             // as opposed to via an OAuth or OpenID provider.
             System.Web.HttpContext.Current.Session["OAuthLoggedIn"] = false;
+
+            return new UserAuthorization
+            {
+                userID = userID,
+                token = token
+            };
         }
         else
         {
@@ -335,9 +335,8 @@ public static class LcAuth
                 // and avoiding misperception of 6 allowed attempts).
                 throw new ConstraintException(AccountLockedErrorMessage);
             }
+            return null;
         }
-
-        return logged;
     }
 
     /// <summary>
@@ -597,7 +596,7 @@ public static class LcAuth
         return true;
     }
 
-    class UserAuthorization
+    public class UserAuthorization
     {
         public int userID;
         public string token;
@@ -730,10 +729,10 @@ public static class LcAuth
     /// token generator.
     /// </summary>
     /// <param name="userID"></param>
-    static void RegisterAuthorizationForUser(int userID)
+    public static string RegisterAuthorizationForUser(int userID)
     {
         RemovesCurrentUserAuthorization();
-        var token = CreateTokenFromUserPassword(userID);
+        var token = CreateUserGuidToken(userID);
         var userAgent = HttpContext.Current.Request.UserAgent;
         var userAddress = HttpContext.Current.Request.UserHostAddress;
         using (var db = new LcDatabase())
@@ -743,6 +742,7 @@ public static class LcAuth
                 VALUES (@0, @1, @2, @3, @4, @5)",
                 token, userID, "", DateTimeOffset.Now, userAddress, userAgent);
         }
+        return token;
     }
 
     /// <summary>
@@ -771,6 +771,20 @@ public static class LcAuth
         }
         catch { }
         return null;
+    }
+
+    /// <summary>
+    /// Creates a token based on a new GUID and the userID.
+    /// Benefit from CreateTokenFromUserPassword, this is different any time is generated.
+    /// Note: using GUID should not require adding the userID, even maybe don't use an encryption and
+    /// sanitization for URL, but just reusing that until be sure
+    /// </summary>
+    /// <param name="userID"></param>
+    /// <returns></returns>
+    public static string CreateUserGuidToken(int userID)
+    {
+        var guid = Guid.NewGuid();
+        return LcEncryptor.ConvertForURL(LcEncryptor.Encrypt(userID.ToString() + "::::" + guid));
     }
     #endregion
 }

@@ -59,6 +59,7 @@ public static class LcAuthHelper
         /// Authorization token, used as value for header `Authorization: Bearer authToken`
         /// </summary>
         public string authToken;
+        //public LcAuth.UserAuthorization authorization;
         public LcRest.UserProfile profile;
         public string onboardingStep;
         public int onboardingJobTitleID;
@@ -90,31 +91,33 @@ public static class LcAuthHelper
         // TODO: RE-ENABLE AFTER BETA
         //if (!allowUnconfirmed)
         //    checkAccountIsConfirmed(username);
-            
-        if (LcAuth.Login(username, password, rememberMe)) {
-            
-            var userId = WebSecurity.GetUserId(username);
-            return GetLoginResultForID(userId, returnProfile);
+
+        var auth = LcAuth.Login(username, password, rememberMe);
+        if (auth != null)
+        {
+            return GetLoginResultForID(auth, returnProfile);
         }
-        else {
+        else
+        {
             throw new HttpException(400, "Incorrect username or password.");
         }
     }
 
-    private static LoginResult GetLoginResultForID(int userID, bool returnProfile)
+    private static LoginResult GetLoginResultForID(LcAuth.UserAuthorization authorization, bool returnProfile)
     {
-        var authKey = LcAuth.GetAutologinKey(userID);
+        var authKey = LcAuth.GetAutologinKey(authorization.userID);
         LcRest.UserProfile profile = null;
             
         if (returnProfile) {
-            profile = LcRest.UserProfile.Get(userID);
+            profile = LcRest.UserProfile.Get(authorization.userID);
         }
 
         return new LoginResult {
-            redirectUrl = getRedirectUrl(userID),
-            userID = userID,
+            redirectUrl = getRedirectUrl(authorization.userID),
+            userID = authorization.userID,
             authKey = authKey,
-            authToken = LcAuth.CreateTokenFromUserPassword(userID),
+            authToken = authorization.token,
+            //authorization = authorization,
             profile = profile,
             onboardingStep = profile == null ? null : profile.onboardingStep
         };
@@ -588,7 +591,11 @@ public static class LcAuthHelper
 
             // Performs system login, using the autologin info since
             // there is no password here.
-            var ret = GetLoginResultForID(user.UserID, returnProfile);
+            var ret = GetLoginResultForID(new LcAuth.UserAuthorization
+            {
+                userID = user.UserID,
+                token = LcAuth.RegisterAuthorizationForUser(user.UserID)
+            }, returnProfile);
             LcAuth.Autologin(ret.userID.ToString(), ret.authKey);
             return ret;
         }
