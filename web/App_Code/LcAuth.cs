@@ -431,8 +431,10 @@ public static class LcAuth
         var auth = Request.Headers["Authorization"];
         if (!String.IsNullOrEmpty(auth))
         {
+            // First: support standard authorization
             if (!StartSessionWithAuthorizationHeader(auth))
             {
+                // Legacy 'header based on autologin scheme' feature as fallback (to be removed as soon as Apps using it are updated)
                 var m = System.Text.RegularExpressions.Regex.Match(auth, "^LC alu=([^,]+),alk=(.+)$");
                 if (m.Success)
                 {
@@ -444,19 +446,24 @@ public static class LcAuth
         }
         else
         {
-            // Using custom headers first, best for security using the REST API.
             var Q = Request.QueryString;
-            var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
-            var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
-
-            // Autologin feature for anonymous sessions with autologin parameters on request
-            if (!Request.IsAuthenticated
-                && alk != null
-                && alu != null)
+            // First: support standard authorization
+            if (!StartSessionWithAuthorizationQueryString(Q))
             {
-                // 'alk' url parameter stands for 'Auto Login Key'
-                // 'alu' url parameter stands for 'Auto Login UserID'
-                LcAuth.Autologin(alu, alk);
+                // Legacy 'autologin' feature as fallback (to be removed as soon as Apps and emails using it are updated)
+                // Using custom headers first, best for security using the REST API.
+                var alk = N.DW(Request.Headers["alk"]) ?? Q["alk"];
+                var alu = N.DW(Request.Headers["alu"]) ?? Q["alu"];
+
+                // Autologin feature for anonymous sessions with autologin parameters on request
+                if (!Request.IsAuthenticated
+                    && alk != null
+                    && alu != null)
+                {
+                    // 'alk' url parameter stands for 'Auto Login Key'
+                    // 'alu' url parameter stands for 'Auto Login UserID'
+                    LcAuth.Autologin(alu, alk);
+                }
             }
         }
     }
@@ -590,7 +597,9 @@ public static class LcAuth
     }
 
     /// <summary>
-    /// #827 Simple token Authorization header
+    /// Validate the given bearer authorization value (the value as is in the Authorization header, including the
+    /// Bearer type) and start a session for the user
+    /// As of #827
     /// </summary>
     /// <param name="authorizationHeaderValue"></param>
     /// <returns></returns>
@@ -601,6 +610,28 @@ public static class LcAuth
         if (tokenMatch.Success)
         {
             var token = tokenMatch.Groups[1].Value;
+            var userID = LcAuth.GetUserIdByAuthorizationToken(token);
+            if (userID.HasValue)
+            {
+                return StartSessionAsUser(userID.Value);
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Validate a bearer token authorization value as part of the given query string, and start a session for the user.
+    /// Supported query string key is access_token
+    /// As of #827
+    /// </summary>
+    /// <param name="authorizationHeaderValue"></param>
+    /// <returns></returns>
+    static bool StartSessionWithAuthorizationQueryString(System.Collections.Specialized.NameValueCollection queryString)
+    {
+        // #827 Simple token Authorization header
+        var token = queryString["access_token"];
+        if (!String.IsNullOrEmpty(token))
+        {
             var userID = LcAuth.GetUserIdByAuthorizationToken(token);
             if (userID.HasValue)
             {
