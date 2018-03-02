@@ -12,6 +12,7 @@ namespace LcRest
     {
         public int userID { get; set; }
         public int jobTitleID { get; set; }
+        public string title { get; set; }
         public string intro { get; set; }
         public bool isActive { get; set; }
         public int cancellationPolicyID { get; set; }
@@ -30,6 +31,7 @@ namespace LcRest
             {
                 userID = userJobTitle.userID,
                 jobTitleID = userJobTitle.jobTitleID,
+                title = userJobTitle.title,
                 intro = userJobTitle.intro,
                 isActive = userJobTitle.isActive,
                 cancellationPolicyID = userJobTitle.cancellationPolicyID,

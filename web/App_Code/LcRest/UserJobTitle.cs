@@ -32,6 +32,7 @@ namespace LcRest
         #region Fields
         public int userID { get; set; }
         public int jobTitleID { get; set; }
+        public string title { get; set; }
 
         public string intro { get; set; }
         public ProfileStatus statusID;
@@ -75,6 +76,7 @@ namespace LcRest
             {
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
+                title = record.title,
 
                 intro = record.intro,
                 statusID = (ProfileStatus)record.statusID,
@@ -115,6 +117,7 @@ namespace LcRest
             SELECT
                 u.UserID As userID,
                 u.PositionID As jobTitleID,
+                u.Title as title,
                 u.PositionIntro As intro,
                 u.StatusID As statusID,
                 u.CancellationPolicyID As cancellationPolicyID,
@@ -265,7 +268,7 @@ namespace LcRest
             userJobTitle.ValidateAndFixBookingPolicies();
             using (var db = new LcDatabase())
             {
-                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7",
+                var results = db.QuerySingle("EXEC dbo.InsertUserProfilePositions @0, @1, @2, @3, @4, @5, @6, @7, @8",
                     userJobTitle.userID,
                     userJobTitle.jobTitleID,
                     LcData.GetCurrentLanguageID(),
@@ -273,7 +276,8 @@ namespace LcRest
                     userJobTitle.cancellationPolicyID,
                     userJobTitle.intro,
                     userJobTitle.instantBooking,
-                    userJobTitle.collectPaymentAtBookMeButton);
+                    userJobTitle.collectPaymentAtBookMeButton,
+                    userJobTitle.title);
 
                 if (results.Result != "Success")
                 {
