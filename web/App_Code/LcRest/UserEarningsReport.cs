@@ -19,14 +19,6 @@ namespace LcRest
                 return totalDurationMinutes == 0 ? 0 : total / (totalDurationMinutes / 60M);
             }
         }
-        /// <summary>
-        /// Job title name or 'all' depending on the report query
-        /// </summary>
-        public string jobTitleName = "All job titles";
-        /// <summary>
-        /// Listing title or 'all' depending on the report query
-        /// </summary>
-        public string listingTitle = "All listings/platforms";
         #endregion
 
         #region Instances
@@ -43,6 +35,16 @@ namespace LcRest
                 entriesCount = record.entriesCount ?? 0,
                 totalDurationMinutes = record.totalDurationMinutes ?? 0
             };
+        }
+        #endregion
+
+        #region Filters class
+        public class EarningsFilterValues
+        {
+            public DateTimeOffset? fromDate;
+            public DateTimeOffset? toDate;
+            public int? jobTitleID;
+            public int? userExternalListingID;
         }
         #endregion
 
@@ -64,14 +66,18 @@ namespace LcRest
       
               FROM [UserEarningsEntry]
               WHERE active = 1 and UserID = @0
+                AND (@1 is null OR PaidDate >= @1)
+                AND (@2 is null OR PaidDate <= @2)
+                AND (@3 is null OR JobTitleID = @3)
+                AND (@4 is null OR UserExternalListingID = @4)
             ) AS T
         ";
         #endregion
-        public static UserEarningsReport Query(int userID)
+        public static UserEarningsReport Query(int userID, EarningsFilterValues filter)
         {
             using (var db = new LcDatabase())
             {
-                return FromDB(db.QuerySingle(sqlQuery, userID));
+                return FromDB(db.QuerySingle(sqlQuery, userID, filter.fromDate, filter.toDate, filter.jobTitleID, filter.userExternalListingID));
             }
         }
         #endregion
