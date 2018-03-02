@@ -196,11 +196,18 @@ export default class EarningsFilter extends Komponent {
             if (converter) {
                 return converter();
             }
-            else {
-                // Return custom range (as like id being TimeRangeOption.custom, or anything without a converter)
+            else if (id === TimeRangeOption.custom) {
+                // Return custom range
                 return {
                     from: this.fromDate(),
                     to: this.toDate()
+                };
+            }
+            else {
+                // No option, no dates filtering (global report)
+                return {
+                    from: null,
+                    to: null
                 };
             }
         });

@@ -91,7 +91,7 @@ export default class EarningsReport extends Komponent {
             }
             else {
                 // No filtering, all displayed
-                return 'Global Summary';
+                return 'All dates';
             }
         });
 
@@ -124,43 +124,22 @@ export default class EarningsReport extends Komponent {
      * @private
      */
     __setupDataOperations() {
-        // Notify errors when loading global report data
-        this.subscribeTo(report.globalReport.onDataError, (error) => {
-            showError({
-                title: 'There was an error loading the report',
-                error
-            });
-        });
-
-        /**
-         * Keep the last subscription to fetch the global report.
-         * @private {Subscription}
-         */
-        let globalReportSubscription = null;
-
         // Request filtered data on filters changes
         ko.computed(() => {
             const filters = this.filters();
-            if (filters) {
-                // Prevent all-data to be loaded
-                if (globalReportSubscription) globalReportSubscription.dispose();
-                // Request filtered data
-                report.query(filters)
-                .then((data) => {
-                    // Use server data
-                    this.earningsReport(data);
-                    this.appliedFilters(filters);
-                })
-                .catch((error) => {
-                    showError({
-                        title: 'There was an error loading the report',
-                        error
-                    });
+            // Request filtered data
+            report.query(filters)
+            .then((data) => {
+                // Use server data
+                this.earningsReport(data);
+                this.appliedFilters(filters);
+            })
+            .catch((error) => {
+                showError({
+                    title: 'There was an error loading the report',
+                    error
                 });
-            }
-            else {
-                globalReportSubscription = this.subscribeTo(report.globalReport.onData, this.earningsReport);
-            }
+            });
         });
     }
 }

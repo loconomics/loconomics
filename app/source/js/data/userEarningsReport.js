@@ -12,7 +12,7 @@ const LOCAL_KEY = 'earnings-report';
 
 /**
  * Gives a report filtered by the given query data.
- * @returns {Promis<rest/UserExternalReport>}
+ * @returns {Promise<rest/UserExternalReport>}
  */
 export function query(filters) {
     return rest.get(API_NAME, filters);
