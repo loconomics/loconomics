@@ -15,6 +15,7 @@ var clients = require('../data/clients');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var DEFAULT_BACK_LINK = '/listingEditor';
 var showError = require('../modals/error').show;
+var Client = require('../models/Client');
 
 var A = Activity.extend(function ServiceProfessionalServiceActivity() {
 
@@ -86,9 +87,11 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
             viewModel.client(null);
 
             if(clientID) {
-                clients.getItem(clientID)
+                clients
+                .item(clientID)
+                .onceLoaded()
                 .then(function(client) {
-                    viewModel.client(client);
+                    viewModel.client(new Client(client));
                 })
                 .catch(function(error) {
                     showError({ title: 'Unable to load client.', error: error });

@@ -19,7 +19,7 @@ const LOCAL_KEY = 'platforms';
  * @returns {CachedDataProvider<Array<rest/Platform>>}
  * Usage:
  * - list.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - list.onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - list.onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export const list = new CachedDataProvider({
     // 10 minutes
@@ -34,7 +34,7 @@ export const list = new CachedDataProvider({
  * @returns {CachedDataProvider<rest/Platform>}
  * Usage:
  * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onLoadError.subscribe(fn) to get notified of errors happening as of onData
+ * - item(platformID).onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export function item(id) {
     return new CachedDataProvider({

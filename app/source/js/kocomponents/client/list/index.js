@@ -1,72 +1,19 @@
 /**
- * Diplays a list of a professional's clients, and, depending on the 
- * mode, allows the ability to select a client to be used in other 
+ * Diplays a list of a professional's clients, and, depending on the
+ * mode, allows the ability to select a client to be used in other
  * activities.
  *
  * @module kocomponents/client/list
- *
  */
 
 import '../../utilities/icon-dec';
 import Komponent from '../../helpers/KnockoutComponent';
-import getObservable from '../../../utils/getObservable';
+import { list as clientsDataList } from '../../../data/clients';
 import ko from 'knockout';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
 const TAG_NAME = 'client-list';
-const dummyData = {};
-dummyData[0] =
-[
-  {
-    'clientUserID': 1,  
-    'firstName': 'Joshua',
-    'lastName': 'Danielson',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  },
-  {
-    'clientUserID': 2,  
-    'firstName': 'Kyra',
-    'lastName': 'Harrington',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  },
-  {
-    'clientUserID': 3,  
-    'firstName': 'Iago',
-    'lastName': 'Lorenzo',
-    'secondLastName': '',
-    'email': 'joshdanielson@gmail.com',
-    'phone': 4159026025,
-    'canReceiveSms': true,
-    'birthMonthDay': 10,
-    'birthMonth': 12,
-    'notesAboutClient': 'tall and detail-oriented', 
-    'createdDate': '12/10/2017',
-    'updatedDate': '12/10/2017',
-    'editable': false,
-    'deleted': false
-  }
-];
-
 
 /**
  * Component
@@ -77,27 +24,11 @@ export default class ClientList extends Komponent {
 
      /**
      * @param {object} params
-     * @param {KnockoutObservable<integer>} [params.userID]
-     * @param {KnockoutObservable<string>} [params.listMode]
-     * @param {KnockoutObservable<method>} [params.selectItem] 
+     * @param {Function<rest/Client>} [params.selectItem] Callback with the data for the client
+     * selected by the user
      */
     constructor(params) {
         super();
-
-      /**
-       * The userID the client list is created for.
-       * @member {KnockoutObservable<integer>}
-       */
-      this.userID = getObservable(params.userID);
-
-        /**
-         * Captures from the activity which "mode" the list
-         * component is to be used. 
-         * view: 
-         * select:
-         * @member {KnockoutObservable<string>}
-         */
-        this.listMode = getObservable(params.listMode || 'view');
 
         /**
          * @method selectItem
@@ -105,14 +36,18 @@ export default class ClientList extends Komponent {
         this.selectItem = params.selectItem;
 
         /**
-         * Client list returned given query parameters.
+         * Client list.
          * @member {KnockoutObservable<array>}
          */
         this.clientList = ko.observableArray();
 
-        this.observeChanges(() => {
-            const data = dummyData[0];
-            this.clientList(data);
+        // Get and keep notified with clients data and any error
+        this.subscribeTo(clientsDataList.onData, this.clientList);
+        this.subscribeTo(clientsDataList.onDataError, (error) => {
+            showError({
+                title: 'There was an error loading clients',
+                error
+            });
         });
     }
 }

@@ -5,10 +5,13 @@
  * @module kocomponents/earnings/report
  */
 import '../../utilities/icon-dec';
+import * as report from '../../../data/userEarningsReport';
 import Komponent from '../../helpers/KnockoutComponent';
+import TimeRangeOption from '../filters/TimeRangeOption';
 import getObservable from '../../../utils/getObservable';
 import ko from 'knockout';
-import { globalReport as report } from '../../../data/userEarningsReport';
+import moment from 'moment';
+import { show as showError } from '../../../modals/error';
 import template from './template.html';
 
 const TAG_NAME = 'earnings-report';
@@ -22,54 +25,122 @@ export default class EarningsReport extends Komponent {
 
     /**
      * @param {object} params
-     * @param {KnockoutObservable<integer>} [params.userID]
+     * @param {KnockoutObservable<kocomponents/earnings/filters/EarningsFilterValues>} [params.filters]
+     * Optional observable to dynamic filters to apply to report data
      */
     constructor(params) {
         super();
 
         /**
-         * A job title for the summary query. Defualt value is
-         * null for all job titles.
-         * @member {KnockoutObservable<integer>}
+         * Incoming data filters, as a dynamic change that can change externally
+         * forcing us to update the report data.
+         * @member {KnockoutObservable<kocomponents/earnings/filters/EarningsFilterValues>}
          */
-        this.jobTitleID = getObservable(params.jobTitleID || null);
+        this.filters = getObservable(params.filters || null);
 
         /**
-         * A start date for the summary query. Default value is
-         * January 1st of the current year.
-         * @member {KnockoutObservable<array>}
+         * Filters applied on the currently displayed data. It's a reference to
+         * the incoming filters, BUT only updated once we have ended loading
+         * the report data.
+         * Purpose: prevent displaying filters that don't match the displayed
+         * data.
+         * @member {KnockoutObservable<kocomponents/earnings/filters/EarningsFilterValues>}
          */
-        this.timeRange = getObservable(params.timeRange || {'2/1/2018':'2/2/2018'});
-
-        /**
-         * A start date for the summary query. Default value is
-         * January 1st of the current year.
-         * @member {KnockoutObservable<string>}
-         */
-        this.startDate = getObservable(params.startDate || '1/1/2018');
-
-        /**
-         * An end date for the summary query. Default value is
-         * today.
-         * @member {KnockoutObservable<string>}
-         */
-        this.endDate = getObservable(params.endDate || '2/2/2018');
-
-        /**
-         * A platformID for the summary query. Defualt value is
-         * null for all platforms.
-         * @member {KnockoutObservable<integer>}
-         */
-        this.platformID = getObservable(params.platformID || null);
+        this.appliedFilters = ko.observable(null);
 
         /**
          * Earnings summary returned given query parameters.
-         * @member {KnockoutObservable<object>}
+         * @member {KnockoutObservable<rest/EarningsReport>}
          */
         this.earningsReport = ko.observable(null);
 
-        // Request data and subscribes to updates
-        this.subscribeTo(report.onData, this.earningsReport);
+        /**
+         * Header describing the time range the data displayed belongs to
+         * @member {KnockoutComputed<string>}
+         */
+        this.timeRangeHeader = ko.pureComputed(() => {
+            const filters = this.appliedFilters();
+            const timeOption = filters && filters.timeRangeOption;
+            if (timeOption) {
+                const fromDate = filters && filters.fromDate;
+                const toDate = filters && filters.toDate;
+                switch (timeOption) {
+                    case TimeRangeOption.thisYear: {
+                        const year = fromDate.getFullYear();
+                        return `${year} Year-to-date Summary`;
+                    }
+                    case TimeRangeOption.thisMonth: {
+                        const month = moment(fromDate).format('MMMM');
+                        return `${month} Month-to-date Summary`;
+                    }
+                    case TimeRangeOption.thisQuarter: {
+                        const quarter = moment(fromDate).format('Qo');
+                        return `${quarter} Quarter-to-date Summary`;
+                    }
+                    case TimeRangeOption.lastMonth: {
+                        const month = moment(fromDate).format('MMMM');
+                        return `Last ${month} Summary`;
+                    }
+                    default: {
+                        // no time option, not recognized, custom option
+                        const from = moment(fromDate).format('ll');
+                        const to = moment(toDate).format('ll');
+                        return `${from} to ${to}`;
+                    }
+                }
+            }
+            else {
+                // No filtering, all displayed
+                return 'All dates';
+            }
+        });
+
+        /**
+         * Text describing the filtered job title, or fallback for all
+         * @member {KnockoutComputed<string>}
+         */
+        this.selectedJobTitleText = ko.pureComputed(() => {
+            const filters = this.appliedFilters();
+            const hasSelected = filters && filters.jobTitleID > 0;
+            return hasSelected ? filters.jobTitleText : 'All job titles';
+        });
+
+        /**
+         * Text describing the filtered platform/listing, or fallback for all
+         * @member {KnockoutComputed<string>}
+         */
+        this.selectedUserExternalListingText = ko.pureComputed(() => {
+            const filters = this.appliedFilters();
+            const hasSelected = filters && filters.userExternalListingID > 0;
+            return hasSelected ? filters.userExternalListingText : 'All listings/platforms';
+        });
+
+        this.__setupDataOperations();
+    }
+
+    /**
+     * Define members, prepare subscriptions to work with the code
+     * and start any initial request for data
+     * @private
+     */
+    __setupDataOperations() {
+        // Request filtered data on filters changes
+        ko.computed(() => {
+            const filters = this.filters();
+            // Request filtered data
+            report.query(filters)
+            .then((data) => {
+                // Use server data
+                this.earningsReport(data);
+                this.appliedFilters(filters);
+            })
+            .catch((error) => {
+                showError({
+                    title: 'There was an error loading the report',
+                    error
+                });
+            });
+        });
     }
 }
 

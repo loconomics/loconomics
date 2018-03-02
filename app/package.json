@@ -139,6 +139,7 @@
     }
   },
   "dependencies": {
+    "browsernizr": "^2.2.0",
     "load-script2": "^1.0.0"
   }
 }

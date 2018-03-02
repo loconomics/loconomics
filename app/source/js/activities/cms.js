@@ -27,8 +27,12 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     // Keep data updated:
-    clients.sync()
-    .catch(function(err) {
+    if (this.dataSub) this.dataSub.dispose();
+    if (this.errorSub) this.dataSub.dispose();
+    this.dataSub = clients.list.onData.subscribe((data) => {
+        this.viewModel.totalClients(data.length);
+    });
+    this.errorSub = clients.list.onDataError.subscribe(function(err) {
         showError({
             title: 'Error loading the clients list',
             error: err
@@ -36,20 +40,26 @@ A.prototype.show = function show(state) {
     });
 };
 
+A.prototype.hide = function() {
+    Activity.prototype.hide.call(this);
+
+    if (this.dataSub) this.dataSub.dispose();
+    if (this.errorSub) this.dataSub.dispose();
+};
+
 var numeral = require('numeral');
 
 function ViewModel() {
 
-    this.clients = clients.list;
+    this.totalClients = ko.observable(0);
 
     this.clientsCount = ko.pureComputed(function() {
-        var cs = this.clients();
-
+        var cs = this.totalClients();
         if (cs <= 0)
             return '0 clients';
         else if (cs === 1)
             return '1 client';
         else
-            return numeral(cs.length |0).format('0,0') + ' clients';
+            return numeral(cs |0).format('0,0') + ' clients';
     }, this);
 }

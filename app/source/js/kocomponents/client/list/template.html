@@ -1,26 +1,16 @@
 <ul class="TilesList TilesList--openEnd" data-bind="foreach: clientList">
-    <li data-bind="attr: { id: 'client' + clientUserID }">
-        <button type="button" data-bind="visible: $component.listMode() == 'select', click: $component.selectItem" class="ListingSummaryItem btn btn-link btn-block">
+    <li>
+        <button type="button" data-bind="click: $component.selectItem"
+            class="ListingSummaryItem btn btn-link btn-block">
             <div class="Item-content">
                 <p>
-                    <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
+                    <strong data-bind="text: firstName"></strong>
+                    <span data-bind="text: lastName"></span>
                 </p>
             </div>
             <div class="Item-action">
                 <icon-dec params="icon: 'ion-ios-circle-outline'"></icon-dec>
             </div>
         </button>
-        <!-- <a href="#" data-bind="visible: $component.listMode() == 'view', attr: {
-            href: ''
-        } " class="ListingSummaryItem btn btn-link btn-block">
-            <div class="Item-content">
-                <p>
-                    <strong data-bind="text: firstName"></strong> <span data-bind="text: lastName"></span>
-                </p>
-            </div>
-            <div class="Item-action">
-                <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
-            </div>
-        </a> -->
     </li>
 </ul>
