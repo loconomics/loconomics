@@ -30,14 +30,14 @@ const TAG_NAME = 'earnings-filters';
  * @property {Date} fromDate Filtering value for inclusive initial date
  * @property {Date} toDate Filtering value for inclusive final date
  * @property {number} jobTitleID Filtering value for job title
- * @property {number} platformID Fitlering value for platform
+ * @property {number} userExternalListingID Fitlering value for external listing/platform
  * @property {TimeRangeOption} timeRangeOption Option used to fill
  * the fromDate and toDate properties, provided only to allow customization of
  * the display for the time range but must not be used as the actual value to
  * filter by.
  * @property {string} jobTitleText Display value, name matching the jobTitleID
- * @property {string} platformText Display value, name or title matching the
- * platformID
+ * @property {string} userExternalListingText Display value, name or title matching the
+ * userExternalListingID
  */
 
 /**
@@ -131,10 +131,10 @@ export default class EarningsFilter extends Komponent {
         this.jobTitle = ko.observable();
 
         /**
-         * Platform ID selected
+         * External Listing ID selected
          * @member {KnockoutObservable<number>}
          */
-        this.platformID = ko.observable();
+        this.userExternalListingID = ko.observable();
 
         /**
          * External listing object selected.
@@ -239,13 +239,13 @@ export default class EarningsFilter extends Komponent {
                 fromDate: range.from,
                 toDate: range.to,
                 jobTitleID: jobTitle && jobTitle.jobTitleID,
-                platformID: externalListing && externalListing.platformID,
+                userExternalListingID: externalListing && externalListing.userExternalListingID,
                 // Includes the predefined option, so allow for other UI to
                 // keep in sync with it if more specialized usage than just
                 // custom range is needed (like different title and so).
                 timeRangeOption: this.timeRangeOption(),
                 jobTitleText: jobTitle && jobTitle.jobTitleSingularName,
-                platformText: externalListing && externalListing.title
+                userExternalListingText: externalListing && externalListing.title
             });
         })
         // Prevent that several, automated/related changes, trigger too much notifications.

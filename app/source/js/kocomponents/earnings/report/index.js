@@ -106,13 +106,13 @@ export default class EarningsReport extends Komponent {
         });
 
         /**
-         * Text describing the filtered platform, or fallback for all
+         * Text describing the filtered platform/listing, or fallback for all
          * @member {KnockoutComputed<string>}
          */
-        this.selectedPlatformText = ko.pureComputed(() => {
+        this.selectedUserExternalListingText = ko.pureComputed(() => {
             const filters = this.appliedFilters();
-            const hasSelected = filters && filters.platformID > 0;
-            return hasSelected ? filters.platformText : 'All listings/platforms';
+            const hasSelected = filters && filters.userExternalListingID > 0;
+            return hasSelected ? filters.userExternalListingText : 'All listings/platforms';
         });
 
         this.__setupDataOperations();
