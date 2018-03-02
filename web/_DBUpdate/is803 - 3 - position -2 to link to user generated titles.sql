@@ -39,7 +39,7 @@ INSERT INTO [positions]
            ,null
            ,null
            ,null
-           ,1
+           ,0
            ,null
            ,null
            ,0
