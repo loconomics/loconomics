@@ -43,8 +43,9 @@ export const list = new CachedDataProvider({
  * @param {number} id The jobTitleID
  * @returns {CachedDataProvider<rest/UserListing>} formerly the type is <rest/UserJobTitle>
  * Usage:
- * - item(platformID).onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
- * - item(platformID).onDataError.subscribe(fn) to get notified of errors happening as of onData
+ * - const dataProvider = item(jobTitleID)
+ * - dataProvider.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
+ * - dataProvider.onDataError.subscribe(fn) to get notified of errors happening as of onData
  */
 export function item(id) {
     const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);
