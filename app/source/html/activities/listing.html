@@ -1,6 +1,6 @@
 <!-- Activity listing -->
 <div data-activity="listing" class="Listing" data-bind="css: { 'is-loading': isLoading }">
-    <app-message-bar params="editListing: editListing, jobTitle: jobTitleSingularName, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
+    <app-message-bar params="editListing: editListing, jobTitle: listingTitle, isActive: listingIsActive, visible: isMessageBarVisible, tone: messageBarTone" title="Alert">
         <p>
             <span data-bind="ifnot:isActive"><icon-dec class="text-danger" params="icon: 'ion-alert-circled'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>inactive.</strong></span>
             <span data-bind="if:isActive"><icon-dec class="text-success" params="icon: 'ion-ios-checkmark'"></icon-dec> Your <span data-bind="text: jobTitle"></span> listing is <strong>active.</strong></span>
@@ -33,7 +33,7 @@
                     <br>
                 </div>
                 <div class="Listing-bookingInfo">
-                    <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().jobTitleSingularName()"></span></h1>
+                    <h1><span data-bind="text: profile().firstNameLastInitial()"></span><br><span data-bind="text: selectedJobTitle() && selectedJobTitle().title()"></span></h1>
                     <p data-bind="visible: profile().businessName(), text: profile().businessName()"></p>
                     <a data-bind="visible: profile().serviceProfessionalWebsiteUrl(), text: profile().serviceProfessionalWebsiteUrl(), attr: { href: profile().serviceProfessionalWebsiteUrl() }" target="_blank"></a>
                     <div data-bind="with: selectedJobTitle">

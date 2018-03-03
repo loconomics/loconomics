@@ -31,7 +31,7 @@ var A = Activity.extend(function ListingEditorActivity() {
     this.title = ko.pureComputed(function() {
         var user = this.user();
         if (user) {
-            return 'Edit your ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName()) + ' listing';
+            return 'Edit your ' + (user.selectedJobTitle() && user.selectedJobTitle().title()) + ' listing';
         }
     }, this.viewModel);
 
@@ -258,10 +258,6 @@ function ViewModel(app) {
         var hasIntro = jobTitle && jobTitle.hasIntro();
         var hasAttributes = jobTitle && jobTitle.serviceAttributes().hasAttributes();
         return hasIntro || hasAttributes;
-    }, this);
-
-    this.jobTitleSingularName = ko.pureComputed(function() {
-        return this.selectedJobTitle().jobTitleSingularName();
     }, this);
 
     this.selectedJobTitle = ko.pureComputed(function() {

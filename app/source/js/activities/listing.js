@@ -27,7 +27,7 @@ var A = Activity.extend(function ListingActivity() {
     this.title = ko.pureComputed(function() {
         var user = this.user();
         if (user) {
-            return user.profile().firstNameLastInitial() + ', ' + (user.selectedJobTitle() && user.selectedJobTitle().jobTitleSingularName());
+            return user.profile().firstNameLastInitial() + ', ' + (user.selectedJobTitle() && user.selectedJobTitle().title());
         }
     }, this.viewModel);
 
@@ -238,8 +238,8 @@ function ViewModel(app) {
         return hasEducation || hasLicenseCertification;
     }, this);
 
-    this.jobTitleSingularName = ko.pureComputed(function() {
-        return this.selectedJobTitle().jobTitleSingularName();
+    this.listingTitle = ko.pureComputed(function() {
+        return this.selectedJobTitle().title();
     }, this);
 
     this.selectedJobTitle = ko.pureComputed(function() {

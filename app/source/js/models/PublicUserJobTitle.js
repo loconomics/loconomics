@@ -36,8 +36,6 @@ function PublicUserJobTitle(values) {
         cancellationPolicyID: 0,
         instantBooking: false,
         isActive: false,
-        jobTitleSingularName: '',
-        jobTitlePluralName: '',
 
         rating: { Model: PublicUserRating },
         verificationsSummary: { Model: PublicUserVerificationsSummary },

@@ -83,7 +83,7 @@ function PublicUser(values) {
     }, this);
     this.otherJobTitleNames = ko.pureComputed(function() {
         return this.otherJobTitles().map(function(jd) {
-            return jd.jobTitleSingularName();
+            return jd.title();
         }).join(', ');
     }, this);
 }

@@ -42,7 +42,11 @@ namespace LcRest
         public bool bookMeButtonReady;
         public bool collectPaymentAtBookMeButton;
 
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitleSingularName { get; set; }
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitlePluralName { get; set; }
 
         public List<Alert> alerts { get; set; }

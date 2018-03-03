@@ -17,7 +17,11 @@ namespace LcRest
         public bool isActive { get; set; }
         public int cancellationPolicyID { get; set; }
         public bool instantBooking { get; set; }
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitleSingularName { get; set; }
+        [Obsolete("Preferred usage of title property. Is not in use at the current " +
+            "App code, will be removed once old App instances are updated.")]
         public string jobTitlePluralName { get; set; }
 
         public static PublicUserJobTitle FromUserJobTitle(UserJobTitle userJobTitle)
