@@ -2,6 +2,9 @@
  * Management of the user job profile/listing (list of job titles
  * with their settings),
  * local and remote.
+ *
+ * @deprecated data/userListings must be used instead for read only tasks, when
+ * it stills needs to be completed on edition APIs
  */
 // TODO store-jsdocs
 'use strict';
@@ -370,6 +373,11 @@ exports.deleteUserJobTitle = function(jobTitleID) {
 
 /*************************/
 /** ADITIONAL UTILITIES **/
+/**
+ * @deprecated Use data/userListings to fetch data and take care that no jobTitle
+ * info should be needed anymore with the listing since it has the 'title' field
+ * replacing the direct usage of jobTitle.jobTitleSingularName
+ */
 exports.getUserJobTitleAndJobTitle = function getUserJobTitleAndJobTitle(jobTitleID) {
     return exports.getUserJobTitle(jobTitleID)
     .then(function(userJobTitle) {

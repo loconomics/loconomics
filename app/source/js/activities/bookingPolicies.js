@@ -3,9 +3,11 @@
 **/
 'use strict';
 
+import UserJobTitle from '../models/UserJobTitle';
+import { item as getUserListing } from '../data/userListings';
+
 var ko = require('knockout');
 var Activity = require('../components/Activity');
-var jobTitles = require('../data/jobTitles');
 var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var showError = require('../modals/error').show;
@@ -22,67 +24,12 @@ var A = Activity.extend(function BookingPoliciesActivity() {
         backLink: 'listingEditor', helpLink: this.viewModel.helpLink
     });
     this.title = ko.pureComputed(function() {
-        return this.jobTitleName() + ' booking policies';
+        return this.listingTitle() + ' booking policies';
     }, this.viewModel);
 
     // On changing jobTitleID:
     // - load job title name
     // - load job profile with policies preferences
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-            if (jobTitleID) {
-                // Get data for the Job title ID
-                jobTitles.getJobTitle(jobTitleID)
-                .then(function(jobTitle) {
-                    // Fill in job title name
-                    this.viewModel.jobTitleName(jobTitle.singularName());
-                }.bind(this))
-                .catch(function (err) {
-                    showError({
-                        title: 'Unable to load listing details.',
-                        error: err
-                    });
-                }.bind(this));
-
-                this.viewModel.isLoading(true);
-                // Get data for the Job title ID
-                userJobProfile.getUserJobTitle(jobTitleID)
-                .then(function(userJobTitle) {
-                    // Save for use in the view
-                    this.viewModel.userJobTitle(userJobTitle);
-                    this.viewModel.selectedCancellationPolicyID(userJobTitle.cancellationPolicyID());
-                    this.viewModel.instantBooking(userJobTitle.instantBooking());
-                }.bind(this))
-                .catch(function (err) {
-                    showError({
-                        title: 'Unable to load policies.',
-                        error: err
-                    });
-                }.bind(this))
-                .then(function() {
-                    // Finally
-                    this.viewModel.isLoading(false);
-                }.bind(this));
-
-                // Fix URL
-                // If the URL didn't included the jobTitleID, or is different,
-                // we put it to avoid reload/resume problems
-                var found = /bookingPolicies\/(\d+)/i.exec(window.location);
-                var urlID = found && found[1] |0;
-                if (urlID !== jobTitleID) {
-                    var url = '/bookingPolicies/' + jobTitleID;
-                    this.app.shell.replaceState(null, null, url);
-                }
-            }
-            else {
-                this.viewModel.jobTitleName('Job Title');
-                this.viewModel.userJobTitle(null);
-                this.viewModel.selectedCancellationPolicyID(null);
-                this.viewModel.instantBooking(null);
-            }
-        }.bind(this)
-    });
 });
 
 exports.init = A.init;
@@ -96,13 +43,40 @@ A.prototype.show = function show(state) {
     Activity.prototype.show.call(this, state);
 
     var params = state && state.route && state.route.segments;
-    var jid = params[0] |0;
-    this.viewModel.jobTitleID(jid);
+    var jobTitleID = params[0] |0;
+    this.viewModel.jobTitleID(jobTitleID);
+
+    // Resets
+    this.viewModel.listingTitle('Job Title');
+    this.viewModel.userJobTitle(null);
+    this.viewModel.selectedCancellationPolicyID(null);
+    this.viewModel.instantBooking(null);
+    // Load data by the listing job title
+    if (jobTitleID) {
+        this.viewModel.isLoading(true);
+        const listingDataProvider = getUserListing(jobTitleID);
+        this.subscribeTo(listingDataProvider.onData, (listing) => {
+            // Direct copy of listing values
+            this.viewModel.listingTitle(listing.title);
+            this.viewModel.selectedCancellationPolicyID(listing.cancellationPolicyID);
+            this.viewModel.instantBooking(listing.instantBooking);
+            // Save for use in the view
+            this.viewModel.userJobTitle(new UserJobTitle(listing));
+            this.viewModel.isLoading(false);
+        });
+        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+            this.viewModel.isLoading(false);
+            showError({
+                title: 'There was an error while loading booking policies.',
+                error
+            });
+        });
+    }
 
     // Request to sync policies, just in case there are remote changes
     cancellationPolicies.sync();
     paymentAccount.sync();
-    if (!jid) {
+    if (!jobTitleID) {
         // Load titles to display for selection
         this.viewModel.jobTitles.sync();
     }
@@ -116,7 +90,7 @@ function ViewModel(app) {
 
     this.jobTitleID = ko.observable(0);
     this.userJobTitle = ko.observable(null);
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
     // Local copy of the cancellationPolicyID, rather than use
     // it directly from the userJobTitle to avoid that gets saved
     // in memory without press 'save'
@@ -131,12 +105,6 @@ function ViewModel(app) {
 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/bookingPolicies');
-    this.jobTitles.selectJobTitle = function(jobTitle) {
-
-        this.jobTitleID(jobTitle.jobTitleID());
-
-        return false;
-    }.bind(this);
 
     this.submitText = ko.pureComputed(function() {
         return (
