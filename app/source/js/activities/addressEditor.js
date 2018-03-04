@@ -102,11 +102,11 @@ A.prototype.show = function show(options) {
 
     this.updateNavBarState();
 
-    this.viewModel.jobTitleName('Job Title');
+    this.viewModel.listingTitle('Job Title');
     if (jobTitleID) {
         const listingDataProvider = getUserListing(jobTitleID);
         this.subscribeTo(listingDataProvider.onData, (listing) => {
-            this.viewModel.jobTitleName(listing.title);
+            this.viewModel.listingTitle(listing.title);
         });
         this.subscribeTo(listingDataProvider.onDataError, (error) => {
             showError({
@@ -205,7 +205,7 @@ function ViewModel(app) {
     this.jobTitleID = ko.observable(0);
     this.addressID = ko.observable(0);
     this.clientUserID = ko.observable(0);
-    this.jobTitleName = ko.observable('Job Title');
+    this.listingTitle = ko.observable('Job Title');
 
     this.addressVersion = ko.observable(null);
     this.address = ko.pureComputed(function() {
