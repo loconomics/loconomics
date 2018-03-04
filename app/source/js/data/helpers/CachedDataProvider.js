@@ -395,6 +395,17 @@ export default class CachedDataProvider {
             // or local data must be revalidated:
             // enforces a remote load and wait for it
             return this.refresh();
+        })
+        .catch((err) => {
+            // In case of error with local cache (that must happens only on
+            // implementation bugs, NOT by design --if there is no cache, must
+            // success with empty info), we register it
+            console.error('localCache.fetch error', err);
+            // and AUTORECOVER by requesting remote data,
+            // this way the user don't get stucked without being able to get
+            // data because the cache is corrupt or the implementation (mostly
+            // fault of the driver containing a bug)
+            return this.refresh();
         });
     }
 
