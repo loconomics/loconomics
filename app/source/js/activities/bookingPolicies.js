@@ -35,18 +35,14 @@ var A = Activity.extend(function BookingPoliciesActivity() {
 exports.init = A.init;
 
 A.prototype.show = function show(state) {
-    // Reset
-    this.viewModel.jobTitleID(null);
-    this.viewModel.selectedCancellationPolicyID(null);
-    this.viewModel.instantBooking(null);
 
     Activity.prototype.show.call(this, state);
 
     var params = state && state.route && state.route.segments;
     var jobTitleID = params[0] |0;
-    this.viewModel.jobTitleID(jobTitleID);
 
     // Resets
+    this.viewModel.jobTitleID(jobTitleID);
     this.viewModel.listingTitle('Job Title');
     this.viewModel.userJobTitle(null);
     this.viewModel.selectedCancellationPolicyID(null);
@@ -54,8 +50,8 @@ A.prototype.show = function show(state) {
     // Load data by the listing job title
     if (jobTitleID) {
         this.viewModel.isLoading(true);
-        const listingDataProvider = getUserListing(jobTitleID);
-        this.subscribeTo(listingDataProvider.onData, (listing) => {
+        getUserListing(jobTitleID).onceLoaded()
+        .then((listing) => {
             // Direct copy of listing values
             this.viewModel.listingTitle(listing.title);
             this.viewModel.selectedCancellationPolicyID(listing.cancellationPolicyID);
@@ -63,8 +59,8 @@ A.prototype.show = function show(state) {
             // Save for use in the view
             this.viewModel.userJobTitle(new UserJobTitle(listing));
             this.viewModel.isLoading(false);
-        });
-        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+        })
+        .catch((error) => {
             this.viewModel.isLoading(false);
             showError({
                 title: 'There was an error while loading booking policies.',
