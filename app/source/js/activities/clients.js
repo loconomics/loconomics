@@ -3,13 +3,13 @@
 **/
 'use strict';
 
-var $ = require('jquery');
-var ko = require('knockout');
-var Activity = require('../components/Activity');
-var textSearch = require('../utils/textSearch');
-var clients = require('../data/clients');
-var showError = require('../modals/error').show;
-var Client = require('../models/Client');
+import { list as clientsList, publicSearch as clientsPublicSearch } from '../data/clients';
+import $ from 'jquery';
+import Activity from '../components/Activity';
+import Client from '../models/Client';
+import ko from 'knockout';
+import { show as showError } from'../modals/error';
+import textSearch from '../utils/textSearch';
 
 var A = Activity.extend(function ClientsActivity() {
 
@@ -128,28 +128,18 @@ A.prototype.show = function show(state) {
     this.updateNavBarState();
 
     // Keep data updated:
-    if (this.dataSub) this.dataSub.dispose();
-    if (this.errorSub) this.errorSub.dispose();
     this.viewModel.isLoading(true);
-    this.dataSub = clients
-    .list.onData.subscribe((data) => {
+    this.subscribeTo(clientsList.onData, (data) => {
         this.viewModel.clients(data.map((raw) => new Client(raw)));
         this.viewModel.isLoading(false);
     });
-    this.errorSub = clients
-    .list.onDataError.subscribe((error) => {
+    this.subscribeTo(clientsList.onDataError, (error) => {
         this.viewModel.isLoading(false);
         showError({
             title: 'Error loading the clients list',
             error
         });
     });
-};
-
-A.prototype.hide = function() {
-    Activity.prototype.hide.call(this);
-    if (this.dataSub) this.dataSub.dispose();
-    if (this.errorSub) this.errorSub.dispose();
 };
 
 function ViewModel(app) {
@@ -247,7 +237,7 @@ function ViewModel(app) {
             // Remove previous results
             this.publicSearchResults([]);
 
-            request = clients.publicSearch({
+            request = clientsPublicSearch({
                 fullName: searchText,
                 email: searchText,
                 phone: searchText
