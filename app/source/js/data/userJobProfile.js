@@ -393,49 +393,6 @@ exports.deleteUserJobTitle = function(jobTitleID) {
 
 /*************************/
 /** ADITIONAL UTILITIES **/
-/**
- * @deprecated Use data/userListings to fetch data and take care that no jobTitle
- * info should be needed anymore with the listing since it has the 'title' field
- * replacing the direct usage of jobTitle.jobTitleSingularName
- */
-exports.getUserJobTitleAndJobTitle = function getUserJobTitleAndJobTitle(jobTitleID) {
-    return exports.getUserJobTitle(jobTitleID)
-    .then(function(userJobTitle) {
-        // Very unlikely error
-        if (!userJobTitle) {
-            throw {
-                name: 'Not Found',
-                message:
-                    // LJDI:
-                    "We don't have a record of this job title" +
-                    'It may have been recently deleted.'
-            };
-        }
-
-        // Get job title info too
-        return Promise.all([
-            userJobTitle,
-            jobTitles.getJobTitle(jobTitleID)
-        ]);
-    })
-    .then(function(all) {
-        var jobTitle = all[1];
-        // Very unlikely error
-        if (!jobTitle) {
-            throw {
-                name: 'Not Found',
-                // LJDI:
-                message: 'The job title does not exist.'
-            };
-        }
-
-        return {
-            jobTitleID: jobTitleID,
-            userJobTitle: all[0],
-            jobTitle: jobTitle
-        };
-    });
-};
 
 // Returns JobTitle objects for each job title in user's profile
 exports.getJobTitles = function() {
