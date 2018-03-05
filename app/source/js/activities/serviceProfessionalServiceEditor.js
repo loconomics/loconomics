@@ -19,6 +19,7 @@ var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
+var Client = require('../models/Client');
 
 var A = Activity.extend(function ServiceProfessionalServiceEditorActivity() {
 
@@ -142,10 +143,15 @@ A.prototype.show = function show(options) {
         var clientID = service.clientID();
 
         if(clientID) {
-            return clients.getItem(clientID)
+            return clients
+            .item(clientID)
+            .onceLoaded()
             .then(function(client) {
-                this.viewModel.client(client);
-            }.bind(this));
+                this.viewModel.client(new Client(client));
+            }.bind(this))
+            .catch(function(error) {
+                showError({ title: 'Unable to load client.', error: error });
+            });
         }
         else {
             this.viewModel.client(null);

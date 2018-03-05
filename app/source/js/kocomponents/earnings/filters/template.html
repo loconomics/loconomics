@@ -1,0 +1,39 @@
+<form>
+    <div class="form-group">
+        <label for="earnings-filters-period" class="sr-only">Period</label>
+        <select id="earnings-filters-period" class="form-control" data-bind="
+            value: timeRangeOption, optionsCaption: ' Dates', options: presetTimeRangeOptions,
+            optionsValue: 'id', optionsText: 'option'">
+        </select>
+    </div>
+    <!-- ko if: isCustomTimeRangeVisible -->
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="earnings-filters-from" class="col-xs-6 col-sm-3">From</label>
+            <div class="col-xs-6 col-sm-9">
+                <input id="earnings-filters-from" class="form-control" data-bind="value: editableFromDate" type="date" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="earnings-filters-to" class="col-xs-6 col-sm-3">to</label>
+            <div class="col-xs-6 col-sm-9">
+                <input id="earnings-filters-to" class="form-control" data-bind="value: editableToDate" type="date" />
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+    <div class="form-group">
+        <label for="earnings-filters-job-title" class="sr-only">Job Title</label>
+        <select id="earnings-filters-job-title" class="form-control" data-bind="value: jobTitle,
+            options: listings, optionsCaption: ' Job titles',
+            optionsText: 'jobTitleSingularName'">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="earnings-filters-listing" class="sr-only">Platform/Listings</label>
+        <select id="earnings-filters-listing" class="form-control" data-bind="value: externalListing,
+            options: externalListings, optionsCaption: ' Platforms/Listings',
+            optionsText: 'title'">
+        </select>
+    </div>
+</form>

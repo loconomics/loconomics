@@ -4,8 +4,8 @@
  *
  */
 import '../list';
-import '../suggestions-list';
-import '../../../solutions/autocomplete';
+//DISABLED DUE NOT-IMPLEMENTED STILL import '../suggestions-list';
+//DISABLED DUE NOT-IMPLEMENTED STILL import '../../../solutions/autocomplete';
 import '../../../utilities/icon-dec';
 import '../../../../utils/autofocusBindingHandler';
 import Komponent from '../../../helpers/KnockoutComponent';
