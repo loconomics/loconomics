@@ -19,7 +19,7 @@ namespace LcRest
         /// booking request without provider confirmation,
         /// the request will expire.
         /// </summary>
-        public const int ConfirmationLimitInHours = 18;
+        public const int ConfirmationLimitInHours = 72;
         #endregion
 
         #region Fields
