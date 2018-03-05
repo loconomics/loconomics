@@ -3,6 +3,8 @@
 **/
 'use strict';
 
+import { item as getUserListing } from '../data/userListings';
+
 var ko = require('knockout');
 var Activity = require('../components/Activity');
 var ServiceProfessionalServiceViewModel = require('../viewmodels/ServiceProfessionalService');
@@ -33,51 +35,19 @@ var A = Activity.extend(function ServiceProfessionalServiceActivity() {
     // Make navBar available at viewModel, needed for dekstop navigation
     this.viewModel.navBar = this.navBar;
     this.title = ko.pureComputed(function() {
-        if (this.isInOnboarding() && this.jobTitleName()) {
-            return 'Add your first ' + this.jobTitleName() + ' offering';
+        if (this.isInOnboarding() && this.listingTitle()) {
+            return 'Add your first ' + this.listingTitle() + ' offering';
         }
-        else if (this.jobTitleName() && !this.isSelectionMode()) {
-            return this.jobTitleName() + ' offerings';
+        else if (this.listingTitle() && !this.isSelectionMode()) {
+            return this.listingTitle() + ' offerings';
         }
-        else if (this.jobTitleName() && this.isSelectionMode()) {
-            return "What's included in " + this.clientName() + "'s " + this.jobTitleName() + ' appointment?';
+        else if (this.listingTitle() && this.isSelectionMode()) {
+            return "What's included in " + this.clientName() + "'s " + this.listingTitle() + ' appointment?';
         }
         else {
             return 'Select a job title';
         }
     }, this.viewModel);
-
-    // On changing jobTitleID:
-    this.registerHandler({
-        target: this.viewModel.jobTitle,
-        handler: function(/*jobTitle*/) {
-            // Update navbar (may indicate the jobTitle name)
-            this.updateNavBarState();
-
-            // May depend on current URL, will change with job title
-            this.viewModel.serviceEditorCancelLink(this.serviceEditorCancelLink(this.viewModel.isAdditionMode()));
-        }.bind(this)
-    });
-
-    // On changing jobTitleID:
-    this.registerHandler({
-        target: this.viewModel.jobTitleID,
-        handler: function(jobTitleID) {
-
-            if (jobTitleID) {
-
-                var params = this.parseRoute(this.requestData.route.path);
-                var urlJobTitleID = params.jobTitleID | 0;
-                var clientID = params.clientID | 0;
-
-                if (urlJobTitleID !== jobTitleID) {
-                    var url = this.buildRoute(jobTitleID, clientID, params.isNew);
-
-                    this.app.shell.replaceState(this.requestData, null, url);
-                }
-            }
-        }.bind(this)
-    });
 
     this.registerHandler({
         target: this.viewModel.clientID,
@@ -151,7 +121,7 @@ A.prototype.newLeftAction = function() {
 
 A.prototype.leftActionText = function() {
     var clientName = this.viewModel.client() && this.viewModel.clientFullName();
-    var jobTitle = this.viewModel.jobTitle() && this.viewModel.jobTitle().singularName();
+    var jobTitle = this.viewModel.listingTitle();
 
     return this.requestData.navTitle || clientName || jobTitle || 'Back';
 };
@@ -238,7 +208,23 @@ A.prototype.show = function show(options) {
         this.viewModel.jobTitles.sync();
     }
     else {
+        // Load the data
         this.viewModel.loadServicesData();
+        // Load informational listing title
+        const listingDataProvider = getUserListing(jobTitleID);
+        this.subscribeTo(listingDataProvider.onData, (listing) => {
+            this.viewModel.listingTitle(listing.title);
+            // Update navbar (may indicate the listing title)
+            this.updateNavBarState();
+            // May depend on current URL, will change with job title
+            this.viewModel.serviceEditorCancelLink(this.serviceEditorCancelLink(this.viewModel.isAdditionMode()));
+        });
+        this.subscribeTo(listingDataProvider.onDataError, (error) => {
+            showError({
+                title: 'There was an error while loading.',
+                error
+            });
+        });
     }
 };
 
@@ -261,11 +247,6 @@ function ViewModel(app) {
 
     this.jobTitles = new UserJobProfile(app);
     this.jobTitles.baseUrl('/serviceProfessionalService');
-    this.jobTitles.selectJobTitle = function(jobTitle) {
-        this.jobTitleID(jobTitle.jobTitleID());
-        this.loadServicesData();
-        return false;
-    }.bind(this);
 
     this.loadServicesData = function() {
         var clientID = this.clientID();
@@ -313,9 +294,7 @@ function ViewModel(app) {
         }
     }, this);
 
-    this.jobTitleName = ko.pureComputed(function() {
-        return (this.jobTitle() && this.jobTitle().singularName()) || '';
-    }, this);
+    this.listingTitle = ko.observable('Job Title');
 
     this.submitText = ko.pureComputed(function() {
         return (
