@@ -7,6 +7,8 @@
 **/
 'use strict';
 
+import PricingType from '../models/PricingType';
+
 var ko = require('knockout');
 var $ = require('jquery');
 
@@ -194,15 +196,10 @@ function ServiceProfessionalServiceViewModel(app) {
         this.isLoading(true);
         // Get data for the Job title ID and pricing types.
         // They are essential data
-        return jobTitles.getJobTitle(jobTitleID)
-        .then(function(jobTitle) {
-            var pricingTypeIDs = jobTitle.pricingTypes().map(function(type) { return type.pricingTypeID(); });
-
-            return pricingTypes.getListByIDs(pricingTypeIDs);
-        }.bind(this))
+        return pricingTypes.byJobTitle(jobTitleID)
+        .onceLoaded()
         .then(function(pricingTypes) {
-            this.pricingTypes(pricingTypes);
-
+            this.pricingTypes(pricingTypes.map((raw) => new PricingType(raw)));
             // Get services
             return servicesPromise;
         }.bind(this))
