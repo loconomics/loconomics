@@ -13,7 +13,6 @@ var ko = require('knockout');
 var $ = require('jquery');
 
 var EventEmitter = require('events').EventEmitter;
-var jobTitles = require('../data/jobTitles');
 var pricingTypes = require('../data/pricingTypes');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
 var showError = require('../modals/error').show;
