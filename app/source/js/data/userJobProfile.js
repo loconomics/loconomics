@@ -9,6 +9,8 @@
 // TODO store-jsdocs
 'use strict';
 
+import SingleEvent from '../utils/SingleEvent';
+
 var UserJobTitle = require('../models/UserJobTitle');
 var CacheControl = require('./helpers/CacheControl');
 var local = require('./drivers/localforage');
@@ -43,10 +45,19 @@ exports.syncList = function syncList() {
     });
 };
 
+/**
+ * Notice when the cache has changed. It's a notice without data.
+ * Added for interactions with data module userListing tha must invalidate data
+ * on changes here, since is the same data but stored cache under different places
+ * @member {SingleEvent}
+ */
+exports.cacheChangedNotice = new SingleEvent(exports);
+
 exports.clearCache = function clearCache() {
     cache.userJobProfile.cache.latest = null;
     cache.userJobProfile.list = [];
     cache.userJobTitles = {};
+    exports.cacheChangedNotice.emit();
 };
 
 /**
@@ -54,6 +65,7 @@ exports.clearCache = function clearCache() {
 */
 exports.invalidateCache = function() {
     cache.userJobProfile.cache.latest = null;
+    exports.cacheChangedNotice.emit();
 };
 
 session.on.cacheCleaningRequested.subscribe(function() {
@@ -112,6 +124,7 @@ function deleteUserJobTitleFromCache(jobTitleID) {
     // and notify observers too
     exports.list.remove(function(j) { return j.jobTitleID() === jobTitleID; });
     cache.userJobProfile.cache.touch();
+    exports.cacheChangedNotice.emit();
 }
 
 /**
@@ -264,6 +277,8 @@ var pushNewUserJobTitle = function(values) {
         // Save in local
         //saveCacheInLocal();
 
+        exports.cacheChangedNotice.emit();
+
         // Return model
         return m;
     });
@@ -322,6 +337,8 @@ exports.setUserJobTitle = function (values) {
         // Save in local
         //saveCacheInLocal();
 
+        exports.cacheChangedNotice.emit();
+
         // Return model
         return m;
     });
@@ -336,6 +353,7 @@ exports.deactivateUserJobTitle = function(jobTitleID) {
     .then(function(raw) {
         // Save to cache and get model
         var m = setGetUserJobTitleToCache(raw);
+        exports.cacheChangedNotice.emit();
         return m;
     });
 };
@@ -345,6 +363,7 @@ exports.reactivateUserJobTitle = function(jobTitleID) {
     .then(function(raw) {
         // Save to cache and get model
         var m = setGetUserJobTitleToCache(raw);
+        exports.cacheChangedNotice.emit();
         return m;
     });
 };
@@ -359,6 +378,7 @@ exports.deleteUserJobTitle = function(jobTitleID) {
         // Remove from cache
         deleteUserJobTitleFromCache(jobTitleID);
         saveCacheToLocal();
+        exports.cacheChangedNotice.emit();
         return null;
     })
     .catch(function(err) {

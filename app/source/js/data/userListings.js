@@ -17,6 +17,7 @@ import RestItemDataProviderDriver from './helpers/RestItemDataProviderDriver';
 import RestSingleDataProviderDriver from './helpers/RestSingleDataProviderDriver';
 import localforage from './drivers/localforage';
 import rest from './drivers/restClient';
+import userJobProfile from './userJobProfile';
 
 const API_NAME = 'me/user-job-profile';
 const LOCAL_KEY = 'listings';
@@ -107,3 +108,7 @@ export function item(id) {
     // Return the instance
     return itemProvider;
 }
+
+// Invalidate this data on data updates at userJobProfile that has it's own
+// copy of the same data and implements the editing capabilities
+userJobProfile.cacheChangedNotice.subscribe(() => list.invalidateCache());
