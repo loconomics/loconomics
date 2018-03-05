@@ -756,12 +756,6 @@ namespace LcRest
         {
             using (var db = new LcDatabase(dbShared))
             {
-                var validStatuses = String.Join(",", new List<int> {
-                    (int)LcEnum.BookingStatus.confirmed,
-                    (int)LcEnum.BookingStatus.servicePerformed,
-                    (int)LcEnum.BookingStatus.completed
-                });
-
                 return db.Query(@"
                     SELECT  B.*
                     FROM    Booking As B
@@ -790,12 +784,6 @@ namespace LcRest
         {
             using (var db = new LcDatabase(dbShared))
             {
-                var validStatuses = String.Join(",", new List<int> {
-                    (int)LcEnum.BookingStatus.confirmed,
-                    (int)LcEnum.BookingStatus.servicePerformed,
-                    (int)LcEnum.BookingStatus.completed
-                });
-
                 return db.Query(@"
                     SELECT  *
                     FROM    Booking
