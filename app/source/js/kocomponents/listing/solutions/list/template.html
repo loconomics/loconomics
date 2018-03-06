@@ -1,4 +1,34 @@
-<ul class="" data-bind="foreach: userListingSolution">
-    <li data-bind="attr: { id: 'solution' + solutionID }">
+<ul class="TilesList TilesList--openEnd" data-bind="foreach: userListingSolution">
+    <li data-bind="attr: { id: 'userListingSolution' + solutionID }">
+        <!-- ko if: $component.listMode() == 'select' -->
+        <button type="button" data-bind="click: $component.selectItem" class="btn btn-primary">
+            <solution-viewer params="solutionID: solutionID"></solution-viewer>
+            &nbsp;
+            <icon-dec params="icon: 'ion-close'"></icon-dec>
+        </button>
+        <!-- /ko -->
+        <!-- ko if: $component.listMode() == 'view' -->
+        <div class="ListingSummaryItem">
+            <div class="Item-content">
+                <solution-viewer params="solutionID: solutionID"></solution-viewer>
+            </div>
+            <div class="Item-action">
+                <icon-dec params="icon: 'ion-ios-arrow-right'"></icon-dec>
+            </div>
+        </div>
+        <!-- /ko -->
     </li>
 </ul>
+
+<!-- <ul>
+    <li class="label label-default">Accounting</li>
+    <li class="label label-default">Tax Preparation</li>
+    <li class="label label-default">Bookkeeping</li>
+</ul>
+<solution-viewer></solution-viewer>
+<button type="button" data-bind="click: " class="btn btn-success" aria-label="Filter Earnings Summary"> <span>Massage Therapy <icon-dec params="icon: 'ion-ios-checkmark'"><i data-bind="css: iconClass" aria-hidden="true" class="ion ion-ios-checkmark"></i></icon-dec> </span> </button>
+<ul class="" data-bind="foreach: userListingSolution">
+    <li data-bind="text: solutionID, attr: { id: 'solution' + solutionID }">
+    </li>
+</ul> -->
+

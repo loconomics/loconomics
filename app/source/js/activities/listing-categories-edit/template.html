@@ -4,7 +4,7 @@
         <div class="SubSectionNavBar hidden-xs hidden-sm">
             <ul>
                 <li>
-                    <a data-bind="attr: { href: '/earnings-view/' + earningsEntryID() + '?mustReturn=earnings-history'+ '&returnText=Earnings History' }">
+                    <a data-bind="attr: { href: '/earnings-view/' + 'id' + '?mustReturn=earnings-history'+ '&returnText=Earnings History' }">
                         <icon-dec params="icon: 'ion-ios-arrow-thin-left'"></icon-dec> View Earnings
                     </a>
                 </li>
@@ -12,8 +12,40 @@
         </div>
         <h1 data-bind="text: title"></h1>
         <div class="col-md-7 col-sm-reset">
-            <earnings-editor params="earningsEntryID: earningsEntryID, editorMode: 'edit',
-                onSaved: onSaved, onDeleted: onDeleted"></earnings-editor>
+            <listing-solutions-editor params="jobTitleID: jobTitleID"></listing-solutions-editor>
+                <legend>Categories you're already listed in</legend>
+                <button type="button" class="btn btn-primary">
+                    <span>Accounting</span>
+                    &nbsp;
+                    <icon-dec params="icon: 'ion-close'"></icon-dec>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    <span>Bookkeeping</span>
+                    &nbsp;
+                    <icon-dec params="icon: 'ion-close'"></icon-dec>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    <span>Tax Preparation</span>
+                    &nbsp;
+                    <icon-dec params="icon: 'ion-close'"></icon-dec>
+                </button>
+
+                <legend>Suggested for you to add</legend>
+                <button type="button" class="btn btn-default">
+                    <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                    &nbsp;
+                    <span>Accounting</span>
+                </button>
+                <button type="button" class="btn btn-default">
+                    <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                    &nbsp;
+                    <span>Bookkeeping</span>
+                </button>
+                <button type="button" class="btn btn-default">
+                    <icon-dec params="icon: 'ion-plus'"></icon-dec>
+                    &nbsp;
+                    <span>Tax Preparation</span>
+                </button>
         </div>
         <div class="SideMenu hidden-xs hidden-sm col-md-3 col-md-offset-1">
            <app-inline-side-menu params="vocElement: 'earningsTracking'"></app-inline-side-menu>

@@ -1,6 +1,22 @@
-<form data-bind="event: { submit: save }">
-    <listing-solutions-suggestions-list>
-    </listing-solutions-suggestions-list>
-    <solutions-autocomplete></solutions-autocomplete>
+<form id="listingCategoriesForm" data-bind="event: { submit: save }">
+    <fieldset>
+        <div class="col-xs-12">
+            <legend>Categories you're already listed in</legend>
+            <listing-solutions-list params="jobTitleID: jobTitleID, listMode: 'select'"></listing-solutions-list>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="col-xs-12">
+            <legend>Suggested for you to add</legend>
+            <listing-solutions-suggestions-list params="jobTitleID: jobTitleID">
+            </listing-solutions-suggestions-list>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="col-xs-12">
+            <legend>Search for categories to add</legend>
+            <solution-autocomplete></solution-autocomplete>
+        </div>
+    </fieldset>
     <button type="submit" class="btn btn-secondary btn-block btn-lg" data-bind="disable: $component.isLocked, text: $component.saveButtonText"></button>
 </form>

@@ -16,15 +16,6 @@ import template from './template.html';
 const TAG_NAME = 'listing-solutions-editor';
 
 /**
- * @enum {string} Supported displaying modes
- */
-const EditorMode = {
-    add: 'add',
-    edit: 'edit',
-    copy: 'copy'
-};
-
-/**
  * Component
  */
 export default class ListingSolutionsEditor extends Komponent {
@@ -48,14 +39,7 @@ export default class ListingSolutionsEditor extends Komponent {
          * component is to be used.
          * @member {EditorMode}
          */
-        this.jobTitleID = ko.observable(ko.unwrap(params.editorMode));
-
-         /**
-         * Captures from the activity which "mode" the editor
-         * component is to be used.
-         * @member {EditorMode}
-         */
-        this.editorMode = ko.observable(ko.unwrap(params.editorMode));
+        this.jobTitleID = ko.observable(ko.unwrap(params.jobTitleID));
 
         /**
          * Callback executed when the form is saved successfully, giving
@@ -63,12 +47,6 @@ export default class ListingSolutionsEditor extends Komponent {
          * @member {function}
          */
         this.onSaved = params.onSaved;
-
-        /**
-         * Holds a list of the user listings at Loconomics, available to allow
-         * quick selection of job title.
-         */
-        this.userListingSolutions = ko.observableArray([]);
 
         this.__setupStatusFlags();
 
@@ -107,36 +85,6 @@ export default class ListingSolutionsEditor extends Komponent {
          * @member {KnockoutComputed<boolean>}
          */
         this.isLocked = ko.pureComputed(() => this.isSaving() || this.isLoading());
-        /**
-         * Whether the item is a new record or is being edited.
-         * @member {KnockoutObservable<boolean>}
-         */
-        this.isNew = ko.pureComputed(() => this.editorMode() !== EditorMode.edit);
-    }
-
-    /**
-     * Define members, prepare subscriptions to work with the code
-     * and start any initial request for data
-     * @private
-     */
-    __setupDataOperations() {
-        /**
-         * We create an item manager to operate on the data for the requested ID
-         * (allows to load, save, delete).
-         */
-        this.dataManager = userListingSolutionsList(this.jobTitleID());
-
-        /**
-         * Notify data load errors
-         */
-        this.subscribeTo(userListingSolutionsList.onDataError, (err) => {
-            showError({
-                title: "There was an error loading your listing's categories",
-                error: err
-            });
-        });
-
-        this.isLoading(true);
     }
 
     /**

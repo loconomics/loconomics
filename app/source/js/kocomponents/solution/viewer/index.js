@@ -1,22 +1,22 @@
 /**
  * A list of search solutions mapped to job titles.
  *
- * @module kocomponents/search/solutions/list
+ * @module kocomponents/search/solution/viewer
  *
- */
-import '../../../utilities/icon-dec.js';
-import Komponent from '../../../helpers/KnockoutComponent';
+ */ 
+import '../../utilities/icon-dec.js';
+import Komponent from '../../helpers/KnockoutComponent';
 import ko from 'knockout';
-import { show as showError } from '../../../../modals/error';
-import { list as solutionsList } from '../../../../data/solutions';
+import { show as showError } from '../../../modals/error';
+import { list as solutionsList } from '../../../data/solutions';
 import template from './template.html';
 
-const TAG_NAME = 'solutions-list';
+const TAG_NAME = 'solution-viewer';
 
 /**
  * Component
  */
-export default class SolutionsList extends Komponent {
+export default class SolutionViewer extends Komponent {
 
     static get template() { return template; }
 
@@ -49,4 +49,4 @@ export default class SolutionsList extends Komponent {
     }
 }
 
-ko.components.register(TAG_NAME, SolutionsList);
+ko.components.register(TAG_NAME, SolutionViewer);

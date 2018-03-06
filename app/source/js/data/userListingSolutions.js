@@ -16,7 +16,7 @@ const SUGGESTED_SOLUTIONS_LOCAL_KEY = 'suggestedSolutionsByJobTitle';
 /// DUMMY DATA
 // Note: It's a dictionary grouping solutions by a user's listing (jobTitleID)
 const DUMMY_DATA_DICTIONARY = {
-    14: [
+    49: [
         {
             solutionID: 44,
             displayRank: 500
