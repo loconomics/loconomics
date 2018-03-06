@@ -24,8 +24,7 @@ const DUMMY_DATA_LIST = [{
     longDescription: 'Need some help around the house? Painters, housekeepers, handymen and more await you and your home. You’ll be able to select the perfect service provider that suits your exact needs and budget. Reviews from clients like yourself will help you along.',
     smallImage: '',
     bannerImage: '',
-    displayRank: 100,
-    active: 1
+    displayRank: 100
   },
   {
     searchCategoryID: 2,
@@ -35,8 +34,7 @@ const DUMMY_DATA_LIST = [{
     longDescription: 'You need a massage. Personal trainers, music teachers, and a number of therapists are here and ready to help you become the person you deserve to be.',
     smallImage: '',
     bannerImage: '',
-    displayRank: 90,
-    active: 1
+    displayRank: 90
   },
   {
     searchCategoryID: 3,
@@ -46,8 +44,7 @@ const DUMMY_DATA_LIST = [{
     longDescription: 'Do you or a family member need a little extra help around the house? Help your child learn a language, play an instrument, or give you a night out on the town. Make life easier with a couple clicks.',
     smallImage: '',
     bannerImage: '',
-    displayRank: 80,
-    active: 1
+    displayRank: 80
   },
   {
     searchCategoryID: 4,
@@ -57,8 +54,7 @@ const DUMMY_DATA_LIST = [{
     longDescription: 'Throw your dog a bone. Better yet, treat your pet to grooming services, walkers, sitters, and more.',
     smallImage: '',
     bannerImage: '',
-    displayRank: 70,
-    active: 1
+    displayRank: 70
   },
   {
     searchCategoryID: 5,
@@ -68,8 +64,7 @@ const DUMMY_DATA_LIST = [{
     longDescription: 'Tax season got you down? Get some help for your small business from marketing to translation services.',
     smallImage: '',
     bannerImage: '',
-    displayRank: 60,
-    active: 1
+    displayRank: 60
   },
   {
     searchCategoryID: 6,
@@ -79,8 +74,7 @@ const DUMMY_DATA_LIST = [{
     longDescription: 'Make your next celebration a real blowout with help from some very talented professionals. Photographers, DJs, musicians and more.',
     smallImage: '',
     bannerImage: '',
-    displayRank: 50,
-    active: 1
+    displayRank: 50
   }
 ];
 

@@ -40,32 +40,39 @@ const DUMMY_SUGGESTED_DATA_DICTIONARY = {
     14: [
         {
             solutionID: 44,
+            defaultSelected: 1,
             displayRank: 500
         },
         {
             solutionID: 45,
+            defaultSelected: 0,
             displayRank: 100
         }
     ],
     37: [
         {
             solutionID: 118,
+            defaultSelected: 1,
             displayRank: 500
         },
         {
             solutionID: 119,
+            defaultSelected: 1,
             displayRank: 100
         },
         {
             solutionID: 147,
+            defaultSelected: 0,
             displayRank: 100
         },
         {
             solutionID: 149,
+            defaultSelected: 0,
             displayRank: 100
         },
         {
             solutionID: 218,
+            defaultSelected: 0,
             displayRank: 100
         }
     ]

@@ -20,67 +20,49 @@ const DUMMY_DATA_DICTIONARY = {
             searchSubCategoryID: 1,
             searchCategoryID: 1,
             name: 'Most Used',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 100,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 100
         },
         {
             searchSubCategoryID: 2,
             searchCategoryID: 1,
             name: 'Everyday',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 90,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 90
         },
         {
             searchSubCategoryID: 3,
             searchCategoryID: 1,
             name: 'Improvement',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 80,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 80
         },
         {
             searchSubCategoryID: 4,
             searchCategoryID: 1,
             name: 'Transportation',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 70,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 70
         },
         {
             searchSubCategoryID: 5,
             searchCategoryID: 1,
             name: 'Technology',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 60,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 60
         },
         {
             searchSubCategoryID: 6,
             searchCategoryID: 1,
             name: 'Legal and Finances',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 50,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 50
         }
     ],
     2: [
@@ -88,67 +70,49 @@ const DUMMY_DATA_DICTIONARY = {
             searchSubCategoryID: 7,
             searchCategoryID: 2,
             name: 'Most Used',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 100,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 100
         },
         {
             searchSubCategoryID: 8,
             searchCategoryID: 2,
             name: 'Body',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 90,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 90
         },
         {
             searchSubCategoryID: 9,
             searchCategoryID: 2,
             name: 'Mind',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 80,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 80
         },
         {
             searchSubCategoryID: 10,
             searchCategoryID: 2,
             name: 'Soul',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 70,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 70
         },
         {
             searchSubCategoryID: 11,
             searchCategoryID: 2,
             name: 'Lessons and Tutoring',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 60,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 60
         },
         {
             searchSubCategoryID: 12,
             searchCategoryID: 2,
             name: 'Legal and Finances',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 50,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 50
         }
     ],
     3: [
@@ -156,56 +120,41 @@ const DUMMY_DATA_DICTIONARY = {
             searchSubCategoryID: 13,
             searchCategoryID: 3,
             name: 'Most Used',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 100,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 100
         },
         {
             searchSubCategoryID: 14,
             searchCategoryID: 3,
             name: 'Wellness',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 90,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 90
         },
         {
             searchSubCategoryID: 15,
             searchCategoryID: 3,
             name: 'Caretaking',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 80,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 80
         },
         {
             searchSubCategoryID: 16,
             searchCategoryID: 3,
             name: 'Lessons and Tutoring',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 70,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 70
         },
         {
             searchSubCategoryID: 17,
             searchCategoryID: 3,
             name: 'Legal and Finances',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 60,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 60
         }
     ],
     4: [
@@ -213,45 +162,33 @@ const DUMMY_DATA_DICTIONARY = {
             searchSubCategoryID: 18,
             searchCategoryID: 4,
             name: 'Most Used',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 100,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 100
         },
         {
             searchSubCategoryID: 19,
             searchCategoryID: 4,
             name: 'Cats',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 90,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 90
         },
         {
             searchSubCategoryID: 20,
             searchCategoryID: 4,
             name: 'Dogs',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 80,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 80
         },
         {
             searchSubCategoryID: 21,
             searchCategoryID: 4,
             name: 'Other Pets',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 70,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 70
         }
     ],
     5: [
@@ -259,122 +196,89 @@ const DUMMY_DATA_DICTIONARY = {
             searchSubCategoryID: 22,
             searchCategoryID: 5,
             name: 'Most Used',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 100,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 100
         },
         {
             searchSubCategoryID: 23,
             searchCategoryID: 5,
             name: 'Legal and Finances',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 90,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 90
         },
         {
             searchSubCategoryID: 24,
             searchCategoryID: 5,
             name: 'App and Web Development',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 80,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 80
         },
         {
             searchSubCategoryID: 25,
             searchCategoryID: 5,
             name: 'IT and Networking',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 70,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 70
         },
         {
             searchSubCategoryID: 26,
             searchCategoryID: 5,
             name: 'Data and Analytics',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 60,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 60
         },
         {
             searchSubCategoryID: 27,
             searchCategoryID: 5,
             name: 'Creative and Design',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 50,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 50
         },
         {
             searchSubCategoryID: 28,
             searchCategoryID: 5,
             name: 'Writing, Editing, and Translation',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 40,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 40
         },
         {
             searchSubCategoryID: 29,
             searchCategoryID: 5,
             name: 'Engineering and Architecture',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 30,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 30
         },
         {
             searchSubCategoryID: 30,
             searchCategoryID: 5,
             name: 'Marketing',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 20,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 20
         },
         {
             searchSubCategoryID: 31,
             searchCategoryID: 5,
             name: 'Operations',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 10,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 10
         },
         {
             searchSubCategoryID: 32,
             searchCategoryID: 5,
             name: 'Events',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 0,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 0
         }
     ],
     6: [
@@ -382,67 +286,49 @@ const DUMMY_DATA_DICTIONARY = {
             searchSubCategoryID: 33,
             searchCategoryID: 6,
             name: 'Most Used',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 100,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 100
         },
         {
             searchSubCategoryID: 34,
             searchCategoryID: 6,
             name: 'Food and Drink',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 90,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 90
         },
         {
             searchSubCategoryID: 35,
             searchCategoryID: 6,
             name: 'Entertainment',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 80,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 80
         },
         {
             searchSubCategoryID: 36,
             searchCategoryID: 6,
             name: 'Planning and Decorations',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 70,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 70
         },
         {
             searchSubCategoryID: 37,
             searchCategoryID: 6,
             name: 'Officiation',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 60,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 60
         },
         {
             searchSubCategoryID: 38,
             searchCategoryID: 6,
             name: 'Wedding',
-            shortDescription: '',
-            longDescription: '',
-            smallImage: '',
-            bannerImage: '',
-            displayRank: 50,
-            active: 1
+            description: '',
+            image: '',
+            displayRank: 50
         }
     ]
 };
