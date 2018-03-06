@@ -1,14 +1,15 @@
 ﻿@*
+    DEPRECATED/OBSOLETE Not used at the App since #5fdd225aa and per new logic as of #801 makes no sense
+    to access individual job title data with an API like this. The more relevant info was the singularName,
+    now accessed as userListing.title, and the pricingTypes, now more optimal and convenient through 
+    the pricing-types/job-title API.
+
     Retrieving the Job Title information for a single record.
 
     Options:
-    
-    - GET /@id
-        Returns a list of JobTitle records
 
-    - GET /autocomplete
-        Receives param 'search' or 'term' (just an alias) to perform a search of job titles by name or alias
-        returning an Autocomplete list, suitable for use in an autocomplete UI.
+    - GET /@id
+        Returns a JobTitle record
 
     Structures
     - JobTitle {
@@ -29,19 +30,16 @@
             }
         ]
     }
-    - Autocomplete {
-        "label":string, // The job title singularName
-        "value":int // The jobTitleID
-    }
 
     EXAMPLES {
-        "Job Titles (item)": {
+        "Job Titles (item) [DEPRECATED]": {
             "url": "/api/v1/en-US/job-titles/106",
             "get": { }
         }
     }
 *@
 @functions{
+    [Obsolete("Unused at App and unneeded per related API changes, keep for a while just to let older App versions to update")]
     public class RestJobTitles : RestWebPage
     {
         public override dynamic Get()
@@ -49,9 +47,9 @@
             if (UrlData[0].IsInt())
             {
                 var id = UrlData[0].AsInt(0);
-                
+
                 var item = LcRest.PublicJobTitle.Get(id, LcRest.Locale.Current);
-                
+
                 if (item != null)
                     return item;
                 else
@@ -62,6 +60,6 @@
         }
     }
 }
-@{   
+@{
     new RestJobTitles().JsonResponse(this);
 }
