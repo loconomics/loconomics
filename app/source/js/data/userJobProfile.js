@@ -18,7 +18,6 @@ var remote = require('./drivers/restClient');
 var ko = require('knockout');
 var $ = require('jquery');
 var session = require('./session');
-var jobTitles = require('./jobTitles');
 
 var defaultTtl = { minutes: 1 };
 var cache = {
@@ -388,17 +387,5 @@ exports.deleteUserJobTitle = function(jobTitleID) {
         });
         // Propagate error
         throw err;
-    });
-};
-
-/*************************/
-/** ADITIONAL UTILITIES **/
-
-// Returns JobTitle objects for each job title in user's profile
-exports.getJobTitles = function() {
-    return exports.getUserJobProfile().then(function(list) {
-        return Promise.all(list.map(function(userJobTitle) {
-            return jobTitles.getJobTitle(userJobTitle.jobTitleID());
-        }));
     });
 };
