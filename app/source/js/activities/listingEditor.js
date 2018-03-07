@@ -15,7 +15,6 @@ var PublicUser = require('../models/PublicUser');
 var user = require('../data/userProfile').data;
 var users = require('../data/users');
 var PublicUserJobTitle = require('../models/PublicUserJobTitle');
-var userJobProfile = require('../data/userJobProfile');
 var showConfirm = require('../modals/confirm').show;
 var showError = require('../modals/error').show;
 var showNotification = require('../modals/notification').show;
@@ -301,7 +300,7 @@ function ViewModel(app) {
             if (v === true && status === UserJobTitle.status.off) {
                 this.userJobTitle().statusID(UserJobTitle.status.on);
                 // Push change to back-end
-                userJobProfile.reactivateUserJobTitle(this.jobTitleID())
+                userListingItem(this.jobTitleID()).reactivate()
                 .catch(function(err) {
                     showError({ title: 'Error enabling your listing', error: err });
                 });
@@ -309,7 +308,7 @@ function ViewModel(app) {
             else if (v === false && status === UserJobTitle.status.on) {
                 this.userJobTitle().statusID(UserJobTitle.status.off);
                 // Push change to back-end
-                userJobProfile.deactivateUserJobTitle(this.jobTitleID())
+                userListingItem(this.jobTitleID()).deactivate()
                 .catch(function(err) {
                     showError({ title: 'Error disabling your listing', error: err });
                 });
