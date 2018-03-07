@@ -6,7 +6,7 @@
 'use strict';
 
 import UserJobTitle from '../models/UserJobTitle';
-import { item as getUserListing } from '../data/userListings';
+import { item as userListingItem } from '../data/userListings';
 
 var ko = require('knockout');
 var $ = require('jquery');
@@ -67,7 +67,7 @@ A.prototype.loadData = function(jobTitleID) {
             if (jobTitleID) {
                 ////////////
                 // User Job Title
-                getUserListing(jobTitleID).onceLoaded()
+                userListingItem(jobTitleID).onceLoaded()
                 .then((listing) => {
                     // Fill the job title record
                     this.viewModel.listingTitle(listing.title);
@@ -274,10 +274,9 @@ function ViewModel(app) {
                 message: 'Are you sure you really want to delete your ' + jname +' listing?',
                 yes: 'Delete',
                 no: 'Keep'
-            }).then(function() {
-                app.shell.goBack();
-                return userJobProfile.deleteUserJobTitle(jid);
             })
+            .then(() => userListingItem(jid).delete())
+            .then(() => app.shell.goBack())
             .catch(function(err) {
                 if (err) {
                     showError({ error: err, title: 'Error while deleting your listing' });

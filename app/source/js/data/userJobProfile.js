@@ -115,17 +115,6 @@ function getUserJobProfileFromLocal() {
     });
 }
 
-function deleteUserJobTitleFromCache(jobTitleID) {
-    // Delete from index
-    delete cache.userJobTitles[jobTitleID];
-
-    // Remove from profile list: do from observable, that modifies plain cache
-    // and notify observers too
-    exports.list.remove(function(j) { return j.jobTitleID() === jobTitleID; });
-    cache.userJobProfile.cache.touch();
-    exports.cacheChangedNotice.emit();
-}
-
 /**
     Set a raw userJobProfile record (from server) and set it in the
     cache, creating or updating the model (so all the time the same model instance
@@ -197,13 +186,6 @@ var fetchUserJobProfile = function () {
         local.setItem('userJobProfile', raw);
         return mapToUserJobProfile(raw);
     });
-};
-
-var saveCacheToLocal = function() {
-    var raw = cache.userJobProfile.list.map(function(j) {
-        return j.model.toPlainObject(true);
-    });
-    local.setItem('userJobProfile', raw);
 };
 
 /**
@@ -364,28 +346,5 @@ exports.reactivateUserJobTitle = function(jobTitleID) {
         var m = setGetUserJobTitleToCache(raw);
         exports.cacheChangedNotice.emit();
         return m;
-    });
-};
-
-exports.deleteUserJobTitle = function(jobTitleID) {
-    var found = exports.list().filter(function(j) {
-        if (j.jobTitleID() === jobTitleID)
-            j.isBeingDeleted(true);
-    });
-    return remote.delete('me/user-job-profile/' + (jobTitleID|0))
-    .then(function() {
-        // Remove from cache
-        deleteUserJobTitleFromCache(jobTitleID);
-        saveCacheToLocal();
-        exports.cacheChangedNotice.emit();
-        return null;
-    })
-    .catch(function(err) {
-        // Uncheck deletion flag
-        found.forEach(function(j) {
-            j.isBeingDeleted(false);
-        });
-        // Propagate error
-        throw err;
     });
 };
