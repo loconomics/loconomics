@@ -80,12 +80,12 @@ export function item(id) {
     itemProvider.onRemoteLoaded.subscribe((itemData) => {
         // ensure the fresh item is registered in the index (then, included in the list)
         localListDriver.registerID(itemData[ID_PROPERTY_NAME]);
-        localListDriver.invalidateCache();
+        list.invalidateCache();
     });
     itemProvider.onSaved.subscribe((itemData) => {
         // ensure the item (maybe new) is registered in the index (then, included in the list)
         localListDriver.registerID(itemData[ID_PROPERTY_NAME]);
-        localListDriver.invalidateCache();
+        list.invalidateCache();
     });
     itemProvider.onDeleted.subscribe((itemData) => {
         // the item needs to be removed from the index
