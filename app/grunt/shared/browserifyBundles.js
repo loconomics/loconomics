@@ -45,6 +45,14 @@ require('common-shakeify');
  */
 exports.create = function(grunt, commonBundle, bundles, onCompleted) {
     /**
+     * Whether enable verbose output for some extra modules, plugins or custom code.
+     * NOTE: this flag is already supported by Grunt and most plugins to generate
+     * additional output, while some others needs to pass in this as setting
+     * explicitely (happens with some Browserify plugins, but not others)
+     * @private {Boolean}
+     */
+    var verbose = !!grunt.option('verbose');
+    /**
      * A list of factors promises that fulfills when files were written.
      * Each factor is a bundle splitted from the original one
      * (out of 'common.js')
@@ -184,7 +192,7 @@ exports.create = function(grunt, commonBundle, bundles, onCompleted) {
             // Array of plugins, we have just one that is defined as an array
             // of name plus settings
             plugin: [
-                'common-shakeify',
+                ['common-shakeify', { verbose: verbose }],
                 [
                     // Output take strictkly the same order than listed
                     // source files, so they match the expected name-content
