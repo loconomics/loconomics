@@ -9,11 +9,12 @@
 **/
 'use strict';
 
+import { item as userListingItem } from '../data/userListings';
+
 var Activity = require('../components/Activity');
 var userProfile = require('../data/userProfile');
 var user = userProfile.data;
 var onboarding = require('../data/onboarding');
-var userJobProfile = require('../data/userJobProfile');
 var ActionForValue = require('../kocomponents/job-title-autocomplete').ActionForValue;
 var showError = require('../modals/error').show;
 var ko = require('knockout');
@@ -120,7 +121,7 @@ function ViewModel(app) {
         var becomingProfessional = !user.isServiceProfessional();
         var jobTitle = this.selectedJobTitle();
 
-        return userJobProfile.createUserJobTitle({
+        return userListingItem().save({
             jobTitleID: jobTitle.value,
             jobTitleName: jobTitle.label
         })
@@ -128,12 +129,12 @@ function ViewModel(app) {
             var onEnd = function onEnd() {
                 this.isSaving(false);
                 if (onboarding.inProgress()) {
-                    onboarding.selectedJobTitleID(result.jobTitleID());
+                    onboarding.selectedJobTitleID(result.jobTitleID);
                     onboarding.goNext();
                 }
                 else {
                     // Go to edit the just added listing
-                    app.shell.go('/listingEditor/' + result.jobTitleID());
+                    app.shell.go('/listingEditor/' + result.jobTitleID);
                 }
             }.bind(this);
             if (becomingProfessional) {

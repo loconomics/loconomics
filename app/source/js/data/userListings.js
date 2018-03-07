@@ -51,7 +51,9 @@ export const list = new CachedDataProvider({
  * - dataProvider.onceLoaded.then(fn).catch(fn) as alternative to previous ones when just
  * want one notification of data (and ensure this is up-to-date), returns Promise. Good for editors.
  *
- * - dataProvider.save(data).then(fn).catch(fn) to save data, returns Promise
+ * - dataProvider.save(data).then(fn).catch(fn) to save changes in existent listing or create a new one, returns Promise
+ *   when no ID, creates a new one (POST) expecting in data a jobTitleID or jobTitleName almost, while that fields are not
+ *   allowed for updates (PUT) where only 'content' fields for a {rest/userListing} are allowed.
  * - dataProvider.delete().then(fn).catch(fn) to delete a listing from the profile, returns Promise
  * - dataprovider.deactivate().then(fn).catch(fn) to change status of the listing to user-inactive,
  * returns Promise and triggers onSaved event
