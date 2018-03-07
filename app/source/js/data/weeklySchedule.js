@@ -37,7 +37,7 @@ session.on.cacheCleaningRequested.subscribe(function() {
 });
 
 // A weekly schedule change may change the status of listings and bookMeButtonReady
-const save = api.save;
+const save = api.save.bind(api);
 api.save = (data) => save(data).then((result) => {
     userListings.invalidateCache();
     return result;
