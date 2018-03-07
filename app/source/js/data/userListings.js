@@ -45,8 +45,18 @@ export const list = new CachedDataProvider({
  * @returns {CachedDataProvider<rest/UserListing>} formerly the type is <rest/UserJobTitle>
  * Usage:
  * - const dataProvider = item(jobTitleID)
- * - dataProvider.onData.subscribe(fn) to get the list, fn keeps being triggered on incoming updated data
+ * - dataProvider.onData.subscribe(fn) to get the record, fn keeps being triggered on incoming updated data
  * - dataProvider.onDataError.subscribe(fn) to get notified of errors happening as of onData
+ *
+ * - dataProvider.onceLoaded.then(fn).catch(fn) as alternative to previous ones when just
+ * want one notification of data (and ensure this is up-to-date), returns Promise. Good for editors.
+ *
+ * - dataProvider.save(data).then(fn).catch(fn) to save data, returns Promise
+ * - dataProvider.delete().then(fn).catch(fn) to delete a listing from the profile, returns Promise
+ * - dataprovider.deactivate().then(fn).catch(fn) to change status of the listing to user-inactive,
+ * returns Promise and triggers onSaved event
+ * - dataprovider.reactivate().then(fn).catch(fn) to change status of the listing to user-active (automatic activation enabled),
+ * returns Promise and triggers onSaved event
  */
 export function item(id) {
     const localItemDriver = new LocalForageItemDataProviderDriver(localforage, LOCAL_KEY, id, ID_PROPERTY_NAME);
@@ -56,6 +66,19 @@ export function item(id) {
         remote: new RestItemDataProviderDriver(rest, API_NAME, id),
         local: localItemDriver
     });
+
+    // API additions, specific to userListing management
+    /**
+     * Change listing status to user-inactive
+     * @returns {Promise<Object>} Gives a copy of the server data
+     */
+    itemProvider.deactivate = () => rest.post(API_NAME + '/' + id + '/deactivate').then(itemProvider.pushSavedData);
+    /**
+     * Change listing status to user-active
+     * @returns {Promise<Object>} Gives a copy of the server data
+     */
+    itemProvider.reactivate = () => rest.post(API_NAME + '/' + id + '/reactivate').then(itemProvider.pushSavedData);
+
     // Keep list notified because of item updates
     itemProvider.onRemoteLoaded.subscribe((itemData) => {
         // ensure the fresh item is registered in the index (then, included in the list)
