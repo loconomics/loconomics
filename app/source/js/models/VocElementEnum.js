@@ -1,5 +1,5 @@
 /**
-    Enumeration of possible values for VocElementIDs, 
+    Enumeration of possible values for VocElementIDs,
     used to identify sections/components when sending Feedback.
 **/
 'use strict';
@@ -27,5 +27,6 @@ module.exports = {
     booking: 19,
     welcome: 20,
     externalListing: 21,
-    earningsTracking: 22
+    earningsTracking: 22,
+    credentials: 23
 };
