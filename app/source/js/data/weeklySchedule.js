@@ -5,12 +5,13 @@
 // TODO store-jsdocs
 'use strict';
 
+import { list as userListings } from './userListings';
+
 var WeeklySchedule = require('../models/WeeklySchedule');
 var RemoteModel = require('./helpers/RemoteModel');
 var session = require('./session');
 var remote = require('./drivers/restClient');
 var calendar = require('./calendar');
-var userJobProfile = require('./userJobProfile');
 
 var api = new RemoteModel({
     data: new WeeklySchedule(),
@@ -35,9 +36,9 @@ session.on.cacheCleaningRequested.subscribe(function() {
     api.clearCache();
 });
 
-// A weekly schedule change may change the status of userJobTitles and bookMeButtonReady
+// A weekly schedule change may change the status of listings and bookMeButtonReady
 const save = api.save;
 api.save = (data) => save(data).then((result) => {
-    userJobProfile.invalidateCache();
+    userListings.invalidateCache();
     return result;
 });
