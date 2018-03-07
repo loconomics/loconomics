@@ -430,6 +430,27 @@ export default class CachedDataProvider {
     }
 
     /**
+     * Request to store in the cache the given data and notify the onSaved event
+     * when finished.
+     * This is used automatically by the 'save' method so no need to call it after it.
+     * Use cases: more advanced managements as when using specialized remote
+     * methods that perform data changes and the updated data must be locally
+     * cached and notified as 'saved' (because is saved in the remote, even if
+     * the common 'save' way of doing the task was not used).
+     * @param {any} data Copy of the data
+     * @returns {Promise<any, Error>} Returns the same given data as was stored
+     * locally
+     */
+    pushSavedData(data) {
+        return this.__localCache.push(data)
+        // Notify it was saved, providing a copy of the data and returning it
+        .then((cache) => {
+            this.onSaved.emit(cache.data);
+            return cache.data;
+        });
+    }
+
+    /**
      * Save data in remote and locally.
      * It get's stored locally only if was saved succesffully at remote, notifying
      * after that with/returning data as sent back by the server.
@@ -442,12 +463,7 @@ export default class CachedDataProvider {
         return this.__remote.push(data)
         // Store the returning data locally with cache info
         // (remote must send the data back, updating any server calculated value)
-        .then((data) => this.__localCache.push(data))
-        // Notify it was saved, providing a copy of the data and returning it
-        .then((cache) => {
-            this.onSaved.emit(cache.data);
-            return cache.data;
-        });
+        .then(this.pushSavedData);
     }
 
     /**
