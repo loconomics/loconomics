@@ -4,11 +4,10 @@
 'use strict';
 
 import UserJobTitle from '../models/UserJobTitle';
-import { item as getUserListing } from '../data/userListings';
+import { item as userListingItem } from '../data/userListings';
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
-var userJobProfile = require('../data/userJobProfile');
 var serviceAttributes = require('../data/serviceAttributes');
 var jobTitleServiceAttributes = require('../data/jobTitleServiceAttributes');
 var DEFAULT_BACK_LINK = '/listingEditor';
@@ -67,7 +66,7 @@ A.prototype.show = function show(state) {
     if (jobTitleID) {
         // Listing with user data
         this.viewModel.isLoadingUserJobTitle(true);
-        getUserListing(jobTitleID).onceLoaded()
+        userListingItem(jobTitleID).onceLoaded()
         .then((listing) => {
             // Direct copy of listing values
             this.viewModel.listingTitle(listing.title);
@@ -170,7 +169,7 @@ function ViewModel(app) {
 
             Promise.all([
                 this.serviceAttributesControl.save(),
-                userJobProfile.setUserJobTitle(plain)
+                userListingItem(this.jobTitleID()).save(plain)
             ])
             .then(function() {
                 this.isSaving(false);

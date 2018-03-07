@@ -4,14 +4,13 @@
 'use strict';
 
 import UserJobTitle from '../models/UserJobTitle';
-import { item as getUserListing } from '../data/userListings';
+import { item as userListingItem } from '../data/userListings';
 
 var Activity = require('../components/Activity');
 var ko = require('knockout');
 var $ = require('jquery');
 var clipboard = require('../utils/clipboard');
 var marketplaceProfile = require('../data/marketplaceProfile');
-var userJobProfile = require('../data/userJobProfile');
 var showError = require('../modals/error').show;
 
 var A = Activity.extend(function BookMeButtonActivity() {
@@ -74,7 +73,7 @@ A.prototype.show = function show(state) {
     this.viewModel.userJobTitle(null);
     // Load data by the listing job title
     if (jobTitleID) {
-        const listingDataProvider = getUserListing(jobTitleID);
+        const listingDataProvider = userListingItem(jobTitleID);
         this.subscribeTo(listingDataProvider.onData, (listing) => {
             // Direct copy of listing values
             this.viewModel.listingTitle(listing.title);
@@ -205,7 +204,8 @@ function ViewModel() {
             var plain = ujt.model.toPlainObject();
             plain.collectPaymentAtBookMeButton = ujt.collectPaymentAtBookMeButton();
 
-            userJobProfile.setUserJobTitle(plain)
+            userListingItem(this.jobTitleID())
+            .save(plain)
             .then(function() {
                 //this.isSaving(false);
                 //app.successSave();

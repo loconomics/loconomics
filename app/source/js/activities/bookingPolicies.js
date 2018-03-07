@@ -4,11 +4,10 @@
 'use strict';
 
 import UserJobTitle from '../models/UserJobTitle';
-import { item as getUserListing } from '../data/userListings';
+import { item as userListingItem } from '../data/userListings';
 
 var ko = require('knockout');
 var Activity = require('../components/Activity');
-var userJobProfile = require('../data/userJobProfile');
 var cancellationPolicies = require('../data/cancellationPolicies');
 var showError = require('../modals/error').show;
 var paymentAccount = require('../data/paymentAccount');
@@ -50,7 +49,7 @@ A.prototype.show = function show(state) {
     // Load data by the listing job title
     if (jobTitleID) {
         this.viewModel.isLoading(true);
-        getUserListing(jobTitleID).onceLoaded()
+        userListingItem(jobTitleID).onceLoaded()
         .then((listing) => {
             // Direct copy of listing values
             this.viewModel.listingTitle(listing.title);
@@ -132,7 +131,8 @@ function ViewModel(app) {
             plain.cancellationPolicyID = this.selectedCancellationPolicyID();
             plain.instantBooking = this.instantBooking();
 
-            userJobProfile.setUserJobTitle(plain)
+            userListingItem(this.jobTitleID())
+            .save(plain)
             .then(function() {
                 this.isSaving(false);
                 app.successSave();

@@ -149,27 +149,3 @@ exports.createUserJobTitle = function(values) {
         return m;
     });
 };
-
-/**
-    Push changes to remote. StatusID can NOT be modified with this API, use specific
-    deactivate/reactivate methods
-**/
-exports.setUserJobTitle = function (values) {
-    return remote.put('me/user-job-profile/' + values.jobTitleID, values)
-    .then(function(raw) {
-        // Save to cache and get model
-        var m = setGetUserJobTitleToCache(raw);
-
-        // TODO implement cache saving for single job-titles, currently
-        // it needs to save the profile cache, that may not exists if
-        // the first request is for a single job title.
-        // Next lines are to save full profile, not valid here.
-        // Save in local
-        //saveCacheInLocal();
-
-        exports.cacheChangedNotice.emit();
-
-        // Return model
-        return m;
-    });
-};
