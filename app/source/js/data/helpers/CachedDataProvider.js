@@ -463,7 +463,7 @@ export default class CachedDataProvider {
         return this.__remote.push(data)
         // Store the returning data locally with cache info
         // (remote must send the data back, updating any server calculated value)
-        .then(this.pushSavedData);
+        .then(this.pushSavedData.bind(this));
     }
 
     /**

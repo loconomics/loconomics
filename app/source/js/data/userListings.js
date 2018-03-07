@@ -69,12 +69,12 @@ export function item(id) {
      * Change listing status to user-inactive
      * @returns {Promise<Object>} Gives a copy of the server data
      */
-    itemProvider.deactivate = () => rest.post(API_NAME + '/' + id + '/deactivate').then(itemProvider.pushSavedData);
+    itemProvider.deactivate = () => rest.post(API_NAME + '/' + id + '/deactivate').then(itemProvider.pushSavedData.bind(itemProvider));
     /**
      * Change listing status to user-active
      * @returns {Promise<Object>} Gives a copy of the server data
      */
-    itemProvider.reactivate = () => rest.post(API_NAME + '/' + id + '/reactivate').then(itemProvider.pushSavedData);
+    itemProvider.reactivate = () => rest.post(API_NAME + '/' + id + '/reactivate').then(itemProvider.pushSavedData.bind(itemProvider));
 
     // Keep list notified because of item updates
     itemProvider.onRemoteLoaded.subscribe((itemData) => {
