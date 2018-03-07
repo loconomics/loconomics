@@ -27,7 +27,6 @@ export default class ListingSolutionsEditor extends Komponent {
      * and keeps constant internally. If is an observable, any change from outside is
      * not read.
      * @param {object} params
-     * @param {KnockoutObservable<EditorMode>} [params.editorMode] Input only value setting-up the mode in use
      * @param {(number|KnockoutObservable<number>)} [params.jobTitleID] Input only ID to be edited or copied, or zero for new.
      * @param {function} [params.onSaved] Callback to notify after save the item, with the updated data included
      */
@@ -35,9 +34,9 @@ export default class ListingSolutionsEditor extends Komponent {
         super();
 
          /**
-         * Captures from the activity which "mode" the editor
-         * component is to be used.
-         * @member {EditorMode}
+         * Captures the jobTitleID to identify 
+         * which listing's categories to edit.
+         * @member {jobTitleID}
          */
         this.jobTitleID = ko.observable(ko.unwrap(params.jobTitleID));
 

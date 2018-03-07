@@ -1,32 +1,23 @@
 /**
  * A list of solutions for a user's listing.
  *
- * @module kocomponents/listing/solutions/list
+ * @module kocomponents/listing/solutions/suggestions-list
  *
  */
 import '../../../utilities/icon-dec.js';
 import '../../../solution/viewer';
 import Komponent from '../../../helpers/KnockoutComponent';
-import getObservable from '../../../../utils/getObservable';
 import ko from 'knockout';
 import { show as showError } from '../../../../modals/error';
 import template from './template.html';
-import { byUserListing as userListingSolutionsList } from '../../../../data/userListingSolutions';
+import { bySuggestedByJobTitle as userListingSolutionsSuggestionsList } from '../../../../data/userListingSolutions';
 
-const TAG_NAME = 'listing-solutions-list';
-
-/**
- * @enum {string} Supported displaying modes
- */
-const ListMode = {
-    view: 'view',
-    select: 'select'
-};
+const TAG_NAME = 'listing-solutions-suggestions-list';
 
 /**
  * Component
  */
-export default class UserListingSolutionsList extends Komponent {
+export default class UserListingSolutionsSuggestionsList extends Komponent {
 
     static get template() { return template; }
 
@@ -36,24 +27,15 @@ export default class UserListingSolutionsList extends Komponent {
     * @param {function} [params.selectItem] Callback to trigger when using
     * `ListMode.select` and an item is clicked. As parameter will get a reference
     * to the item object.
-    * @param {(number|KnockoutObservable<number>)} 
+    *  @param {(number|KnockoutObservable<number>)} 
     * [params.jobTitleID] Input only ID to be 
     * edited or copied, or zero for new.
     */
     constructor(params) {
         super();
-      /**
-         * Captures from the activity which "mode" the list
-         * component is to be used.
-         * view:
-         * select:
-         * @member {KnockoutObservable<string>}
-         */
-        this.listMode = getObservable(params.listMode || ListMode.view);
-
          /**
          * Captures the jobTitleID to identify 
-         * which listing's categories to edit.
+         * which solutions to suggest.
          * @member {jobTitleID}
          */
         this.jobTitleID = ko.observable(ko.unwrap(params.jobTitleID));
@@ -74,22 +56,18 @@ export default class UserListingSolutionsList extends Komponent {
          * Suscribe to data coming for the list and put them in our
          * userListingSolution property.
          */
-        this.subscribeTo(userListingSolutionsList.onData, this.userListingSolution);
+        this.subscribeTo(userListingSolutionsSuggestionsList.onData, this.userListingSolution);
 
         /**
          * Notify data load errors
          */
-        this.subscribeTo(userListingSolutionsList.onDataError, (err) => {
+        this.subscribeTo(userListingSolutionsSuggestionsList.onDataError, (err) => {
             showError({
-                title: 'There was an error loading search categories',
+                title: 'There was an error loading suggested search categories',
                 error: err
             });
         });
     }
 }
 
-ko.components.register(TAG_NAME, UserListingSolutionsList);
-/**
- * @enum {string} Public enumeration of supported displaying modes
- */
-UserListingSolutionsList.ListMode = ListMode;
+ko.components.register(TAG_NAME, UserListingSolutionsSuggestionsList);
