@@ -275,7 +275,7 @@ function ViewModel(app) {
                 no: 'Keep'
             })
             .then(() => userListingItem(jid).delete())
-            .then(() => app.shell.goBack())
+            .then(() => app.shell.go('/listings'))
             .catch(function(err) {
                 if (err) {
                     showError({ error: err, title: 'Error while deleting your listing' });
