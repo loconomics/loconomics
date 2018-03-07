@@ -617,6 +617,4 @@ INSERT INTO dbo.positionpricingtype (PositionID,PricingTypeID,ClientTypeID,Langu
 INSERT INTO dbo.positionpricingtype (PositionID,PricingTypeID,ClientTypeID,LanguageID,CountryID,CreatedDate,UpdatedDate,ModifiedBy,Active) VALUES (1205,6,1,1,1,'2018-03-05 11:05:00.000','2018-03-05 11:05:00.000','jd',1);
 INSERT INTO dbo.positionpricingtype (PositionID,PricingTypeID,ClientTypeID,LanguageID,CountryID,CreatedDate,UpdatedDate,ModifiedBy,Active) VALUES (1206,6,1,1,1,'2018-03-05 11:05:00.000','2018-03-05 11:05:00.000','jd',1);
 INSERT INTO dbo.positionpricingtype (PositionID,PricingTypeID,ClientTypeID,LanguageID,CountryID,CreatedDate,UpdatedDate,ModifiedBy,Active) VALUES (1207,6,1,1,1,'2018-03-05 11:05:00.000','2018-03-05 11:05:00.000','jd',1);
-INSERT INTO dbo.positionpricingtype (PositionID,PricingTypeID,ClientTypeID,LanguageID,CountryID,CreatedDate,UpdatedDate,ModifiedBy,Active) VALUES (-2,5,1,1,1,'2018-03-05 11:05:00.000','2018-03-05 11:05:00.000','jd',1);
-INSERT INTO dbo.positionpricingtype (PositionID,PricingTypeID,ClientTypeID,LanguageID,CountryID,CreatedDate,UpdatedDate,ModifiedBy,Active) VALUES (-2,6,1,1,1,'2018-03-05 11:05:00.000','2018-03-05 11:05:00.000','jd',1);
 
