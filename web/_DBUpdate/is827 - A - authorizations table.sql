@@ -4,7 +4,7 @@ GO
 
 CREATE TABLE dbo.authorizations
 (
-	AuthorizationID int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
+	id int NOT NULL IDENTITY (1, 1) PRIMARY KEY,
 	Token varchar(216) NOT NULL,
 	UserID int NOT NULL,
 	Scope varchar(100) NOT NULL,
