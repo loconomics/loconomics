@@ -1,6 +1,6 @@
 CREATE TABLE dbo.UserListingSolution
 (UserID int NOT NULL,
-JobTitleID int NOT NULL,
+UserListingID int NOT NULL,
 SolutionID int NOT NULL,
 LanguageID int NOT NULL,
 CountryID int NOT NULL,
@@ -9,4 +9,4 @@ CreatedDate datetimeoffset NOT NULL,
 UpdatedDate datetimeoffset NOT NULL,
 ModifiedBy nvarchar(4) DEFAULT 'sys' NOT NULL,
 Active bit DEFAULT 1 NOT NULL,
-PRIMARY KEY (UserID,JobTitleID,SolutionID,LanguageID, CountryID));
+PRIMARY KEY (UserID,UserListingID,SolutionID,LanguageID, CountryID));
