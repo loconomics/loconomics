@@ -134,7 +134,7 @@ exports.serviceProfessionalsByJobTitle = function(jobTitleID, lat, lng, searchDi
  * Retrieves information for a job title search
  * @param {string} searchTerm job title search term to retrieve
  * @returns {Promise}
- */
+ * DISABLED REST API IMPLEMENTATION, USING EMBEDDED DATA IMPLEMENTATION BELOW/
 exports.jobTitleAutocomplete = function(searchTerm) {
     if (exports.jobTitleAutocomplete.latestRequest) {
         exports.jobTitleAutocomplete.latestRequest.xhr.abort();
@@ -144,4 +144,15 @@ exports.jobTitleAutocomplete = function(searchTerm) {
         searchTerm: searchTerm
     });
     return exports.jobTitleAutocomplete.latestRequest;
+};*/
+
+var rawData = require('./embedded/jobTitlesAutocomplete').default;
+var textSearch = require('../utils/textSearch');
+/**
+ * Retrieves information for a job title search
+ * @param {string} searchTerm job title search term to retrieve
+ * @returns {Promise}
+ */
+exports.jobTitleAutocomplete = function(searchTerm) {
+    return Promise.resolve(rawData.filter((item) => textSearch(searchTerm, item.singularName)));
 };
