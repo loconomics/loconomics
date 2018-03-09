@@ -30,6 +30,8 @@ namespace LcRest
         }
 
         #region Fields
+        public int userListingID { get; set; }
+
         public int userID { get; set; }
         public int jobTitleID { get; set; }
         public string title { get; set; }
@@ -78,6 +80,8 @@ namespace LcRest
             if (record == null) return null;
             return new UserJobTitle
             {
+                userListingID = record.userListingID,
+
                 userID = record.userID,
                 jobTitleID = record.jobTitleID,
                 title = record.title,
@@ -119,6 +123,7 @@ namespace LcRest
         /// </summary>
         private const string sqlSelect = @"
             SELECT
+                u.UserListingID as userListingID,
                 u.UserID As userID,
                 u.PositionID As jobTitleID,
                 u.Title as title,

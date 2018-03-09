@@ -29,6 +29,7 @@ function PublicUserJobTitle(values) {
     Model(this);
 
     this.model.defProperties({
+        userListingID: 0,
         userID: 0,
         jobTitleID: 0,
         title: '',
@@ -65,7 +66,7 @@ function PublicUserJobTitle(values) {
         cancellationPolicy: { Model: UserCancellationPolicy }
     }, values);
 
-    this.model.defID(['userID', 'jobTitleID']);
+    this.model.defID(['userID', 'jobTitleID']); // Will be userListingID
 
     var findMinValue = function(services) {
         var s = services;
