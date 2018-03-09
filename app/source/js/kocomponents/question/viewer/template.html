@@ -3,23 +3,110 @@
     <h2 data-bind="
         text: question, 
         attr: {
-            id: 'question' + postingTemplateID() + QuestionID()
+            id: 'question' + postingTemplateID() + questionID()
         } ">
     </h2>
     <!-- radio -->
-    <div class="answer-option-cell" data-bind="foreach: ">
-        <div data-sm-radio-button="" class="radio-button-container ">
-            <input id="710615652_8136179490" name="710615652" type="radio" class="radio-button-input " value="8136179490">
-            <label data-sm-radio-button-label="" class="answer-label radio-button-label no-touch touch-sensitive clearfix" for="710615652_8136179490">
-                <span class="radio-button-display ">
-                </span>
-                <span class="radio-button-label-text question-body-font-theme user-generated ">
-                        0 Not at all likely
-                </span>
-            </label>
+    <ul class="answer-option-cell">
+        <div data-bind="foreach: responses">
+            <li class="radio-button-container">
+                <input type="radio" data-bind="
+                    value: '{id:"' + id() + '", text:"' + text() + '", value:"' + value() + '", valueType:"' + valueType() +'"}'
+                    attr: {
+                        id: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    } "class="radio-button-input">
+                <label data-bind="
+                    text: text, 
+                    attr: {
+                        for: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    }">
+                </label>
+            </li>
         </div>
-    </div>
+        <div data-bind="with: otherOption">
+            <li class="radio-button-container">
+                <!-- not sure how to create a form input and it still be a radio -->
+                <input type="radio" data-bind="
+                    value: '{id:"' + id() + '", text:"' + text() + '", value:"' + value() + '", valueType:"' + valueType() +'"}'
+                    attr: {
+                        id: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    } "class="radio-button-input">
+                <label data-bind="
+                    text: text, 
+                    attr: {
+                        for: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    }">
+                </label>
+            </li>
+        </div>
+    </ul>
     <!-- dropdown with option -->
+    <select data-bind="attr: {'aria-labelledby': 'question' + $parent.postingTemplateID() + $parent.questionID()">
+        <div data-bind="foreach: responses">
+            <option data-bind="
+                text: text, 
+                value: '{id:"' + id() + '", text:"' + text() + '", value:"' + value() + '", valueType:"' + valueType() +'"}'
+                attr: {
+                    id: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                }">
+            </option>
+        </div>
+        <div data-bind="with: otherOption">
+            <!-- not sure how to create a form input and it still be an option -->
+            <option data-bind="
+                text: text, 
+                value: '{id:"' + id() + '", text:"' + text() + '", value:"' + value() + '", valueType:"' + valueType() +'"}'
+                attr: {
+                    id: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                }">
+            </option>
+        </div>
+    </select>
+    <!-- checkbox -->
+    <ul class="answer-option-cell">
+        <div data-bind="foreach: responses">
+            <li class="radio-button-container">
+                <input type="checkbox" data-bind="
+                    value: '{id:"' + id() + '", text:"' + text() + '", value:"' + value() + '", valueType:"' + valueType() +'"}'
+                    attr: {
+                        id: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    } " class="radio-button-input">
+                <label data-bind="
+                    text: text, 
+                    attr: {
+                        for: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    }">
+                </label>
+            </li>
+        </div>
+        <div data-bind="with: otherOption">
+            <li class="radio-button-container">
+                <!-- not sure how to create a form input and it still be a radio -->
+                <input type="checkbox" data-bind="
+                    value: '{id:"' + id() + '", text:"' + text() + '", value:"' + value() + '", valueType:"' + valueType() +'"}'
+                    attr: {
+                        id: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    } " class="radio-button-input">
+                <label data-bind="
+                    text: text, 
+                    attr: {
+                        for: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    }">
+                </label>
+                <textarea data-bind="
+                    placeholder: placeholder, 
+                    attr: {
+                        for: 'response' + $parent.postingTemplateID() + $parent.questionID() + id()
+                    }">
+                </textarea>
+            </li>
+        </div>
+    </ul>
+</fieldset>
+<!-- 
+
+
+
     <div class="question-body clearfix notranslate ">
         <select id="710620273" name="710620273" aria-labelledby="question-title-710620273" class="select no-touch" data-sm-select="">
             <option value=""></option>
@@ -40,7 +127,6 @@
             <textarea id="710620273_other" name="710620273_other" class="textarea other-answer-text" rows="10" cols="50" data-other-text=""></textarea>
         </div>
     </div>
-    <!-- checkboxes -->
     <div class="answer-option-cell">
         <div data-sm-checkbox="" class="checkbox-button-container ">
             <input id="1083408650_11060871966" name="1083408650[]" type="checkbox" class="checkbox-button-input " value="11060871966">
@@ -240,4 +326,3 @@
             </div>
         </div>
     </fieldset>
-</div>
