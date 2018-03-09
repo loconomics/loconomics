@@ -803,13 +803,6 @@ binary-extensions@^1.0.0:
     uglify-js ">=1.2.3"
     underscore "1.5.2"
 
-bliss@~1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/bliss/-/bliss-1.0.1.tgz#cc71ce3d47b6e76785d423b80da2b30ea335e514"
-  dependencies:
-    html-minifier ">=0.4.5"
-    uglify-js ">=1.2.3"
-
 block-stream@*:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"
@@ -2517,11 +2510,11 @@ growl@1.9.2:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.9.2.tgz#0ea7743715db8d8de2c5ede1775e1b45ac85c02f"
 
-"grunt-bliss@git+https://git@github.com/IagoSRL/grunt-bliss.git":
+"grunt-bliss@git://github.com/IagoSRL/grunt-bliss.git#942b7fae7132e060a73042a70a0fa26e8747969f":
   version "0.0.2"
-  resolved "git+https://git@github.com/IagoSRL/grunt-bliss.git#96b63efbadc7a5958ab37cb36dcbbe17f5737d4e"
+  resolved "git://github.com/IagoSRL/grunt-bliss.git#942b7fae7132e060a73042a70a0fa26e8747969f"
   dependencies:
-    bliss "~1.0.1"
+    bliss "git://github.com/cstivers78/bliss.git#54c7da14babc80b39734b771c539ac7ee07b1255"
     html "0.0.7"
 
 grunt-browserify@^5.2.0:
