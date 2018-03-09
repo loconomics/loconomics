@@ -11,4 +11,4 @@ UpdatedDate datetimeoffset NOT NULL,
 CreatedBy nvarchar(12) DEFAULT 'staff' NOT NULL,
 Approved bit DEFAULT 0 NOT NULL,
 Active bit DEFAULT 1 NOT NULL,
-PRIMARY KEY (SpecializationID,SolutionID,LanguageID, CountryID));
+PRIMARY KEY (SpecializationID,LanguageID, CountryID));
