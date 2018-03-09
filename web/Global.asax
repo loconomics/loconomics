@@ -113,6 +113,8 @@
         // Asp.net will always includes the custom headers from web.config
         if (Request.HttpMethod == "OPTIONS")
         {
+            // As max age as possible, to reduce number of preflight requests sent by the client
+            Response.Headers["Access-Control-Max-Age"] = "1728000";
             Response.End();
             return;
         }

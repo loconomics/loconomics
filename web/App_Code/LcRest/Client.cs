@@ -152,6 +152,9 @@ namespace LcRest
         private const string sqlAndClientUserID = @"
         AND pc.ClientUserID = @1
     ";
+        private const string sqlOrder = @"
+            ORDER BY uc.FirstName, uc.LastName, uc.SecondLastName
+        ";
         #endregion
 
         #region Fetch
@@ -159,7 +162,7 @@ namespace LcRest
         {
             using (var db = Database.Open("sqlloco"))
             {
-                return db.Query(sqlSelect + sqlFields,
+                return db.Query(sqlSelect + sqlFields + sqlOrder,
                     serviceProfessionalUserID)
                     .Select(FromDB)
                     .ToList();

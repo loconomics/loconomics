@@ -9,10 +9,13 @@ var ko = require('knockout');
 var clients = require('../data/clients');
 var serviceAddresses = require('../data/serviceAddresses');
 var serviceProfessionalServices = require('../data/serviceProfessionalServices');
+var Client = require('../models/Client');
 
 module.exports = function AppointmentView(appointment) {
     if (appointment._isAppointmentView) return appointment;
     appointment._isAppointmentView = true;
+
+    var obsClient = ko.observable(null);
 
     appointment.client = ko.computed(function() {
         var b = this.sourceBooking();
@@ -20,7 +23,12 @@ module.exports = function AppointmentView(appointment) {
 
         var cid = this.clientUserID();
         if (cid) {
-            return clients.getObservableItem(cid, true)();
+            clients.item(cid)
+            .onceLoaded()
+            .then((data) => {
+                obsClient(new Client(data));
+            });
+            return obsClient();
         }
         return null;
     }, appointment)
