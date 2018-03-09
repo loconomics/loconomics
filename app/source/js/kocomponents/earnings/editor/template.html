@@ -278,7 +278,8 @@
         </div>
         <p data-bind="text: notes" style="white-space: pre;"></p>
         <button type="submit" class="btn btn-secondary btn-block btn-lg"
-            data-bind="click: $component.save.bind($component), disable: $component.isLocked,
+            data-bind="click: $component.save.bind($component),
+            disable: $component.isLocked() || !$component.hasUnsavedChanges(),
             text: $component.saveButtonText"></button>
         <p class="help-block isolated">Please review carefully before submitting.</p>
         <p class="isolated" data-bind="visible: !$component.isNew()">
