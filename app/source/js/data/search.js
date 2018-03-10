@@ -154,5 +154,6 @@ var textSearch = require('../utils/textSearch');
  * @returns {Promise}
  */
 exports.jobTitleAutocomplete = function(searchTerm) {
-    return Promise.resolve(rawData.filter((item) => textSearch(searchTerm, item.singularName)));
+    const doSearch = textSearch.searchFor(searchTerm);
+    return Promise.resolve(rawData.filter((item) => doSearch.allAtWords(item.singularName)));
 };
