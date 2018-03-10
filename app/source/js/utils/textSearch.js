@@ -6,14 +6,6 @@
 
 var removeAccent = require('./removeAccent');
 
-module.exports = function textSearch(search, text) {
-
-    var s = removeAccent(search || '').toLowerCase();
-    var t = removeAccent(text || '').toLowerCase();
-
-    return t.indexOf(s) > -1;
-};
-
 /**
  * Partial search of any term in the list at each element in the content list,
  * if just one matches, it returns true
@@ -65,7 +57,7 @@ const getWords = function(text) {
  * @param {string} searchTerm Text to look for
  * @return {Object} Search object
  */
-module.exports.searchFor = function(searchTerm) {
+export function searchFor(searchTerm) {
     var terms = getWords(removeAccent(searchTerm || '').toLowerCase());
     return {
         /**
@@ -105,4 +97,4 @@ module.exports.searchFor = function(searchTerm) {
             return searchAllAt(terms, getWords(text));
         }
     };
-};
+}

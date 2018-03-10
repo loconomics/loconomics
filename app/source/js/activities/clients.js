@@ -3,13 +3,13 @@
 **/
 'use strict';
 
+import * as textSearch from '../utils/textSearch';
 import { list as clientsList, publicSearch as clientsPublicSearch } from '../data/clients';
 import $ from 'jquery';
 import Activity from '../components/Activity';
 import Client from '../models/Client';
 import ko from 'knockout';
 import { show as showError } from'../modals/error';
-import textSearch from '../utils/textSearch';
 
 var A = Activity.extend(function ClientsActivity() {
 
