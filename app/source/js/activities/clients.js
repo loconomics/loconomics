@@ -162,6 +162,8 @@ function ViewModel(app) {
     // Utility to get a filtered list of clients based on search and deleted property
     this.getFilteredList = function getFilteredList() {
         var s = (this.searchText() || '').toLowerCase();
+        // Prepare search term
+        const doSearch = textSearch.searchFor(s);
         // Search the client by:
         // - full name
         // - (else) email
@@ -169,11 +171,11 @@ function ViewModel(app) {
         return this.clients().filter(function(client) {
             if (!client) return false;
             if (client.deleted()) return false;
-            var found = textSearch(s, client.fullName());
+            var found = doSearch.allAtWords(client.fullName());
             if (found) return true;
-            found = textSearch(s, client.email());
+            found = doSearch.allAt([client.email()]);
             if (found) return true;
-            found = textSearch(s, client.phone());
+            found = doSearch.allAt([client.phone()]);
             return found;
         });
     };

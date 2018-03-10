@@ -57,27 +57,32 @@ function ViewModel(app) {
         var t = this.sourceThreads();
         var s = this.searchText();
 
-        if (!t)
+        if (!t) {
             return [];
-        else if (!s)
+        }
+        else if (!s) {
             return t.map(MessageView.fromThread.bind(null, app));
-        else
+        }
+        else {
+            // Prepare search term
+            const doSearch = textSearch.searchFor(s);
             return t.filter(function(thread) {
                 var found = false;
 
                 // Check subject
-                found = textSearch(s, thread.subject());
+                found = doSearch.allAtWords(thread.subject());
 
                 if (!found) {
                     // Try content of messages
                     // It stops on first 'true' result
                     thread.messages().some(function(msg) {
-                        found = textSearch(s, msg.bodyText());
+                        found = doSearch.allAt([msg.bodyText()]);
                         return found;
                     });
                 }
 
                 return found;
             }).map(MessageView.fromThread.bind(null, app));
+        }
     }, this);
 }
