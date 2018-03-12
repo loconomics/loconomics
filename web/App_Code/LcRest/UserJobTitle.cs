@@ -116,6 +116,14 @@ namespace LcRest
             return userJobTitles;
         }
 
+        /// <summary>
+        /// Value of the job title ID assigned when a user adds a new name as job title.
+        /// Previously, a real job title was created ("user generated"), now this one is
+        /// used for that cases, preventing from more new ones being added but using the
+        /// user given name as the listing title.
+        /// </summary>
+        public const int UserGeneratedJobTitleID = -2;
+
         #region Fetch
         #region SQL
         /// <summary>
@@ -290,7 +298,23 @@ namespace LcRest
 
                 if (results.Result != "Success")
                 {
-                    throw new Exception("We're sorry, there was an error creating your job title: " + results.Result);
+                    // TODO: Add better error checks (codes) at new back-end when porting this rather than local text errors
+                    var message = (string)results.Result;
+                    if (message.Contains("Cannot insert duplicate key"))
+                    {
+                        if (userJobTitle.jobTitleID == UserGeneratedJobTitleID)
+                        {
+                            throw new ConstraintException("We're sorry, but more than one job title with a custom name is not supported at this moment (stay tunned, this will change soon!).");
+                        }
+                        else
+                        {
+                            throw new ConstraintException("Attempt to add a job title that already exists at your profile");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("We're sorry, there was an error creating your job title: " + message);
+                    }
                 }
             }
         }

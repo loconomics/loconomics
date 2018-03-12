@@ -158,14 +158,6 @@ public class RestUserJobProfile : RestWebPage
     }
 
     /// <summary>
-    /// Value of the job title ID assigned when a user adds a new name as job title.
-    /// Previously, a real job title was created ("user generated"), now this one is
-    /// used for that cases, preventing from more new ones being added but using the
-    /// user given name as the listing title.
-    /// </summary>
-    const int UserGeneratedJobTitleID = -2;
-
-    /// <summary>
     /// Process a request to create a user job title given a jobTitleID with
     /// a validated and sanitized jobTitleName (pass in GetValidatedJobTitleName result)
     /// as a custom listing title.
@@ -176,7 +168,7 @@ public class RestUserJobProfile : RestWebPage
     /// <returns></returns>
     public dynamic Create(int userID, int jobTitleID, string jobTitleName)
     {
-        if (jobTitleID == 0 || jobTitleID == UserGeneratedJobTitleID)
+        if (jobTitleID == 0 || jobTitleID == LcRest.UserJobTitle.UserGeneratedJobTitleID)
         {
             // new-job-title version: it's possible that the user wrotes a 
             // job title name without pick-up one from the list, on that case
@@ -201,7 +193,7 @@ public class RestUserJobProfile : RestWebPage
             else
             {
                 //  Create a new job-title based on the given name #650
-                jobTitleID = UserGeneratedJobTitleID;
+                jobTitleID = LcRest.UserJobTitle.UserGeneratedJobTitleID;
             }
         }
         // Double check that the job title exists
