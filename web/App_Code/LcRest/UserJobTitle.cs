@@ -147,7 +147,7 @@ namespace LcRest
                     AND u.CountryID = @2
                     AND u.Active = 1                   
                     -- Double check for approved positions
-                    AND positions.Active = 1
+                    AND (positions.Active = 1 OR positions.positionID = -2)
                     AND (positions.Approved = 1 Or positions.Approved is null) -- Avoid not approved, allowing pending (null) and approved (1)
         ";
         
