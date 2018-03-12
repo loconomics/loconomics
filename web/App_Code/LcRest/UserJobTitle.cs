@@ -304,16 +304,16 @@ namespace LcRest
                     {
                         if (userJobTitle.jobTitleID == UserGeneratedJobTitleID)
                         {
-                            throw new ConstraintException("We're sorry, but more than one job title with a custom name is not supported at this moment (stay tunned, this will change soon!).");
+                            throw new ConstraintException("We're sorry, but we currently only support one custom job title (stay tunned, this will change soon!).");
                         }
                         else
                         {
-                            throw new ConstraintException("Attempt to add a job title that already exists at your profile");
+                            throw new ConstraintException("You already have a listing with that job title.");
                         }
                     }
                     else
                     {
-                        throw new Exception("We're sorry, there was an error creating your job title: " + message);
+                        throw new Exception("We're sorry, there was an error creating your listing: " + message);
                     }
                 }
             }
